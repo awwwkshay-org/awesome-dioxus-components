@@ -1,0 +1,3 @@
+[workspace]
+members = ["dioxus", "desktop", "web"]
+resolver = "3"
