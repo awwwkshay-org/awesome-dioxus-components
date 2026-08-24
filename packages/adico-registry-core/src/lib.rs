@@ -650,6 +650,175 @@ struct ResolutionState {
     items: Vec<ResolvedRegistryItem>,
 }
 
+/// A Cargo dependency requirement merged from one or more registry items.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct UnifiedCargoDependency {
+    /// Dependency key written to Cargo.toml.
+    pub crate_name: String,
+    /// Underlying crates.io package when the key is an alias.
+    pub package: Option<String>,
+    /// A Cargo-compatible conjunction of all source version requirements.
+    pub version: String,
+    /// Deterministically sorted union of requested features.
+    pub features: Vec<String>,
+    /// Whether any installed source requires package default features.
+    pub default_features: bool,
+    /// Optional Cargo target predicate. Different predicates remain distinct.
+    pub target: Option<String>,
+    /// Source-owned items that contributed this requirement.
+    pub origins: Vec<RegistryItemAddress>,
+}
+
+/// Unifies Cargo requirements declared by a resolved registry install plan.
+///
+/// Requirements sharing a manifest key and target predicate are combined only
+/// when they name the same package and have a satisfiable semver intersection.
+/// Cargo features are additive, so their union is deterministic. Default
+/// features are retained when any copied source requires them.
+pub fn unify_cargo_dependencies(
+    plan: &RegistryInstallPlan,
+) -> Result<Vec<UnifiedCargoDependency>, RegistryError> {
+    let mut merged = BTreeMap::<(String, Option<String>), UnifiedCargoDependency>::new();
+    for resolved in &plan.items {
+        for requirement in &resolved.item.cargo_dependencies {
+            validate_cargo_version_requirement(requirement, &resolved.address)?;
+            let key = (requirement.crate_name.clone(), requirement.target.clone());
+            if let Some(existing) = merged.get_mut(&key) {
+                if existing.package != requirement.package {
+                    return Err(RegistryError::CargoPackageConflict {
+                        crate_name: requirement.crate_name.clone(),
+                        target: requirement.target.clone(),
+                        existing_package: existing.package.clone(),
+                        requested_package: requirement.package.clone(),
+                        origins: origin_strings(
+                            existing
+                                .origins
+                                .iter()
+                                .chain(std::iter::once(&resolved.address)),
+                        ),
+                    });
+                }
+                let combined = format!("{}, {}", existing.version, requirement.version);
+                let combined_requirement = VersionReq::parse(&combined).map_err(|error| {
+                    RegistryError::InvalidCargoVersionRequirement {
+                        crate_name: requirement.crate_name.clone(),
+                        requirement: combined.clone(),
+                        origin: resolved.address.to_string(),
+                        reason: error.to_string(),
+                    }
+                })?;
+                if !has_semver_witness(&combined_requirement) {
+                    return Err(RegistryError::IncompatibleCargoRequirements {
+                        crate_name: requirement.crate_name.clone(),
+                        target: requirement.target.clone(),
+                        requirements: vec![existing.version.clone(), requirement.version.clone()],
+                        origins: origin_strings(
+                            existing
+                                .origins
+                                .iter()
+                                .chain(std::iter::once(&resolved.address)),
+                        ),
+                    });
+                }
+                existing.version = combined;
+                let mut features: BTreeSet<_> = existing.features.iter().cloned().collect();
+                features.extend(requirement.features.iter().cloned());
+                existing.features = features.into_iter().collect();
+                existing.default_features |= requirement.default_features;
+                if !existing.origins.contains(&resolved.address) {
+                    existing.origins.push(resolved.address.clone());
+                    existing.origins.sort();
+                }
+            } else {
+                merged.insert(
+                    key,
+                    UnifiedCargoDependency {
+                        crate_name: requirement.crate_name.clone(),
+                        package: requirement.package.clone(),
+                        version: requirement.version.clone(),
+                        features: {
+                            let mut features: Vec<_> = requirement.features.clone();
+                            features.sort();
+                            features.dedup();
+                            features
+                        },
+                        default_features: requirement.default_features,
+                        target: requirement.target.clone(),
+                        origins: vec![resolved.address.clone()],
+                    },
+                );
+            }
+        }
+    }
+    Ok(merged.into_values().collect())
+}
+
+fn validate_cargo_version_requirement(
+    requirement: &CargoDependency,
+    origin: &RegistryItemAddress,
+) -> Result<(), RegistryError> {
+    let parsed = VersionReq::parse(&requirement.version).map_err(|error| {
+        RegistryError::InvalidCargoVersionRequirement {
+            crate_name: requirement.crate_name.clone(),
+            requirement: requirement.version.clone(),
+            origin: origin.to_string(),
+            reason: error.to_string(),
+        }
+    })?;
+    if has_semver_witness(&parsed) {
+        Ok(())
+    } else {
+        Err(RegistryError::IncompatibleCargoRequirements {
+            crate_name: requirement.crate_name.clone(),
+            target: requirement.target.clone(),
+            requirements: vec![requirement.version.clone()],
+            origins: vec![origin.to_string()],
+        })
+    }
+}
+
+fn origin_strings<'a>(origins: impl Iterator<Item = &'a RegistryItemAddress>) -> Vec<String> {
+    origins.map(ToString::to_string).collect()
+}
+
+/// Checks whether a Cargo-style semver conjunction has a practical stable
+/// release witness. The candidates are comparator boundaries plus their next
+/// patch/minor releases, which covers all ordinary Cargo requirements while
+/// avoiding an unbounded version search.
+fn has_semver_witness(requirement: &VersionReq) -> bool {
+    let mut candidates = BTreeSet::from([
+        Version::new(0, 0, 0),
+        Version::new(0, 1, 0),
+        Version::new(1, 0, 0),
+    ]);
+    for comparator in &requirement.comparators {
+        let minor = comparator.minor.unwrap_or(0);
+        let patch = comparator.patch.unwrap_or(0);
+        let boundary = Version {
+            major: comparator.major,
+            minor,
+            patch,
+            pre: comparator.pre.clone(),
+            build: Default::default(),
+        };
+        candidates.insert(boundary.clone());
+        if boundary.pre.is_empty() {
+            if let Some(next_patch) = boundary.patch.checked_add(1) {
+                candidates.insert(Version::new(boundary.major, boundary.minor, next_patch));
+            }
+            if let Some(next_minor) = boundary.minor.checked_add(1) {
+                candidates.insert(Version::new(boundary.major, next_minor, 0));
+            }
+            if let Some(next_major) = boundary.major.checked_add(1) {
+                candidates.insert(Version::new(next_major, 0, 0));
+            }
+        }
+    }
+    candidates
+        .into_iter()
+        .any(|candidate| requirement.matches(&candidate))
+}
+
 /// Minimal transport boundary used by static HTTPS registry sources.
 ///
 /// The trait keeps registry validation testable without making CI contact a
@@ -1182,6 +1351,52 @@ pub enum RegistryError {
         /// Fully qualified requested address.
         address: String,
     },
+    /// Two requirements use one Cargo dependency key for different packages.
+    #[error(
+        "Cargo dependency {crate_name:?} has conflicting package aliases for target {target:?}: {existing_package:?} versus {requested_package:?} (from {})",
+        .origins.join(", ")
+    )]
+    CargoPackageConflict {
+        /// Cargo manifest key.
+        crate_name: String,
+        /// Optional Cargo target predicate.
+        target: Option<String>,
+        /// Package selected by the first requirement.
+        existing_package: Option<String>,
+        /// Package selected by the conflicting requirement.
+        requested_package: Option<String>,
+        /// Fully-qualified source items that introduced the conflict.
+        origins: Vec<String>,
+    },
+    /// A Cargo semver requirement cannot be parsed.
+    #[error(
+        "Cargo dependency {crate_name:?} has invalid version requirement {requirement:?} from {origin}: {reason}"
+    )]
+    InvalidCargoVersionRequirement {
+        /// Cargo manifest key.
+        crate_name: String,
+        /// Invalid requirement text.
+        requirement: String,
+        /// Fully-qualified item that declared the requirement.
+        origin: String,
+        /// Semver parser reason.
+        reason: String,
+    },
+    /// Cargo requirements have no shared compatible version.
+    #[error(
+        "Cargo dependency {crate_name:?} has incompatible requirements {requirements:?} for target {target:?} (from {})",
+        .origins.join(", ")
+    )]
+    IncompatibleCargoRequirements {
+        /// Cargo manifest key.
+        crate_name: String,
+        /// Optional Cargo target predicate.
+        target: Option<String>,
+        /// Mutually incompatible requirement text.
+        requirements: Vec<String>,
+        /// Fully-qualified source items that declared the requirements.
+        origins: Vec<String>,
+    },
     /// The configured source namespace did not match the manifest identity.
     #[error(
         "registry source {registry_source} declares {declared}, but the project configured it as {configured}"
@@ -1457,6 +1672,57 @@ mod tests {
             .iter()
             .map(|item| item.address.to_string())
             .collect()
+    }
+
+    fn cargo_requirement(
+        crate_name: &str,
+        package: Option<&str>,
+        version: &str,
+        features: &[&str],
+        default_features: bool,
+        target: Option<&str>,
+    ) -> CargoDependency {
+        CargoDependency {
+            crate_name: crate_name.to_string(),
+            package: package.map(str::to_string),
+            version: version.to_string(),
+            features: features.iter().map(ToString::to_string).collect(),
+            default_features,
+            target: target.map(str::to_string),
+        }
+    }
+
+    fn cargo_plan(items: &[(&str, Vec<CargoDependency>)]) -> RegistryInstallPlan {
+        RegistryInstallPlan {
+            requested: Vec::new(),
+            items: items
+                .iter()
+                .map(|(name, cargo_dependencies)| ResolvedRegistryItem {
+                    address: RegistryItemAddress {
+                        namespace: "@adico".parse().expect("valid namespace"),
+                        item: (*name).to_string(),
+                    },
+                    item: RegistryItem {
+                        name: (*name).to_string(),
+                        item_type: RegistryItemType::Lib,
+                        description: "Cargo requirement fixture".to_string(),
+                        files: Vec::new(),
+                        registry_dependencies: Vec::new(),
+                        cargo_dependencies: cargo_dependencies.clone(),
+                        style: StyleRequirements::default(),
+                        module_exports: Vec::new(),
+                        documentation: None,
+                        compatibility: None,
+                        provenance: None,
+                    },
+                    location: RegistryLocation::Embedded {
+                        label: "Cargo fixture".to_string(),
+                        source_root: fixture_root(),
+                    },
+                    manifest_digest: "fixture-digest".to_string(),
+                })
+                .collect(),
+        }
     }
 
     #[test]
@@ -1744,6 +2010,112 @@ mod tests {
                 )
                 .expect_err("cross-registry cycle must fail"),
             RegistryError::CrossRegistryDependencyCycle { .. }
+        ));
+    }
+
+    #[test]
+    fn cargo_requirements_merge_features_versions_and_default_feature_policy() {
+        let plan = cargo_plan(&[
+            (
+                "button",
+                vec![cargo_requirement(
+                    "dioxus",
+                    None,
+                    ">=0.7.0, <0.8.0",
+                    &["web"],
+                    false,
+                    None,
+                )],
+            ),
+            (
+                "dialog",
+                vec![cargo_requirement(
+                    "dioxus",
+                    None,
+                    "^0.7.2",
+                    &["desktop", "web"],
+                    true,
+                    None,
+                )],
+            ),
+            (
+                "web-only",
+                vec![cargo_requirement(
+                    "dioxus",
+                    None,
+                    "^0.7.2",
+                    &[],
+                    false,
+                    Some("cfg(target_arch = \"wasm32\")"),
+                )],
+            ),
+        ]);
+
+        let dependencies = unify_cargo_dependencies(&plan).expect("requirements should merge");
+        assert_eq!(dependencies.len(), 2, "target predicates remain distinct");
+        let general = dependencies
+            .iter()
+            .find(|dependency| dependency.target.is_none())
+            .expect("general requirement should exist");
+        assert_eq!(general.features, ["desktop", "web"]);
+        assert!(general.default_features);
+        assert_eq!(general.origins.len(), 2);
+        assert!(
+            VersionReq::parse(&general.version)
+                .expect("merged version is valid Cargo semver")
+                .matches(&Version::parse("0.7.9").expect("valid version"))
+        );
+    }
+
+    #[test]
+    fn incompatible_cargo_requirements_identify_their_registry_item_origins() {
+        let plan = cargo_plan(&[
+            (
+                "button",
+                vec![cargo_requirement("dioxus", None, "^0.7.0", &[], true, None)],
+            ),
+            (
+                "dialog",
+                vec![cargo_requirement("dioxus", None, "^1.0.0", &[], true, None)],
+            ),
+        ]);
+        let error = unify_cargo_dependencies(&plan).expect_err("ranges cannot overlap");
+        assert!(matches!(
+            error,
+            RegistryError::IncompatibleCargoRequirements { origins, .. }
+                if origins == ["@adico/button", "@adico/dialog"]
+        ));
+    }
+
+    #[test]
+    fn conflicting_package_aliases_are_rejected_before_manifest_editing() {
+        let plan = cargo_plan(&[
+            (
+                "button",
+                vec![cargo_requirement(
+                    "icons",
+                    Some("dioxus-lucide-icons"),
+                    "^0.1.0",
+                    &[],
+                    true,
+                    None,
+                )],
+            ),
+            (
+                "dialog",
+                vec![cargo_requirement(
+                    "icons",
+                    Some("lucide-icons"),
+                    "^0.1.0",
+                    &[],
+                    true,
+                    None,
+                )],
+            ),
+        ]);
+        assert!(matches!(
+            unify_cargo_dependencies(&plan).expect_err("different alias packages must fail"),
+            RegistryError::CargoPackageConflict { .. }
         ));
     }
 }
