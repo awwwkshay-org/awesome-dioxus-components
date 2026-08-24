@@ -1,0 +1,21 @@
+[application]
+name = "awesome-dioxus-components-ui"
+default_platform = "web"
+
+[web.app]
+title = "Awesome Dioxus Components"
+
+[web.watcher]
+reload_html = true
+watch_path = ["src", "assets"]
+
+[web.resource]
+style = []
+script = []
+
+[web.resource.dev]
+script = []
+
+[bundle]
+identifier = "com.example.awesome-dioxus-components-ui"
+publisher = "Example"

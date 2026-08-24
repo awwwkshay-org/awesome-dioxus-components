@@ -1,0 +1,93 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    profiles: ["apps", "app_deps", "full"]
+    environment:
+      POSTGRES_DB: awesome_dioxus_components
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d awesome_dioxus_components"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  api:
+    profiles: ["apps", "full"]
+    build:
+      context: .
+      dockerfile: apps/awesome-dioxus-components-api/Dockerfile
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/awesome_dioxus_components
+      RUST_LOG: awesome_dioxus_components_api=info,tower_http=info
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:3001/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  ui:
+    profiles: ["apps", "full"]
+    build:
+      context: .
+      dockerfile: apps/awesome-dioxus-components-ui/Dockerfile
+    environment:
+      API_URL: http://api:3001
+      IP: 0.0.0.0
+      PORT: 8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  test:
+    image: rust:1.96.1-slim-bookworm
+    profiles: ["test", "full"]
+    working_dir: /app
+    command: >-
+      sh -c "cargo test --locked --workspace --exclude awesome-dioxus-components-ui &&
+      cargo check --locked -p awesome-dioxus-components-ui --no-default-features --features server"
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/awesome_dioxus_components_test
+    volumes:
+      - .:/app
+      - cargo-registry:/usr/local/cargo/registry
+      - test-target:/app/target
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+
+  postgres-test:
+    image: postgres:17-alpine
+    profiles: ["test", "app_deps", "full"]
+    environment:
+      POSTGRES_DB: awesome_dioxus_components_test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d awesome_dioxus_components_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+    tmpfs:
+      - /var/lib/postgresql/data
+
+volumes:
+  postgres-data:
+  cargo-registry:
+  test-target:
