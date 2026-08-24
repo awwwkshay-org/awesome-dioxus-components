@@ -51,7 +51,7 @@
 ## 4. M3 — Existing component migration
 
 - [x] 4.1 Turn the M1 inventory into a migration queue ordered by reusable primitive availability and classify each entry’s registry item type, target source files, theme assets, Cargo dependencies, and platform limitations; verify every suitable upstream item has a migration decision.
-- [ ] 4.2 Extend `adico-primitives` only with the audited upstream dependencies necessary for the first migration batch, preserving provenance and public facades; verify focused primitive tests and required target checks pass.
+- [x] 4.2 Extend `adico-primitives` only with the audited upstream dependencies necessary for the first migration batch, preserving provenance and public facades; verify focused primitive tests and required target checks pass.
 - [ ] 4.3 Migrate the first independent batch of existing styled components into `registry/` with source metadata, docs metadata, and installation fixtures; verify each can be installed by `adico add` into a clean consumer fixture.
 - [ ] 4.4 Migrate overlay/layer-dependent existing components as a batch after their shared primitive behavior is available; verify browser keyboard, focus, and accessibility coverage for every migrated interactive item.
 - [ ] 4.5 Migrate collection/selection/navigation-dependent existing components as a batch after their shared primitive behavior is available; verify representative keyboard/typeahead/selection tests and consumer builds.

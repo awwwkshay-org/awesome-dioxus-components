@@ -127,6 +127,27 @@ explicitly as extras so they never count toward shadcn parity credit
 | toolbar | `toolbar` | `src/toolbar.rs` | none beyond primitive | Roving-focus toolbar container, similar shape to Menubar without the layered popups. |
 | virtual-list | `virtual-list` | `src/virtual/**`, `src/virtual_list.rs` | none beyond primitive | Needs viewport/scroll measurement; web-only until an observer-bridge primitive exists (M6 territory), document as a target-support skip rather than a silent omission until then. |
 
+## Task 4.2: primitive extension for the first migration batch
+
+Wave 1 is the first migration batch (task 4.3). Per its own table, none of
+its eight items needs a new `adico-primitives` import: seven have no
+primitive at all, and `sheet` composes the already-owned `dialog` primitive.
+Task 4.2 is therefore satisfied by explicitly recording that decision rather
+than by an unnecessary primitive change, and by confirming no regression:
+
+| Check | Result |
+| --- | --- |
+| `cargo test -p adico-primitives --locked` | 14 doctests passed, unchanged |
+| `cargo check -p adico-primitives --locked` (native/SSR-safe default) | passed, unchanged |
+| `cargo check -p adico-primitives --locked --no-default-features --features web --target wasm32-unknown-unknown` | passed, unchanged |
+| `cargo check -p adico-primitives --locked --features desktop` | passed, unchanged |
+
+Wave 2 is where task 4.2-style primitive extension work actually begins: each
+of its items needs one upstream primitive module ported into
+`adico-primitives` with a provenance record, following the same import
+process already used for Dialog/Select
+([`m1-primitive-ownership.md`](m1-primitive-ownership.md)).
+
 ## Verification
 
 Every one of the 41 items above (45 total upstream styled components, minus
