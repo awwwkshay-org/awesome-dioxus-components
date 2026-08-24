@@ -6,6 +6,7 @@ version = 4
 name = "adico-cli"
 version = "0.1.0"
 dependencies = [
+ "adico-registry-core",
  "serde",
  "serde_json",
  "thiserror 2.0.20",

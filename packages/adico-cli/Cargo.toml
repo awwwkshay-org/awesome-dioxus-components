@@ -10,6 +10,7 @@ name = "adico"
 path = "src/main.rs"
 
 [dependencies]
+adico-registry-core = { path = "../adico-registry-core" }
 serde = { workspace = true }
 serde_json = { workspace = true }
 thiserror = { workspace = true }
