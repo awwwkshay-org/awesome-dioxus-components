@@ -1,0 +1,35 @@
+{
+  "formatVersion": 1,
+  "namespace": "@awwwkshay",
+  "name": "Awwwkshay Dioxus Registry",
+  "description": "A curated organization registry fixture demonstrating adico's local and static-HTTPS multi-source model.",
+  "compatibility": {
+    "cli": ">=0.1.0"
+  },
+  "items": [
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "description": "A source-owned card shell that reuses the official cn utility.",
+      "files": [
+        {
+          "source": "ui/card.rs",
+          "targetRoot": "ui",
+          "target": "card.rs",
+          "checksum": "055a9e802fb01f200a9cb3de9f52c474a1d52217d48e749a5af861d31d41dd6c"
+        }
+      ],
+      "registryDependencies": ["@adico/cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" }
+      ],
+      "style": {
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "card", "reexport": true }
+      ],
+      "documentation": { "slug": "card" }
+    }
+  ]
+}

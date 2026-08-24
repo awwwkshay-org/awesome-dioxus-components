@@ -2225,6 +2225,91 @@ mod tests {
         assert!(matches!(loaded.location, RegistryLocation::Https { .. }));
     }
 
+    fn awwwkshay_fixture_root() -> PathBuf {
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../tests/installation/awwwkshay-consumer/awwwkshay-registry")
+    }
+
+    fn awwwkshay_fixture_bytes(name: &str) -> Vec<u8> {
+        fs::read(awwwkshay_fixture_root().join(name)).expect("awwwkshay fixture should be readable")
+    }
+
+    /// The checked-in Awwwkshay organization registry fixture (also exercised
+    /// end-to-end by the `adico` binary against
+    /// `tests/installation/awwwkshay-consumer`) resolves identically whether a
+    /// consumer configures it as a local path or a static HTTPS endpoint, and
+    /// its explicit cross-registry dependency on `@adico/cn` is preserved.
+    #[test]
+    fn awwwkshay_registry_fixture_resolves_identically_over_local_and_https_sources() {
+        let manifest_bytes = awwwkshay_fixture_bytes("registry.json");
+        let card_bytes = awwwkshay_fixture_bytes("ui/card.rs");
+        let manifest_url = "https://registry.awwwkshay.example/registry.json";
+        let source_url = "https://registry.awwwkshay.example/ui/card.rs";
+        let mut client = FixtureHttpClient::default();
+        client
+            .responses
+            .insert(manifest_url.to_string(), manifest_bytes.clone());
+        client
+            .responses
+            .insert(source_url.to_string(), card_bytes.clone());
+        let loader = RegistrySourceLoader::with_client(
+            EmbeddedRegistry::new(
+                fixture_bytes("validation-source/registry.json"),
+                fixture_root(),
+            ),
+            client,
+        );
+        let namespace: RegistryNamespace = "@awwwkshay".parse().expect("valid namespace");
+
+        let local = loader
+            .load(
+                &namespace,
+                &RegistrySource::Local {
+                    path: awwwkshay_fixture_root().display().to_string(),
+                },
+            )
+            .expect("local Awwwkshay fixture should load");
+        let https = loader
+            .load(
+                &namespace,
+                &RegistrySource::Https {
+                    url: manifest_url.to_string(),
+                },
+            )
+            .expect("HTTPS Awwwkshay fixture should load");
+
+        assert!(matches!(local.location, RegistryLocation::Local { .. }));
+        assert!(matches!(https.location, RegistryLocation::Https { .. }));
+        assert_eq!(local.manifest.items, https.manifest.items);
+        assert_eq!(
+            local
+                .manifest
+                .items
+                .iter()
+                .find(|item| item.name == "card")
+                .expect("card item should be present")
+                .registry_dependencies,
+            vec!["@adico/cn".to_string()]
+        );
+
+        let synthetic_official = registry_with_items("@adico", &[("cn", &[])]);
+        for awwwkshay in [local, https] {
+            let plan = catalog(vec![synthetic_official.clone(), awwwkshay])
+                .resolve(
+                    &namespace,
+                    &[RegistryAddress::parse("card").expect("valid request")],
+                )
+                .expect("bare card should resolve through its explicit cross-registry dependency");
+            assert_eq!(plan_addresses(&plan), ["@adico/cn", "@awwwkshay/card"]);
+            let card = plan
+                .items
+                .iter()
+                .find(|item| item.address.to_string() == "@awwwkshay/card")
+                .expect("resolved card item should be present");
+            assert_eq!(card.item.files[0].checksum, sha256_hex(&card_bytes));
+        }
+    }
+
     #[test]
     fn non_https_endpoints_are_rejected_before_any_network_request() {
         let error = fixture_loader()

@@ -1,0 +1,9 @@
+[package]
+name = "adico-awwwkshay-consumer"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+
+[dependencies]
+dioxus = { version = "=0.7.9" }

@@ -143,6 +143,73 @@ fn multi_item_add_installs_shared_dependencies_once() {
     assert!(manifest.contains("=0.1.0"));
 }
 
+/// The same registry fixture the `adico` binary installs end-to-end into
+/// `tests/installation/awwwkshay-consumer`, embedded here so an offline
+/// company-registry consumer can be configured without a second copy.
+const AWWWKSHAY_REGISTRY_MANIFEST: &str =
+    include_str!("../../../tests/installation/awwwkshay-consumer/awwwkshay-registry/registry.json");
+const AWWWKSHAY_CARD_SOURCE: &str =
+    include_str!("../../../tests/installation/awwwkshay-consumer/awwwkshay-registry/ui/card.rs");
+
+fn write_awwwkshay_registry(project: &FixtureProject) {
+    fs::create_dir_all(project.path("awwwkshay-registry/ui"))
+        .expect("awwwkshay registry directory should be created");
+    fs::write(
+        project.path("awwwkshay-registry/registry.json"),
+        AWWWKSHAY_REGISTRY_MANIFEST,
+    )
+    .expect("awwwkshay registry manifest should be written");
+    fs::write(
+        project.path("awwwkshay-registry/ui/card.rs"),
+        AWWWKSHAY_CARD_SOURCE,
+    )
+    .expect("awwwkshay registry source should be written");
+}
+
+#[test]
+fn bare_company_default_and_explicit_official_items_install_together() {
+    let project = fixture_project("=0.7.9");
+    write_awwwkshay_registry(&project);
+
+    let init_output = project.adico(&[
+        "init",
+        "--default-registry",
+        "@awwwkshay",
+        "--registry",
+        "@awwwkshay=awwwkshay-registry",
+    ]);
+    assert!(
+        init_output.status.success(),
+        "company-default init should succeed: {}",
+        stderr(&init_output)
+    );
+
+    // "card" is bare and resolves through the configured @awwwkshay default;
+    // "@adico/button" is explicit and resolves through the official registry
+    // regardless of that default. Card also carries an explicit
+    // "@adico/cn" cross-registry dependency, so a single add exercises both
+    // namespace-selection rules at once.
+    let output = project.adico(&["add", "card", "@adico/button"]);
+    assert!(
+        output.status.success(),
+        "mixed bare/explicit add should succeed: {}",
+        stderr(&output)
+    );
+    let report = stdout(&output);
+    assert!(report.contains("@awwwkshay/card"));
+    assert!(report.contains("@adico/button"));
+    assert!(report.contains("@adico/cn"));
+
+    assert!(project.exists("src/components/ui/card.rs"));
+    assert!(project.exists("src/components/ui/button.rs"));
+    assert!(project.exists("src/adico_lib/cn.rs"));
+
+    let lock = project.read("adico.lock");
+    assert!(lock.contains("\"address\": \"@awwwkshay/card\""));
+    assert!(lock.contains("\"address\": \"@adico/button\""));
+    assert!(lock.contains("\"address\": \"@adico/cn\""));
+}
+
 #[test]
 fn repeated_add_is_idempotent() {
     let project = fixture_project("=0.7.9");
