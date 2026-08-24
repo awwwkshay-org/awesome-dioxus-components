@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "style": "default",
+  "theme": { "tokens": "shadcn", "darkMode": "class" },
+  "paths": { "components": "src/components", "ui": "src/components/ui", "lib": "src/lib", "hooks": "src/hooks" },
+  "css": { "entry": "assets/tailwind.css", "framework": "tailwind" },
+  "registries": { "@awwwkshay": { "kind": "https", "url": "http://ui.awwwkshay.example/registry.json" } },
+  "defaultRegistry": "@awwwkshay"
+}

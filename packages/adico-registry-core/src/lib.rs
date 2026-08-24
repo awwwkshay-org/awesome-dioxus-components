@@ -26,6 +26,9 @@ pub const ADICO_CLI_VERSION: &str = "0.1.0";
 /// The owned primitive API version understood by this registry-core release.
 pub const ADICO_PRIMITIVES_VERSION: &str = "0.1.0";
 
+/// The current schema version for a consumer project's `components.json`.
+pub const COMPONENTS_CONFIGURATION_VERSION: u32 = 1;
+
 /// A stable, named registry namespace such as `@adico` or `@awwwkshay`.
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd, Serialize)]
 #[serde(transparent)]
@@ -355,6 +358,177 @@ pub struct RegistrySourceConfiguration {
     pub registries: BTreeMap<RegistryNamespace, RegistrySource>,
     /// Namespace used to resolve bare component names.
     pub default_registry: RegistryNamespace,
+}
+
+/// Consumer-owned, versioned configuration stored in `components.json`.
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ComponentsConfiguration {
+    /// Optional published JSON Schema identifier for editor integrations.
+    #[serde(rename = "$schema", default)]
+    pub schema: Option<String>,
+    /// Versioned configuration shape, independent from registry format version.
+    pub version: u32,
+    /// Selected registry component visual style.
+    pub style: String,
+    /// Theme/token conventions used by source-installed components.
+    pub theme: ThemeConfiguration,
+    /// Consumer-owned source destinations.
+    pub paths: ComponentPaths,
+    /// The CSS entry point adico may manage through explicit markers.
+    pub css: CssConfiguration,
+    /// Registry source definitions by stable namespace.
+    pub registries: BTreeMap<RegistryNamespace, RegistrySource>,
+    /// Namespace used to resolve bare registry addresses.
+    pub default_registry: RegistryNamespace,
+}
+
+/// Theme choices retained in consumer configuration rather than hidden in CLI state.
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ThemeConfiguration {
+    /// Semantic token set installed into the configured CSS entry.
+    pub tokens: String,
+    /// Dark-mode selection strategy, initially `class`.
+    pub dark_mode: String,
+}
+
+/// Logical component paths resolved by registry target roots.
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ComponentPaths {
+    /// General component source directory.
+    pub components: String,
+    /// Styled UI component source directory.
+    pub ui: String,
+    /// Source-installed utility directory.
+    pub lib: String,
+    /// Source-installed hook directory.
+    pub hooks: String,
+}
+
+/// CSS entry configuration for the selected Dioxus/Tailwind workflow.
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct CssConfiguration {
+    /// CSS file relative to the detected consumer project root.
+    pub entry: String,
+    /// CSS framework integration selected by initialization.
+    pub framework: String,
+}
+
+impl ComponentsConfiguration {
+    /// Parses and validates a v1 `components.json` document.
+    ///
+    /// No released pre-v1 adico configuration exists. Missing, v0, and newer
+    /// versions are rejected explicitly rather than guessed or silently
+    /// rewritten; `adico init` will be the only creator of a fresh v1 config.
+    pub fn parse(contents: &str) -> Result<Self, RegistryError> {
+        let configuration = serde_json::from_str::<Self>(contents).map_err(|error| {
+            RegistryError::MalformedComponentsConfiguration {
+                message: error.to_string(),
+            }
+        })?;
+        configuration.validate()?;
+        Ok(configuration)
+    }
+
+    /// Validates path, registry-source, and default-registry invariants.
+    pub fn validate(&self) -> Result<(), RegistryError> {
+        if self.version != COMPONENTS_CONFIGURATION_VERSION {
+            return Err(RegistryError::UnsupportedComponentsConfigurationVersion {
+                actual: self.version,
+                supported: COMPONENTS_CONFIGURATION_VERSION,
+            });
+        }
+        if self.style.trim().is_empty() {
+            return Err(RegistryError::InvalidComponentsConfigurationValue {
+                field: "style".to_string(),
+                reason: "must not be empty".to_string(),
+            });
+        }
+        if self.theme.tokens.trim().is_empty() || self.theme.dark_mode.trim().is_empty() {
+            return Err(RegistryError::InvalidComponentsConfigurationValue {
+                field: "theme".to_string(),
+                reason: "tokens and darkMode must not be empty".to_string(),
+            });
+        }
+        for (field, path) in [
+            ("paths.components", &self.paths.components),
+            ("paths.ui", &self.paths.ui),
+            ("paths.lib", &self.paths.lib),
+            ("paths.hooks", &self.paths.hooks),
+            ("css.entry", &self.css.entry),
+        ] {
+            validate_project_relative_path(field, path)?;
+        }
+        if self.css.framework.trim().is_empty() {
+            return Err(RegistryError::InvalidComponentsConfigurationValue {
+                field: "css.framework".to_string(),
+                reason: "must not be empty".to_string(),
+            });
+        }
+        if self.registries.is_empty() {
+            return Err(RegistryError::InvalidComponentsConfigurationValue {
+                field: "registries".to_string(),
+                reason: "must define at least one named registry source".to_string(),
+            });
+        }
+        for (namespace, source) in &self.registries {
+            validate_configured_registry_source(namespace, source)?;
+        }
+        if !self.registries.contains_key(&self.default_registry) {
+            return Err(RegistryError::UnknownDefaultRegistry {
+                namespace: self.default_registry.to_string(),
+            });
+        }
+        Ok(())
+    }
+}
+
+fn validate_project_relative_path(field: &str, value: &str) -> Result<(), RegistryError> {
+    let path = Path::new(value);
+    if value.trim().is_empty() || path.is_absolute() {
+        return Err(RegistryError::InvalidComponentsConfigurationPath {
+            field: field.to_string(),
+            path: value.to_string(),
+            reason: "must be a non-empty path relative to the consumer project root".to_string(),
+        });
+    }
+    if path.components().any(|component| {
+        matches!(
+            component,
+            Component::RootDir | Component::Prefix(_) | Component::CurDir | Component::ParentDir
+        )
+    }) {
+        return Err(RegistryError::InvalidComponentsConfigurationPath {
+            field: field.to_string(),
+            path: value.to_string(),
+            reason: "must not contain '.', '..', a root, or a platform prefix".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn validate_configured_registry_source(
+    namespace: &RegistryNamespace,
+    source: &RegistrySource,
+) -> Result<(), RegistryError> {
+    match source {
+        RegistrySource::Embedded => Ok(()),
+        RegistrySource::Local { path } => {
+            if path.trim().is_empty() || Path::new(path).is_absolute() {
+                return Err(RegistryError::InvalidComponentsConfigurationPath {
+                    field: format!("registries.{namespace}.path"),
+                    path: path.clone(),
+                    reason: "must be a non-empty path relative to the consumer project root"
+                        .to_string(),
+                });
+            }
+            Ok(())
+        }
+        RegistrySource::Https { url } => parse_https_url(url).map(|_| ()),
+    }
 }
 
 /// Immutable content supplied by the CLI for the embedded official registry.
@@ -1319,6 +1493,46 @@ pub enum RegistryError {
     /// An item name is not portable across registries.
     #[error("invalid registry item name {0:?}; use lowercase letters, digits, or hyphens")]
     InvalidItemName(String),
+    /// `components.json` could not be parsed as the supported configuration shape.
+    #[error("components.json is malformed: {message}")]
+    MalformedComponentsConfiguration {
+        /// JSON/schema parsing reason.
+        message: String,
+    },
+    /// A consumer configuration version has no supported automatic migration.
+    #[error(
+        "components.json version {actual} is unsupported; this adico build supports version {supported}. Run `adico init` to create or explicitly migrate a v{supported} configuration."
+    )]
+    UnsupportedComponentsConfigurationVersion {
+        /// Version declared in the consumer file.
+        actual: u32,
+        /// Version supported by this build.
+        supported: u32,
+    },
+    /// A consumer configuration field has an unsafe or non-portable path.
+    #[error("components.json {field} path {path:?} is invalid: {reason}")]
+    InvalidComponentsConfigurationPath {
+        /// Configuration field name.
+        field: String,
+        /// Invalid configured path.
+        path: String,
+        /// Validation reason.
+        reason: String,
+    },
+    /// A consumer configuration field is missing a required meaningful value.
+    #[error("components.json {field} is invalid: {reason}")]
+    InvalidComponentsConfigurationValue {
+        /// Configuration field name.
+        field: String,
+        /// Validation reason.
+        reason: String,
+    },
+    /// The default registry was not declared among named sources.
+    #[error("components.json defaultRegistry {namespace} is not configured")]
+    UnknownDefaultRegistry {
+        /// Missing default registry namespace.
+        namespace: String,
+    },
     /// The manifest format cannot be interpreted by this CLI/core version.
     #[error("unsupported registry format {actual}; this build supports format {supported}")]
     UnsupportedFormat {
@@ -1601,6 +1815,15 @@ mod tests {
         .expect("fixture should be readable")
     }
 
+    fn components_fixture(name: &str) -> String {
+        fs::read_to_string(
+            PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+                .join("../../tests/compile/components")
+                .join(name),
+        )
+        .expect("components fixture should be readable")
+    }
+
     fn fixture_loader() -> RegistrySourceLoader<FixtureHttpClient> {
         RegistrySourceLoader::with_client(
             EmbeddedRegistry::new(
@@ -1749,6 +1972,48 @@ mod tests {
             "../../../tests/compile/registry/invalid-item-type.json"
         ));
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn components_configuration_accepts_official_and_company_registry_defaults() {
+        let official = ComponentsConfiguration::parse(&components_fixture("official-valid.json"))
+            .expect("official default should be valid");
+        assert_eq!(official.default_registry.as_str(), "@adico");
+
+        let company =
+            ComponentsConfiguration::parse(&components_fixture("company-default-valid.json"))
+                .expect("company default should be valid");
+        assert_eq!(company.default_registry.as_str(), "@awwwkshay");
+        assert!(matches!(
+            company.registries.get(&company.default_registry),
+            Some(RegistrySource::Https { .. })
+        ));
+    }
+
+    #[test]
+    fn components_configuration_rejects_unsafe_paths_http_and_unknown_versions() {
+        assert!(matches!(
+            ComponentsConfiguration::parse(&components_fixture("invalid-path.json"))
+                .expect_err("parent path must fail"),
+            RegistryError::InvalidComponentsConfigurationPath { .. }
+        ));
+        assert!(matches!(
+            ComponentsConfiguration::parse(&components_fixture("invalid-url.json"))
+                .expect_err("HTTP source must fail"),
+            RegistryError::InvalidHttpsUrl { .. }
+        ));
+        assert!(matches!(
+            ComponentsConfiguration::parse(&components_fixture("unsupported-version.json"))
+                .expect_err("unknown version must fail without migration"),
+            RegistryError::UnsupportedComponentsConfigurationVersion { .. }
+        ));
+        let invalid_namespace =
+            components_fixture("official-valid.json").replace("@adico", "@Awwwkshay");
+        assert!(matches!(
+            ComponentsConfiguration::parse(&invalid_namespace)
+                .expect_err("namespace grammar must be enforced"),
+            RegistryError::MalformedComponentsConfiguration { .. }
+        ));
     }
 
     #[test]

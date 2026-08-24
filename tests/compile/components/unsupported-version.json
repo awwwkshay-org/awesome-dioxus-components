@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "style": "default",
+  "theme": { "tokens": "shadcn", "darkMode": "class" },
+  "paths": { "components": "src/components", "ui": "src/components/ui", "lib": "src/lib", "hooks": "src/hooks" },
+  "css": { "entry": "assets/tailwind.css", "framework": "tailwind" },
+  "registries": { "@adico": { "kind": "embedded" } },
+  "defaultRegistry": "@adico"
+}

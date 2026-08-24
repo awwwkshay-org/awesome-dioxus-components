@@ -1,0 +1,18 @@
+{
+  "$schema": "https://adico.dev/schema/components.json/v1",
+  "version": 1,
+  "style": "default",
+  "theme": { "tokens": "shadcn", "darkMode": "class" },
+  "paths": {
+    "components": "src/components",
+    "ui": "src/components/ui",
+    "lib": "src/lib",
+    "hooks": "src/hooks"
+  },
+  "css": { "entry": "assets/tailwind.css", "framework": "tailwind" },
+  "registries": {
+    "@adico": { "kind": "embedded" },
+    "@awwwkshay": { "kind": "https", "url": "https://ui.awwwkshay.example/registry.json" }
+  },
+  "defaultRegistry": "@awwwkshay"
+}
