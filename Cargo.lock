@@ -99,6 +99,7 @@ dependencies = [
 name = "adico-xtask"
 version = "0.1.0"
 dependencies = [
+ "adico-registry-core",
  "serde",
  "serde_json",
 ]

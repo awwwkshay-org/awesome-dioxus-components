@@ -1,12 +1,14 @@
 //! Repository automation for Awesome Dioxus Components.
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use serde::{Deserialize, Serialize};
+
+use adico_registry_core::{RegistryCompatibility, RegistryManifest, RegistryNamespace};
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -26,12 +28,29 @@ struct DioxusComponentsSnapshot {
     primitive_source_paths: Vec<String>,
 }
 
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+struct GeneratedRegistryIndex {
+    format_version: u32,
+    namespace: RegistryNamespace,
+    name: String,
+    description: Option<String>,
+    compatibility: RegistryCompatibility,
+    items: BTreeMap<String, String>,
+}
+
 fn main() {
     let arguments: Vec<_> = env::args().skip(1).collect();
     match arguments.as_slice() {
         [command, subcommand] if command == "provenance" && subcommand == "check" => {
             if let Err(error) = check_provenance() {
                 eprintln!("provenance check failed: {error}");
+                std::process::exit(1);
+            }
+        }
+        [command, subcommand] if command == "registry" && subcommand == "build" => {
+            if let Err(error) = build_registry() {
+                eprintln!("registry build failed: {error}");
                 std::process::exit(1);
             }
         }
@@ -77,11 +96,71 @@ fn main() {
         }
         _ => {
             eprintln!(
-                "usage:\n  cargo xtask provenance check\n  cargo xtask upstream dioxus-components\n  cargo xtask upstream dioxus-components --source <local-clone> --refreshed-at <YYYY-MM-DD> [--write]"
+                "usage:\n  cargo xtask provenance check\n  cargo xtask registry build\n  cargo xtask upstream dioxus-components\n  cargo xtask upstream dioxus-components --source <local-clone> --refreshed-at <YYYY-MM-DD> [--write]"
             );
             std::process::exit(2);
         }
     }
+}
+
+fn build_registry() -> Result<(), String> {
+    let root = repository_root()?;
+    let manifest_path = root.join("registry/registry.json");
+    let contents = fs::read_to_string(&manifest_path)
+        .map_err(|error| format!("cannot read {}: {error}", manifest_path.display()))?;
+    let manifest: RegistryManifest = serde_json::from_str(&contents)
+        .map_err(|error| format!("{} is invalid: {error}", manifest_path.display()))?;
+    manifest
+        .validate()
+        .map_err(|error| format!("{} is invalid: {error}", manifest_path.display()))?;
+
+    let generated_root = root.join("registry/generated");
+    let payload_root = generated_root.join("items");
+    fs::create_dir_all(&payload_root)
+        .map_err(|error| format!("cannot create {}: {error}", payload_root.display()))?;
+
+    let mut item_paths = BTreeMap::new();
+    let mut items = manifest.items.clone();
+    items.sort_by(|left, right| left.name.cmp(&right.name));
+    for item in items {
+        let relative_path = format!("items/{}.json", item.name);
+        let payload = serde_json::to_string_pretty(&item)
+            .map_err(|error| format!("cannot serialize item {}: {error}", item.name))?;
+        write_if_changed(
+            &generated_root.join(&relative_path),
+            &format!("{payload}\n"),
+        )?;
+        item_paths.insert(item.name, relative_path);
+    }
+
+    let index = GeneratedRegistryIndex {
+        format_version: manifest.format_version,
+        namespace: manifest.namespace,
+        name: manifest.name,
+        description: manifest.description,
+        compatibility: manifest.compatibility,
+        items: item_paths,
+    };
+    let item_count = index.items.len();
+    let index = serde_json::to_string_pretty(&index)
+        .map_err(|error| format!("cannot serialize generated registry index: {error}"))?;
+    let index_path = generated_root.join("index.json");
+    write_if_changed(&index_path, &format!("{index}\n"))?;
+    println!(
+        "registry build passed: {} item payload(s) at {}",
+        item_count,
+        generated_root.display()
+    );
+    Ok(())
+}
+
+fn write_if_changed(path: &Path, contents: &str) -> Result<(), String> {
+    let existing = fs::read_to_string(path).ok();
+    if existing.as_deref() != Some(contents) {
+        fs::write(path, contents)
+            .map_err(|error| format!("cannot write {}: {error}", path.display()))?;
+    }
+    Ok(())
 }
 
 fn report_dioxus_components_snapshot() -> Result<(), String> {

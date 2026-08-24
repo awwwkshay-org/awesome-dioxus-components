@@ -1,0 +1,11 @@
+{
+  "formatVersion": 1,
+  "namespace": "@adico",
+  "name": "Awesome Dioxus Components",
+  "description": "The official source-owned Dioxus component registry.",
+  "compatibility": {
+    "cli": ">=0.1.0",
+    "runtime": null
+  },
+  "items": {}
+}
