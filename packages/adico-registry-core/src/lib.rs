@@ -1257,12 +1257,33 @@ impl<Client: RegistryHttpClient> RegistrySourceLoader<Client> {
         registry: &LoadedRegistry,
         relative_path: &Path,
     ) -> Result<Vec<u8>, RegistryError> {
-        match &registry.location {
+        self.read_source_location(&registry.location, relative_path)
+    }
+
+    /// Reads a source file for a resolved item while retaining its registry
+    /// location. CLI installers use this after dependency resolution, so local
+    /// and static-HTTPS organization registries use the same checked source
+    /// path as validation.
+    pub fn read_resolved_source(
+        &self,
+        item: &ResolvedRegistryItem,
+        source: &str,
+    ) -> Result<Vec<u8>, RegistryError> {
+        let relative_path = validated_relative_path(source, "source")?;
+        self.read_source_location(&item.location, &relative_path)
+    }
+
+    fn read_source_location(
+        &self,
+        location: &RegistryLocation,
+        relative_path: &Path,
+    ) -> Result<Vec<u8>, RegistryError> {
+        match location {
             RegistryLocation::Embedded {
                 source_root, label, ..
             } => read_local_source(source_root, relative_path, label),
             RegistryLocation::Local { source_root, .. } => {
-                read_local_source(source_root, relative_path, &registry.location.to_string())
+                read_local_source(source_root, relative_path, &location.to_string())
             }
             RegistryLocation::Https { source_root, .. } => {
                 let url = source_root

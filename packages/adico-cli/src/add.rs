@@ -579,6 +579,9 @@ mod tests {
         RegistryNamespace, RegistrySource, RegistrySourceLoader, StyleRequirements,
     };
     use std::collections::BTreeMap;
+    use std::sync::atomic::{AtomicUsize, Ordering};
+
+    static TEMPORARY_DIRECTORY_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
     #[derive(Default)]
     struct FixtureReader {
@@ -602,8 +605,11 @@ mod tests {
             .duration_since(UNIX_EPOCH)
             .expect("valid system time")
             .as_nanos();
-        let root =
-            std::env::temp_dir().join(format!("adico-add-test-{}-{nonce}", std::process::id()));
+        let sequence = TEMPORARY_DIRECTORY_COUNTER.fetch_add(1, Ordering::Relaxed);
+        let root = std::env::temp_dir().join(format!(
+            "adico-add-test-{}-{nonce}-{sequence}",
+            std::process::id()
+        ));
         fs::create_dir_all(&root).expect("temporary project should be created");
         root
     }

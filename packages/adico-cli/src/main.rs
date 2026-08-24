@@ -7,8 +7,9 @@ use adico_cli::add::{AddError, RegistryFileReader, plan_component_add};
 use adico_cli::init::{InitOptions, plan_init};
 use adico_cli::project::discover_dioxus_project;
 use adico_registry_core::{
-    ComponentsConfiguration, LoadedRegistry, RegistryAddress, RegistryCatalog, RegistryLocation,
-    RegistryNamespace, RegistrySource, ResolvedRegistryItem,
+    ComponentsConfiguration, EmbeddedRegistry, LoadedRegistry, RegistryAddress, RegistryCatalog,
+    RegistryLocation, RegistryNamespace, RegistrySource, RegistrySourceLoader,
+    ResolvedRegistryItem,
 };
 
 fn main() {
@@ -61,22 +62,20 @@ fn run_add(arguments: &[String]) {
             std::process::exit(1);
         }
     };
-    let mut catalog = RegistryCatalog::new();
-    let official = LoadedRegistry::from_embedded_manifest(
-        include_bytes!("../../../registry/registry.json"),
-        "embedded official registry",
-    )
-    .expect("checked-in official manifest is valid");
-    catalog
-        .insert(official)
-        .expect("official registry namespace is unique");
+    let (catalog, reader) = match configured_catalog(root, &configuration) {
+        Ok(result) => result,
+        Err(error) => {
+            eprintln!("adico add: {error}");
+            std::process::exit(1);
+        }
+    };
     let plan = match plan_component_add(
         &catalog,
         root,
         &project.package_manifest_path,
         &configuration,
         &requests,
-        &EmbeddedReader,
+        &reader,
     ) {
         Ok(plan) => plan,
         Err(error) => {
@@ -121,8 +120,52 @@ fn parse_add_options(arguments: &[String]) -> Result<(Vec<RegistryAddress>, bool
     Ok((requests, dry_run))
 }
 
-struct EmbeddedReader;
-impl RegistryFileReader for EmbeddedReader {
+fn configured_catalog(
+    project_root: &std::path::Path,
+    configuration: &ComponentsConfiguration,
+) -> Result<(RegistryCatalog, ConfiguredRegistryReader), String> {
+    let official_manifest = include_bytes!("../../../registry/registry.json");
+    let loader = RegistrySourceLoader::new(EmbeddedRegistry::new(official_manifest, project_root));
+    let mut catalog = RegistryCatalog::new();
+    for (namespace, configured_source) in &configuration.registries {
+        if matches!(configured_source, RegistrySource::Embedded) {
+            let official = LoadedRegistry::from_embedded_manifest(
+                official_manifest,
+                "embedded official registry",
+            )
+            .map_err(|error| error.to_string())?;
+            if &official.manifest.namespace != namespace {
+                return Err(format!(
+                    "embedded registry is {}; it cannot be configured as {}",
+                    official.manifest.namespace, namespace
+                ));
+            }
+            catalog
+                .insert(official)
+                .map_err(|error| error.to_string())?;
+            continue;
+        }
+        let source = match configured_source {
+            RegistrySource::Local { path } => RegistrySource::Local {
+                path: project_root.join(path).display().to_string(),
+            },
+            source => source.clone(),
+        };
+        let registry = loader
+            .load(namespace, &source)
+            .map_err(|error| error.to_string())?;
+        catalog
+            .insert(registry)
+            .map_err(|error| error.to_string())?;
+    }
+    Ok((catalog, ConfiguredRegistryReader { loader }))
+}
+
+struct ConfiguredRegistryReader {
+    loader: RegistrySourceLoader,
+}
+
+impl RegistryFileReader for ConfiguredRegistryReader {
     fn read(&self, item: &ResolvedRegistryItem, source: &str) -> Result<Vec<u8>, AddError> {
         match (&item.location, source) {
             (RegistryLocation::Embedded { .. }, "lib/cn.rs") => {
@@ -131,11 +174,18 @@ impl RegistryFileReader for EmbeddedReader {
             (RegistryLocation::Embedded { .. }, "ui/button.rs") => {
                 Ok(include_bytes!("../../../registry/ui/button.rs").to_vec())
             }
-            _ => Err(AddError::ReadFailed {
+            (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"
                     .to_string(),
             }),
+            _ => self
+                .loader
+                .read_resolved_source(item, source)
+                .map_err(|error| AddError::ReadFailed {
+                    path: format!("{} from {}", source, item.location),
+                    message: error.to_string(),
+                }),
         }
     }
 }
@@ -259,4 +309,84 @@ fn display_paths(paths: &[PathBuf]) -> String {
         .map(|path| path.display().to_string())
         .collect::<Vec<_>>()
         .join(", ")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use adico_registry_core::{ComponentPaths, CssConfiguration, ThemeConfiguration};
+    use sha2::{Digest, Sha256};
+    use std::collections::BTreeMap;
+    use std::fs;
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    fn checksum(bytes: &[u8]) -> String {
+        format!("{:x}", Sha256::digest(bytes))
+    }
+
+    #[test]
+    fn bare_requests_use_the_project_selected_local_registry() {
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("valid time")
+            .as_nanos();
+        let root = std::env::temp_dir().join(format!(
+            "adico-configured-registry-test-{}-{nonce}",
+            std::process::id()
+        ));
+        let registry = root.join("company-registry");
+        fs::create_dir_all(registry.join("ui")).expect("registry directory should exist");
+        let source = b"pub fn company_button() {}\n";
+        fs::write(registry.join("ui/button.rs"), source).expect("registry source should exist");
+        fs::write(
+            registry.join("registry.json"),
+            format!(
+                r#"{{"formatVersion":1,"namespace":"@awwwkshay","name":"company","compatibility":{{"cli":">=0.1.0"}},"items":[{{"name":"button","type":"registry:ui","description":"company button","files":[{{"source":"ui/button.rs","targetRoot":"ui","target":"button.rs","checksum":"{}"}}]}}]}}"#,
+                checksum(source)
+            ),
+        )
+        .expect("registry manifest should exist");
+        let company: RegistryNamespace = "@awwwkshay".parse().expect("valid namespace");
+        let configuration = ComponentsConfiguration {
+            schema: None,
+            version: 1,
+            style: "default".to_string(),
+            theme: ThemeConfiguration {
+                tokens: "shadcn".to_string(),
+                dark_mode: "class".to_string(),
+            },
+            paths: ComponentPaths {
+                components: "src/components".to_string(),
+                ui: "src/components/ui".to_string(),
+                lib: "src/adico_lib".to_string(),
+                hooks: "src/hooks".to_string(),
+            },
+            css: CssConfiguration {
+                entry: "assets/tailwind.css".to_string(),
+                framework: "tailwind".to_string(),
+            },
+            registries: BTreeMap::from([
+                (
+                    "@adico".parse().expect("valid namespace"),
+                    RegistrySource::Embedded,
+                ),
+                (
+                    company.clone(),
+                    RegistrySource::Local {
+                        path: "company-registry".to_string(),
+                    },
+                ),
+            ]),
+            default_registry: company,
+        };
+        let (catalog, _) = configured_catalog(&root, &configuration).expect("catalog should load");
+        let plan = catalog
+            .resolve(
+                &configuration.default_registry,
+                &[RegistryAddress::parse("button").expect("valid request")],
+            )
+            .expect("bare company item should resolve");
+        assert_eq!(plan.items[0].address.to_string(), "@awwwkshay/button");
+        fs::remove_dir_all(root).expect("temporary project should be removable");
+    }
 }
