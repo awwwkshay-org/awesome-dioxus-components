@@ -3,18 +3,139 @@
 use std::env;
 use std::path::PathBuf;
 
+use adico_cli::add::{AddError, RegistryFileReader, plan_component_add};
 use adico_cli::init::{InitOptions, plan_init};
-use adico_registry_core::{RegistryNamespace, RegistrySource};
+use adico_cli::project::discover_dioxus_project;
+use adico_registry_core::{
+    ComponentsConfiguration, LoadedRegistry, RegistryAddress, RegistryCatalog, RegistryLocation,
+    RegistryNamespace, RegistrySource, ResolvedRegistryItem,
+};
 
 fn main() {
     let arguments: Vec<_> = env::args().skip(1).collect();
     match arguments.first().map(String::as_str) {
         Some("init") => run_init(&arguments[1..]),
+        Some("add") => run_add(&arguments[1..]),
         _ => {
             eprintln!(
-                "usage:\n  adico init [--default-registry <@namespace>] [--registry <@namespace>=<embedded|relative-path|https-url>] [--dry-run]"
+                "usage:\n  adico init [--default-registry <@namespace>] [--registry <@namespace>=<embedded|relative-path|https-url>] [--dry-run]\n  adico add <component...> [--dry-run]"
             );
             std::process::exit(2);
+        }
+    }
+}
+
+fn run_add(arguments: &[String]) {
+    let (requests, dry_run) = match parse_add_options(arguments) {
+        Ok(options) => options,
+        Err(error) => {
+            eprintln!("adico add: {error}");
+            std::process::exit(2);
+        }
+    };
+    let current = match env::current_dir() {
+        Ok(path) => path,
+        Err(error) => {
+            eprintln!("adico add: cannot determine current directory: {error}");
+            std::process::exit(1);
+        }
+    };
+    let project = match discover_dioxus_project(&current) {
+        Ok(project) => project,
+        Err(error) => {
+            eprintln!("adico add: {error}");
+            std::process::exit(1);
+        }
+    };
+    let root = project
+        .package_manifest_path
+        .parent()
+        .expect("manifest has parent");
+    let configuration = match std::fs::read_to_string(root.join("components.json"))
+        .ok()
+        .and_then(|contents| ComponentsConfiguration::parse(&contents).ok())
+    {
+        Some(configuration) => configuration,
+        None => {
+            eprintln!("adico add: valid components.json is required; run adico init first");
+            std::process::exit(1);
+        }
+    };
+    let mut catalog = RegistryCatalog::new();
+    let official = LoadedRegistry::from_embedded_manifest(
+        include_bytes!("../../../registry/registry.json"),
+        "embedded official registry",
+    )
+    .expect("checked-in official manifest is valid");
+    catalog
+        .insert(official)
+        .expect("official registry namespace is unique");
+    let plan = match plan_component_add(
+        &catalog,
+        root,
+        &project.package_manifest_path,
+        &configuration,
+        &requests,
+        &EmbeddedReader,
+    ) {
+        Ok(plan) => plan,
+        Err(error) => {
+            eprintln!("adico add: {error}");
+            std::process::exit(1);
+        }
+    };
+    println!(
+        "adico add plan: {}",
+        plan.install
+            .items
+            .iter()
+            .map(|item| item.address.to_string())
+            .collect::<Vec<_>>()
+            .join(", ")
+    );
+    if dry_run {
+        return;
+    }
+    if let Err(error) = plan.apply() {
+        eprintln!("adico add: {error}");
+        std::process::exit(1);
+    }
+    println!("adico add complete.");
+}
+
+fn parse_add_options(arguments: &[String]) -> Result<(Vec<RegistryAddress>, bool), String> {
+    let mut dry_run = false;
+    let mut requests = Vec::new();
+    for argument in arguments {
+        if argument == "--dry-run" {
+            dry_run = true;
+        } else if argument.starts_with('-') {
+            return Err(format!("unknown add option {argument:?}"));
+        } else {
+            requests.push(RegistryAddress::parse(argument).map_err(|error| error.to_string())?);
+        }
+    }
+    if requests.is_empty() {
+        return Err("at least one component is required".to_string());
+    }
+    Ok((requests, dry_run))
+}
+
+struct EmbeddedReader;
+impl RegistryFileReader for EmbeddedReader {
+    fn read(&self, item: &ResolvedRegistryItem, source: &str) -> Result<Vec<u8>, AddError> {
+        match (&item.location, source) {
+            (RegistryLocation::Embedded { .. }, "lib/cn.rs") => {
+                Ok(include_bytes!("../../../registry/lib/cn.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/button.rs") => {
+                Ok(include_bytes!("../../../registry/ui/button.rs").to_vec())
+            }
+            _ => Err(AddError::ReadFailed {
+                path: format!("{} from {}", source, item.location),
+                message: "this adico binary does not embed the requested registry source"
+                    .to_string(),
+            }),
         }
     }
 }

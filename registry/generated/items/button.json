@@ -1,0 +1,46 @@
+{
+  "name": "button",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style semantic button for Dioxus.",
+  "files": [
+    {
+      "source": "ui/button.rs",
+      "targetRoot": "ui",
+      "target": "button.rs",
+      "checksum": "be0370c99c085c132da73dc4d77733d362f466905942a8d6ab3d93e0c5c304a7"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "button",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "button",
+    "compositionNote": "Use the Dioxus Lucide icon crate (`dioxus-icons`) from consumer composition when an icon is needed; Button itself embeds no SVG markup."
+  },
+  "compatibility": null,
+  "provenance": null
+}

@@ -10,6 +10,9 @@ use adico_registry_core::{
 };
 use thiserror::Error;
 
+use crate::modules::{
+    ModuleExportRequest, ModuleUpdatePlan, plan_entrypoint_module_update, plan_module_update,
+};
 use crate::project::{DioxusProject, ProjectDiscoveryError, discover_dioxus_project};
 
 /// User-selected initialization inputs. The official registry is always
@@ -57,6 +60,10 @@ pub struct InitPlan {
     pub directories_to_create: Vec<PathBuf>,
     /// Rust module roots reserved for later marker-region setup.
     pub module_roots: Vec<PathBuf>,
+    /// Explicit entrypoint-owned declarations that expose generated roots.
+    pub entrypoint_modules: ModuleUpdatePlan,
+    /// Generated nested module roots required by the default layout.
+    pub module_setup: Vec<ModuleUpdatePlan>,
     /// CSS entry reserved for the later marker-owned theme installer.
     pub css_entry: PathBuf,
     write_configuration: bool,
@@ -65,7 +72,10 @@ pub struct InitPlan {
 impl InitPlan {
     /// Returns whether applying this plan will make any filesystem changes.
     pub fn has_changes(&self) -> bool {
-        self.write_configuration || !self.directories_to_create.is_empty()
+        self.write_configuration
+            || !self.directories_to_create.is_empty()
+            || self.entrypoint_modules.has_changes()
+            || self.module_setup.iter().any(ModuleUpdatePlan::has_changes)
     }
 
     /// Applies an already reviewed plan without overwriting consumer files.
@@ -75,6 +85,14 @@ impl InitPlan {
                 path: directory.display().to_string(),
                 message: error.to_string(),
             })?;
+        }
+        self.entrypoint_modules
+            .apply()
+            .map_err(|error| InitError::Module(error.to_string()))?;
+        for module in &self.module_setup {
+            module
+                .apply()
+                .map_err(|error| InitError::Module(error.to_string()))?;
         }
         if self.write_configuration {
             let contents = serde_json::to_string_pretty(&self.configuration).map_err(|error| {
@@ -141,6 +159,34 @@ pub fn plan_init(start: &Path, options: &InitOptions) -> Result<InitPlan, InitEr
         };
 
     let paths = configuration.paths.clone();
+    let entrypoint_modules = plan_entrypoint_module_update(
+        &project.entrypoint,
+        &[
+            ModuleExportRequest {
+                module: "components".to_string(),
+                reexport: false,
+            },
+            ModuleExportRequest {
+                module: "adico_lib".to_string(),
+                reexport: false,
+            },
+        ],
+    )
+    .map_err(|error| InitError::Module(error.to_string()))?;
+    let module_setup = vec![
+        plan_module_update(
+            project_root.join(&paths.components).join("mod.rs"),
+            &[ModuleExportRequest {
+                module: "ui".to_string(),
+                reexport: true,
+            }],
+        )
+        .map_err(|error| InitError::Module(error.to_string()))?,
+        plan_module_update(project_root.join(&paths.ui).join("mod.rs"), &[])
+            .map_err(|error| InitError::Module(error.to_string()))?,
+        plan_module_update(project_root.join(&paths.lib).join("mod.rs"), &[])
+            .map_err(|error| InitError::Module(error.to_string()))?,
+    ];
     let css_entry = project_root.join(&configuration.css.entry);
     let requested_directories = [
         project_root.join(&paths.components),
@@ -167,6 +213,8 @@ pub fn plan_init(start: &Path, options: &InitOptions) -> Result<InitPlan, InitEr
             project_root.join(&paths.components),
             project_root.join(&paths.ui),
         ],
+        entrypoint_modules,
+        module_setup,
         css_entry,
         write_configuration,
     })
@@ -184,7 +232,7 @@ fn default_configuration(options: InitOptions) -> ComponentsConfiguration {
         paths: ComponentPaths {
             components: "src/components".to_string(),
             ui: "src/components/ui".to_string(),
-            lib: "src/lib".to_string(),
+            lib: "src/adico_lib".to_string(),
             hooks: "src/hooks".to_string(),
         },
         css: CssConfiguration {
@@ -230,6 +278,9 @@ pub enum InitError {
         /// Serialization failure.
         message: String,
     },
+    /// The explicit entrypoint-owned region could not be prepared safely.
+    #[error("cannot prepare adico entrypoint module region: {0}")]
+    Module(String),
 }
 
 #[cfg(test)]

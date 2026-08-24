@@ -1,16 +1,21 @@
 //! Plan-first source installation and lockfile management for `adico add`.
 
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use adico_registry_core::{
-    ComponentsConfiguration, RegistryCatalog, RegistryError, RegistryInstallPlan,
-    RegistryItemAddress, ResolvedRegistryItem, TargetRoot,
+    ComponentsConfiguration, RegistryAddress, RegistryCatalog, RegistryError, RegistryInstallPlan,
+    RegistryItemAddress, ResolvedRegistryItem, TargetRoot, unify_cargo_dependencies,
 };
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use thiserror::Error;
+
+use crate::cargo::{CargoEditPlan, plan_cargo_dependency_edits};
+use crate::css::{CssThemePlan, plan_theme_install};
+use crate::modules::{ModuleExportRequest, ModuleUpdatePlan, plan_module_update};
 
 /// Source-byte boundary used by local, embedded, and HTTPS registry transports.
 pub trait RegistryFileReader {
@@ -248,6 +253,90 @@ pub fn plan_source_install<R: RegistryFileReader>(
     })
 }
 
+/// Complete Button-era add plan: all mutable consumer surfaces are validated
+/// before any one of them is applied.
+#[derive(Clone, Debug)]
+pub struct ComponentAddPlan {
+    pub install: RegistryInstallPlan,
+    pub source: AddPlan,
+    pub cargo: CargoEditPlan,
+    pub modules: Vec<ModuleUpdatePlan>,
+    pub theme: Option<CssThemePlan>,
+}
+
+impl ComponentAddPlan {
+    pub fn has_changes(&self) -> bool {
+        self.source.has_changes()
+            || self.cargo.has_changes()
+            || self.modules.iter().any(ModuleUpdatePlan::has_changes)
+            || self.theme.as_ref().is_some_and(CssThemePlan::has_changes)
+    }
+
+    pub fn apply(&self) -> Result<(), ComponentAddError> {
+        self.cargo.apply()?;
+        if let Some(theme) = &self.theme {
+            theme.apply()?;
+        }
+        for module in &self.modules {
+            module.apply()?;
+        }
+        self.source.apply()?;
+        Ok(())
+    }
+}
+
+/// Resolves named items, then validates source, Cargo, module, and theme edits
+/// as one reviewable plan.
+pub fn plan_component_add<R: RegistryFileReader>(
+    catalog: &RegistryCatalog,
+    project_root: &Path,
+    manifest_path: &Path,
+    configuration: &ComponentsConfiguration,
+    requests: &[RegistryAddress],
+    reader: &R,
+) -> Result<ComponentAddPlan, ComponentAddError> {
+    let install = catalog
+        .resolve(&configuration.default_registry, requests)
+        .map_err(|error| ComponentAddError::Registry(Box::new(error)))?;
+    let source = plan_source_install(project_root, configuration, &install, reader)?;
+    let requirements = unify_cargo_dependencies(&install)
+        .map_err(|error| ComponentAddError::Registry(Box::new(error)))?;
+    let cargo = plan_cargo_dependency_edits(manifest_path, &requirements)?;
+    let mut exports = BTreeMap::<TargetRoot, Vec<ModuleExportRequest>>::new();
+    let requires_theme = install
+        .items
+        .iter()
+        .any(|item| item.item.style.semantic_tokens || item.item.style.radius_token);
+    for item in &install.items {
+        for export in &item.item.module_exports {
+            exports
+                .entry(export.target_root.clone())
+                .or_default()
+                .push(ModuleExportRequest {
+                    module: export.module.clone(),
+                    reexport: export.reexport,
+                });
+        }
+    }
+    let mut modules = Vec::new();
+    for (root, requests) in exports {
+        let path = project_root
+            .join(target_root_path(configuration, &root)?)
+            .join("mod.rs");
+        modules.push(plan_module_update(path, &requests)?);
+    }
+    let theme = requires_theme
+        .then(|| plan_theme_install(project_root.join(&configuration.css.entry)))
+        .transpose()?;
+    Ok(ComponentAddPlan {
+        install,
+        source,
+        cargo,
+        modules,
+        theme,
+    })
+}
+
 /// A deterministic `adico add --all` plan. The resolved install sequence is
 /// retained for review/output, while its source writes use the same preflight
 /// and transactional apply behavior as explicitly requested items.
@@ -468,6 +557,20 @@ pub enum AddAllError {
     Source(#[from] AddError),
 }
 
+#[derive(Debug, Error)]
+pub enum ComponentAddError {
+    #[error(transparent)]
+    Registry(Box<RegistryError>),
+    #[error(transparent)]
+    Source(#[from] AddError),
+    #[error(transparent)]
+    Cargo(#[from] crate::cargo::CargoEditError),
+    #[error(transparent)]
+    Module(#[from] crate::modules::ModuleError),
+    #[error(transparent)]
+    Theme(#[from] crate::css::CssThemeError),
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -517,7 +620,7 @@ mod tests {
             paths: ComponentPaths {
                 components: "src/components".to_string(),
                 ui: "src/components/ui".to_string(),
-                lib: "src/lib".to_string(),
+                lib: "src/adico_lib".to_string(),
                 hooks: "src/hooks".to_string(),
             },
             css: adico_registry_core::CssConfiguration {
@@ -759,7 +862,7 @@ mod tests {
             ["@awwwkshay/utility", "@awwwkshay/button", "@awwwkshay/card"]
         );
         plan.apply().expect("all company sources should install");
-        assert!(root.join("src/lib/utility.rs").is_file());
+        assert!(root.join("src/adico_lib/utility.rs").is_file());
         assert!(root.join("src/components/ui/button.rs").is_file());
         assert!(root.join("src/components/ui/card.rs").is_file());
         assert!(

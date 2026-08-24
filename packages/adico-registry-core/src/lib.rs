@@ -233,7 +233,7 @@ pub struct RegistryFile {
 }
 
 /// Consumer destination roots resolved through `components.json`.
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub enum TargetRoot {
     /// The UI-component destination.
@@ -603,6 +603,33 @@ pub struct LoadedRegistry {
 }
 
 impl LoadedRegistry {
+    /// Creates an embedded registry from manifest bytes already compiled into
+    /// the `adico` executable. Authored source bytes are verified again by the
+    /// CLI file reader immediately before they can be installed.
+    pub fn from_embedded_manifest(
+        manifest_bytes: &[u8],
+        label: impl Into<String>,
+    ) -> Result<Self, RegistryError> {
+        let label = label.into();
+        let manifest: RegistryManifest =
+            serde_json::from_slice(manifest_bytes).map_err(|error| {
+                RegistryError::MalformedManifest {
+                    registry_source: label.clone(),
+                    message: error.to_string(),
+                }
+            })?;
+        manifest.validate()?;
+        validate_compatibility(&manifest.compatibility, &manifest.namespace, "registry")?;
+        Ok(Self {
+            manifest,
+            location: RegistryLocation::Embedded {
+                label,
+                source_root: PathBuf::new(),
+            },
+            manifest_digest: sha256_hex(manifest_bytes),
+        })
+    }
+
     /// Returns the SHA-256 digest of the exact manifest bytes that were loaded.
     pub fn manifest_digest(&self) -> &str {
         &self.manifest_digest

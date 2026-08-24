@@ -82,6 +82,38 @@ pub fn plan_module_update(
     Ok(ModuleUpdatePlan { path, contents })
 }
 
+/// Plans an entrypoint-owned module region. Unlike a nested `mod.rs`, a Rust
+/// application entrypoint is allowed to gain one new marker region at EOF so
+/// `adico init` can expose its generated top-level module trees without
+/// touching user code. Once present, the region follows the ordinary strict
+/// marker rules.
+pub fn plan_entrypoint_module_update(
+    path: impl Into<PathBuf>,
+    requests: &[ModuleExportRequest],
+) -> Result<ModuleUpdatePlan, ModuleError> {
+    let path = path.into();
+    let entries = normalized_entries(requests)?;
+    let managed_body = managed_body(&entries);
+    let existing = fs::read_to_string(&path).map_err(|error| ModuleError::ReadFailed {
+        path: path.display().to_string(),
+        message: error.to_string(),
+    })?;
+    let updated = match (
+        marker_positions(&existing, MANAGED_REGION_START),
+        marker_positions(&existing, MANAGED_REGION_END),
+    ) {
+        (starts, ends) if starts.is_empty() && ends.is_empty() => format!(
+            "{}\n\n{MANAGED_REGION_START}\n{managed_body}{MANAGED_REGION_END}\n",
+            existing.trim_end()
+        ),
+        _ => replace_managed_region(&existing, &managed_body)?,
+    };
+    Ok(ModuleUpdatePlan {
+        path,
+        contents: (updated != existing).then_some(updated),
+    })
+}
+
 fn normalized_entries(
     requests: &[ModuleExportRequest],
 ) -> Result<BTreeMap<String, bool>, ModuleError> {
@@ -280,5 +312,38 @@ mod tests {
         );
         fs::remove_dir_all(path.ancestors().nth(4).expect("temp root should exist"))
             .expect("test directory should be removable");
+    }
+
+    #[test]
+    fn appends_one_entrypoint_region_and_then_remains_idempotent() {
+        let path = temporary_module_path();
+        fs::create_dir_all(path.parent().expect("module parent should exist"))
+            .expect("module parent should be created");
+        fs::write(&path, "fn main() {}\n").expect("entrypoint should be written");
+        let plan = plan_entrypoint_module_update(
+            &path,
+            &[ModuleExportRequest {
+                module: "components".to_string(),
+                reexport: false,
+            }],
+        )
+        .expect("entrypoint should plan");
+        plan.apply().expect("entrypoint plan should apply");
+        let updated = fs::read_to_string(&path).expect("entrypoint should be readable");
+        assert!(updated.starts_with("fn main() {}\n"));
+        assert!(updated.contains("// adico:start\npub mod components;\n// adico:end"));
+        assert!(
+            !plan_entrypoint_module_update(
+                &path,
+                &[ModuleExportRequest {
+                    module: "components".to_string(),
+                    reexport: false,
+                }]
+            )
+            .expect("repeat should plan")
+            .has_changes()
+        );
+        fs::remove_dir_all(path.ancestors().nth(4).expect("temp root should exist"))
+            .expect("temporary directory should be removable");
     }
 }

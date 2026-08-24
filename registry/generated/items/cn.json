@@ -1,0 +1,33 @@
+{
+  "name": "cn",
+  "type": "registry:lib",
+  "description": "Small source-owned helper for composing Tailwind class fragments.",
+  "files": [
+    {
+      "source": "lib/cn.rs",
+      "targetRoot": "lib",
+      "target": "cn.rs",
+      "checksum": "76e269ea046b2a9f53d7c43e3c78d2f0afd3aea964d18b2aa10878e49676c2ed"
+    }
+  ],
+  "registryDependencies": [],
+  "cargoDependencies": [],
+  "style": {
+    "semanticTokens": false,
+    "radiusToken": false,
+    "utilities": []
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "lib",
+      "module": "cn",
+      "reexport": false
+    }
+  ],
+  "documentation": {
+    "slug": "cn",
+    "compositionNote": null
+  },
+  "compatibility": null,
+  "provenance": null
+}

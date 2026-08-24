@@ -182,7 +182,7 @@ configuration. Its v1 shape includes:
   "paths": {
     "components": "src/components",
     "ui": "src/components/ui",
-    "lib": "src/lib",
+    "lib": "src/adico_lib",
     "hooks": "src/hooks"
   },
   "css": { "entry": "assets/tailwind.css", "framework": "tailwind" },

@@ -6,5 +6,52 @@
   "compatibility": {
     "cli": ">=0.1.0"
   },
-  "items": []
+  "items": [
+    {
+      "name": "cn",
+      "type": "registry:lib",
+      "description": "Small source-owned helper for composing Tailwind class fragments.",
+      "files": [
+        {
+          "source": "lib/cn.rs",
+          "targetRoot": "lib",
+          "target": "cn.rs",
+          "checksum": "76e269ea046b2a9f53d7c43e3c78d2f0afd3aea964d18b2aa10878e49676c2ed"
+        }
+      ],
+      "moduleExports": [
+        { "targetRoot": "lib", "module": "cn", "reexport": false }
+      ],
+      "documentation": { "slug": "cn" }
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style semantic button for Dioxus.",
+      "files": [
+        {
+          "source": "ui/button.rs",
+          "targetRoot": "ui",
+          "target": "button.rs",
+          "checksum": "be0370c99c085c132da73dc4d77733d362f466905942a8d6ab3d93e0c5c304a7"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "button", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "button",
+        "compositionNote": "Use the Dioxus Lucide icon crate (`dioxus-icons`) from consumer composition when an icon is needed; Button itself embeds no SVG markup."
+      }
+    }
+  ]
 }
