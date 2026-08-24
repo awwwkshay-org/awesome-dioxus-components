@@ -1,0 +1,46 @@
+{
+  "name": "card",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style card shell composition for Dioxus.",
+  "files": [
+    {
+      "source": "ui/card.rs",
+      "targetRoot": "ui",
+      "target": "card.rs",
+      "checksum": "21c18ff94eaff7d7685c83edbdd4927f98fa09d8f8a5a5a9d0f4dbe87a3e6e72"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "card",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "card",
+    "compositionNote": null
+  },
+  "compatibility": null,
+  "provenance": null
+}

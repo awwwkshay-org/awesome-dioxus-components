@@ -421,6 +421,74 @@ fn source_lock_refresh_merges_items_across_separate_add_invocations() {
     assert!(project.exists("src/components/ui/dialog.rs"));
 }
 
+#[test]
+fn wave1_batch_add_installs_every_migrated_item_once() {
+    let project = fixture_project("=0.7.9");
+    init(&project);
+
+    // The M3 Wave 1 migration batch: every item with no new adico-primitives
+    // dependency ("sheet" reuses the already-owned dialog primitive).
+    let output = project.adico(&[
+        "add",
+        "badge",
+        "card",
+        "input",
+        "item",
+        "pagination",
+        "skeleton",
+        "textarea",
+        "sheet",
+    ]);
+    assert!(
+        output.status.success(),
+        "wave 1 batch add should succeed: {}",
+        stderr(&output)
+    );
+    let report = stdout(&output);
+    for address in [
+        "@adico/badge",
+        "@adico/card",
+        "@adico/input",
+        "@adico/item",
+        "@adico/pagination",
+        "@adico/skeleton",
+        "@adico/textarea",
+        "@adico/sheet",
+        "@adico/cn",
+    ] {
+        assert!(
+            report.contains(address),
+            "{report} should mention {address}"
+        );
+    }
+
+    for file in [
+        "badge.rs",
+        "card.rs",
+        "input.rs",
+        "item.rs",
+        "pagination.rs",
+        "skeleton.rs",
+        "textarea.rs",
+        "sheet.rs",
+    ] {
+        assert!(
+            project.exists(&format!("src/components/ui/{file}")),
+            "{file} should be installed"
+        );
+    }
+    // "skeleton" has no cn registryDependency edge, but every other Wave 1
+    // item does, so cn must still be installed exactly once overall.
+    assert!(project.exists("src/adico_lib/cn.rs"));
+
+    let lock = project.read("adico.lock");
+    assert_eq!(lock.matches("\"address\": \"@adico/cn\"").count(), 1);
+
+    // "sheet" is the only Wave 1 item that pulls in the owned primitive crate.
+    let manifest = project.read("Cargo.toml");
+    assert!(manifest.contains("adico-primitives"));
+}
+
 /// Sanity check on the fixture helper itself: two independent fixtures never
 /// collide on disk.
 #[test]

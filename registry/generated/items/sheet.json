@@ -1,0 +1,59 @@
+{
+  "name": "sheet",
+  "type": "registry:ui",
+  "description": "A source-owned slide-in Sheet for Dioxus, composing the owned Dialog primitive.",
+  "files": [
+    {
+      "source": "ui/sheet.rs",
+      "targetRoot": "ui",
+      "target": "sheet.rs",
+      "checksum": "86794c7ab1dc401702e780e7cf3bb29ae8f51e4534800fe1601a0bda39b2bdfe"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "sheet",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "sheet",
+    "compositionNote": "Composes the owned dialog primitive directly (SheetTitle/SheetDescription/Sheet re-export the Dialog primitive's parts); the styled wrapper only adds the slide-in side variant and positioning."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-dialog-select.json",
+    "revision": null
+  }
+}

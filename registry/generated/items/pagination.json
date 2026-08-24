@@ -1,0 +1,46 @@
+{
+  "name": "pagination",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Pagination composition for Dioxus.",
+  "files": [
+    {
+      "source": "ui/pagination.rs",
+      "targetRoot": "ui",
+      "target": "pagination.rs",
+      "checksum": "ce086999b837e57e1f42dd0528f4cb428c94c50fa4fe752f6597a95ff2b11c4b"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "pagination",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "pagination",
+    "compositionNote": null
+  },
+  "compatibility": null,
+  "provenance": null
+}

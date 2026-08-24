@@ -8,9 +8,17 @@
     "runtime": null
   },
   "items": {
+    "badge": "items/badge.json",
     "button": "items/button.json",
+    "card": "items/card.json",
     "cn": "items/cn.json",
     "dialog": "items/dialog.json",
-    "select": "items/select.json"
+    "input": "items/input.json",
+    "item": "items/item.json",
+    "pagination": "items/pagination.json",
+    "select": "items/select.json",
+    "sheet": "items/sheet.json",
+    "skeleton": "items/skeleton.json",
+    "textarea": "items/textarea.json"
   }
 }

@@ -1,0 +1,46 @@
+{
+  "name": "item",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Item composition for rows of media, content, and actions.",
+  "files": [
+    {
+      "source": "ui/item.rs",
+      "targetRoot": "ui",
+      "target": "item.rs",
+      "checksum": "b8a8ea06f467214fcc12ea7f41251a533e2ec1ac46cfb2ed3f51fb99cadce9d8"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "item",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "item",
+    "compositionNote": null
+  },
+  "compatibility": null,
+  "provenance": null
+}

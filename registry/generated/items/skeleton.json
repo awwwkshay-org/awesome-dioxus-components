@@ -1,0 +1,42 @@
+{
+  "name": "skeleton",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style pulsing loading placeholder for Dioxus.",
+  "files": [
+    {
+      "source": "ui/skeleton.rs",
+      "targetRoot": "ui",
+      "target": "skeleton.rs",
+      "checksum": "10a86b0dc6312f839ab4c878c4abdbe904c94e140f23e9910e75cc810e8bc3d6"
+    }
+  ],
+  "registryDependencies": [],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": []
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "skeleton",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "skeleton",
+    "compositionNote": null
+  },
+  "compatibility": null,
+  "provenance": null
+}

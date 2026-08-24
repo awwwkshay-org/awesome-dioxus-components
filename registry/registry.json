@@ -112,6 +112,217 @@
         "compositionNote": "The copied façade re-exports the owned Select parts; applications can style each primitive part directly with Dioxus class attributes while the runtime retains keyboard, typeahead, and ARIA behavior."
       },
       "provenance": { "record": "provenance/records/adico-primitives-dialog-select.json" }
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style status/label badge for Dioxus.",
+      "files": [
+        {
+          "source": "ui/badge.rs",
+          "targetRoot": "ui",
+          "target": "badge.rs",
+          "checksum": "fcb45a4fc9f2f63906c3d23f7897b462926a20f21f9a9f9ad4bc331e4acf1717"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "badge", "reexport": true }
+      ],
+      "documentation": { "slug": "badge" }
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style card shell composition for Dioxus.",
+      "files": [
+        {
+          "source": "ui/card.rs",
+          "targetRoot": "ui",
+          "target": "card.rs",
+          "checksum": "21c18ff94eaff7d7685c83edbdd4927f98fa09d8f8a5a5a9d0f4dbe87a3e6e72"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "card", "reexport": true }
+      ],
+      "documentation": { "slug": "card" }
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style single-line text input for Dioxus.",
+      "files": [
+        {
+          "source": "ui/input.rs",
+          "targetRoot": "ui",
+          "target": "input.rs",
+          "checksum": "c0157e83ff2686cf20e7141cb9bb9b9bdfea136e537f40a95d7135a779928baf"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "input", "reexport": true }
+      ],
+      "documentation": { "slug": "input" }
+    },
+    {
+      "name": "item",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Item composition for rows of media, content, and actions.",
+      "files": [
+        {
+          "source": "ui/item.rs",
+          "targetRoot": "ui",
+          "target": "item.rs",
+          "checksum": "b8a8ea06f467214fcc12ea7f41251a533e2ec1ac46cfb2ed3f51fb99cadce9d8"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "item", "reexport": true }
+      ],
+      "documentation": { "slug": "item" }
+    },
+    {
+      "name": "pagination",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Pagination composition for Dioxus.",
+      "files": [
+        {
+          "source": "ui/pagination.rs",
+          "targetRoot": "ui",
+          "target": "pagination.rs",
+          "checksum": "ce086999b837e57e1f42dd0528f4cb428c94c50fa4fe752f6597a95ff2b11c4b"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "pagination", "reexport": true }
+      ],
+      "documentation": { "slug": "pagination" }
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style pulsing loading placeholder for Dioxus.",
+      "files": [
+        {
+          "source": "ui/skeleton.rs",
+          "targetRoot": "ui",
+          "target": "skeleton.rs",
+          "checksum": "10a86b0dc6312f839ab4c878c4abdbe904c94e140f23e9910e75cc810e8bc3d6"
+        }
+      ],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "skeleton", "reexport": true }
+      ],
+      "documentation": { "slug": "skeleton" }
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style multi-line text input for Dioxus.",
+      "files": [
+        {
+          "source": "ui/textarea.rs",
+          "targetRoot": "ui",
+          "target": "textarea.rs",
+          "checksum": "a1545ae64651efad56a541ef109083d5ffe64aee592ee9d4a264dbcde8997098"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "textarea", "reexport": true }
+      ],
+      "documentation": { "slug": "textarea" }
+    },
+    {
+      "name": "sheet",
+      "type": "registry:ui",
+      "description": "A source-owned slide-in Sheet for Dioxus, composing the owned Dialog primitive.",
+      "files": [
+        {
+          "source": "ui/sheet.rs",
+          "targetRoot": "ui",
+          "target": "sheet.rs",
+          "checksum": "86794c7ab1dc401702e780e7cf3bb29ae8f51e4534800fe1601a0bda39b2bdfe"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "sheet", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "sheet",
+        "compositionNote": "Composes the owned dialog primitive directly (SheetTitle/SheetDescription/Sheet re-export the Dialog primitive's parts); the styled wrapper only adds the slide-in side variant and positioning."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-dialog-select.json" }
     }
   ]
 }

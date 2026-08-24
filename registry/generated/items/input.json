@@ -1,0 +1,46 @@
+{
+  "name": "input",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style single-line text input for Dioxus.",
+  "files": [
+    {
+      "source": "ui/input.rs",
+      "targetRoot": "ui",
+      "target": "input.rs",
+      "checksum": "c0157e83ff2686cf20e7141cb9bb9b9bdfea136e537f40a95d7135a779928baf"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "input",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "input",
+    "compositionNote": null
+  },
+  "compatibility": null,
+  "provenance": null
+}

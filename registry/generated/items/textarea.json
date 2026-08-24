@@ -1,0 +1,46 @@
+{
+  "name": "textarea",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style multi-line text input for Dioxus.",
+  "files": [
+    {
+      "source": "ui/textarea.rs",
+      "targetRoot": "ui",
+      "target": "textarea.rs",
+      "checksum": "a1545ae64651efad56a541ef109083d5ffe64aee592ee9d4a264dbcde8997098"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "textarea",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "textarea",
+    "compositionNote": null
+  },
+  "compatibility": null,
+  "provenance": null
+}

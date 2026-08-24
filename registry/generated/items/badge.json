@@ -1,0 +1,46 @@
+{
+  "name": "badge",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style status/label badge for Dioxus.",
+  "files": [
+    {
+      "source": "ui/badge.rs",
+      "targetRoot": "ui",
+      "target": "badge.rs",
+      "checksum": "fcb45a4fc9f2f63906c3d23f7897b462926a20f21f9a9f9ad4bc331e4acf1717"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "badge",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "badge",
+    "compositionNote": null
+  },
+  "compatibility": null,
+  "provenance": null
+}

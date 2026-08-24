@@ -424,6 +424,30 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/select.rs") => {
                 Ok(include_bytes!("../../../registry/ui/select.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/badge.rs") => {
+                Ok(include_bytes!("../../../registry/ui/badge.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/card.rs") => {
+                Ok(include_bytes!("../../../registry/ui/card.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/input.rs") => {
+                Ok(include_bytes!("../../../registry/ui/input.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/item.rs") => {
+                Ok(include_bytes!("../../../registry/ui/item.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/pagination.rs") => {
+                Ok(include_bytes!("../../../registry/ui/pagination.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/skeleton.rs") => {
+                Ok(include_bytes!("../../../registry/ui/skeleton.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/textarea.rs") => {
+                Ok(include_bytes!("../../../registry/ui/textarea.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/sheet.rs") => {
+                Ok(include_bytes!("../../../registry/ui/sheet.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"
@@ -654,10 +678,18 @@ mod tests {
                 .map(|item| item.address.to_string())
                 .collect::<Vec<_>>(),
             vec![
+                "@adico/badge".to_string(),
                 "@adico/button".to_string(),
+                "@adico/card".to_string(),
                 "@adico/cn".to_string(),
                 "@adico/dialog".to_string(),
+                "@adico/input".to_string(),
+                "@adico/item".to_string(),
+                "@adico/pagination".to_string(),
                 "@adico/select".to_string(),
+                "@adico/sheet".to_string(),
+                "@adico/skeleton".to_string(),
+                "@adico/textarea".to_string(),
             ]
         );
         let official_plan = catalog
