@@ -10,6 +10,7 @@
   "items": {
     "button": "items/button.json",
     "cn": "items/cn.json",
-    "dialog": "items/dialog.json"
+    "dialog": "items/dialog.json",
+    "select": "items/select.json"
   }
 }

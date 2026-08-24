@@ -1,0 +1,6 @@
+[application]
+name = "adico-select-consumer"
+default_platform = "web"
+
+[web.app]
+title = "adico Select fixture"

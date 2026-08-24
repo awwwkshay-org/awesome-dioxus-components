@@ -1,0 +1,55 @@
+{
+  "name": "select",
+  "type": "registry:ui",
+  "description": "A source-owned compositional select with keyboard navigation and typeahead.",
+  "files": [
+    {
+      "source": "ui/select.rs",
+      "targetRoot": "ui",
+      "target": "select.rs",
+      "checksum": "1605d470dd7708ebc905ad7ae472a705ca7ee0c52cece52da168ceec0ee70301"
+    }
+  ],
+  "registryDependencies": [],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": []
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "select",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "select",
+    "compositionNote": "The copied façade re-exports the owned Select parts; applications can style each primitive part directly with Dioxus class attributes while the runtime retains keyboard, typeahead, and ARIA behavior."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-dialog-select.json",
+    "revision": null
+  }
+}

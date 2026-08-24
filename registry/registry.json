@@ -83,6 +83,35 @@
         "compositionNote": "The public copied API remains compositional; focus management, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives."
       },
       "provenance": { "record": "provenance/records/adico-primitives-dialog-select.json" }
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "description": "A source-owned compositional select with keyboard navigation and typeahead.",
+      "files": [
+        {
+          "source": "ui/select.rs",
+          "targetRoot": "ui",
+          "target": "select.rs",
+          "checksum": "1605d470dd7708ebc905ad7ae472a705ca7ee0c52cece52da168ceec0ee70301"
+        }
+      ],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "select", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "select",
+        "compositionNote": "The copied façade re-exports the owned Select parts; applications can style each primitive part directly with Dioxus class attributes while the runtime retains keyboard, typeahead, and ARIA behavior."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-dialog-select.json" }
     }
   ]
 }
