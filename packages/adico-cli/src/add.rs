@@ -298,6 +298,31 @@ pub fn plan_component_add<R: RegistryFileReader>(
     let install = catalog
         .resolve(&configuration.default_registry, requests)
         .map_err(|error| ComponentAddError::Registry(Box::new(error)))?;
+    plan_component_install(project_root, manifest_path, configuration, install, reader)
+}
+
+/// Resolves every item in the selected default registry and validates every
+/// consumer surface required by that complete install set.
+pub fn plan_component_add_all<R: RegistryFileReader>(
+    catalog: &RegistryCatalog,
+    project_root: &Path,
+    manifest_path: &Path,
+    configuration: &ComponentsConfiguration,
+    reader: &R,
+) -> Result<ComponentAddPlan, ComponentAddError> {
+    let install = catalog
+        .resolve_all(&configuration.default_registry)
+        .map_err(|error| ComponentAddError::Registry(Box::new(error)))?;
+    plan_component_install(project_root, manifest_path, configuration, install, reader)
+}
+
+fn plan_component_install<R: RegistryFileReader>(
+    project_root: &Path,
+    manifest_path: &Path,
+    configuration: &ComponentsConfiguration,
+    install: RegistryInstallPlan,
+    reader: &R,
+) -> Result<ComponentAddPlan, ComponentAddError> {
     let source = plan_source_install(project_root, configuration, &install, reader)?;
     let requirements = unify_cargo_dependencies(&install)
         .map_err(|error| ComponentAddError::Registry(Box::new(error)))?;
