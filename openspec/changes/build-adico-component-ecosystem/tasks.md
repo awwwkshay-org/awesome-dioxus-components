@@ -46,7 +46,7 @@
 - [x] 3.18 Add CLI integration tests for multi-item add, repeated add, shared dependencies, Cargo conflicts, file conflicts, malformed modules, dry-plan output, incompatible registry sources, and source-lock refresh behavior; verify the installation test suite passes.
 - [x] 3.19 Create an Awwwkshay curated-registry fixture with a local and static-HTTPS manifest, select it as `defaultRegistry`, and install bare plus explicit `@adico` items; verify dependency namespaces, generated source provenance, and consumer build outcomes are correct.
 - [x] 3.20 Add vertical-slice SSR/hydration and desktop smoke validation with recorded target outcomes; verify `parity.json` contains evidence/skip reasons for each selected component.
-- [ ] 3.21 Record M2 acceptance: registry source→metadata→resolution→CLI→Cargo/module/CSS→consumer build/runtime pipeline passes for Button, Dialog, and the selected richer component from the official registry and a configured organization registry; verify the end-to-end acceptance command is documented and reproducible.
+- [x] 3.21 Record M2 acceptance: registry source→metadata→resolution→CLI→Cargo/module/CSS→consumer build/runtime pipeline passes for Button, Dialog, and the selected richer component from the official registry and a configured organization registry; verify the end-to-end acceptance command is documented and reproducible.
 
 ## 4. M3 — Existing component migration
 
