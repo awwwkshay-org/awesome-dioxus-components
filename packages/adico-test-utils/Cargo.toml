@@ -6,3 +6,4 @@ license.workspace = true
 description = "Reusable test utilities for Awesome Dioxus Components"
 
 [dependencies]
+adico-primitives = { path = "../adico-primitives", features = ["test-utils"] }

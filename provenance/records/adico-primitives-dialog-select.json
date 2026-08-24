@@ -1,0 +1,55 @@
+{
+  "id": "adico-primitives-dialog-select",
+  "upstream": "https://github.com/DioxusLabs/dioxus-components",
+  "revision": "bf007c15d0cf4d04d3181cc46cf12325aa773955",
+  "license": ["MIT", "Apache-2.0"],
+  "importedAt": "2026-08-24",
+  "originalPaths": [
+    "primitives/src/lib.rs",
+    "primitives/src/dialog.rs",
+    "primitives/src/collection.rs",
+    "primitives/src/listbox.rs",
+    "primitives/src/selectable.rs",
+    "primitives/src/selection.rs",
+    "primitives/src/select/mod.rs",
+    "primitives/src/select/context.rs",
+    "primitives/src/select/text_search.rs",
+    "primitives/src/select/components/mod.rs",
+    "primitives/src/select/components/group.rs",
+    "primitives/src/select/components/list.rs",
+    "primitives/src/select/components/option.rs",
+    "primitives/src/select/components/select.rs",
+    "primitives/src/select/components/trigger.rs",
+    "primitives/src/select/components/value.rs",
+    "primitives/src/js/focus-trap.js"
+  ],
+  "localPaths": [
+    "packages/adico-primitives/src/lib.rs",
+    "packages/adico-primitives/src/dialog.rs",
+    "packages/adico-primitives/src/collection.rs",
+    "packages/adico-primitives/src/listbox.rs",
+    "packages/adico-primitives/src/selectable.rs",
+    "packages/adico-primitives/src/selection.rs",
+    "packages/adico-primitives/src/select/mod.rs",
+    "packages/adico-primitives/src/select/context.rs",
+    "packages/adico-primitives/src/select/text_search.rs",
+    "packages/adico-primitives/src/select/components/mod.rs",
+    "packages/adico-primitives/src/select/components/group.rs",
+    "packages/adico-primitives/src/select/components/list.rs",
+    "packages/adico-primitives/src/select/components/option.rs",
+    "packages/adico-primitives/src/select/components/select.rs",
+    "packages/adico-primitives/src/select/components/trigger.rs",
+    "packages/adico-primitives/src/select/components/value.rs",
+    "packages/adico-primitives/src/js/focus-trap.js"
+  ],
+  "changes": [
+    {
+      "date": "2026-08-24",
+      "summary": "Imported the minimal Dialog and Select primitive closure. Added SPDX/provenance headers, applied workspace rustfmt, renamed inherited doctest crate references to adico_primitives, and narrowed the public crate facade. DOM evaluation and focus trapping now sit behind explicit web/desktop runtime adapters with SSR-safe stubs; a test-only Select adapter supports common interaction helpers. Narrowly scoped lints preserve inherited private APIs and control flow until focused coverage permits refactoring. The internal module layout remains source-compatible for the initial fork."
+    }
+  ],
+  "notices": [
+    "Upstream is dual-licensed under MIT OR Apache-2.0; its LICENSE-MIT and LICENSE-APACHE texts are retained in third_party/dioxus-components/.",
+    "Each imported source unit identifies its immutable upstream revision and original path."
+  ]
+}

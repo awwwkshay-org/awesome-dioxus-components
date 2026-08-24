@@ -16,12 +16,12 @@
 - [x] 2.2 Classify every upstream styled component as `EXISTING_SHADCN_EQUIVALENT`, `EXISTING_DIOXUS_EXTRA`, `NEEDS_PARITY_UPDATES`, `NEEDS_PRIMITIVE_FIX`, or `NOT_SUITABLE_FOR_REUSE`; verify all inventory entries have one classification and rationale.
 - [x] 2.3 Map upstream styled components to the checked-in current shadcn catalog snapshot and record existing-shadcn matches, Dioxus-only extras, and tentative gap groups; verify the mapping has no unnamed upstream item.
 - [x] 2.4 Record the primitive dependency graph for all reusable candidates and select the minimal Button/Dialog/third-component runtime slice; verify the chosen third component is Select, Combobox, or Calendar based on actual source suitability and interaction coverage.
-- [ ] 2.5 Import/fork the selected primitive modules into `adico-primitives` with immutable provenance, retained notices, and public-facade boundaries; verify `adico-xtask provenance check` succeeds for every imported file.
-- [ ] 2.6 Preserve required upstream internal module structure for the initial primitive slice and add independent unit/compile coverage before refactoring; verify `cargo test -p adico-primitives --locked` passes.
-- [ ] 2.7 Add target-gated runtime adapters for SSR-safe behavior and the selected web/desktop capabilities; verify the primitive crate compiles for native, server, and `wasm32-unknown-unknown` targets required by the selected slice.
-- [ ] 2.8 Port or adapt reusable upstream test-harness helpers into `adico-test-utils`; verify a primitive-focused keyboard/focus test runs through the common helper.
-- [ ] 2.9 Add `adico-xtask upstream dioxus-components` inventory refresh and diff reporting; verify it produces no live-network requirement for normal CI after its snapshot is checked in.
-- [ ] 2.10 Record M1 acceptance: pinned inventory, classifications, provenance, selected owned primitives, and independent target checks are complete; verify all M1 reports are linked from `UPSTREAMS.md`.
+- [x] 2.5 Import/fork the selected primitive modules into `adico-primitives` with immutable provenance, retained notices, and public-facade boundaries; verify `adico-xtask provenance check` succeeds for every imported file.
+- [x] 2.6 Preserve required upstream internal module structure for the initial primitive slice and add independent unit/compile coverage before refactoring; verify `cargo test -p adico-primitives --locked` passes.
+- [x] 2.7 Add target-gated runtime adapters for SSR-safe behavior and the selected web/desktop capabilities; verify the primitive crate compiles for native, server, and `wasm32-unknown-unknown` targets required by the selected slice.
+- [x] 2.8 Port or adapt reusable upstream test-harness helpers into `adico-test-utils`; verify a primitive-focused keyboard/focus test runs through the common helper.
+- [x] 2.9 Add `adico-xtask upstream dioxus-components` inventory refresh and diff reporting; verify it produces no live-network requirement for normal CI after its snapshot is checked in.
+- [x] 2.10 Record M1 acceptance: pinned inventory, classifications, provenance, selected owned primitives, and independent target checks are complete; verify all M1 reports are linked from `UPSTREAMS.md`.
 
 ## 3. M2 — Registry and CLI vertical slice
 

@@ -6,3 +6,16 @@ license.workspace = true
 description = "Owned headless primitives for Awesome Dioxus Components"
 
 [dependencies]
+dioxus = { workspace = true }
+dioxus-core = "0.7.9"
+dioxus-sdk-time = "0.7.0"
+tracing = { workspace = true }
+
+[features]
+default = []
+# Enables browser DOM interop for WebAssembly consumers.
+web = []
+# Enables WebView DOM interop for Dioxus desktop consumers.
+desktop = []
+# Exposes narrowly scoped test adapters for `adico-test-utils`; not required by consumers.
+test-utils = []

@@ -10,9 +10,11 @@ generally declares `dioxus-primitives` and the shared
 `preview/assets/dx-components-theme.css`; Select, Combobox, and Calendar also
 declare `dioxus-icons =0.1.0`, while Calendar declares `time =0.3.44`.
 
-No upstream source has been imported into adico yet. Before any import, M1 must
-replace the example provenance record with one that names this exact revision
-and the actual imported paths.
+The Dialog/Select primitive closure has been imported into `adico-primitives`
+from this exact revision. Its 17 source units, retained license material, and
+local adapter changes are recorded in
+`provenance/records/adico-primitives-dialog-select.json`. The remaining
+inventory is audit input only and has not been imported.
 
 ## Styled component inventory
 

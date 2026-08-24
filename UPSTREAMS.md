@@ -25,10 +25,16 @@ they were imported together and have identical origin and license details.
 
 | Upstream | Intended use | License | Status |
 | --- | --- | --- | --- |
-| `DioxusLabs/dioxus-components` | Audited source for owned primitives and styled starting points | MIT OR Apache-2.0 | M1 inventory pending; no source imported yet. |
+| `DioxusLabs/dioxus-components` | Owned Dialog/Select primitive fork and future styled starting points | MIT OR Apache-2.0 | Dialog/Select closure imported from `bf007c15d0cf4d04d3181cc46cf12325aa773955`; see `provenance/records/adico-primitives-dialog-select.json`. |
 | `shadcn-ui/ui` | Catalog and behavior/parity reference | MIT | Snapshot/reference only; do not copy source without a record. |
 
 Company-curated registry authors are responsible for provenance records and
 license notices in their own registry source. Adico preserves a registry item's
 declared provenance in installation plans and does not imply that a company
 item is official adico source.
+
+## M1 evidence
+
+The pinned upstream inventory, owned Dialog/Select closure, target compilation
+results, and offline refresh command are recorded in
+[`docs/adico/m1-primitive-ownership.md`](docs/adico/m1-primitive-ownership.md).

@@ -72,6 +72,12 @@ dependencies = [
 [[package]]
 name = "adico-primitives"
 version = "0.1.0"
+dependencies = [
+ "dioxus",
+ "dioxus-core",
+ "dioxus-sdk-time",
+ "tracing",
+]
 
 [[package]]
 name = "adico-registry-core"
@@ -80,10 +86,17 @@ version = "0.1.0"
 [[package]]
 name = "adico-test-utils"
 version = "0.1.0"
+dependencies = [
+ "adico-primitives",
+]
 
 [[package]]
 name = "adico-xtask"
 version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+]
 
 [[package]]
 name = "adler2"
@@ -1601,6 +1614,18 @@ dependencies = [
  "quote",
  "rustversion",
  "syn 2.0.119",
+]
+
+[[package]]
+name = "dioxus-sdk-time"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "80c25ae93a3f72e734873b97fbd09d9b1b6adff97205fb0ffd8543e3564fb78e"
+dependencies = [
+ "dioxus",
+ "futures",
+ "gloo-timers",
+ "tokio",
 ]
 
 [[package]]
