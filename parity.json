@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "catalog": {
+    "status": "tracked",
+    "source": "https://github.com/shadcn-ui/ui",
+    "revision": "ac60ef5c4db4265d71454dd9ecd3f93e255d7211",
+    "refreshedAt": "2026-08-24"
+  },
+  "components": {}
+}

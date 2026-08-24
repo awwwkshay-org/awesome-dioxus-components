@@ -1,0 +1,12 @@
+[package]
+name = "adico-xtask"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Repository automation for Awesome Dioxus Components"
+
+[[bin]]
+name = "xtask"
+path = "src/main.rs"
+
+[dependencies]

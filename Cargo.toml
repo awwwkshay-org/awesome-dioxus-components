@@ -1,5 +1,21 @@
 [workspace]
-members = ["apps/awesome-dioxus-components-api", "apps/awesome-dioxus-components-ui", "packages/shared"]
+members = [
+    "apps/docs",
+    "apps/playground",
+    "examples/basic",
+    "examples/dashboard",
+    "examples/desktop",
+    "examples/forms",
+    "examples/fullstack",
+    "examples/kitchen-sink",
+    "examples/web",
+    "packages/adico-cli",
+    "packages/adico-primitives",
+    "packages/adico-registry-core",
+    "packages/adico-test-utils",
+    "packages/adico-xtask",
+    "packages/shared",
+]
 resolver = "3"
 
 [workspace.package]

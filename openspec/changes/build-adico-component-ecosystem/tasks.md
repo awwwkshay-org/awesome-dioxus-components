@@ -1,21 +1,21 @@
 ## 1. M0 — Repository and architecture foundation
 
-- [ ] 1.1 Audit the current Cargo workspace, current application/template assets, and OpenSpec baseline; record the disposition of every pre-adico package and verify the audit is reviewed in the M0 decision record.
-- [ ] 1.2 Define the target Cargo workspace members and create the `apps`, `packages`, `examples`, `registry`, `tests`, and `scripts` boundaries without moving implementation prematurely; verify `cargo metadata --locked` reports the intended skeleton.
-- [ ] 1.3 Create package skeletons for `adico-cli`, `adico-primitives`, `adico-registry-core`, `adico-test-utils`, and `adico-xtask`; verify each has a deliberate public boundary and the workspace builds with `cargo check --workspace --locked`.
-- [ ] 1.4 Create docs and playground application skeletons plus the basic, web, desktop, fullstack, forms, dashboard, and kitchen-sink example manifests; verify workspace members do not import registry UI source as a crate.
-- [ ] 1.5 Establish the test directory layout, CI baseline, and command matrix for formatting, lint, unit, compile, installation, browser, SSR/hydration, desktop, and visual checks; verify CI/documentation distinguish required from optional runners.
-- [ ] 1.6 Investigate and pin the Dioxus 0.7-compatible Tailwind workflow, CSS entry conventions, Lucide icon crate, browser test runner, and visual test tool; verify the resulting compatibility decision names tested versions, licenses, and platform support.
-- [ ] 1.7 Add repository dual-license files, contribution/provenance policy, and `UPSTREAMS.md`/record schema; verify a sample provenance record passes schema validation.
-- [ ] 1.8 Define the parity manifest JSON schema, source-of-truth ownership, evidence vocabulary, and offline validation rules; verify a minimal fixture is accepted and an incomplete-complete fixture is rejected.
-- [ ] 1.9 Record M0 acceptance: workspace/package boundaries, toolchain decisions, licensing policy, test baseline, and parity schema are approved; verify the decision record links all artifacts and `cargo fmt --all --check` passes.
+- [x] 1.1 Audit the current Cargo workspace, current application/template assets, and OpenSpec baseline; record the disposition of every pre-adico package and verify the audit is reviewed in the M0 decision record.
+- [x] 1.2 Define the target Cargo workspace members and create the `apps`, `packages`, `examples`, `registry`, `tests`, and `scripts` boundaries without moving implementation prematurely; verify `cargo metadata --locked` reports the intended skeleton.
+- [x] 1.3 Create package skeletons for `adico-cli`, `adico-primitives`, `adico-registry-core`, `adico-test-utils`, and `adico-xtask`; verify each has a deliberate public boundary and the workspace builds with `cargo check --workspace --locked`.
+- [x] 1.4 Create docs and playground application skeletons plus the basic, web, desktop, fullstack, forms, dashboard, and kitchen-sink example manifests; verify workspace members do not import registry UI source as a crate.
+- [x] 1.5 Establish the test directory layout, CI baseline, and command matrix for formatting, lint, unit, compile, installation, browser, SSR/hydration, desktop, and visual checks; verify CI/documentation distinguish required from optional runners.
+- [x] 1.6 Investigate and pin the Dioxus 0.7-compatible Tailwind workflow, CSS entry conventions, Lucide icon crate, browser test runner, and visual test tool; verify the resulting compatibility decision names tested versions, licenses, and platform support.
+- [x] 1.7 Add repository dual-license files, contribution/provenance policy, and `UPSTREAMS.md`/record schema; verify a sample provenance record passes schema validation.
+- [x] 1.8 Define the parity manifest JSON schema, source-of-truth ownership, evidence vocabulary, and offline validation rules; verify a minimal fixture is accepted and an incomplete-complete fixture is rejected.
+- [x] 1.9 Record M0 acceptance: workspace/package boundaries, toolchain decisions, licensing policy, test baseline, and parity schema are approved; verify the decision record links all artifacts and `cargo fmt --all --check` passes.
 
 ## 2. M1 — Upstream inventory and primitive ownership
 
-- [ ] 2.1 Fetch and pin the current `DioxusLabs/dioxus-components` revision; inventory every styled component, primitive, test, CSS/theme asset, dependency edge, and license source, and verify the inventory is reproducible from the pinned revision.
-- [ ] 2.2 Classify every upstream styled component as `EXISTING_SHADCN_EQUIVALENT`, `EXISTING_DIOXUS_EXTRA`, `NEEDS_PARITY_UPDATES`, `NEEDS_PRIMITIVE_FIX`, or `NOT_SUITABLE_FOR_REUSE`; verify all inventory entries have one classification and rationale.
-- [ ] 2.3 Map upstream styled components to the checked-in current shadcn catalog snapshot and record existing-shadcn matches, Dioxus-only extras, and tentative gap groups; verify the mapping has no unnamed upstream item.
-- [ ] 2.4 Record the primitive dependency graph for all reusable candidates and select the minimal Button/Dialog/third-component runtime slice; verify the chosen third component is Select, Combobox, or Calendar based on actual source suitability and interaction coverage.
+- [x] 2.1 Fetch and pin the current `DioxusLabs/dioxus-components` revision; inventory every styled component, primitive, test, CSS/theme asset, dependency edge, and license source, and verify the inventory is reproducible from the pinned revision.
+- [x] 2.2 Classify every upstream styled component as `EXISTING_SHADCN_EQUIVALENT`, `EXISTING_DIOXUS_EXTRA`, `NEEDS_PARITY_UPDATES`, `NEEDS_PRIMITIVE_FIX`, or `NOT_SUITABLE_FOR_REUSE`; verify all inventory entries have one classification and rationale.
+- [x] 2.3 Map upstream styled components to the checked-in current shadcn catalog snapshot and record existing-shadcn matches, Dioxus-only extras, and tentative gap groups; verify the mapping has no unnamed upstream item.
+- [x] 2.4 Record the primitive dependency graph for all reusable candidates and select the minimal Button/Dialog/third-component runtime slice; verify the chosen third component is Select, Combobox, or Calendar based on actual source suitability and interaction coverage.
 - [ ] 2.5 Import/fork the selected primitive modules into `adico-primitives` with immutable provenance, retained notices, and public-facade boundaries; verify `adico-xtask provenance check` succeeds for every imported file.
 - [ ] 2.6 Preserve required upstream internal module structure for the initial primitive slice and add independent unit/compile coverage before refactoring; verify `cargo test -p adico-primitives --locked` passes.
 - [ ] 2.7 Add target-gated runtime adapters for SSR-safe behavior and the selected web/desktop capabilities; verify the primitive crate compiles for native, server, and `wasm32-unknown-unknown` targets required by the selected slice.

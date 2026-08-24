@@ -24,26 +24,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
-    # #[sqlx::test] creates a temporary database per test using this connection
-    # as an administrative database, so the CI user must be allowed to CREATE DATABASE.
-    services:
-      postgres:
-        image: postgres:17-alpine
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: postgres
-          POSTGRES_HOST_AUTH_METHOD: trust
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres -d postgres"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 10
-
-    env:
-      DATABASE_URL: postgres://postgres@localhost:5432/postgres
-
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -65,49 +45,13 @@ jobs:
       - name: Verify formatting
         run: cargo fmt --all --check
 
-      - name: Lint API and shared crate
-        run: cargo clippy --locked --workspace --exclude awesome-dioxus-components-ui --all-targets -- -D warnings
+      - name: Check workspace skeleton
+        run: cargo check --locked --workspace
 
-      - name: Test API and shared crate
-        run: cargo test --locked --workspace --exclude awesome-dioxus-components-ui
+      - name: Lint core Rust crates
+        run: >-
+          cargo clippy --locked --workspace --all-targets --
+          -D warnings
 
-      - name: Lint Dioxus SSR server
-        run: cargo clippy --locked -p awesome-dioxus-components-ui --no-default-features --features server --all-targets -- -D warnings
-
-      - name: Lint Dioxus web client
-        run: cargo clippy --locked -p awesome-dioxus-components-ui --no-default-features --features web --target wasm32-unknown-unknown -- -D warnings
-
-  containers:
-    name: Build ${{ matrix.name }} image
-    needs: rust
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: API
-            dockerfile: apps/awesome-dioxus-components-api/Dockerfile
-            cache_scope: api
-          - name: UI SSR
-            dockerfile: apps/awesome-dioxus-components-ui/Dockerfile
-            cache_scope: ui
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          persist-credentials: false
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-
-      - name: Build image
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: ${{ matrix.dockerfile }}
-          push: false
-          cache-from: type=gha,scope=${{ matrix.cache_scope }}
-          cache-to: type=gha,scope=${{ matrix.cache_scope }},mode=max
-
+      - name: Test core Rust crates
+        run: cargo test --locked --workspace

@@ -1,59 +1,46 @@
 # Architecture
 
-This template favors a small number of clear deployables: a domain API and a
-Dioxus full-stack UI server. PostgreSQL is the only supporting service.
+Awesome Dioxus Components (`adico`) is a source-distribution ecosystem for
+Dioxus, not a conventional styled component crate. The user installs authored
+registry source into their own project and owns the resulting files.
 
 ```text
-web browser ── SSR/hydration ──► apps/awesome-dioxus-components-ui server ── HTTP/JSON ──► apps/awesome-dioxus-components-api ──► PostgreSQL
-native app  ── server functions ─────▲
-
-apps/awesome-dioxus-components-ui  ───────► packages/shared ◄────── apps/awesome-dioxus-components-api
+Dioxus
+  ↓
+adico-primitives
+  ↓
+registry source + metadata
+  ↓
+adico CLI / registry core
+  ↓
+consumer Dioxus application
 ```
 
-## Dependency rules
+## Boundaries
 
-- `shared` contains serializable API contracts and small domain value types.
-- `shared` must not depend on Axum, Dioxus, a database driver, or platform APIs.
-- `api` owns domain HTTP routes, persistence, and database migrations.
-- `ui` owns presentation plus an independent Dioxus server for SSR and server functions.
-- The UI never imports the API crate. The shared contract is their only compile-time coupling.
-- The UI server acts as a small backend-for-frontend (BFF); it forwards Todo operations to the API.
+- `packages/adico-primitives` owns stable, reusable headless behavior. It can
+  fork licensed Dioxus Components primitives, preserving provenance.
+- `packages/adico-registry-core` owns registry schemas, source loading,
+  dependency resolution, compatibility checks, and installation plans.
+- `packages/adico-cli` owns project discovery and safe changes to consumer
+  files, `Cargo.toml`, CSS, and managed Rust module regions.
+- `registry/` contains styled source, metadata, hooks, libraries, and blocks.
+  It is distribution input, not a Cargo styled-component package.
+- `apps/docs`, `apps/playground`, and `examples/` are maintained Dioxus apps.
+  Consumer-focused fixtures must exercise the CLI installation path rather than
+  import registry UI source through workspace paths.
 
-## Current vertical slice
+## Platform rules
 
-The Todo example demonstrates the minimum useful flow:
+Web, desktop, SSR, and fullstack are supported design targets. Browser-only
+behavior belongs behind target-aware primitive adapters; copied component APIs
+must not expose browser interop details. Native and SSR validation may be
+progressive, but skipped coverage is recorded rather than treated as a pass.
 
-```text
-Dioxus page → typed server function → UI server → Axum API → SQLx/PostgreSQL
-            ←────── shared Todo data ──────────────────────────
-```
+## Registry rules
 
-API routes (port 3001):
-
-- `GET /health`
-- `GET /api/todos`
-- `POST /api/todos`
-- `PATCH /api/todos/{id}/toggle`
-- `DELETE /api/todos/{id}`
-
-The UI server (port 8080) exposes matching server-function routes plus `/health`.
-On web, `use_server_future` resolves Todo data before the initial HTML is sent
-and Dioxus serializes that result for hydration. On mobile and desktop, SSR does
-not apply; the same function call is sent to the configured UI server URL.
-
-## Growing the template
-
-Prefer feature modules over horizontal folders once the API grows. A feature
-can own its handlers, service logic, repository, and tests. Put only types that
-cross the HTTP boundary in `shared`; database rows and internal entities should
-remain server-side.
-
-`AppState` owns a cloneable SQLx connection pool. Queries stay inside the API,
-and migrations are embedded in the binary and applied on startup. Start with
-concrete query functions; introduce repository traits only when you have a real
-second implementation or need a sharper testing boundary.
-
-The containerized UI is the Dioxus-generated server executable plus its `public`
-assets. It does not rely on the API binary to host or render the frontend. The UI
-server needs the API only for domain data, just as a native client needs a remote
-backend.
+The official registry is embedded with the CLI. A consumer can also configure a
+named local or static-HTTPS organization registry in `components.json` and make
+it the default. Explicit item references such as `@adico/button` select the
+official registry when an organization default is active. See the active
+[registry design](../openspec/changes/build-adico-component-ecosystem/design.md).

@@ -2,11 +2,14 @@
 
 ## Project overview
 
-This repository is a Rust full-stack monorepo with three boundaries:
+This repository is a Rust monorepo for Awesome Dioxus Components (`adico`), a
+shadcn-style Dioxus component ecosystem. Its product boundaries are:
 
-- `apps/awesome-dioxus-components-api`: Axum HTTP API, domain behavior, SQLx queries, and migrations.
-- `apps/awesome-dioxus-components-ui`: Dioxus SSR/web/native UI and a small server-function BFF.
-- `packages/shared`: transport-safe types shared by the API and UI.
+- `packages/adico-primitives`: owned reusable headless runtime behavior.
+- `packages/adico-registry-core`: registry schemas, resolution, and installation planning.
+- `packages/adico-cli`: the `adico` executable.
+- `registry/`: source-owned component distribution content.
+- `apps/docs`, `apps/playground`, and `examples/`: maintained Dioxus applications and consumer fixtures.
 
 Read `docs/architecture.md` before changing boundaries and
 `docs/development.md` before changing build or test workflows. Inspect the
@@ -15,13 +18,12 @@ template defaults.
 
 ## Architecture rules
 
-- Keep domain rules and persistence in the API.
-- Keep presentation and API forwarding in the UI. The UI must not depend on the
-  API crate.
-- Put only serialized HTTP contracts and small domain value types in `shared`.
-  Do not add Axum, Dioxus, SQLx, or platform-specific dependencies there.
-- Treat a feature as a vertical slice: shared contract, migration when needed,
-  API route/query, UI server function, UI state, and tests.
+- Keep reusable behavior in `adico-primitives`, registry semantics in
+  `adico-registry-core`, and consumer workflow in `adico-cli`.
+- Keep styled components as understandable source under `registry/`; do not
+  turn them into an opaque consumer-facing component crate.
+- Treat a feature as a vertical slice: registry metadata, dependency planning,
+  CLI installation, copied component source, consumer fixture, and tests.
 - Preserve separate Dioxus feature builds. Server-only dependencies must remain
   behind the `server` feature, and browser code must compile for
   `wasm32-unknown-unknown`.
@@ -33,8 +35,6 @@ matching skill before starting one of these tasks, even when the current agent
 does not discover repository skills automatically:
 
 - Feature work: `.agents/skills/implement-fullstack-feature/SKILL.md`
-- PostgreSQL schema or migration work:
-  `.agents/skills/evolve-database-schema/SKILL.md`
 - Testing, CI reproduction, or pre-handoff validation:
   `.agents/skills/validate-fullstack-project/SKILL.md`
 
@@ -65,14 +65,12 @@ behavior may proceed directly, but must still be tested.
 
 - Use the pinned toolchain and committed `Cargo.lock`. Use `--locked` for
   validation commands.
-- Keep migrations forward-only after they have been shared. Never edit or remove
-  deployed migrations unless the user explicitly requests a recovery plan.
 - Add focused tests for behavior changes. API database tests use `#[sqlx::test]`
-  and require a PostgreSQL connection with permission to create databases.
+  only when a future approved API boundary introduces database behavior.
 - Never commit `.env` files, credentials, tokens, production data, or generated
   build output.
-- Keep the template small. Add abstractions in response to a concrete need, not
-  in anticipation of one.
+- Keep the ecosystem focused. Add abstractions in response to a concrete need,
+  not in anticipation of one.
 - Update documentation and example environment values when commands,
   configuration, public contracts, or architecture change.
 

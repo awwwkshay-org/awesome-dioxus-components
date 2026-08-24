@@ -1,0 +1,16 @@
+{
+  "id": "dioxus-components-example",
+  "upstream": "https://github.com/DioxusLabs/dioxus-components",
+  "revision": "0000000000000000000000000000000000000000",
+  "license": ["MIT", "Apache-2.0"],
+  "importedAt": "2026-08-24",
+  "originalPaths": ["primitives/example.rs"],
+  "localPaths": ["packages/adico-primitives/src/example.rs"],
+  "changes": [
+    {
+      "date": "2026-08-24",
+      "summary": "Schema example only; no upstream source has been imported."
+    }
+  ],
+  "notices": ["Retain upstream MIT and Apache-2.0 notices when source is imported."]
+}

@@ -1,0 +1,8 @@
+[package]
+name = "adico-primitives"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Owned headless primitives for Awesome Dioxus Components"
+
+[dependencies]
