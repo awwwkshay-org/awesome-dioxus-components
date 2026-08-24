@@ -132,18 +132,22 @@ pub fn DialogRoot(props: DialogRootProps) -> Element {
         dialog_describedby,
     });
 
-    let render = use_animated_open(id, open);
+    let _render = use_animated_open(id, open);
 
     rsx! {
         FocusTrapScript {}
-        if render() {
-            div {
-                id,
-                aria_hidden: (!open()).then_some("true"),
-                "data-state": if open() { "open" } else { "closed" },
-                ..props.attributes,
-                {props.children}
-            }
+        div {
+            id,
+            "data-state": if open() { "open" } else { "closed" },
+            onkeydown: move |event| {
+                if event.key() == Key::Escape {
+                    set_open.call(false);
+                    event.prevent_default();
+                    event.stop_propagation();
+                }
+            },
+            ..props.attributes,
+            {props.children}
         }
     }
 }
@@ -219,6 +223,10 @@ pub fn DialogContent(props: DialogContentProps) -> Element {
     let open = ctx.open;
     let is_modal = ctx.is_modal;
     let set_open = ctx.set_open;
+
+    if !ctx.is_open() {
+        return rsx! {};
+    }
 
     // Add a escape key listener to the document when the dialog is open. We can't
     // just add this to the dialog itself because it might not be focused if the user

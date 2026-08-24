@@ -9,6 +9,7 @@
   },
   "items": {
     "button": "items/button.json",
-    "cn": "items/cn.json"
+    "cn": "items/cn.json",
+    "dialog": "items/dialog.json"
   }
 }

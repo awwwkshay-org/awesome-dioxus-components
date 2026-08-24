@@ -6,12 +6,11 @@
 
 use dioxus::prelude::*;
 use dioxus_core::Task;
-use dioxus_sdk_time::sleep;
 
 use std::time::Duration;
 
 use super::text_search::AdaptiveKeyboard;
-use crate::selectable::SelectableContext;
+use crate::{selectable::SelectableContext, time::sleep};
 
 /// Main context for the select component containing all shared state
 #[derive(Clone, Copy)]

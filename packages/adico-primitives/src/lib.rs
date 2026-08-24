@@ -26,6 +26,8 @@ use dioxus::core::{current_scope_id, use_drop};
 use dioxus::prelude::*;
 #[cfg(any(feature = "web", feature = "desktop"))]
 use dioxus::prelude::{Asset, asset, manganis};
+#[cfg(any(feature = "web", feature = "desktop"))]
+use dioxus_document as document;
 
 pub use ::dioxus_core;
 
@@ -36,6 +38,7 @@ mod collection;
 mod listbox;
 mod selectable;
 mod selection;
+mod time;
 
 #[cfg(any(feature = "web", feature = "desktop"))]
 const FOCUS_TRAP_JS: Asset = asset!("/src/js/focus-trap.js");
@@ -50,10 +53,6 @@ fn use_unique_id() -> Signal<String> {
         format!("adico-{id}")
     });
 
-    fullstack! {
-        let server_id = dioxus::prelude::use_server_cached(move || initial_value.clone());
-        initial_value = server_id;
-    }
     use_signal(|| initial_value)
 }
 
@@ -100,7 +99,7 @@ pub fn use_controlled<T: Clone + PartialEq + 'static>(
 }
 
 fn use_effect_cleanup<F: FnOnce() + 'static>(#[allow(unused)] cleanup: F) {
-    client!(dioxus_core::use_drop(cleanup));
+    dioxus_core::use_drop(cleanup);
 }
 
 fn use_effect_with_cleanup<F: FnMut() -> C + 'static, C: FnOnce() + 'static>(mut effect: F) {
@@ -111,11 +110,11 @@ fn use_effect_with_cleanup<F: FnMut() -> C + 'static, C: FnOnce() + 'static>(mut
         }
         cleanup.set(Some(effect()));
     });
-    client!(dioxus_core::use_drop(move || {
+    dioxus_core::use_drop(move || {
         if let Some(cleanup) = cleanup.take() {
             cleanup();
         }
-    }));
+    });
 }
 
 #[derive(Clone)]
@@ -222,7 +221,7 @@ fn use_animated_open(
             show_in_dom.set(true);
         } else {
             spawn(async move {
-                let mut eval = dioxus::document::eval(
+                let mut eval = document::eval(
                     "const id = await dioxus.recv();
                     const element = document.getElementById(id);
                     if (element && element.getAnimations().length > 0) {

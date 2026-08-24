@@ -1,0 +1,10 @@
+# These files are created when an installation fixture exercises the real CLI.
+# Keep each fixture's hand-authored Cargo manifest, Dioxus config, and main.rs
+# under version control; the generated consumer state must start clean.
+*/Cargo.lock
+*/adico.lock
+*/components.json
+*/assets/
+*/src/adico_lib/
+*/src/components/
+*/target/

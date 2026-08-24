@@ -174,6 +174,9 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/button.rs") => {
                 Ok(include_bytes!("../../../registry/ui/button.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/dialog.rs") => {
+                Ok(include_bytes!("../../../registry/ui/dialog.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"

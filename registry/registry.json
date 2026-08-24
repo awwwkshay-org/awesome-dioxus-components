@@ -52,6 +52,37 @@
         "slug": "button",
         "compositionNote": "Use the Dioxus Lucide icon crate (`dioxus-icons`) from consumer composition when an icon is needed; Button itself embeds no SVG markup."
       }
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "description": "A source-owned Dioxus dialog backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/dialog.rs",
+          "targetRoot": "ui",
+          "target": "dialog.rs",
+          "checksum": "6312cd0eab91554c970c30567b85eebf33cbd3b847a0cf76c660cc86326d5ad0"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "dialog", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "dialog",
+        "compositionNote": "The public copied API remains compositional; focus management, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-dialog-select.json" }
     }
   ]
 }

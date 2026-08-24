@@ -6,10 +6,19 @@ license.workspace = true
 description = "Owned headless primitives for Awesome Dioxus Components"
 
 [dependencies]
-dioxus = { workspace = true }
+# The runtime must not inherit the workspace's fullstack feature selection.
+# Installed components select their Dioxus platform in the consumer application;
+# primitives only need the common composition, signal, and hook APIs.
+dioxus = { version = "=0.7.9", default-features = false, features = ["asset", "hooks", "html", "macro", "mounted", "signals"] }
 dioxus-core = "0.7.9"
-dioxus-sdk-time = "0.7.0"
+dioxus-document = "0.7.9"
 tracing = { workspace = true }
+
+[target.'cfg(target_family = "wasm")'.dependencies]
+gloo-timers = { version = "0.3", features = ["futures"] }
+
+[target.'cfg(not(target_family = "wasm"))'.dependencies]
+tokio = { version = "1", features = ["time"] }
 
 [features]
 default = []

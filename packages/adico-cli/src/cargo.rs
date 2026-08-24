@@ -185,10 +185,14 @@ fn verify_existing_dependency(
             crate_name: requested.crate_name.clone(),
         }
     })?;
+    let requested_features = requested.features.iter().cloned().collect::<BTreeSet<_>>();
+    // A consumer may deliberately enable additional features or disable
+    // defaults on a dependency already needed by a registry item. Registry
+    // items name every feature they require explicitly, so only a missing
+    // requested feature is incompatible.
     if existing.version.as_deref() != Some(requested.version.as_str())
         || existing.package != requested.package
-        || existing.default_features != requested.default_features
-        || existing.features != requested.features.iter().cloned().collect()
+        || !requested_features.is_subset(&existing.features)
     {
         return Err(CargoEditError::DependencyConflict {
             crate_name: requested.crate_name.clone(),
@@ -205,7 +209,6 @@ struct DependencyShape {
     version: Option<String>,
     package: Option<String>,
     features: BTreeSet<String>,
-    default_features: bool,
 }
 
 fn dependency_shape(item: &Item) -> Option<DependencyShape> {
@@ -214,7 +217,6 @@ fn dependency_shape(item: &Item) -> Option<DependencyShape> {
             version: Some(version.to_string()),
             package: None,
             features: BTreeSet::new(),
-            default_features: true,
         });
     }
     let table = item.as_inline_table()?;
@@ -237,15 +239,10 @@ fn dependency_shape(item: &Item) -> Option<DependencyShape> {
                 .collect()
         })
         .unwrap_or_default();
-    let default_features = table
-        .get("default-features")
-        .and_then(Value::as_bool)
-        .unwrap_or(true);
     Some(DependencyShape {
         version,
         package,
         features,
-        default_features,
     })
 }
 
@@ -345,6 +342,18 @@ mod tests {
         assert!(contents.contains("# keep this comment\ndioxus = \"=0.7.9\" # preserve this too"));
         assert!(contents.contains("adico-primitives = \"^0.1.0\""));
         plan.apply().expect("plan should apply");
+        fs::remove_dir_all(path.parent().expect("temporary root should exist"))
+            .expect("temporary directory should be removable");
+    }
+
+    #[test]
+    fn accepts_a_consumer_dependency_with_additional_features() {
+        let path = temporary_manifest(
+            "[dependencies]\ndioxus = { version = \"=0.7.9\", features = [\"web\", \"router\"] }\n",
+        );
+        let plan = plan_cargo_dependency_edits(&path, &[dependency("dioxus", "=0.7.9")])
+            .expect("extra consumer features should remain compatible");
+        assert!(!plan.has_changes());
         fs::remove_dir_all(path.parent().expect("temporary root should exist"))
             .expect("temporary directory should be removable");
     }
