@@ -27,7 +27,7 @@ makes the platform useful while parity is progressively delivered.
   organization can curate a compatible local or static HTTPS registry and make
   it the consumer project's default without forking the CLI.
 - Introduce the `adico` CLI with production-quality `init`, `add <items...>`,
-  and `add --all` behavior. It creates/reads `components.json`, safely plans
+  `add --all`, `list`, and `view <item>` behavior. It creates/reads `components.json`, safely plans
   and installs source, edits Cargo.toml structurally, and manages Rust module
   exports only inside explicit adico-owned regions.
 - Deliver a first vertical slice using Button, Dialog, and one existing
@@ -64,6 +64,7 @@ makes the platform useful while parity is progressively delivered.
   configuration, Dioxus-project detection, destinations, styles/themes, and
   managed Rust-module conventions.
 - `adico-cli-installation`: Defines `adico init`, `adico add`, `add --all`,
+  `list`, `view`,
   structured Cargo.toml updates, idempotency, conflict handling, and the
   source-ownership guarantee.
 - `adico-component-parity`: Defines upstream inventories, catalog snapshots,

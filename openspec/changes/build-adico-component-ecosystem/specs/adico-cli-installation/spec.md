@@ -5,6 +5,26 @@ into source-owned, buildable Dioxus component code in a consumer project.
 
 ## ADDED Requirements
 
+### Requirement: Registry discovery and inspection are source-aware
+The CLI SHALL provide `adico list` and `adico view <item>` as read-only registry
+commands. `list` SHALL enumerate the items available from the configured default
+registry, or from an explicitly selected configured namespace. `view` SHALL
+resolve bare and namespaced item addresses by the same rules as `add` and report
+the stable item address, description, item type, source/target files, registry
+dependencies, Cargo dependencies, style requirements, compatibility, and
+provenance metadata. Neither command SHALL mutate the consumer project.
+
+#### Scenario: Company registry lists its curated components
+- **WHEN** an Awwwkshay project sets `@awwwkshay` as its default registry and
+  runs `adico list`
+- **THEN** the CLI lists the compatible items from `@awwwkshay` and identifies
+  their namespace
+
+#### Scenario: User inspects an official component from a company project
+- **WHEN** a project runs `adico view @adico/dialog`
+- **THEN** the CLI reports Dialog's official source identity and all declared
+  installation requirements without changing project files
+
 ### Requirement: Initialization prepares a supported project
 The `adico init` command SHALL detect and validate a supported Dioxus project,
 create required component directories, establish `components.json`, prepare

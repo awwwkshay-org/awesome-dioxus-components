@@ -168,6 +168,20 @@ set, optional/default-feature policy, and target/feature predicates. Requirement
 unification uses Cargo-compatible intersections; incompatible declarations are
 reported with their registry and manifest origin.
 
+### 4a. Registry discovery is configuration-aware and read-only
+
+`adico list` loads the same configured registry catalog as `add`, listing the
+default registry by default or one explicitly configured namespace when
+selected. `adico view <item>` resolves bare and namespaced addresses by the
+same default-registry rules and emits deterministic human-readable metadata:
+the fully-qualified item address, description, type, files and logical targets,
+registry and Cargo dependencies, style requirements, compatibility, and
+provenance. These commands perform no installation planning or consumer-file
+mutation, so they are safe for discovery in projects using an organizational
+default such as `@awwwkshay`. Machine-readable output and remote search remain
+future extensions; v1 keeps the contract clear, offline-friendly where the
+configured registry is local or embedded, and aligned with `add` resolution.
+
 ### 5. `components.json` and Dioxus project detection
 
 `components.json` is the consumer-owned, shadcn-compatible-in-spirit JSON
