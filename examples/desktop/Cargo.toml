@@ -6,10 +6,13 @@ license.workspace = true
 publish = false
 
 [dependencies]
-dioxus.workspace = true
+# Kept explicit (matching the workspace's pinned "=0.7.9") rather than
+# `dioxus.workspace = true`, so the installer can verify and edit this
+# declaration exactly as it would in a normal external Dioxus project.
+dioxus = { version = "=0.7.9" }
 
 [features]
-default = ["web"]
+default = ["desktop"]
 web = ["dioxus/web"]
 desktop = ["dioxus/desktop"]
 server = ["dioxus/server"]

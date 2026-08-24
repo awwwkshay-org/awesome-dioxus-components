@@ -54,6 +54,7 @@ dependencies = [
 name = "adico-example-fullstack"
 version = "0.1.0"
 dependencies = [
+ "adico-primitives",
  "dioxus",
 ]
 

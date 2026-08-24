@@ -6,5 +6,374 @@
     "revision": "ac60ef5c4db4265d71454dd9ecd3f93e255d7211",
     "refreshedAt": "2026-08-24"
   },
-  "components": {}
+  "components": {
+    "button": {
+      "status": "in_progress",
+      "registryItem": "@adico/button",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/button.rs",
+            "tests/installation/button-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/button.rs (native <button> element; no custom keyboard handling)"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/button.rs (native <button> semantics)"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "examples/basic",
+            "examples/fullstack",
+            "examples/desktop"
+          ]
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/tests/cli_integration.rs",
+            "tests/installation/button-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "examples/basic (wasm32-unknown-unknown build)",
+            "tests/playwright/fullstack.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "examples/desktop (native desktop-target build with the real dioxus-desktop backend)"
+          ]
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "examples/fullstack (server-feature and web-feature builds both succeed)",
+            "tests/playwright/fullstack.spec.ts"
+          ]
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "dialog": {
+      "status": "in_progress",
+      "registryItem": "@adico/dialog",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/dialog.rs",
+            "tests/installation/dialog-consumer",
+            "provenance/records/adico-primitives-dialog-select.json"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/dialog.spec.ts"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/dialog.spec.ts (axe scan and ARIA/focus-restoration assertions)"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "examples/basic",
+            "examples/fullstack"
+          ]
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/dialog-consumer",
+            "packages/adico-cli/tests/cli_integration.rs"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/dialog.spec.ts",
+            "tests/playwright/fullstack.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "The registry's cargoDependencies pin adico-primitives to its \"web\" feature unconditionally; a desktop-targeted install has no per-platform feature selection yet. Tracked as a gap for later milestone work, not yet a passing desktop install."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "examples/fullstack (server-feature and web-feature builds both succeed)",
+            "tests/playwright/fullstack.spec.ts"
+          ]
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "select": {
+      "status": "in_progress",
+      "registryItem": "@adico/select",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/select.rs",
+            "tests/installation/select-consumer",
+            "provenance/records/adico-primitives-dialog-select.json"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/select.spec.ts"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/select.spec.ts (axe scan and listbox ARIA assertions)"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "examples/basic",
+            "examples/fullstack"
+          ]
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/select-consumer",
+            "packages/adico-cli/tests/cli_integration.rs"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/select.spec.ts",
+            "tests/playwright/fullstack.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "The registry's cargoDependencies pin adico-primitives to its \"web\" feature unconditionally; a desktop-targeted install has no per-platform feature selection yet. Tracked as a gap for later milestone work, not yet a passing desktop install."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "examples/fullstack (server-feature and web-feature builds both succeed)",
+            "tests/playwright/fullstack.spec.ts"
+          ]
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    }
+  }
 }

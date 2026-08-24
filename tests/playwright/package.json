@@ -5,7 +5,8 @@
   "scripts": {
     "test": "playwright test",
     "test:dialog": "playwright test dialog.spec.ts",
-    "test:select": "playwright test select.spec.ts"
+    "test:select": "playwright test select.spec.ts",
+    "test:fullstack": "playwright test fullstack.spec.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
