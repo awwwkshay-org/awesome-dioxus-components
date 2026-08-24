@@ -8,7 +8,10 @@ use std::process::Command;
 
 use serde::{Deserialize, Serialize};
 
-use adico_registry_core::{RegistryCompatibility, RegistryManifest, RegistryNamespace};
+use adico_registry_core::{
+    EmbeddedRegistry, RegistryCompatibility, RegistryManifest, RegistryNamespace, RegistrySource,
+    RegistrySourceLoader,
+};
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -54,6 +57,20 @@ fn main() {
                 std::process::exit(1);
             }
         }
+        [command, subcommand] if command == "registry" && subcommand == "validate" => {
+            if let Err(error) = validate_registry(None) {
+                eprintln!("registry validation failed: {error}");
+                std::process::exit(1);
+            }
+        }
+        [command, subcommand, flag, source]
+            if command == "registry" && subcommand == "validate" && flag == "--source" =>
+        {
+            if let Err(error) = validate_registry(Some(Path::new(source))) {
+                eprintln!("registry validation failed: {error}");
+                std::process::exit(1);
+            }
+        }
         [command, upstream] if command == "upstream" && upstream == "dioxus-components" => {
             if let Err(error) = report_dioxus_components_snapshot() {
                 eprintln!("upstream inventory failed: {error}");
@@ -96,7 +113,7 @@ fn main() {
         }
         _ => {
             eprintln!(
-                "usage:\n  cargo xtask provenance check\n  cargo xtask registry build\n  cargo xtask upstream dioxus-components\n  cargo xtask upstream dioxus-components --source <local-clone> --refreshed-at <YYYY-MM-DD> [--write]"
+                "usage:\n  cargo xtask provenance check\n  cargo xtask registry build\n  cargo xtask registry validate [--source <registry-directory-or-manifest>]\n  cargo xtask upstream dioxus-components\n  cargo xtask upstream dioxus-components --source <local-clone> --refreshed-at <YYYY-MM-DD> [--write]"
             );
             std::process::exit(2);
         }
@@ -108,11 +125,11 @@ fn build_registry() -> Result<(), String> {
     let manifest_path = root.join("registry/registry.json");
     let contents = fs::read_to_string(&manifest_path)
         .map_err(|error| format!("cannot read {}: {error}", manifest_path.display()))?;
-    let manifest: RegistryManifest = serde_json::from_str(&contents)
-        .map_err(|error| format!("{} is invalid: {error}", manifest_path.display()))?;
-    manifest
-        .validate()
-        .map_err(|error| format!("{} is invalid: {error}", manifest_path.display()))?;
+    let manifest = load_registry_manifest(
+        &root.join("registry"),
+        contents.as_bytes(),
+        RegistrySource::Embedded,
+    )?;
 
     let generated_root = root.join("registry/generated");
     let payload_root = generated_root.join("items");
@@ -152,6 +169,62 @@ fn build_registry() -> Result<(), String> {
         generated_root.display()
     );
     Ok(())
+}
+
+fn validate_registry(source: Option<&Path>) -> Result<(), String> {
+    let root = repository_root()?;
+    let official_root = root.join("registry");
+    let official_manifest = fs::read(official_root.join("registry.json")).map_err(|error| {
+        format!(
+            "cannot read {}: {error}",
+            official_root.join("registry.json").display()
+        )
+    })?;
+    let source = source.map_or(RegistrySource::Embedded, |path| RegistrySource::Local {
+        path: path.display().to_string(),
+    });
+    let manifest = load_registry_manifest(&official_root, &official_manifest, source)?;
+    println!(
+        "registry validation passed: {} item payload(s) in {}",
+        manifest.items.len(),
+        manifest.namespace
+    );
+    Ok(())
+}
+
+fn load_registry_manifest(
+    official_root: &Path,
+    official_manifest: &[u8],
+    source: RegistrySource,
+) -> Result<RegistryManifest, String> {
+    let configured_manifest = match &source {
+        RegistrySource::Embedded => official_manifest.to_vec(),
+        RegistrySource::Local { path } => {
+            let candidate = PathBuf::from(path);
+            let manifest_path = if candidate.is_dir() {
+                candidate.join("registry.json")
+            } else {
+                candidate
+            };
+            fs::read(&manifest_path)
+                .map_err(|error| format!("cannot read {}: {error}", manifest_path.display()))?
+        }
+        RegistrySource::Https { .. } => {
+            return Err(
+                "cargo xtask registry validate only accepts embedded or local sources".into(),
+            );
+        }
+    };
+    let declared: RegistryManifest = serde_json::from_slice(&configured_manifest)
+        .map_err(|error| format!("registry manifest is invalid: {error}"))?;
+    let loader = RegistrySourceLoader::new(EmbeddedRegistry::new(
+        official_manifest.to_vec(),
+        official_root,
+    ));
+    loader
+        .load(&declared.namespace, &source)
+        .map(|loaded| loaded.manifest)
+        .map_err(|error| error.to_string())
 }
 
 fn write_if_changed(path: &Path, contents: &str) -> Result<(), String> {

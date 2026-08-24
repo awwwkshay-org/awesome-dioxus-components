@@ -83,9 +83,13 @@ dependencies = [
 name = "adico-registry-core"
 version = "0.1.0"
 dependencies = [
+ "reqwest",
+ "semver",
  "serde",
  "serde_json",
+ "sha2",
  "thiserror 2.0.20",
+ "url",
 ]
 
 [[package]]
@@ -4739,6 +4743,7 @@ dependencies = [
  "bytes",
  "cookie",
  "cookie_store",
+ "futures-channel",
  "futures-core",
  "futures-util",
  "http",

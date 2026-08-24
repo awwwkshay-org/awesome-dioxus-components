@@ -1,0 +1,17 @@
+{
+  "formatVersion": 1,
+  "namespace": "@adico",
+  "name": "Checksum mismatch fixture",
+  "compatibility": { "cli": ">=0.1.0" },
+  "items": [{
+    "name": "button",
+    "type": "registry:ui",
+    "description": "A bad checksum.",
+    "files": [{
+      "source": "ui/button.rs",
+      "targetRoot": "ui",
+      "target": "button.rs",
+      "checksum": "0000000000000000000000000000000000000000000000000000000000000000"
+    }]
+  }]
+}

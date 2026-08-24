@@ -1,0 +1,17 @@
+{
+  "formatVersion": 1,
+  "namespace": "@adico",
+  "name": "Incompatible CLI fixture",
+  "compatibility": { "cli": ">=9.0.0" },
+  "items": [{
+    "name": "button",
+    "type": "registry:ui",
+    "description": "Requires a newer CLI.",
+    "files": [{
+      "source": "ui/button.rs",
+      "targetRoot": "ui",
+      "target": "button.rs",
+      "checksum": "73058a07c2b84095985ca37efb4d42a7c11680a61dc27670d9b1ec4c64b63f2c"
+    }]
+  }]
+}

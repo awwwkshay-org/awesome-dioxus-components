@@ -1,0 +1,32 @@
+{
+  "formatVersion": 1,
+  "namespace": "@adico",
+  "name": "Dependency cycle fixture",
+  "compatibility": { "cli": ">=0.1.0" },
+  "items": [
+    {
+      "name": "first",
+      "type": "registry:lib",
+      "description": "Cycle start.",
+      "registryDependencies": ["second"],
+      "files": [{
+        "source": "ui/button.rs",
+        "targetRoot": "lib",
+        "target": "first.rs",
+        "checksum": "73058a07c2b84095985ca37efb4d42a7c11680a61dc27670d9b1ec4c64b63f2c"
+      }]
+    },
+    {
+      "name": "second",
+      "type": "registry:lib",
+      "description": "Cycle end.",
+      "registryDependencies": ["first"],
+      "files": [{
+        "source": "ui/button.rs",
+        "targetRoot": "lib",
+        "target": "second.rs",
+        "checksum": "73058a07c2b84095985ca37efb4d42a7c11680a61dc27670d9b1ec4c64b63f2c"
+      }]
+    }
+  ]
+}
