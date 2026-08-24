@@ -6,7 +6,11 @@ license.workspace = true
 publish = false
 
 [dependencies]
-dioxus.workspace = true
+# Keep this consumer-style fixture explicit rather than inheriting the
+# workspace's fullstack development feature set. The installer can then verify
+# the declaration exactly as it would in a normal external Dioxus project.
+dioxus = { version = "=0.7.9", default-features = false, features = ["web", "launch", "macro", "html", "signals", "hooks", "asset"] }
+adico-primitives = { version = "=0.1.0", features = ["web"] }
 
 [features]
 default = ["web"]

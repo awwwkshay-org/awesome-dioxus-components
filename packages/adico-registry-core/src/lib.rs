@@ -975,7 +975,15 @@ pub fn unify_cargo_dependencies(
                         ),
                     });
                 }
-                let combined = format!("{}, {}", existing.version, requirement.version);
+                // Repeating an identical requirement must not make the
+                // consumer-facing declaration needlessly different. This is
+                // common when several installed components pin the Dioxus
+                // runtime to the same exact release.
+                let combined = if existing.version == requirement.version {
+                    existing.version.clone()
+                } else {
+                    format!("{}, {}", existing.version, requirement.version)
+                };
                 let combined_requirement = VersionReq::parse(&combined).map_err(|error| {
                     RegistryError::InvalidCargoVersionRequirement {
                         crate_name: requirement.crate_name.clone(),
@@ -2485,6 +2493,25 @@ mod tests {
                 .expect("merged version is valid Cargo semver")
                 .matches(&Version::parse("0.7.9").expect("valid version"))
         );
+    }
+
+    #[test]
+    fn identical_cargo_requirements_remain_a_single_consumer_facing_requirement() {
+        let plan = cargo_plan(&[
+            (
+                "button",
+                vec![cargo_requirement("dioxus", None, "=0.7.9", &[], true, None)],
+            ),
+            (
+                "dialog",
+                vec![cargo_requirement("dioxus", None, "=0.7.9", &[], true, None)],
+            ),
+        ]);
+
+        let dependencies = unify_cargo_dependencies(&plan).expect("requirements should merge");
+        assert_eq!(dependencies.len(), 1);
+        assert_eq!(dependencies[0].version, "=0.7.9");
+        assert_eq!(dependencies[0].origins.len(), 2);
     }
 
     #[test]
