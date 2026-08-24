@@ -2,6 +2,7 @@
 
 #![forbid(unsafe_code)]
 
+pub mod add;
 pub mod cargo;
 pub mod css;
 pub mod init;
