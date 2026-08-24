@@ -1,0 +1,23 @@
+{
+  "formatVersion": 1,
+  "namespace": "@adico",
+  "name": "Invalid Registry",
+  "compatibility": {
+    "cli": ">=0.1.0"
+  },
+  "items": [
+    {
+      "name": "button",
+      "type": "registry:unknown",
+      "description": "Invalid item type fixture.",
+      "files": [
+        {
+          "source": "ui/button.rs",
+          "targetRoot": "ui",
+          "target": "button.rs",
+          "checksum": "b9a4f3ed6bc83c6a1d02e9b5c33cb0db1a6f2d56214e78d5748f7ec901fe1a00"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "formatVersion": 1,
+  "namespace": "@awwwkshay",
+  "name": "Awwwkshay Dioxus Registry",
+  "compatibility": {
+    "cli": ">=0.1.0",
+    "runtime": ">=0.1.0"
+  },
+  "items": [
+    {
+      "name": "company-card",
+      "type": "registry:component",
+      "description": "A company-curated card shell.",
+      "files": [
+        {
+          "source": "components/company_card.rs",
+          "targetRoot": "components",
+          "target": "company_card.rs",
+          "checksum": "cf0d6c5d5a29a5cb148de01550384e599a2761d2268c9c07542e9e7236b0e201"
+        }
+      ],
+      "registryDependencies": ["@adico/button"],
+      "moduleExports": [
+        {
+          "targetRoot": "components",
+          "module": "company_card"
+        }
+      ],
+      "provenance": {
+        "record": "company/provenance/company-card.json"
+      }
+    }
+  ]
+}

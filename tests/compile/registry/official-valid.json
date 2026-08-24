@@ -1,0 +1,45 @@
+{
+  "formatVersion": 1,
+  "namespace": "@adico",
+  "name": "Awesome Dioxus Components",
+  "description": "The embedded official adico registry.",
+  "compatibility": {
+    "cli": ">=0.1.0"
+  },
+  "items": [
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "description": "A source-owned button component.",
+      "files": [
+        {
+          "source": "ui/button.rs",
+          "targetRoot": "ui",
+          "target": "button.rs",
+          "checksum": "b9a4f3ed6bc83c6a1d02e9b5c33cb0db1a6f2d56214e78d5748f7ec901fe1a00"
+        }
+      ],
+      "cargoDependencies": [
+        {
+          "crate": "dioxus",
+          "version": "=0.7.9"
+        }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        {
+          "targetRoot": "ui",
+          "module": "button",
+          "reexport": true
+        }
+      ],
+      "documentation": {
+        "slug": "button"
+      }
+    }
+  ]
+}

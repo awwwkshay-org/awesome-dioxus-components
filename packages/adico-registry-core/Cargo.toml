@@ -6,3 +6,6 @@ license.workspace = true
 description = "Registry schema, validation, and installation planning for adico"
 
 [dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
