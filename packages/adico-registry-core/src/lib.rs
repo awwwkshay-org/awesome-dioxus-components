@@ -435,6 +435,221 @@ impl LoadedRegistry {
     }
 }
 
+/// A fully-qualified item identity preserved through registry resolution.
+#[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RegistryItemAddress {
+    /// Namespace that supplied the item.
+    pub namespace: RegistryNamespace,
+    /// Stable name declared by that registry.
+    pub item: String,
+}
+
+impl fmt::Display for RegistryItemAddress {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(formatter, "{}/{}", self.namespace, self.item)
+    }
+}
+
+/// A resolved registry item, including immutable source identity for later
+/// installation planning and lock-file creation.
+#[derive(Clone, Debug)]
+pub struct ResolvedRegistryItem {
+    /// Fully-qualified source identity.
+    pub address: RegistryItemAddress,
+    /// Registry metadata for the resolved source item.
+    pub item: RegistryItem,
+    /// Source location retained for source-file installation.
+    pub location: RegistryLocation,
+    /// Digest of the manifest from which the item was resolved.
+    pub manifest_digest: String,
+}
+
+/// A deterministic, dependency-first sequence of source-owned registry items.
+#[derive(Clone, Debug)]
+pub struct RegistryInstallPlan {
+    /// Canonical requested root items after default-registry resolution.
+    pub requested: Vec<RegistryItemAddress>,
+    /// Deduplicated dependencies followed by their dependents.
+    pub items: Vec<ResolvedRegistryItem>,
+}
+
+/// Loaded registry sources available for one consumer installation request.
+#[derive(Clone, Debug, Default)]
+pub struct RegistryCatalog {
+    registries: BTreeMap<RegistryNamespace, LoadedRegistry>,
+}
+
+impl RegistryCatalog {
+    /// Creates an empty catalog. Sources are inserted only after source
+    /// validation has completed.
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Inserts a validated registry source, rejecting duplicate namespaces.
+    pub fn insert(&mut self, registry: LoadedRegistry) -> Result<(), RegistryError> {
+        let namespace = registry.manifest.namespace.clone();
+        if self.registries.contains_key(&namespace) {
+            return Err(RegistryError::DuplicateRegistrySource {
+                namespace: namespace.to_string(),
+            });
+        }
+        self.registries.insert(namespace, registry);
+        Ok(())
+    }
+
+    /// Resolves requested bare/namespaced addresses into a deterministic plan.
+    ///
+    /// A bare request uses `default_registry`. A bare dependency is always
+    /// local to its declaring registry; it never falls through to the default
+    /// registry. Cross-registry dependencies must therefore be explicitly
+    /// namespaced in registry metadata.
+    pub fn resolve(
+        &self,
+        default_registry: &RegistryNamespace,
+        requests: &[RegistryAddress],
+    ) -> Result<RegistryInstallPlan, RegistryError> {
+        self.require_registry(default_registry)?;
+        let mut requested: Vec<_> = requests
+            .iter()
+            .map(|request| self.request_address(default_registry, request))
+            .collect::<Result<_, _>>()?;
+        requested.sort();
+        requested.dedup();
+
+        let mut state = ResolutionState::default();
+        for address in &requested {
+            self.visit(address, &mut state)?;
+        }
+        Ok(RegistryInstallPlan {
+            requested,
+            items: state.items,
+        })
+    }
+
+    fn request_address(
+        &self,
+        default_registry: &RegistryNamespace,
+        request: &RegistryAddress,
+    ) -> Result<RegistryItemAddress, RegistryError> {
+        let address = match request {
+            RegistryAddress::Bare(item) => RegistryItemAddress {
+                namespace: default_registry.clone(),
+                item: item.clone(),
+            },
+            RegistryAddress::Namespaced { namespace, item } => RegistryItemAddress {
+                namespace: namespace.clone(),
+                item: item.clone(),
+            },
+        };
+        self.require_item(&address)?;
+        Ok(address)
+    }
+
+    fn visit(
+        &self,
+        address: &RegistryItemAddress,
+        state: &mut ResolutionState,
+    ) -> Result<(), RegistryError> {
+        if state.resolved.contains(address) {
+            return Ok(());
+        }
+        if !state.visiting.insert(address.clone()) {
+            let start = state
+                .path
+                .iter()
+                .position(|entry| entry == address)
+                .unwrap_or(0);
+            let mut cycle = state.path[start..].to_vec();
+            cycle.push(address.clone());
+            return Err(RegistryError::CrossRegistryDependencyCycle {
+                cycle: cycle.into_iter().map(|entry| entry.to_string()).collect(),
+            });
+        }
+        state.path.push(address.clone());
+        let registry = self.require_registry(&address.namespace)?;
+        let item = registry
+            .manifest
+            .items
+            .iter()
+            .find(|item| item.name == address.item)
+            .expect("require_item verifies resolved items exist");
+        let mut dependencies = item
+            .registry_dependencies
+            .iter()
+            .map(|dependency| self.dependency_address(&address.namespace, dependency))
+            .collect::<Result<Vec<_>, _>>()?;
+        dependencies.sort();
+        dependencies.dedup();
+        for dependency in dependencies {
+            self.require_item(&dependency)?;
+            self.visit(&dependency, state)?;
+        }
+        state.path.pop();
+        state.visiting.remove(address);
+        state.resolved.insert(address.clone());
+        state.items.push(ResolvedRegistryItem {
+            address: address.clone(),
+            item: item.clone(),
+            location: registry.location.clone(),
+            manifest_digest: registry.manifest_digest.clone(),
+        });
+        Ok(())
+    }
+
+    fn dependency_address(
+        &self,
+        declaring_namespace: &RegistryNamespace,
+        dependency: &str,
+    ) -> Result<RegistryItemAddress, RegistryError> {
+        Ok(match RegistryAddress::parse(dependency)? {
+            RegistryAddress::Bare(item) => RegistryItemAddress {
+                namespace: declaring_namespace.clone(),
+                item,
+            },
+            RegistryAddress::Namespaced { namespace, item } => {
+                RegistryItemAddress { namespace, item }
+            }
+        })
+    }
+
+    fn require_registry(
+        &self,
+        namespace: &RegistryNamespace,
+    ) -> Result<&LoadedRegistry, RegistryError> {
+        self.registries
+            .get(namespace)
+            .ok_or_else(|| RegistryError::UnknownRegistrySource {
+                namespace: namespace.to_string(),
+            })
+    }
+
+    fn require_item(&self, address: &RegistryItemAddress) -> Result<(), RegistryError> {
+        let registry = self.require_registry(&address.namespace)?;
+        if registry
+            .manifest
+            .items
+            .iter()
+            .any(|item| item.name == address.item)
+        {
+            Ok(())
+        } else {
+            Err(RegistryError::UnknownRegistryItem {
+                address: address.to_string(),
+            })
+        }
+    }
+}
+
+#[derive(Default)]
+struct ResolutionState {
+    visiting: BTreeSet<RegistryItemAddress>,
+    resolved: BTreeSet<RegistryItemAddress>,
+    path: Vec<RegistryItemAddress>,
+    items: Vec<ResolvedRegistryItem>,
+}
+
 /// Minimal transport boundary used by static HTTPS registry sources.
 ///
 /// The trait keeps registry validation testable without making CI contact a
@@ -949,6 +1164,24 @@ pub enum RegistryError {
     /// An item cannot install source without source files.
     #[error("registry item {0:?} does not declare source files")]
     ItemHasNoFiles(String),
+    /// More than one loaded source claimed the same namespace.
+    #[error("registry namespace {namespace} was configured more than once")]
+    DuplicateRegistrySource {
+        /// Namespace configured by duplicate sources.
+        namespace: String,
+    },
+    /// A requested/default namespace is not available in the loaded catalog.
+    #[error("registry source {namespace} is not configured or could not be loaded")]
+    UnknownRegistrySource {
+        /// Missing namespace.
+        namespace: String,
+    },
+    /// A registry source does not provide a requested item.
+    #[error("registry item {address} is not available from its selected source")]
+    UnknownRegistryItem {
+        /// Fully qualified requested address.
+        address: String,
+    },
     /// The configured source namespace did not match the manifest identity.
     #[error(
         "registry source {registry_source} declares {declared}, but the project configured it as {configured}"
@@ -1061,6 +1294,12 @@ pub enum RegistryError {
         /// Cycle order, including the repeated start item.
         cycle: Vec<String>,
     },
+    /// A dependency cycle crosses one or more configured registry sources.
+    #[error("cross-registry dependency cycle: {}", .cycle.join(" -> "))]
+    CrossRegistryDependencyCycle {
+        /// Fully-qualified cycle order, including the repeated start item.
+        cycle: Vec<String>,
+    },
     /// A compatibility range is not valid semver syntax.
     #[error(
         "registry {namespace} {subject} has invalid {dependency} compatibility range {range:?}: {reason}"
@@ -1114,6 +1353,7 @@ const fn default_true() -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use serde_json::json;
 
     #[derive(Default)]
     struct FixtureHttpClient {
@@ -1166,6 +1406,57 @@ mod tests {
             },
             manifest_digest: sha256_hex(&bytes),
         }
+    }
+
+    fn registry_with_items(namespace: &str, items: &[(&str, &[&str])]) -> LoadedRegistry {
+        let items: Vec<_> = items
+            .iter()
+            .map(|(name, dependencies)| {
+                json!({
+                    "name": name,
+                    "type": "registry:ui",
+                    "description": format!("{name} fixture item"),
+                    "registryDependencies": dependencies,
+                    "files": [{
+                        "source": "ui/button.rs",
+                        "targetRoot": "ui",
+                        "target": format!("{name}.rs"),
+                        "checksum": "73058a07c2b84095985ca37efb4d42a7c11680a61dc27670d9b1ec4c64b63f2c"
+                    }]
+                })
+            })
+            .collect();
+        let manifest = serde_json::from_value(json!({
+            "formatVersion": 1,
+            "namespace": namespace,
+            "name": format!("{namespace} resolver fixture"),
+            "compatibility": { "cli": ">=0.1.0" },
+            "items": items,
+        }))
+        .expect("resolver fixture should deserialize");
+        LoadedRegistry {
+            manifest,
+            location: RegistryLocation::Embedded {
+                label: format!("{namespace} fixture"),
+                source_root: fixture_root(),
+            },
+            manifest_digest: "fixture-digest".to_string(),
+        }
+    }
+
+    fn catalog(registries: Vec<LoadedRegistry>) -> RegistryCatalog {
+        let mut catalog = RegistryCatalog::new();
+        for registry in registries {
+            catalog.insert(registry).expect("unique fixture namespace");
+        }
+        catalog
+    }
+
+    fn plan_addresses(plan: &RegistryInstallPlan) -> Vec<String> {
+        plan.items
+            .iter()
+            .map(|item| item.address.to_string())
+            .collect()
     }
 
     #[test]
@@ -1341,5 +1632,118 @@ mod tests {
             )
             .expect_err("configured namespace must match manifest namespace");
         assert!(matches!(error, RegistryError::NamespaceMismatch { .. }));
+    }
+
+    #[test]
+    fn resolver_deduplicates_shared_dependencies_in_a_stable_dependency_first_order() {
+        let catalog = catalog(vec![registry_with_items(
+            "@adico",
+            &[
+                ("utility", &[]),
+                ("button", &["utility"]),
+                ("card", &["utility"]),
+            ],
+        )]);
+        let default: RegistryNamespace = "@adico".parse().expect("valid namespace");
+        let plan = catalog
+            .resolve(
+                &default,
+                &[
+                    RegistryAddress::parse("card").expect("valid request"),
+                    RegistryAddress::parse("button").expect("valid request"),
+                ],
+            )
+            .expect("dependencies should resolve");
+
+        assert_eq!(
+            plan_addresses(&plan),
+            ["@adico/utility", "@adico/button", "@adico/card"]
+        );
+        assert_eq!(
+            plan.requested
+                .iter()
+                .map(ToString::to_string)
+                .collect::<Vec<_>>(),
+            ["@adico/button", "@adico/card"]
+        );
+        let reversed = catalog
+            .resolve(
+                &default,
+                &[
+                    RegistryAddress::parse("button").expect("valid request"),
+                    RegistryAddress::parse("card").expect("valid request"),
+                ],
+            )
+            .expect("reversed request order should resolve");
+        assert_eq!(plan_addresses(&plan), plan_addresses(&reversed));
+    }
+
+    #[test]
+    fn resolver_keeps_company_defaults_and_explicit_official_items_separate() {
+        let catalog = catalog(vec![
+            registry_with_items("@adico", &[("button", &[])]),
+            registry_with_items("@awwwkshay", &[("company-card", &["@adico/button"])]),
+        ]);
+        let default: RegistryNamespace = "@awwwkshay".parse().expect("valid namespace");
+        let plan = catalog
+            .resolve(
+                &default,
+                &[
+                    RegistryAddress::parse("company-card").expect("valid request"),
+                    RegistryAddress::parse("@adico/button").expect("valid request"),
+                ],
+            )
+            .expect("explicit cross-registry dependency should resolve");
+
+        assert_eq!(
+            plan_addresses(&plan),
+            ["@adico/button", "@awwwkshay/company-card"]
+        );
+        assert_eq!(plan.items[1].manifest_digest, "fixture-digest");
+    }
+
+    #[test]
+    fn resolver_never_falls_back_to_another_registry_for_a_bare_dependency() {
+        let catalog = catalog(vec![
+            registry_with_items("@adico", &[("button", &[])]),
+            registry_with_items("@awwwkshay", &[("company-card", &["button"])]),
+        ]);
+        let error = catalog
+            .resolve(
+                &"@awwwkshay".parse().expect("valid namespace"),
+                &[RegistryAddress::parse("company-card").expect("valid request")],
+            )
+            .expect_err("bare dependency cannot cross registry boundaries");
+        assert!(
+            matches!(error, RegistryError::UnknownRegistryItem { address } if address == "@awwwkshay/button")
+        );
+    }
+
+    #[test]
+    fn resolver_reports_missing_items_and_cross_registry_cycles() {
+        let missing_catalog = catalog(vec![registry_with_items("@adico", &[])]);
+        assert!(matches!(
+            missing_catalog
+                .resolve(
+                    &"@adico".parse().expect("valid namespace"),
+                    &[RegistryAddress::parse("button").expect("valid request")],
+                )
+                .expect_err("missing item must fail"),
+            RegistryError::UnknownRegistryItem { .. }
+        ));
+
+        let cyclic_catalog = catalog(vec![
+            registry_with_items("@adico", &[("button", &["@awwwkshay/card"])]),
+            registry_with_items("@awwwkshay", &[("card", &["@adico/button"])]),
+        ]);
+        assert!(matches!(
+            cyclic_catalog
+                .resolve(
+                    &"@adico".parse().expect("valid namespace"),
+                    &[RegistryAddress::parse("button").expect("valid request")],
+                )
+                .expect_err("cross-registry cycle must fail"),
+            RegistryError::CrossRegistryDependencyCycle { .. }
+        ));
     }
 }
