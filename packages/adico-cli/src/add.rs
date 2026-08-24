@@ -5,8 +5,8 @@ use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use adico_registry_core::{
-    ComponentsConfiguration, RegistryInstallPlan, RegistryItemAddress, ResolvedRegistryItem,
-    TargetRoot,
+    ComponentsConfiguration, RegistryCatalog, RegistryError, RegistryInstallPlan,
+    RegistryItemAddress, ResolvedRegistryItem, TargetRoot,
 };
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -248,6 +248,44 @@ pub fn plan_source_install<R: RegistryFileReader>(
     })
 }
 
+/// A deterministic `adico add --all` plan. The resolved install sequence is
+/// retained for review/output, while its source writes use the same preflight
+/// and transactional apply behavior as explicitly requested items.
+#[derive(Clone, Debug)]
+pub struct AddAllPlan {
+    /// Dependency-first resolved items from the selected default registry.
+    pub install: RegistryInstallPlan,
+    /// Source and lockfile writes for the resolved item set.
+    pub source: AddPlan,
+}
+
+impl AddAllPlan {
+    /// Returns whether applying every selected item changes the project.
+    pub fn has_changes(&self) -> bool {
+        self.source.has_changes()
+    }
+
+    /// Applies every source and lockfile change through the shared installer.
+    pub fn apply(&self) -> Result<(), AddError> {
+        self.source.apply()
+    }
+}
+
+/// Resolves every item from the configured default registry and preflights it
+/// through the same source installer used by `adico add <component...>`.
+pub fn plan_add_all<R: RegistryFileReader>(
+    catalog: &RegistryCatalog,
+    project_root: &Path,
+    configuration: &ComponentsConfiguration,
+    reader: &R,
+) -> Result<AddAllPlan, AddAllError> {
+    let install = catalog
+        .resolve_all(&configuration.default_registry)
+        .map_err(|error| AddAllError::Registry(Box::new(error)))?;
+    let source = plan_source_install(project_root, configuration, &install, reader)?;
+    Ok(AddAllPlan { install, source })
+}
+
 #[derive(Clone, Debug)]
 struct PlannedWrite {
     path: PathBuf,
@@ -418,12 +456,24 @@ pub enum AddError {
     WriteFailed { path: String, message: String },
 }
 
+/// `--all` planning failures retain either registry-resolution or source-file
+/// context without performing a consumer-project mutation.
+#[derive(Debug, Error)]
+pub enum AddAllError {
+    /// The selected registry could not be resolved.
+    #[error(transparent)]
+    Registry(Box<RegistryError>),
+    /// Source-install preflight failed.
+    #[error(transparent)]
+    Source(#[from] AddError),
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use adico_registry_core::{
-        ComponentPaths, RegistryItem, RegistryItemType, RegistryLocation, RegistryNamespace,
-        StyleRequirements,
+        ComponentPaths, EmbeddedRegistry, RegistryItem, RegistryItemType, RegistryLocation,
+        RegistryNamespace, RegistrySource, RegistrySourceLoader, StyleRequirements,
     };
     use std::collections::BTreeMap;
 
@@ -520,6 +570,69 @@ mod tests {
                 manifest_digest: "fixture-manifest-digest".to_string(),
             }],
         }
+    }
+
+    fn company_catalog(root: &Path) -> (RegistryCatalog, FixtureReader) {
+        let registry_root = root.join("company-registry");
+        let source_root = registry_root.join("ui");
+        fs::create_dir_all(&source_root).expect("registry source directory should be created");
+        let sources = [
+            ("utility", b"pub fn utility() {}\n".as_slice()),
+            ("button", b"pub fn button() {}\n".as_slice()),
+            ("card", b"pub fn card() {}\n".as_slice()),
+        ];
+        for (name, bytes) in &sources {
+            fs::write(source_root.join(format!("{name}.rs")), bytes)
+                .expect("registry source should be written");
+        }
+        let manifest = format!(
+            r#"{{
+  "formatVersion": 1,
+  "namespace": "@awwwkshay",
+  "name": "Awwwkshay fixtures",
+  "compatibility": {{ "cli": ">=0.1.0" }},
+  "items": [
+    {{ "name": "utility", "type": "registry:lib", "description": "utility", "files": [{{ "source": "ui/utility.rs", "targetRoot": "lib", "target": "utility.rs", "checksum": "{}" }}] }},
+    {{ "name": "button", "type": "registry:ui", "description": "button", "registryDependencies": ["utility"], "files": [{{ "source": "ui/button.rs", "targetRoot": "ui", "target": "button.rs", "checksum": "{}" }}] }},
+    {{ "name": "card", "type": "registry:ui", "description": "card", "registryDependencies": ["utility"], "files": [{{ "source": "ui/card.rs", "targetRoot": "ui", "target": "card.rs", "checksum": "{}" }}] }}
+  ]
+}}"#,
+            checksum(sources[0].1),
+            checksum(sources[1].1),
+            checksum(sources[2].1),
+        );
+        fs::write(registry_root.join("registry.json"), manifest)
+            .expect("registry manifest should be written");
+        let embedded_manifest = br#"{
+            "formatVersion": 1,
+            "namespace": "@adico",
+            "name": "embedded fixture",
+            "compatibility": { "cli": ">=0.1.0" },
+            "items": []
+        }"#;
+        let loader =
+            RegistrySourceLoader::new(EmbeddedRegistry::new(embedded_manifest, &registry_root));
+        let namespace: RegistryNamespace = "@awwwkshay".parse().expect("valid namespace");
+        let loaded = loader
+            .load(
+                &namespace,
+                &RegistrySource::Local {
+                    path: registry_root.display().to_string(),
+                },
+            )
+            .expect("company registry should load");
+        let mut catalog = RegistryCatalog::new();
+        catalog
+            .insert(loaded)
+            .expect("catalog should accept registry");
+        let mut reader = FixtureReader::default();
+        for (name, bytes) in sources {
+            reader.files.insert(
+                (format!("@awwwkshay/{name}"), format!("ui/{name}.rs")),
+                bytes.to_vec(),
+            );
+        }
+        (catalog, reader)
     }
 
     #[test]
@@ -620,6 +733,40 @@ mod tests {
             "consumer added this after planning\n"
         );
         assert!(!root.join("adico.lock").exists());
+        fs::remove_dir_all(root).expect("temporary project should be removable");
+    }
+
+    #[test]
+    fn all_uses_the_same_install_path_for_every_local_registry_item_once() {
+        let root = temporary_project();
+        let (catalog, reader) = company_catalog(&root);
+        let mut configuration = configuration();
+        configuration.default_registry = "@awwwkshay".parse().expect("valid namespace");
+        configuration.registries = BTreeMap::from([(
+            configuration.default_registry.clone(),
+            RegistrySource::Local {
+                path: "company-registry".to_string(),
+            },
+        )]);
+        let plan = plan_add_all(&catalog, &root, &configuration, &reader)
+            .expect("all company items should plan");
+        assert_eq!(
+            plan.install
+                .items
+                .iter()
+                .map(|item| item.address.to_string())
+                .collect::<Vec<_>>(),
+            ["@awwwkshay/utility", "@awwwkshay/button", "@awwwkshay/card"]
+        );
+        plan.apply().expect("all company sources should install");
+        assert!(root.join("src/lib/utility.rs").is_file());
+        assert!(root.join("src/components/ui/button.rs").is_file());
+        assert!(root.join("src/components/ui/card.rs").is_file());
+        assert!(
+            !plan_add_all(&catalog, &root, &configuration, &reader)
+                .expect("repeat all should plan")
+                .has_changes()
+        );
         fs::remove_dir_all(root).expect("temporary project should be removable");
     }
 }

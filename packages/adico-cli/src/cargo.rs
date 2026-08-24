@@ -289,15 +289,21 @@ pub enum CargoEditError {
 mod tests {
     use super::*;
     use adico_registry_core::RegistryItemAddress;
+    use std::sync::atomic::{AtomicUsize, Ordering};
     use std::time::{SystemTime, UNIX_EPOCH};
+
+    static TEMPORARY_DIRECTORY_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
     fn temporary_manifest(contents: &str) -> PathBuf {
         let nonce = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .expect("valid time")
             .as_nanos();
-        let root =
-            std::env::temp_dir().join(format!("adico-cargo-test-{}-{nonce}", std::process::id()));
+        let sequence = TEMPORARY_DIRECTORY_COUNTER.fetch_add(1, Ordering::Relaxed);
+        let root = std::env::temp_dir().join(format!(
+            "adico-cargo-test-{}-{nonce}-{sequence}",
+            std::process::id()
+        ));
         fs::create_dir_all(&root).expect("temporary directory should be created");
         let path = root.join("Cargo.toml");
         fs::write(&path, contents).expect("temporary manifest should be written");

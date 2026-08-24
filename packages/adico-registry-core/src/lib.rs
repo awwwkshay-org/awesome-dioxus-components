@@ -702,6 +702,24 @@ impl RegistryCatalog {
         })
     }
 
+    /// Resolves every item published by one configured registry in stable
+    /// source-name order. This is the single registry-core entry point behind
+    /// `adico add --all`; it deliberately does not include other configured
+    /// registries unless the caller selects them as the source.
+    pub fn resolve_all(
+        &self,
+        namespace: &RegistryNamespace,
+    ) -> Result<RegistryInstallPlan, RegistryError> {
+        let registry = self.require_registry(namespace)?;
+        let requests = registry
+            .manifest
+            .items
+            .iter()
+            .map(|item| RegistryAddress::Bare(item.name.clone()))
+            .collect::<Vec<_>>();
+        self.resolve(namespace, &requests)
+    }
+
     fn request_address(
         &self,
         default_registry: &RegistryNamespace,
@@ -2207,6 +2225,33 @@ mod tests {
             )
             .expect("reversed request order should resolve");
         assert_eq!(plan_addresses(&plan), plan_addresses(&reversed));
+    }
+
+    #[test]
+    fn resolver_all_uses_the_selected_registry_once_in_stable_order() {
+        let catalog = catalog(vec![registry_with_items(
+            "@awwwkshay",
+            &[
+                ("utility", &[]),
+                ("button", &["utility"]),
+                ("card", &["utility"]),
+            ],
+        )]);
+        let selected: RegistryNamespace = "@awwwkshay".parse().expect("valid namespace");
+        let plan = catalog
+            .resolve_all(&selected)
+            .expect("all configured company items should resolve");
+        assert_eq!(
+            plan_addresses(&plan),
+            ["@awwwkshay/utility", "@awwwkshay/button", "@awwwkshay/card"]
+        );
+        assert_eq!(
+            plan.requested
+                .iter()
+                .map(ToString::to_string)
+                .collect::<Vec<_>>(),
+            ["@awwwkshay/button", "@awwwkshay/card", "@awwwkshay/utility"]
+        );
     }
 
     #[test]
