@@ -1,0 +1,103 @@
+## Why
+
+Dioxus developers need a coherent, source-owned way to adopt accessible,
+shadcn-style components without coupling their applications to a monolithic UI
+crate or waiting for upstream component work to merge. This change establishes
+**Awesome Dioxus Components** (`adico`): an independently releasable primitive
+layer, a Rust-native component registry, and an installer CLI that copies
+editable component source into a consumer's project.
+
+The work must prove a reliable distribution pipeline with the components that
+already exist in `DioxusLabs/dioxus-components` before expanding toward full
+first-party shadcn catalog parity. This sequencing minimizes duplicate work and
+makes the platform useful while parity is progressively delivered.
+
+## What Changes
+
+- Reframe the repository as the `adico` monorepo, preserving the existing Rust
+  workspace while adding the conceptual `apps`, `packages`, `examples`,
+  `registry`, `tests`, `scripts`, and parity-tracking boundaries.
+- Establish `adico-primitives` as an owned, independently releasable headless
+  runtime layer. It will begin with appropriately reused/forked Dioxus
+  primitives, recorded with source commit, license, notices, port history, and
+  local divergence metadata; upstream contribution remains optional.
+- Introduce `adico-registry-core` and a checked-in registry source/build model
+  for source-owned UI items, their Rust/Cargo dependencies, their registry
+  dependencies, module-export requirements, and theme/CSS requirements. An
+  organization can curate a compatible local or static HTTPS registry and make
+  it the consumer project's default without forking the CLI.
+- Introduce the `adico` CLI with production-quality `init`, `add <items...>`,
+  and `add --all` behavior. It creates/reads `components.json`, safely plans
+  and installs source, edits Cargo.toml structurally, and manages Rust module
+  exports only inside explicit adico-owned regions.
+- Deliver a first vertical slice using Button, Dialog, and one existing
+  complex component selected after the Dioxus Components inventory. The slice
+  validates source installation, `adico-primitives`, CSS/theme setup, Cargo
+  changes, module management, builds, and interaction behavior in a real
+  consumer-style example.
+- Inventory the current upstream Dioxus Components styled catalog and primitive
+  catalog, classify each reusable item, and migrate appropriate existing items
+  to the registry before implementing missing shadcn components.
+- Add a checked-in, refreshable snapshot of the current first-party shadcn
+  catalog plus a machine-readable parity manifest and `cargo xtask parity`
+  reporting. Catalog refreshes are explicit and reviewable rather than a live
+  network dependency of normal CI.
+- Define the subsequent staged path to full current shadcn parity: close gaps
+  in inherited components, then implement missing components by shared
+  primitive dependency groups, followed by application and newer chat/agent
+  components.
+- Add examples, compile/install fixtures, browser/keyboard/accessibility,
+  SSR/hydration, desktop, and visual test organization so examples validate
+  the same CLI installation path users follow.
+
+## Capabilities
+
+### New Capabilities
+
+- `adico-workspace-and-provenance`: Defines the `adico` monorepo boundaries,
+  package responsibilities, independent primitive ownership, and mandatory
+  licensing/provenance records for reused upstream code.
+- `adico-registry`: Defines the local registry source/build schema, item
+  dependency graph, installation plan, compatibility validation, and extensible
+  item categories.
+- `adico-project-configuration`: Defines the shadcn-style `components.json`
+  configuration, Dioxus-project detection, destinations, styles/themes, and
+  managed Rust-module conventions.
+- `adico-cli-installation`: Defines `adico init`, `adico add`, `add --all`,
+  structured Cargo.toml updates, idempotency, conflict handling, and the
+  source-ownership guarantee.
+- `adico-component-parity`: Defines upstream inventories, catalog snapshots,
+  the parity manifest/completion criteria, refresh tooling, and the staged
+  existing-first migration-to-parity sequence.
+- `adico-component-validation`: Defines consumer-style examples and the
+  compile, installation, browser, accessibility, interaction, SSR/hydration,
+  desktop, and visual validation expectations for registry components.
+
+### Modified Capabilities
+
+- None.
+
+## Impact
+
+- **Workspace and public APIs:** Adds `adico-cli`, `adico-primitives`,
+  `adico-registry-core`, `adico-test-utils`, and `adico-xtask`, plus registry
+  source and consumer examples. `adico` becomes a public executable and
+  `adico-primitives` a public runtime dependency for installed components.
+- **Consumer contracts:** Introduces `components.json`, including named
+  registry sources and `defaultRegistry`, adico-owned regions in generated
+  `mod.rs` files, and a documented Tailwind/CSS-variable theme entry point.
+  Existing user code outside managed regions remains untouched.
+- **Compatibility:** Web, desktop, SSR, and fullstack support are architectural
+  requirements; initial validation is deliberately milestone-scoped. Browser
+  interop is isolated behind primitives rather than copied UI source.
+- **Dependencies and licensing:** New Rust tooling dependencies include a
+  structured TOML editor; final Dioxus, Tailwind, icon, and browser-test
+  dependency versions are selected during the recorded compatibility audit.
+  Forked Dioxus Components code retains Apache-2.0 and MIT obligations and
+  auditable provenance.
+- **Non-goals:** This change does not require authenticated registry transport,
+  registry discovery/marketplaces, MCP integration, every future CLI command,
+  every shadcn block, or immediate completion of every missing shadcn
+  component. It does require an architecture that supports a configured local
+  or static HTTPS organizational registry and an explicit plan through full
+  parity.
