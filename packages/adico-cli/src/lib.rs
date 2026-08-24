@@ -3,4 +3,5 @@
 #![forbid(unsafe_code)]
 
 pub mod init;
+pub mod modules;
 pub mod project;
