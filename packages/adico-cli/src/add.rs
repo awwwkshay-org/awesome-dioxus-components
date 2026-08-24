@@ -677,6 +677,10 @@ mod tests {
                     source_root: PathBuf::new(),
                 },
                 manifest_digest: "fixture-manifest-digest".to_string(),
+                registry_compatibility: adico_registry_core::RegistryCompatibility {
+                    cli: ">=0.1.0".to_string(),
+                    runtime: None,
+                },
             }],
         }
     }

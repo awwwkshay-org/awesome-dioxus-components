@@ -17,11 +17,232 @@ fn main() {
     match arguments.first().map(String::as_str) {
         Some("init") => run_init(&arguments[1..]),
         Some("add") => run_add(&arguments[1..]),
+        Some("list") => run_list(&arguments[1..]),
+        Some("view") => run_view(&arguments[1..]),
         _ => {
             eprintln!(
-                "usage:\n  adico init [--default-registry <@namespace>] [--registry <@namespace>=<embedded|relative-path|https-url>] [--dry-run]\n  adico add <component...> [--dry-run]"
+                "usage:\n  adico init [--default-registry <@namespace>] [--registry <@namespace>=<embedded|relative-path|https-url>] [--dry-run]\n  adico add <component...> [--dry-run]\n  adico list [--registry <@namespace>]\n  adico view <component>"
             );
             std::process::exit(2);
+        }
+    }
+}
+
+fn run_list(arguments: &[String]) {
+    let namespace = match parse_list_options(arguments) {
+        Ok(namespace) => namespace,
+        Err(error) => exit_command_error("list", 2, error),
+    };
+    let (_, configuration, catalog) = match current_project_catalog() {
+        Ok(result) => result,
+        Err(error) => exit_command_error("list", 1, error),
+    };
+    let namespace = namespace.unwrap_or(configuration.default_registry);
+    let items = match catalog.items_in(&namespace) {
+        Ok(items) => items,
+        Err(error) => exit_command_error("list", 1, error.to_string()),
+    };
+    print!("{}", render_registry_list(&namespace, &items));
+}
+
+fn run_view(arguments: &[String]) {
+    let request = match parse_view_options(arguments) {
+        Ok(request) => request,
+        Err(error) => exit_command_error("view", 2, error),
+    };
+    let (_, configuration, catalog) = match current_project_catalog() {
+        Ok(result) => result,
+        Err(error) => exit_command_error("view", 1, error),
+    };
+    let plan = match catalog.resolve(&configuration.default_registry, &[request]) {
+        Ok(plan) => plan,
+        Err(error) => exit_command_error("view", 1, error.to_string()),
+    };
+    let requested = plan
+        .requested
+        .first()
+        .expect("one request is required by parse_view_options");
+    let item = plan
+        .items
+        .iter()
+        .find(|item| item.address == *requested)
+        .expect("a resolved requested item is included in its install plan");
+    print!("{}", render_registry_item(item));
+}
+
+fn parse_list_options(arguments: &[String]) -> Result<Option<RegistryNamespace>, String> {
+    let mut namespace = None;
+    let mut index = 0;
+    while index < arguments.len() {
+        match arguments[index].as_str() {
+            "--registry" => {
+                index += 1;
+                let value = arguments
+                    .get(index)
+                    .ok_or("--registry requires a configured @namespace")?;
+                if namespace.is_some() {
+                    return Err("--registry may be provided only once".to_string());
+                }
+                namespace = Some(
+                    value
+                        .parse()
+                        .map_err(|error: adico_registry_core::RegistryError| error.to_string())?,
+                );
+            }
+            argument => return Err(format!("unknown list option {argument:?}")),
+        }
+        index += 1;
+    }
+    Ok(namespace)
+}
+
+fn parse_view_options(arguments: &[String]) -> Result<RegistryAddress, String> {
+    match arguments {
+        [request] if !request.starts_with('-') => {
+            RegistryAddress::parse(request).map_err(|error| error.to_string())
+        }
+        [] => Err("a component address is required".to_string()),
+        _ => Err("view accepts exactly one component address".to_string()),
+    }
+}
+
+fn current_project_catalog() -> Result<(PathBuf, ComponentsConfiguration, RegistryCatalog), String>
+{
+    let current = env::current_dir()
+        .map_err(|error| format!("cannot determine current directory: {error}"))?;
+    let project = discover_dioxus_project(&current).map_err(|error| error.to_string())?;
+    let root = project
+        .package_manifest_path
+        .parent()
+        .expect("manifest has parent")
+        .to_path_buf();
+    let configuration = read_components_configuration(&root)?;
+    let (catalog, _) = configured_catalog(&root, &configuration)?;
+    Ok((root, configuration, catalog))
+}
+
+fn read_components_configuration(
+    root: &std::path::Path,
+) -> Result<ComponentsConfiguration, String> {
+    let contents = std::fs::read_to_string(root.join("components.json"))
+        .map_err(|_| "valid components.json is required; run adico init first".to_string())?;
+    ComponentsConfiguration::parse(&contents)
+        .map_err(|error| format!("components.json is invalid: {error}"))
+}
+
+fn exit_command_error(command: &str, status: i32, error: String) -> ! {
+    eprintln!("adico {command}: {error}");
+    std::process::exit(status);
+}
+
+fn render_registry_list(namespace: &RegistryNamespace, items: &[ResolvedRegistryItem]) -> String {
+    let mut output = format!("Available components from {namespace}:\n");
+    if items.is_empty() {
+        output.push_str("  (none)\n");
+        return output;
+    }
+    for item in items {
+        output.push_str(&format!(
+            "  {:<24} {:<20} {}\n",
+            item.address,
+            item.item.item_type.as_str(),
+            item.item.description
+        ));
+    }
+    output
+}
+
+fn render_registry_item(resolved: &ResolvedRegistryItem) -> String {
+    let item = &resolved.item;
+    let compatibility = item
+        .compatibility
+        .as_ref()
+        .unwrap_or(&resolved.registry_compatibility);
+    let mut output = format!(
+        "{}\nType: {}\nDescription: {}\nCompatibility: CLI {}{}\n",
+        resolved.address,
+        item.item_type.as_str(),
+        item.description,
+        compatibility.cli,
+        compatibility
+            .runtime
+            .as_deref()
+            .map(|runtime| format!(", runtime {runtime}"))
+            .unwrap_or_default(),
+    );
+    output.push_str("Files:\n");
+    for file in &item.files {
+        output.push_str(&format!(
+            "  {} -> {}/{}\n",
+            file.source,
+            file.target_root.as_str(),
+            file.target
+        ));
+    }
+    render_values(
+        &mut output,
+        "Registry dependencies",
+        &item.registry_dependencies,
+    );
+    let cargo_dependencies = item
+        .cargo_dependencies
+        .iter()
+        .map(|dependency| {
+            let package = dependency
+                .package
+                .as_deref()
+                .map(|package| format!(" (package {package})"))
+                .unwrap_or_default();
+            let features = if dependency.features.is_empty() {
+                String::new()
+            } else {
+                format!(" [{}]", dependency.features.join(", "))
+            };
+            let default_features = if dependency.default_features {
+                String::new()
+            } else {
+                " (default features disabled)".to_string()
+            };
+            format!(
+                "{} {}{}{}{}",
+                dependency.crate_name, dependency.version, package, features, default_features
+            )
+        })
+        .collect::<Vec<_>>();
+    render_values(&mut output, "Cargo dependencies", &cargo_dependencies);
+    let mut style = Vec::new();
+    if item.style.semantic_tokens {
+        style.push("semantic tokens".to_string());
+    }
+    if item.style.radius_token {
+        style.push("radius token".to_string());
+    }
+    style.extend(
+        item.style
+            .utilities
+            .iter()
+            .map(|utility| format!("utility {utility}")),
+    );
+    render_values(&mut output, "Style requirements", &style);
+    if let Some(provenance) = &item.provenance {
+        output.push_str(&format!("Provenance: {}", provenance.record));
+        if let Some(revision) = &provenance.revision {
+            output.push_str(&format!(" (revision {revision})"));
+        }
+        output.push('\n');
+    } else {
+        output.push_str("Provenance: none declared\n");
+    }
+    output
+}
+
+fn render_values(output: &mut String, label: &str, values: &[String]) {
+    output.push_str(&format!("{label}:\n"));
+    if values.is_empty() {
+        output.push_str("  (none)\n");
+    } else {
+        for value in values {
+            output.push_str(&format!("  {value}\n"));
         }
     }
 }
@@ -328,7 +549,7 @@ mod tests {
     }
 
     #[test]
-    fn bare_requests_use_the_project_selected_local_registry() {
+    fn discovery_uses_default_and_explicit_configured_sources_without_mutation() {
         let nonce = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .expect("valid time")
@@ -390,6 +611,65 @@ mod tests {
             )
             .expect("bare company item should resolve");
         assert_eq!(plan.items[0].address.to_string(), "@awwwkshay/button");
+        let company_items = catalog
+            .items_in(&configuration.default_registry)
+            .expect("company items should list");
+        assert_eq!(
+            render_registry_list(&configuration.default_registry, &company_items),
+            "Available components from @awwwkshay:\n  @awwwkshay/button registry:ui          company button\n"
+        );
+        let official: RegistryNamespace = "@adico".parse().expect("valid namespace");
+        let official_items = catalog
+            .items_in(&official)
+            .expect("official items should list");
+        assert_eq!(
+            official_items
+                .iter()
+                .map(|item| item.address.to_string())
+                .collect::<Vec<_>>(),
+            vec![
+                "@adico/button".to_string(),
+                "@adico/cn".to_string(),
+                "@adico/dialog".to_string(),
+            ]
+        );
+        let official_plan = catalog
+            .resolve(
+                &configuration.default_registry,
+                &[RegistryAddress::parse("@adico/dialog").expect("valid official request")],
+            )
+            .expect("official dialog should resolve");
+        let dialog = official_plan
+            .items
+            .iter()
+            .find(|item| item.address.to_string() == "@adico/dialog")
+            .expect("official dialog should be present");
+        let details = render_registry_item(dialog);
+        assert!(details.contains("@adico/dialog\nType: registry:ui"));
+        assert!(details.contains("Registry dependencies:\n  cn"));
+        assert!(details.contains("Cargo dependencies:\n  dioxus =0.7.9"));
+        assert!(
+            details.contains("Provenance: provenance/records/adico-primitives-dialog-select.json")
+        );
+        assert!(
+            !root.join("src").exists(),
+            "discovery must not create consumer source"
+        );
+        assert!(
+            !root.join("components.json").exists(),
+            "discovery must not create consumer configuration"
+        );
         fs::remove_dir_all(root).expect("temporary project should be removable");
+    }
+
+    #[test]
+    fn list_and_view_options_reject_ambiguous_or_mutating_forms() {
+        let selected = parse_list_options(&["--registry".to_string(), "@adico".to_string()])
+            .expect("one namespace should parse")
+            .expect("the namespace is supplied");
+        assert_eq!(selected.as_str(), "@adico");
+        assert!(parse_list_options(&["button".to_string()]).is_err());
+        assert!(parse_view_options(&[]).is_err());
+        assert!(parse_view_options(&["button".to_string(), "dialog".to_string()]).is_err());
     }
 }

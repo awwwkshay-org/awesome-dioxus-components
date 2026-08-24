@@ -218,6 +218,23 @@ pub enum RegistryItemType {
     Template,
 }
 
+impl RegistryItemType {
+    /// Returns the stable manifest spelling for this item category.
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Ui => "registry:ui",
+            Self::Component => "registry:component",
+            Self::Hook => "registry:hook",
+            Self::Lib => "registry:lib",
+            Self::Block => "registry:block",
+            Self::Page => "registry:page",
+            Self::Theme => "registry:theme",
+            Self::File => "registry:file",
+            Self::Template => "registry:template",
+        }
+    }
+}
+
 /// A source file installed as part of an item.
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -246,6 +263,19 @@ pub enum TargetRoot {
     Hooks,
     /// The configured CSS entry destination.
     Css,
+}
+
+impl TargetRoot {
+    /// Returns the stable manifest spelling for this logical consumer root.
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Ui => "ui",
+            Self::Components => "components",
+            Self::Lib => "lib",
+            Self::Hooks => "hooks",
+            Self::Css => "css",
+        }
+    }
 }
 
 /// A Cargo dependency installed or reconciled with the consumer manifest.
@@ -664,6 +694,8 @@ pub struct ResolvedRegistryItem {
     pub location: RegistryLocation,
     /// Digest of the manifest from which the item was resolved.
     pub manifest_digest: String,
+    /// Compatibility declared by the registry that supplied the item.
+    pub registry_compatibility: RegistryCompatibility,
 }
 
 /// A deterministic, dependency-first sequence of source-owned registry items.
@@ -747,6 +779,31 @@ impl RegistryCatalog {
         self.resolve(namespace, &requests)
     }
 
+    /// Lists the source items published by one configured registry in stable
+    /// item-name order. This read-only operation backs CLI discovery without
+    /// involving dependency resolution or consumer-project mutation.
+    pub fn items_in(
+        &self,
+        namespace: &RegistryNamespace,
+    ) -> Result<Vec<ResolvedRegistryItem>, RegistryError> {
+        let registry = self.require_registry(namespace)?;
+        let mut items = registry.manifest.items.clone();
+        items.sort_by(|left, right| left.name.cmp(&right.name));
+        Ok(items
+            .into_iter()
+            .map(|item| ResolvedRegistryItem {
+                address: RegistryItemAddress {
+                    namespace: namespace.clone(),
+                    item: item.name.clone(),
+                },
+                item,
+                location: registry.location.clone(),
+                manifest_digest: registry.manifest_digest.clone(),
+                registry_compatibility: registry.manifest.compatibility.clone(),
+            })
+            .collect())
+    }
+
     fn request_address(
         &self,
         default_registry: &RegistryNamespace,
@@ -813,6 +870,7 @@ impl RegistryCatalog {
             item: item.clone(),
             location: registry.location.clone(),
             manifest_digest: registry.manifest_digest.clone(),
+            registry_compatibility: registry.manifest.compatibility.clone(),
         });
         Ok(())
     }
@@ -2009,6 +2067,10 @@ mod tests {
                         source_root: fixture_root(),
                     },
                     manifest_digest: "fixture-digest".to_string(),
+                    registry_compatibility: RegistryCompatibility {
+                        cli: ">=0.1.0".to_string(),
+                        runtime: None,
+                    },
                 })
                 .collect(),
         }
