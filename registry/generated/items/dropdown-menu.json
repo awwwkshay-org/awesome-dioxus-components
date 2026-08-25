@@ -1,0 +1,55 @@
+{
+  "name": "dropdown-menu",
+  "type": "registry:ui",
+  "description": "A source-owned compositional dropdown menu with roving-focus keyboard navigation.",
+  "files": [
+    {
+      "source": "ui/dropdown_menu.rs",
+      "targetRoot": "ui",
+      "target": "dropdown_menu.rs",
+      "checksum": "3a37c3aee9aa5617561e53073df9e88e907a80a0d793782081c77205137b56c2"
+    }
+  ],
+  "registryDependencies": [],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": []
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "dropdown_menu",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "dropdown-menu",
+    "compositionNote": "The copied façade re-exports the owned DropdownMenu parts unstyled, matching select's approach: DropdownMenuItem is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains roving-focus keyboard and ARIA behavior."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave3-overlays.json",
+    "revision": null
+  }
+}

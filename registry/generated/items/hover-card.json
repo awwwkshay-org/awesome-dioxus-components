@@ -1,0 +1,59 @@
+{
+  "name": "hover-card",
+  "type": "registry:ui",
+  "description": "A source-owned Dioxus hover card backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/hover_card.rs",
+      "targetRoot": "ui",
+      "target": "hover_card.rs",
+      "checksum": "f5af7dda147c3c676b5d92b95cfc2927eb714ce598e8007e9641f0f569608aeb"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "hover_card",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "hover-card",
+    "compositionNote": "The public copied API remains compositional; hover/focus handling and ARIA wiring remain inside adico-primitives."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave3-overlays.json",
+    "revision": null
+  }
+}

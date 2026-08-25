@@ -323,6 +323,190 @@
         "compositionNote": "Composes the owned dialog primitive directly (SheetTitle/SheetDescription/Sheet re-export the Dialog primitive's parts); the styled wrapper only adds the slide-in side variant and positioning."
       },
       "provenance": { "record": "provenance/records/adico-primitives-dialog-select.json" }
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "description": "A source-owned Dioxus tooltip backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/tooltip.rs",
+          "targetRoot": "ui",
+          "target": "tooltip.rs",
+          "checksum": "d37d14e6dbbfb6cac11ea24a51fd2f7fe5b9b1031106dbb2ee042d426d95f029"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "tooltip", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "tooltip",
+        "compositionNote": "The public copied API remains compositional; hover/focus/Escape handling and ARIA wiring remain inside adico-primitives. Positioning is CSS-only via data-side/data-align attributes, matching the real upstream implementation (no portal or JS positioning engine)."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave3-overlays.json" }
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "description": "A source-owned Dioxus popover backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/popover.rs",
+          "targetRoot": "ui",
+          "target": "popover.rs",
+          "checksum": "e687386c9082f132c756c929b70b60c1dbcedcda9e1ad6789217ddd84d20d85e"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "popover", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "popover",
+        "compositionNote": "The public copied API remains compositional; focus trapping, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives (reusing the same use_focus_trap/FocusTrapScript internals as dialog)."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave3-overlays.json" }
+    },
+    {
+      "name": "hover-card",
+      "type": "registry:ui",
+      "description": "A source-owned Dioxus hover card backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/hover_card.rs",
+          "targetRoot": "ui",
+          "target": "hover_card.rs",
+          "checksum": "f5af7dda147c3c676b5d92b95cfc2927eb714ce598e8007e9641f0f569608aeb"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "hover_card", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "hover-card",
+        "compositionNote": "The public copied API remains compositional; hover/focus handling and ARIA wiring remain inside adico-primitives."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave3-overlays.json" }
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:ui",
+      "description": "A source-owned compositional dropdown menu with roving-focus keyboard navigation.",
+      "files": [
+        {
+          "source": "ui/dropdown_menu.rs",
+          "targetRoot": "ui",
+          "target": "dropdown_menu.rs",
+          "checksum": "3a37c3aee9aa5617561e53073df9e88e907a80a0d793782081c77205137b56c2"
+        }
+      ],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "dropdown_menu", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "dropdown-menu",
+        "compositionNote": "The copied façade re-exports the owned DropdownMenu parts unstyled, matching select's approach: DropdownMenuItem is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains roving-focus keyboard and ARIA behavior."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave3-overlays.json" }
+    },
+    {
+      "name": "context-menu",
+      "type": "registry:ui",
+      "description": "A source-owned Dioxus context menu backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/context_menu.rs",
+          "targetRoot": "ui",
+          "target": "context_menu.rs",
+          "checksum": "d6a677b6ae168729e2841da9691f022b0592f2a88bdc132783ad3b259659d7cd"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "context_menu", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "context-menu",
+        "compositionNote": "The public copied API remains compositional; right-click/long-press detection, positioning, roving-focus keyboard navigation, and ARIA wiring remain inside adico-primitives."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave3-overlays.json" }
+    },
+    {
+      "name": "menubar",
+      "type": "registry:ui",
+      "description": "A source-owned Dioxus menubar backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/menubar.rs",
+          "targetRoot": "ui",
+          "target": "menubar.rs",
+          "checksum": "c6d5e21f149604cd626864cf3503675076d629bf10550ea255179e527eb103d6"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "menubar", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "menubar",
+        "compositionNote": "The public copied API remains compositional; coordinated multi-menu roving-focus keyboard navigation and ARIA wiring remain inside adico-primitives."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave3-overlays.json" }
     }
   ]
 }

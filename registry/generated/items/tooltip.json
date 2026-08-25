@@ -1,0 +1,59 @@
+{
+  "name": "tooltip",
+  "type": "registry:ui",
+  "description": "A source-owned Dioxus tooltip backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/tooltip.rs",
+      "targetRoot": "ui",
+      "target": "tooltip.rs",
+      "checksum": "d37d14e6dbbfb6cac11ea24a51fd2f7fe5b9b1031106dbb2ee042d426d95f029"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "tooltip",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "tooltip",
+    "compositionNote": "The public copied API remains compositional; hover/focus/Escape handling and ARIA wiring remain inside adico-primitives. Positioning is CSS-only via data-side/data-align attributes, matching the real upstream implementation (no portal or JS positioning engine)."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave3-overlays.json",
+    "revision": null
+  }
+}

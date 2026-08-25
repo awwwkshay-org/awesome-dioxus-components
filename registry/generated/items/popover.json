@@ -1,0 +1,59 @@
+{
+  "name": "popover",
+  "type": "registry:ui",
+  "description": "A source-owned Dioxus popover backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/popover.rs",
+      "targetRoot": "ui",
+      "target": "popover.rs",
+      "checksum": "e687386c9082f132c756c929b70b60c1dbcedcda9e1ad6789217ddd84d20d85e"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "popover",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "popover",
+    "compositionNote": "The public copied API remains compositional; focus trapping, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives (reusing the same use_focus_trap/FocusTrapScript internals as dialog)."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave3-overlays.json",
+    "revision": null
+  }
+}

@@ -489,6 +489,66 @@ fn wave1_batch_add_installs_every_migrated_item_once() {
     assert!(manifest.contains("adico-primitives"));
 }
 
+#[test]
+fn wave3_batch_add_installs_every_overlay_item_once() {
+    let project = fixture_project("=0.7.9");
+    init(&project);
+
+    // The M3 Wave 3 migration batch: overlay/layer items, all of which pull
+    // in adico-primitives (unlike Wave 1's mostly-primitive-free items).
+    let output = project.adico(&[
+        "add",
+        "tooltip",
+        "popover",
+        "hover-card",
+        "dropdown-menu",
+        "context-menu",
+        "menubar",
+    ]);
+    assert!(
+        output.status.success(),
+        "wave 3 batch add should succeed: {}",
+        stderr(&output)
+    );
+    let report = stdout(&output);
+    for address in [
+        "@adico/tooltip",
+        "@adico/popover",
+        "@adico/hover-card",
+        "@adico/dropdown-menu",
+        "@adico/context-menu",
+        "@adico/menubar",
+        "@adico/cn",
+    ] {
+        assert!(
+            report.contains(address),
+            "{report} should mention {address}"
+        );
+    }
+
+    for file in [
+        "tooltip.rs",
+        "popover.rs",
+        "hover_card.rs",
+        "dropdown_menu.rs",
+        "context_menu.rs",
+        "menubar.rs",
+    ] {
+        assert!(
+            project.exists(&format!("src/components/ui/{file}")),
+            "{file} should be installed"
+        );
+    }
+    assert!(project.exists("src/adico_lib/cn.rs"));
+
+    let lock = project.read("adico.lock");
+    assert_eq!(lock.matches("\"address\": \"@adico/cn\"").count(), 1);
+
+    // Every Wave 3 item depends on the owned primitive crate.
+    let manifest = project.read("Cargo.toml");
+    assert!(manifest.contains("adico-primitives"));
+}
+
 /// Sanity check on the fixture helper itself: two independent fixtures never
 /// collide on disk.
 #[test]

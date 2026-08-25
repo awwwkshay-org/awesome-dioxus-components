@@ -1,0 +1,6 @@
+[application]
+name = "adico-wave3-consumer"
+default_platform = "web"
+
+[web.app]
+title = "adico Wave 3 fixture"

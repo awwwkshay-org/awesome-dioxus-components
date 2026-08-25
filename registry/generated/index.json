@@ -12,13 +12,19 @@
     "button": "items/button.json",
     "card": "items/card.json",
     "cn": "items/cn.json",
+    "context-menu": "items/context-menu.json",
     "dialog": "items/dialog.json",
+    "dropdown-menu": "items/dropdown-menu.json",
+    "hover-card": "items/hover-card.json",
     "input": "items/input.json",
     "item": "items/item.json",
+    "menubar": "items/menubar.json",
     "pagination": "items/pagination.json",
+    "popover": "items/popover.json",
     "select": "items/select.json",
     "sheet": "items/sheet.json",
     "skeleton": "items/skeleton.json",
-    "textarea": "items/textarea.json"
+    "textarea": "items/textarea.json",
+    "tooltip": "items/tooltip.json"
   }
 }

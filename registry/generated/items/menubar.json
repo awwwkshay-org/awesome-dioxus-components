@@ -1,0 +1,59 @@
+{
+  "name": "menubar",
+  "type": "registry:ui",
+  "description": "A source-owned Dioxus menubar backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/menubar.rs",
+      "targetRoot": "ui",
+      "target": "menubar.rs",
+      "checksum": "c6d5e21f149604cd626864cf3503675076d629bf10550ea255179e527eb103d6"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "menubar",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "menubar",
+    "compositionNote": "The public copied API remains compositional; coordinated multi-menu roving-focus keyboard navigation and ARIA wiring remain inside adico-primitives."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave3-overlays.json",
+    "revision": null
+  }
+}

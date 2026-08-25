@@ -448,6 +448,24 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/sheet.rs") => {
                 Ok(include_bytes!("../../../registry/ui/sheet.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/tooltip.rs") => {
+                Ok(include_bytes!("../../../registry/ui/tooltip.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/popover.rs") => {
+                Ok(include_bytes!("../../../registry/ui/popover.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/hover_card.rs") => {
+                Ok(include_bytes!("../../../registry/ui/hover_card.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/dropdown_menu.rs") => {
+                Ok(include_bytes!("../../../registry/ui/dropdown_menu.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/context_menu.rs") => {
+                Ok(include_bytes!("../../../registry/ui/context_menu.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/menubar.rs") => {
+                Ok(include_bytes!("../../../registry/ui/menubar.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"
@@ -682,14 +700,20 @@ mod tests {
                 "@adico/button".to_string(),
                 "@adico/card".to_string(),
                 "@adico/cn".to_string(),
+                "@adico/context-menu".to_string(),
                 "@adico/dialog".to_string(),
+                "@adico/dropdown-menu".to_string(),
+                "@adico/hover-card".to_string(),
                 "@adico/input".to_string(),
                 "@adico/item".to_string(),
+                "@adico/menubar".to_string(),
                 "@adico/pagination".to_string(),
+                "@adico/popover".to_string(),
                 "@adico/select".to_string(),
                 "@adico/sheet".to_string(),
                 "@adico/skeleton".to_string(),
                 "@adico/textarea".to_string(),
+                "@adico/tooltip".to_string(),
             ]
         );
         let official_plan = catalog

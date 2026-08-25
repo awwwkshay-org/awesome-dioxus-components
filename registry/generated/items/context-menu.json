@@ -1,0 +1,59 @@
+{
+  "name": "context-menu",
+  "type": "registry:ui",
+  "description": "A source-owned Dioxus context menu backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/context_menu.rs",
+      "targetRoot": "ui",
+      "target": "context_menu.rs",
+      "checksum": "d6a677b6ae168729e2841da9691f022b0592f2a88bdc132783ad3b259659d7cd"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "context_menu",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "context-menu",
+    "compositionNote": "The public copied API remains compositional; right-click/long-press detection, positioning, roving-focus keyboard navigation, and ARIA wiring remain inside adico-primitives."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave3-overlays.json",
+    "revision": null
+  }
+}
