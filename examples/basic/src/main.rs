@@ -4,9 +4,12 @@ fn main() {
     dioxus::launch(App);
 }
 
+const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
+
 #[component]
 fn App() -> Element {
     rsx! {
+        document::Stylesheet { href: TAILWIND_CSS }
         main { class: "space-y-6 p-6",
             h1 { "adico basic example" }
             components::ui::Button { "Source-owned Button" }
