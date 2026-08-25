@@ -419,6 +419,17 @@ fn source_lock_refresh_merges_items_across_separate_add_invocations() {
     );
     assert!(project.exists("src/components/ui/button.rs"));
     assert!(project.exists("src/components/ui/dialog.rs"));
+
+    // The mod.rs managed region must retain button's declaration from the
+    // first invocation, not just its file on disk and lock entry -- this is
+    // the exact bug a second, unrelated `adico add` used to trigger: mod.rs
+    // was rebuilt from only the current invocation's items, silently
+    // dropping every previously installed module's `pub mod`/`pub use`.
+    let mod_rs = project.read("src/components/ui/mod.rs");
+    assert!(mod_rs.contains("pub mod button;"));
+    assert!(mod_rs.contains("pub mod dialog;"));
+    assert!(mod_rs.contains("pub use button::*;"));
+    assert!(mod_rs.contains("pub use dialog::*;"));
 }
 
 #[test]

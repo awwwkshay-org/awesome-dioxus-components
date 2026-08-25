@@ -56,30 +56,77 @@ impl ModuleUpdatePlan {
 }
 
 /// Plans a deterministic update to one adico-managed `mod.rs` region.
+///
+/// Each `adico add` invocation only knows the registry items it was asked to
+/// install, not every item a prior invocation already declared here. Merging
+/// `requests` into whatever the managed region already lists (rather than
+/// replacing it outright) is what keeps `adico add <new-item>` from silently
+/// dropping every previously installed module's `pub mod`/`pub use` lines.
 pub fn plan_module_update(
     path: impl Into<PathBuf>,
     requests: &[ModuleExportRequest],
 ) -> Result<ModuleUpdatePlan, ModuleError> {
     let path = path.into();
-    let entries = normalized_entries(requests)?;
-    let managed_body = managed_body(&entries);
+    let new_entries = normalized_entries(requests)?;
     let contents = match path.try_exists().map_err(|error| ModuleError::ReadFailed {
         path: path.display().to_string(),
         message: error.to_string(),
     })? {
-        false => Some(format!(
-            "{MANAGED_REGION_START}\n{managed_body}{MANAGED_REGION_END}\n"
-        )),
+        false => {
+            let managed_body = managed_body(&new_entries);
+            Some(format!(
+                "{MANAGED_REGION_START}\n{managed_body}{MANAGED_REGION_END}\n"
+            ))
+        }
         true => {
             let existing = fs::read_to_string(&path).map_err(|error| ModuleError::ReadFailed {
                 path: path.display().to_string(),
                 message: error.to_string(),
             })?;
+            let mut merged = managed_region_entries(&existing)?;
+            for (module, reexport) in new_entries {
+                merged
+                    .entry(module)
+                    .and_modify(|existing_reexport| *existing_reexport |= reexport)
+                    .or_insert(reexport);
+            }
+            let managed_body = managed_body(&merged);
             let updated = replace_managed_region(&existing, &managed_body)?;
             (updated != existing).then_some(updated)
         }
     };
     Ok(ModuleUpdatePlan { path, contents })
+}
+
+/// Extracts the module entries already declared in a file's managed region,
+/// using the same marker validation `replace_managed_region` applies so a
+/// missing/malformed region is still rejected rather than silently merged
+/// against nothing.
+fn managed_region_entries(existing: &str) -> Result<BTreeMap<String, bool>, ModuleError> {
+    let starts = marker_positions(existing, MANAGED_REGION_START);
+    let ends = marker_positions(existing, MANAGED_REGION_END);
+    let (start, end) = match (starts.as_slice(), ends.as_slice()) {
+        ([], []) => return Err(ModuleError::MissingManagedRegion),
+        ([start], [end]) if start < end => (*start, *end),
+        _ => return Err(ModuleError::MalformedManagedRegion),
+    };
+    let body = &existing[start + MANAGED_REGION_START.len()..end];
+    let mut entries = BTreeMap::new();
+    for line in body.lines() {
+        let line = line.trim();
+        if let Some(module) = line
+            .strip_prefix("pub mod ")
+            .and_then(|rest| rest.strip_suffix(';'))
+        {
+            entries.entry(module.to_string()).or_insert(false);
+        } else if let Some(module) = line
+            .strip_prefix("pub use ")
+            .and_then(|rest| rest.strip_suffix("::*;"))
+        {
+            entries.insert(module.to_string(), true);
+        }
+    }
+    Ok(entries)
 }
 
 /// Plans an entrypoint-owned module region. Unlike a nested `mod.rs`, a Rust
@@ -92,8 +139,7 @@ pub fn plan_entrypoint_module_update(
     requests: &[ModuleExportRequest],
 ) -> Result<ModuleUpdatePlan, ModuleError> {
     let path = path.into();
-    let entries = normalized_entries(requests)?;
-    let managed_body = managed_body(&entries);
+    let new_entries = normalized_entries(requests)?;
     let existing = fs::read_to_string(&path).map_err(|error| ModuleError::ReadFailed {
         path: path.display().to_string(),
         message: error.to_string(),
@@ -102,11 +148,24 @@ pub fn plan_entrypoint_module_update(
         marker_positions(&existing, MANAGED_REGION_START),
         marker_positions(&existing, MANAGED_REGION_END),
     ) {
-        (starts, ends) if starts.is_empty() && ends.is_empty() => format!(
-            "{}\n\n{MANAGED_REGION_START}\n{managed_body}{MANAGED_REGION_END}\n",
-            existing.trim_end()
-        ),
-        _ => replace_managed_region(&existing, &managed_body)?,
+        (starts, ends) if starts.is_empty() && ends.is_empty() => {
+            let managed_body = managed_body(&new_entries);
+            format!(
+                "{}\n\n{MANAGED_REGION_START}\n{managed_body}{MANAGED_REGION_END}\n",
+                existing.trim_end()
+            )
+        }
+        _ => {
+            let mut merged = managed_region_entries(&existing)?;
+            for (module, reexport) in new_entries {
+                merged
+                    .entry(module)
+                    .and_modify(|existing_reexport| *existing_reexport |= reexport)
+                    .or_insert(reexport);
+            }
+            let managed_body = managed_body(&merged);
+            replace_managed_region(&existing, &managed_body)?
+        }
     };
     Ok(ModuleUpdatePlan {
         path,
@@ -261,6 +320,40 @@ mod tests {
                 .expect("same request should be planable")
                 .has_changes()
         );
+        fs::remove_dir_all(path.ancestors().nth(4).expect("temp root should exist"))
+            .expect("test directory should be removable");
+    }
+
+    #[test]
+    fn a_later_add_merges_with_rather_than_replaces_earlier_declarations() {
+        let path = temporary_module_path();
+        // "dialog" and "button" installed first, matching a real `adico add`.
+        plan_module_update(&path, &requests())
+            .expect("first module update should plan")
+            .apply()
+            .expect("first module update should apply");
+
+        // A later, unrelated `adico add card` only knows about "card" -- it
+        // must not drop "button"/"dialog" from the managed region.
+        let later_request = vec![ModuleExportRequest {
+            module: "card".to_string(),
+            reexport: true,
+        }];
+        let plan =
+            plan_module_update(&path, &later_request).expect("later module update should plan");
+        assert_eq!(
+            plan.contents.as_deref(),
+            Some(
+                "// adico:start\npub mod button;\npub mod card;\npub mod dialog;\n\npub use button::*;\npub use card::*;\npub use dialog::*;\n// adico:end\n"
+            )
+        );
+        plan.apply().expect("later module update should apply");
+        assert!(
+            !plan_module_update(&path, &later_request)
+                .expect("repeated later request should plan")
+                .has_changes()
+        );
+
         fs::remove_dir_all(path.ancestors().nth(4).expect("temp root should exist"))
             .expect("test directory should be removable");
     }

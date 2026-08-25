@@ -351,7 +351,7 @@ fn plan_component_install<R: RegistryFileReader>(
         modules.push(plan_module_update(path, &requests)?);
     }
     let theme = requires_theme
-        .then(|| plan_theme_install(project_root.join(&configuration.css.entry)))
+        .then(|| plan_theme_install(project_root.join(&configuration.css.entry), project_root))
         .transpose()?;
     Ok(ComponentAddPlan {
         install,
