@@ -1,0 +1,55 @@
+{
+  "name": "combobox",
+  "type": "registry:ui",
+  "description": "A source-owned compositional autocomplete input with a filterable popup list.",
+  "files": [
+    {
+      "source": "ui/combobox.rs",
+      "targetRoot": "ui",
+      "target": "combobox.rs",
+      "checksum": "543bd615914f7daca5aaa092d85c6b72e2534efd5934adb01edfc9b39050d061"
+    }
+  ],
+  "registryDependencies": [],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": []
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "combobox",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "combobox",
+    "compositionNote": "The copied façade re-exports the owned Combobox parts unstyled, matching select's approach: ComboboxOption is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains filtering, roving-focus keyboard, and ARIA behavior."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave4-collection.json",
+    "revision": null
+  }
+}

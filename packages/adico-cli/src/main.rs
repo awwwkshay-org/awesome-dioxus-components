@@ -466,6 +466,18 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/menubar.rs") => {
                 Ok(include_bytes!("../../../registry/ui/menubar.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/combobox.rs") => {
+                Ok(include_bytes!("../../../registry/ui/combobox.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/calendar.rs") => {
+                Ok(include_bytes!("../../../registry/ui/calendar.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/date_picker.rs") => {
+                Ok(include_bytes!("../../../registry/ui/date_picker.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/sidebar.rs") => {
+                Ok(include_bytes!("../../../registry/ui/sidebar.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"
@@ -698,9 +710,12 @@ mod tests {
             vec![
                 "@adico/badge".to_string(),
                 "@adico/button".to_string(),
+                "@adico/calendar".to_string(),
                 "@adico/card".to_string(),
                 "@adico/cn".to_string(),
+                "@adico/combobox".to_string(),
                 "@adico/context-menu".to_string(),
+                "@adico/date-picker".to_string(),
                 "@adico/dialog".to_string(),
                 "@adico/dropdown-menu".to_string(),
                 "@adico/hover-card".to_string(),
@@ -711,6 +726,7 @@ mod tests {
                 "@adico/popover".to_string(),
                 "@adico/select".to_string(),
                 "@adico/sheet".to_string(),
+                "@adico/sidebar".to_string(),
                 "@adico/skeleton".to_string(),
                 "@adico/textarea".to_string(),
                 "@adico/tooltip".to_string(),

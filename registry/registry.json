@@ -507,6 +507,125 @@
         "compositionNote": "The public copied API remains compositional; coordinated multi-menu roving-focus keyboard navigation and ARIA wiring remain inside adico-primitives."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave3-overlays.json" }
+    },
+    {
+      "name": "combobox",
+      "type": "registry:ui",
+      "description": "A source-owned compositional autocomplete input with a filterable popup list.",
+      "files": [
+        {
+          "source": "ui/combobox.rs",
+          "targetRoot": "ui",
+          "target": "combobox.rs",
+          "checksum": "543bd615914f7daca5aaa092d85c6b72e2534efd5934adb01edfc9b39050d061"
+        }
+      ],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "combobox", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "combobox",
+        "compositionNote": "The copied façade re-exports the owned Combobox parts unstyled, matching select's approach: ComboboxOption is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains filtering, roving-focus keyboard, and ARIA behavior."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave4-collection.json" }
+    },
+    {
+      "name": "calendar",
+      "type": "registry:ui",
+      "description": "A source-owned compositional date-grid calendar with single and range selection.",
+      "files": [
+        {
+          "source": "ui/calendar.rs",
+          "targetRoot": "ui",
+          "target": "calendar.rs",
+          "checksum": "229ce2529908340a1f02d10ae13e4b14ee62099122ae1887d950bd8ee8f8b4e5"
+        }
+      ],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] },
+        { "crate": "time", "version": "=0.3.44" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "calendar", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "calendar",
+        "compositionNote": "The copied façade re-exports the owned Calendar parts unstyled: with 20+ composable parts, a full Tailwind restyle is deferred to M4 parity hardening. Applications style each primitive part directly with Dioxus class attributes while the runtime retains keyboard navigation, focus, and ARIA behavior."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave4-collection.json" }
+    },
+    {
+      "name": "date-picker",
+      "type": "registry:ui",
+      "description": "A source-owned compositional date and date-range picker, composing the owned calendar and popover primitives.",
+      "files": [
+        {
+          "source": "ui/date_picker.rs",
+          "targetRoot": "ui",
+          "target": "date_picker.rs",
+          "checksum": "1a4ae774ef4d7f702dd9b9fb4e125038f7d109bb9e27d1c495c971d016e2f9fe"
+        }
+      ],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] },
+        { "crate": "time", "version": "=0.3.44" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "date_picker", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "date-picker",
+        "compositionNote": "The copied façade re-exports the owned DatePicker parts unstyled, matching calendar's approach. Composes the owned calendar and popover primitives internally (a Cargo-level composition, not a registry dependency edge, the same relationship sheet already has with dialog)."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave4-collection.json" }
+    },
+    {
+      "name": "sidebar",
+      "type": "registry:ui",
+      "description": "A source-owned collapsible sidebar layout composition for Dioxus.",
+      "files": [
+        {
+          "source": "ui/sidebar.rs",
+          "targetRoot": "ui",
+          "target": "sidebar.rs",
+          "checksum": "36d71ca7807680b709e4ab7c757a2f6124205ecc7b79b096557e3bdc0b89b87d"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "sidebar", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "sidebar",
+        "compositionNote": "Unlike most registry items, upstream ships Sidebar as a styled preview component rather than an adico-primitives module; its only shared state is a plain open/closed signal from adico_primitives::use_controlled, and it composes the owned separator primitive directly. This initial pass renders one CSS-driven collapsible layout rather than upstream's document::eval-detected mobile sheet mode (that eval pattern was found non-functional while testing the Wave 3 overlay batch); a real viewport-driven mobile mode is deferred to M4/M5."
+      }
     }
   ]
 }

@@ -1,0 +1,63 @@
+{
+  "name": "calendar",
+  "type": "registry:ui",
+  "description": "A source-owned compositional date-grid calendar with single and range selection.",
+  "files": [
+    {
+      "source": "ui/calendar.rs",
+      "targetRoot": "ui",
+      "target": "calendar.rs",
+      "checksum": "229ce2529908340a1f02d10ae13e4b14ee62099122ae1887d950bd8ee8f8b4e5"
+    }
+  ],
+  "registryDependencies": [],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "time",
+      "package": null,
+      "version": "=0.3.44",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": []
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "calendar",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "calendar",
+    "compositionNote": "The copied façade re-exports the owned Calendar parts unstyled: with 20+ composable parts, a full Tailwind restyle is deferred to M4 parity hardening. Applications style each primitive part directly with Dioxus class attributes while the runtime retains keyboard navigation, focus, and ARIA behavior."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave4-collection.json",
+    "revision": null
+  }
+}

@@ -7,6 +7,7 @@
     "test:dialog": "playwright test dialog.spec.ts",
     "test:select": "playwright test select.spec.ts",
     "test:wave3": "playwright test wave3.spec.ts",
+    "test:wave4": "playwright test wave4.spec.ts",
     "test:fullstack": "playwright test fullstack.spec.ts"
   },
   "devDependencies": {

@@ -10,9 +10,12 @@
   "items": {
     "badge": "items/badge.json",
     "button": "items/button.json",
+    "calendar": "items/calendar.json",
     "card": "items/card.json",
     "cn": "items/cn.json",
+    "combobox": "items/combobox.json",
     "context-menu": "items/context-menu.json",
+    "date-picker": "items/date-picker.json",
     "dialog": "items/dialog.json",
     "dropdown-menu": "items/dropdown-menu.json",
     "hover-card": "items/hover-card.json",
@@ -23,6 +26,7 @@
     "popover": "items/popover.json",
     "select": "items/select.json",
     "sheet": "items/sheet.json",
+    "sidebar": "items/sidebar.json",
     "skeleton": "items/skeleton.json",
     "textarea": "items/textarea.json",
     "tooltip": "items/tooltip.json"

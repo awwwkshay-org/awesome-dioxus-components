@@ -549,6 +549,53 @@ fn wave3_batch_add_installs_every_overlay_item_once() {
     assert!(manifest.contains("adico-primitives"));
 }
 
+#[test]
+fn wave4_batch_add_installs_every_collection_item_once() {
+    let project = fixture_project("=0.7.9");
+    init(&project);
+
+    // The M3 Wave 4 migration batch: collection/selection/navigation items
+    // plus sidebar (a registry-only composition with no primitive module).
+    let output = project.adico(&["add", "combobox", "calendar", "date-picker", "sidebar"]);
+    assert!(
+        output.status.success(),
+        "wave 4 batch add should succeed: {}",
+        stderr(&output)
+    );
+    let report = stdout(&output);
+    for address in [
+        "@adico/combobox",
+        "@adico/calendar",
+        "@adico/date-picker",
+        "@adico/sidebar",
+        "@adico/cn",
+    ] {
+        assert!(
+            report.contains(address),
+            "{report} should mention {address}"
+        );
+    }
+
+    for file in ["combobox.rs", "calendar.rs", "date_picker.rs", "sidebar.rs"] {
+        assert!(
+            project.exists(&format!("src/components/ui/{file}")),
+            "{file} should be installed"
+        );
+    }
+    // combobox/calendar/date-picker declare no cn registryDependency (raw
+    // re-exports), but sidebar does, so cn must still be installed once.
+    assert!(project.exists("src/adico_lib/cn.rs"));
+
+    let lock = project.read("adico.lock");
+    assert_eq!(lock.matches("\"address\": \"@adico/cn\"").count(), 1);
+
+    // Every Wave 4 item depends on the owned primitive crate; calendar and
+    // date-picker additionally require the time crate.
+    let manifest = project.read("Cargo.toml");
+    assert!(manifest.contains("adico-primitives"));
+    assert!(manifest.contains("time"));
+}
+
 /// Sanity check on the fixture helper itself: two independent fixtures never
 /// collide on disk.
 #[test]

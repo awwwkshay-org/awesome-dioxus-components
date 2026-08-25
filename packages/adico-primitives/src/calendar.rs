@@ -542,7 +542,7 @@ impl DefaultCalendarProps for CalendarProps {
 /// ```rust
 /// use dioxus::prelude::*;
 /// use adico_primitives::calendar::{
-///     Calendar, CalendarGrid, CalendarHeader, CalendarMonthTitle, CalendarNavigation, CalendarNextMonthButton, CalendarPreviousMonthButton
+///     Calendar, CalendarGrid, CalendarHeader, CalendarMonthTitle, CalendarNavigation, CalendarNextMonthButton, CalendarPreviousMonthButton, CalendarView
 /// };
 /// use time::{Date, Month, UtcDateTime};
 /// #[component]
@@ -561,18 +561,20 @@ impl DefaultCalendarProps for CalendarProps {
 ///                 tracing::info!("View changed to: {}-{}", new_view.year(), new_view.month());
 ///                 view_date.set(new_view);
 ///             },
-///             CalendarHeader {
-///                 CalendarNavigation {
-///                     CalendarPreviousMonthButton {
-///                         "<"
-///                     }
-///                     CalendarMonthTitle {}
-///                     CalendarNextMonthButton {
-///                         ">"
+///             CalendarView {
+///                 CalendarHeader {
+///                     CalendarNavigation {
+///                         CalendarPreviousMonthButton {
+///                             "<"
+///                         }
+///                         CalendarMonthTitle {}
+///                         CalendarNextMonthButton {
+///                             ">"
+///                         }
 ///                     }
 ///                 }
+///                 CalendarGrid {}
 ///             }
-///             CalendarGrid {}
 ///         }
 ///     }
 /// }
@@ -815,18 +817,20 @@ impl DefaultCalendarProps for RangeCalendarProps {
 ///                 tracing::info!("View changed to: {}-{}", new_view.year(), new_view.month());
 ///                 view_date.set(new_view);
 ///             },
-///             CalendarHeader {
-///                 CalendarNavigation {
-///                     CalendarPreviousMonthButton {
-///                         "<"
-///                     }
-///                     CalendarMonthTitle {}
-///                     CalendarNextMonthButton {
-///                         ">"
+///             CalendarView {
+///                 CalendarHeader {
+///                     CalendarNavigation {
+///                         CalendarPreviousMonthButton {
+///                             "<"
+///                         }
+///                         CalendarMonthTitle {}
+///                         CalendarNextMonthButton {
+///                             ">"
+///                         }
 ///                     }
 ///                 }
+///                 CalendarGrid {}
 ///             }
-///             CalendarGrid {}
 ///         }
 ///     }
 /// }
@@ -1000,6 +1004,13 @@ impl CalendarViewContext {
 /// Render one [`CalendarView`] for each month you want visible. The calendar derives the
 /// visible month count from the registered views and uses each view's render order as
 /// its month offset unless `offset` is provided.
+///
+/// **Required, not optional, even for a single month.** [`CalendarMonthTitle`] and
+/// [`CalendarGrid`] read [`CalendarView`]'s context and panic (`use_context` on a
+/// missing type) without it. Several doc examples on this crate's own components
+/// (inherited from upstream, never runtime-verified since doctests here are compiled
+/// but not executed) omit this wrapper; always nest a `CalendarView` between `Calendar`
+/// and its header/grid children, matching `docs/adico/m3-wave4-migration.md`.
 #[component]
 pub fn CalendarView(props: CalendarViewProps) -> Element {
     let base_ctx: BaseCalendarContext = use_context();
@@ -1051,7 +1062,7 @@ pub struct CalendarHeaderProps {
 /// ```rust
 /// use dioxus::prelude::*;
 /// use adico_primitives::calendar::{
-///     Calendar, CalendarGrid, CalendarHeader, CalendarMonthTitle, CalendarNavigation, CalendarNextMonthButton, CalendarPreviousMonthButton
+///     Calendar, CalendarGrid, CalendarHeader, CalendarMonthTitle, CalendarNavigation, CalendarNextMonthButton, CalendarPreviousMonthButton, CalendarView
 /// };
 /// use time::{Date, Month, UtcDateTime};
 /// #[component]
@@ -1070,18 +1081,20 @@ pub struct CalendarHeaderProps {
 ///                 tracing::info!("View changed to: {}-{}", new_view.year(), new_view.month());
 ///                 view_date.set(new_view);
 ///             },
-///             CalendarHeader {
-///                 CalendarNavigation {
-///                     CalendarPreviousMonthButton {
-///                         "<"
-///                     }
-///                     CalendarMonthTitle {}
-///                     CalendarNextMonthButton {
-///                         ">"
+///             CalendarView {
+///                 CalendarHeader {
+///                     CalendarNavigation {
+///                         CalendarPreviousMonthButton {
+///                             "<"
+///                         }
+///                         CalendarMonthTitle {}
+///                         CalendarNextMonthButton {
+///                             ">"
+///                         }
 ///                     }
 ///                 }
+///                 CalendarGrid {}
 ///             }
-///             CalendarGrid {}
 ///         }
 ///     }
 /// }
@@ -1121,7 +1134,7 @@ pub struct CalendarNavigationProps {
 /// ```rust
 /// use dioxus::prelude::*;
 /// use adico_primitives::calendar::{
-///     Calendar, CalendarGrid, CalendarHeader, CalendarMonthTitle, CalendarNavigation, CalendarNextMonthButton, CalendarPreviousMonthButton
+///     Calendar, CalendarGrid, CalendarHeader, CalendarMonthTitle, CalendarNavigation, CalendarNextMonthButton, CalendarPreviousMonthButton, CalendarView
 /// };
 /// use time::{Date, Month, UtcDateTime};
 /// #[component]
@@ -1140,18 +1153,20 @@ pub struct CalendarNavigationProps {
 ///                 tracing::info!("View changed to: {}-{}", new_view.year(), new_view.month());
 ///                 view_date.set(new_view);
 ///             },
-///             CalendarHeader {
-///                 CalendarNavigation {
-///                     CalendarPreviousMonthButton {
-///                         "<"
-///                     }
-///                     CalendarMonthTitle {}
-///                     CalendarNextMonthButton {
-///                         ">"
+///             CalendarView {
+///                 CalendarHeader {
+///                     CalendarNavigation {
+///                         CalendarPreviousMonthButton {
+///                             "<"
+///                         }
+///                         CalendarMonthTitle {}
+///                         CalendarNextMonthButton {
+///                             ">"
+///                         }
 ///                     }
 ///                 }
+///                 CalendarGrid {}
 ///             }
-///             CalendarGrid {}
 ///         }
 ///     }
 /// }
@@ -1186,7 +1201,7 @@ pub struct CalendarPreviousMonthButtonProps {
 /// ```rust
 /// use dioxus::prelude::*;
 /// use adico_primitives::calendar::{
-///     Calendar, CalendarGrid, CalendarHeader, CalendarMonthTitle, CalendarNavigation, CalendarNextMonthButton, CalendarPreviousMonthButton
+///     Calendar, CalendarGrid, CalendarHeader, CalendarMonthTitle, CalendarNavigation, CalendarNextMonthButton, CalendarPreviousMonthButton, CalendarView
 /// };
 /// use time::{Date, Month, UtcDateTime};
 /// #[component]
@@ -1205,18 +1220,20 @@ pub struct CalendarPreviousMonthButtonProps {
 ///                 tracing::info!("View changed to: {}-{}", new_view.year(), new_view.month());
 ///                 view_date.set(new_view);
 ///             },
-///             CalendarHeader {
-///                 CalendarNavigation {
-///                     CalendarPreviousMonthButton {
-///                         "<"
-///                     }
-///                     CalendarMonthTitle {}
-///                     CalendarNextMonthButton {
-///                         ">"
+///             CalendarView {
+///                 CalendarHeader {
+///                     CalendarNavigation {
+///                         CalendarPreviousMonthButton {
+///                             "<"
+///                         }
+///                         CalendarMonthTitle {}
+///                         CalendarNextMonthButton {
+///                             ">"
+///                         }
 ///                     }
 ///                 }
+///                 CalendarGrid {}
 ///             }
-///             CalendarGrid {}
 ///         }
 ///     }
 /// }
@@ -1286,7 +1303,7 @@ pub struct CalendarNextMonthButtonProps {
 /// ```rust
 /// use dioxus::prelude::*;
 /// use adico_primitives::calendar::{
-///     Calendar, CalendarGrid, CalendarHeader, CalendarMonthTitle, CalendarNavigation, CalendarNextMonthButton, CalendarPreviousMonthButton
+///     Calendar, CalendarGrid, CalendarHeader, CalendarMonthTitle, CalendarNavigation, CalendarNextMonthButton, CalendarPreviousMonthButton, CalendarView
 /// };
 /// use time::{Date, Month, UtcDateTime};
 /// #[component]
@@ -1305,18 +1322,20 @@ pub struct CalendarNextMonthButtonProps {
 ///                 tracing::info!("View changed to: {}-{}", new_view.year(), new_view.month());
 ///                 view_date.set(new_view);
 ///             },
-///             CalendarHeader {
-///                 CalendarNavigation {
-///                     CalendarPreviousMonthButton {
-///                         "<"
-///                     }
-///                     CalendarMonthTitle {}
-///                     CalendarNextMonthButton {
-///                         ">"
+///             CalendarView {
+///                 CalendarHeader {
+///                     CalendarNavigation {
+///                         CalendarPreviousMonthButton {
+///                             "<"
+///                         }
+///                         CalendarMonthTitle {}
+///                         CalendarNextMonthButton {
+///                             ">"
+///                         }
 ///                     }
 ///                 }
+///                 CalendarGrid {}
 ///             }
-///             CalendarGrid {}
 ///         }
 ///     }
 /// }
@@ -1388,7 +1407,7 @@ pub struct CalendarMonthTitleProps {
 /// ```rust
 /// use dioxus::prelude::*;
 /// use adico_primitives::calendar::{
-///     Calendar, CalendarGrid, CalendarHeader, CalendarMonthTitle, CalendarNavigation, CalendarNextMonthButton, CalendarPreviousMonthButton
+///     Calendar, CalendarGrid, CalendarHeader, CalendarMonthTitle, CalendarNavigation, CalendarNextMonthButton, CalendarPreviousMonthButton, CalendarView
 /// };
 /// use time::{Date, Month, UtcDateTime};
 /// #[component]
@@ -1407,18 +1426,20 @@ pub struct CalendarMonthTitleProps {
 ///                 tracing::info!("View changed to: {}-{}", new_view.year(), new_view.month());
 ///                 view_date.set(new_view);
 ///             },
-///             CalendarHeader {
-///                 CalendarNavigation {
-///                     CalendarPreviousMonthButton {
-///                         "<"
-///                     }
-///                     CalendarMonthTitle {}
-///                     CalendarNextMonthButton {
-///                         ">"
+///             CalendarView {
+///                 CalendarHeader {
+///                     CalendarNavigation {
+///                         CalendarPreviousMonthButton {
+///                             "<"
+///                         }
+///                         CalendarMonthTitle {}
+///                         CalendarNextMonthButton {
+///                             ">"
+///                         }
 ///                     }
 ///                 }
+///                 CalendarGrid {}
 ///             }
-///             CalendarGrid {}
 ///         }
 ///     }
 /// }
@@ -1653,7 +1674,7 @@ fn calendar_grid_weeks(view_date: Date, first_day_of_week: Weekday) -> Vec<Vec<D
 /// ```rust
 /// use dioxus::prelude::*;
 /// use adico_primitives::calendar::{
-///     Calendar, CalendarGrid, CalendarHeader, CalendarMonthTitle, CalendarNavigation, CalendarNextMonthButton, CalendarPreviousMonthButton
+///     Calendar, CalendarGrid, CalendarHeader, CalendarMonthTitle, CalendarNavigation, CalendarNextMonthButton, CalendarPreviousMonthButton, CalendarView
 /// };
 /// use time::{Date, Month, UtcDateTime};
 /// #[component]
@@ -1672,18 +1693,20 @@ fn calendar_grid_weeks(view_date: Date, first_day_of_week: Weekday) -> Vec<Vec<D
 ///                 tracing::info!("View changed to: {}-{}", new_view.year(), new_view.month());
 ///                 view_date.set(new_view);
 ///             },
-///             CalendarHeader {
-///                 CalendarNavigation {
-///                     CalendarPreviousMonthButton {
-///                         "<"
-///                     }
-///                     CalendarMonthTitle {}
-///                     CalendarNextMonthButton {
-///                         ">"
+///             CalendarView {
+///                 CalendarHeader {
+///                     CalendarNavigation {
+///                         CalendarPreviousMonthButton {
+///                             "<"
+///                         }
+///                         CalendarMonthTitle {}
+///                         CalendarNextMonthButton {
+///                             ">"
+///                         }
 ///                     }
 ///                 }
+///                 CalendarGrid {}
 ///             }
-///             CalendarGrid {}
 ///         }
 ///     }
 /// }
@@ -1875,7 +1898,7 @@ pub struct CalendarSelectMonthValueProps {
 /// use dioxus::prelude::*;
 /// use adico_primitives::calendar::{
 ///     Calendar, CalendarGrid, CalendarHeader, CalendarNavigation, CalendarNextMonthButton, CalendarPreviousMonthButton,
-///     CalendarSelectMonth, CalendarSelectMonthSelect, CalendarSelectMonthValue
+///     CalendarSelectMonth, CalendarSelectMonthSelect, CalendarSelectMonthValue, CalendarView
 /// };
 /// use time::{Date, Month, UtcDateTime};
 /// #[component]
@@ -1894,21 +1917,23 @@ pub struct CalendarSelectMonthValueProps {
 ///                 tracing::info!("View changed to: {}-{}", new_view.year(), new_view.month());
 ///                 view_date.set(new_view);
 ///             },
-///             CalendarHeader {
-///                 CalendarNavigation {
-///                     CalendarPreviousMonthButton {
-///                         "<"
-///                     }
-///                     CalendarSelectMonth {
-///                         CalendarSelectMonthSelect {}
-///                         CalendarSelectMonthValue {}
-///                     }
-///                     CalendarNextMonthButton {
-///                         ">"
+///             CalendarView {
+///                 CalendarHeader {
+///                     CalendarNavigation {
+///                         CalendarPreviousMonthButton {
+///                             "<"
+///                         }
+///                         CalendarSelectMonth {
+///                             CalendarSelectMonthSelect {}
+///                             CalendarSelectMonthValue {}
+///                         }
+///                         CalendarNextMonthButton {
+///                             ">"
+///                         }
 ///                     }
 ///                 }
+///                 CalendarGrid {}
 ///             }
-///             CalendarGrid {}
 ///         }
 ///     }
 /// }
@@ -2066,7 +2091,7 @@ pub struct CalendarSelectYearValueProps {
 /// use dioxus::prelude::*;
 /// use adico_primitives::calendar::{
 ///     Calendar, CalendarGrid, CalendarHeader, CalendarNavigation, CalendarNextMonthButton, CalendarPreviousMonthButton,
-///     CalendarSelectYear, CalendarSelectYearSelect, CalendarSelectYearValue
+///     CalendarSelectYear, CalendarSelectYearSelect, CalendarSelectYearValue, CalendarView
 /// };
 /// use time::{Date, Month, UtcDateTime};
 /// #[component]
@@ -2085,21 +2110,23 @@ pub struct CalendarSelectYearValueProps {
 ///                 tracing::info!("View changed to: {}-{}", new_view.year(), new_view.month());
 ///                 view_date.set(new_view);
 ///             },
-///             CalendarHeader {
-///                 CalendarNavigation {
-///                     CalendarPreviousMonthButton {
-///                         "<"
-///                     }
-///                     CalendarSelectYear {
-///                         CalendarSelectYearSelect {}
-///                         CalendarSelectYearValue {}
-///                     }
-///                     CalendarNextMonthButton {
-///                         ">"
+///             CalendarView {
+///                 CalendarHeader {
+///                     CalendarNavigation {
+///                         CalendarPreviousMonthButton {
+///                             "<"
+///                         }
+///                         CalendarSelectYear {
+///                             CalendarSelectYearSelect {}
+///                             CalendarSelectYearValue {}
+///                         }
+///                         CalendarNextMonthButton {
+///                             ">"
+///                         }
 ///                     }
 ///                 }
+///                 CalendarGrid {}
 ///             }
-///             CalendarGrid {}
 ///         }
 ///     }
 /// }
@@ -2263,18 +2290,20 @@ pub struct CalendarDayProps {
 ///                 tracing::info!("View changed to: {}-{}", new_view.year(), new_view.month());
 ///                 view_date.set(new_view);
 ///             },
-///             CalendarHeader {
-///                 CalendarNavigation {
-///                     CalendarPreviousMonthButton {
-///                         "<"
-///                     }
-///                     CalendarMonthTitle {}
-///                     CalendarNextMonthButton {
-///                         ">"
+///             CalendarView {
+///                 CalendarHeader {
+///                     CalendarNavigation {
+///                         CalendarPreviousMonthButton {
+///                             "<"
+///                         }
+///                         CalendarMonthTitle {}
+///                         CalendarNextMonthButton {
+///                             ">"
+///                         }
 ///                     }
 ///                 }
+///                 CalendarGrid {}
 ///             }
-///             CalendarGrid {}
 ///         }
 ///     }
 /// }

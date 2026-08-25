@@ -1,0 +1,54 @@
+{
+  "name": "sidebar",
+  "type": "registry:ui",
+  "description": "A source-owned collapsible sidebar layout composition for Dioxus.",
+  "files": [
+    {
+      "source": "ui/sidebar.rs",
+      "targetRoot": "ui",
+      "target": "sidebar.rs",
+      "checksum": "36d71ca7807680b709e4ab7c757a2f6124205ecc7b79b096557e3bdc0b89b87d"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "sidebar",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "sidebar",
+    "compositionNote": "Unlike most registry items, upstream ships Sidebar as a styled preview component rather than an adico-primitives module; its only shared state is a plain open/closed signal from adico_primitives::use_controlled, and it composes the owned separator primitive directly. This initial pass renders one CSS-driven collapsible layout rather than upstream's document::eval-detected mobile sheet mode (that eval pattern was found non-functional while testing the Wave 3 overlay batch); a real viewport-driven mobile mode is deferred to M4/M5."
+  },
+  "compatibility": null,
+  "provenance": null
+}

@@ -1,0 +1,63 @@
+{
+  "name": "date-picker",
+  "type": "registry:ui",
+  "description": "A source-owned compositional date and date-range picker, composing the owned calendar and popover primitives.",
+  "files": [
+    {
+      "source": "ui/date_picker.rs",
+      "targetRoot": "ui",
+      "target": "date_picker.rs",
+      "checksum": "1a4ae774ef4d7f702dd9b9fb4e125038f7d109bb9e27d1c495c971d016e2f9fe"
+    }
+  ],
+  "registryDependencies": [],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "time",
+      "package": null,
+      "version": "=0.3.44",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": []
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "date_picker",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "date-picker",
+    "compositionNote": "The copied façade re-exports the owned DatePicker parts unstyled, matching calendar's approach. Composes the owned calendar and popover primitives internally (a Cargo-level composition, not a registry dependency edge, the same relationship sheet already has with dialog)."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave4-collection.json",
+    "revision": null
+  }
+}
