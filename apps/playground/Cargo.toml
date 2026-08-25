@@ -6,7 +6,17 @@ license.workspace = true
 description = "Component and primitive development playground for adico"
 
 [dependencies]
-dioxus.workspace = true
+# Explicit (not `dioxus.workspace = true`): `adico add`'s Cargo editor does
+# not yet understand workspace-inherited dependency tables, only plain
+# strings/inline tables. Matches the pattern examples/* already use.
+dioxus = { version = "=0.7.9", default-features = false, features = ["launch", "macro", "html", "signals", "hooks", "asset", "document", "router"] }
+adico-primitives = { version = "=0.1.0", features = ["web"] }
+time = "=0.3.44"
+# dioxus-web 0.7.10's history integration calls web_sys::Window::location(),
+# which needs this feature enabled somewhere in the dependency graph for
+# Cargo's feature unification to make it available; dioxus-web itself does
+# not declare it.
+web-sys = { version = "=0.3.104", features = ["Location"] }
 
 [features]
 default = ["web"]
