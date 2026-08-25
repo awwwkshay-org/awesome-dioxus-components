@@ -10,13 +10,19 @@ use dioxus::prelude::*;
 use time::Date;
 
 use crate::components;
+use crate::controls::{BoolControl, SelectControl, TextControl};
 use crate::demo::Demo;
 
 #[component]
 pub fn ButtonPage() -> Element {
+    let disabled = use_signal(|| false);
     rsx! {
-        Demo { name: "Button",
-            components::ui::Button { "Source-owned Button" }
+        Demo {
+            name: "Button",
+            controls: rsx! {
+                BoolControl { label: "Disabled", value: disabled }
+            },
+            components::ui::Button { disabled: disabled(), "Source-owned Button" }
         }
     }
 }
@@ -48,9 +54,16 @@ pub fn CardPage() -> Element {
 
 #[component]
 pub fn InputPage() -> Element {
+    let placeholder = use_signal(|| "Type here".to_string());
+    let disabled = use_signal(|| false);
     rsx! {
-        Demo { name: "Input",
-            components::ui::Input { placeholder: "Type here" }
+        Demo {
+            name: "Input",
+            controls: rsx! {
+                TextControl { label: "Placeholder", value: placeholder }
+                BoolControl { label: "Disabled", value: disabled }
+            },
+            components::ui::Input { placeholder: placeholder(), disabled: disabled() }
         }
     }
 }
@@ -114,7 +127,11 @@ pub fn PaginationPage() -> Element {
 pub fn DialogPage() -> Element {
     let mut open = use_signal(|| false);
     rsx! {
-        Demo { name: "Dialog",
+        Demo {
+            name: "Dialog",
+            controls: rsx! {
+                BoolControl { label: "Open", value: open }
+            },
             components::ui::Dialog {
                 open: open(),
                 on_open_change: move |value| open.set(value),
@@ -152,9 +169,15 @@ pub fn SheetPage() -> Element {
 
 #[component]
 pub fn SelectPage() -> Element {
+    let disabled = use_signal(|| false);
     rsx! {
-        Demo { name: "Select",
+        Demo {
+            name: "Select",
+            controls: rsx! {
+                BoolControl { label: "Disabled", value: disabled }
+            },
             components::ui::Select::<String> {
+                disabled: disabled(),
                 components::ui::SelectTrigger {
                     aria_label: "Choose a fruit",
                     components::ui::SelectValue { placeholder: "Choose a fruit" }
@@ -209,13 +232,28 @@ pub fn TooltipPage() -> Element {
 #[component]
 pub fn PopoverPage() -> Element {
     let mut open = use_signal(|| false);
+    let mut align = use_signal(|| ContentAlign::Center);
     rsx! {
-        Demo { name: "Popover",
+        Demo {
+            name: "Popover",
+            controls: rsx! {
+                BoolControl { label: "Open", value: open }
+                SelectControl {
+                    label: "Align",
+                    value: align(),
+                    options: vec![
+                        ("Start", ContentAlign::Start),
+                        ("Center", ContentAlign::Center),
+                        ("End", ContentAlign::End),
+                    ],
+                    on_change: move |value| align.set(value),
+                }
+            },
             components::ui::Popover {
                 open: open(),
                 on_open_change: move |value| open.set(value),
                 components::ui::PopoverTrigger { "Open popover" }
-                components::ui::PopoverContent { "Popover content" }
+                components::ui::PopoverContent { align: align(), "Popover content" }
             }
         }
     }
@@ -356,10 +394,36 @@ pub fn DatePickerPage() -> Element {
 
 #[component]
 pub fn SidebarPage() -> Element {
+    let mut collapsible = use_signal(|| components::ui::SidebarCollapsible::Offcanvas);
+    let mut side = use_signal(|| components::ui::SidebarSide::Left);
     rsx! {
-        Demo { name: "Sidebar",
+        Demo {
+            name: "Sidebar",
+            controls: rsx! {
+                SelectControl {
+                    label: "Collapsible",
+                    value: collapsible(),
+                    options: vec![
+                        ("Offcanvas", components::ui::SidebarCollapsible::Offcanvas),
+                        ("Icon", components::ui::SidebarCollapsible::Icon),
+                        ("None", components::ui::SidebarCollapsible::None),
+                    ],
+                    on_change: move |value| collapsible.set(value),
+                }
+                SelectControl {
+                    label: "Side",
+                    value: side(),
+                    options: vec![
+                        ("Left", components::ui::SidebarSide::Left),
+                        ("Right", components::ui::SidebarSide::Right),
+                    ],
+                    on_change: move |value| side.set(value),
+                }
+            },
             components::ui::SidebarProvider { class: "rounded-lg border",
                 components::ui::Sidebar {
+                    collapsible: collapsible(),
+                    side: side(),
                     components::ui::SidebarHeader { "My App" }
                     components::ui::SidebarContent {
                         components::ui::SidebarGroup {

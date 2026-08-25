@@ -1,5 +1,6 @@
 use dioxus::prelude::*;
 
+mod controls;
 mod demo;
 mod pages;
 
