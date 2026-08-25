@@ -1,0 +1,33 @@
+{
+  "id": "adico-primitives-wave3-overlays",
+  "upstream": "https://github.com/DioxusLabs/dioxus-components",
+  "revision": "bf007c15d0cf4d04d3181cc46cf12325aa773955",
+  "license": ["MIT", "Apache-2.0"],
+  "importedAt": "2026-08-25",
+  "originalPaths": [
+    "primitives/src/tooltip.rs",
+    "primitives/src/popover.rs",
+    "primitives/src/hover_card.rs",
+    "primitives/src/dropdown_menu.rs",
+    "primitives/src/context_menu.rs",
+    "primitives/src/menubar.rs"
+  ],
+  "localPaths": [
+    "packages/adico-primitives/src/tooltip.rs",
+    "packages/adico-primitives/src/popover.rs",
+    "packages/adico-primitives/src/hover_card.rs",
+    "packages/adico-primitives/src/dropdown_menu.rs",
+    "packages/adico-primitives/src/context_menu.rs",
+    "packages/adico-primitives/src/menubar.rs"
+  ],
+  "changes": [
+    {
+      "date": "2026-08-25",
+      "summary": "Imported the M3 Wave 3 overlay/layer primitive batch (Tooltip, Popover, HoverCard, DropdownMenu, ContextMenu, Menubar) for task 4.4. None of these six items actually depend on upstream's portal.rs or a JS positioning engine (only toast.rs uses the portal in the real upstream source, contrary to the earlier migration-queue speculation drawn from inventory metadata alone) -- positioning is pure CSS via `data-side`/`data-align` attributes, already representable with the crate-root ContentSide/ContentAlign enums ported alongside this batch. Trigger components no longer depend on upstream's separate `dioxus-attributes` proc-macro crate or its `merge_attributes` helper or the polymorphic `r#as` render prop; default behavioral attributes are written directly on each trigger element with `..props.attributes` spread after them, the same plain-spread pattern this crate's `dialog` module already established. Popover's and ContextMenu's inline `document::eval` focus-trap/scroll-lock scripts are replaced with this crate's existing target-gated `use_focus_trap`/`FocusTrapScript`/new per-component gated helpers, keeping every module SSR-safe by construction instead of relying on an unconditional `document::eval` call. ContextMenu's long-press timer uses this crate's own target-aware `time::sleep` instead of upstream's `dioxus_sdk_time` dependency. DropdownMenu, ContextMenu, and Menubar reuse the collection/selectable roving-focus infrastructure already imported for Select; no new shared collection primitive was needed. Verified for native (SSR-safe default), `--features web --target wasm32-unknown-unknown`, and `--features desktop`."
+    }
+  ],
+  "notices": [
+    "Upstream is dual-licensed under MIT OR Apache-2.0; its LICENSE-MIT and LICENSE-APACHE texts are retained in third_party/dioxus-components/.",
+    "Each imported source unit identifies its immutable upstream revision and original path."
+  ]
+}

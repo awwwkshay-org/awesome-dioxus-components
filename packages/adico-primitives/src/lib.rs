@@ -34,6 +34,13 @@ pub use ::dioxus_core;
 pub mod dialog;
 pub mod select;
 
+pub mod context_menu;
+pub mod dropdown_menu;
+pub mod hover_card;
+pub mod menubar;
+pub mod popover;
+pub mod tooltip;
+
 mod collection;
 mod listbox;
 mod selectable;
@@ -287,4 +294,49 @@ pub(crate) fn FocusTrapScript() -> Element {
 #[component]
 pub(crate) fn FocusTrapScript() -> Element {
     rsx! {}
+}
+
+/// The side where overlay content will be displayed relative to its trigger.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum ContentSide {
+    /// The content will appear above the trigger.
+    Top,
+    /// The content will appear to the right of the trigger.
+    Right,
+    /// The content will appear below the trigger.
+    Bottom,
+    /// The content will appear to the left of the trigger.
+    Left,
+}
+
+impl ContentSide {
+    pub(crate) fn as_str(&self) -> &'static str {
+        match self {
+            Self::Top => "top",
+            Self::Right => "right",
+            Self::Bottom => "bottom",
+            Self::Left => "left",
+        }
+    }
+}
+
+/// The alignment of overlay content relative to its trigger.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum ContentAlign {
+    /// The content will be aligned to the start of the trigger.
+    Start,
+    /// The content will be centered relative to the trigger.
+    Center,
+    /// The content will be aligned to the end of the trigger.
+    End,
+}
+
+impl ContentAlign {
+    pub(crate) fn as_str(&self) -> &'static str {
+        match self {
+            Self::Start => "start",
+            Self::Center => "center",
+            Self::End => "end",
+        }
+    }
 }
