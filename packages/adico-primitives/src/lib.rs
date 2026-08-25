@@ -34,11 +34,15 @@ pub use ::dioxus_core;
 pub mod dialog;
 pub mod select;
 
+pub mod calendar;
+pub mod combobox;
 pub mod context_menu;
+pub mod date_picker;
 pub mod dropdown_menu;
 pub mod hover_card;
 pub mod menubar;
 pub mod popover;
+pub mod separator;
 pub mod tooltip;
 
 mod collection;
@@ -338,5 +342,20 @@ impl ContentAlign {
             Self::Center => "center",
             Self::End => "end",
         }
+    }
+}
+
+// `::time::` (crate-root-relative) disambiguates the external `time` crate
+// from this crate's own local `time` module (target-aware sleep support).
+pub(crate) trait LocalDateExt {
+    /// A small extension method function to get the local date with a fallback to UTC date if this fails
+    fn now_local_date() -> ::time::Date;
+}
+
+impl LocalDateExt for ::time::OffsetDateTime {
+    fn now_local_date() -> ::time::Date {
+        ::time::OffsetDateTime::now_local()
+            .map(|x| x.date())
+            .unwrap_or_else(|_| ::time::OffsetDateTime::now_utc().date())
     }
 }

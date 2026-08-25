@@ -13,6 +13,13 @@ dioxus = { version = "=0.7.9", default-features = false, features = ["asset", "h
 dioxus-core = "0.7.9"
 dioxus-document = "0.7.9"
 tracing = { workspace = true }
+time = { version = "0.3.44", features = ["std", "macros", "parsing", "local-offset"] }
+num-integer = "0.1.46"
+
+[dev-dependencies]
+# Only used by calendar/date_picker unit tests to render static HTML for
+# assertions; matches upstream's own dev-dependency.
+dioxus-ssr = "0.7.0"
 
 [target.'cfg(target_family = "wasm")'.dependencies]
 gloo-timers = { version = "0.3", features = ["futures"] }
@@ -23,7 +30,9 @@ tokio = { version = "1", features = ["time"] }
 [features]
 default = []
 # Enables browser DOM interop for WebAssembly consumers.
-web = []
+# `time`'s `local-offset` needs the browser's timezone via wasm-bindgen when
+# targeting wasm; native (desktop/native SSR) resolves it through the OS.
+web = ["time/wasm-bindgen"]
 # Enables WebView DOM interop for Dioxus desktop consumers.
 desktop = []
 # Exposes narrowly scoped test adapters for `adico-test-utils`; not required by consumers.

@@ -1,0 +1,44 @@
+{
+  "id": "adico-primitives-wave4-collection",
+  "upstream": "https://github.com/DioxusLabs/dioxus-components",
+  "revision": "bf007c15d0cf4d04d3181cc46cf12325aa773955",
+  "license": ["MIT", "Apache-2.0"],
+  "importedAt": "2026-08-25",
+  "originalPaths": [
+    "primitives/src/combobox/mod.rs",
+    "primitives/src/combobox/context.rs",
+    "primitives/src/combobox/components/mod.rs",
+    "primitives/src/combobox/components/combobox.rs",
+    "primitives/src/combobox/components/input.rs",
+    "primitives/src/combobox/components/list.rs",
+    "primitives/src/combobox/components/empty.rs",
+    "primitives/src/combobox/components/option.rs",
+    "primitives/src/calendar.rs",
+    "primitives/src/date_picker.rs",
+    "primitives/src/separator.rs"
+  ],
+  "localPaths": [
+    "packages/adico-primitives/src/combobox/mod.rs",
+    "packages/adico-primitives/src/combobox/context.rs",
+    "packages/adico-primitives/src/combobox/components/mod.rs",
+    "packages/adico-primitives/src/combobox/components/combobox.rs",
+    "packages/adico-primitives/src/combobox/components/input.rs",
+    "packages/adico-primitives/src/combobox/components/list.rs",
+    "packages/adico-primitives/src/combobox/components/empty.rs",
+    "packages/adico-primitives/src/combobox/components/option.rs",
+    "packages/adico-primitives/src/calendar.rs",
+    "packages/adico-primitives/src/date_picker.rs",
+    "packages/adico-primitives/src/separator.rs"
+  ],
+  "changes": [
+    {
+      "date": "2026-08-25",
+      "summary": "Imported the M3 Wave 4 collection/selection/navigation-dependent primitive batch (combobox, calendar, date_picker) for task 4.5, plus separator (a Wave 2 item, ported now only because it is a hard dependency of the sidebar registry composition -- the rest of Wave 2 remains unmigrated, see tasks.md/m3-migration-queue.md follow-up note). combobox needed zero adaptation beyond a Rust-2024 return-position-impl-Trait lifetime-capture fix (`+ use<>` on ComboboxContext::predicate/predicate_for, required because 2024 now captures the elided `&self` lifetime by default, conflicting with the following `&mut self.selectable` calls); it reuses the collection/selectable/listbox infrastructure already imported for select verbatim. calendar and date_picker (2806 and 1445 lines) compiled essentially unmodified after two fixes: (1) this crate's own private `mod time` (target-aware sleep support) shadows the external `time` crate name inside lib.rs specifically (sibling modules like calendar.rs are unaffected since they never import `crate::time`), fixed by qualifying the new `LocalDateExt` impl as `::time::...`; (2) upstream's internal doctest/test code referenced its own crate as `dioxus_primitives`, renamed to `adico_primitives`. Added `time =0.3.44` (`std`, `macros`, `parsing`, `local-offset` features; `web` feature now also enables `time/wasm-bindgen`, needed for `local-offset` under wasm), `num-integer =0.1.46` (date_picker only), and `dioxus-ssr =0.7.0` as a dev-dependency (matches upstream, only used by calendar/date_picker's own internal SSR-rendering unit tests). No document::eval, dioxus-attributes, or merge_attributes usage in any of these four files -- unlike Wave 3, no target-gating or attribute-spread adaptation was needed. Verified for native (SSR-safe default, 23 unit tests + 40 doctests all passing), `--features web --target wasm32-unknown-unknown`, and `--features desktop`."
+    }
+  ],
+  "notices": [
+    "Upstream is dual-licensed under MIT OR Apache-2.0; its LICENSE-MIT and LICENSE-APACHE texts are retained in third_party/dioxus-components/.",
+    "Each imported source unit identifies its immutable upstream revision and original path.",
+    "sidebar (also part of M3 Wave 4) has no upstream primitives/src file at all -- it ships upstream only as a styled preview component under preview/src/components/sidebar/, using CSS modules and a document::eval-based mobile-viewport hook of the same long-lived/repeatedly-firing kind already found non-functional in this runtime during Wave 3. It is therefore implemented directly as a registry:ui composition (registry/ui/sidebar.rs) rather than an adico-primitives module, and is not covered by this provenance record; see docs/adico/m3-wave4-migration.md for the adaptation."
+  ]
+}
