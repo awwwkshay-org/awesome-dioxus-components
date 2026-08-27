@@ -45,7 +45,7 @@ jobs:
 
     steps:
       - name: Checkout release source
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -199,7 +199,7 @@ jobs:
 
     steps:
       - name: Checkout infrastructure repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: ${{ env.INFRA_REPO }}
           ref: ${{ env.BASE_BRANCH }}
