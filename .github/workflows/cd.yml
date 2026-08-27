@@ -25,8 +25,40 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
+  guard:
+    name: Check deployable apps exist
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      ready: ${{ steps.check.outputs.ready }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Check for API/UI Dockerfiles
+        id: check
+        run: |
+          if [ -f apps/awesome-dioxus-components-api/Dockerfile ] && [ -f apps/awesome-dioxus-components-ui/Dockerfile ]; then
+            echo "ready=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "ready=false" >> "${GITHUB_OUTPUT}"
+            {
+              echo "## CD skipped"
+              echo
+              echo "This workflow is scaffolded ahead of the API/UI apps it deploys:"
+              echo "\`apps/awesome-dioxus-components-api\` and \`apps/awesome-dioxus-components-ui\`"
+              echo "(with their Dockerfiles) don't exist in this repository yet."
+              echo
+              echo "Point \`cd.yml\` at the real apps (or restore these two) once they land."
+            } >> "${GITHUB_STEP_SUMMARY}"
+          fi
+
   publish:
     name: Publish production images
+    needs: guard
+    if: needs.guard.outputs.ready == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     permissions:
@@ -177,9 +209,10 @@ jobs:
 
   propose:
     name: Propose production deployment
-    needs: publish
+    needs: [guard, publish]
     if: >-
-      ${{ vars.INFRA_REPOSITORY != '' &&
+      ${{ needs.guard.outputs.ready == 'true' &&
+          vars.INFRA_REPOSITORY != '' &&
           vars.INFRA_KUSTOMIZE_DIR != '' &&
           (github.event_name == 'release' || inputs.propose_deployment) }}
     runs-on: ubuntu-latest
