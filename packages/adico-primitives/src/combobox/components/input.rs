@@ -48,7 +48,7 @@ pub fn ComboboxInput(props: ComboboxInputProps) -> Element {
         if open() {
             query.cloned()
         } else {
-            ctx.selectable.selected_text().unwrap_or_default()
+            ctx.selectable.selected_texts().join(", ")
         }
     });
 

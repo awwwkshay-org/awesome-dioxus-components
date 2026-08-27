@@ -3,6 +3,7 @@
 
 use dioxus::prelude::*;
 
+use super::button::{Button, ButtonSize, ButtonVariant};
 use crate::adico_lib::cn::cn;
 use adico_primitives::dialog::{DialogContent as DialogPrimitiveContent, DialogCtx};
 pub use adico_primitives::dialog::{
@@ -47,17 +48,20 @@ impl SheetSide {
     }
 }
 
-/// Opens the surrounding [`Sheet`] through the owned headless primitive.
+/// Opens the surrounding [`Sheet`] with the installed [`Button`] component.
 #[component]
-pub fn SheetTrigger(children: Element, class: Option<String>) -> Element {
+pub fn SheetTrigger(
+    children: Element,
+    class: Option<String>,
+    variant: Option<ButtonVariant>,
+    size: Option<ButtonSize>,
+) -> Element {
     let context: DialogCtx = use_context();
-    let class = cn(&[
-        "inline-flex items-center justify-center",
-        class.as_deref().unwrap_or_default(),
-    ]);
     rsx! {
-        button {
+        Button {
             class,
+            variant: variant.unwrap_or_default(),
+            size: size.unwrap_or_default(),
             onclick: move |_| context.set_open(true),
             {children}
         }

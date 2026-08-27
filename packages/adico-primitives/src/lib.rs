@@ -227,8 +227,8 @@ fn use_animated_open(
     let animating = use_signal(|| false);
     let mut show_in_dom = use_signal(|| false);
     use_effect(move || {
-        let open = open.cloned();
-        if open {
+        let is_open = open.cloned();
+        if is_open {
             show_in_dom.set(true);
         } else {
             spawn(async move {
@@ -241,7 +241,12 @@ fn use_animated_open(
                 );
                 let _ = eval.send(id.cloned());
                 _ = eval.recv::<bool>().await;
-                show_in_dom.set(false);
+                // The close-animation task from the initial closed render can
+                // complete after a trigger has already reopened the layer.
+                // Never let that stale task remove currently-open content.
+                if !open.cloned() {
+                    show_in_dom.set(false);
+                }
             });
         }
     });

@@ -21,7 +21,7 @@ fn main() {
         Some("view") => run_view(&arguments[1..]),
         _ => {
             eprintln!(
-                "usage:\n  adico init [--default-registry <@namespace>] [--registry <@namespace>=<embedded|relative-path|https-url>] [--dry-run]\n  adico add <component...> [--dry-run]\n  adico list [--registry <@namespace>]\n  adico view <component>"
+                "usage:\n  adico init [--default-registry <@namespace>] [--registry <@namespace>=<embedded|relative-path|https-url>] [--dry-run]\n  adico add <component...> [--dry-run] [--replace]\n  adico list [--registry <@namespace>]\n  adico view <component>"
             );
             std::process::exit(2);
         }
@@ -248,7 +248,7 @@ fn render_values(output: &mut String, label: &str, values: &[String]) {
 }
 
 fn run_add(arguments: &[String]) {
-    let (request, dry_run) = match parse_add_options(arguments) {
+    let (request, dry_run, replace) = match parse_add_options(arguments) {
         Ok(options) => options,
         Err(error) => {
             eprintln!("adico add: {error}");
@@ -298,6 +298,7 @@ fn run_add(arguments: &[String]) {
             &configuration,
             &requests,
             &reader,
+            replace,
         ),
         AddRequest::All => plan_component_add_all(
             &catalog,
@@ -305,6 +306,7 @@ fn run_add(arguments: &[String]) {
             &project.package_manifest_path,
             &configuration,
             &reader,
+            replace,
         ),
     } {
         Ok(plan) => plan,
@@ -337,13 +339,16 @@ enum AddRequest {
     All,
 }
 
-fn parse_add_options(arguments: &[String]) -> Result<(AddRequest, bool), String> {
+fn parse_add_options(arguments: &[String]) -> Result<(AddRequest, bool, bool), String> {
     let mut dry_run = false;
+    let mut replace = false;
     let mut requests = Vec::new();
     let mut all = false;
     for argument in arguments {
         if argument == "--dry-run" {
             dry_run = true;
+        } else if argument == "--replace" {
+            replace = true;
         } else if argument == "--all" {
             all = true;
         } else if argument.starts_with('-') {
@@ -356,12 +361,12 @@ fn parse_add_options(arguments: &[String]) -> Result<(AddRequest, bool), String>
         return Err("--all cannot be combined with named components".to_string());
     }
     if all {
-        return Ok((AddRequest::All, dry_run));
+        return Ok((AddRequest::All, dry_run, replace));
     }
     if requests.is_empty() {
         return Err("at least one component is required".to_string());
     }
-    Ok((AddRequest::Items(requests), dry_run))
+    Ok((AddRequest::Items(requests), dry_run, replace))
 }
 
 fn configured_catalog(
@@ -774,10 +779,15 @@ mod tests {
 
     #[test]
     fn add_all_selects_the_registry_wide_install_path() {
-        let (request, dry_run) = parse_add_options(&["--all".to_string(), "--dry-run".to_string()])
-            .expect("add-all options should parse");
+        let (request, dry_run, replace) =
+            parse_add_options(&["--all".to_string(), "--dry-run".to_string()])
+                .expect("add-all options should parse");
         assert!(matches!(request, AddRequest::All));
         assert!(dry_run);
+        assert!(!replace);
+        let (_, _, replace) = parse_add_options(&["button".to_string(), "--replace".to_string()])
+            .expect("replace should parse");
+        assert!(replace);
         assert!(parse_add_options(&["--all".to_string(), "button".to_string()]).is_err());
     }
 }

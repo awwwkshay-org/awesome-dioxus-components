@@ -3,12 +3,14 @@ use dioxus::prelude::*;
 mod controls;
 mod demo;
 mod pages;
+mod theme;
 
 use pages::{
     BadgePage, ButtonPage, CalendarPage, CardPage, ComboboxPage, ContextMenuPage, DatePickerPage,
     DialogPage, DropdownMenuPage, HoverCardPage, InputPage, ItemPage, MenubarPage, PaginationPage,
     PopoverPage, SelectPage, SheetPage, SidebarPage, SkeletonPage, TextareaPage, TooltipPage,
 };
+use theme::{ThemeLauncher, ThemeModal, ThemeSelection};
 
 // Compiled by `dx serve`/`dx build` from the project-root `tailwind.css`
 // (which declares `@import "tailwindcss"` + `@source` + the adico theme
@@ -18,6 +20,12 @@ use pages::{
 // Cargo.toml — `adico add`'s CSS step does not wire the link or the feature
 // automatically yet.
 const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
+const PLAYGROUND_LOGO: Asset = asset!("/assets/web/android-chrome-192x192.png");
+const WEB_MANIFEST: Asset = asset!("/assets/web/site.webmanifest");
+const FAVICON: Asset = asset!("/assets/web/favicon.ico");
+const FAVICON_16: Asset = asset!("/assets/web/favicon-16x16.png");
+const FAVICON_32: Asset = asset!("/assets/web/favicon-32x32.png");
+const APPLE_TOUCH_ICON: Asset = asset!("/assets/web/apple-touch-icon.png");
 
 fn main() {
     dioxus::launch(App);
@@ -74,9 +82,21 @@ enum Route {
 
 #[component]
 fn App() -> Element {
+    let theme = use_signal(ThemeSelection::default);
+    use_context_provider(|| theme);
+    let selection = theme();
+
     rsx! {
+        document::Title { "adico playground" }
         document::Stylesheet { href: TAILWIND_CSS }
-        Router::<Route> {}
+        document::Link { rel: "manifest", href: WEB_MANIFEST }
+        document::Link { rel: "shortcut icon", r#type: "image/x-icon", href: FAVICON }
+        document::Link { rel: "icon", r#type: "image/png", sizes: "16x16", href: FAVICON_16 }
+        document::Link { rel: "icon", r#type: "image/png", sizes: "32x32", href: FAVICON_32 }
+        document::Link { rel: "apple-touch-icon", href: APPLE_TOUCH_ICON }
+        div { class: "{selection.shell_class()}", style: "{selection.variables()}",
+            Router::<Route> {}
+        }
     }
 }
 
@@ -108,21 +128,29 @@ fn nav_items() -> Vec<(&'static str, Route)> {
 
 #[component]
 fn Layout() -> Element {
+    let theme = use_context::<Signal<ThemeSelection>>();
+    let theme_open = use_signal(|| false);
+
     rsx! {
-        div { class: "mx-auto flex max-w-5xl gap-8 p-8",
-            nav { class: "w-48 shrink-0 space-y-1",
-                Link { class: "block text-lg font-bold", to: Route::Home {}, "adico playground" }
-                ul { class: "mt-4 space-y-1 text-sm",
+        div { class: "mx-auto flex h-full min-h-0 w-full max-w-none flex-col gap-4 p-4 lg:w-4/5 lg:flex-row lg:gap-6 lg:p-6",
+            nav { class: "flex min-h-0 w-full flex-col rounded-lg border border-sidebar-border bg-sidebar p-3 text-sidebar-foreground lg:w-60 lg:shrink-0",
+                Link { class: "flex shrink-0 items-center gap-2 text-lg font-bold", to: Route::Home {},
+                    img { class: "size-8 rounded-md", src: PLAYGROUND_LOGO, alt: "adico logo" }
+                    span { "adico playground" }
+                }
+                ul { class: "mt-4 min-h-0 flex-1 space-y-1 overflow-y-auto pr-1 text-sm",
                     for (label , route) in nav_items() {
                         li {
-                            Link { class: "block rounded px-2 py-1 hover:bg-accent", to: route, "{label}" }
+                            Link { class: "block rounded px-2 py-1 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground", to: route, "{label}" }
                         }
                     }
                 }
+                ThemeLauncher { open: theme_open }
             }
-            main { class: "min-w-0 flex-1 space-y-2",
+            main { class: "min-h-0 min-w-0 flex-1 overflow-hidden rounded-lg border border-border bg-muted/30 p-3 lg:p-6",
                 Outlet::<Route> {}
             }
+            ThemeModal { theme, open: theme_open }
         }
     }
 }

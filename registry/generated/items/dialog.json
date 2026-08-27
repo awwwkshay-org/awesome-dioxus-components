@@ -7,11 +7,12 @@
       "source": "ui/dialog.rs",
       "targetRoot": "ui",
       "target": "dialog.rs",
-      "checksum": "6312cd0eab91554c970c30567b85eebf33cbd3b847a0cf76c660cc86326d5ad0"
+      "checksum": "d37d1fdc4d45f7127130ce542a7431ecb3137656494e1800e0ee4534a362900d"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "button"
   ],
   "cargoDependencies": [
     {

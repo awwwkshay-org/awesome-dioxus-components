@@ -73,9 +73,9 @@ pub fn SelectValue(props: SelectValueProps) -> Element {
     let ctx = use_context::<SelectContext>();
 
     let is_empty = move || ctx.selectable.is_empty();
-    let display_value = ctx
-        .selectable
-        .selected_text()
+    let selected_values = ctx.selectable.selected_texts();
+    let display_value = (!selected_values.is_empty())
+        .then(|| selected_values.join(", "))
         .unwrap_or_else(|| props.placeholder.cloned());
 
     rsx! {

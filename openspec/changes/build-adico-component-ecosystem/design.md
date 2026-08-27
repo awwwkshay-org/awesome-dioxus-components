@@ -266,6 +266,57 @@ a declared Cargo dependency and a small replaceable icon adapter/type boundary
 when components need icons. They do not embed per-item SVG copies. M0 records
 the selected crate's Dioxus/version/platform compatibility and licensing.
 
+### 7a. Playground theme-combination validation
+
+The playground is a consumer-realistic visual validation surface, so it owns a
+small runtime-only customization launcher and modal rather than introducing a
+new registry runtime or changing copied component source. The launcher remains
+at the bottom of the navigation surface; the modal reuses the installed Dialog
+component so focus, Escape, and outside dismissal retain the same behavior
+that consumers receive. The modal provides independently
+selectable primary, secondary, and tertiary palette presets as a quick starting
+point, plus an advanced editor for the complete shadcn-style semantic contract:
+page/card/popover surfaces and foregrounds; primary, secondary, muted, accent,
+and destructive role pairs; border, input, ring, and radius; and every sidebar
+role. Light and dark appearances retain separate values, so a user can edit a
+combination without overwriting its counterpart.
+
+The modal can export the active appearance as a paste-ready `:root` or `.dark`
+CSS block containing the canonical shadcn variables. This export deliberately
+omits derived Tailwind `--color-*` aliases: consumers retain their ordinary
+`@theme` aliases, which resolve the copied canonical values in their own CSS
+scope.
+
+The selected mode is applied at the playground shell, together with the shared
+custom properties, so all routed component pages respond without component
+specific class or source changes. This keeps the theme contract identical to a
+consumer's installed CSS-variable contract and makes the controls useful for
+parity inspection. The initial configuration is deterministic and retained
+only for the current page session; persistence, system-preference negotiation,
+and consumer-facing theme generation remain outside this M3 playground task.
+
+Tailwind v4's generated `--color-*` utility aliases must be overridden at that
+same shell boundary as the lower-level shadcn variables. A `--color-primary`
+alias inherited from `:root` has already resolved its `var(--primary)` value,
+so changing only `--primary` on a descendant would not reliably recolor
+`bg-primary` and related utility classes. The tray therefore supplies each
+semantic source value and its Tailwind color alias together, keeping installed
+component utilities live without altering their source.
+
+The tray also provides a generate-theme action that selects a fresh palette
+combination and applies the resulting role defaults to both appearances. It
+uses an internal deterministic generator rather than browser randomness, so it
+does not add a client-only dependency or make SSR/hydration behavior depend on
+ambient platform state. Generated values are ordinary tray values and remain
+individually editable afterward.
+
+Alternative considered: create one stylesheet for every primary/secondary/
+tertiary combination. Rejected because it grows combinatorially, obscures the
+semantic-token contract, and makes adding a palette needlessly expensive.
+Alternative considered: alter each installed component to accept palette
+props. Rejected because themes must remain a shared consumer concern rather
+than a divergent copied-component API.
+
 ### 8. Stable copied-component APIs and platform features
 
 Installed components expose idiomatic Dioxus composition (for example,
@@ -320,6 +371,18 @@ full validation. Docs/playground publish only components whose parity record
 clearly exposes their maturity. Company-registry items have their own
 provenance/quality metadata and are never counted toward official shadcn parity
 unless explicitly mapped.
+
+### 10a. Current-component hardening gate
+
+Before another component migration wave begins, adico pauses on the currently
+installed registry set and makes its consumer proof surface trustworthy. The
+gate audits each installed component for public composition/API, all referenced
+semantic tokens in light and dark themes, visual states and variants,
+keyboard/pointer behavior, accessibility, responsive layout, and playground
+coverage. Findings are closed through shared primitives or copied source as
+appropriate, with focused tests and real consumer routes. This is a bounded
+hardening pass for already migrated components, not a claim of final catalog
+parity; the full M4 parity program remains the follow-on milestone.
 
 ## Risks / Trade-offs
 

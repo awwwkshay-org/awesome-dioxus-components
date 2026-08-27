@@ -1,13 +1,13 @@
 {
   "name": "pagination",
   "type": "registry:ui",
-  "description": "A source-owned shadcn-style Pagination composition for Dioxus.",
+  "description": "A source-owned shadcn-style Pagination composition with configurable native links.",
   "files": [
     {
       "source": "ui/pagination.rs",
       "targetRoot": "ui",
       "target": "pagination.rs",
-      "checksum": "ce086999b837e57e1f42dd0528f4cb428c94c50fa4fe752f6597a95ff2b11c4b"
+      "checksum": "aa7a7b0ee49a1b93c4cf86f5ef2de7b25e9333388eecab0764a493f9deb50fe2"
     }
   ],
   "registryDependencies": [

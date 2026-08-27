@@ -1,5 +1,6 @@
 //! Compile-time coverage for the public primitive facade.
 
+use adico_primitives::combobox::{Combobox, ComboboxMulti, ComboboxMultiProps, ComboboxProps};
 use adico_primitives::dialog::{
     DialogContent, DialogContentProps, DialogDescription, DialogDescriptionProps, DialogRoot,
     DialogRootProps, DialogTitle, DialogTitleProps,
@@ -33,4 +34,12 @@ fn select_public_facade_remains_importable() {
     let _ = SelectTrigger;
     let _ = SelectValue;
     let _ = std::any::type_name::<SelectProps<String>>();
+}
+
+#[test]
+fn combobox_multi_public_facade_remains_importable() {
+    let _ = Combobox::<String>;
+    let _ = ComboboxMulti::<String>;
+    let _ = std::any::type_name::<ComboboxProps<String>>();
+    let _ = std::any::type_name::<ComboboxMultiProps<String>>();
 }

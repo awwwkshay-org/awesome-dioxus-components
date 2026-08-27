@@ -7,15 +7,27 @@
       "source": "ui/date_picker.rs",
       "targetRoot": "ui",
       "target": "date_picker.rs",
-      "checksum": "1a4ae774ef4d7f702dd9b9fb4e125038f7d109bb9e27d1c495c971d016e2f9fe"
+      "checksum": "3cd195e1dc4059067d043b0caf88a4caf9656cd3a9ec42939e8c977b47149f86"
     }
   ],
-  "registryDependencies": [],
+  "registryDependencies": [
+    "cn",
+    "calendar",
+    "popover"
+  ],
   "cargoDependencies": [
     {
       "crate": "dioxus",
       "package": null,
       "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "dioxus-icons",
+      "package": null,
+      "version": "=0.1.0",
       "features": [],
       "defaultFeatures": true,
       "target": null
@@ -53,7 +65,7 @@
   ],
   "documentation": {
     "slug": "date-picker",
-    "compositionNote": "The copied façade re-exports the owned DatePicker parts unstyled, matching calendar's approach. Composes the owned calendar and popover primitives internally (a Cargo-level composition, not a registry dependency edge, the same relationship sheet already has with dialog)."
+    "compositionNote": "The copied façade composes the installed semantic Calendar and Popover façades over the owned DatePicker primitive. The primitive retains typed date/range state, constraints, keyboard focus, dismissal, and ARIA behavior."
   },
   "compatibility": null,
   "provenance": {

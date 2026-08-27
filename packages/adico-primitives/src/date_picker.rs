@@ -25,6 +25,7 @@ use time::{Date, Month, OffsetDateTime, Weekday, macros::date};
 struct BaseDatePickerContext {
     // State
     open: Signal<bool>,
+    on_open_change: Callback<bool>,
     read_only: ReadSignal<bool>,
 
     // Configuration
@@ -32,6 +33,13 @@ struct BaseDatePickerContext {
     focus: CollectionState,
     enabled_date_range: DateRange,
     available_ranges: Memo<AvailableRanges>,
+}
+
+impl BaseDatePickerContext {
+    fn set_open(&mut self, value: bool) {
+        self.open.set(value);
+        self.on_open_change.call(value);
+    }
 }
 
 /// The context provided by the [`DatePicker`] component to its children.
@@ -145,6 +153,7 @@ pub fn DatePicker(props: DatePickerProps) -> Element {
     // Create context provider for child components
     use_context_provider(|| BaseDatePickerContext {
         open,
+        on_open_change: Callback::new(|_| {}),
         read_only: props.read_only,
         disabled: props.disabled,
         focus,
@@ -280,6 +289,7 @@ pub fn DateRangePicker(props: DateRangePickerProps) -> Element {
     // Create context provider for child components
     use_context_provider(|| BaseDatePickerContext {
         open,
+        on_open_change: Callback::new(|_| {}),
         read_only: props.read_only,
         disabled: props.disabled,
         focus,
@@ -376,13 +386,39 @@ pub struct DatePickerPopoverProps {
 pub fn DatePickerPopover(props: DatePickerPopoverProps) -> Element {
     let ctx = use_context::<BaseDatePickerContext>();
     let mut open = ctx.open;
+    let controlled_open = props.open;
+    let default_open = props.default_open;
+    let on_open_change = props.on_open_change;
+
+    use_hook(move || {
+        if controlled_open.peek().is_none() && default_open {
+            open.set(true);
+        }
+    });
+
+    let effective_open = use_memo(move || controlled_open().unwrap_or_else(|| open()));
+
+    use_context_provider(|| BaseDatePickerContext {
+        open,
+        on_open_change,
+        read_only: ctx.read_only,
+        disabled: ctx.disabled,
+        focus: ctx.focus,
+        enabled_date_range: ctx.enabled_date_range,
+        available_ranges: ctx.available_ranges,
+    });
 
     let PopoverRoot = props.popover_root;
 
     rsx! {
         PopoverRoot {
-            open: open(),
-            on_open_change: move |v| open.set(v),
+            is_modal: props.is_modal,
+            open: effective_open(),
+            default_open: props.default_open,
+            on_open_change: move |value| {
+                open.set(value);
+                on_open_change.call(value);
+            },
             attributes: props.attributes,
             {props.children}
         }
@@ -511,7 +547,7 @@ pub fn DatePickerCalendar(props: DatePickerCalendarProps<CalendarProps>) -> Elem
             selected_date: ctx.selected_date,
             on_date_change: move |date| {
                 ctx.set_date(date);
-                base_ctx.open.set(false);
+                base_ctx.set_open(false);
             },
             disabled_ranges: base_ctx.available_ranges.read().to_disabled_ranges(),
             on_format_weekday: props.on_format_weekday,
@@ -587,7 +623,7 @@ pub fn DateRangePickerCalendar(props: DatePickerCalendarProps<RangeCalendarProps
             selected_range: ctx.date_range,
             on_range_change: move |range| {
                 ctx.set_range(range);
-                base_ctx.open.set(false);
+                base_ctx.set_open(false);
             },
             disabled_ranges: base_ctx.available_ranges.read().to_disabled_ranges(),
             on_format_weekday: props.on_format_weekday,
@@ -811,7 +847,7 @@ fn DateSegment<T: Clone + Copy + Integer + FromStr + Display + 'static>(
                 reset_value.set(true);
                 ctx.focus.set_focus(Some(props.index.cloned()));
                 if (ctx.open)() {
-                    ctx.open.set(false);
+                    ctx.set_open(false);
                 }
             },
             "no-date": (props.value)().is_none(),
@@ -1153,7 +1189,7 @@ pub fn DatePickerInputValue(props: DatePickerInputValueProps) -> Element {
             selected_date: ctx.selected_date,
             on_date_change: move |date| {
                 ctx.set_date(date);
-                base_ctx.open.set(false);
+                base_ctx.set_open(false);
             },
             on_format_day_placeholder: props.on_format_day_placeholder,
             on_format_month_placeholder: props.on_format_month_placeholder,
@@ -1397,6 +1433,10 @@ pub fn DateRangePickerInput(props: DatePickerInputProps) -> Element {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use dioxus_core::{Event, Mutation};
+    use dioxus_html::{
+        EventData, SerializedHtmlEventConverter, SerializedMouseData, set_event_converter,
+    };
     use time::macros::date;
 
     #[component]
@@ -1415,6 +1455,31 @@ mod tests {
             DateRangePicker {
                 selected_range: Some(DateRange::new(date!(2026 - 05 - 07), date!(2026 - 05 - 11))),
                 DateRangePickerInput {}
+            }
+        }
+    }
+
+    #[component]
+    fn OpenDatePickerPopover() -> Element {
+        rsx! {
+            DatePicker {
+                DatePickerPopover {
+                    open: Some(true),
+                    PopoverTrigger { "Select date" }
+                    PopoverContent { "Calendar popup" }
+                }
+            }
+        }
+    }
+
+    #[component]
+    fn InteractiveDatePickerPopover() -> Element {
+        rsx! {
+            DatePicker {
+                DatePickerPopover {
+                    PopoverTrigger { "Select date" }
+                    PopoverContent { "Interactive calendar popup" }
+                }
             }
         }
     }
@@ -1446,5 +1511,41 @@ mod tests {
         assert!(!html.contains("YYYY"));
         assert!(!html.contains("MM"));
         assert!(!html.contains("DD"));
+    }
+
+    #[test]
+    fn date_picker_popover_honors_controlled_open_on_first_render() {
+        let mut dom = VirtualDom::new(OpenDatePickerPopover);
+        dom.rebuild_in_place();
+        let html = dioxus_ssr::render(&dom);
+
+        assert!(html.contains("data-state=\"open\""));
+        assert!(html.contains("Calendar popup"));
+    }
+
+    #[test]
+    fn date_picker_trigger_opens_the_popover() {
+        let mut dom = VirtualDom::new(InteractiveDatePickerPopover);
+        let edits = dom.rebuild_to_vec();
+        let trigger_id = edits
+            .edits
+            .iter()
+            .find_map(|edit| match edit {
+                Mutation::NewEventListener { name, id } if name == "click" => Some(*id),
+                _ => None,
+            })
+            .expect("popover trigger click listener");
+
+        set_event_converter(Box::new(SerializedHtmlEventConverter));
+        let event = Event::new(
+            EventData::Mouse(SerializedMouseData::default()).into_any(),
+            true,
+        );
+        dom.runtime().handle_event("click", event, trigger_id);
+        dom.render_immediate_to_vec();
+        let html = dioxus_ssr::render(&dom);
+
+        assert!(html.contains("data-state=\"open\""));
+        assert!(html.contains("Interactive calendar popup"));
     }
 }

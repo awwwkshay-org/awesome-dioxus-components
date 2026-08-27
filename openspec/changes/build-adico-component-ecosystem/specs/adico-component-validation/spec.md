@@ -38,6 +38,69 @@ exercise their named platform or composition concerns.
 - **THEN** it is added to kitchen-sink and to any focused example needed to
   validate its primary composition or platform behavior
 
+### Requirement: Playground customizes the full semantic theme contract
+The playground SHALL provide a bottom-anchored customization launcher that
+opens an installed-component modal with independently selectable primary,
+secondary, and tertiary palette presets, a light or dark appearance, and
+editable values for every installed shadcn-style semantic variable:
+surfaces and foregrounds, role colors and foregrounds, border, input, ring,
+radius, and sidebar values. Every combination SHALL update the shared
+CSS-variable theme used by routed, installed components without requiring
+component-specific theme props or source changes. The modal SHALL allow users
+to copy the active light or dark canonical shadcn CSS variables as a
+paste-ready CSS block.
+
+#### Scenario: User changes a palette in dark mode
+- **WHEN** a user selects primary, secondary, and tertiary palettes and turns
+  on dark appearance
+- **THEN** every current playground page renders with the corresponding dark
+  semantic variables, including primary, secondary, tertiary, foreground,
+  focus-ring, and sidebar values
+
+#### Scenario: User customizes a semantic value
+- **WHEN** a user changes a semantic color, foreground, structural, or sidebar
+  value in the customization tray
+- **THEN** every affected routed component updates through the shared theme
+  contract and no copied component source changes
+
+#### Scenario: User generates a theme combination
+- **WHEN** a user asks the customization tray to generate a theme
+- **THEN** it selects a new primary, secondary, and tertiary palette
+  combination with light and dark semantic values, which the user can further
+  customize through the same tray
+
+#### Scenario: User copies the active appearance
+- **WHEN** a user selects Copy CSS variables from the theme modal
+- **THEN** the active appearance is copied as a `:root` or `.dark` CSS block
+  containing the canonical shadcn variables
+
+#### Scenario: User changes appearance without changing palettes
+- **WHEN** a user switches an existing palette combination between light and
+  dark appearance
+- **THEN** the same selected palette roles remain in effect while their
+  light- or dark-mode values and accessible foreground values update live, and
+  direct customizations for each appearance remain available
+
+### Requirement: Current migrated components are hardened before new migration
+Before the project resumes migration of new registry components, it SHALL audit
+the currently migrated set in a consumer-style playground for public
+composition/API, semantic-theme coverage, visual states, keyboard and pointer
+behavior, accessibility, responsive layout, and focused example coverage. Each
+identified defect SHALL be corrected or recorded as an explicit, bounded
+exception with a follow-up dependency.
+
+#### Scenario: A migrated component lacks theme coverage
+- **WHEN** the hardening audit finds that an installed component does not react
+  to a referenced semantic color, foreground, radius, or sidebar token
+- **THEN** the project corrects the shared theme or component source and adds
+  focused evidence that the consumer-style component now responds
+
+#### Scenario: A migrated component regresses under interaction
+- **WHEN** the hardening audit finds a keyboard, pointer, focus, or accessible
+  naming defect in an installed interactive component
+- **THEN** the project corrects the shared primitive or copied source and adds
+  focused validation before starting another migration wave
+
 ### Requirement: Interactive components have layered behavior coverage
 Interactive components SHALL have proportionate Rust, compile, browser,
 keyboard, accessibility, and platform coverage before being marked complete in

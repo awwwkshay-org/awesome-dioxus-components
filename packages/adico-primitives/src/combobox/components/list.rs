@@ -38,6 +38,7 @@ pub fn ComboboxList(props: ComboboxListProps) -> Element {
             div {
                 id: listbox.id,
                 role: "listbox",
+                aria_multiselectable: ctx.selectable.selection_mode.is_multiple(),
                 "data-state": if open() { "open" } else { "closed" },
                 onpointerdown: move |event| {
                     event.prevent_default();

@@ -7,7 +7,7 @@
       "source": "ui/select.rs",
       "targetRoot": "ui",
       "target": "select.rs",
-      "checksum": "1605d470dd7708ebc905ad7ae472a705ca7ee0c52cece52da168ceec0ee70301"
+      "checksum": "676b14ea7cdfbe2402ed6f1e92ddade9c63a855e9249b598b699084d375adf88"
     }
   ],
   "registryDependencies": [],

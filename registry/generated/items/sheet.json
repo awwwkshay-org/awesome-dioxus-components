@@ -7,11 +7,12 @@
       "source": "ui/sheet.rs",
       "targetRoot": "ui",
       "target": "sheet.rs",
-      "checksum": "86794c7ab1dc401702e780e7cf3bb29ae8f51e4534800fe1601a0bda39b2bdfe"
+      "checksum": "66f652b6871beaa1b4653456c1126f4e525014c7e132bc0017a53f94188d4a48"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "button"
   ],
   "cargoDependencies": [
     {

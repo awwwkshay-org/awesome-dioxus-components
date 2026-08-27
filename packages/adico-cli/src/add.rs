@@ -176,10 +176,13 @@ pub fn plan_source_install<R: RegistryFileReader>(
     configuration: &ComponentsConfiguration,
     install: &RegistryInstallPlan,
     reader: &R,
+    replace: bool,
 ) -> Result<AddPlan, AddError> {
     let mut files = Vec::new();
     let mut locked_items = Vec::new();
     let mut source_namespaces = Vec::new();
+    let lock_path = project_root.join("adico.lock");
+    let lock = read_lock(&lock_path)?;
     for resolved in &install.items {
         source_namespaces.push(resolved.address.namespace.to_string());
         let mut locked_files = Vec::new();
@@ -200,10 +203,31 @@ pub fn plan_source_install<R: RegistryFileReader>(
             let existing_checksum = existing_checksum(&path)?;
             if let Some(existing_checksum) = &existing_checksum {
                 if existing_checksum != &file.checksum {
-                    return Err(AddError::ModifiedConsumerFile {
-                        path: path.display().to_string(),
-                        address: resolved.address.to_string(),
-                    });
+                    let relative_path = relative_display(project_root, &path);
+                    let installed_checksum = lock
+                        .items
+                        .iter()
+                        .find(|item| item.address == resolved.address.to_string())
+                        .and_then(|item| {
+                            item.files
+                                .iter()
+                                .find(|locked| locked.path == relative_path)
+                        })
+                        .map(|locked| &locked.checksum);
+                    if replace && installed_checksum == Some(existing_checksum) {
+                        files.push(SourceFilePlan {
+                            address: resolved.address.clone(),
+                            path: path.clone(),
+                            bytes,
+                            checksum: file.checksum.clone(),
+                            expected_existing_checksum: Some(existing_checksum.clone()),
+                        });
+                    } else {
+                        return Err(AddError::ModifiedConsumerFile {
+                            path: path.display().to_string(),
+                            address: resolved.address.to_string(),
+                        });
+                    }
                 }
             } else {
                 files.push(SourceFilePlan {
@@ -226,9 +250,8 @@ pub fn plan_source_install<R: RegistryFileReader>(
         });
     }
 
-    let lock_path = project_root.join("adico.lock");
     let lock_existing_checksum = existing_checksum(&lock_path)?;
-    let mut lock = read_lock(&lock_path)?;
+    let mut lock = lock;
     for item in locked_items {
         lock.items
             .retain(|existing| existing.address != item.address);
@@ -294,11 +317,19 @@ pub fn plan_component_add<R: RegistryFileReader>(
     configuration: &ComponentsConfiguration,
     requests: &[RegistryAddress],
     reader: &R,
+    replace: bool,
 ) -> Result<ComponentAddPlan, ComponentAddError> {
     let install = catalog
         .resolve(&configuration.default_registry, requests)
         .map_err(|error| ComponentAddError::Registry(Box::new(error)))?;
-    plan_component_install(project_root, manifest_path, configuration, install, reader)
+    plan_component_install(
+        project_root,
+        manifest_path,
+        configuration,
+        install,
+        reader,
+        replace,
+    )
 }
 
 /// Resolves every item in the selected default registry and validates every
@@ -309,11 +340,19 @@ pub fn plan_component_add_all<R: RegistryFileReader>(
     manifest_path: &Path,
     configuration: &ComponentsConfiguration,
     reader: &R,
+    replace: bool,
 ) -> Result<ComponentAddPlan, ComponentAddError> {
     let install = catalog
         .resolve_all(&configuration.default_registry)
         .map_err(|error| ComponentAddError::Registry(Box::new(error)))?;
-    plan_component_install(project_root, manifest_path, configuration, install, reader)
+    plan_component_install(
+        project_root,
+        manifest_path,
+        configuration,
+        install,
+        reader,
+        replace,
+    )
 }
 
 fn plan_component_install<R: RegistryFileReader>(
@@ -322,8 +361,9 @@ fn plan_component_install<R: RegistryFileReader>(
     configuration: &ComponentsConfiguration,
     install: RegistryInstallPlan,
     reader: &R,
+    replace: bool,
 ) -> Result<ComponentAddPlan, ComponentAddError> {
-    let source = plan_source_install(project_root, configuration, &install, reader)?;
+    let source = plan_source_install(project_root, configuration, &install, reader, replace)?;
     let requirements = unify_cargo_dependencies(&install)
         .map_err(|error| ComponentAddError::Registry(Box::new(error)))?;
     let cargo = plan_cargo_dependency_edits(manifest_path, &requirements)?;
@@ -396,7 +436,7 @@ pub fn plan_add_all<R: RegistryFileReader>(
     let install = catalog
         .resolve_all(&configuration.default_registry)
         .map_err(|error| AddAllError::Registry(Box::new(error)))?;
-    let source = plan_source_install(project_root, configuration, &install, reader)?;
+    let source = plan_source_install(project_root, configuration, &install, reader, false)?;
     Ok(AddAllPlan { install, source })
 }
 
@@ -784,7 +824,7 @@ mod tests {
             bytes.to_vec(),
         );
 
-        let plan = plan_source_install(&root, &configuration(), &install, &reader)
+        let plan = plan_source_install(&root, &configuration(), &install, &reader, false)
             .expect("install should plan");
         assert_eq!(plan.source_namespaces(), vec!["@awwwkshay"]);
         assert!(plan.has_changes());
@@ -800,7 +840,7 @@ mod tests {
         assert_eq!(lock.items[0].address, "@awwwkshay/button");
         assert_eq!(lock.items[0].manifest_digest, "fixture-manifest-digest");
         assert!(
-            !plan_source_install(&root, &configuration(), &install, &reader)
+            !plan_source_install(&root, &configuration(), &install, &reader, false)
                 .expect("repeat should plan")
                 .has_changes()
         );
@@ -823,7 +863,7 @@ mod tests {
         fs::write(&target, "consumer changes\n").expect("consumer source should be written");
         let before = fs::read(&target).expect("source should be readable");
         assert!(matches!(
-            plan_source_install(&root, &configuration(), &install, &reader),
+            plan_source_install(&root, &configuration(), &install, &reader, false),
             Err(AddError::ModifiedConsumerFile { .. })
         ));
         assert_eq!(
@@ -838,7 +878,7 @@ mod tests {
             b"incorrect registry source\n".to_vec(),
         );
         assert!(matches!(
-            plan_source_install(&root, &configuration(), &install, &reader),
+            plan_source_install(&root, &configuration(), &install, &reader, false),
             Err(AddError::RegistryChecksumMismatch { .. })
         ));
         assert!(!root.join("adico.lock").exists());
@@ -855,7 +895,7 @@ mod tests {
             ("@adico/select".to_string(), "ui/select.rs".to_string()),
             bytes.to_vec(),
         );
-        let plan = plan_source_install(&root, &configuration(), &install, &reader)
+        let plan = plan_source_install(&root, &configuration(), &install, &reader, false)
             .expect("install should plan");
         let target = root.join("src/components/ui/select.rs");
         fs::create_dir_all(target.parent().expect("target parent should exist"))

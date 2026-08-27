@@ -3,50 +3,152 @@
 //! install, just split into its own route instead of one long scroll.
 
 use adico_primitives::ContentAlign;
-use adico_primitives::popover::{
-    PopoverContent as PrimitivePopoverContent, PopoverTrigger as PrimitivePopoverTrigger,
-};
 use dioxus::prelude::*;
-use time::Date;
+use time::{Date, Weekday};
 
 use crate::components;
 use crate::controls::{BoolControl, SelectControl, TextControl};
 use crate::demo::Demo;
 
+#[derive(Clone, Copy, PartialEq)]
+enum ButtonContent {
+    Text,
+    Icon,
+    IconAndText,
+}
+
 #[component]
 pub fn ButtonPage() -> Element {
     let disabled = use_signal(|| false);
+    let mut variant = use_signal(|| components::ui::ButtonVariant::Default);
+    let mut size = use_signal(|| components::ui::ButtonSize::Default);
+    let mut button_type = use_signal(|| "button".to_string());
+    let mut content = use_signal(|| ButtonContent::Text);
+    let label = use_signal(|| "Save changes".to_string());
     rsx! {
         Demo {
             name: "Button",
             controls: rsx! {
+                SelectControl {
+                    label: "Variant",
+                    value: variant(),
+                    options: vec![
+                        ("Default", components::ui::ButtonVariant::Default),
+                        ("Destructive", components::ui::ButtonVariant::Destructive),
+                        ("Outline", components::ui::ButtonVariant::Outline),
+                        ("Secondary", components::ui::ButtonVariant::Secondary),
+                        ("Ghost", components::ui::ButtonVariant::Ghost),
+                        ("Link", components::ui::ButtonVariant::Link),
+                    ],
+                    on_change: move |value| variant.set(value),
+                }
+                SelectControl {
+                    label: "Size",
+                    value: size(),
+                    options: vec![
+                        ("Default", components::ui::ButtonSize::Default),
+                        ("Extra small", components::ui::ButtonSize::Xs),
+                        ("Small", components::ui::ButtonSize::Sm),
+                        ("Large", components::ui::ButtonSize::Lg),
+                        ("Icon", components::ui::ButtonSize::Icon),
+                        ("Icon extra small", components::ui::ButtonSize::IconXs),
+                        ("Icon small", components::ui::ButtonSize::IconSm),
+                        ("Icon large", components::ui::ButtonSize::IconLg),
+                    ],
+                    on_change: move |value| size.set(value),
+                }
                 BoolControl { label: "Disabled", value: disabled }
+                SelectControl {
+                    label: "Native type",
+                    value: button_type(),
+                    options: vec![
+                        ("Button", "button".to_string()),
+                        ("Submit", "submit".to_string()),
+                        ("Reset", "reset".to_string()),
+                    ],
+                    on_change: move |value| button_type.set(value),
+                }
+                SelectControl {
+                    label: "Children",
+                    value: content(),
+                    options: vec![
+                        ("Text", ButtonContent::Text),
+                        ("Icon only", ButtonContent::Icon),
+                        ("Icon and text", ButtonContent::IconAndText),
+                    ],
+                    on_change: move |value| content.set(value),
+                }
+                TextControl { label: "Text", value: label }
             },
-            components::ui::Button { disabled: disabled(), "Source-owned Button" }
+            components::ui::Button {
+                variant: variant(),
+                size: size(),
+                disabled: disabled(),
+                r#type: button_type(),
+                aria_label: (content() == ButtonContent::Icon).then_some("Save changes"),
+                if content() != ButtonContent::Text {
+                    span { "aria-hidden": "true", "↗" }
+                }
+                if content() != ButtonContent::Icon {
+                    "{label}"
+                }
+            }
         }
     }
 }
 
 #[component]
 pub fn BadgePage() -> Element {
+    let mut variant = use_signal(|| components::ui::BadgeVariant::Default);
+    let label = use_signal(|| "New".to_string());
     rsx! {
-        Demo { name: "Badge",
-            components::ui::Badge { "New" }
+        Demo {
+            name: "Badge",
+            controls: rsx! {
+                SelectControl {
+                    label: "Variant",
+                    value: variant(),
+                    options: vec![
+                        ("Default", components::ui::BadgeVariant::Default),
+                        ("Secondary", components::ui::BadgeVariant::Secondary),
+                        ("Destructive", components::ui::BadgeVariant::Destructive),
+                        ("Outline", components::ui::BadgeVariant::Outline),
+                        ("Verified", components::ui::BadgeVariant::Verified),
+                    ],
+                    on_change: move |value| variant.set(value),
+                }
+                TextControl { label: "Content", value: label }
+            },
+            components::ui::Badge { variant: variant(), "{label}" }
         }
     }
 }
 
 #[component]
 pub fn CardPage() -> Element {
+    let show_footer = use_signal(|| true);
+    let title = use_signal(|| "Card title".to_string());
+    let description = use_signal(|| "Supporting description text.".to_string());
     rsx! {
-        Demo { name: "Card",
-            components::ui::Card {
+        Demo {
+            name: "Card",
+            controls: rsx! {
+                TextControl { label: "Title", value: title }
+                TextControl { label: "Description", value: description }
+                BoolControl { label: "Show actions", value: show_footer }
+            },
+            components::ui::Card { class: "max-w-md",
                 components::ui::CardHeader {
-                    components::ui::CardTitle { "Card title" }
-                    components::ui::CardDescription { "Supporting description text." }
+                    components::ui::CardTitle { "{title}" }
+                    components::ui::CardDescription { "{description}" }
                 }
-                components::ui::CardContent { "Card body content." }
-                components::ui::CardFooter { "Footer" }
+                components::ui::CardContent { "Card body content uses composed semantic regions." }
+                if show_footer() {
+                    components::ui::CardFooter {
+                        components::ui::Button { variant: components::ui::ButtonVariant::Outline, "Cancel" }
+                        components::ui::Button { "Continue" }
+                    }
+                }
             }
         }
     }
@@ -56,42 +158,108 @@ pub fn CardPage() -> Element {
 pub fn InputPage() -> Element {
     let placeholder = use_signal(|| "Type here".to_string());
     let disabled = use_signal(|| false);
+    let readonly = use_signal(|| false);
+    let required = use_signal(|| false);
+    let invalid = use_signal(|| false);
     rsx! {
         Demo {
             name: "Input",
             controls: rsx! {
                 TextControl { label: "Placeholder", value: placeholder }
                 BoolControl { label: "Disabled", value: disabled }
+                BoolControl { label: "Read only", value: readonly }
+                BoolControl { label: "Required", value: required }
+                BoolControl { label: "Invalid", value: invalid }
             },
-            components::ui::Input { placeholder: placeholder(), disabled: disabled() }
+            components::ui::Input {
+                placeholder: placeholder(),
+                disabled: disabled(),
+                readonly: readonly(),
+                required: required(),
+                invalid: invalid(),
+            }
         }
     }
 }
 
 #[component]
 pub fn TextareaPage() -> Element {
+    let placeholder = use_signal(|| "Longer text".to_string());
+    let disabled = use_signal(|| false);
+    let readonly = use_signal(|| false);
+    let required = use_signal(|| false);
+    let invalid = use_signal(|| false);
     rsx! {
-        Demo { name: "Textarea",
-            components::ui::Textarea { placeholder: "Longer text" }
+        Demo {
+            name: "Textarea",
+            controls: rsx! {
+                TextControl { label: "Placeholder", value: placeholder }
+                BoolControl { label: "Disabled", value: disabled }
+                BoolControl { label: "Read only", value: readonly }
+                BoolControl { label: "Required", value: required }
+                BoolControl { label: "Invalid", value: invalid }
+            },
+            components::ui::Textarea {
+                placeholder: placeholder(),
+                disabled: disabled(),
+                readonly: readonly(),
+                required: required(),
+                invalid: invalid(),
+            }
         }
     }
 }
 
 #[component]
 pub fn SkeletonPage() -> Element {
+    let mut variant = use_signal(|| components::ui::SkeletonVariant::Default);
+    let decorative = use_signal(|| true);
     rsx! {
-        Demo { name: "Skeleton",
-            components::ui::Skeleton { class: "h-4 w-40" }
+        Demo {
+            name: "Skeleton",
+            controls: rsx! {
+                SelectControl {
+                    label: "Shape",
+                    value: variant(),
+                    options: vec![
+                        ("Rectangle", components::ui::SkeletonVariant::Default),
+                        ("Circle", components::ui::SkeletonVariant::Circle),
+                    ],
+                    on_change: move |value| variant.set(value),
+                }
+                BoolControl { label: "Decorative", value: decorative }
+            },
+            components::ui::Skeleton {
+                variant: variant(),
+                decorative: decorative(),
+                class: if variant() == components::ui::SkeletonVariant::Circle { "size-16" } else { "h-4 w-40" },
+            }
         }
     }
 }
 
 #[component]
 pub fn ItemPage() -> Element {
+    let mut variant = use_signal(|| components::ui::ItemVariant::Default);
+    let disabled = use_signal(|| false);
     rsx! {
-        Demo { name: "Item",
+        Demo {
+            name: "Item",
+            controls: rsx! {
+                SelectControl {
+                    label: "Variant",
+                    value: variant(),
+                    options: vec![
+                        ("Default", components::ui::ItemVariant::Default),
+                        ("Muted", components::ui::ItemVariant::Muted),
+                        ("Interactive", components::ui::ItemVariant::Interactive),
+                    ],
+                    on_change: move |value| variant.set(value),
+                }
+                BoolControl { label: "Disabled", value: disabled }
+            },
             components::ui::ItemGroup {
-                components::ui::Item {
+                components::ui::Item { variant: variant(), disabled: disabled(), class: "w-full max-w-md",
                     components::ui::ItemContent {
                         components::ui::ItemTitle { "Row title" }
                         components::ui::ItemDescription { "Row description" }
@@ -107,16 +275,50 @@ pub fn ItemPage() -> Element {
 
 #[component]
 pub fn PaginationPage() -> Element {
+    let mut active_page = use_signal(|| 2usize);
+    let compact = use_signal(|| false);
+    let previous_text = use_signal(|| "Previous".to_string());
+    let next_text = use_signal(|| "Next".to_string());
     rsx! {
-        Demo { name: "Pagination",
+        Demo {
+            name: "Pagination",
+            controls: rsx! {
+                SelectControl {
+                    label: "Active page",
+                    value: active_page(),
+                    options: vec![("Page 1", 1usize), ("Page 2", 2usize), ("Page 3", 3usize)],
+                    on_change: move |value| active_page.set(value),
+                }
+                BoolControl { label: "Compact previous / next", value: compact }
+                TextControl { label: "Previous text", value: previous_text }
+                TextControl { label: "Next text", value: next_text }
+            },
             components::ui::Pagination {
                 components::ui::PaginationContent {
-                    components::ui::PaginationItem { components::ui::PaginationPrevious {} }
                     components::ui::PaginationItem {
-                        components::ui::PaginationLink { is_active: true, "1" }
+                        components::ui::PaginationPrevious {
+                            text: previous_text(),
+                            compact: compact(),
+                            onclick: move |_| active_page.set(active_page().saturating_sub(1).max(1)),
+                        }
+                    }
+                    components::ui::PaginationItem {
+                        components::ui::PaginationLink { is_active: active_page() == 1, onclick: move |_| active_page.set(1), "1" }
+                    }
+                    components::ui::PaginationItem {
+                        components::ui::PaginationLink { is_active: active_page() == 2, onclick: move |_| active_page.set(2), "2" }
+                    }
+                    components::ui::PaginationItem {
+                        components::ui::PaginationLink { is_active: active_page() == 3, onclick: move |_| active_page.set(3), "3" }
                     }
                     components::ui::PaginationItem { components::ui::PaginationEllipsis {} }
-                    components::ui::PaginationItem { components::ui::PaginationNext {} }
+                    components::ui::PaginationItem {
+                        components::ui::PaginationNext {
+                            text: next_text(),
+                            compact: compact(),
+                            onclick: move |_| active_page.set((active_page() + 1).min(3)),
+                        }
+                    }
                 }
             }
         }
@@ -150,12 +352,27 @@ pub fn DialogPage() -> Element {
 
 #[component]
 pub fn SheetPage() -> Element {
+    let mut side = use_signal(|| components::ui::SheetSide::Right);
     rsx! {
-        Demo { name: "Sheet",
+        Demo {
+            name: "Sheet",
+            controls: rsx! {
+                SelectControl {
+                    label: "Side",
+                    value: side(),
+                    options: vec![
+                        ("Right", components::ui::SheetSide::Right),
+                        ("Left", components::ui::SheetSide::Left),
+                        ("Top", components::ui::SheetSide::Top),
+                        ("Bottom", components::ui::SheetSide::Bottom),
+                    ],
+                    on_change: move |value| side.set(value),
+                }
+            },
             components::ui::Sheet {
                 components::ui::SheetTrigger { "Open sheet" }
                 components::ui::SheetOverlay {}
-                components::ui::SheetContent {
+                components::ui::SheetContent { side: side(),
                     components::ui::SheetHeader {
                         components::ui::SheetTitle { "Settings" }
                         components::ui::SheetDescription { "Adjust your preferences." }
@@ -170,30 +387,71 @@ pub fn SheetPage() -> Element {
 #[component]
 pub fn SelectPage() -> Element {
     let disabled = use_signal(|| false);
+    let multiple = use_signal(|| false);
+    let mut value = use_signal(|| None::<String>);
+    let mut values = use_signal(|| Some(Vec::<String>::new()));
+    let mut open = use_signal(|| None::<bool>);
+    let invalid = use_signal(|| false);
     rsx! {
         Demo {
             name: "Select",
             controls: rsx! {
                 BoolControl { label: "Disabled", value: disabled }
-            },
-            components::ui::Select::<String> {
-                disabled: disabled(),
-                components::ui::SelectTrigger {
-                    aria_label: "Choose a fruit",
-                    components::ui::SelectValue { placeholder: "Choose a fruit" }
-                }
-                components::ui::SelectList { aria_label: "Fruit options",
-                    components::ui::SelectOption::<String> {
-                        index: 0usize,
-                        value: "apple",
-                        text_value: "Apple",
-                        "Apple"
+                BoolControl { label: "Multi-select", value: multiple }
+                BoolControl { label: "Invalid presentation", value: invalid }
+                if !multiple() {
+                    SelectControl {
+                        label: "Value",
+                        value: value(),
+                        options: vec![
+                            ("None", None),
+                            ("Apple", Some("apple".to_string())),
+                            ("Banana", Some("banana".to_string())),
+                        ],
+                        on_change: move |next| value.set(next),
                     }
-                    components::ui::SelectOption::<String> {
-                        index: 1usize,
-                        value: "banana",
-                        text_value: "Banana",
-                        "Banana"
+                } else {
+                    p { class: "self-end pb-2 text-sm text-muted-foreground", "Choose one or more options in the preview." }
+                }
+                SelectControl {
+                    label: "Open state",
+                    value: open(),
+                    options: vec![("Uncontrolled", None), ("Closed", Some(false)), ("Open", Some(true))],
+                    on_change: move |next| open.set(next),
+                }
+            },
+            if multiple() {
+                components::ui::SelectMulti::<String> {
+                    disabled: disabled(),
+                    values: ReadSignal::from(values),
+                    open: open,
+                    on_values_change: move |next| values.set(Some(next)),
+                    components::ui::SelectTrigger {
+                        class: "w-48",
+                        aria_label: "Choose one or more fruits",
+                        aria_invalid: invalid(),
+                        components::ui::SelectValue { placeholder: "Choose fruits" }
+                    }
+                    components::ui::SelectList { class: "w-48", aria_label: "Fruit options",
+                        components::ui::SelectOption::<String> { index: 0usize, value: "apple", text_value: "Apple", "Apple" }
+                        components::ui::SelectOption::<String> { index: 1usize, value: "banana", text_value: "Banana", "Banana" }
+                    }
+                }
+            } else {
+                components::ui::Select::<String> {
+                    disabled: disabled(),
+                    value: Some(ReadSignal::from(value)),
+                    open: open,
+                    on_value_change: move |next| value.set(next),
+                    components::ui::SelectTrigger {
+                        class: "w-48",
+                        aria_label: "Choose a fruit",
+                        aria_invalid: invalid(),
+                        components::ui::SelectValue { placeholder: "Choose a fruit" }
+                    }
+                    components::ui::SelectList { class: "w-48", aria_label: "Fruit options",
+                        components::ui::SelectOption::<String> { index: 0usize, value: "apple", text_value: "Apple", "Apple" }
+                        components::ui::SelectOption::<String> { index: 1usize, value: "banana", text_value: "Banana", "Banana" }
                     }
                 }
             }
@@ -203,14 +461,59 @@ pub fn SelectPage() -> Element {
 
 #[component]
 pub fn ComboboxPage() -> Element {
+    let disabled = use_signal(|| false);
+    let multiple = use_signal(|| false);
+    let mut value = use_signal(|| None::<String>);
+    let mut values = use_signal(|| Some(Vec::<String>::new()));
+    let mut open = use_signal(|| None::<bool>);
     rsx! {
-        Demo { name: "Combobox",
-            components::ui::Combobox::<String> {
-                components::ui::ComboboxInput { placeholder: "Search fruit" }
-                components::ui::ComboboxList {
-                    components::ui::ComboboxOption::<String> { value: "Apple".to_string(), index: 0usize, "Apple" }
-                    components::ui::ComboboxOption::<String> { value: "Banana".to_string(), index: 1usize, "Banana" }
-                    components::ui::ComboboxEmpty { "No results" }
+        Demo {
+            name: "Combobox",
+            controls: rsx! {
+                BoolControl { label: "Disabled", value: disabled }
+                BoolControl { label: "Multi-select", value: multiple }
+                if !multiple() {
+                    SelectControl {
+                        label: "Value",
+                        value: value(),
+                        options: vec![("None", None), ("Apple", Some("Apple".to_string())), ("Banana", Some("Banana".to_string()))],
+                        on_change: move |next| value.set(next),
+                    }
+                } else {
+                    p { class: "self-end pb-2 text-sm text-muted-foreground", "Choose one or more options in the preview." }
+                }
+                SelectControl {
+                    label: "Open state",
+                    value: open(),
+                    options: vec![("Uncontrolled", None), ("Closed", Some(false)), ("Open", Some(true))],
+                    on_change: move |next| open.set(next),
+                }
+            },
+            if multiple() {
+                components::ui::ComboboxMulti::<String> {
+                    disabled: disabled(),
+                    values: ReadSignal::from(values),
+                    open: open,
+                    on_values_change: move |next| values.set(Some(next)),
+                    components::ui::ComboboxInput { class: "w-48", placeholder: "Search fruits" }
+                    components::ui::ComboboxList { class: "w-48",
+                        components::ui::ComboboxOption::<String> { value: "Apple".to_string(), index: 0usize, "Apple" }
+                        components::ui::ComboboxOption::<String> { value: "Banana".to_string(), index: 1usize, "Banana" }
+                        components::ui::ComboboxEmpty { "No results" }
+                    }
+                }
+            } else {
+                components::ui::Combobox::<String> {
+                    disabled: disabled(),
+                    value: Some(ReadSignal::from(value)),
+                    open: open,
+                    on_value_change: move |next| value.set(next),
+                    components::ui::ComboboxInput { class: "w-48", placeholder: "Search fruit" }
+                    components::ui::ComboboxList { class: "w-48",
+                        components::ui::ComboboxOption::<String> { value: "Apple".to_string(), index: 0usize, "Apple" }
+                        components::ui::ComboboxOption::<String> { value: "Banana".to_string(), index: 1usize, "Banana" }
+                        components::ui::ComboboxEmpty { "No results" }
+                    }
                 }
             }
         }
@@ -219,9 +522,21 @@ pub fn ComboboxPage() -> Element {
 
 #[component]
 pub fn TooltipPage() -> Element {
+    let mut open = use_signal(|| None::<bool>);
+    let disabled = use_signal(|| false);
     rsx! {
-        Demo { name: "Tooltip",
-            components::ui::Tooltip {
+        Demo {
+            name: "Tooltip",
+            controls: rsx! {
+                BoolControl { label: "Disabled", value: disabled }
+                SelectControl {
+                    label: "Open state",
+                    value: open(),
+                    options: vec![("Uncontrolled", None), ("Closed", Some(false)), ("Open", Some(true))],
+                    on_change: move |value| open.set(value),
+                }
+            },
+            components::ui::Tooltip { open: open, disabled: disabled(),
                 components::ui::TooltipTrigger { "Hover me" }
                 components::ui::TooltipContent { "Tooltip content" }
             }
@@ -261,9 +576,21 @@ pub fn PopoverPage() -> Element {
 
 #[component]
 pub fn HoverCardPage() -> Element {
+    let mut open = use_signal(|| None::<bool>);
+    let disabled = use_signal(|| false);
     rsx! {
-        Demo { name: "HoverCard",
-            components::ui::HoverCard {
+        Demo {
+            name: "HoverCard",
+            controls: rsx! {
+                BoolControl { label: "Disabled", value: disabled }
+                SelectControl {
+                    label: "Open state",
+                    value: open(),
+                    options: vec![("Uncontrolled", None), ("Closed", Some(false)), ("Open", Some(true))],
+                    on_change: move |value| open.set(value),
+                }
+            },
+            components::ui::HoverCard { open: open, disabled: disabled(),
                 components::ui::HoverCardTrigger { "Dioxus" }
                 components::ui::HoverCardContent { "Hover card content" }
             }
@@ -273,9 +600,20 @@ pub fn HoverCardPage() -> Element {
 
 #[component]
 pub fn DropdownMenuPage() -> Element {
+    let disabled = use_signal(|| false);
+    let mut open = use_signal(|| None::<bool>);
     rsx! {
-        Demo { name: "DropdownMenu",
-            components::ui::DropdownMenu {
+        Demo {
+            name: "DropdownMenu",
+            controls: rsx! {
+                BoolControl { label: "Disabled", value: disabled }
+                SelectControl {
+                    label: "Open state", value: open(),
+                    options: vec![("Uncontrolled", None), ("Closed", Some(false)), ("Open", Some(true))],
+                    on_change: move |value| open.set(value),
+                }
+            },
+            components::ui::DropdownMenu { disabled: disabled(), open: open,
                 components::ui::DropdownMenuTrigger { "Open menu" }
                 components::ui::DropdownMenuContent {
                     components::ui::DropdownMenuItem::<String> {
@@ -292,9 +630,20 @@ pub fn DropdownMenuPage() -> Element {
 
 #[component]
 pub fn ContextMenuPage() -> Element {
+    let disabled = use_signal(|| false);
+    let mut open = use_signal(|| None::<bool>);
     rsx! {
-        Demo { name: "ContextMenu",
-            components::ui::ContextMenu {
+        Demo {
+            name: "ContextMenu",
+            controls: rsx! {
+                BoolControl { label: "Disabled", value: disabled }
+                SelectControl {
+                    label: "Open state", value: open(),
+                    options: vec![("Uncontrolled", None), ("Closed", Some(false)), ("Open", Some(true))],
+                    on_change: move |value| open.set(value),
+                }
+            },
+            components::ui::ContextMenu { disabled: disabled(), open: open,
                 components::ui::ContextMenuTrigger { "Right click here" }
                 components::ui::ContextMenuContent {
                     components::ui::ContextMenuItem {
@@ -335,23 +684,39 @@ pub fn CalendarPage() -> Element {
     let mut selected_date = use_signal(|| None::<Date>);
     let today = time::OffsetDateTime::now_utc().date();
     let mut view_date = use_signal(move || today);
+    let disabled = use_signal(|| false);
+    let mut first_day_of_week = use_signal(|| Weekday::Sunday);
     rsx! {
-        Demo { name: "Calendar",
-            components::ui::Calendar {
-                selected_date: selected_date(),
-                on_date_change: move |date| selected_date.set(date),
-                view_date: view_date(),
-                today,
-                on_view_change: move |new_view: Date| view_date.set(new_view),
-                components::ui::CalendarView {
-                    components::ui::CalendarHeader {
-                        components::ui::CalendarNavigation {
-                            components::ui::CalendarPreviousMonthButton { "<" }
-                            components::ui::CalendarMonthTitle {}
-                            components::ui::CalendarNextMonthButton { ">" }
+        Demo {
+            name: "Calendar",
+            controls: rsx! {
+                BoolControl { label: "Disabled", value: disabled }
+                SelectControl {
+                    label: "First day of week",
+                    value: first_day_of_week(),
+                    options: vec![("Sunday", Weekday::Sunday), ("Monday", Weekday::Monday)],
+                    on_change: move |next| first_day_of_week.set(next),
+                }
+            },
+            div { class: "flex w-full justify-center",
+                components::ui::Calendar {
+                    selected_date: selected_date(),
+                    on_date_change: move |date| selected_date.set(date),
+                    view_date: view_date(),
+                    today,
+                    on_view_change: move |new_view: Date| view_date.set(new_view),
+                    disabled: disabled(),
+                    first_day_of_week: first_day_of_week(),
+                    components::ui::CalendarView {
+                        components::ui::CalendarHeader {
+                            components::ui::CalendarNavigation {
+                                components::ui::CalendarPreviousMonthButton { "<" }
+                                components::ui::CalendarMonthTitle {}
+                                components::ui::CalendarNextMonthButton { ">" }
+                            }
                         }
+                        components::ui::CalendarGrid {}
                     }
-                    components::ui::CalendarGrid {}
                 }
             }
         }
@@ -361,18 +726,30 @@ pub fn CalendarPage() -> Element {
 #[component]
 pub fn DatePickerPage() -> Element {
     let mut picked_date = use_signal(|| None::<Date>);
+    let disabled = use_signal(|| false);
+    let read_only = use_signal(|| false);
+    let mut open = use_signal(|| false);
     rsx! {
-        Demo { name: "DatePicker",
+        Demo {
+            name: "DatePicker",
+            controls: rsx! {
+                BoolControl { label: "Disabled", value: disabled }
+                BoolControl { label: "Read only", value: read_only }
+            },
             components::ui::DatePicker {
                 selected_date: picked_date(),
                 on_value_change: move |date| picked_date.set(date),
+                disabled: disabled(),
+                read_only: read_only(),
                 components::ui::DatePickerPopover {
+                    class: "playground-date-picker-popover-root",
+                    open: Some(open()),
+                    on_open_change: move |value| open.set(value),
                     components::ui::DatePickerInput {
-                        PrimitivePopoverTrigger { "Select date" }
-                        PrimitivePopoverContent {
-                            align: ContentAlign::End,
+                        components::ui::DatePickerInputValue {}
+                        components::ui::DatePickerTrigger {}
+                        components::ui::DatePickerContent {
                             components::ui::DatePickerCalendar {
-                                calendar: components::ui::Calendar,
                                 components::ui::CalendarView {
                                     components::ui::CalendarHeader {
                                         components::ui::CalendarNavigation {
@@ -396,6 +773,9 @@ pub fn DatePickerPage() -> Element {
 pub fn SidebarPage() -> Element {
     let mut collapsible = use_signal(|| components::ui::SidebarCollapsible::Offcanvas);
     let mut side = use_signal(|| components::ui::SidebarSide::Left);
+    let mut open = use_signal(|| Some(true));
+    let active_settings = use_signal(|| true);
+    let settings_disabled = use_signal(|| false);
     rsx! {
         Demo {
             name: "Sidebar",
@@ -419,8 +799,17 @@ pub fn SidebarPage() -> Element {
                     ],
                     on_change: move |value| side.set(value),
                 }
+                SelectControl {
+                    label: "Open state",
+                    value: open(),
+                    options: vec![("Uncontrolled", None), ("Open", Some(true)), ("Closed", Some(false))],
+                    on_change: move |value| open.set(value),
+                }
+                BoolControl { label: "Settings active", value: active_settings }
+                BoolControl { label: "Settings disabled", value: settings_disabled }
             },
-            components::ui::SidebarProvider { class: "rounded-lg border",
+            components::ui::SidebarProvider { class: "h-64 min-h-0 rounded-lg border",
+                open: open,
                 components::ui::Sidebar {
                     collapsible: collapsible(),
                     side: side(),
@@ -434,7 +823,7 @@ pub fn SidebarPage() -> Element {
                                         components::ui::SidebarMenuButton { "Overview" }
                                     }
                                     components::ui::SidebarMenuItem {
-                                        components::ui::SidebarMenuButton { is_active: true, "Settings" }
+                                        components::ui::SidebarMenuButton { is_active: active_settings(), disabled: settings_disabled(), "Settings" }
                                     }
                                 }
                             }
@@ -450,5 +839,33 @@ pub fn SidebarPage() -> Element {
                 }
             }
         }
+    }
+}
+
+#[cfg(all(test, feature = "server"))]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn calendar_page_builds_its_primitive_tree() {
+        let mut dom = VirtualDom::new(CalendarPage);
+        dom.rebuild_in_place();
+        let html = dioxus::ssr::render(&dom);
+        assert!(html.contains("Calendar"));
+        assert!(html.contains("role=\"grid\""));
+    }
+
+    #[test]
+    fn date_picker_uses_segment_width_placeholders_once() {
+        let mut dom = VirtualDom::new(DatePickerPage);
+        dom.rebuild_in_place();
+        let html = dioxus::ssr::render(&dom);
+
+        assert!(html.contains("YYYY"));
+        assert!(html.contains("MM"));
+        assert!(html.contains("DD"));
+        assert!(!html.contains("YYYYY"));
+        assert!(!html.contains("MMM"));
+        assert!(!html.contains("DDD"));
     }
 }

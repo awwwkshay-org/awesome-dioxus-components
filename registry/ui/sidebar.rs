@@ -334,24 +334,42 @@ pub fn SidebarMenuItem(children: Element, class: Option<String>) -> Element {
     }
 }
 
+/// Props for the clickable/navigable control inside a [`SidebarMenuItem`].
+#[derive(Props, Clone, PartialEq)]
+pub struct SidebarMenuButtonProps {
+    /// Applies the active semantic treatment and `data-active` hook.
+    #[props(default)]
+    pub is_active: bool,
+    /// Disables pointer and keyboard interaction with native semantics.
+    #[props(default)]
+    pub disabled: bool,
+    /// Extra classes appended to the semantic defaults.
+    #[props(default)]
+    pub class: Option<String>,
+    /// Native button/global attributes and handlers.
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = button)]
+    pub attributes: Vec<Attribute>,
+    pub children: Element,
+}
+
 /// The clickable/navigable control inside a [`SidebarMenuItem`].
 #[component]
-pub fn SidebarMenuButton(
-    children: Element,
-    #[props(default)] is_active: bool,
-    class: Option<String>,
-) -> Element {
+pub fn SidebarMenuButton(props: SidebarMenuButtonProps) -> Element {
     let class = cn(&[
-        "flex h-8 w-full items-center gap-2 overflow-hidden rounded-md px-2 text-left text-sm outline-none transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-        class.as_deref().unwrap_or_default(),
+        "flex h-8 w-full items-center gap-2 overflow-hidden rounded-md px-2 text-left text-sm outline-none transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring disabled:pointer-events-none disabled:opacity-50",
+        if props.is_active { "bg-sidebar-accent text-sidebar-accent-foreground font-medium" } else { "" },
+        props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
         button {
             class,
             r#type: "button",
             "data-slot": "sidebar-menu-button",
-            "data-active": is_active,
-            {children}
+            "data-active": props.is_active,
+            disabled: props.disabled,
+            ..props.attributes,
+            {props.children}
         }
     }
 }

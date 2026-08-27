@@ -81,6 +81,22 @@ impl SelectableContext {
         selection::selected_text(values.iter(), &options)
     }
 
+    /// Returns selected option labels in selection order. Multi-select inputs
+    /// use this to present all selected values without owning selection state.
+    pub(crate) fn selected_texts(&self) -> Vec<String> {
+        let values = self.values.read();
+        let options = self.options.read();
+        values
+            .iter()
+            .filter_map(|value| {
+                options
+                    .iter()
+                    .find(|option| &option.value == value)
+                    .map(|option| option.text_value.clone())
+            })
+            .collect()
+    }
+
     pub(crate) fn is_selected(&self, value: &RcPartialEqValue) -> bool {
         self.values.read().iter().any(|selected| selected == value)
     }

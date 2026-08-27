@@ -1,13 +1,13 @@
 {
   "name": "button",
   "type": "registry:ui",
-  "description": "A source-owned shadcn-style semantic button for Dioxus.",
+  "description": "A source-owned shadcn-style native button for Dioxus with typed variants and sizes.",
   "files": [
     {
       "source": "ui/button.rs",
       "targetRoot": "ui",
       "target": "button.rs",
-      "checksum": "be0370c99c085c132da73dc4d77733d362f466905942a8d6ab3d93e0c5c304a7"
+      "checksum": "0f498536390cf5ee008340c199f0d412e346a4ee7477390cda9c93edb4f75ceb"
     }
   ],
   "registryDependencies": [
@@ -39,7 +39,7 @@
   ],
   "documentation": {
     "slug": "button",
-    "compositionNote": "Use the Dioxus Lucide icon crate (`dioxus-icons`) from consumer composition when an icon is needed; Button itself embeds no SVG markup."
+    "compositionNote": "Use caller-composed children for text, icons, and icon-plus-text content. `ButtonVariant` and `ButtonSize` mirror the current shadcn visual contract; native Dioxus button/global attributes and events are forwarded."
   },
   "compatibility": null,
   "provenance": null

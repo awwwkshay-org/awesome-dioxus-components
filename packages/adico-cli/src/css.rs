@@ -132,9 +132,110 @@ fn positions(contents: &str, marker: &str) -> Vec<usize> {
         .collect()
 }
 
+/// The full shadcn-style semantic token set: every color a registry
+/// component's Tailwind classes reference (`bg-accent`, `bg-card`,
+/// `bg-popover`, `bg-sidebar*`, `border-input`, `ring-ring`, etc.), not just
+/// the background/foreground/primary trio a single Button/Badge needs. A
+/// narrower set left those classes resolving to nothing under Tailwind v4
+/// (no `@theme` token registered), so components using them rendered
+/// unstyled even with the CSS pipeline otherwise wired up correctly.
 fn theme_region() -> String {
     format!(
-        "{THEME_REGION_START}\n@theme {{\n  --color-background: hsl(var(--background));\n  --color-foreground: hsl(var(--foreground));\n  --color-primary: hsl(var(--primary));\n  --color-primary-foreground: hsl(var(--primary-foreground));\n  --radius-sm: calc(var(--radius) - 4px);\n  --radius-md: calc(var(--radius) - 2px);\n  --radius-lg: var(--radius);\n}}\n\n:root {{\n  --background: 0 0% 100%;\n  --foreground: 222.2 84% 4.9%;\n  --primary: 222.2 47.4% 11.2%;\n  --primary-foreground: 210 40% 98%;\n  --radius: 0.5rem;\n}}\n\n.dark {{\n  --background: 222.2 84% 4.9%;\n  --foreground: 210 40% 98%;\n  --primary: 210 40% 98%;\n  --primary-foreground: 222.2 47.4% 11.2%;\n}}\n{THEME_REGION_END}\n"
+        "{THEME_REGION_START}\n\
+@theme {{\n\
+\x20 --color-background: hsl(var(--background));\n\
+\x20 --color-foreground: hsl(var(--foreground));\n\
+\x20 --color-card: hsl(var(--card));\n\
+\x20 --color-card-foreground: hsl(var(--card-foreground));\n\
+\x20 --color-popover: hsl(var(--popover));\n\
+\x20 --color-popover-foreground: hsl(var(--popover-foreground));\n\
+\x20 --color-primary: hsl(var(--primary));\n\
+\x20 --color-primary-foreground: hsl(var(--primary-foreground));\n\
+\x20 --color-secondary: hsl(var(--secondary));\n\
+\x20 --color-secondary-foreground: hsl(var(--secondary-foreground));\n\
+\x20 --color-muted: hsl(var(--muted));\n\
+\x20 --color-muted-foreground: hsl(var(--muted-foreground));\n\
+\x20 --color-accent: hsl(var(--accent));\n\
+\x20 --color-accent-foreground: hsl(var(--accent-foreground));\n\
+\x20 --color-destructive: hsl(var(--destructive));\n\
+\x20 --color-destructive-foreground: hsl(var(--destructive-foreground));\n\
+\x20 --color-border: hsl(var(--border));\n\
+\x20 --color-input: hsl(var(--input));\n\
+\x20 --color-ring: hsl(var(--ring));\n\
+\x20 --color-sidebar: hsl(var(--sidebar-background));\n\
+\x20 --color-sidebar-foreground: hsl(var(--sidebar-foreground));\n\
+\x20 --color-sidebar-primary: hsl(var(--sidebar-primary));\n\
+\x20 --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));\n\
+\x20 --color-sidebar-accent: hsl(var(--sidebar-accent));\n\
+\x20 --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));\n\
+\x20 --color-sidebar-border: hsl(var(--sidebar-border));\n\
+\x20 --color-sidebar-ring: hsl(var(--sidebar-ring));\n\
+\x20 --radius-sm: calc(var(--radius) - 4px);\n\
+\x20 --radius-md: calc(var(--radius) - 2px);\n\
+\x20 --radius-lg: var(--radius);\n\
+}}\n\
+\n\
+:root {{\n\
+\x20 --background: 0 0% 100%;\n\
+\x20 --foreground: 222.2 84% 4.9%;\n\
+\x20 --card: 0 0% 100%;\n\
+\x20 --card-foreground: 222.2 84% 4.9%;\n\
+\x20 --popover: 0 0% 100%;\n\
+\x20 --popover-foreground: 222.2 84% 4.9%;\n\
+\x20 --primary: 222.2 47.4% 11.2%;\n\
+\x20 --primary-foreground: 210 40% 98%;\n\
+\x20 --secondary: 210 40% 96.1%;\n\
+\x20 --secondary-foreground: 222.2 47.4% 11.2%;\n\
+\x20 --muted: 210 40% 96.1%;\n\
+\x20 --muted-foreground: 215.4 16.3% 46.9%;\n\
+\x20 --accent: 210 40% 96.1%;\n\
+\x20 --accent-foreground: 222.2 47.4% 11.2%;\n\
+\x20 --destructive: 0 84.2% 60.2%;\n\
+\x20 --destructive-foreground: 210 40% 98%;\n\
+\x20 --border: 214.3 31.8% 91.4%;\n\
+\x20 --input: 214.3 31.8% 91.4%;\n\
+\x20 --ring: 222.2 84% 4.9%;\n\
+\x20 --radius: 0.5rem;\n\
+\x20 --sidebar-background: 0 0% 98%;\n\
+\x20 --sidebar-foreground: 240 5.3% 26.1%;\n\
+\x20 --sidebar-primary: 240 5.9% 10%;\n\
+\x20 --sidebar-primary-foreground: 0 0% 98%;\n\
+\x20 --sidebar-accent: 240 4.8% 95.9%;\n\
+\x20 --sidebar-accent-foreground: 240 5.9% 10%;\n\
+\x20 --sidebar-border: 220 13% 91%;\n\
+\x20 --sidebar-ring: 217.2 91.2% 59.8%;\n\
+}}\n\
+\n\
+.dark {{\n\
+\x20 --background: 222.2 84% 4.9%;\n\
+\x20 --foreground: 210 40% 98%;\n\
+\x20 --card: 222.2 84% 4.9%;\n\
+\x20 --card-foreground: 210 40% 98%;\n\
+\x20 --popover: 222.2 84% 4.9%;\n\
+\x20 --popover-foreground: 210 40% 98%;\n\
+\x20 --primary: 210 40% 98%;\n\
+\x20 --primary-foreground: 222.2 47.4% 11.2%;\n\
+\x20 --secondary: 217.2 32.6% 17.5%;\n\
+\x20 --secondary-foreground: 210 40% 98%;\n\
+\x20 --muted: 217.2 32.6% 17.5%;\n\
+\x20 --muted-foreground: 215 20.2% 65.1%;\n\
+\x20 --accent: 217.2 32.6% 17.5%;\n\
+\x20 --accent-foreground: 210 40% 98%;\n\
+\x20 --destructive: 0 62.8% 30.6%;\n\
+\x20 --destructive-foreground: 210 40% 98%;\n\
+\x20 --border: 217.2 32.6% 17.5%;\n\
+\x20 --input: 217.2 32.6% 17.5%;\n\
+\x20 --ring: 212.7 26.8% 83.9%;\n\
+\x20 --sidebar-background: 240 5.9% 10%;\n\
+\x20 --sidebar-foreground: 240 4.8% 95.9%;\n\
+\x20 --sidebar-primary: 224.3 76.3% 48%;\n\
+\x20 --sidebar-primary-foreground: 0 0% 100%;\n\
+\x20 --sidebar-accent: 240 3.7% 15.9%;\n\
+\x20 --sidebar-accent-foreground: 240 4.8% 95.9%;\n\
+\x20 --sidebar-border: 240 3.7% 15.9%;\n\
+\x20 --sidebar-ring: 217.2 91.2% 59.8%;\n\
+}}\n\
+{THEME_REGION_END}\n"
     )
 }
 
