@@ -20,10 +20,10 @@ num-integer = "0.1.46"
 # Only used by calendar/date_picker unit tests to render static HTML for
 # assertions; matches upstream's own dev-dependency.
 dioxus-ssr = "0.7.0"
-dioxus-html = { version = "=0.7.9", features = ["serialize"] }
+dioxus-html = { version = "=0.7.10", features = ["serialize"] }
 
 [target.'cfg(target_family = "wasm")'.dependencies]
-gloo-timers = { version = "0.3", features = ["futures"] }
+gloo-timers = { version = "0.4", features = ["futures"] }
 
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 tokio = { version = "1", features = ["time"] }
