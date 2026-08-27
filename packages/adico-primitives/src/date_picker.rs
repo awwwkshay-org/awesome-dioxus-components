@@ -396,6 +396,10 @@ pub fn DatePickerPopover(props: DatePickerPopoverProps) -> Element {
         }
     });
 
+    // Not a redundant closure: `open()` is a tracked reactive read, while
+    // clippy's suggested `&*open` goes through `Deref` and silently skips
+    // Dioxus's subscription tracking, breaking reactivity.
+    #[allow(clippy::redundant_closure)]
     let effective_open = use_memo(move || controlled_open().unwrap_or_else(|| open()));
 
     use_context_provider(|| BaseDatePickerContext {
@@ -1433,7 +1437,9 @@ pub fn DateRangePickerInput(props: DatePickerInputProps) -> Element {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(not(any(feature = "web", feature = "desktop")))]
     use dioxus_core::{Event, Mutation};
+    #[cfg(not(any(feature = "web", feature = "desktop")))]
     use dioxus_html::{
         EventData, SerializedHtmlEventConverter, SerializedMouseData, set_event_converter,
     };
@@ -1459,6 +1465,7 @@ mod tests {
         }
     }
 
+    #[cfg(not(any(feature = "web", feature = "desktop")))]
     #[component]
     fn OpenDatePickerPopover() -> Element {
         rsx! {
@@ -1472,6 +1479,7 @@ mod tests {
         }
     }
 
+    #[cfg(not(any(feature = "web", feature = "desktop")))]
     #[component]
     fn InteractiveDatePickerPopover() -> Element {
         rsx! {
@@ -1513,6 +1521,12 @@ mod tests {
         assert!(!html.contains("DD"));
     }
 
+    // `use_animated_open` (lib.rs) only takes this synchronous path when
+    // neither platform feature is active; with "web"/"desktop" enabled it
+    // waits on a `document::eval` animation-end signal that a bare
+    // `VirtualDom`/SSR test has no real JS runtime to ever resolve, so the
+    // popover content would never mount and this assertion can't hold.
+    #[cfg(not(any(feature = "web", feature = "desktop")))]
     #[test]
     fn date_picker_popover_honors_controlled_open_on_first_render() {
         let mut dom = VirtualDom::new(OpenDatePickerPopover);
@@ -1523,6 +1537,8 @@ mod tests {
         assert!(html.contains("Calendar popup"));
     }
 
+    // See the cfg note on `date_picker_popover_honors_controlled_open_on_first_render`.
+    #[cfg(not(any(feature = "web", feature = "desktop")))]
     #[test]
     fn date_picker_trigger_opens_the_popover() {
         let mut dom = VirtualDom::new(InteractiveDatePickerPopover);

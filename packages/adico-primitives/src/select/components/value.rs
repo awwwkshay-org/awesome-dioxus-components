@@ -74,9 +74,11 @@ pub fn SelectValue(props: SelectValueProps) -> Element {
 
     let is_empty = move || ctx.selectable.is_empty();
     let selected_values = ctx.selectable.selected_texts();
-    let display_value = (!selected_values.is_empty())
-        .then(|| selected_values.join(", "))
-        .unwrap_or_else(|| props.placeholder.cloned());
+    let display_value = if !selected_values.is_empty() {
+        selected_values.join(", ")
+    } else {
+        props.placeholder.cloned()
+    };
 
     rsx! {
         // Add placeholder option if needed

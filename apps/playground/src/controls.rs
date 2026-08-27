@@ -50,10 +50,10 @@ pub fn SelectControl<T: Clone + PartialEq + 'static>(
             select {
                 class: "h-9 w-full rounded-md border border-input bg-background px-3 text-sm font-normal shadow-xs outline-none focus-visible:ring-1 focus-visible:ring-ring",
                 onchange: move |event| {
-                    if let Ok(index) = event.value().parse::<usize>() {
-                        if let Some((_, option)) = options.get(index) {
-                            on_change.call(option.clone());
-                        }
+                    if let Ok(index) = event.value().parse::<usize>()
+                        && let Some((_, option)) = options.get(index)
+                    {
+                        on_change.call(option.clone());
                     }
                 },
                 for (index , (option_label , option)) in options.iter().enumerate() {

@@ -121,6 +121,10 @@ pub struct ComboboxMultiProps<T: Clone + PartialEq + 'static = String> {
     pub children: Element,
 }
 
+// Mirrors `use_selectable_root`'s already-accepted arg count plus the two
+// combobox-specific controlled inputs (query, filter); grouping them would
+// just relocate the same fields into a one-off struct with no other use.
+#[allow(clippy::too_many_arguments)]
 fn use_combobox_root(
     values: Memo<Vec<RcPartialEqValue>>,
     set_value: Callback<RcPartialEqValue>,
