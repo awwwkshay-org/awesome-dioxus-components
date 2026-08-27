@@ -756,9 +756,16 @@ fn DateSegment<T: Clone + Copy + Integer + FromStr + Display + 'static>(
     };
 
     let handle_keydown = move |event: Event<KeyboardData>| {
+        if (ctx.disabled)() {
+            return;
+        }
+        let read_only = (ctx.read_only)();
         let key = event.key();
         match key {
             Key::Character(actual_char) => {
+                if read_only {
+                    return;
+                }
                 // Don't block keyboard shortcuts
                 if event.modifiers().ctrl() || event.modifiers().meta() || event.modifiers().alt() {
                     return;
@@ -776,6 +783,9 @@ fn DateSegment<T: Clone + Copy + Integer + FromStr + Display + 'static>(
                 event.stop_propagation();
             }
             Key::Backspace => {
+                if read_only {
+                    return;
+                }
                 let mut text = text_value();
                 if event.modifiers().ctrl() || event.modifiers().meta() {
                     text.clear();
@@ -785,6 +795,9 @@ fn DateSegment<T: Clone + Copy + Integer + FromStr + Display + 'static>(
                 set_value(text);
             }
             Key::Delete => {
+                if read_only {
+                    return;
+                }
                 let mut text = text_value();
                 text.remove(0);
                 set_value(text);
@@ -801,6 +814,9 @@ fn DateSegment<T: Clone + Copy + Integer + FromStr + Display + 'static>(
                 event.stop_propagation();
             }
             Key::ArrowUp => {
+                if read_only {
+                    return;
+                }
                 let value = match (props.value)() {
                     Some(mut value) => {
                         value.inc();
@@ -811,6 +827,9 @@ fn DateSegment<T: Clone + Copy + Integer + FromStr + Display + 'static>(
                 props.on_value_change.call(Some(value));
             }
             Key::ArrowDown => {
+                if read_only {
+                    return;
+                }
                 let value = match (props.value)() {
                     Some(mut value) => {
                         value.dec();

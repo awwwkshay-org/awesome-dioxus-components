@@ -111,13 +111,6 @@
   box-shadow: none !important;
 }
 
-/* Keep the trigger and its 20rem calendar together at the visual center of
-   the playground preview. This is preview composition, not source-component
-   placement behavior. */
 .playground-date-picker-popover-root {
   position: relative;
-}
-
-.playground-date-picker-popover-root[data-state="open"] {
-  transform: translateY(-10.25rem);
 }

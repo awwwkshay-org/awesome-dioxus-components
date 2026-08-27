@@ -4,6 +4,7 @@
 
 use adico_primitives::ContentAlign;
 use dioxus::prelude::*;
+use dioxus_icons::lucide::{ChevronLeft, ChevronRight};
 use time::{Date, Weekday};
 
 use crate::components;
@@ -686,6 +687,14 @@ pub fn CalendarPage() -> Element {
     let mut view_date = use_signal(move || today);
     let disabled = use_signal(|| false);
     let mut first_day_of_week = use_signal(|| Weekday::Sunday);
+    // Jump the visible month to a pre-existing selected date (e.g. on first
+    // open) rather than always starting on today's month; mirrors the same
+    // effect `DatePickerCalendar` already runs internally.
+    use_effect(move || {
+        if let Some(date) = selected_date() {
+            view_date.set(date);
+        }
+    });
     rsx! {
         Demo {
             name: "Calendar",
@@ -710,9 +719,22 @@ pub fn CalendarPage() -> Element {
                     components::ui::CalendarView {
                         components::ui::CalendarHeader {
                             components::ui::CalendarNavigation {
-                                components::ui::CalendarPreviousMonthButton { "<" }
-                                components::ui::CalendarMonthTitle {}
-                                components::ui::CalendarNextMonthButton { ">" }
+                                components::ui::CalendarPreviousMonthButton {
+                                    ChevronLeft { class: "size-4", size: 16 }
+                                }
+                                div { class: "flex flex-1 items-center gap-1",
+                                    components::ui::CalendarSelectMonth {
+                                        components::ui::CalendarSelectMonthSelect {}
+                                        components::ui::CalendarSelectMonthValue {}
+                                    }
+                                    components::ui::CalendarSelectYear {
+                                        components::ui::CalendarSelectYearSelect {}
+                                        components::ui::CalendarSelectYearValue {}
+                                    }
+                                }
+                                components::ui::CalendarNextMonthButton {
+                                    ChevronRight { class: "size-4", size: 16 }
+                                }
                             }
                         }
                         components::ui::CalendarGrid {}
@@ -753,9 +775,22 @@ pub fn DatePickerPage() -> Element {
                                 components::ui::CalendarView {
                                     components::ui::CalendarHeader {
                                         components::ui::CalendarNavigation {
-                                            components::ui::CalendarPreviousMonthButton { "<" }
-                                            components::ui::CalendarMonthTitle {}
-                                            components::ui::CalendarNextMonthButton { ">" }
+                                            components::ui::CalendarPreviousMonthButton {
+                                    ChevronLeft { class: "size-4", size: 16 }
+                                }
+                                            div { class: "flex flex-1 items-center gap-1",
+                                                components::ui::CalendarSelectMonth {
+                                                    components::ui::CalendarSelectMonthSelect {}
+                                                    components::ui::CalendarSelectMonthValue {}
+                                                }
+                                                components::ui::CalendarSelectYear {
+                                                    components::ui::CalendarSelectYearSelect {}
+                                                    components::ui::CalendarSelectYearValue {}
+                                                }
+                                            }
+                                            components::ui::CalendarNextMonthButton {
+                                    ChevronRight { class: "size-4", size: 16 }
+                                }
                                         }
                                     }
                                     components::ui::CalendarGrid {}

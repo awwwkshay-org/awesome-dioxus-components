@@ -333,7 +333,7 @@ pub struct BaseCalendarContext {
     // Configuration
     disabled: ReadSignal<bool>,
     today: Date,
-    first_day_of_week: Weekday,
+    first_day_of_week: ReadSignal<Weekday>,
     enabled_date_range: DateRange,
     view_registrations: Signal<Vec<CalendarViewRegistration>>,
 }
@@ -505,8 +505,8 @@ pub struct CalendarProps {
     pub disabled: ReadSignal<bool>,
 
     /// First day of the week
-    #[props(default = Weekday::Sunday)]
-    pub first_day_of_week: Weekday,
+    #[props(default = ReadSignal::new(Signal::new(Weekday::Sunday)))]
+    pub first_day_of_week: ReadSignal<Weekday>,
 
     /// Lower limit of the range of available dates
     #[props(default = date!(1925-01-01))]
@@ -763,8 +763,8 @@ pub struct RangeCalendarProps {
     pub disabled: ReadSignal<bool>,
 
     /// First day of the week
-    #[props(default = Weekday::Sunday)]
-    pub first_day_of_week: Weekday,
+    #[props(default = ReadSignal::new(Signal::new(Weekday::Sunday)))]
+    pub first_day_of_week: ReadSignal<Weekday>,
 
     /// Lower limit of the range of available dates
     #[props(default = date!(1925-01-01))]
@@ -1610,10 +1610,11 @@ pub fn use_calendar_grid() -> CalendarGridData {
 
     use_memo(move || {
         let view_date = view_ctx.offset_view_date();
+        let first_day_of_week = (ctx.first_day_of_week)();
         CalendarGridData {
             view_date,
-            weekdays: calendar_grid_weekdays(ctx.first_day_of_week, ctx.format_weekday),
-            weeks: calendar_grid_weeks(view_date, ctx.first_day_of_week),
+            weekdays: calendar_grid_weekdays(first_day_of_week, ctx.format_weekday),
+            weeks: calendar_grid_weeks(view_date, first_day_of_week),
         }
     })()
 }
@@ -1983,6 +1984,7 @@ pub fn CalendarSelectMonthSelect(props: CalendarSelectMonthSelectProps) -> Eleme
     rsx! {
         select {
             aria_label: "Month",
+            disabled: (base_ctx.disabled)(),
             onchange: move |e| {
                 let mut view_date = view_ctx.offset_view_date();
                 let number = e.value().parse().unwrap_or(view_date.month() as u8);
@@ -2168,6 +2170,7 @@ pub fn CalendarSelectYearSelect(props: CalendarSelectYearSelectProps) -> Element
     rsx! {
         select {
             aria_label: "Year",
+            disabled: (base_ctx.disabled)(),
             onchange: move |e| {
                 let mut view_date = view_ctx.offset_view_date();
                 let year = e.value().parse().unwrap_or(view_date.year());

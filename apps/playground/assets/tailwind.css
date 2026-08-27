@@ -217,6 +217,9 @@
   .pointer-events-none {
     pointer-events: none;
   }
+  .invisible {
+    visibility: hidden;
+  }
   .visible {
     visibility: visible;
   }
@@ -263,6 +266,9 @@
   }
   .right-0 {
     right: calc(var(--spacing) * 0);
+  }
+  .right-3 {
+    right: calc(var(--spacing) * 3);
   }
   .bottom-0 {
     bottom: calc(var(--spacing) * 0);
@@ -347,6 +353,9 @@
   }
   .grid {
     display: grid;
+  }
+  .hidden {
+    display: none;
   }
   .inline-block {
     display: inline-block;
@@ -469,6 +478,12 @@
   .w-\[18rem\] {
     width: 18rem;
   }
+  .w-\[40\%\] {
+    width: 40%;
+  }
+  .w-\[60\%\] {
+    width: 60%;
+  }
   .w-auto {
     width: auto;
   }
@@ -511,6 +526,9 @@
   .shrink-0 {
     flex-shrink: 0;
   }
+  .grow-0 {
+    flex-grow: 0;
+  }
   .basis-full {
     flex-basis: 100%;
   }
@@ -539,6 +557,9 @@
   }
   .cursor-pointer {
     cursor: pointer;
+  }
+  .appearance-none {
+    appearance: none;
   }
   .grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -825,6 +846,9 @@
   .pr-2\.5 {
     padding-right: calc(var(--spacing) * 2.5);
   }
+  .pr-8 {
+    padding-right: calc(var(--spacing) * 8);
+  }
   .pb-2 {
     padding-bottom: calc(var(--spacing) * 2);
   }
@@ -938,6 +962,9 @@
   .underline-offset-4 {
     text-underline-offset: 4px;
   }
+  .opacity-0 {
+    opacity: 0%;
+  }
   .opacity-50 {
     opacity: 50%;
   }
@@ -1022,6 +1049,26 @@
   .select-none {
     -webkit-user-select: none;
     user-select: none;
+  }
+  .group-aria-expanded\:block {
+    &:is(:where(.group)[aria-expanded="true"] *) {
+      display: block;
+    }
+  }
+  .group-aria-expanded\:hidden {
+    &:is(:where(.group)[aria-expanded="true"] *) {
+      display: none;
+    }
+  }
+  .group-data-\[state\=open\]\:block {
+    &:is(:where(.group)[data-state="open"] *) {
+      display: block;
+    }
+  }
+  .group-data-\[state\=open\]\:hidden {
+    &:is(:where(.group)[data-state="open"] *) {
+      display: none;
+    }
   }
   .group-data-\[state\=open\]\/date-picker\:rotate-180 {
     &:is(:where(.group\/date-picker)[data-state="open"] *) {
@@ -1306,6 +1353,25 @@
   .disabled\:opacity-50 {
     &:disabled {
       opacity: 50%;
+    }
+  }
+  .has-disabled\:pointer-events-none {
+    &:has(*:disabled) {
+      pointer-events: none;
+    }
+  }
+  .has-disabled\:opacity-50 {
+    &:has(*:disabled) {
+      opacity: 50%;
+    }
+  }
+  .has-disabled\:hover\:bg-transparent {
+    &:has(*:disabled) {
+      &:hover {
+        @media (hover: hover) {
+          background-color: transparent;
+        }
+      }
     }
   }
   .aria-invalid\:border-destructive {
@@ -1759,9 +1825,6 @@
 }
 .playground-date-picker-popover-root {
   position: relative;
-}
-.playground-date-picker-popover-root[data-state="open"] {
-  transform: translateY(-10.25rem);
 }
 @property --tw-translate-x {
   syntax: "*";
