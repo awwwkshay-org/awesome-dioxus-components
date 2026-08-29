@@ -83,8 +83,12 @@ compile evidence, applicable keyboard/a11y checks, web and server feature
 checks, plus a recorded reason for each unavailable browser, desktop, or
 hydration check.
 
-The following log records that evidence per component as its ledger closes.
-Unlisted rows are not yet closed.
+The following log carries a row only for a component whose ledger closure
+required its own dedicated evidence write-up (sections 2, 4, and 6). Badge,
+Card, Input, Textarea, Skeleton, Item, and Pagination (section 5 and 3) and
+Select, Combobox, and Sidebar (section 4) are equally closed; their evidence
+lives in the Matrix and control-contract tables above plus their task
+records, not as a separate row here.
 
 | Component | Rust | Consumer compile | Browser / keyboard / a11y | Notes |
 | --- | --- | --- | --- | --- |
@@ -109,9 +113,14 @@ contract" above), not a registry-source omission — closing it would mean
 extending `adico-primitives` first, which is out of scope for a styled-façade
 hardening pass. All eight overlay/menu components were also grepped for
 hardcoded colors (`bg-[#`, `rgb(`, `hsl(`, hex literals) and use semantic
-tokens exclusively, so they inherit theme-reactivity from the same
-CSS-variable mechanism verified in task 4.8d rather than needing individual
-theme wiring.
+tokens exclusively (`bg-popover`, `text-popover-foreground`, `bg-accent`,
+etc.), so they inherit theme-reactivity structurally rather than needing
+individual theme wiring: `apps/playground/src/theme.rs`'s customization tray
+writes the same `--popover`/`--popover-foreground`/`--accent`/etc. CSS custom
+properties these Tailwind classes resolve through (see its `CssVariable`
+mapping and the generated inline `style` covering the full semantic set), so
+any live palette or appearance change reaches every overlay/menu surface
+without per-component changes.
 
 Closing Calendar's ledger also surfaced two pre-existing registry metadata
 defects, fixed alongside it since they broke the same standalone-install path
@@ -132,11 +141,11 @@ of those items already requires `adico-primitives`.
 
 ## Hardening report
 
-All 21 `registry:ui` components in the Matrix above are closed: 1–20 (every
-row except Sidebar's dependents) landed across sections 1–5, Calendar/Date
-Picker closed in section 4, and Dialog/Sheet/Tooltip/Popover/Hover
-Card/Dropdown Menu/Context Menu/Menubar closed in section 6. No component is
-blocked. The one deliberate, documented gap is check/radio/submenu menu item
+All 21 `registry:ui` components in the Matrix above are closed: Button
+(section 2), Pagination (section 3), Select/Combobox/Sidebar (section 4),
+Badge/Card/Input/Textarea/Skeleton/Item (section 5), Calendar/Date Picker
+(section 4), and Dialog/Sheet/Tooltip/Popover/Hover Card/Dropdown
+Menu/Context Menu/Menubar (section 6). No component is blocked. The one deliberate, documented gap is check/radio/submenu menu item
 variants (Dropdown Menu, Context Menu, Menubar): the owned primitives expose
 no such parts, so a styled façade has nothing to wrap without first extending
 `adico-primitives` — out of scope for this styled-façade hardening change.
@@ -162,7 +171,7 @@ Final validation, run against the complete working tree after section 6:
 | `cargo xtask provenance check` | 3 imported record(s), 34 source unit(s), passed |
 | `cargo check --locked --workspace` | passed |
 | `cargo clippy --locked --workspace --all-targets -- -D warnings` | passed |
-| `cargo test --locked --workspace` (`--test-threads=1`) | passed, all suites; run single-threaded because `adico-cli`'s `css::tests` module uses a nanosecond-nonce temp directory that collides under parallel execution — a pre-existing test-isolation issue, not a regression from this change |
+| `cargo test --locked --workspace` | passed, all suites, default parallel execution. A pre-existing flake was found and fixed along the way: `adico-cli`'s `css::tests` module derived its temp directory from a nanosecond timestamp alone, which could collide across threads on platforms with coarser clock resolution; `temporary_project_root()` now also mixes in an atomic counter so every call gets a distinct path |
 | `adico-primitives` `web`/wasm32 and `desktop` feature checks | both passed |
 | `adico-playground` `web`/wasm32 and `server` feature checks | both passed |
 | `dialog.spec.ts` (3 tests) against a freshly reinstalled `dialog-consumer` via `dx serve` | passed, zero critical axe violations |

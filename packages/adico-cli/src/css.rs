@@ -253,14 +253,25 @@ pub enum CssThemeError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::atomic::{AtomicU64, Ordering};
     use std::time::{SystemTime, UNIX_EPOCH};
 
     fn temporary_project_root() -> PathBuf {
+        // A nanosecond timestamp alone can collide: this repo's tests run
+        // with multiple threads, and two calls close together can land in
+        // the same clock tick on platforms with coarser-than-nanosecond
+        // resolution, so two tests race on the same directory. The counter
+        // guarantees every call gets a distinct path regardless of timing.
+        static NEXT: AtomicU64 = AtomicU64::new(0);
         let nonce = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .expect("valid time")
             .as_nanos();
-        std::env::temp_dir().join(format!("adico-css-test-{}-{nonce}", std::process::id()))
+        let unique = NEXT.fetch_add(1, Ordering::Relaxed);
+        std::env::temp_dir().join(format!(
+            "adico-css-test-{}-{nonce}-{unique}",
+            std::process::id()
+        ))
     }
 
     fn temporary_css_path() -> PathBuf {
