@@ -93,17 +93,19 @@
           "source": "ui/select.rs",
           "targetRoot": "ui",
           "target": "select.rs",
-          "checksum": "676b14ea7cdfbe2402ed6f1e92ddade9c63a855e9249b598b699084d375adf88"
+          "checksum": "8993ad35659a83d1a7751217f4c17579ecdf5f98cd5bea036ce242d69b5ce664"
         }
       ],
       "cargoDependencies": [
         { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "dioxus-icons", "version": "=0.1.0" },
         { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
       ],
       "style": {
         "semanticTokens": true,
         "radiusToken": true
       },
+      "registryDependencies": ["cn"],
       "moduleExports": [
         { "targetRoot": "ui", "module": "select", "reexport": true }
       ],
@@ -437,6 +439,7 @@
         "semanticTokens": true,
         "radiusToken": true
       },
+      "registryDependencies": ["cn"],
       "moduleExports": [
         { "targetRoot": "ui", "module": "dropdown_menu", "reexport": true }
       ],
@@ -517,17 +520,19 @@
           "source": "ui/combobox.rs",
           "targetRoot": "ui",
           "target": "combobox.rs",
-          "checksum": "90d919b67f9e35014afbe37c89c6bf960a4041aab653ea105591b9fd44f54a95"
+          "checksum": "37fc0a4fca31aca9510490e6d478d9b8659886ff967dd59f28f42766e8608f3d"
         }
       ],
       "cargoDependencies": [
         { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "dioxus-icons", "version": "=0.1.0" },
         { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
       ],
       "style": {
         "semanticTokens": true,
         "radiusToken": true
       },
+      "registryDependencies": ["cn"],
       "moduleExports": [
         { "targetRoot": "ui", "module": "combobox", "reexport": true }
       ],
@@ -546,11 +551,12 @@
           "source": "ui/calendar.rs",
           "targetRoot": "ui",
           "target": "calendar.rs",
-          "checksum": "488abcc1f974bc37484989b16e6e2482b16e8e84f9773bb6caa9319baa8fb7a3"
+          "checksum": "bde793b7b33eecf4511a12542a266f7ea1306dd938af824ed7ed264929a40f8f"
         }
       ],
       "cargoDependencies": [
         { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "dioxus-icons", "version": "=0.1.0" },
         { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] },
         { "crate": "time", "version": "=0.3.44" }
       ],

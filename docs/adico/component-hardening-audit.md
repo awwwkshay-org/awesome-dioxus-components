@@ -82,3 +82,24 @@ controls, CLI-refreshed copied source and checksums, focused Rust/consumer
 compile evidence, applicable keyboard/a11y checks, web and server feature
 checks, plus a recorded reason for each unavailable browser, desktop, or
 hydration check.
+
+The following log records that evidence per component as its ledger closes.
+Unlisted rows are not yet closed.
+
+| Component | Rust | Consumer compile | Browser / keyboard / a11y | Notes |
+| --- | --- | --- | --- | --- |
+| Button | `every_public_variant_has_a_distinct_semantic_class`, `icon_sizes_remain_square` unit tests in `registry/ui/button.rs` | `adico-playground` `web`/`server` features and `wasm32-unknown-unknown` all pass | Not warranted as a dedicated Playwright spec: Button is a styled native `<button>` with no custom JS/ARIA behavior (same disposition as Badge/Card/Input/Textarea/Skeleton/Item, none of which carry a spec either); keyboard activation (Space/Enter) and `disabled`/`aria-invalid` semantics are native HTML, and its trigger composition is exercised live by `dialog.spec.ts` (`Open dialog` / `Open nested dialog` buttons), which passes with zero critical axe violations | Desktop/hydration: unavailable, no desktop or SSR-hydration fixture exists for Button in isolation; covered transitively by the workspace-wide `server` feature check |
+| Calendar | `adico-primitives` calendar doctests (`Calendar`, `CalendarGrid`, `RangeCalendar`, `CalendarSelectMonth`/`CalendarSelectYear`, etc.) | `adico-playground` `web`/`server` features and `wasm32-unknown-unknown` pass; `tests/installation/wave4-consumer` `cargo build`/`cargo check --target wasm32-unknown-unknown` pass | `tests/playwright/wave4.spec.ts` (`installed Calendar navigates and selects dates with arrow keys`) passed live against `wave4-consumer` via `dx serve`; zero critical axe violations in the same run | Desktop/hydration: unavailable, no desktop/SSR-hydration fixture; registry-source drift found during closure (playground copy had hand-authored month/year select pills not present in `registry/ui/calendar.rs`) was reconciled by porting the fix into registry source and refreshing every installed copy through `adico add --replace` |
+| Date Picker | `adico-primitives` date_picker doctests (`DatePicker`, `DatePickerPopover`, `DatePickerCalendar`, `DateRangePicker`, etc.) | `adico-playground` `web`/`server` features and `wasm32-unknown-unknown` pass; `tests/installation/wave4-consumer` `cargo build`/`cargo check --target wasm32-unknown-unknown` pass | `tests/playwright/wave4.spec.ts` (`installed DatePicker opens a Calendar inside its popover`) passed live against `wave4-consumer` via `dx serve`; zero critical axe violations in the same run | Desktop/hydration: unavailable, no desktop/SSR-hydration fixture; no registry-source drift found (`date_picker.rs` copies matched registry source) |
+
+Closing Calendar's ledger also surfaced two pre-existing registry metadata
+defects, fixed alongside it since they broke the same standalone-install path
+being verified: `select` and `combobox` (both closed under tasks 4.1/4.2) and
+`dropdown-menu` (not yet closed, part of the pending overlay/menu batch) used
+the `cn` helper in their copied source but omitted `cn` from
+`registryDependencies`, so `adico add select` (or `combobox`, `dropdown-menu`)
+alone — without another item that happens to declare `cn` — installed a
+project that failed to compile. Fixed in `registry/registry.json`, covered by
+the new `standalone_add_of_items_using_cn_resolves_the_cn_dependency`
+regression test in `packages/adico-cli/tests/cli_integration.rs`, and verified
+live via `select.spec.ts` against a freshly reinstalled `select-consumer`.

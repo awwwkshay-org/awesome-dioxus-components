@@ -5,6 +5,7 @@
 //! the primitive parts while preserving their native Dioxus composition API.
 
 use dioxus::prelude::*;
+use dioxus_icons::lucide::ChevronDown;
 
 use crate::adico_lib::cn::cn;
 use adico_primitives::calendar::{
@@ -13,15 +14,19 @@ use adico_primitives::calendar::{
     CalendarNavigation as PrimitiveCalendarNavigation,
     CalendarNextMonthButton as PrimitiveCalendarNextMonthButton,
     CalendarPreviousMonthButton as PrimitiveCalendarPreviousMonthButton,
+    CalendarSelectMonth as PrimitiveCalendarSelectMonth,
+    CalendarSelectMonthSelect as PrimitiveCalendarSelectMonthSelect,
+    CalendarSelectMonthValue as PrimitiveCalendarSelectMonthValue,
+    CalendarSelectYear as PrimitiveCalendarSelectYear,
+    CalendarSelectYearSelect as PrimitiveCalendarSelectYearSelect,
+    CalendarSelectYearValue as PrimitiveCalendarSelectYearValue,
     CalendarView as PrimitiveCalendarView,
 };
 
 pub use adico_primitives::calendar::{
     Calendar, CalendarDay, CalendarGridBody, CalendarGridCell, CalendarGridDayHeader,
     CalendarGridHead, CalendarGridHeaderRow, CalendarGridRoot, CalendarGridWeek,
-    CalendarSelectMonth, CalendarSelectMonthOption, CalendarSelectMonthSelect,
-    CalendarSelectMonthValue, CalendarSelectYear, CalendarSelectYearOption,
-    CalendarSelectYearSelect, CalendarSelectYearValue, RangeCalendar,
+    CalendarSelectMonthOption, CalendarSelectYearOption, RangeCalendar,
 };
 
 #[derive(Props, Clone, PartialEq)]
@@ -147,6 +152,110 @@ pub fn CalendarMonthTitle(props: CalendarMonthTitleProps) -> Element {
     ]);
     rsx! {
         PrimitiveCalendarMonthTitle { class, attributes: props.attributes }
+    }
+}
+
+// Fixed percentage widths (of the flex-1 group in `CalendarNavigation` that
+// holds both selects) rather than content-driven auto widths. Month/year
+// names are variable-length ("May" vs. "September"); an auto-width pill
+// resizes every time the value changes, shoving its neighbor sideways. A
+// fixed share is stable across every possible value, so picking a new
+// month/year never shifts anything else in the row.
+const SELECT_TRIGGER_CLASSES: &str = "pointer-events-none flex h-8 w-full min-w-0 items-center justify-center gap-1 truncate rounded-md px-2 text-sm font-medium";
+const SELECT_NATIVE_CLASSES: &str =
+    "absolute inset-0 h-full w-full cursor-pointer appearance-none opacity-0";
+
+#[derive(Props, Clone, PartialEq)]
+pub struct CalendarSelectContainerProps {
+    #[props(default)]
+    pub class: Option<String>,
+    #[props(extends = GlobalAttributes)]
+    pub attributes: Vec<Attribute>,
+    #[props(default)]
+    pub children: Element,
+}
+
+/// Container pairing an invisible native `<select>` with a styled value
+/// display; clicking anywhere in the pill opens the native dropdown.
+///
+/// Fixed at 60% of the enclosing flex group (see `SELECT_TRIGGER_CLASSES`)
+/// so its width never depends on which month is selected.
+#[component]
+pub fn CalendarSelectMonth(props: CalendarSelectContainerProps) -> Element {
+    let class = cn(&[
+        "relative flex w-[60%] min-w-0 shrink-0 grow-0 overflow-hidden rounded-md hover:bg-accent has-disabled:pointer-events-none has-disabled:opacity-50 has-disabled:hover:bg-transparent",
+        props.class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        PrimitiveCalendarSelectMonth { class, attributes: props.attributes, {props.children} }
+    }
+}
+
+/// Fixed at 40% of the enclosing flex group; see [`CalendarSelectMonth`].
+#[component]
+pub fn CalendarSelectYear(props: CalendarSelectContainerProps) -> Element {
+    let class = cn(&[
+        "relative flex w-[40%] min-w-0 shrink-0 grow-0 overflow-hidden rounded-md hover:bg-accent has-disabled:pointer-events-none has-disabled:opacity-50 has-disabled:hover:bg-transparent",
+        props.class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        PrimitiveCalendarSelectYear { class, attributes: props.attributes, {props.children} }
+    }
+}
+
+#[derive(Props, Clone, PartialEq)]
+pub struct CalendarSelectFieldProps {
+    #[props(default)]
+    pub class: Option<String>,
+    #[props(extends = GlobalAttributes)]
+    pub attributes: Vec<Attribute>,
+}
+
+#[component]
+pub fn CalendarSelectMonthSelect(props: CalendarSelectFieldProps) -> Element {
+    let class = cn(&[
+        SELECT_NATIVE_CLASSES,
+        props.class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        PrimitiveCalendarSelectMonthSelect { class, attributes: props.attributes }
+    }
+}
+
+#[component]
+pub fn CalendarSelectYearSelect(props: CalendarSelectFieldProps) -> Element {
+    let class = cn(&[
+        SELECT_NATIVE_CLASSES,
+        props.class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        PrimitiveCalendarSelectYearSelect { class, attributes: props.attributes }
+    }
+}
+
+#[component]
+pub fn CalendarSelectMonthValue(props: CalendarSelectFieldProps) -> Element {
+    let class = cn(&[
+        SELECT_TRIGGER_CLASSES,
+        props.class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        PrimitiveCalendarSelectMonthValue { class, attributes: props.attributes,
+            ChevronDown { class: "size-3.5 text-muted-foreground", size: 14 }
+        }
+    }
+}
+
+#[component]
+pub fn CalendarSelectYearValue(props: CalendarSelectFieldProps) -> Element {
+    let class = cn(&[
+        SELECT_TRIGGER_CLASSES,
+        props.class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        PrimitiveCalendarSelectYearValue { class, attributes: props.attributes,
+            ChevronDown { class: "size-3.5 text-muted-foreground", size: 14 }
+        }
     }
 }
 

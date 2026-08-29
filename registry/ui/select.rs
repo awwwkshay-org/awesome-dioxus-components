@@ -6,6 +6,7 @@
 //! pass Dioxus attributes and compose groups or indicators normally.
 
 use dioxus::prelude::*;
+use dioxus_icons::lucide::{ChevronDown, ChevronUp};
 
 use crate::adico_lib::cn::cn;
 
@@ -108,7 +109,7 @@ pub fn SelectTrigger(
     aria_invalid: Option<bool>,
 ) -> Element {
     let class = cn(&[
-        "flex h-9 w-full min-w-32 items-center justify-between gap-2 rounded-md border border-input bg-background px-3 text-sm outline-none transition-[color,box-shadow] focus-visible:ring-1 focus-visible:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+        "group flex h-9 w-full min-w-32 items-center justify-between gap-2 rounded-md border border-input bg-background px-3 text-sm outline-none transition-[color,box-shadow] focus-visible:ring-1 focus-visible:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -117,7 +118,10 @@ pub fn SelectTrigger(
             aria_label,
             aria_invalid,
             {children}
-            span { class: "shrink-0 text-muted-foreground", "aria-hidden": "true", "⌄" }
+            span { class: "relative inline-flex size-4 shrink-0 text-muted-foreground", "aria-hidden": "true",
+                ChevronDown { class: "size-4 group-aria-expanded:hidden", size: 16 }
+                ChevronUp { class: "hidden size-4 group-aria-expanded:block", size: 16 }
+            }
         }
     }
 }

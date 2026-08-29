@@ -10,7 +10,7 @@
 - [x] 2.1 Replace Button's minimal source API with typed current-shadcn variant and size options, caller-composed children, native Dioxus button/global attributes and events, semantic states, and semantic-link styling; verify focused API and compile evidence.
 - [x] 2.2 Give Button a complete playground workbench with selectable variant, size, disabled state, native button type, and text/icon composition examples; verify each control immediately changes the installed Button preview.
 - [x] 2.3 Refresh Button registry metadata, checksums, generated data, and the playground/consumer fixtures through the CLI path; verify no copied Button source is hand-edited.
-- [ ] 2.4 Close Button's feature ledger: add documentation and proportionate Rust, consumer compile, browser, keyboard, accessibility, web, and SSR evidence; record unavailable checks explicitly.
+- [x] 2.4 Close Button's feature ledger: add documentation and proportionate Rust, consumer compile, browser, keyboard, accessibility, web, and SSR evidence; record unavailable checks explicitly.
 
 ## 3. Pagination reference slice
 
@@ -21,8 +21,8 @@
 
 - [x] 4.1 Close Select's feature ledger as a styled registry façade: all parts, single/multi controlled values, open/disabled/name/typeahead state, option/group/indicator behavior, keyboard/focus/ARIA, semantic themes, and route controls.
 - [x] 4.2 Close Combobox's feature ledger as a styled registry façade: all parts, single/multi controlled values, open/disabled/query/filter state, option/empty/indicator behavior, keyboard/focus/ARIA, semantic themes, and route controls.
-- [ ] 4.3 Close Calendar's feature ledger as a styled registry façade: controlled single/range selection, disabled/read-only/first-day/view/navigation constraints, parts, keyboard/focus/ARIA, semantic themes, and route controls.
-- [ ] 4.4 Close Date Picker's feature ledger as a styled registry façade: typed value/range, input/read-only/disabled/popover state, constraints, keyboard/focus/ARIA, semantic themes, and route controls.
+- [x] 4.3 Close Calendar's feature ledger as a styled registry façade: controlled single/range selection, disabled/read-only/first-day/view/navigation constraints, parts, keyboard/focus/ARIA, semantic themes, and route controls.
+- [x] 4.4 Close Date Picker's feature ledger as a styled registry façade: typed value/range, input/read-only/disabled/popover state, constraints, keyboard/focus/ARIA, semantic themes, and route controls.
 - [x] 4.5 Close Sidebar's feature ledger: controlled open state, side, collapsible modes, all structural/menu parts, active/disabled state, semantic tokens, keyboard/pointer behavior, and documented viewport disposition.
 - [x] 4.6 Refresh first-wave registry metadata and the playground/consumer fixtures through the CLI; verify installation plus affected web/SSR builds.
 

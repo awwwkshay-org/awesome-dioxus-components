@@ -4,6 +4,7 @@
 //! ARIA. These façades provide a positioned shadcn-style popup surface.
 
 use dioxus::prelude::*;
+use dioxus_icons::lucide::{ChevronDown, ChevronUp};
 
 use crate::adico_lib::cn::cn;
 
@@ -37,7 +38,7 @@ pub fn Combobox<T: Clone + PartialEq + 'static>(
     children: Element,
 ) -> Element {
     let class = cn(&[
-        "relative inline-block",
+        "group relative inline-block",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -56,6 +57,22 @@ pub fn Combobox<T: Clone + PartialEq + 'static>(
             filter,
             class,
             {children}
+            ComboboxChevron {}
+        }
+    }
+}
+
+/// Trailing chevron shared by [`Combobox`] and [`ComboboxMulti`]; swaps
+/// direction with the root's `data-state` rather than being duplicated per
+/// consumer.
+#[component]
+fn ComboboxChevron() -> Element {
+    rsx! {
+        span {
+            class: "pointer-events-none absolute right-3 top-1/2 inline-flex size-4 -translate-y-1/2 text-muted-foreground",
+            "aria-hidden": "true",
+            ChevronDown { class: "size-4 group-data-[state=open]:hidden", size: 16 }
+            ChevronUp { class: "hidden size-4 group-data-[state=open]:block", size: 16 }
         }
     }
 }
@@ -130,7 +147,7 @@ pub fn ComboboxMulti<T: Clone + PartialEq + 'static>(
     children: Element,
 ) -> Element {
     let class = cn(&[
-        "relative inline-block",
+        "group relative inline-block",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -149,6 +166,7 @@ pub fn ComboboxMulti<T: Clone + PartialEq + 'static>(
             filter,
             class,
             {children}
+            ComboboxChevron {}
         }
     }
 }
@@ -161,7 +179,7 @@ pub fn ComboboxInput(
     class: Option<String>,
 ) -> Element {
     let class = cn(&[
-        "h-9 w-full min-w-48 rounded-md border border-input bg-background px-3 text-sm outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-50",
+        "h-9 w-full min-w-48 rounded-md border border-input bg-background px-3 pr-8 text-sm outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-50",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

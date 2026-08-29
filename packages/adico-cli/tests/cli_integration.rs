@@ -143,6 +143,36 @@ fn multi_item_add_installs_shared_dependencies_once() {
     assert!(manifest.contains("=0.1.0"));
 }
 
+/// Regression test: `select`, `combobox`, and `dropdown-menu` all use the
+/// `cn` class-merging helper in their copied source but previously omitted
+/// `cn` from `registryDependencies`, so installing any of them alone (rather
+/// than alongside another item that happens to declare `cn`) produced an
+/// uncompilable consumer project.
+#[test]
+fn standalone_add_of_items_using_cn_resolves_the_cn_dependency() {
+    for item in ["select", "combobox", "dropdown-menu"] {
+        let project = fixture_project("=0.7.9");
+        init(&project);
+
+        let output = project.adico(&["add", item]);
+        assert!(
+            output.status.success(),
+            "add {item} should succeed: {}",
+            stderr(&output)
+        );
+        assert!(
+            project.exists("src/adico_lib/cn.rs"),
+            "add {item} alone must also install the cn dependency it uses"
+        );
+
+        let lock = project.read("adico.lock");
+        assert!(
+            lock.contains("\"address\": \"@adico/cn\""),
+            "adico.lock must record cn after installing {item} alone"
+        );
+    }
+}
+
 /// The same registry fixture the `adico` binary installs end-to-end into
 /// `tests/installation/awwwkshay-consumer`, embedded here so an offline
 /// company-registry consumer can be configured without a second copy.

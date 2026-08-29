@@ -7,15 +7,25 @@
       "source": "ui/combobox.rs",
       "targetRoot": "ui",
       "target": "combobox.rs",
-      "checksum": "90d919b67f9e35014afbe37c89c6bf960a4041aab653ea105591b9fd44f54a95"
+      "checksum": "37fc0a4fca31aca9510490e6d478d9b8659886ff967dd59f28f42766e8608f3d"
     }
   ],
-  "registryDependencies": [],
+  "registryDependencies": [
+    "cn"
+  ],
   "cargoDependencies": [
     {
       "crate": "dioxus",
       "package": null,
       "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "dioxus-icons",
+      "package": null,
+      "version": "=0.1.0",
       "features": [],
       "defaultFeatures": true,
       "target": null

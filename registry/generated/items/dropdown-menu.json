@@ -10,7 +10,9 @@
       "checksum": "e1df17de17b7ef5150c8633081cd20046861b7f55e7d04ae962361becdad7d9c"
     }
   ],
-  "registryDependencies": [],
+  "registryDependencies": [
+    "cn"
+  ],
   "cargoDependencies": [
     {
       "crate": "dioxus",

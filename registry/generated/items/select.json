@@ -7,15 +7,25 @@
       "source": "ui/select.rs",
       "targetRoot": "ui",
       "target": "select.rs",
-      "checksum": "676b14ea7cdfbe2402ed6f1e92ddade9c63a855e9249b598b699084d375adf88"
+      "checksum": "8993ad35659a83d1a7751217f4c17579ecdf5f98cd5bea036ce242d69b5ce664"
     }
   ],
-  "registryDependencies": [],
+  "registryDependencies": [
+    "cn"
+  ],
   "cargoDependencies": [
     {
       "crate": "dioxus",
       "package": null,
       "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "dioxus-icons",
+      "package": null,
+      "version": "=0.1.0",
       "features": [],
       "defaultFeatures": true,
       "target": null
