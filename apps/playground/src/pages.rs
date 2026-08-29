@@ -661,9 +661,14 @@ pub fn ContextMenuPage() -> Element {
 
 #[component]
 pub fn MenubarPage() -> Element {
+    let disabled = use_signal(|| false);
     rsx! {
-        Demo { name: "Menubar",
-            components::ui::Menubar {
+        Demo {
+            name: "Menubar",
+            controls: rsx! {
+                BoolControl { label: "Disabled", value: disabled }
+            },
+            components::ui::Menubar { disabled: disabled(),
                 components::ui::MenubarMenu { index: 0usize,
                     components::ui::MenubarTrigger { "File" }
                     components::ui::MenubarContent {

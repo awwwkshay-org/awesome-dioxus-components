@@ -488,7 +488,7 @@
           "source": "ui/menubar.rs",
           "targetRoot": "ui",
           "target": "menubar.rs",
-          "checksum": "c6d5e21f149604cd626864cf3503675076d629bf10550ea255179e527eb103d6"
+          "checksum": "f2dfe77fead108ddc047539f2a6e88a84993f33781a1acfa55520c29ab7574ac"
         }
       ],
       "registryDependencies": ["cn"],

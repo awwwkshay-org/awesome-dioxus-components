@@ -36,11 +36,11 @@
 
 ## 6. Overlay and menu component batch
 
-- [ ] 6.1 Close Dialog and Sheet feature ledgers through shared primitive fixes before source styling changes; compose installed dependencies only through declared registry dependencies; verify layers, focus, Escape, outside interaction, ARIA, keyboard, pointer, side, and responsive behavior.
-- [ ] 6.2 Close Tooltip, Popover, and Hover Card feature ledgers through shared primitive fixes before source styling changes; verify trigger/content composition, delay/open/placement state, layers, focus, Escape, outside interaction, ARIA, keyboard, and pointer behavior.
-- [ ] 6.3 Close Dropdown Menu, Context Menu, and Menubar feature ledgers through shared primitive fixes before source styling changes; verify item/group/check/radio/submenu composition, layers, roving focus, Escape, dismissal, ARIA, keyboard, and pointer behavior.
-- [ ] 6.4 Add meaningful typed playground controls and close audited visual, semantic-token, dark-mode, responsive, and public-composition gaps for every overlay/menu item; verify each responds to live themes.
-- [ ] 6.5 Refresh overlay/menu metadata and consumer fixtures through the CLI; verify installation plus affected web/SSR builds.
+- [x] 6.1 Close Dialog and Sheet feature ledgers through shared primitive fixes before source styling changes; compose installed dependencies only through declared registry dependencies; verify layers, focus, Escape, outside interaction, ARIA, keyboard, pointer, side, and responsive behavior.
+- [x] 6.2 Close Tooltip, Popover, and Hover Card feature ledgers through shared primitive fixes before source styling changes; verify trigger/content composition, delay/open/placement state, layers, focus, Escape, outside interaction, ARIA, keyboard, and pointer behavior.
+- [x] 6.3 Close Dropdown Menu, Context Menu, and Menubar feature ledgers through shared primitive fixes before source styling changes; verify item/group/check/radio/submenu composition, layers, roving focus, Escape, dismissal, ARIA, keyboard, and pointer behavior.
+- [x] 6.4 Add meaningful typed playground controls and close audited visual, semantic-token, dark-mode, responsive, and public-composition gaps for every overlay/menu item; verify each responds to live themes.
+- [x] 6.5 Refresh overlay/menu metadata and consumer fixtures through the CLI; verify installation plus affected web/SSR builds.
 
 ## 7. Completion evidence
 

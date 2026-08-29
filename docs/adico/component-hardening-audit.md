@@ -91,11 +91,32 @@ Unlisted rows are not yet closed.
 | Button | `every_public_variant_has_a_distinct_semantic_class`, `icon_sizes_remain_square` unit tests in `registry/ui/button.rs` | `adico-playground` `web`/`server` features and `wasm32-unknown-unknown` all pass | Not warranted as a dedicated Playwright spec: Button is a styled native `<button>` with no custom JS/ARIA behavior (same disposition as Badge/Card/Input/Textarea/Skeleton/Item, none of which carry a spec either); keyboard activation (Space/Enter) and `disabled`/`aria-invalid` semantics are native HTML, and its trigger composition is exercised live by `dialog.spec.ts` (`Open dialog` / `Open nested dialog` buttons), which passes with zero critical axe violations | Desktop/hydration: unavailable, no desktop or SSR-hydration fixture exists for Button in isolation; covered transitively by the workspace-wide `server` feature check |
 | Calendar | `adico-primitives` calendar doctests (`Calendar`, `CalendarGrid`, `RangeCalendar`, `CalendarSelectMonth`/`CalendarSelectYear`, etc.) | `adico-playground` `web`/`server` features and `wasm32-unknown-unknown` pass; `tests/installation/wave4-consumer` `cargo build`/`cargo check --target wasm32-unknown-unknown` pass | `tests/playwright/wave4.spec.ts` (`installed Calendar navigates and selects dates with arrow keys`) passed live against `wave4-consumer` via `dx serve`; zero critical axe violations in the same run | Desktop/hydration: unavailable, no desktop/SSR-hydration fixture; registry-source drift found during closure (playground copy had hand-authored month/year select pills not present in `registry/ui/calendar.rs`) was reconciled by porting the fix into registry source and refreshing every installed copy through `adico add --replace` |
 | Date Picker | `adico-primitives` date_picker doctests (`DatePicker`, `DatePickerPopover`, `DatePickerCalendar`, `DateRangePicker`, etc.) | `adico-playground` `web`/`server` features and `wasm32-unknown-unknown` pass; `tests/installation/wave4-consumer` `cargo build`/`cargo check --target wasm32-unknown-unknown` pass | `tests/playwright/wave4.spec.ts` (`installed DatePicker opens a Calendar inside its popover`) passed live against `wave4-consumer` via `dx serve`; zero critical axe violations in the same run | Desktop/hydration: unavailable, no desktop/SSR-hydration fixture; no registry-source drift found (`date_picker.rs` copies matched registry source) |
+| Dialog | Shared `adico-primitives::dialog` doctests (`DialogRoot`, `DialogContent`, `DialogTitle`, `DialogDescription`) | `adico-playground` `web`/`server`/`wasm32-unknown-unknown` pass; `tests/installation/dialog-consumer` `cargo build`/`cargo check --target wasm32-unknown-unknown` pass | `tests/playwright/dialog.spec.ts` (3 tests: open/ARIA/focus-restore/Escape, outside-interaction + axe, nested-dialog layered Escape) passed live against a freshly reinstalled `dialog-consumer` via `dx serve`; zero critical axe violations | Desktop/hydration: unavailable; no registry-source drift found |
+| Sheet | Reuses the `adico-primitives::dialog` primitive (`DialogContent`/`DialogCtx`) directly, so its layer/focus/Escape/dismissal/ARIA behavior is the same code path `dialog.spec.ts` exercises | `adico-playground` `web`/`server`/`wasm32-unknown-unknown` pass | No dedicated Playwright spec: Sheet is a styled four-side variant of the same primitive Dialog uses, not a separate behavior surface; side/trigger/overlay composition is verified through the playground's live "Side" control | Desktop/hydration: unavailable; registry-source formatting drift (playground had reformatted a manual `impl Default for SheetSide` into a derive) reconciled by copying the current, correctly-formatted source back into `registry/ui/sheet.rs` |
+| Tooltip | `adico-primitives` tooltip doctests (`Tooltip`, `TooltipContent`, `TooltipTrigger`) | `adico-playground` `web`/`server`/`wasm32-unknown-unknown` pass; `tests/installation/wave3-consumer` `cargo build`/`cargo check --target wasm32-unknown-unknown` pass | `tests/playwright/wave3.spec.ts` (`installed Tooltip shows on hover with ARIA association and hides on mouse leave`) passed live against a freshly reinstalled `wave3-consumer`; zero critical axe violations in the suite-wide scan | Desktop/hydration: unavailable |
+| Popover | `adico-primitives` popover doctests (`PopoverRoot`) | same as Tooltip | `tests/playwright/wave3.spec.ts` (`installed Popover opens on click, exposes dialog semantics, and closes with Escape`) passed live | Desktop/hydration: unavailable |
+| Hover Card | `adico-primitives` hover_card doctests (`HoverCard`) | same as Tooltip | `tests/playwright/wave3.spec.ts` (`installed HoverCard shows on hover and hides on mouse leave`) passed live | Desktop/hydration: unavailable |
+| Dropdown Menu | `adico-primitives` dropdown_menu doctests (`DropdownMenu`) | same as Tooltip | `tests/playwright/wave3.spec.ts` (`installed DropdownMenu opens with roving-focus keyboard navigation and closes on selection`) passed live | Desktop/hydration: unavailable; registry-source drift (formatting only) and the missing `cn` registry dependency (see below) both fixed |
+| Context Menu | `adico-primitives` context_menu doctests (`ContextMenu`) | same as Tooltip | `tests/playwright/wave3.spec.ts` (`installed ContextMenu opens on right-click, navigates by keyboard, and closes with Escape`) passed live | Desktop/hydration: unavailable; no registry-source drift found |
+| Menubar | `adico-primitives` menubar doctests (`Menubar`) | same as Tooltip | `tests/playwright/wave3.spec.ts` (`installed Menubar opens a menu on click and selects an item`) passed live | Desktop/hydration: unavailable; the registry façade's public `Menubar` component silently dropped the primitive's `disabled` prop (no way to render a disabled menubar at all despite the primitive supporting it) — fixed by forwarding it, and the playground route, which previously had no `controls:` block at all, gained a live "Disabled" toggle |
+
+Check/radio/submenu item variants are not fabricated for Dropdown Menu,
+Context Menu, or Menubar: `packages/adico-primitives/src/{dropdown_menu,
+context_menu,menubar}.rs` expose no check/radio/submenu-flavored parts today,
+so there is nothing in the owned primitive layer for a styled façade to wrap.
+This remains a documented primitive-extension gap (see "First-wave control
+contract" above), not a registry-source omission — closing it would mean
+extending `adico-primitives` first, which is out of scope for a styled-façade
+hardening pass. All eight overlay/menu components were also grepped for
+hardcoded colors (`bg-[#`, `rgb(`, `hsl(`, hex literals) and use semantic
+tokens exclusively, so they inherit theme-reactivity from the same
+CSS-variable mechanism verified in task 4.8d rather than needing individual
+theme wiring.
 
 Closing Calendar's ledger also surfaced two pre-existing registry metadata
 defects, fixed alongside it since they broke the same standalone-install path
 being verified: `select` and `combobox` (both closed under tasks 4.1/4.2) and
-`dropdown-menu` (not yet closed, part of the pending overlay/menu batch) used
+`dropdown-menu` (closed above, part of this overlay/menu batch) used
 the `cn` helper in their copied source but omitted `cn` from
 `registryDependencies`, so `adico add select` (or `combobox`, `dropdown-menu`)
 alone — without another item that happens to declare `cn` — installed a
@@ -103,3 +124,8 @@ project that failed to compile. Fixed in `registry/registry.json`, covered by
 the new `standalone_add_of_items_using_cn_resolves_the_cn_dependency`
 regression test in `packages/adico-cli/tests/cli_integration.rs`, and verified
 live via `select.spec.ts` against a freshly reinstalled `select-consumer`.
+
+Lucide icons (used by Calendar, Select, Combobox, and Date Picker) were also
+centralized behind `adico_primitives::icons` instead of each registry
+component and consumer depending on `dioxus-icons` directly, since every one
+of those items already requires `adico-primitives`.

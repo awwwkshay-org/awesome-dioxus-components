@@ -13,13 +13,17 @@ use crate::adico_lib::cn::cn;
 
 /// The horizontal bar containing one or more [`MenubarMenu`] entries.
 #[component]
-pub fn Menubar(children: Element, class: Option<String>) -> Element {
+pub fn Menubar(
+    #[props(default)] disabled: ReadSignal<bool>,
+    children: Element,
+    class: Option<String>,
+) -> Element {
     let class = cn(&[
         "flex h-9 items-center gap-1 rounded-md border bg-background p-1",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        MenubarPrimitive { class, {children} }
+        MenubarPrimitive { disabled, class, {children} }
     }
 }
 
