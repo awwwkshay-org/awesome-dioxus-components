@@ -31,6 +31,11 @@ use dioxus_document as document;
 
 pub use ::dioxus_core;
 
+/// Lucide icon components, re-exported so copied registry source and
+/// consumer applications depend on `adico-primitives` for icons rather than
+/// adding `dioxus-icons` as a second, directly-installed crate.
+pub use dioxus_icons::lucide as icons;
+
 pub mod dialog;
 pub mod select;
 

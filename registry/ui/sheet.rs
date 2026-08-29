@@ -11,22 +11,17 @@ pub use adico_primitives::dialog::{
 };
 
 /// The viewport edge a [`Sheet`] slides in from.
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq, Default)]
 pub enum SheetSide {
     /// Slides in from the top edge.
     Top,
     /// Slides in from the right edge (the default).
+    #[default]
     Right,
     /// Slides in from the bottom edge.
     Bottom,
     /// Slides in from the left edge.
     Left,
-}
-
-impl Default for SheetSide {
-    fn default() -> Self {
-        SheetSide::Right
-    }
 }
 
 impl SheetSide {

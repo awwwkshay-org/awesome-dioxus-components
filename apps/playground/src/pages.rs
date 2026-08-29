@@ -3,8 +3,8 @@
 //! install, just split into its own route instead of one long scroll.
 
 use adico_primitives::ContentAlign;
+use adico_primitives::icons::{ChevronLeft, ChevronRight};
 use dioxus::prelude::*;
-use dioxus_icons::lucide::{ChevronLeft, ChevronRight};
 use time::{Date, Weekday};
 
 use crate::components;

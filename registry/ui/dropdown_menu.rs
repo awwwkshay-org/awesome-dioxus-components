@@ -25,7 +25,10 @@ pub fn DropdownMenu(
     class: Option<String>,
     children: Element,
 ) -> Element {
-    let class = cn(&["relative inline-block", class.as_deref().unwrap_or_default()]);
+    let class = cn(&[
+        "relative inline-block",
+        class.as_deref().unwrap_or_default(),
+    ]);
     rsx! {
         PrimitiveDropdownMenu {
             open,

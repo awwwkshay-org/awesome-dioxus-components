@@ -7,7 +7,7 @@
       "source": "ui/calendar.rs",
       "targetRoot": "ui",
       "target": "calendar.rs",
-      "checksum": "bde793b7b33eecf4511a12542a266f7ea1306dd938af824ed7ed264929a40f8f"
+      "checksum": "5938c8ea7aaadc2158855f9aa70030a462e4b96f74a0d924a14a9c1e0c0ec9ab"
     }
   ],
   "registryDependencies": [
@@ -18,14 +18,6 @@
       "crate": "dioxus",
       "package": null,
       "version": "=0.7.9",
-      "features": [],
-      "defaultFeatures": true,
-      "target": null
-    },
-    {
-      "crate": "dioxus-icons",
-      "package": null,
-      "version": "=0.1.0",
       "features": [],
       "defaultFeatures": true,
       "target": null

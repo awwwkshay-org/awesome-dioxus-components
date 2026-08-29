@@ -12,6 +12,7 @@ description = "Owned headless primitives for Awesome Dioxus Components"
 dioxus = { version = "=0.7.9", default-features = false, features = ["asset", "hooks", "html", "macro", "mounted", "signals"] }
 dioxus-core = "0.7.9"
 dioxus-document = "0.7.9"
+dioxus-icons = "=0.1.0"
 tracing = { workspace = true }
 time = { version = "0.3.44", features = ["std", "macros", "parsing", "local-offset"] }
 num-integer = "0.1.46"

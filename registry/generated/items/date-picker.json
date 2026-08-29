@@ -7,7 +7,7 @@
       "source": "ui/date_picker.rs",
       "targetRoot": "ui",
       "target": "date_picker.rs",
-      "checksum": "3cd195e1dc4059067d043b0caf88a4caf9656cd3a9ec42939e8c977b47149f86"
+      "checksum": "efdc41c9ac472d032b58983b1e7afc76f977027ef6fa1720a72ce04439321c4b"
     }
   ],
   "registryDependencies": [
@@ -20,14 +20,6 @@
       "crate": "dioxus",
       "package": null,
       "version": "=0.7.9",
-      "features": [],
-      "defaultFeatures": true,
-      "target": null
-    },
-    {
-      "crate": "dioxus-icons",
-      "package": null,
-      "version": "=0.1.0",
       "features": [],
       "defaultFeatures": true,
       "target": null

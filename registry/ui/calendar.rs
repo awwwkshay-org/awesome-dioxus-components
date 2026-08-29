@@ -4,8 +4,8 @@
 //! owned by `adico-primitives`. These wrappers add a semantic visual façade to
 //! the primitive parts while preserving their native Dioxus composition API.
 
+use adico_primitives::icons::ChevronDown;
 use dioxus::prelude::*;
-use dioxus_icons::lucide::ChevronDown;
 
 use crate::adico_lib::cn::cn;
 use adico_primitives::calendar::{

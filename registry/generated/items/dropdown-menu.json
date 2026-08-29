@@ -7,7 +7,7 @@
       "source": "ui/dropdown_menu.rs",
       "targetRoot": "ui",
       "target": "dropdown_menu.rs",
-      "checksum": "e1df17de17b7ef5150c8633081cd20046861b7f55e7d04ae962361becdad7d9c"
+      "checksum": "f4b74ec161a24cfef634a30003dff1ad1eefe3421ee6701df29664485cb3b217"
     }
   ],
   "registryDependencies": [

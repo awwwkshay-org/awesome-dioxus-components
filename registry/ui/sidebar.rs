@@ -358,7 +358,11 @@ pub struct SidebarMenuButtonProps {
 pub fn SidebarMenuButton(props: SidebarMenuButtonProps) -> Element {
     let class = cn(&[
         "flex h-8 w-full items-center gap-2 overflow-hidden rounded-md px-2 text-left text-sm outline-none transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring disabled:pointer-events-none disabled:opacity-50",
-        if props.is_active { "bg-sidebar-accent text-sidebar-accent-foreground font-medium" } else { "" },
+        if props.is_active {
+            "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+        } else {
+            ""
+        },
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

@@ -3,7 +3,6 @@
 //! and ARIA behavior; the roots supply the semantic layout hook.
 
 use dioxus::prelude::*;
-use dioxus_icons::lucide::ChevronDown;
 use time::{Date, macros::date};
 
 use super::popover::{PopoverContent, PopoverTrigger};
@@ -14,6 +13,7 @@ use adico_primitives::date_picker::{
     DatePickerInputValue as PrimitiveDatePickerInputValue,
     DatePickerPopover as PrimitiveDatePickerPopover, DateRangePicker as PrimitiveDateRangePicker,
 };
+use adico_primitives::icons::ChevronDown;
 use adico_primitives::popover::{PopoverRoot, PopoverRootProps};
 
 pub use adico_primitives::date_picker::{

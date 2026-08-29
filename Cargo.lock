@@ -79,7 +79,6 @@ version = "0.1.0"
 dependencies = [
  "adico-primitives",
  "dioxus",
- "dioxus-icons",
  "time",
  "wasm-bindgen-futures",
  "web-sys",
@@ -93,6 +92,7 @@ dependencies = [
  "dioxus-core",
  "dioxus-document",
  "dioxus-html",
+ "dioxus-icons",
  "dioxus-ssr",
  "gloo-timers",
  "num-integer",

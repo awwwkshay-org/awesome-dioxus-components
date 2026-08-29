@@ -142,7 +142,10 @@ mod tests {
 
     #[test]
     fn card_regions_use_semantic_surfaces() {
-        assert!(cn(&["w-full rounded-xl border bg-card text-card-foreground shadow-sm"]).contains("bg-card"));
+        assert!(
+            cn(&["w-full rounded-xl border bg-card text-card-foreground shadow-sm"])
+                .contains("bg-card")
+        );
         assert!(cn(&["flex flex-wrap items-center gap-2 p-6 pt-0"]).contains("flex-wrap"));
     }
 }

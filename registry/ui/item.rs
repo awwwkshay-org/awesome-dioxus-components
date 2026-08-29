@@ -40,7 +40,9 @@ impl ItemVariant {
         match self {
             Self::Default => "border bg-card",
             Self::Muted => "border-transparent bg-muted/50",
-            Self::Interactive => "border bg-card cursor-pointer hover:bg-accent hover:text-accent-foreground",
+            Self::Interactive => {
+                "border bg-card cursor-pointer hover:bg-accent hover:text-accent-foreground"
+            }
         }
     }
 }
@@ -67,7 +69,11 @@ pub fn Item(props: ItemProps) -> Element {
     let class = cn(&[
         "flex items-center gap-4 rounded-md p-4 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         props.variant.class(),
-        if props.disabled { "pointer-events-none opacity-50" } else { "" },
+        if props.disabled {
+            "pointer-events-none opacity-50"
+        } else {
+            ""
+        },
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -108,8 +114,11 @@ pub fn ItemMedia(props: ItemMediaProps) -> Element {
 /// The flexible text region of an [`Item`], holding title/description.
 #[derive(Props, Clone, PartialEq)]
 pub struct ItemContentProps {
-    #[props(default)] pub class: Option<String>,
-    #[props(extends = GlobalAttributes)] #[props(extends = div)] pub attributes: Vec<Attribute>,
+    #[props(default)]
+    pub class: Option<String>,
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = div)]
+    pub attributes: Vec<Attribute>,
     pub children: Element,
 }
 
@@ -127,8 +136,11 @@ pub fn ItemContent(props: ItemContentProps) -> Element {
 /// The primary label of an [`Item`].
 #[derive(Props, Clone, PartialEq)]
 pub struct ItemTitleProps {
-    #[props(default)] pub class: Option<String>,
-    #[props(extends = GlobalAttributes)] #[props(extends = div)] pub attributes: Vec<Attribute>,
+    #[props(default)]
+    pub class: Option<String>,
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = div)]
+    pub attributes: Vec<Attribute>,
     pub children: Element,
 }
 
@@ -146,8 +158,11 @@ pub fn ItemTitle(props: ItemTitleProps) -> Element {
 /// Supporting text placed under an [`ItemTitle`].
 #[derive(Props, Clone, PartialEq)]
 pub struct ItemDescriptionProps {
-    #[props(default)] pub class: Option<String>,
-    #[props(extends = GlobalAttributes)] #[props(extends = div)] pub attributes: Vec<Attribute>,
+    #[props(default)]
+    pub class: Option<String>,
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = div)]
+    pub attributes: Vec<Attribute>,
     pub children: Element,
 }
 
@@ -165,8 +180,11 @@ pub fn ItemDescription(props: ItemDescriptionProps) -> Element {
 /// A trailing slot for buttons or other controls on an [`Item`].
 #[derive(Props, Clone, PartialEq)]
 pub struct ItemActionsProps {
-    #[props(default)] pub class: Option<String>,
-    #[props(extends = GlobalAttributes)] #[props(extends = div)] pub attributes: Vec<Attribute>,
+    #[props(default)]
+    pub class: Option<String>,
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = div)]
+    pub attributes: Vec<Attribute>,
     pub children: Element,
 }
 
@@ -184,8 +202,11 @@ pub fn ItemActions(props: ItemActionsProps) -> Element {
 /// A full-width row above an [`Item`]'s main content, e.g. for grouped headers.
 #[derive(Props, Clone, PartialEq)]
 pub struct ItemHeaderProps {
-    #[props(default)] pub class: Option<String>,
-    #[props(extends = GlobalAttributes)] #[props(extends = div)] pub attributes: Vec<Attribute>,
+    #[props(default)]
+    pub class: Option<String>,
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = div)]
+    pub attributes: Vec<Attribute>,
     pub children: Element,
 }
 
@@ -203,8 +224,11 @@ pub fn ItemHeader(props: ItemHeaderProps) -> Element {
 /// A full-width row below an [`Item`]'s main content.
 #[derive(Props, Clone, PartialEq)]
 pub struct ItemFooterProps {
-    #[props(default)] pub class: Option<String>,
-    #[props(extends = GlobalAttributes)] #[props(extends = div)] pub attributes: Vec<Attribute>,
+    #[props(default)]
+    pub class: Option<String>,
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = div)]
+    pub attributes: Vec<Attribute>,
     pub children: Element,
 }
 
@@ -222,8 +246,11 @@ pub fn ItemFooter(props: ItemFooterProps) -> Element {
 /// A thin horizontal rule between items in an [`ItemGroup`].
 #[derive(Props, Clone, PartialEq)]
 pub struct ItemSeparatorProps {
-    #[props(default)] pub class: Option<String>,
-    #[props(extends = GlobalAttributes)] #[props(extends = hr)] pub attributes: Vec<Attribute>,
+    #[props(default)]
+    pub class: Option<String>,
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = hr)]
+    pub attributes: Vec<Attribute>,
 }
 
 #[component]

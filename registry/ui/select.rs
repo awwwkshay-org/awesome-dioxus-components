@@ -6,9 +6,9 @@
 //! pass Dioxus attributes and compose groups or indicators normally.
 
 use dioxus::prelude::*;
-use dioxus_icons::lucide::{ChevronDown, ChevronUp};
 
 use crate::adico_lib::cn::cn;
+use adico_primitives::icons::{ChevronDown, ChevronUp};
 
 use adico_primitives::select::{
     Select as PrimitiveSelect, SelectList as PrimitiveSelectList,

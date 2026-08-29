@@ -4,9 +4,9 @@
 //! ARIA. These façades provide a positioned shadcn-style popup surface.
 
 use dioxus::prelude::*;
-use dioxus_icons::lucide::{ChevronDown, ChevronUp};
 
 use crate::adico_lib::cn::cn;
+use adico_primitives::icons::{ChevronDown, ChevronUp};
 
 use adico_primitives::combobox::{
     Combobox as PrimitiveCombobox, ComboboxInput as PrimitiveComboboxInput,

@@ -11,7 +11,6 @@ edition = "2024"
 dioxus = { version = "=0.7.9", default-features = false, features = ["web", "launch", "macro", "html", "signals", "hooks", "asset"] }
 adico-primitives = { version = "=0.1.0", features = ["web"] }
 time = "=0.3.44"
-dioxus-icons = "=0.1.0"
 
 [patch.crates-io]
 adico-primitives = { path = "../../../packages/adico-primitives" }

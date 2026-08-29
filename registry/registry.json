@@ -93,12 +93,11 @@
           "source": "ui/select.rs",
           "targetRoot": "ui",
           "target": "select.rs",
-          "checksum": "8993ad35659a83d1a7751217f4c17579ecdf5f98cd5bea036ce242d69b5ce664"
+          "checksum": "b5d9bf23b461db1aa81e807a08c5971a108f901406fe715b9264fc87352a5c8a"
         }
       ],
       "cargoDependencies": [
         { "crate": "dioxus", "version": "=0.7.9" },
-        { "crate": "dioxus-icons", "version": "=0.1.0" },
         { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
       ],
       "style": {
@@ -150,7 +149,7 @@
           "source": "ui/card.rs",
           "targetRoot": "ui",
           "target": "card.rs",
-          "checksum": "f0c9ed46c06021db577d640c609cb0127613c0049e22a844ff89b86c9b8d786b"
+          "checksum": "a4acd825a37efde81320c7ccf3e5b18697c28e35d90158472f67b7f432a8c968"
         }
       ],
       "registryDependencies": ["cn"],
@@ -202,7 +201,7 @@
           "source": "ui/item.rs",
           "targetRoot": "ui",
           "target": "item.rs",
-          "checksum": "5929bcca25e6224a1936636e8ab5beb92779acc731bc241477fd629afa85bdac"
+          "checksum": "ef7822bed025bf5edc2d726ce1d89f71545766e7953537ff8883d805d1911ce7"
         }
       ],
       "registryDependencies": ["cn"],
@@ -304,7 +303,7 @@
           "source": "ui/sheet.rs",
           "targetRoot": "ui",
           "target": "sheet.rs",
-          "checksum": "66f652b6871beaa1b4653456c1126f4e525014c7e132bc0017a53f94188d4a48"
+          "checksum": "8f0c59b89d8809cd8c344ce96f032284230807f22fa5b10ac9d1e218becefb5d"
         }
       ],
       "registryDependencies": ["cn", "button"],
@@ -428,7 +427,7 @@
           "source": "ui/dropdown_menu.rs",
           "targetRoot": "ui",
           "target": "dropdown_menu.rs",
-          "checksum": "e1df17de17b7ef5150c8633081cd20046861b7f55e7d04ae962361becdad7d9c"
+          "checksum": "f4b74ec161a24cfef634a30003dff1ad1eefe3421ee6701df29664485cb3b217"
         }
       ],
       "cargoDependencies": [
@@ -520,12 +519,11 @@
           "source": "ui/combobox.rs",
           "targetRoot": "ui",
           "target": "combobox.rs",
-          "checksum": "37fc0a4fca31aca9510490e6d478d9b8659886ff967dd59f28f42766e8608f3d"
+          "checksum": "d53ee01f7fa8ca4c9e94bf837b8aff261c3d0ba93d7afa8960f311afa1fdf071"
         }
       ],
       "cargoDependencies": [
         { "crate": "dioxus", "version": "=0.7.9" },
-        { "crate": "dioxus-icons", "version": "=0.1.0" },
         { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
       ],
       "style": {
@@ -551,12 +549,11 @@
           "source": "ui/calendar.rs",
           "targetRoot": "ui",
           "target": "calendar.rs",
-          "checksum": "bde793b7b33eecf4511a12542a266f7ea1306dd938af824ed7ed264929a40f8f"
+          "checksum": "5938c8ea7aaadc2158855f9aa70030a462e4b96f74a0d924a14a9c1e0c0ec9ab"
         }
       ],
       "cargoDependencies": [
         { "crate": "dioxus", "version": "=0.7.9" },
-        { "crate": "dioxus-icons", "version": "=0.1.0" },
         { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] },
         { "crate": "time", "version": "=0.3.44" }
       ],
@@ -583,12 +580,11 @@
           "source": "ui/date_picker.rs",
           "targetRoot": "ui",
           "target": "date_picker.rs",
-          "checksum": "3cd195e1dc4059067d043b0caf88a4caf9656cd3a9ec42939e8c977b47149f86"
+          "checksum": "efdc41c9ac472d032b58983b1e7afc76f977027ef6fa1720a72ce04439321c4b"
         }
       ],
       "cargoDependencies": [
         { "crate": "dioxus", "version": "=0.7.9" },
-        { "crate": "dioxus-icons", "version": "=0.1.0" },
         { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] },
         { "crate": "time", "version": "=0.3.44" }
       ],
@@ -615,7 +611,7 @@
           "source": "ui/sidebar.rs",
           "targetRoot": "ui",
           "target": "sidebar.rs",
-          "checksum": "ff252226d1da616d80c0cb1aa83c974a9c33ca1ef2a6e96ba4bc6581f4575838"
+          "checksum": "d024977c20130df659e07ad8a90bd264f48c5abaa228611448ceb7d038116a80"
         }
       ],
       "registryDependencies": ["cn"],
