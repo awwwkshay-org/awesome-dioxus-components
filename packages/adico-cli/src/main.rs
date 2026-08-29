@@ -492,6 +492,21 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/progress.rs") => {
                 Ok(include_bytes!("../../../registry/ui/progress.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/avatar.rs") => {
+                Ok(include_bytes!("../../../registry/ui/avatar.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/checkbox.rs") => {
+                Ok(include_bytes!("../../../registry/ui/checkbox.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/collapsible.rs") => {
+                Ok(include_bytes!("../../../registry/ui/collapsible.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/switch.rs") => {
+                Ok(include_bytes!("../../../registry/ui/switch.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/toggle.rs") => {
+                Ok(include_bytes!("../../../registry/ui/toggle.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"
@@ -723,11 +738,14 @@ mod tests {
                 .collect::<Vec<_>>(),
             vec![
                 "@adico/aspect-ratio".to_string(),
+                "@adico/avatar".to_string(),
                 "@adico/badge".to_string(),
                 "@adico/button".to_string(),
                 "@adico/calendar".to_string(),
                 "@adico/card".to_string(),
+                "@adico/checkbox".to_string(),
                 "@adico/cn".to_string(),
+                "@adico/collapsible".to_string(),
                 "@adico/combobox".to_string(),
                 "@adico/context-menu".to_string(),
                 "@adico/date-picker".to_string(),
@@ -745,7 +763,9 @@ mod tests {
                 "@adico/sheet".to_string(),
                 "@adico/sidebar".to_string(),
                 "@adico/skeleton".to_string(),
+                "@adico/switch".to_string(),
                 "@adico/textarea".to_string(),
+                "@adico/toggle".to_string(),
                 "@adico/tooltip".to_string(),
             ]
         );

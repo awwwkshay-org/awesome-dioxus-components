@@ -723,6 +723,160 @@
         "compositionNote": "Styled facade over the owned ARIA progressbar primitive. The indicator's fill width is CSS-transform-driven from the primitive's --progress-value custom property; a `None` value renders a zero-filled indeterminate bar rather than upstream's unstyled indeterminate state, since animated indeterminate styling is M4's job."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-simple.json" }
+    },
+    {
+      "name": "avatar",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Avatar for Dioxus, backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/avatar.rs",
+          "targetRoot": "ui",
+          "target": "avatar.rs",
+          "checksum": "899ff08b867224c6be6830defabf812ccdd1c5b3615963e8105e7762b2c1ba23"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "avatar", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "avatar",
+        "compositionNote": "Styled facade over the owned image-load-state primitive: Avatar/AvatarImage/AvatarFallback. AvatarImage stops rendering on error so an installed AvatarFallback (bg-muted) takes over automatically."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave2-state.json" }
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Checkbox for Dioxus, backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/checkbox.rs",
+          "targetRoot": "ui",
+          "target": "checkbox.rs",
+          "checksum": "a11d8d873023f4d0fd24abce70cf86c7af813ed3e7323fc8abaf65582c2d94e6"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "checkbox", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "checkbox",
+        "compositionNote": "Styled facade over the owned keyboard/ARIA checkbox primitive (checked/indeterminate/unchecked), with a Lucide Check indicator. Requires the web feature since the primitive's hidden bubble input needs the browser DOM to sync indeterminate state."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave2-state.json" }
+    },
+    {
+      "name": "collapsible",
+      "type": "registry:ui",
+      "description": "A source-owned Collapsible for Dioxus, backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/collapsible.rs",
+          "targetRoot": "ui",
+          "target": "collapsible.rs",
+          "checksum": "9e5983ccab481bcf769a2bc772cabc7d9c5244c9e8131729ba39180bdfc762e7"
+        }
+      ],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": false,
+        "radiusToken": false,
+        "utilities": []
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "collapsible", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "collapsible",
+        "compositionNote": "A pure re-export of the owned Collapsible/CollapsibleContent/CollapsibleTrigger primitive: upstream ships it unstyled, matching shadcn's own unstyled Collapsible -- layout is left to consumer composition."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave2-state.json" }
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Switch for Dioxus, backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/switch.rs",
+          "targetRoot": "ui",
+          "target": "switch.rs",
+          "checksum": "b07d8edd799c36266a2297081f73c52f5c0cb352aae335a6869551fb49bd188d"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": false,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "switch", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "switch",
+        "compositionNote": "Styled facade over the owned keyboard/ARIA switch primitive, composing SwitchThumb with a translate-x thumb animation driven by data-state."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave2-state.json" }
+    },
+    {
+      "name": "toggle",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Toggle for Dioxus, backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/toggle.rs",
+          "targetRoot": "ui",
+          "target": "toggle.rs",
+          "checksum": "47895f52c67eaa790ffde588b6b1607ff781b7e931d7a83d8ae139d1c7958871"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "toggle", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "toggle",
+        "compositionNote": "Styled facade over the owned pressed-state ARIA button primitive, with sm/default/lg size variants matching shadcn's Toggle."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave2-state.json" }
     }
   ]
 }

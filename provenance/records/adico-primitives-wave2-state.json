@@ -1,0 +1,31 @@
+{
+  "id": "adico-primitives-wave2-state",
+  "upstream": "https://github.com/DioxusLabs/dioxus-components",
+  "revision": "bf007c15d0cf4d04d3181cc46cf12325aa773955",
+  "license": ["MIT", "Apache-2.0"],
+  "importedAt": "2026-08-30",
+  "originalPaths": [
+    "primitives/src/avatar.rs",
+    "primitives/src/checkbox.rs",
+    "primitives/src/collapsible.rs",
+    "primitives/src/switch.rs",
+    "primitives/src/toggle.rs"
+  ],
+  "localPaths": [
+    "packages/adico-primitives/src/avatar.rs",
+    "packages/adico-primitives/src/checkbox.rs",
+    "packages/adico-primitives/src/collapsible.rs",
+    "packages/adico-primitives/src/switch.rs",
+    "packages/adico-primitives/src/toggle.rs"
+  ],
+  "changes": [
+    {
+      "date": "2026-08-30",
+      "summary": "Imported the second sub-batch of the M3 Wave 2 migration (task 4.5a) -- the simple state primitives: Avatar (image-load-state with loading/error/empty tracking), Checkbox (keyboard/ARIA checkbox state, including indeterminate), Collapsible (single-panel open/close state), Switch (keyboard/ARIA switch state), and Toggle (pressed-state ARIA button). Switch and Toggle ported unmodified (only the doc-example import path changed from dioxus_primitives to adico_primitives); neither uses document::eval, dioxus-attributes, or merge_attributes. Collapsible dropped upstream's dioxus-attributes/merge_attributes helper crate and its polymorphic r#as render-prop escape hatch, rewritten with the plain `..props.attributes` spread pattern this crate's dialog/tooltip modules already established (no other primitive in this crate exposes an r#as escape hatch, so it was dropped rather than ported); it has no document::eval usage and is SSR-safe as-is. Avatar's AvatarImage and Checkbox's internal BubbleInput each had one unconditional document::eval call -- Avatar's reconciles cached/very-fast image loads that can complete before Dioxus delivers the synthetic onload/onerror event, and Checkbox's BubbleInput syncs a hidden native <input type=\"checkbox\">'s checked/indeterminate DOM properties (Dioxus's checked attribute only sets the initial default, and indeterminate has no HTML attribute equivalent at all) -- both are now behind this crate's established #[cfg(any(feature = \"web\", feature = \"desktop\"))] target-gated adapter pattern with SSR-safe no-op fallbacks, matching context_menu.rs/popover.rs's precedent from Wave 3. Verified for native (SSR-safe default), `--features web --target wasm32-unknown-unknown`, and `--features desktop`."
+    }
+  ],
+  "notices": [
+    "Upstream is dual-licensed under MIT OR Apache-2.0; its LICENSE-MIT and LICENSE-APACHE texts are retained in third_party/dioxus-components/.",
+    "Each imported source unit identifies its immutable upstream revision and original path."
+  ]
+}

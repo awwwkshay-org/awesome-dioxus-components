@@ -40,7 +40,10 @@ pub mod dialog;
 pub mod select;
 
 pub mod aspect_ratio;
+pub mod avatar;
 pub mod calendar;
+pub mod checkbox;
+pub mod collapsible;
 pub mod combobox;
 pub mod context_menu;
 pub mod date_picker;
@@ -51,6 +54,8 @@ pub mod menubar;
 pub mod popover;
 pub mod progress;
 pub mod separator;
+pub mod switch;
+pub mod toggle;
 pub mod tooltip;
 
 mod collection;
