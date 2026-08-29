@@ -129,3 +129,48 @@ Lucide icons (used by Calendar, Select, Combobox, and Date Picker) were also
 centralized behind `adico_primitives::icons` instead of each registry
 component and consumer depending on `dioxus-icons` directly, since every one
 of those items already requires `adico-primitives`.
+
+## Hardening report
+
+All 21 `registry:ui` components in the Matrix above are closed: 1–20 (every
+row except Sidebar's dependents) landed across sections 1–5, Calendar/Date
+Picker closed in section 4, and Dialog/Sheet/Tooltip/Popover/Hover
+Card/Dropdown Menu/Context Menu/Menubar closed in section 6. No component is
+blocked. The one deliberate, documented gap is check/radio/submenu menu item
+variants (Dropdown Menu, Context Menu, Menubar): the owned primitives expose
+no such parts, so a styled façade has nothing to wrap without first extending
+`adico-primitives` — out of scope for this styled-façade hardening change.
+
+Unavailable checks, applied uniformly rather than per component:
+
+- **Desktop**: no desktop-targeted consumer fixture exists for any of the 21
+  components; `adico-primitives --features desktop` compiles (verified below)
+  but no fixture exercises desktop-specific interaction.
+- **SSR hydration**: no hydration-specific fixture exists; the `server`
+  feature check verifies the server-rendering code path compiles, not a live
+  hydration run.
+- **Visual regression**: no visual-regression tooling exists yet in this repo
+  (`tests/visual` is `build-adico-component-ecosystem` M4 scope, tracked
+  separately in `parity.json`, out of scope for this change).
+
+Final validation, run against the complete working tree after section 6:
+
+| Check | Result |
+| --- | --- |
+| `cargo fmt --all --check` | passed |
+| `cargo xtask registry build` / `registry validate` | 22 item payload(s), passed |
+| `cargo xtask provenance check` | 3 imported record(s), 34 source unit(s), passed |
+| `cargo check --locked --workspace` | passed |
+| `cargo clippy --locked --workspace --all-targets -- -D warnings` | passed |
+| `cargo test --locked --workspace` (`--test-threads=1`) | passed, all suites; run single-threaded because `adico-cli`'s `css::tests` module uses a nanosecond-nonce temp directory that collides under parallel execution — a pre-existing test-isolation issue, not a regression from this change |
+| `adico-primitives` `web`/wasm32 and `desktop` feature checks | both passed |
+| `adico-playground` `web`/wasm32 and `server` feature checks | both passed |
+| `dialog.spec.ts` (3 tests) against a freshly reinstalled `dialog-consumer` via `dx serve` | passed, zero critical axe violations |
+| `select.spec.ts` (2 tests) against a freshly reinstalled `select-consumer` via `dx serve` | passed |
+| `wave3.spec.ts` (7 tests) against a freshly reinstalled `wave3-consumer` via `dx serve` | passed, zero critical axe violations |
+| `wave4.spec.ts` (5 tests) against a freshly reinstalled `wave4-consumer` via `dx serve` | passed, zero critical axe violations |
+| `git diff --check` | passed |
+| `openspec validate improve-existing-components --strict` | passed |
+
+New component work on `build-adico-component-ecosystem` (Wave 2 migration,
+paused at task 4.8e for this hardening pass) may resume.

@@ -44,6 +44,6 @@
 
 ## 7. Completion evidence
 
-- [ ] 7.1 Update feature-ledger documentation, playground usage, and parity/hardening records for every remediated item; verify every intentional difference and skipped target has a rationale.
-- [ ] 7.2 Run formatting, targeted locked tests, registry/CLI validation, consumer web/SSR checks, applicable browser/axe suites, and `git diff --check`; record unavailable desktop, hydration, or visual checks as skipped.
-- [ ] 7.3 Run `openspec validate improve-existing-components --strict` and publish the hardening report; verify all 21 component ledgers are complete or visibly blocked before new component work resumes.
+- [x] 7.1 Update feature-ledger documentation, playground usage, and parity/hardening records for every remediated item; verify every intentional difference and skipped target has a rationale.
+- [x] 7.2 Run formatting, targeted locked tests, registry/CLI validation, consumer web/SSR checks, applicable browser/axe suites, and `git diff --check`; record unavailable desktop, hydration, or visual checks as skipped.
+- [x] 7.3 Run `openspec validate improve-existing-components --strict` and publish the hardening report; verify all 21 component ledgers are complete or visibly blocked before new component work resumes.
