@@ -1001,6 +1001,129 @@
         "compositionNote": "Styled facade over the owned roving-focus toggle-group primitive (reuses the collection infrastructure already imported for Select and composes the owned Toggle primitive directly), matching shadcn's Toggle Group."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-roving-focus.json" }
+    },
+    {
+      "name": "scroll-area",
+      "type": "registry:ui",
+      "description": "A source-owned custom-scrollbar Scroll Area for Dioxus, backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/scroll_area.rs",
+          "targetRoot": "ui",
+          "target": "scroll_area.rs",
+          "checksum": "d88f6e42d6e36e86df6ae4a943bbac82ff164853ea255c7c71528d6b32b09807"
+        }
+      ],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": false,
+        "radiusToken": false,
+        "utilities": []
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "scroll_area", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "scroll-area",
+        "compositionNote": "A pure re-export of the owned ScrollArea primitive: pure CSS overflow/scrollbar-width styling with no visual language to compose, matching upstream's own unstyled behavior."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave2-risk.json" }
+    },
+    {
+      "name": "alert-dialog",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Alert Dialog composition for Dioxus.",
+      "files": [
+        {
+          "source": "ui/alert_dialog.rs",
+          "targetRoot": "ui",
+          "target": "alert_dialog.rs",
+          "checksum": "dc9ccb370a05345b2976f1ed76617d6f97c81f78df6fcd72d3f83179ead43aff"
+        }
+      ],
+      "registryDependencies": ["cn", "button"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "alert_dialog", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "alert-dialog",
+        "compositionNote": "The public copied API remains compositional; focus-trap handling is delegated to the same shared internals the installed Dialog uses. AlertDialogTrigger (composing the installed Button, matching DialogTrigger) is nested inside AlertDialog so the root-level Escape handler reliably receives keyboard events; Escape is handled on AlertDialogRoot itself, the same working position DialogRoot uses. Unlike Dialog, no outside-dismiss listener is installed, matching the WAI-ARIA alertdialog pattern's requirement that only an explicit action can close it."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave2-risk.json" }
+    },
+    {
+      "name": "toast",
+      "type": "registry:ui",
+      "description": "A source-owned Toast notification system for Dioxus, backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/toast.rs",
+          "targetRoot": "ui",
+          "target": "toast.rs",
+          "checksum": "6768aa3c3532bf3b68f3076e3f80a93bb8f600005cb11ad39a578f256e746c91"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": false,
+        "radiusToken": false,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "toast", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "toast",
+        "compositionNote": "Only the toast region's fixed viewport placement is styled by default (structural, not cosmetic); individual toast cards keep the primitive's own unstyled composition, matching this registry's existing many-parts-unstyled precedent for Select/Combobox. A full default visual style for Toast itself is M4's job."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave2-risk.json" }
+    },
+    {
+      "name": "slider",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Slider for Dioxus, backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/slider.rs",
+          "targetRoot": "ui",
+          "target": "slider.rs",
+          "checksum": "682a9fc459b1a4a0aa6b5153716b2e0a9a084410a42e6f8af890f5fa6b00a922"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "slider", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "slider",
+        "compositionNote": "Styled facade over the owned pointer-drag/keyboard value primitive. Pointer-drag interaction depends on the web feature (pointer tracking is a no-op on the native default); keyboard arrow-key interaction works on every target. Desktop pointer-capture behavior is compiled but not independently verified against a real desktop WebView, a named and recorded gap."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave2-risk.json" }
     }
   ]
 }

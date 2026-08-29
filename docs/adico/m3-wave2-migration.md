@@ -1,6 +1,6 @@
 # M3 Wave 2 migration (task 4.5a)
 
-Status: in progress
+Status: complete
 
 This records task 4.5a: the sixteen-item Wave 2 batch from the
 [M3 migration queue](m3-migration-queue.md#wave-2--single-self-contained-new-primitive-task-43-continued) —
@@ -287,15 +287,122 @@ cargo check -p adico-primitives --locked --features desktop
 | `wave2-roving-focus-consumer`: `adico add accordion radio-group tabs`, then `adico add toggle-group` | both plans applied cleanly; `cargo build` (native) and `cargo check --target wasm32-unknown-unknown` succeeded after each |
 | `wave2-roving-focus.spec.ts` (5 tests, live `dx serve` + Playwright + axe) | all passed: Accordion click/ArrowDown-roving/Enter-activate, RadioGroup ArrowDown-roving-with-auto-select, Tabs ArrowDown-roving-without-switching then Enter-activate, ToggleGroup ArrowRight-roving with radio-style press, zero critical axe violations |
 
-## Sub-batch 4 — named-risk items (remaining)
+## Sub-batch 4 — named-risk items (complete)
 
-`alert-dialog`, `scroll-area`, `slider`, `toast`. Each carries a named risk
-per the migration queue: alert-dialog may delegate to the owned `dialog`
-primitive's focus-trap/Escape internals rather than duplicating them (decide
-at import time); scroll-area needs SSR fallback verification; slider needs
-`pointer.rs`/`move_interaction.rs` and has unverified desktop pointer-capture
-behavior; toast needs the target-gated timeout adapter matching
-`adico-primitives::time`. Worked one at a time, not as a single batch.
+`alert-dialog`, `scroll-area`, `slider`, `toast`. Worked one at a time, not
+as a single batch, per the migration queue's guidance for these named risks.
 
-Task 4.5a's checkbox in `tasks.md` is marked complete only once Sub-batch 4
-above is done and independently verified.
+- `packages/adico-primitives/src/{scroll_area,alert_dialog,toast,portal,pointer,move_interaction,slider}.rs`:
+  forked from upstream, provenance-tracked in
+  `provenance/records/adico-primitives-wave2-risk.json`. `scroll_area.rs`
+  ported unmodified (pure CSS, no `document::eval`). `alert_dialog.rs`
+  confirmed at import time (per the queue's explicit instruction) that it
+  should delegate to the owned `dialog` primitive's shared focus-trap
+  internals rather than duplicating its own inline `document::eval` script —
+  see "A real Escape/focus bug found and fixed by testing in the browser"
+  below for how this actually played out. `toast.rs` replaced
+  `dioxus_sdk_time::use_timeout` with this crate's own target-aware
+  `time::sleep` inside a single `spawn` (matching `context_menu.rs`'s
+  long-press timer), and is the first item in this crate to import
+  `portal.rs` — reading the actual upstream source showed this is a pure-Rust
+  "logical" portal built entirely on Dioxus's own scope/context system, not a
+  `document::eval`/DOM portal, so it ported unmodified with no SSR risk.
+  `slider.rs` ported unmodified; its supporting `pointer.rs` (global
+  pointerdown/move/up tracking) is now behind this crate's
+  `#[cfg(any(feature = "web", feature = "desktop"))]` pattern with an
+  SSR-safe stub, and `move_interaction.rs` needed no changes since its only
+  DOM access runs exclusively from event/mount callbacks.
+- `registry/ui/{scroll_area,alert_dialog,toast,slider}.rs`: `scroll-area` is
+  a pure re-export (upstream ships it unstyled). `alert-dialog` composes the
+  installed `cn`/`button`; `toast` styles only the region's fixed viewport
+  placement (structural), leaving individual toast cards unstyled, matching
+  the existing `select`/`combobox` many-parts-unstyled precedent; `slider`
+  is fully styled.
+- `registry/registry.json`: four new entries (`alert-dialog` also gained a
+  `button` registry dependency once `AlertDialogTrigger` was added, see below).
+
+### A real Escape/focus bug found and fixed by testing in the browser
+
+Live `dx serve` testing surfaced two real defects that no compile check or
+unit test caught:
+
+1. **Escape did nothing.** `use_global_escape_listener` — the exact
+   long-lived `document::eval` listener pattern the Wave 3 record already
+   found broken in this Dioxus 0.7.9/0.7.10 web runtime — never registers.
+   The first fix attempt (a native `onkeydown` on `AlertDialogContent`, matching
+   what looked like `dialog`'s pattern) still failed: testing showed focus
+   never moves into the dialog on open (matching `dialog::DialogRoot`'s own
+   Playwright suite, which explicitly asserts the *trigger* stays focused,
+   not dialog content), and upstream's documented composition keeps the
+   trigger as an external sibling of `AlertDialogRoot`, so a
+   `Content`-scoped handler never receives the keydown. The real fix:
+   `AlertDialogCtx` is now `pub` with `is_open()`/`set_open()` accessors
+   (matching `DialogCtx`'s existing shape), the registry gained an
+   `AlertDialogTrigger` (composing the installed `Button`, matching
+   `DialogTrigger`) nested *inside* `AlertDialog` instead of upstream's
+   external button, `AlertDialogRoot` was restructured to always render its
+   children (removing its `use_animated_open`-gated conditional, matching
+   `DialogRoot`'s actual pattern) with the Escape `onkeydown` moved onto its
+   own always-mounted root, and `AlertDialogContent` gained the equivalent
+   `if !ctx.is_open() { return rsx! {}; }` gate `DialogContent` already uses.
+2. **`AlertDialogOverlay` blocked every click, including its own dialog's
+   Cancel/Delete buttons, while closed.** The registry facade rendered the
+   full-screen `bg-black/80` scrim unconditionally instead of gating on
+   `ctx.is_open()` (unlike `DialogOverlay`, which does). Real Playwright runs
+   (not the browser extension, which had unrelated flaky click delivery in
+   this session) caught this immediately: every click after the first
+   dialog interaction silently failed because the invisible-but-still-`fixed
+   inset-0`-and-pointer-events-enabled overlay div intercepted it. Fixed by
+   adding the same `is_open()` early return `DialogOverlay` already has.
+
+Both fixes are now the second and third real bugs this migration effort has
+found purely through actually running the software in a browser rather than
+trusting compile success — the same category of defect Wave 3 found with
+Popover's Escape handling.
+
+### Verification
+
+```
+cargo xtask registry validate
+cargo xtask provenance check
+cargo fmt --all --check
+cargo check --locked --workspace
+cargo clippy --locked --workspace --all-targets -- -D warnings
+cargo test --locked --workspace
+cargo check -p adico-primitives --locked --no-default-features --features web --target wasm32-unknown-unknown
+cargo check -p adico-primitives --locked --features desktop
+(cd tests/installation/wave2-risk-consumer && \
+  ../../../target/debug/adico init && \
+  ../../../target/debug/adico add scroll-area alert-dialog toast slider && \
+  cargo build && \
+  cargo check --target wasm32-unknown-unknown)
+(cd tests/installation/wave2-risk-consumer && dx serve --platform web --port 8793) &
+(cd tests/playwright && ADICO_PLAYWRIGHT_BASE_URL=http://127.0.0.1:8793 npm run test:wave2-risk)
+```
+
+| Check | Result |
+| --- | --- |
+| `cargo xtask registry validate` | 38 item payload(s) (34 existing + 4 new) |
+| `cargo xtask provenance check` | 7 imported record(s), 53 source unit(s) |
+| `cargo fmt --all --check` | passed |
+| `cargo check --locked --workspace` | passed |
+| `cargo clippy --locked --workspace --all-targets -- -D warnings` | passed |
+| `cargo test --locked --workspace` | passed (79 primitive doctests, including `pointer`'s desktop-feature-gated unit test) |
+| `adico-primitives` web+wasm32 / desktop feature checks | both passed |
+| `wave2-risk-consumer`: `adico add scroll-area alert-dialog toast slider` | plan applied cleanly; `cargo build` (native) and `cargo check --target wasm32-unknown-unknown` both succeeded |
+| `wave2-risk.spec.ts` (6 tests, live `dx serve` + Playwright + axe) | all passed: ScrollArea scroll, AlertDialog open/Cancel/Escape, AlertDialog Delete-action close, Toast appears after `use_toast().info(...)`, Slider ArrowRight/ArrowLeft keyboard value changes, zero critical axe violations |
+
+Desktop pointer-capture behavior for `slider` is compiled (`cargo check
+--features desktop` passes, and `pointer::tests::upsert_pointer_updates_existing_pointer`
+runs natively under that feature) but not independently verified against a
+real desktop WebView — the migration queue's named risk for this item,
+recorded rather than silently assumed.
+
+## M3 Wave 2 acceptance
+
+All sixteen items in task 4.5a's scope — `accordion`, `alert-dialog`,
+`aspect-ratio`, `avatar`, `checkbox`, `collapsible`, `label`, `progress`,
+`radio-group`, `scroll-area`, `slider`, `switch`, `tabs`, `toast`, `toggle`,
+`toggle-group` — are migrated, registry-validated, provenance-tracked, and
+independently verified across all four sub-batches above. Task 4.5a's
+checkbox in `tasks.md` is now marked complete.

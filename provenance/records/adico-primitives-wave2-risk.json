@@ -1,0 +1,39 @@
+{
+  "id": "adico-primitives-wave2-risk",
+  "upstream": "https://github.com/DioxusLabs/dioxus-components",
+  "revision": "bf007c15d0cf4d04d3181cc46cf12325aa773955",
+  "license": ["MIT", "Apache-2.0"],
+  "importedAt": "2026-08-30",
+  "originalPaths": [
+    "primitives/src/scroll_area.rs",
+    "primitives/src/alert_dialog.rs",
+    "primitives/src/toast.rs",
+    "primitives/src/portal.rs",
+    "primitives/src/pointer.rs",
+    "primitives/src/move_interaction.rs",
+    "primitives/src/slider.rs"
+  ],
+  "localPaths": [
+    "packages/adico-primitives/src/scroll_area.rs",
+    "packages/adico-primitives/src/alert_dialog.rs",
+    "packages/adico-primitives/src/toast.rs",
+    "packages/adico-primitives/src/portal.rs",
+    "packages/adico-primitives/src/pointer.rs",
+    "packages/adico-primitives/src/move_interaction.rs",
+    "packages/adico-primitives/src/slider.rs"
+  ],
+  "changes": [
+    {
+      "date": "2026-08-30",
+      "summary": "Imported the fourth and final Wave 2 sub-batch (task 4.5a) -- the named-risk items -- one at a time as the migration queue directed, not as a single batch. scroll_area.rs ported unmodified: pure CSS overflow/scrollbar-width styling, no document::eval, SSR-safe by construction; its SSR fallback (plain overflow CSS, browser renders native scrollbars) needs no live test since no JS is involved at any point. alert_dialog.rs: confirmed at import time (per the queue's explicit instruction) that it can and should delegate to the owned dialog primitive's shared focus-trap/Escape internals -- AlertDialogRoot's unconditional document::Script and AlertDialogContent's own inline document::eval focus-trap script (window.createFocusTrap) exactly duplicated what dialog.rs already shares via the crate's FocusTrapScript/use_focus_trap helpers, so both were replaced with those shared, target-gated (SSR-safe) helpers instead of being reimplemented. Outside-dismiss is intentionally NOT added, unlike dialog/DialogContent: a WAI-ARIA alertdialog must not be dismissible by clicking outside it, matching upstream's own omission of any outside-dismiss call. toast.rs needed two real additions: (1) dioxus_sdk_time::use_timeout is replaced with this crate's own target-aware time::sleep inside a single spawn, matching the pattern already established by context_menu.rs's long-press timer -- a toast's duration never changes after creation, so the general-purpose restart semantics of use_timeout are not needed; (2) portal.rs is imported for the first time in this crate. Reading the actual upstream source revealed portal.rs is a pure-Rust 'logical' portal implemented entirely through Dioxus's own scope/context system (relaying a VNode from one place in the component tree to another within the same virtual DOM) -- not a document::eval/DOM-based portal at all, contrary to what the Wave 3 record's finding ('only toast.rs actually needs the portal upstream') implied about its nature. It has no browser API dependency and is SSR-safe by construction, so it was ported unmodified and is safe to depend on. Real desktop pointer-capture behavior for slider is compiled (cargo check --features desktop passes) but not independently verified against a real desktop WebView in this pass, per the migration queue's own named risk for this item -- recorded here rather than assumed."
+    },
+    {
+      "date": "2026-08-30",
+      "summary": "slider.rs needed pointer.rs and move_interaction.rs as supporting infrastructure. pointer.rs's global window.addEventListener('pointerdown'/'pointermove'/'pointerup'/'pointercancel', ...) document::eval script (installed lazily the first time the pointer tracker is read) is now behind this crate's established `#[cfg(any(feature = \"web\", feature = \"desktop\"))]` target-gated pattern, with an SSR-safe stub (`track_pointer_down` no-op, `pointer_position` always `None`) for the native default -- upstream called `dioxus::document::eval` unconditionally; this crate's existing local `dioxus_document as document` import alias (matching every other eval call site in this crate) is used instead. move_interaction.rs and slider.rs themselves needed no adaptation: their only DOM access (`MountedData::get_client_rect()`) runs exclusively from event/mount callbacks, never during initial render, so no additional target gating was needed, and slider.rs's own pointer-drag path is simply inert on the native default (`pointer::pointer_position` always returns `None`) while keyboard arrow-key interaction, being pure Rust, works identically on every target. Verified for native (SSR-safe default), `--features web --target wasm32-unknown-unknown` (compile only, wasm unit tests require a wasm test runner not available in this environment), and `--features desktop` (compiles and its pointer unit test runs natively under this feature)."
+    }
+  ],
+  "notices": [
+    "Upstream is dual-licensed under MIT OR Apache-2.0; its LICENSE-MIT and LICENSE-APACHE texts are retained in third_party/dioxus-components/.",
+    "Each imported source unit identifies its immutable upstream revision and original path."
+  ]
+}

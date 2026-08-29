@@ -519,6 +519,18 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/toggle_group.rs") => {
                 Ok(include_bytes!("../../../registry/ui/toggle_group.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/scroll_area.rs") => {
+                Ok(include_bytes!("../../../registry/ui/scroll_area.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/alert_dialog.rs") => {
+                Ok(include_bytes!("../../../registry/ui/alert_dialog.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/toast.rs") => {
+                Ok(include_bytes!("../../../registry/ui/toast.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/slider.rs") => {
+                Ok(include_bytes!("../../../registry/ui/slider.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"
@@ -750,6 +762,7 @@ mod tests {
                 .collect::<Vec<_>>(),
             vec![
                 "@adico/accordion".to_string(),
+                "@adico/alert-dialog".to_string(),
                 "@adico/aspect-ratio".to_string(),
                 "@adico/avatar".to_string(),
                 "@adico/badge".to_string(),
@@ -773,13 +786,16 @@ mod tests {
                 "@adico/popover".to_string(),
                 "@adico/progress".to_string(),
                 "@adico/radio-group".to_string(),
+                "@adico/scroll-area".to_string(),
                 "@adico/select".to_string(),
                 "@adico/sheet".to_string(),
                 "@adico/sidebar".to_string(),
                 "@adico/skeleton".to_string(),
+                "@adico/slider".to_string(),
                 "@adico/switch".to_string(),
                 "@adico/tabs".to_string(),
                 "@adico/textarea".to_string(),
+                "@adico/toast".to_string(),
                 "@adico/toggle".to_string(),
                 "@adico/toggle-group".to_string(),
                 "@adico/tooltip".to_string(),

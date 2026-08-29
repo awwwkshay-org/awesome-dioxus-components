@@ -1,0 +1,6 @@
+[application]
+name = "adico-wave2-risk-consumer"
+default_platform = "web"
+
+[web.app]
+title = "adico Wave 2 risk fixture"
