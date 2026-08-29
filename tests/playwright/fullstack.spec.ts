@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-// Exercises `examples/fullstack`, which installs Button, Dialog, and Select
+// Exercises `examples/basic-ssr`, which installs Button, Dialog, and Select
 // through the real `adico` CLI. Run against a `dx serve --platform web`
 // instance of that example (see README) so both server-rendered HTML and
 // client hydration are covered by one real request/response cycle.

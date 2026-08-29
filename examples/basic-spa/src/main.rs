@@ -11,7 +11,7 @@ fn App() -> Element {
     rsx! {
         document::Stylesheet { href: TAILWIND_CSS }
         main { class: "space-y-6 p-6",
-            h1 { "adico basic example" }
+            h1 { "adico basic-spa example" }
             components::ui::Button { "Source-owned Button" }
             components::ui::Dialog {
                 components::ui::DialogTrigger { "Open dialog" }

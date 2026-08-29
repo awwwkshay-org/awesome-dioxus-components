@@ -79,9 +79,8 @@
           "applicable": true,
           "passed": true,
           "evidence": [
-            "examples/basic",
-            "examples/fullstack",
-            "examples/desktop"
+            "examples/basic-spa",
+            "examples/basic-ssr"
           ]
         },
         "cli": {
@@ -104,22 +103,21 @@
           "applicable": true,
           "passed": true,
           "evidence": [
-            "examples/basic (wasm32-unknown-unknown build)",
+            "examples/basic-spa (wasm32-unknown-unknown build)",
             "tests/playwright/fullstack.spec.ts"
           ]
         },
         "desktop": {
           "applicable": true,
-          "passed": true,
-          "evidence": [
-            "examples/desktop (native desktop-target build with the real dioxus-desktop backend)"
-          ]
+          "passed": false,
+          "evidence": [],
+          "note": "examples/desktop was removed by the consolidate-examples change (2026-08-30); native desktop-target build validation has no fixture and is a named, tracked gap, not a silent regression."
         },
         "ssrHydration": {
           "applicable": true,
           "passed": true,
           "evidence": [
-            "examples/fullstack (server-feature and web-feature builds both succeed)",
+            "examples/basic-ssr (server-feature and web-feature builds both succeed)",
             "tests/playwright/fullstack.spec.ts"
           ]
         },
@@ -204,8 +202,8 @@
           "applicable": true,
           "passed": true,
           "evidence": [
-            "examples/basic",
-            "examples/fullstack"
+            "examples/basic-spa",
+            "examples/basic-ssr"
           ]
         },
         "cli": {
@@ -241,7 +239,7 @@
           "applicable": true,
           "passed": true,
           "evidence": [
-            "examples/fullstack (server-feature and web-feature builds both succeed)",
+            "examples/basic-ssr (server-feature and web-feature builds both succeed)",
             "tests/playwright/fullstack.spec.ts"
           ]
         },
@@ -326,8 +324,8 @@
           "applicable": true,
           "passed": true,
           "evidence": [
-            "examples/basic",
-            "examples/fullstack"
+            "examples/basic-spa",
+            "examples/basic-ssr"
           ]
         },
         "cli": {
@@ -363,7 +361,7 @@
           "applicable": true,
           "passed": true,
           "evidence": [
-            "examples/fullstack (server-feature and web-feature builds both succeed)",
+            "examples/basic-ssr (server-feature and web-feature builds both succeed)",
             "tests/playwright/fullstack.spec.ts"
           ]
         },

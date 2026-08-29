@@ -349,13 +349,18 @@ does not hard-code catalog totals.
 
 ### 10. Examples, testing, and rollout
 
-Examples are product fixtures, not workspace-source shortcuts. `examples/basic`
-and installation fixtures are initialized/updated through the CLI against a
+Examples are product fixtures, not workspace-source shortcuts. `examples/`
+holds exactly two CLI-installed fixtures — `basic-spa` (web-only) and
+`basic-ssr` (server + web, SSR/hydration) — per the `consolidate-examples`
+change (2026-08-30) and its `adico-example-fixtures` spec; both, plus
+`tests/installation/*`, are initialized/updated through the CLI against a
 locally built/installed adico binary and compile with normal published-style
-dependencies. `examples/kitchen-sink` is generated/refreshed from available
-registry metadata and renders every installable item. Web, desktop, fullstack,
-forms, and dashboard examples arrive progressively as their components and
-tests are available.
+dependencies. New components migrated by later milestones get their
+installation/parity evidence from `tests/installation/*` fixtures and
+`examples/basic-spa`/`examples/basic-ssr` refreshes, not from progressively
+growing the example set — a native-desktop fixture and an unwired
+kitchen-sink/dashboard/forms/web gallery are explicitly out of scope unless a
+future change reintroduces them.
 
 Testing layers are: unit/property tests in primitives and registry core;
 compile fixtures; CLI installation/conflict tests; Playwright interaction,

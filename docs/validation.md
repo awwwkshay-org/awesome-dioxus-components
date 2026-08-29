@@ -26,7 +26,7 @@ until its retirement is explicitly approved.
 | CLI installation | Installation fixtures plus conflict/idempotency tests | Harness added in M2 (`packages/adico-cli/tests/cli_integration.rs`, `tests/installation/`) |
 | Web/wasm | `cargo check --target wasm32-unknown-unknown` for affected Dioxus apps | Proven for Button/Dialog/Select in M2 |
 | SSR/hydration | Server-feature build and hydration fixture | Proven for Button/Dialog/Select in M2 (`tests/playwright/fullstack.spec.ts`); required for later components |
-| Desktop | Explicit desktop feature check/smoke test on a supported runner | Proven for Button in M2 (`examples/desktop`); Dialog/Select desktop feature-selection is a tracked gap, see `parity.json` |
+| Desktop | Explicit desktop feature check/smoke test on a supported runner | `examples/desktop` (Button's only evidence) was removed by `consolidate-examples` (2026-08-30); native desktop-target validation has no fixture and is a tracked gap for all of Button/Dialog/Select, see `parity.json` |
 | Browser interaction/a11y | Playwright keyboard and accessibility suite | Harness selected in M0, added in M2 (`tests/playwright/dialog.spec.ts`, `select.spec.ts`) |
 | Visual parity | Approved visual-regression suite | Harness selected in M0, added incrementally starting M4 |
 | External registry | Local/static-HTTPS source and lock-refresh fixtures | Proven in M2 (`tests/installation/awwwkshay-consumer`, registry-core local/HTTPS parity test) |

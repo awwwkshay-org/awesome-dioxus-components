@@ -5,6 +5,6 @@ set -eu
 # through its public commands. Installed UI source remains committed so the
 # example compiles without invoking the script.
 cargo build -p adico-cli --locked
-cd examples/basic
+cd examples/basic-spa
 ../../target/debug/adico init
 ../../target/debug/adico add button dialog select

@@ -13,7 +13,7 @@ fn App() -> Element {
     let mut open = use_signal(|| false);
     rsx! {
         main {
-            h1 { "adico fullstack example" }
+            h1 { "adico basic-ssr example" }
             components::ui::Button { "SSR/hydration smoke check" }
             components::ui::Dialog {
                 open: open(),
