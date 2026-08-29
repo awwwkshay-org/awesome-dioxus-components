@@ -507,6 +507,18 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/toggle.rs") => {
                 Ok(include_bytes!("../../../registry/ui/toggle.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/accordion.rs") => {
+                Ok(include_bytes!("../../../registry/ui/accordion.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/radio_group.rs") => {
+                Ok(include_bytes!("../../../registry/ui/radio_group.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/tabs.rs") => {
+                Ok(include_bytes!("../../../registry/ui/tabs.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/toggle_group.rs") => {
+                Ok(include_bytes!("../../../registry/ui/toggle_group.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"
@@ -737,6 +749,7 @@ mod tests {
                 .map(|item| item.address.to_string())
                 .collect::<Vec<_>>(),
             vec![
+                "@adico/accordion".to_string(),
                 "@adico/aspect-ratio".to_string(),
                 "@adico/avatar".to_string(),
                 "@adico/badge".to_string(),
@@ -759,13 +772,16 @@ mod tests {
                 "@adico/pagination".to_string(),
                 "@adico/popover".to_string(),
                 "@adico/progress".to_string(),
+                "@adico/radio-group".to_string(),
                 "@adico/select".to_string(),
                 "@adico/sheet".to_string(),
                 "@adico/sidebar".to_string(),
                 "@adico/skeleton".to_string(),
                 "@adico/switch".to_string(),
+                "@adico/tabs".to_string(),
                 "@adico/textarea".to_string(),
                 "@adico/toggle".to_string(),
+                "@adico/toggle-group".to_string(),
                 "@adico/tooltip".to_string(),
             ]
         );

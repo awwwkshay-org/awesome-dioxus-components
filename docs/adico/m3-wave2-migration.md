@@ -183,12 +183,119 @@ cargo check -p adico-primitives --locked --features desktop
 | `wave2-state-consumer`: `cargo build` (native) / `cargo check --target wasm32-unknown-unknown` | both succeeded |
 | `wave2-state.spec.ts` (5 tests, live `dx serve` + Playwright + axe) | all passed: Checkbox click/Space toggle with `aria-checked`, Switch click/Space toggle with `aria-checked`, Toggle click toggles `aria-pressed`, Collapsible expand/collapse with `aria-expanded`, zero critical axe violations |
 
-## Remaining sub-batches
+## Sub-batch 3 — roving-focus group (complete)
 
-- **Sub-batch 3 — roving-focus group**: accordion, radio-group, tabs,
-  toggle-group.
-- **Sub-batch 4 — named-risk items**: alert-dialog, scroll-area, slider,
-  toast.
+`accordion`, `radio-group`, `tabs`, `toggle-group`. All four already depend
+on this crate's existing private `collection` module (`collection_item`,
+`use_item`, `CollectionOptions`/`CollectionState`,
+`use_collection_provider`/`use_collection_provider_with`) — the same shared
+roving-focus infrastructure already imported for Select in M1 and reused by
+DropdownMenu/ContextMenu/Menubar in Wave 3, confirmed by reading the actual
+upstream source rather than assumed from the migration queue's one-line
+descriptions. No new shared primitive was needed; this validates the queue's
+own Wave 3 note that this infrastructure generalizes.
 
-Task 4.5a's checkbox in `tasks.md` is marked complete only once all four
-sub-batches above are done and independently verified.
+- `packages/adico-primitives/src/{accordion,radio_group,tabs,toggle_group}.rs`:
+  forked from upstream, provenance-tracked in
+  `provenance/records/adico-primitives-wave2-roving-focus.json`.
+  `accordion.rs` dropped the one upstream-internal
+  `use crate::dioxus_elements::Key;` import (a re-export path specific to
+  upstream's own crate layout that does not exist here) since `Key` already
+  resolves through the existing `use dioxus::prelude::*` glob import,
+  matching every other keyboard-handling primitive in this crate.
+  `radio_group.rs` and `tabs.rs` needed no adaptation beyond the doc-example
+  import path change. `toggle_group.rs` was deferred within this sub-batch
+  until its hard dependency `crate::toggle::Toggle` landed via the
+  concurrently-running Wave 2 state sub-batch (commit `6664368`), then ported
+  unmodified — it composes the owned `Toggle` primitive directly as a plain
+  Rust module dependency, not a registry dependency edge (matching the
+  migration queue's Wave 5 `color-picker` composition precedent). None of the
+  four uses `document::eval`, a portal, or a DOM measurement API, so all are
+  SSR-safe by construction; no target-gated adapter work was needed.
+- `registry/ui/{accordion,radio_group,tabs,toggle_group}.rs`: styled
+  shadcn-convention facades using `cn` and semantic tokens. `accordion.rs`
+  composes a Lucide `ChevronDown` indicator into the trigger. `radio_group.rs`
+  renders its checked indicator as a CSS `::before` dot driven by the
+  primitive's own `data-state` attribute (no extra child element needed,
+  since the composition upstream already puts caller content directly inside
+  the radio button rather than beside an indicator the way shadcn's React
+  version does — a documented intentional Dioxus composition difference).
+  `toggle_group.rs`'s `ToggleItem` facade reuses the same
+  `data-[state=on]:bg-accent` semantic surface as the standalone `toggle`
+  facade from Sub-batch 2.
+- `registry/registry.json`: four new entries.
+- `packages/adico-cli/src/main.rs`: four new `include_bytes!` match arms,
+  plus the 30 → 34 item expected-catalog list update (alphabetical
+  insertion).
+- `tests/installation/wave2-roving-focus-consumer` (with `Dioxus.toml`, since
+  this batch has real roving-focus/manual-activation keyboard behavior worth
+  a live browser check): a real consumer fixture composing all four items,
+  installed and built through the real `adico` binary.
+- `tests/playwright/wave2-roving-focus.spec.ts`: real-browser coverage via a
+  live `dx serve --platform web` run — Accordion opens on click, roves focus
+  with ArrowDown, and activates with Enter (closing the other item, since
+  `allow_multiple_open: false`); RadioGroup roves focus *and* auto-selects on
+  ArrowDown (matches upstream's automatic-activation radio semantics); Tabs
+  roves focus with ArrowDown *without* switching the active panel, requiring
+  a separate Enter to activate (upstream's manual-activation pattern,
+  verified as a real behavioral distinction between RadioGroup and Tabs, not
+  assumed); ToggleGroup roves focus with ArrowRight and toggles pressed state
+  radio-style (`allow_multiple_pressed` defaults to `false`); plus a
+  whole-page axe scan.
+
+### Real concurrency note
+
+This sub-batch was implemented in the same shared working tree as a
+concurrently-running Wave 2 state sub-batch (Sub-batch 2, above). Shared
+files (`packages/adico-primitives/src/lib.rs`, `registry/registry.json`,
+`packages/adico-cli/src/main.rs`) were deliberately left untouched by this
+sub-batch's own work until Sub-batch 2's commit (`6664368`) landed, to avoid
+clobbering concurrent edits; new files (the four primitive/registry sources,
+the provenance record, the consumer fixture) were written and compile-checked
+independently in the meantime via a disposable scratch crate outside the
+main workspace.
+
+### Verification
+
+```
+cargo xtask registry validate
+cargo xtask provenance check
+cargo fmt --all --check
+cargo check --locked --workspace
+cargo clippy --locked --workspace --all-targets -- -D warnings
+cargo test --locked --workspace
+cargo check -p adico-primitives --locked --no-default-features --features web --target wasm32-unknown-unknown
+cargo check -p adico-primitives --locked --features desktop
+(cd tests/installation/wave2-roving-focus-consumer && \
+  ../../../target/debug/adico init && \
+  ../../../target/debug/adico add accordion radio-group tabs toggle-group && \
+  cargo build && \
+  cargo check --target wasm32-unknown-unknown)
+(cd tests/installation/wave2-roving-focus-consumer && dx serve --platform web --port 8792) &
+(cd tests/playwright && ADICO_PLAYWRIGHT_BASE_URL=http://127.0.0.1:8792 npm run test:wave2-roving-focus)
+```
+
+| Check | Result |
+| --- | --- |
+| `cargo xtask registry validate` | 34 item payload(s) (30 existing + 4 new) |
+| `cargo xtask provenance check` | 6 imported record(s), 46 source unit(s) |
+| `cargo fmt --all --check` | passed |
+| `cargo check --locked --workspace` | passed |
+| `cargo clippy --locked --workspace --all-targets -- -D warnings` | passed |
+| `cargo test --locked --workspace` | passed (68 primitive doctests, updated 34-item catalog assertion) |
+| `adico-primitives` web+wasm32 / desktop feature checks | both passed |
+| `wave2-roving-focus-consumer`: `adico add accordion radio-group tabs`, then `adico add toggle-group` | both plans applied cleanly; `cargo build` (native) and `cargo check --target wasm32-unknown-unknown` succeeded after each |
+| `wave2-roving-focus.spec.ts` (5 tests, live `dx serve` + Playwright + axe) | all passed: Accordion click/ArrowDown-roving/Enter-activate, RadioGroup ArrowDown-roving-with-auto-select, Tabs ArrowDown-roving-without-switching then Enter-activate, ToggleGroup ArrowRight-roving with radio-style press, zero critical axe violations |
+
+## Sub-batch 4 — named-risk items (remaining)
+
+`alert-dialog`, `scroll-area`, `slider`, `toast`. Each carries a named risk
+per the migration queue: alert-dialog may delegate to the owned `dialog`
+primitive's focus-trap/Escape internals rather than duplicating them (decide
+at import time); scroll-area needs SSR fallback verification; slider needs
+`pointer.rs`/`move_interaction.rs` and has unverified desktop pointer-capture
+behavior; toast needs the target-gated timeout adapter matching
+`adico-primitives::time`. Worked one at a time, not as a single batch.
+
+Task 4.5a's checkbox in `tasks.md` is marked complete only once Sub-batch 4
+above is done and independently verified.

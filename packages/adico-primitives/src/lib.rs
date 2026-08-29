@@ -39,6 +39,7 @@ pub use dioxus_icons::lucide as icons;
 pub mod dialog;
 pub mod select;
 
+pub mod accordion;
 pub mod aspect_ratio;
 pub mod avatar;
 pub mod calendar;
@@ -53,9 +54,12 @@ pub mod label;
 pub mod menubar;
 pub mod popover;
 pub mod progress;
+pub mod radio_group;
 pub mod separator;
 pub mod switch;
+pub mod tabs;
 pub mod toggle;
+pub mod toggle_group;
 pub mod tooltip;
 
 mod collection;

@@ -877,6 +877,130 @@
         "compositionNote": "Styled facade over the owned pressed-state ARIA button primitive, with sm/default/lg size variants matching shadcn's Toggle."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-state.json" }
+    },
+    {
+      "name": "accordion",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Accordion for Dioxus, backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/accordion.rs",
+          "targetRoot": "ui",
+          "target": "accordion.rs",
+          "checksum": "2d5a9ea4bfa2883edd07360e8573b946597227e90c39f795e2def96cb268cc7e"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "accordion", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "accordion",
+        "compositionNote": "Styled facade over the owned roving-focus collapsible-group primitive (reuses the collection infrastructure already imported for Select). Composes a Lucide ChevronDown indicator into the trigger, matching shadcn's Accordion."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave2-roving-focus.json" }
+    },
+    {
+      "name": "radio-group",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Radio Group for Dioxus, backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/radio_group.rs",
+          "targetRoot": "ui",
+          "target": "radio_group.rs",
+          "checksum": "5d2d5a1e4a2ed4f525e1b7e0ae84646c563d1568333cd95ca45952f3576e9170"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "radio_group", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "radio-group",
+        "compositionNote": "Styled facade over the owned roving-focus radio primitive (reuses the collection infrastructure already imported for Select), with a CSS-only checked indicator dot."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave2-roving-focus.json" }
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Tabs for Dioxus, backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/tabs.rs",
+          "targetRoot": "ui",
+          "target": "tabs.rs",
+          "checksum": "a982299738d090990d8f059c1f0024603f6f7ea769762e9302441b4f9f3bb5d5"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "tabs", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "tabs",
+        "compositionNote": "Styled facade over the owned roving-focus tab-list primitive (reuses the collection infrastructure already imported for Select), matching shadcn's Tabs."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave2-roving-focus.json" }
+    },
+    {
+      "name": "toggle-group",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Toggle Group for Dioxus, backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/toggle_group.rs",
+          "targetRoot": "ui",
+          "target": "toggle_group.rs",
+          "checksum": "c83cfb2ba597137d16cfb01a363bd0cc0cb1eb58b8dd8847c9fd884a8bbd0c7d"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "toggle_group", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "toggle-group",
+        "compositionNote": "Styled facade over the owned roving-focus toggle-group primitive (reuses the collection infrastructure already imported for Select and composes the owned Toggle primitive directly), matching shadcn's Toggle Group."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave2-roving-focus.json" }
     }
   ]
 }

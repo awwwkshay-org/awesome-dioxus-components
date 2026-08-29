@@ -1,0 +1,6 @@
+[application]
+name = "adico-wave2-roving-focus-consumer"
+default_platform = "web"
+
+[web.app]
+title = "adico Wave 2 roving-focus fixture"

@@ -1,0 +1,15 @@
+[package]
+name = "adico-wave2-roving-focus-consumer"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+
+[dependencies]
+# A browser fixture explicitly selects the Dioxus web runtime. Runtime crates
+# must not make a consumer inherit fullstack or development-only features.
+dioxus = { version = "=0.7.9", default-features = false, features = ["web", "launch", "macro", "html", "signals", "hooks", "asset"] }
+adico-primitives = { version = "=0.1.0", features = ["web"] }
+
+[patch.crates-io]
+adico-primitives = { path = "../../../packages/adico-primitives" }
