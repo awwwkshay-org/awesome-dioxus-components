@@ -1,0 +1,27 @@
+{
+  "id": "adico-primitives-wave2-simple",
+  "upstream": "https://github.com/DioxusLabs/dioxus-components",
+  "revision": "bf007c15d0cf4d04d3181cc46cf12325aa773955",
+  "license": ["MIT", "Apache-2.0"],
+  "importedAt": "2026-08-30",
+  "originalPaths": [
+    "primitives/src/aspect_ratio.rs",
+    "primitives/src/label.rs",
+    "primitives/src/progress.rs"
+  ],
+  "localPaths": [
+    "packages/adico-primitives/src/aspect_ratio.rs",
+    "packages/adico-primitives/src/label.rs",
+    "packages/adico-primitives/src/progress.rs"
+  ],
+  "changes": [
+    {
+      "date": "2026-08-30",
+      "summary": "Imported the first sub-batch of the M3 Wave 2 migration (task 4.5a) -- the no-JS-behavior styled-wrapper primitives: AspectRatio (a pure CSS padding-bottom ratio wrapper), Label (a `for`/`id` association helper), and Progress/ProgressIndicator (ARIA progressbar semantics driven entirely by a `--progress-value` CSS custom property, no timers or DOM APIs). All three ported unmodified from upstream source at the pinned revision (only import paths/doc examples changed from `dioxus_primitives` to `adico_primitives`, matching the pattern already used for separator/tooltip/etc.); none uses `document::eval`, a portal, or any DOM measurement API, so no target-gated adapter work was needed and all three are SSR-safe by construction. Verified for native (SSR-safe default), `--features web --target wasm32-unknown-unknown`, and `--features desktop`."
+    }
+  ],
+  "notices": [
+    "Upstream is dual-licensed under MIT OR Apache-2.0; its LICENSE-MIT and LICENSE-APACHE texts are retained in third_party/dioxus-components/.",
+    "Each imported source unit identifies its immutable upstream revision and original path."
+  ]
+}

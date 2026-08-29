@@ -39,14 +39,17 @@ pub use dioxus_icons::lucide as icons;
 pub mod dialog;
 pub mod select;
 
+pub mod aspect_ratio;
 pub mod calendar;
 pub mod combobox;
 pub mod context_menu;
 pub mod date_picker;
 pub mod dropdown_menu;
 pub mod hover_card;
+pub mod label;
 pub mod menubar;
 pub mod popover;
+pub mod progress;
 pub mod separator;
 pub mod tooltip;
 

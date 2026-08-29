@@ -483,6 +483,15 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/sidebar.rs") => {
                 Ok(include_bytes!("../../../registry/ui/sidebar.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/aspect_ratio.rs") => {
+                Ok(include_bytes!("../../../registry/ui/aspect_ratio.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/label.rs") => {
+                Ok(include_bytes!("../../../registry/ui/label.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/progress.rs") => {
+                Ok(include_bytes!("../../../registry/ui/progress.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"
@@ -713,6 +722,7 @@ mod tests {
                 .map(|item| item.address.to_string())
                 .collect::<Vec<_>>(),
             vec![
+                "@adico/aspect-ratio".to_string(),
                 "@adico/badge".to_string(),
                 "@adico/button".to_string(),
                 "@adico/calendar".to_string(),
@@ -726,9 +736,11 @@ mod tests {
                 "@adico/hover-card".to_string(),
                 "@adico/input".to_string(),
                 "@adico/item".to_string(),
+                "@adico/label".to_string(),
                 "@adico/menubar".to_string(),
                 "@adico/pagination".to_string(),
                 "@adico/popover".to_string(),
+                "@adico/progress".to_string(),
                 "@adico/select".to_string(),
                 "@adico/sheet".to_string(),
                 "@adico/sidebar".to_string(),

@@ -631,6 +631,98 @@
         "slug": "sidebar",
         "compositionNote": "Unlike most registry items, upstream ships Sidebar as a styled preview component rather than an adico-primitives module; its only shared state is a plain open/closed signal from adico_primitives::use_controlled, and it composes the owned separator primitive directly. This initial pass renders one CSS-driven collapsible layout rather than upstream's document::eval-detected mobile sheet mode (that eval pattern was found non-functional while testing the Wave 3 overlay batch); a real viewport-driven mobile mode is deferred to M4/M5."
       }
+    },
+    {
+      "name": "aspect-ratio",
+      "type": "registry:ui",
+      "description": "A source-owned CSS aspect-ratio wrapper for Dioxus, backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/aspect_ratio.rs",
+          "targetRoot": "ui",
+          "target": "aspect_ratio.rs",
+          "checksum": "8c30c1f65934f5bac2baa602132710b450b3308b49320826b5abd7ba6c10c039"
+        }
+      ],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": false,
+        "radiusToken": false,
+        "utilities": []
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "aspect_ratio", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "aspect-ratio",
+        "compositionNote": "A pure re-export of the owned AspectRatio primitive: a CSS padding-bottom ratio wrapper with no visual styling to compose, matching upstream's own unstyled behavior."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave2-simple.json" }
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Label for Dioxus, backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/label.rs",
+          "targetRoot": "ui",
+          "target": "label.rs",
+          "checksum": "c39474fff2df114cfb9fde2a3350ef4eb0baeb00e4e857cbea945f0796713e5f"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": false,
+        "radiusToken": false,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "label", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "label",
+        "compositionNote": "Styled facade over the owned `for`/`id` association primitive. Composes with any installed form control via matching `html_for`/`id` values."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave2-simple.json" }
+    },
+    {
+      "name": "progress",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Progress bar for Dioxus, backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/progress.rs",
+          "targetRoot": "ui",
+          "target": "progress.rs",
+          "checksum": "17984eaeb1ddfa193b546c14d6882b2feffc6aefdcdf57f84b0cc418377b192a"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": false,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "progress", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "progress",
+        "compositionNote": "Styled facade over the owned ARIA progressbar primitive. The indicator's fill width is CSS-transform-driven from the primitive's --progress-value custom property; a `None` value renders a zero-filled indeterminate bar rather than upstream's unstyled indeterminate state, since animated indeterminate styling is M4's job."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave2-simple.json" }
     }
   ]
 }
