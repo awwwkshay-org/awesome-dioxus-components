@@ -52,3 +52,7 @@ results) are recorded in:
 - [`docs/adico/m3-wave4-migration.md`](docs/adico/m3-wave4-migration.md)
 - [`docs/adico/m3-wave5-migration.md`](docs/adico/m3-wave5-migration.md) — Dioxus-only extras (task 4.6); `form` is excluded there with evidence
 - [`docs/adico/m3-acceptance.md`](docs/adico/m3-acceptance.md) — M3 acceptance record (task 4.9): classification accounting, documented exceptions (`separator`, `form`, `navbar`), and installability evidence
+
+## M4 evidence
+
+- [`docs/adico/m4-parity-audit.md`](docs/adico/m4-parity-audit.md) — M4 parity audit (task 5.1): evidence-backed comparison of the 38 tracked components against upstream shadcn and this repo's own rendered output, across the `api`, `visual`, `variants`, `states`, `darkMode`, `rtl`, `responsive`, `desktop`, `docs`, and `ssrHydration` dimensions deferred from M3
