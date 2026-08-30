@@ -51,3 +51,4 @@ results) are recorded in:
 - [`docs/adico/m3-wave3-migration.md`](docs/adico/m3-wave3-migration.md)
 - [`docs/adico/m3-wave4-migration.md`](docs/adico/m3-wave4-migration.md)
 - [`docs/adico/m3-wave5-migration.md`](docs/adico/m3-wave5-migration.md) — Dioxus-only extras (task 4.6); `form` is excluded there with evidence
+- [`docs/adico/m3-acceptance.md`](docs/adico/m3-acceptance.md) — M3 acceptance record (task 4.9): classification accounting, documented exceptions (`separator`, `form`, `navbar`), and installability evidence
