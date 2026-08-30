@@ -15,6 +15,8 @@
     "test:wave5-tag-group": "playwright test wave5-tag-group.spec.ts",
     "test:wave5-drag-and-drop-list": "playwright test wave5-drag-and-drop-list.spec.ts",
     "test:wave5-color-picker": "playwright test wave5-color-picker.spec.ts",
+    "test:mode-toggle": "playwright test mode-toggle.spec.ts",
+    "test:theme-switcher": "playwright test theme-switcher.spec.ts",
     "test:fullstack": "playwright test fullstack.spec.ts"
   },
   "devDependencies": {

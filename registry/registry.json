@@ -1279,6 +1279,66 @@
         "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` in upstreams/dioxus-components/inventory.md and excluded from shadcn parity tracking. Grouped multi-select tag input reusing the roving-focus collection infrastructure already imported for Select; no document::eval, portal, or DOM measurement API, so it is SSR-safe by construction."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave5-extras.json" }
+    },
+    {
+      "name": "mode-toggle",
+      "type": "registry:ui",
+      "description": "A source-owned Light/Dark/System theme toggle for Dioxus, backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/mode_toggle.rs",
+          "targetRoot": "ui",
+          "target": "mode_toggle.rs",
+          "checksum": "5e2a9ecf6f8513206df6476239caecc966cad1fe341c9d0258d1d67c249bde7f"
+        }
+      ],
+      "registryDependencies": ["cn", "dropdown-menu"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "mode_toggle", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "mode-toggle",
+        "compositionNote": "Composes the installed dropdown-menu registry item with adico_primitives::theme_mode for Light/Dark/System selection. Persists the selection (localStorage on web, a preferences file on desktop) and applies the resolved appearance's class to the document root automatically. Classified `EXISTING_SHADCN_EQUIVALENT`-adjacent -- shadcn's theming docs ship an equivalent Light/Dark/System dropdown pattern; see parity.json and design.md §7b."
+      }
+    },
+    {
+      "name": "theme-switcher",
+      "type": "registry:ui",
+      "description": "A source-owned Dioxus-only palette switcher for Dioxus (no shadcn equivalent), backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/theme_switcher.rs",
+          "targetRoot": "ui",
+          "target": "theme_switcher.rs",
+          "checksum": "37457f12ce326a8b4da2a833347e6943cea4f049ccd52554939d65de05608b61"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "theme_switcher", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "theme-switcher",
+        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA`-style per design.md §7b and excluded from shadcn parity tracking (no parity.json entry). A distilled palette picker (Slate/Blue/Violet/Emerald/Rose/Amber presets recoloring --primary/--primary-foreground and their Tailwind aliases) productizing the concept prototyped in apps/playground's advanced customization tray, which keeps its own full 28-token editor unchanged."
+      }
     }
   ]
 }

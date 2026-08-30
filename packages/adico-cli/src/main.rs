@@ -546,6 +546,12 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/color_picker.rs") => {
                 Ok(include_bytes!("../../../registry/ui/color_picker.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/mode_toggle.rs") => {
+                Ok(include_bytes!("../../../registry/ui/mode_toggle.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/theme_switcher.rs") => {
+                Ok(include_bytes!("../../../registry/ui/theme_switcher.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"
@@ -799,6 +805,7 @@ mod tests {
                 "@adico/item".to_string(),
                 "@adico/label".to_string(),
                 "@adico/menubar".to_string(),
+                "@adico/mode-toggle".to_string(),
                 "@adico/pagination".to_string(),
                 "@adico/popover".to_string(),
                 "@adico/progress".to_string(),
@@ -813,6 +820,7 @@ mod tests {
                 "@adico/tabs".to_string(),
                 "@adico/tag-group".to_string(),
                 "@adico/textarea".to_string(),
+                "@adico/theme-switcher".to_string(),
                 "@adico/toast".to_string(),
                 "@adico/toggle".to_string(),
                 "@adico/toggle-group".to_string(),

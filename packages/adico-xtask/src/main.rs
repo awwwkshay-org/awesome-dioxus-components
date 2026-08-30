@@ -13,16 +13,21 @@ use adico_registry_core::{
     RegistrySource, RegistrySourceLoader,
 };
 
-/// Registry items classified `EXISTING_DIOXUS_EXTRA` in
-/// `upstreams/dioxus-components/inventory.md` (the M3 Wave 5 batch, task 4.6).
-/// These deliberately have no `parity.json` entry: parity only tracks items
-/// explicitly mapped to the upstream shadcn catalog (see `docs/adico/parity.md`).
-/// Keep this list and the inventory table in sync if a future wave adds
-/// another Dioxus-only extra.
+/// Registry items with no shadcn-catalog mapping, so they deliberately have
+/// no `parity.json` entry: parity only tracks items explicitly mapped to the
+/// upstream shadcn catalog (see `docs/adico/parity.md`). Most of these are
+/// classified `EXISTING_DIOXUS_EXTRA` in
+/// `upstreams/dioxus-components/inventory.md` (the M3 Wave 5 batch, task
+/// 4.6); `theme-switcher` is an adico-original component with no upstream
+/// source at all (task 4.8g, see design.md §7b) but is classified the same
+/// way for the same reason -- ui.shadcn.com's theme customizer is a docs-site
+/// feature, not a shipped component. Keep this list, the inventory table,
+/// and design.md in sync if a future item needs the same treatment.
 const DIOXUS_ONLY_EXTRAS: &[&str] = &[
     "color-picker",
     "drag-and-drop-list",
     "tag-group",
+    "theme-switcher",
     "toolbar",
     "virtual-list",
 ];

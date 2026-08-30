@@ -1,0 +1,57 @@
+{
+  "name": "mode-toggle",
+  "type": "registry:ui",
+  "description": "A source-owned Light/Dark/System theme toggle for Dioxus, backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/mode_toggle.rs",
+      "targetRoot": "ui",
+      "target": "mode_toggle.rs",
+      "checksum": "5e2a9ecf6f8513206df6476239caecc966cad1fe341c9d0258d1d67c249bde7f"
+    }
+  ],
+  "registryDependencies": [
+    "cn",
+    "dropdown-menu"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "mode_toggle",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "mode-toggle",
+    "compositionNote": "Composes the installed dropdown-menu registry item with adico_primitives::theme_mode for Light/Dark/System selection. Persists the selection (localStorage on web, a preferences file on desktop) and applies the resolved appearance's class to the document root automatically. Classified `EXISTING_SHADCN_EQUIVALENT`-adjacent -- shadcn's theming docs ship an equivalent Light/Dark/System dropdown pattern; see parity.json and design.md §7b."
+  },
+  "compatibility": null,
+  "provenance": null
+}

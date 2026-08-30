@@ -2347,6 +2347,125 @@
         }
       }
     },
+    "mode-toggle": {
+      "status": "in_progress",
+      "registryItem": "@adico/mode-toggle",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/mode_toggle.rs",
+            "packages/adico-primitives/src/theme_mode.rs",
+            "tests/installation/theme-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/mode-toggle.spec.ts"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/mode-toggle.spec.ts (zero critical axe violations)"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-primitives/src/theme_mode.rs (applies the resolved appearance's class to the document root)",
+            "tests/playwright/mode-toggle.spec.ts"
+          ]
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice; broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/theme-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/theme-consumer/Cargo.toml (adico-primitives web feature merged automatically by adico add)"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/theme-consumer (wasm32-unknown-unknown build)",
+            "tests/playwright/mode-toggle.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "packages/adico-primitives/src/theme_mode.rs compiles under --features desktop, but desktop-target interaction (persistence file, dark-light OS detection under a real WebView) has no fixture and is a named, tracked gap, not a silent regression -- matches the existing desktop gap recorded for button/dialog/select."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
     "pagination": {
       "status": "in_progress",
       "registryItem": "@adico/pagination",
