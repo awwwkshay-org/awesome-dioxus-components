@@ -1,7 +1,51 @@
-# Claude Code instructions
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 This is the only agent-guidance file in this repository (no `AGENTS.md` /
 `.agents/` — Claude Code only).
+
+## Commands
+
+Baseline validation, run from the repository root for every Rust/package change:
+
+```sh
+cargo fmt --all --check
+cargo check --locked --workspace
+cargo clippy --locked -p adico-cli -p adico-primitives -p adico-registry-core -p adico-test-utils -p adico-xtask --all-targets -- -D warnings
+cargo test --locked -p adico-cli -p adico-primitives -p adico-registry-core -p adico-test-utils -p adico-xtask
+openspec validate build-adico-component-ecosystem --strict
+```
+
+Single test / single package:
+
+```sh
+cargo test -p adico-cli <test_name>            # one test by name
+cargo test -p adico-registry-core -- --exact <test_name>
+```
+
+`adico-xtask` commands (no npm/Node involved; run from repo root):
+
+```sh
+cargo run -p adico-xtask -- registry build       # regenerate registry/generated/* from registry/ui|hooks|lib source
+cargo run -p adico-xtask -- registry validate     # check registry/generated/* isn't stale
+cargo run -p adico-xtask -- provenance check      # verify provenance/records/* against UPSTREAMS.md obligations
+cargo run -p adico-xtask -- parity                # verify parity.json covers every EXISTING_SHADCN_EQUIVALENT item
+cargo run -p adico-xtask -- upstream dioxus-components [--source <clone>] [--refreshed-at YYYY-MM-DD] [--write]
+```
+
+Surface-specific checks (only run when the change actually touches that surface — see `docs/validation.md` for the full matrix and current per-surface status):
+
+```sh
+cargo check --target wasm32-unknown-unknown -p <crate>   # web/wasm
+cd tests/playwright && npm test                          # browser/keyboard/a11y (Playwright + axe)
+dx serve                                                  # from an app/example dir; auto-compiles tailwind.css → assets/tailwind.css
+```
+
+Registry components are Dioxus-source, not a compiled dependency: never `cargo check`
+a `registry/ui/*.rs` file in isolation — validate it through `registry validate`
+and through an installed consumer (`examples/basic-spa`, `examples/basic-ssr`,
+or a `tests/installation/*` fixture), since that's the only path real consumers use.
 
 ## Project overview
 
@@ -21,15 +65,40 @@ template defaults.
 
 ## Architecture rules
 
+`adico` is a source-distribution ecosystem, not a conventional styled
+component crate — the consumer installs authored registry source into their
+own project and owns the resulting files (shadcn's model, applied to Dioxus).
+The dependency/data flow is one direction only:
+
+```
+Dioxus → adico-primitives → registry source + metadata → adico CLI/registry-core → consumer app
+```
+
 - Keep reusable behavior in `adico-primitives`, registry semantics in
   `adico-registry-core`, and consumer workflow in `adico-cli`.
 - Keep styled components as understandable source under `registry/`; do not
-  turn them into an opaque consumer-facing component crate.
+  turn them into an opaque consumer-facing component crate. Never make a
+  consumer example or fixture import `registry/` source via a workspace path
+  — they must go through the real `adico` CLI installation, same as an
+  external consumer would.
 - Treat a feature as a vertical slice: registry metadata, dependency planning,
   CLI installation, copied component source, consumer fixture, and tests.
 - Preserve separate Dioxus feature builds. Server-only dependencies must remain
   behind the `server` feature, and browser code must compile for
-  `wasm32-unknown-unknown`.
+  `wasm32-unknown-unknown`. Browser-only interop belongs behind target-aware
+  primitive adapters — copied component APIs must not leak browser-interop
+  details to the consumer.
+- The Tailwind CSS pipeline is per-project, not shared: each installed app has
+  its own root `tailwind.css` (compiler input: `@import "tailwindcss"`,
+  `@source`, and an `adico`-managed semantic-token/animation marker region)
+  compiled to `assets/tailwind.css` (generated output, linked via
+  `document::Stylesheet { href: asset!(...) }`), because Tailwind only emits
+  the classes actually referenced in that project's own `src/`. `dx serve`/
+  `dx build` compile this automatically using Tailwind's cached standalone
+  native binary (`~/.dx/tools/`) — not the npm `@tailwindcss/cli` package.
+- The official registry is embedded with the CLI; a consumer can additionally
+  configure a named local or static-HTTPS organization registry in
+  `components.json` and set it as default without forking the CLI.
 
 ## Spec-driven development (OpenSpec)
 
