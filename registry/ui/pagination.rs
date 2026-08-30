@@ -79,7 +79,7 @@ pub fn PaginationLink(props: PaginationLinkProps) -> Element {
         "hover:bg-accent hover:text-accent-foreground"
     };
     let class = cn(&[
-        "inline-flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium transition-colors",
+        "inline-flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
         state_class,
         props.class.as_deref().unwrap_or_default(),
     ]);

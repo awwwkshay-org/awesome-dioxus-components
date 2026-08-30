@@ -34,7 +34,7 @@ pub fn TabTrigger(
     children: Element,
 ) -> Element {
     let class = cn(&[
-        "inline-flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-md px-2 py-1 text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",
+        "inline-flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-md px-2 py-1 text-sm font-medium transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -65,10 +65,7 @@ mod tests {
 
     #[test]
     fn active_trigger_gets_a_semantic_surface() {
-        let class = cn(&[
-            "data-[state=active]:bg-background data-[state=active]:text-foreground",
-            "",
-        ]);
+        let class = cn(&["data-[state=active]:bg-background data-[state=active]:text-foreground", ""]);
         assert!(class.contains("data-[state=active]:bg-background"));
     }
 }

@@ -22,8 +22,10 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "registry/ui/accordion.rs (AccordionTrigger: items-start alignment, rounded-md/outline-none/focus-visible:ring/disabled: classes added, matching apps/v4/registry/new-york-v4/ui/accordion.tsx)"
+          ],
+          "note": "Interaction-state class parity (focus-visible ring, disabled-state styling) fixed against upstream shadcn's new-york-v4 style in M4 task 5.2's first sub-batch (docs/adico/m4-parity-audit.md); full prop-shape/slot composition audit beyond interaction-state classes remains open 5.2 scope."
         },
         "visual": {
           "applicable": true,
@@ -2245,8 +2247,10 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "registry/ui/menubar.rs (MenubarTrigger: data-[state=open]:bg-accent/text-accent-foreground added, matching apps/v4/registry/new-york-v4/ui/menubar.tsx; focus:bg-accent treatment was already present and already matched upstream)"
+          ],
+          "note": "Interaction-state class parity (focus-visible ring, disabled-state styling) fixed against upstream shadcn's new-york-v4 style in M4 task 5.2's first sub-batch (docs/adico/m4-parity-audit.md); full prop-shape/slot composition audit beyond interaction-state classes remains open 5.2 scope."
         },
         "visual": {
           "applicable": true,
@@ -2481,8 +2485,10 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "registry/ui/pagination.rs (PaginationLink: outline-none/focus-visible:ring classes added; upstream reuses buttonVariants' focus treatment directly)"
+          ],
+          "note": "Interaction-state class parity (focus-visible ring, disabled-state styling) fixed against upstream shadcn's new-york-v4 style in M4 task 5.2's first sub-batch (docs/adico/m4-parity-audit.md); full prop-shape/slot composition audit beyond interaction-state classes remains open 5.2 scope."
         },
         "visual": {
           "applicable": true,
@@ -3765,8 +3771,10 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "registry/ui/tabs.rs (TabTrigger: focus-visible:border-ring/ring/outline classes added, matching apps/v4/registry/new-york-v4/ui/tabs.tsx)"
+          ],
+          "note": "Interaction-state class parity (focus-visible ring, disabled-state styling) fixed against upstream shadcn's new-york-v4 style in M4 task 5.2's first sub-batch (docs/adico/m4-parity-audit.md); full prop-shape/slot composition audit beyond interaction-state classes remains open 5.2 scope."
         },
         "visual": {
           "applicable": true,

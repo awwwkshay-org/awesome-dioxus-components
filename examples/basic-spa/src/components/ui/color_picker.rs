@@ -4,13 +4,13 @@
 
 use dioxus::prelude::*;
 
+pub use adico_primitives::color_picker::{
+    Color, ColorPickerContext, AreaThumbSaturationInput, AreaThumbSaturationInputProps,
+    AreaThumbValueInput, AreaThumbValueInputProps,
+};
 use adico_primitives::color_picker::{
     AreaThumb as AreaThumbPrimitive, AreaTrack as AreaTrackPrimitive,
     ColorArea as ColorAreaPrimitive, ColorPicker as ColorPickerPrimitive,
-};
-pub use adico_primitives::color_picker::{
-    AreaThumbSaturationInput, AreaThumbSaturationInputProps, AreaThumbValueInput,
-    AreaThumbValueInputProps, Color, ColorPickerContext,
 };
 
 use crate::adico_lib::cn::cn;
@@ -36,11 +36,7 @@ pub fn ColorPicker(
 
 /// A two-dimensional saturation/value drag surface.
 #[component]
-pub fn ColorArea(
-    #[props(default = 1.0)] step: ReadSignal<f64>,
-    class: Option<String>,
-    children: Element,
-) -> Element {
+pub fn ColorArea(#[props(default = 1.0)] step: ReadSignal<f64>, class: Option<String>, children: Element) -> Element {
     let class = cn(&[
         "relative size-48 touch-none rounded-md border border-input",
         class.as_deref().unwrap_or_default(),
@@ -68,7 +64,7 @@ pub fn AreaTrack(class: Option<String>, children: Element) -> Element {
 #[component]
 pub fn AreaThumb(children: Element) -> Element {
     let class = cn(&[
-        "absolute size-4 -translate-x-1/2 translate-y-1/2 rounded-full border-2 border-white shadow-[0_0_0_1px_rgba(0,0,0,0.3)] outline-none data-[dragging=true]:cursor-grabbing",
+        "absolute size-4 -translate-x-1/2 translate-y-1/2 rounded-full border-2 border-white shadow-[0_0_0_1px_rgba(0,0,0,0.3)] outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[dragging=true]:cursor-grabbing",
         "",
     ]);
     rsx! {

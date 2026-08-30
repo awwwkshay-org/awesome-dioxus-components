@@ -227,7 +227,7 @@
           "source": "ui/pagination.rs",
           "targetRoot": "ui",
           "target": "pagination.rs",
-          "checksum": "aa7a7b0ee49a1b93c4cf86f5ef2de7b25e9333388eecab0764a493f9deb50fe2"
+          "checksum": "0ab017592c966b711de795bd25e9be00f40ba47d61bf3e3ba0efbb77e5e7b125"
         }
       ],
       "registryDependencies": ["cn"],
@@ -488,7 +488,7 @@
           "source": "ui/menubar.rs",
           "targetRoot": "ui",
           "target": "menubar.rs",
-          "checksum": "f2dfe77fead108ddc047539f2a6e88a84993f33781a1acfa55520c29ab7574ac"
+          "checksum": "9f5bf533255914a145c82e6e2779229b2b63a4ed7df32f3e9e9aedc72c67bc2a"
         }
       ],
       "registryDependencies": ["cn"],
@@ -887,7 +887,7 @@
           "source": "ui/accordion.rs",
           "targetRoot": "ui",
           "target": "accordion.rs",
-          "checksum": "2d5a9ea4bfa2883edd07360e8573b946597227e90c39f795e2def96cb268cc7e"
+          "checksum": "5aedab50ddc1675cdabec07017744193f2df89e9a17ce8f0339b2e22a1dcac32"
         }
       ],
       "registryDependencies": ["cn"],
@@ -949,7 +949,7 @@
           "source": "ui/tabs.rs",
           "targetRoot": "ui",
           "target": "tabs.rs",
-          "checksum": "a982299738d090990d8f059c1f0024603f6f7ea769762e9302441b4f9f3bb5d5"
+          "checksum": "155e32acb0cbc8e75cc613a160df929bb93eb42041b19eb7048f8677c3e6ba8b"
         }
       ],
       "registryDependencies": ["cn"],
@@ -1195,7 +1195,7 @@
           "source": "ui/color_picker.rs",
           "targetRoot": "ui",
           "target": "color_picker.rs",
-          "checksum": "024b39109b35965270a20e9f4157a6c93cc217dfed43dfc29bd15b38d6cf7ef9"
+          "checksum": "e160a5485be1ec53a605b11f723ff7c30c9a03ec6c6d6238db86bd87d427e8f4"
         }
       ],
       "registryDependencies": ["cn"],

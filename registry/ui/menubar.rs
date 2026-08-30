@@ -31,7 +31,7 @@ pub fn Menubar(
 #[component]
 pub fn MenubarTrigger(children: Element, class: Option<String>) -> Element {
     let class = cn(&[
-        "flex cursor-default select-none items-center rounded-sm px-3 py-1 text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground",
+        "flex cursor-default select-none items-center rounded-sm px-3 py-1 text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

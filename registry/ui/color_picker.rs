@@ -64,7 +64,7 @@ pub fn AreaTrack(class: Option<String>, children: Element) -> Element {
 #[component]
 pub fn AreaThumb(children: Element) -> Element {
     let class = cn(&[
-        "absolute size-4 -translate-x-1/2 translate-y-1/2 rounded-full border-2 border-white shadow-[0_0_0_1px_rgba(0,0,0,0.3)] outline-none data-[dragging=true]:cursor-grabbing",
+        "absolute size-4 -translate-x-1/2 translate-y-1/2 rounded-full border-2 border-white shadow-[0_0_0_1px_rgba(0,0,0,0.3)] outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[dragging=true]:cursor-grabbing",
         "",
     ]);
     rsx! {

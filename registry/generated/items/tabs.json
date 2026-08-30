@@ -7,7 +7,7 @@
       "source": "ui/tabs.rs",
       "targetRoot": "ui",
       "target": "tabs.rs",
-      "checksum": "a982299738d090990d8f059c1f0024603f6f7ea769762e9302441b4f9f3bb5d5"
+      "checksum": "155e32acb0cbc8e75cc613a160df929bb93eb42041b19eb7048f8677c3e6ba8b"
     }
   ],
   "registryDependencies": [
