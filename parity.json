@@ -7,6 +7,585 @@
     "refreshedAt": "2026-08-24"
   },
   "components": {
+    "accordion": {
+      "status": "in_progress",
+      "registryItem": "@adico/accordion",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/accordion.rs",
+            "tests/installation/wave2-roving-focus-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-roving-focus.spec.ts (\"installed Accordion opens with click, roves focus with ArrowDown, and activates with Enter\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-roving-focus.spec.ts (\"wave2-roving-focus fixture has zero critical accessibility violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-roving-focus-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-roving-focus-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave2-roving-focus.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "alert-dialog": {
+      "status": "in_progress",
+      "registryItem": "@adico/alert-dialog",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/alert_dialog.rs",
+            "tests/installation/wave2-risk-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-risk.spec.ts (\"installed AlertDialog opens via its trigger, closes via Cancel, and closes with Escape\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-risk.spec.ts (\"wave2-risk fixture has zero critical accessibility violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-risk-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-risk-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave2-risk.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "aspect-ratio": {
+      "status": "in_progress",
+      "registryItem": "@adico/aspect-ratio",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/aspect_ratio.rs",
+            "tests/installation/wave2-simple-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": false,
+          "passed": false,
+          "evidence": [],
+          "note": "Pure CSS aspect-ratio wrapper with no interactive surface."
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/aspect_ratio.rs (native HTML semantics)"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-simple-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-simple-consumer (cargo check --target wasm32-unknown-unknown)"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/desktop was removed by the consolidate-examples change (2026-08-30); native desktop-target build validation has no fixture and is a named, tracked gap, not a silent regression."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "avatar": {
+      "status": "in_progress",
+      "registryItem": "@adico/avatar",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/avatar.rs",
+            "tests/installation/wave2-state-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": false,
+          "passed": false,
+          "evidence": [],
+          "note": "Image-load-state display with no interactive role or focusable surface."
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-state.spec.ts (\"wave2-state fixture has zero critical accessibility violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-state-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-state-consumer (real dx serve --platform web run)"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "badge": {
+      "status": "in_progress",
+      "registryItem": "@adico/badge",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/badge.rs",
+            "tests/installation/wave1-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": false,
+          "passed": false,
+          "evidence": [],
+          "note": "Decorative label with no interactive role or focusable surface."
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/badge.rs (native HTML semantics)"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave1-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave1-consumer (cargo check --target wasm32-unknown-unknown)"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/desktop was removed by the consolidate-examples change (2026-08-30); native desktop-target build validation has no fixture and is a named, tracked gap, not a silent regression."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
     "button": {
       "status": "in_progress",
       "registryItem": "@adico/button",
@@ -120,6 +699,826 @@
             "examples/basic-ssr (server-feature and web-feature builds both succeed)",
             "tests/playwright/fullstack.spec.ts"
           ]
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "calendar": {
+      "status": "in_progress",
+      "registryItem": "@adico/calendar",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/calendar.rs",
+            "tests/installation/wave4-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave4.spec.ts (\"installed Calendar navigates and selects dates with arrow keys\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave4.spec.ts (\"installed Wave 4 collection components have no critical axe violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave4-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project",
+            "tests/installation/wave4-consumer (installs dioxus-icons and time via adico add)"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave4-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave4.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave4-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "card": {
+      "status": "in_progress",
+      "registryItem": "@adico/card",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/card.rs",
+            "tests/installation/wave1-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": false,
+          "passed": false,
+          "evidence": [],
+          "note": "Structural layout container; interactive content (e.g. buttons) is covered by its own registry item."
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/card.rs (native HTML semantics)"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave1-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave1-consumer (cargo check --target wasm32-unknown-unknown)"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/desktop was removed by the consolidate-examples change (2026-08-30); native desktop-target build validation has no fixture and is a named, tracked gap, not a silent regression."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "checkbox": {
+      "status": "in_progress",
+      "registryItem": "@adico/checkbox",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/checkbox.rs",
+            "tests/installation/wave2-state-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-state.spec.ts (\"installed Checkbox toggles on click and Space with correct ARIA state\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-state.spec.ts (\"wave2-state fixture has zero critical accessibility violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-state-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-state-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave2-state.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "collapsible": {
+      "status": "in_progress",
+      "registryItem": "@adico/collapsible",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/collapsible.rs",
+            "tests/installation/wave2-state-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-state.spec.ts (\"installed Collapsible expands and collapses via its trigger\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-state.spec.ts (\"wave2-state fixture has zero critical accessibility violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-state-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-state-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave2-state.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "combobox": {
+      "status": "in_progress",
+      "registryItem": "@adico/combobox",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/combobox.rs",
+            "tests/installation/wave4-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave4.spec.ts (\"installed Combobox filters by typeahead and selects with the keyboard\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave4.spec.ts (\"installed Wave 4 collection components have no critical axe violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave4-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project",
+            "tests/installation/wave4-consumer (installs dioxus-icons via adico add)"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave4-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave4.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave4-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "context-menu": {
+      "status": "in_progress",
+      "registryItem": "@adico/context-menu",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/context_menu.rs",
+            "tests/installation/wave3-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave3.spec.ts (\"installed ContextMenu opens on right-click, navigates by keyboard, and closes with Escape\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave3.spec.ts (\"installed Wave 3 overlays have no critical axe violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave3-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave3-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave3.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "date-picker": {
+      "status": "in_progress",
+      "registryItem": "@adico/date-picker",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/date_picker.rs",
+            "tests/installation/wave4-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave4.spec.ts (\"installed DatePicker opens a Calendar inside its popover\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave4.spec.ts (\"installed Wave 4 collection components have no critical axe violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave4-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project",
+            "tests/installation/wave4-consumer (installs dioxus-icons and time via adico add)"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave4-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave4.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave4-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
         },
         "docs": {
           "applicable": true,
@@ -251,6 +1650,1285 @@
         }
       }
     },
+    "dropdown-menu": {
+      "status": "in_progress",
+      "registryItem": "@adico/dropdown-menu",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/dropdown_menu.rs",
+            "tests/installation/wave3-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave3.spec.ts (\"installed DropdownMenu opens with roving-focus keyboard navigation and closes on selection\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave3.spec.ts (\"installed Wave 3 overlays have no critical axe violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave3-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave3-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave3.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "hover-card": {
+      "status": "in_progress",
+      "registryItem": "@adico/hover-card",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/hover_card.rs",
+            "tests/installation/wave3-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave3.spec.ts (\"installed HoverCard shows on hover and hides on mouse leave\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave3.spec.ts (\"installed Wave 3 overlays have no critical axe violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave3-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave3-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave3.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "input": {
+      "status": "in_progress",
+      "registryItem": "@adico/input",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/input.rs",
+            "tests/installation/wave1-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/input.rs (native HTML element semantics; no custom keyboard handling)"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/input.rs (native HTML semantics)"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave1-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave1-consumer (cargo check --target wasm32-unknown-unknown)"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/desktop was removed by the consolidate-examples change (2026-08-30); native desktop-target build validation has no fixture and is a named, tracked gap, not a silent regression."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "item": {
+      "status": "in_progress",
+      "registryItem": "@adico/item",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/item.rs",
+            "tests/installation/wave1-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "registry/ui/item.rs's Interactive variant sets tabindex=0 and onclick but has no onkeydown handler, so a plain <div> cannot be activated with Enter/Space by keyboard users even though it is focusable \u2014 a real, found-by-reading-source gap, not yet fixed."
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/item.rs (native HTML semantics)"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave1-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave1-consumer (cargo check --target wasm32-unknown-unknown)"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/desktop was removed by the consolidate-examples change (2026-08-30); native desktop-target build validation has no fixture and is a named, tracked gap, not a silent regression."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "label": {
+      "status": "in_progress",
+      "registryItem": "@adico/label",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/label.rs",
+            "tests/installation/wave2-simple-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": false,
+          "passed": false,
+          "evidence": [],
+          "note": "A <label> proxies focus/activation to its associated control; it has no independent keyboard surface of its own."
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/label.rs (native HTML semantics)"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-simple-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-simple-consumer (cargo check --target wasm32-unknown-unknown)"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/desktop was removed by the consolidate-examples change (2026-08-30); native desktop-target build validation has no fixture and is a named, tracked gap, not a silent regression."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "menubar": {
+      "status": "in_progress",
+      "registryItem": "@adico/menubar",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/menubar.rs",
+            "tests/installation/wave3-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave3.spec.ts (\"installed Menubar opens a menu on click and selects an item\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave3.spec.ts (\"installed Wave 3 overlays have no critical axe violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave3-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave3-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave3.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "pagination": {
+      "status": "in_progress",
+      "registryItem": "@adico/pagination",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/pagination.rs",
+            "tests/installation/wave1-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/pagination.rs (native HTML element semantics; no custom keyboard handling)"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/pagination.rs (native HTML semantics)"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave1-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave1-consumer (cargo check --target wasm32-unknown-unknown)"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/desktop was removed by the consolidate-examples change (2026-08-30); native desktop-target build validation has no fixture and is a named, tracked gap, not a silent regression."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "popover": {
+      "status": "in_progress",
+      "registryItem": "@adico/popover",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/popover.rs",
+            "tests/installation/wave3-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave3.spec.ts (\"installed Popover opens on click, exposes dialog semantics, and closes with Escape\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave3.spec.ts (\"installed Wave 3 overlays have no critical axe violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave3-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave3-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave3.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "progress": {
+      "status": "in_progress",
+      "registryItem": "@adico/progress",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/progress.rs",
+            "tests/installation/wave2-simple-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": false,
+          "passed": false,
+          "evidence": [],
+          "note": "Non-interactive ARIA progressbar display with no focusable surface."
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/progress.rs (native HTML semantics)"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-simple-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-simple-consumer (cargo check --target wasm32-unknown-unknown)"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/desktop was removed by the consolidate-examples change (2026-08-30); native desktop-target build validation has no fixture and is a named, tracked gap, not a silent regression."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "radio-group": {
+      "status": "in_progress",
+      "registryItem": "@adico/radio-group",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/radio-group.rs",
+            "tests/installation/wave2-roving-focus-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-roving-focus.spec.ts (\"installed RadioGroup roves focus and selects with ArrowDown\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-roving-focus.spec.ts (\"wave2-roving-focus fixture has zero critical accessibility violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-roving-focus-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-roving-focus-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave2-roving-focus.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "scroll-area": {
+      "status": "in_progress",
+      "registryItem": "@adico/scroll-area",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/scroll_area.rs",
+            "tests/installation/wave2-risk-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-risk.spec.ts (\"installed ScrollArea scrolls its content\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-risk.spec.ts (\"wave2-risk fixture has zero critical accessibility violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-risk-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-risk-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave2-risk.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
     "select": {
       "status": "in_progress",
       "registryItem": "@adico/select",
@@ -364,6 +3042,1287 @@
             "examples/basic-ssr (server-feature and web-feature builds both succeed)",
             "tests/playwright/fullstack.spec.ts"
           ]
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "sheet": {
+      "status": "in_progress",
+      "registryItem": "@adico/sheet",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/sheet.rs",
+            "tests/installation/wave1-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Sheet composes the owned dialog primitive's Escape/focus-trap behavior, but unlike Dialog (tests/playwright/dialog.spec.ts) it has no dedicated Playwright spec \u2014 its own composition has not been independently re-verified. Tracked gap, matching the Wave 1 no-dedicated-spec precedent recorded in docs/adico/m3-wave1-migration.md."
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No dedicated Playwright/axe coverage exists for Sheet; relies on the shared Dialog primitive's ARIA semantics, unverified for Sheet's own slide-in composition. Tracked gap."
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave1-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave1-consumer (cargo check --target wasm32-unknown-unknown)"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave1-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "sidebar": {
+      "status": "in_progress",
+      "registryItem": "@adico/sidebar",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/sidebar.rs",
+            "tests/installation/wave4-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave4.spec.ts (\"installed Sidebar toggles open/closed state from its trigger\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave4.spec.ts (\"installed Wave 4 collection components have no critical axe violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave4-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave4-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave4.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave4-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "skeleton": {
+      "status": "in_progress",
+      "registryItem": "@adico/skeleton",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/skeleton.rs",
+            "tests/installation/wave1-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": false,
+          "passed": false,
+          "evidence": [],
+          "note": "Non-interactive loading placeholder with no focusable surface."
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/skeleton.rs (native HTML semantics)"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave1-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave1-consumer (cargo check --target wasm32-unknown-unknown)"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/desktop was removed by the consolidate-examples change (2026-08-30); native desktop-target build validation has no fixture and is a named, tracked gap, not a silent regression."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "slider": {
+      "status": "in_progress",
+      "registryItem": "@adico/slider",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/slider.rs",
+            "tests/installation/wave2-risk-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-risk.spec.ts (\"installed Slider moves value with arrow keys\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-risk.spec.ts (\"wave2-risk fixture has zero critical accessibility violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-risk-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-risk-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave2-risk.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but Slider's pointer-drag path uses web-only pointer capture; desktop pointer-capture behavior is explicitly unverified, per the Wave 2 migration queue's own noted risk. No consumer-app desktop-target fixture exists either (examples/desktop was removed by the consolidate-examples change, 2026-08-30)."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "switch": {
+      "status": "in_progress",
+      "registryItem": "@adico/switch",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/switch.rs",
+            "tests/installation/wave2-state-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-state.spec.ts (\"installed Switch toggles on click and Space with correct ARIA state\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-state.spec.ts (\"wave2-state fixture has zero critical accessibility violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-state-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-state-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave2-state.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "tabs": {
+      "status": "in_progress",
+      "registryItem": "@adico/tabs",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/tabs.rs",
+            "tests/installation/wave2-roving-focus-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-roving-focus.spec.ts (\"installed Tabs roves focus with ArrowDown without switching, then activates with Enter\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-roving-focus.spec.ts (\"wave2-roving-focus fixture has zero critical accessibility violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-roving-focus-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-roving-focus-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave2-roving-focus.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "textarea": {
+      "status": "in_progress",
+      "registryItem": "@adico/textarea",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/textarea.rs",
+            "tests/installation/wave1-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/textarea.rs (native HTML element semantics; no custom keyboard handling)"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/textarea.rs (native HTML semantics)"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave1-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave1-consumer (cargo check --target wasm32-unknown-unknown)"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/desktop was removed by the consolidate-examples change (2026-08-30); native desktop-target build validation has no fixture and is a named, tracked gap, not a silent regression."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "toast": {
+      "status": "in_progress",
+      "registryItem": "@adico/toast",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/toast.rs",
+            "tests/installation/wave2-risk-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-risk.spec.ts (\"installed Toast appears after use_toast().info(...)\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-risk.spec.ts (\"wave2-risk fixture has zero critical accessibility violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-risk-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-risk-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave2-risk.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "toggle": {
+      "status": "in_progress",
+      "registryItem": "@adico/toggle",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/toggle.rs",
+            "tests/installation/wave2-state-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-state.spec.ts (\"installed Toggle toggles pressed state on click\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-state.spec.ts (\"wave2-state fixture has zero critical accessibility violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-state-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-state-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave2-state.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "toggle-group": {
+      "status": "in_progress",
+      "registryItem": "@adico/toggle-group",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/toggle-group.rs",
+            "tests/installation/wave2-roving-focus-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-roving-focus.spec.ts (\"installed ToggleGroup roves focus with ArrowRight and toggles pressed state radio-style\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave2-roving-focus.spec.ts (\"wave2-roving-focus fixture has zero critical accessibility violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-roving-focus-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave2-roving-focus-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave2-roving-focus.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
+        },
+        "docs": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dedicated docs page is M4/M10 scope (task 5.5, task 11.5)."
+        }
+      }
+    },
+    "tooltip": {
+      "status": "in_progress",
+      "registryItem": "@adico/tooltip",
+      "dimensions": {
+        "source": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "registry/ui/tooltip.rs",
+            "tests/installation/wave3-consumer"
+          ]
+        },
+        "api": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+        },
+        "visual": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+        },
+        "variants": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Variant parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "states": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+        },
+        "keyboard": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave3.spec.ts (\"installed Tooltip shows on hover with ARIA association and hides on mouse leave\")"
+          ]
+        },
+        "accessibility": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/playwright/wave3.spec.ts (\"installed Wave 3 overlays have no critical axe violations\")"
+          ]
+        },
+        "darkMode": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Dark-mode token audit is M4 scope (task 5.3)."
+        },
+        "rtl": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "RTL audit is M4 scope (task 5.3)."
+        },
+        "responsive": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "Responsive-layout audit is M4 scope (task 5.3)."
+        },
+        "examples": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-spa and examples/basic-ssr only cover the original vertical slice (button/dialog/select); broader coverage is task 4.8."
+        },
+        "cli": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave3-consumer"
+          ]
+        },
+        "cargo": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "packages/adico-cli/src/cargo.rs (unit tests)",
+            "packages/adico-cli/tests/cli_integration.rs::cargo_dependency_conflict_reports_without_mutating_project"
+          ]
+        },
+        "web": {
+          "applicable": true,
+          "passed": true,
+          "evidence": [
+            "tests/installation/wave3-consumer (real dx serve --platform web run)",
+            "tests/playwright/wave3.spec.ts"
+          ]
+        },
+        "desktop": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+        },
+        "ssrHydration": {
+          "applicable": true,
+          "passed": false,
+          "evidence": [],
+          "note": "examples/basic-ssr only covers the original vertical slice (button/dialog/select); no SSR/hydration fixture exists for this item. Broader coverage is task 4.8."
         },
         "docs": {
           "applicable": true,
