@@ -1,0 +1,57 @@
+{
+  "name": "progress",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Progress bar for Dioxus, backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/progress.rs",
+      "targetRoot": "ui",
+      "target": "progress.rs",
+      "checksum": "17984eaeb1ddfa193b546c14d6882b2feffc6aefdcdf57f84b0cc418377b192a"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": false,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "progress",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "progress",
+    "compositionNote": "Styled facade over the owned ARIA progressbar primitive. The indicator's fill width is CSS-transform-driven from the primitive's --progress-value custom property; a `None` value renders a zero-filled indeterminate bar rather than upstream's unstyled indeterminate state, since animated indeterminate styling is M4's job."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave2-simple.json",
+    "revision": null
+  }
+}

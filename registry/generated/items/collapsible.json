@@ -1,0 +1,53 @@
+{
+  "name": "collapsible",
+  "type": "registry:ui",
+  "description": "A source-owned Collapsible for Dioxus, backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/collapsible.rs",
+      "targetRoot": "ui",
+      "target": "collapsible.rs",
+      "checksum": "9e5983ccab481bcf769a2bc772cabc7d9c5244c9e8131729ba39180bdfc762e7"
+    }
+  ],
+  "registryDependencies": [],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": false,
+    "radiusToken": false,
+    "utilities": []
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "collapsible",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "collapsible",
+    "compositionNote": "A pure re-export of the owned Collapsible/CollapsibleContent/CollapsibleTrigger primitive: upstream ships it unstyled, matching shadcn's own unstyled Collapsible -- layout is left to consumer composition."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave2-state.json",
+    "revision": null
+  }
+}

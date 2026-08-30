@@ -1,0 +1,57 @@
+{
+  "name": "radio-group",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Radio Group for Dioxus, backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/radio_group.rs",
+      "targetRoot": "ui",
+      "target": "radio_group.rs",
+      "checksum": "5d2d5a1e4a2ed4f525e1b7e0ae84646c563d1568333cd95ca45952f3576e9170"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "radio_group",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "radio-group",
+    "compositionNote": "Styled facade over the owned roving-focus radio primitive (reuses the collection infrastructure already imported for Select), with a CSS-only checked indicator dot."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave2-roving-focus.json",
+    "revision": null
+  }
+}

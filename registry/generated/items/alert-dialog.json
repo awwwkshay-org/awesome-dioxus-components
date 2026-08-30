@@ -1,0 +1,60 @@
+{
+  "name": "alert-dialog",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Alert Dialog composition for Dioxus.",
+  "files": [
+    {
+      "source": "ui/alert_dialog.rs",
+      "targetRoot": "ui",
+      "target": "alert_dialog.rs",
+      "checksum": "dc9ccb370a05345b2976f1ed76617d6f97c81f78df6fcd72d3f83179ead43aff"
+    }
+  ],
+  "registryDependencies": [
+    "cn",
+    "button"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "alert_dialog",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "alert-dialog",
+    "compositionNote": "The public copied API remains compositional; focus-trap handling is delegated to the same shared internals the installed Dialog uses. AlertDialogTrigger (composing the installed Button, matching DialogTrigger) is nested inside AlertDialog so the root-level Escape handler reliably receives keyboard events; Escape is handled on AlertDialogRoot itself, the same working position DialogRoot uses. Unlike Dialog, no outside-dismiss listener is installed, matching the WAI-ARIA alertdialog pattern's requirement that only an explicit action can close it."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave2-risk.json",
+    "revision": null
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "name": "checkbox",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Checkbox for Dioxus, backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/checkbox.rs",
+      "targetRoot": "ui",
+      "target": "checkbox.rs",
+      "checksum": "a11d8d873023f4d0fd24abce70cf86c7af813ed3e7323fc8abaf65582c2d94e6"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "checkbox",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "checkbox",
+    "compositionNote": "Styled facade over the owned keyboard/ARIA checkbox primitive (checked/indeterminate/unchecked), with a Lucide Check indicator. Requires the web feature since the primitive's hidden bubble input needs the browser DOM to sync indeterminate state."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave2-state.json",
+    "revision": null
+  }
+}

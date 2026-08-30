@@ -1,0 +1,59 @@
+{
+  "name": "toast",
+  "type": "registry:ui",
+  "description": "A source-owned Toast notification system for Dioxus, backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/toast.rs",
+      "targetRoot": "ui",
+      "target": "toast.rs",
+      "checksum": "6768aa3c3532bf3b68f3076e3f80a93bb8f600005cb11ad39a578f256e746c91"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": false,
+    "radiusToken": false,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "toast",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "toast",
+    "compositionNote": "Only the toast region's fixed viewport placement is styled by default (structural, not cosmetic); individual toast cards keep the primitive's own unstyled composition, matching this registry's existing many-parts-unstyled precedent for Select/Combobox. A full default visual style for Toast itself is M4's job."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave2-risk.json",
+    "revision": null
+  }
+}

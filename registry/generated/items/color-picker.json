@@ -1,0 +1,65 @@
+{
+  "name": "color-picker",
+  "type": "registry:ui",
+  "description": "A source-owned Dioxus-only Color Picker component for Dioxus (no shadcn equivalent), backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/color_picker.rs",
+      "targetRoot": "ui",
+      "target": "color_picker.rs",
+      "checksum": "024b39109b35965270a20e9f4157a6c93cc217dfed43dfc29bd15b38d6cf7ef9"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "palette",
+      "package": null,
+      "version": "0.7.6",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": false,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "color_picker",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "color-picker",
+    "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` in upstreams/dioxus-components/inventory.md and excluded from shadcn parity tracking. HSV saturation/value drag surface with keyboard arrow-key navigation and accessible per-axis range inputs (AreaThumbSaturationInput/AreaThumbValueInput). The M3 migration queue's dependency note said this item composes label/popover/slider; reading the actual upstream primitive source found it only depends on the already-owned move_interaction/pointer modules (reused unmodified from Wave 2's Slider import), not those three registry items -- a real correction recorded per the M1 lesson to verify against source, not the queue's one-line notes. Requires the `palette` crate directly (matching upstream's own public HSV color type in its props), same as any upstream consumer."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave5-extras.json",
+    "revision": null
+  }
+}

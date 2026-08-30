@@ -1,0 +1,53 @@
+{
+  "name": "scroll-area",
+  "type": "registry:ui",
+  "description": "A source-owned custom-scrollbar Scroll Area for Dioxus, backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/scroll_area.rs",
+      "targetRoot": "ui",
+      "target": "scroll_area.rs",
+      "checksum": "d88f6e42d6e36e86df6ae4a943bbac82ff164853ea255c7c71528d6b32b09807"
+    }
+  ],
+  "registryDependencies": [],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": false,
+    "radiusToken": false,
+    "utilities": []
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "scroll_area",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "scroll-area",
+    "compositionNote": "A pure re-export of the owned ScrollArea primitive: pure CSS overflow/scrollbar-width styling with no visual language to compose, matching upstream's own unstyled behavior."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave2-risk.json",
+    "revision": null
+  }
+}

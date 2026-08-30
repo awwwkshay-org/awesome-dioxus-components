@@ -1,0 +1,57 @@
+{
+  "name": "tag-group",
+  "type": "registry:ui",
+  "description": "A source-owned Dioxus-only Tag Group component for Dioxus (no shadcn equivalent), backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/tag_group.rs",
+      "targetRoot": "ui",
+      "target": "tag_group.rs",
+      "checksum": "756d29188520956b09e32279d48a6eef623226dfb29319223ca359e6f547929b"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "tag_group",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "tag-group",
+    "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` in upstreams/dioxus-components/inventory.md and excluded from shadcn parity tracking. Grouped multi-select tag input reusing the roving-focus collection infrastructure already imported for Select; no document::eval, portal, or DOM measurement API, so it is SSR-safe by construction."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave5-extras.json",
+    "revision": null
+  }
+}

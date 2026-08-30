@@ -1,0 +1,59 @@
+{
+  "name": "avatar",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Avatar for Dioxus, backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/avatar.rs",
+      "targetRoot": "ui",
+      "target": "avatar.rs",
+      "checksum": "899ff08b867224c6be6830defabf812ccdd1c5b3615963e8105e7762b2c1ba23"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "avatar",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "avatar",
+    "compositionNote": "Styled facade over the owned image-load-state primitive: Avatar/AvatarImage/AvatarFallback. AvatarImage stops rendering on error so an installed AvatarFallback (bg-muted) takes over automatically."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave2-state.json",
+    "revision": null
+  }
+}

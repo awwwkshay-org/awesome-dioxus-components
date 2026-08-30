@@ -1,0 +1,57 @@
+{
+  "name": "tabs",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Tabs for Dioxus, backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/tabs.rs",
+      "targetRoot": "ui",
+      "target": "tabs.rs",
+      "checksum": "a982299738d090990d8f059c1f0024603f6f7ea769762e9302441b4f9f3bb5d5"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "tabs",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "tabs",
+    "compositionNote": "Styled facade over the owned roving-focus tab-list primitive (reuses the collection infrastructure already imported for Select), matching shadcn's Tabs."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave2-roving-focus.json",
+    "revision": null
+  }
+}

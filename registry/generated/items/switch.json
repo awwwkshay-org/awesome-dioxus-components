@@ -1,0 +1,57 @@
+{
+  "name": "switch",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Switch for Dioxus, backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/switch.rs",
+      "targetRoot": "ui",
+      "target": "switch.rs",
+      "checksum": "b07d8edd799c36266a2297081f73c52f5c0cb352aae335a6869551fb49bd188d"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": false,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "switch",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "switch",
+    "compositionNote": "Styled facade over the owned keyboard/ARIA switch primitive, composing SwitchThumb with a translate-x thumb animation driven by data-state."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave2-state.json",
+    "revision": null
+  }
+}

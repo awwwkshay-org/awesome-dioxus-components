@@ -1,0 +1,57 @@
+{
+  "name": "toggle",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Toggle for Dioxus, backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/toggle.rs",
+      "targetRoot": "ui",
+      "target": "toggle.rs",
+      "checksum": "47895f52c67eaa790ffde588b6b1607ff781b7e931d7a83d8ae139d1c7958871"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "toggle",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "toggle",
+    "compositionNote": "Styled facade over the owned pressed-state ARIA button primitive, with sm/default/lg size variants matching shadcn's Toggle."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave2-state.json",
+    "revision": null
+  }
+}

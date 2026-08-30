@@ -1,0 +1,53 @@
+{
+  "name": "virtual-list",
+  "type": "registry:ui",
+  "description": "A source-owned Dioxus-only VirtualList component for Dioxus (no shadcn equivalent), backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/virtual_list.rs",
+      "targetRoot": "ui",
+      "target": "virtual_list.rs",
+      "checksum": "4a4fb6accb44a6487d29148c7ef15a25e6b143a3154e91014a1ecc7ebd161507"
+    }
+  ],
+  "registryDependencies": [],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": false,
+    "radiusToken": false,
+    "utilities": []
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "virtual_list",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "virtual-list",
+    "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` in upstreams/dioxus-components/inventory.md and excluded from shadcn parity tracking. Pure re-export: upstream ships it unstyled, list-item content is entirely caller-composed, and the caller must give the container a bounded height (for example `style: \"height: 300px; overflow-y: auto;\"`) or the viewport measurement equals the full content height and nothing is virtualized. Its scroll/resize bridge uses native `onscroll`/`onmounted` element queries (no `web`/`desktop` feature gate needed, unlike other overlay primitives) after live browser testing found upstream's own `document::eval`-based bridge never registers in this Dioxus 0.7.9/0.7.10 web runtime -- see provenance. On a renderer without `onscroll`/`onmounted` support (native/server) it renders zero items rather than failing to build -- a documented, explicit target-support skip, not silent, until a proper observer-bridge primitive exists (M6 territory)."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave5-extras.json",
+    "revision": null
+  }
+}

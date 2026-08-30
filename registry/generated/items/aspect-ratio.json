@@ -1,0 +1,53 @@
+{
+  "name": "aspect-ratio",
+  "type": "registry:ui",
+  "description": "A source-owned CSS aspect-ratio wrapper for Dioxus, backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/aspect_ratio.rs",
+      "targetRoot": "ui",
+      "target": "aspect_ratio.rs",
+      "checksum": "8c30c1f65934f5bac2baa602132710b450b3308b49320826b5abd7ba6c10c039"
+    }
+  ],
+  "registryDependencies": [],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": false,
+    "radiusToken": false,
+    "utilities": []
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "aspect_ratio",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "aspect-ratio",
+    "compositionNote": "A pure re-export of the owned AspectRatio primitive: a CSS padding-bottom ratio wrapper with no visual styling to compose, matching upstream's own unstyled behavior."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave2-simple.json",
+    "revision": null
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "name": "slider",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Slider for Dioxus, backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/slider.rs",
+      "targetRoot": "ui",
+      "target": "slider.rs",
+      "checksum": "682a9fc459b1a4a0aa6b5153716b2e0a9a084410a42e6f8af890f5fa6b00a922"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "slider",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "slider",
+    "compositionNote": "Styled facade over the owned pointer-drag/keyboard value primitive. Pointer-drag interaction depends on the web feature (pointer tracking is a no-op on the native default); keyboard arrow-key interaction works on every target. Desktop pointer-capture behavior is compiled but not independently verified against a real desktop WebView, a named and recorded gap."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave2-risk.json",
+    "revision": null
+  }
+}

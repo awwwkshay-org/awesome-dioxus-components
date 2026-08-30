@@ -1,0 +1,57 @@
+{
+  "name": "toolbar",
+  "type": "registry:ui",
+  "description": "A source-owned Dioxus-only Toolbar component for Dioxus (no shadcn equivalent), backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/toolbar.rs",
+      "targetRoot": "ui",
+      "target": "toolbar.rs",
+      "checksum": "db1937b43c1b6b447f292a83f4b121e74b93a101421ec67a8e767177ba9a98e6"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "toolbar",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "toolbar",
+    "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` in upstreams/dioxus-components/inventory.md and excluded from shadcn parity tracking. Roving-focus button/separator container, similar shape to Menubar without layered popups. No document::eval or DOM measurement, SSR-safe by construction."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave5-extras.json",
+    "revision": null
+  }
+}

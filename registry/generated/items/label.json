@@ -1,0 +1,57 @@
+{
+  "name": "label",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Label for Dioxus, backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/label.rs",
+      "targetRoot": "ui",
+      "target": "label.rs",
+      "checksum": "c39474fff2df114cfb9fde2a3350ef4eb0baeb00e4e857cbea945f0796713e5f"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": false,
+    "radiusToken": false,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "label",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "label",
+    "compositionNote": "Styled facade over the owned `for`/`id` association primitive. Composes with any installed form control via matching `html_for`/`id` values."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave2-simple.json",
+    "revision": null
+  }
+}

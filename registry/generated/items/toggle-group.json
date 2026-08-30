@@ -1,0 +1,57 @@
+{
+  "name": "toggle-group",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Toggle Group for Dioxus, backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/toggle_group.rs",
+      "targetRoot": "ui",
+      "target": "toggle_group.rs",
+      "checksum": "c83cfb2ba597137d16cfb01a363bd0cc0cb1eb58b8dd8847c9fd884a8bbd0c7d"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "toggle_group",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "toggle-group",
+    "compositionNote": "Styled facade over the owned roving-focus toggle-group primitive (reuses the collection infrastructure already imported for Select and composes the owned Toggle primitive directly), matching shadcn's Toggle Group."
+  },
+  "compatibility": null,
+  "provenance": {
+    "record": "provenance/records/adico-primitives-wave2-roving-focus.json",
+    "revision": null
+  }
+}
