@@ -23,7 +23,12 @@ test("installed ThemeSwitcher recolors --primary when a palette is selected", as
 
 test("installed ThemeSwitcher has zero critical accessibility violations", async ({ page }) => {
   await page.goto("/");
-  const results = await new AxeBuilder({ page }).analyze();
+  // Scoped to the component's own container (`#theme-switcher-demo`), not
+  // the whole page -- see the matching comment in mode-toggle.spec.ts for
+  // why: examples/basic-spa and examples/basic-ssr render this alongside
+  // every other migrated registry item, and a page-wide scan would surface
+  // unrelated pre-existing issues elsewhere as false failures here.
+  const results = await new AxeBuilder({ page }).include("#theme-switcher-demo").analyze();
   const critical = results.violations.filter((violation) => violation.impact === "critical");
   expect(critical).toEqual([]);
 });

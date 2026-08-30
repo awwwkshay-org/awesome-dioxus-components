@@ -3,8 +3,8 @@ use dioxus::prelude::*;
 fn app() -> Element {
     rsx! {
         main { class: "flex items-center gap-4 p-6",
-            components::ui::ModeToggle {}
-            components::ui::ThemeSwitcher {}
+            div { id: "mode-toggle-demo", components::ui::ModeToggle {} }
+            div { id: "theme-switcher-demo", components::ui::ThemeSwitcher {} }
         }
     }
 }

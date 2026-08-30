@@ -27,6 +27,8 @@ version = "0.1.0"
 dependencies = [
  "adico-primitives",
  "dioxus",
+ "palette",
+ "time",
  "web-sys",
 ]
 
@@ -36,6 +38,8 @@ version = "0.1.0"
 dependencies = [
  "adico-primitives",
  "dioxus",
+ "palette",
+ "time",
 ]
 
 [[package]]

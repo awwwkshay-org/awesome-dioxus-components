@@ -36,7 +36,12 @@ test("installed ModeToggle persists the selected mode across reloads", async ({ 
 
 test("installed ModeToggle has zero critical accessibility violations", async ({ page }) => {
   await page.goto("/");
-  const results = await new AxeBuilder({ page }).analyze();
+  // Scoped to the component's own container (`#mode-toggle-demo`), not the
+  // whole page: examples/basic-spa and examples/basic-ssr render ModeToggle
+  // alongside every other migrated registry item on one demo page, and a
+  // page-wide scan would surface unrelated pre-existing issues elsewhere on
+  // that page (e.g. a Tabs aria-controls defect) as false failures here.
+  const results = await new AxeBuilder({ page }).include("#mode-toggle-demo").analyze();
   const critical = results.violations.filter((violation) => violation.impact === "critical");
   expect(critical).toEqual([]);
 });
