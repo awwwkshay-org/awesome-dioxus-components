@@ -6,10 +6,13 @@
 use dioxus::prelude::*;
 
 use crate::pages::{
-    BadgePage, ButtonPage, CalendarPage, CardPage, ComboboxPage, ContextMenuPage, DatePickerPage,
-    DialogPage, DropdownMenuPage, Home, HoverCardPage, InputPage, ItemPage, MenubarPage,
-    PaginationPage, PopoverPage, SelectPage, SheetPage, SidebarPage, SkeletonPage, TextareaPage,
-    TooltipPage,
+    AccordionPage, AlertDialogPage, AspectRatioPage, AvatarPage, BadgePage, ButtonPage,
+    CalendarPage, CardPage, CheckboxPage, CollapsiblePage, ColorPickerPage, ComboboxPage,
+    ContextMenuPage, DatePickerPage, DialogPage, DragAndDropListPage, DropdownMenuPage, Home,
+    HoverCardPage, InputPage, ItemPage, LabelPage, MenubarPage, ModeTogglePage, PaginationPage,
+    PopoverPage, ProgressPage, RadioGroupPage, ScrollAreaPage, SelectPage, SheetPage, SidebarPage,
+    SkeletonPage, SliderPage, SwitchPage, TabsPage, TagGroupPage, TextareaPage, ThemeSwitcherPage,
+    ToastPage, ToggleGroupPage, TogglePage, ToolbarPage, TooltipPage, VirtualListPage,
 };
 use crate::theme::{ThemeLauncher, ThemeModal, ThemeSelection};
 
@@ -62,6 +65,52 @@ pub enum Route {
     DatePickerPage {},
     #[route("/sidebar")]
     SidebarPage {},
+    #[route("/accordion")]
+    AccordionPage {},
+    #[route("/alert-dialog")]
+    AlertDialogPage {},
+    #[route("/aspect-ratio")]
+    AspectRatioPage {},
+    #[route("/avatar")]
+    AvatarPage {},
+    #[route("/checkbox")]
+    CheckboxPage {},
+    #[route("/collapsible")]
+    CollapsiblePage {},
+    #[route("/color-picker")]
+    ColorPickerPage {},
+    #[route("/drag-and-drop-list")]
+    DragAndDropListPage {},
+    #[route("/label")]
+    LabelPage {},
+    #[route("/mode-toggle")]
+    ModeTogglePage {},
+    #[route("/progress")]
+    ProgressPage {},
+    #[route("/radio-group")]
+    RadioGroupPage {},
+    #[route("/scroll-area")]
+    ScrollAreaPage {},
+    #[route("/slider")]
+    SliderPage {},
+    #[route("/switch")]
+    SwitchPage {},
+    #[route("/tabs")]
+    TabsPage {},
+    #[route("/tag-group")]
+    TagGroupPage {},
+    #[route("/theme-switcher")]
+    ThemeSwitcherPage {},
+    #[route("/toast")]
+    ToastPage {},
+    #[route("/toggle")]
+    TogglePage {},
+    #[route("/toggle-group")]
+    ToggleGroupPage {},
+    #[route("/toolbar")]
+    ToolbarPage {},
+    #[route("/virtual-list")]
+    VirtualListPage {},
 }
 
 pub fn nav_items() -> Vec<(&'static str, Route)> {
@@ -87,6 +136,29 @@ pub fn nav_items() -> Vec<(&'static str, Route)> {
         ("Calendar", Route::CalendarPage {}),
         ("DatePicker", Route::DatePickerPage {}),
         ("Sidebar", Route::SidebarPage {}),
+        ("Accordion", Route::AccordionPage {}),
+        ("AlertDialog", Route::AlertDialogPage {}),
+        ("AspectRatio", Route::AspectRatioPage {}),
+        ("Avatar", Route::AvatarPage {}),
+        ("Checkbox", Route::CheckboxPage {}),
+        ("Collapsible", Route::CollapsiblePage {}),
+        ("ColorPicker", Route::ColorPickerPage {}),
+        ("DragAndDropList", Route::DragAndDropListPage {}),
+        ("Label", Route::LabelPage {}),
+        ("ModeToggle", Route::ModeTogglePage {}),
+        ("Progress", Route::ProgressPage {}),
+        ("RadioGroup", Route::RadioGroupPage {}),
+        ("ScrollArea", Route::ScrollAreaPage {}),
+        ("Slider", Route::SliderPage {}),
+        ("Switch", Route::SwitchPage {}),
+        ("Tabs", Route::TabsPage {}),
+        ("TagGroup", Route::TagGroupPage {}),
+        ("ThemeSwitcher", Route::ThemeSwitcherPage {}),
+        ("Toast", Route::ToastPage {}),
+        ("Toggle", Route::TogglePage {}),
+        ("ToggleGroup", Route::ToggleGroupPage {}),
+        ("Toolbar", Route::ToolbarPage {}),
+        ("VirtualList", Route::VirtualListPage {}),
     ]
 }
 
