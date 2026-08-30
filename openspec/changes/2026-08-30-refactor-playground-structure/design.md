@@ -34,9 +34,11 @@ already 911-line file.
 
 - Adding pages/routes for any of the 24 components that don't have one yet
   — explicitly deferred to a follow-up change (see proposal.md Impact).
-- Restructuring `demo.rs`, `controls.rs`, or `theme.rs`. They are shared
-  UI helpers used *by* pages, not page bodies themselves, and stay at
-  `src/` top level.
+- Rewriting `theme.rs`'s content or behavior. A separate, already-planned
+  follow-up (see Decision 5) replaces it outright once a registry
+  `ThemeBuilder` component exists — this change only relocates
+  `demo.rs`/`controls.rs`, and deliberately leaves `theme.rs` untouched
+  rather than moving code about to be deleted.
 - Changing navigation UX, page layout, or the `Demo`/control-panel
   composition pattern pages use today.
 - Introducing nested route layouts, route groups, or any router feature
@@ -114,6 +116,44 @@ alongside its own code, per `docs/development.md`). No new tests are added
 for other pages by this change — that stays a per-page-addition concern for
 whichever change adds a page in the future.
 
+### 5. `demo.rs`/`controls.rs` move under `components/`; `theme.rs` is left alone (for now)
+
+Per a standing rule established this session — registry components must
+stay generic and app-agnostic, and anything playground-specific that
+isn't registry material belongs under `apps/playground/src/components/`
+(sibling to the CLI-managed `components/ui/`), not loose `src/` top-level
+files — `demo.rs` (the shared `Demo` preview-panel wrapper) and
+`controls.rs` (`BoolControl`/`SelectControl`/`TextControl`) move to
+`apps/playground/src/components/demo.rs` and
+`apps/playground/src/components/controls.rs`. Both are genuinely
+playground-only UI (no registry equivalent, no plan to promote them), so
+this is a pure location fix, matching the "custom playground components
+belong in `components/`" rule directly.
+
+`components/mod.rs` is currently *entirely* inside the
+`// adico:start`/`// adico:end` managed block (`adico add`/`adico css
+build` own it), so the two new `pub mod demo; pub mod controls;` lines are
+added *outside* that block — the same pattern already proven in `main.rs`
+and `adico_lib/mod.rs`, where hand-authored content coexists with a
+managed region in the same file. Task 1 (below) includes an explicit
+verification step — reinstall a component via `adico add --replace` and
+confirm the added lines survive — since this file's current 100%-managed
+content means that assumption hasn't actually been exercised here before.
+
+`theme.rs` is a different case: it's not just misplaced, it's about to be
+deleted outright. `theme.rs`'s `ThemeMode` duplicates and is strictly
+weaker than the already-installed (but currently unused) `ModeToggle`
+registry component, and its `Palette` HSL table is byte-identical to
+`ThemeSwitcher`'s. A separate, already-scoped follow-up change promotes
+`theme.rs`'s one genuinely novel piece (the full 28-token editor with
+independent light/dark values, CSS export, and deterministic
+"generate theme") into a new registry `ThemeBuilder` component, then
+rewires `apps/playground` to compose `ModeToggle` + `ThemeSwitcher` +
+`ThemeBuilder` + the real `Sidebar` family instead of any hand-rolled
+equivalent — at which point `theme.rs` and its duplicated logic are
+deleted, not moved. Moving `theme.rs` under `components/` in this change,
+only to delete it in the very next one, would be pure churn.
+
 ## Risks / Trade-offs
 
 - [Splitting 21 pages by hand risks a copy-paste mistake in one page's
@@ -129,21 +169,36 @@ whichever change adds a page in the future.
 - [This change silently expands scope to also add the 24 missing pages] →
   Proposal.md and design.md both name this as an explicit non-goal/
   follow-up; tasks.md does not include adding any new page.
+- [`adico add`/`adico css build` overwrites or clobbers the two new
+  hand-authored lines added to `components/mod.rs`, since that file is
+  100% managed content today and this assumption has never actually been
+  tested against it] → Task 1 includes running `adico add --replace` (or
+  `adico css build`) against `apps/playground` after adding the lines and
+  confirming they survive, before relying on the pattern; if it turns out
+  the managed-region writer does *not* preserve non-managed content in
+  this file the way it does in `main.rs`, stop and re-plan rather than
+  silently losing the two lines on the next `adico add`.
 
 ## Migration Plan
 
 1. Create `apps/playground/src/routes.rs` with `Route`, `nav_items()`, and
    `Layout` moved from `main.rs` (imports adjusted, e.g. `pages::Home` for
    `Route::Home {}`'s target).
-2. Create `apps/playground/src/pages/` with one file per existing page
-   (`home.rs` plus the 21 files named after their current `XPage`
+2. Move `apps/playground/src/demo.rs` and `apps/playground/src/controls.rs`
+   to `apps/playground/src/components/demo.rs` and
+   `apps/playground/src/components/controls.rs`; add `pub mod demo; pub mod
+   controls;` to `components/mod.rs` outside its managed block; verify the
+   lines survive an `adico add --replace`/`adico css build` run (see Risks).
+3. Create `apps/playground/src/pages/` with one file per existing page
+   (`index.rs` plus the 21 files named after their current `XPage`
    function, snake_cased) and a `pages/mod.rs` that declares each `pub mod`
-   and re-exports each page component.
-3. Delete `apps/playground/src/pages.rs`; update `main.rs` to declare
+   and re-exports each page component, importing `Demo`/controls from
+   `crate::components::{demo::Demo, controls::*}`.
+4. Delete `apps/playground/src/pages.rs`; update `main.rs` to declare
    `mod routes; mod pages;` and use `routes::{Route, Layout}` instead of
    local definitions.
-4. Move the two `DatePickerPage` SSR tests into `pages/date_picker.rs`.
-5. Verify: `cargo check --workspace`, `cargo fmt --all --check`,
+5. Move the two `DatePickerPage` SSR tests into `pages/date_picker.rs`.
+6. Verify: `cargo check --workspace`, `cargo fmt --all --check`,
    `cargo test -p adico-playground` (the two moved tests), a live
    `dx serve` pass over all 22 routes, `openspec validate
    refactor-playground-structure --strict`.

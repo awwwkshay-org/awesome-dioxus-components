@@ -34,18 +34,35 @@ file.
   `pages/date_picker.rs`'s own `#[cfg(test)]` module instead of a single
   shared test block at the end of the old `pages.rs`.
 - No page's rendered output, props, or route path changes. No component
-  demo composition changes. `demo.rs`, `controls.rs`, and `theme.rs` are
-  unaffected — they stay shared top-level modules imported by page files,
-  not moved under `pages/`.
+  demo composition changes.
+- Move `apps/playground/src/demo.rs` and `apps/playground/src/controls.rs`
+  to `apps/playground/src/components/demo.rs` and
+  `apps/playground/src/components/controls.rs`: per this session's
+  standing rule, playground-specific shared UI belongs under
+  `components/` (sibling to the CLI-managed `components/ui/`), not loose
+  files at `src/` top level. Registered in `components/mod.rs` *outside*
+  the `// adico:start`/`// adico:end` managed block — the same
+  managed-region-plus-hand-authored-content pattern `main.rs` and
+  `adico_lib/mod.rs` already use. Every `pages/*.rs` file's imports of
+  `crate::demo::Demo`/`crate::controls::{...}` update accordingly, which
+  this change is already doing for every page file's imports regardless.
+  `theme.rs` is explicitly **not** moved by this change — it is replaced
+  outright by a follow-up change once a registry `ThemeBuilder` component
+  exists (see design.md Decision 5); moving code this change is about to
+  delete would be wasted work.
 
 ## Capabilities
 
 ### New Capabilities
 
-- `adico-playground-structure`: Defines where `apps/playground`'s router
-  and page components live — `routes.rs` for routing/navigation/shell,
-  `pages/` with one file per page component — so future page additions
-  have a fixed place to land instead of growing an existing shared file.
+- `adico-playground-structure`: Defines where `apps/playground`'s router,
+  page components, and playground-specific shared UI live — `routes.rs`
+  for routing/navigation/shell, `pages/` with one file per page component,
+  `components/` (outside the CLI-managed `components/ui/`) for shared
+  playground-only UI like `demo.rs`/`controls.rs` — so future page
+  additions and playground-only components have a fixed place to land
+  instead of growing an existing shared file or leaking into the
+  registry.
 
 ### Modified Capabilities
 
@@ -54,11 +71,15 @@ file.
 ## Impact
 
 - Affected code: `apps/playground/src/main.rs`, `apps/playground/src/pages.rs`
-  (deleted), new `apps/playground/src/routes.rs` and
+  (deleted), `apps/playground/src/demo.rs`/`controls.rs` (moved), new
+  `apps/playground/src/routes.rs`,
+  `apps/playground/src/components/{demo.rs,controls.rs}`, and
   `apps/playground/src/pages/{mod.rs,index.rs,button.rs,badge.rs,card.rs,
   input.rs,textarea.rs,skeleton.rs,item.rs,pagination.rs,dialog.rs,sheet.rs,
   select.rs,combobox.rs,tooltip.rs,popover.rs,hover_card.rs,dropdown_menu.rs,
   context_menu.rs,menubar.rs,calendar.rs,date_picker.rs,sidebar.rs}`.
+  `apps/playground/src/components/mod.rs` gains two hand-authored `pub mod`
+  lines outside its managed block.
 - No change to `apps/playground/Cargo.toml`, `components.json`,
   `adico.lock`, installed `src/components/ui/*.rs`, or `tailwind.css`/
   `assets/tailwind.css` — this is a pure internal module reorganization of

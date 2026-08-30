@@ -461,6 +461,86 @@ after the CLI command because it changes every consumer's build graph
 (a network fetch or cache-miss inside `cargo build` itself) and deserves its
 own scrutiny once the simpler explicit-command version is proven.
 
+### 7d. `theme-builder`: productizing the playground's advanced theme editor
+
+§7a explicitly kept `apps/playground/src/theme.rs`'s full 28-token editor,
+independent light/dark values, deterministic "generate theme," and CSS
+export as playground-only "parity inspection" tooling, reasoning that the
+playground is "a consumer-realistic visual validation surface" that "owns a
+small runtime-only customization launcher and modal rather than introducing
+a new registry runtime." §7b then partially superseded that scope
+boundary once — for mode switching and primary-color presets — by shipping
+`mode-toggle`/`theme-switcher` as real registry components. This section
+completes that supersession for the remaining piece §7a kept playground-only:
+none of it (full token coverage, per-appearance independence, a generator,
+CSS export) is actually playground-specific in nature. A real consumer
+building a theme customization feature for their own app wants exactly this,
+the same way they want `mode-toggle`/`theme-switcher`. Keeping it
+playground-only was a scope decision made before `theme-mode`/`mode-toggle`/
+`theme-switcher` existed to build it on top of, not a permanent architectural
+one — and it left playground carrying two problems: a `ThemeMode` enum
+duplicating and *weaker than* the registry's own (`Light`/`Dark` only, no
+`System`, no persistence, no OS detection), and a primary-palette HSL table
+byte-identical to `theme-switcher`'s.
+
+**Component.** `registry/ui/theme_builder.rs` adds `ThemeBuilder`, a
+self-contained component (no required props, matching `ModeToggle`/
+`ThemeSwitcher`'s shape) that ports `theme.rs`'s `ThemeSelection`/
+`ThemeVariables`/`ThemeToken`/`generate_theme`/`css_export` logic verbatim
+where it still applies. It owns its own local editing state (all 28 tokens,
+independently for light and dark, exactly as `theme.rs` does today) — this
+state is intentionally *not* `theme_mode`'s persisted global signal, since
+`ThemeBuilder` is an editing surface a consumer mounts occasionally (e.g.
+behind a settings dialog), not an always-active mode switch.
+
+**Fixing the mechanism conflict, not inheriting it.** `theme.rs` applies its
+whole result via an inline `style`/class on a shell `<div>` wrapping the
+entire app — a mechanism nothing else in the registry uses, and one that
+actively conflicts with `theme-switcher`'s `:root`-level custom properties
+(an inline style on a descendant always wins). `ThemeBuilder` instead applies
+its edited tokens live through the *existing*
+`adico_primitives::theme_mode::apply_root_properties` (already fully generic
+— `&[(&str, String)]` pairs, no primitive-layer change required), the exact
+mechanism `theme-switcher` already uses for its 4 properties, just extended
+to the full 28-token set. This means `ThemeBuilder`, `ThemeSwitcher`, and
+`ModeToggle` can all be mounted on the same page and compose correctly —
+whichever was touched last wins for the specific properties it wrote, same
+as any other CSS custom-property cascade a consumer would expect, with no
+special-cased shell wrapper anywhere.
+
+**Output for "designing a new theme."** Matches `theme.rs`'s proven UX
+exactly: a built-in action producing the same paste-ready `:root {}`/
+`.dark {}` CSS block `css_export()` already generates today (this is what
+lets a consumer actually walk away with a new theme, not just preview one
+live). Additionally exposes an optional `on_theme_change: Callback<...>`
+prop so a consuming app can persist or react to edits programmatically
+instead of only copy-paste — the exact callback payload shape is an
+implementation detail decided while porting (reusing the existing
+`ThemeVariables`-shaped token table rather than inventing a new
+representation).
+
+**Classification and provenance.** `EXISTING_DIOXUS_EXTRA`, same as
+`theme-switcher` — no shadcn upstream has an equivalent (ui.shadcn.com's own
+theme customizer is a docs-site feature, not a shipped component). Added to
+`packages/adico-xtask/src/main.rs`'s `DIOXUS_ONLY_EXTRAS`; no `parity.json`
+entry, per the existing extras-labeling convention (task 4.6).
+
+**What happens to `theme.rs`.** A separate, already-scoped follow-up change
+(`2026-08-30-playground-uses-registry-theme-and-sidebar`) deletes `theme.rs`
+and its duplicated `ThemeMode`/`Palette` outright once `ThemeBuilder` exists,
+and rewires `apps/playground` to compose `ModeToggle` + `ThemeSwitcher` +
+`ThemeBuilder` + the real `Sidebar` family instead of any hand-rolled
+equivalent. That rewrite is out of this section's/task 4.8k's scope — 4.8k
+only adds the registry component.
+
+Alternative considered: keep `theme.rs` playground-only permanently, as §7a
+originally decided, and treat the duplication with `mode-toggle`/
+`theme-switcher` as an acceptable, isolated exception. Rejected per this
+session's explicit direction: registry components should be used to their
+full extent inside the playground, and duplicated app-specific logic that
+isn't actually app-specific in nature should become a real component instead
+of a permanent carve-out.
+
 ### 8. Stable copied-component APIs and platform features
 
 Installed components expose idiomatic Dioxus composition (for example,
