@@ -16,6 +16,8 @@ adico-primitives = { version = "=0.1.0", features = ["web"] }
 # Cargo's feature unification to make it available; dioxus-web itself does
 # not declare it. https://github.com/DioxusLabs/dioxus upstream issue candidate.
 web-sys = { version = "=0.3.104", features = ["Location"] }
+palette = "0.7.6"
+time = "=0.3.44"
 
 [features]
 default = ["web"]

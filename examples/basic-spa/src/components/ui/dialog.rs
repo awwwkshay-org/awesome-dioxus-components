@@ -2,22 +2,30 @@
 
 use dioxus::prelude::*;
 
+use super::button::{Button, ButtonSize, ButtonVariant};
 use crate::adico_lib::cn::cn;
 pub use adico_primitives::dialog::{
     DialogContent as DialogPrimitiveContent, DialogDescription, DialogRoot as Dialog, DialogTitle,
 };
 
-/// Opens the surrounding [`Dialog`] through the owned headless primitive.
+/// Opens the surrounding [`Dialog`] with the installed [`Button`] component.
+///
+/// This keeps dialog triggers visually and behaviorally consistent with every
+/// other action in a consumer application while the Dialog primitive continues
+/// to own focus, Escape, outside-dismissal, and ARIA behavior.
 #[component]
-pub fn DialogTrigger(children: Element, class: Option<String>) -> Element {
+pub fn DialogTrigger(
+    children: Element,
+    class: Option<String>,
+    variant: Option<ButtonVariant>,
+    size: Option<ButtonSize>,
+) -> Element {
     let context: adico_primitives::dialog::DialogCtx = use_context();
-    let class = cn(&[
-        "inline-flex items-center justify-center",
-        class.as_deref().unwrap_or_default(),
-    ]);
     rsx! {
-        button {
+        Button {
             class,
+            variant: variant.unwrap_or_default(),
+            size: size.unwrap_or_default(),
             onclick: move |_| context.set_open(true),
             {children}
         }
