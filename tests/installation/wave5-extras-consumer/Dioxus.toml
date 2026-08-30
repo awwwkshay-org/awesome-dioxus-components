@@ -1,0 +1,6 @@
+[application]
+name = "adico-wave5-extras-consumer"
+default_platform = "web"
+
+[web.app]
+title = "adico Wave 5 extras fixture"

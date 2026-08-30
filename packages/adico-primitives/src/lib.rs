@@ -64,7 +64,9 @@ pub mod tabs;
 pub mod toast;
 pub mod toggle;
 pub mod toggle_group;
+pub mod toolbar;
 pub mod tooltip;
+pub mod virtual_list;
 
 mod collection;
 mod listbox;
@@ -74,6 +76,7 @@ mod portal;
 mod selectable;
 mod selection;
 mod time;
+mod r#virtual;
 
 #[cfg(any(feature = "web", feature = "desktop"))]
 const FOCUS_TRAP_JS: Asset = asset!("/src/js/focus-trap.js");

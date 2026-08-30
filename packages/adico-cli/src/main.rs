@@ -531,6 +531,12 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/slider.rs") => {
                 Ok(include_bytes!("../../../registry/ui/slider.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/toolbar.rs") => {
+                Ok(include_bytes!("../../../registry/ui/toolbar.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/virtual_list.rs") => {
+                Ok(include_bytes!("../../../registry/ui/virtual_list.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"
@@ -798,7 +804,9 @@ mod tests {
                 "@adico/toast".to_string(),
                 "@adico/toggle".to_string(),
                 "@adico/toggle-group".to_string(),
+                "@adico/toolbar".to_string(),
                 "@adico/tooltip".to_string(),
+                "@adico/virtual-list".to_string(),
             ]
         );
         let official_plan = catalog

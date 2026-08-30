@@ -1124,6 +1124,67 @@
         "compositionNote": "Styled facade over the owned pointer-drag/keyboard value primitive. Pointer-drag interaction depends on the web feature (pointer tracking is a no-op on the native default); keyboard arrow-key interaction works on every target. Desktop pointer-capture behavior is compiled but not independently verified against a real desktop WebView, a named and recorded gap."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-risk.json" }
+    },
+    {
+      "name": "toolbar",
+      "type": "registry:ui",
+      "description": "A source-owned Dioxus-only Toolbar component for Dioxus (no shadcn equivalent), backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/toolbar.rs",
+          "targetRoot": "ui",
+          "target": "toolbar.rs",
+          "checksum": "db1937b43c1b6b447f292a83f4b121e74b93a101421ec67a8e767177ba9a98e6"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "toolbar", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "toolbar",
+        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` in upstreams/dioxus-components/inventory.md and excluded from shadcn parity tracking. Roving-focus button/separator container, similar shape to Menubar without layered popups. No document::eval or DOM measurement, SSR-safe by construction."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave5-extras.json" }
+    },
+    {
+      "name": "virtual-list",
+      "type": "registry:ui",
+      "description": "A source-owned Dioxus-only VirtualList component for Dioxus (no shadcn equivalent), backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/virtual_list.rs",
+          "targetRoot": "ui",
+          "target": "virtual_list.rs",
+          "checksum": "4a4fb6accb44a6487d29148c7ef15a25e6b143a3154e91014a1ecc7ebd161507"
+        }
+      ],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": false,
+        "radiusToken": false,
+        "utilities": []
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "virtual_list", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "virtual-list",
+        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` in upstreams/dioxus-components/inventory.md and excluded from shadcn parity tracking. Pure re-export: upstream ships it unstyled, list-item content is entirely caller-composed, and the caller must give the container a bounded height (for example `style: \"height: 300px; overflow-y: auto;\"`) or the viewport measurement equals the full content height and nothing is virtualized. Its scroll/resize bridge uses native `onscroll`/`onmounted` element queries (no `web`/`desktop` feature gate needed, unlike other overlay primitives) after live browser testing found upstream's own `document::eval`-based bridge never registers in this Dioxus 0.7.9/0.7.10 web runtime -- see provenance. On a renderer without `onscroll`/`onmounted` support (native/server) it renders zero items rather than failing to build -- a documented, explicit target-support skip, not silent, until a proper observer-bridge primitive exists (M6 territory)."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave5-extras.json" }
     }
   ]
 }
