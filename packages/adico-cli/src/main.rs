@@ -19,9 +19,10 @@ fn main() {
         Some("add") => run_add(&arguments[1..]),
         Some("list") => run_list(&arguments[1..]),
         Some("view") => run_view(&arguments[1..]),
+        Some("css") => run_css(&arguments[1..]),
         _ => {
             eprintln!(
-                "usage:\n  adico init [--default-registry <@namespace>] [--registry <@namespace>=<embedded|relative-path|https-url>] [--dry-run]\n  adico add <component...> [--dry-run] [--replace]\n  adico list [--registry <@namespace>]\n  adico view <component>"
+                "usage:\n  adico init [--default-registry <@namespace>] [--registry <@namespace>=<embedded|relative-path|https-url>] [--dry-run]\n  adico add <component...> [--dry-run] [--replace]\n  adico list [--registry <@namespace>]\n  adico view <component>\n  adico css build\n  adico css check"
             );
             std::process::exit(2);
         }
@@ -247,6 +248,94 @@ fn render_values(output: &mut String, label: &str, values: &[String]) {
     }
 }
 
+fn run_css(arguments: &[String]) {
+    let mode = match arguments.first().map(String::as_str) {
+        Some("build") => CssMode::Build,
+        Some("check") => CssMode::Check,
+        _ => {
+            eprintln!("usage:\n  adico css build\n  adico css check");
+            std::process::exit(2);
+        }
+    };
+    let current = match env::current_dir() {
+        Ok(path) => path,
+        Err(error) => {
+            eprintln!("adico css: cannot determine current directory: {error}");
+            std::process::exit(1);
+        }
+    };
+    let project = match discover_dioxus_project(&current) {
+        Ok(project) => project,
+        Err(error) => {
+            eprintln!("adico css: {error}");
+            std::process::exit(1);
+        }
+    };
+    let root = project
+        .package_manifest_path
+        .parent()
+        .expect("manifest has parent");
+    let configuration = match read_components_configuration(root) {
+        Ok(configuration) => configuration,
+        Err(error) => {
+            eprintln!("adico css: {error}");
+            std::process::exit(1);
+        }
+    };
+    let result = match mode {
+        CssMode::Build => adico_cli::css_build::build_project(root, &configuration.css.entry)
+            .map(|()| "adico css build complete."),
+        CssMode::Check => adico_cli::css_build::check_project(root, &configuration.css.entry)
+            .map(|()| "adico css check: assets/tailwind.css is up to date."),
+    };
+    match result {
+        Ok(message) => println!("{message}"),
+        Err(error) => {
+            eprintln!("adico css: {error}");
+            std::process::exit(1);
+        }
+    }
+}
+
+enum CssMode {
+    Build,
+    Check,
+}
+
+/// Best-effort compile-after-mutate step for `init`/`add`: failures here
+/// (most likely a first-run network fetch of the standalone Tailwind CLI
+/// failing) are printed but never abort the command, since the component
+/// install/scaffold itself already succeeded and is more important than an
+/// automatic CSS refresh a human can always retry with `adico css build`.
+fn build_css_best_effort(
+    command: &str,
+    root: &std::path::Path,
+    configuration: &ComponentsConfiguration,
+) {
+    let input = root.join(&configuration.css.entry);
+    if !input.is_file() {
+        return;
+    }
+    if let Err(error) = adico_cli::css_build::build_project(root, &configuration.css.entry) {
+        eprintln!(
+            "adico {command}: warning: could not compile Tailwind CSS ({error}); run `adico css build` once this is resolved."
+        );
+    }
+}
+
+/// Names the exact one-line fix when a consumer's entrypoint does not yet
+/// link the compiled stylesheet -- printed instead of silently reporting
+/// success while the project cannot render styled output.
+fn warn_if_entrypoint_missing_stylesheet(command: &str, entrypoint: &std::path::Path) {
+    let contents = std::fs::read_to_string(entrypoint).unwrap_or_default();
+    if !contents.contains("assets/tailwind.css") {
+        eprintln!(
+            "adico {command}: note: {} does not yet link the compiled stylesheet. Add inside your root component's rsx! block:\n  document::Stylesheet {{ href: asset!(\"/assets/tailwind.css\") }}\n(and enable the `document` Dioxus feature, plus `const TAILWIND_CSS: Asset = asset!(\"/assets/tailwind.css\");`, if not already present).",
+            entrypoint.display()
+        );
+    }
+}
+
 fn run_add(arguments: &[String]) {
     let (request, dry_run, replace) = match parse_add_options(arguments) {
         Ok(options) => options,
@@ -331,6 +420,8 @@ fn run_add(arguments: &[String]) {
         eprintln!("adico add: {error}");
         std::process::exit(1);
     }
+    build_css_best_effort("add", root, &configuration);
+    warn_if_entrypoint_missing_stylesheet("add", &project.entrypoint);
     println!("adico add complete.");
 }
 
@@ -619,6 +710,13 @@ fn run_init(arguments: &[String]) {
         eprintln!("adico init: {error}");
         std::process::exit(1);
     }
+    let root = plan
+        .project
+        .package_manifest_path
+        .parent()
+        .expect("manifest has parent");
+    build_css_best_effort("init", root, &plan.configuration);
+    warn_if_entrypoint_missing_stylesheet("init", &plan.project.entrypoint);
     println!("adico is ready.");
 }
 

@@ -10,6 +10,7 @@ use adico_registry_core::{
 };
 use thiserror::Error;
 
+use crate::css::{CssThemeError, CssThemePlan, plan_theme_install};
 use crate::modules::{
     ModuleExportRequest, ModuleUpdatePlan, plan_entrypoint_module_update, plan_module_update,
 };
@@ -66,6 +67,15 @@ pub struct InitPlan {
     pub module_setup: Vec<ModuleUpdatePlan>,
     /// CSS entry reserved for the later marker-owned theme installer.
     pub css_entry: PathBuf,
+    /// Eagerly-bootstrapped Tailwind CSS entry so a fresh project has valid,
+    /// compilable CSS (the `@import`/`@source`/theme-token region) even
+    /// before any component is added -- closing the gap where `adico init`
+    /// alone left a project that could not yet render styled output.
+    pub theme: CssThemePlan,
+    /// `Dioxus.toml` to scaffold when the consumer project does not already
+    /// have one, so `dx serve`/`dx build` can find the project-root
+    /// Tailwind input this plan's `theme` field writes.
+    pub dioxus_toml: Option<(PathBuf, String)>,
     write_configuration: bool,
 }
 
@@ -76,6 +86,8 @@ impl InitPlan {
             || !self.directories_to_create.is_empty()
             || self.entrypoint_modules.has_changes()
             || self.module_setup.iter().any(ModuleUpdatePlan::has_changes)
+            || self.theme.has_changes()
+            || self.dioxus_toml.is_some()
     }
 
     /// Applies an already reviewed plan without overwriting consumer files.
@@ -94,6 +106,13 @@ impl InitPlan {
                 .apply()
                 .map_err(|error| InitError::Module(error.to_string()))?;
         }
+        if let Some((path, contents)) = &self.dioxus_toml {
+            fs::write(path, contents).map_err(|error| InitError::WriteFailed {
+                path: path.display().to_string(),
+                message: error.to_string(),
+            })?;
+        }
+        self.theme.apply().map_err(InitError::Theme)?;
         if self.write_configuration {
             let contents = serde_json::to_string_pretty(&self.configuration).map_err(|error| {
                 InitError::ConfigurationSerialization {
@@ -204,6 +223,20 @@ pub fn plan_init(start: &Path, options: &InitOptions) -> Result<InitPlan, InitEr
         .collect::<BTreeSet<_>>()
         .into_iter()
         .collect();
+
+    let theme = plan_theme_install(&css_entry, &project_root).map_err(InitError::Theme)?;
+
+    let dioxus_toml_path = project_root.join("Dioxus.toml");
+    let dioxus_toml = (!dioxus_toml_path.is_file()).then(|| {
+        let name = &project.package_name;
+        (
+            dioxus_toml_path,
+            format!(
+                "[application]\nname = \"{name}\"\ndefault_platform = \"web\"\n\n[web.app]\ntitle = \"{name}\"\n"
+            ),
+        )
+    });
+
     Ok(InitPlan {
         project,
         configuration,
@@ -216,6 +249,8 @@ pub fn plan_init(start: &Path, options: &InitOptions) -> Result<InitPlan, InitEr
         entrypoint_modules,
         module_setup,
         css_entry,
+        theme,
+        dioxus_toml,
         write_configuration,
     })
 }
@@ -236,7 +271,14 @@ fn default_configuration(options: InitOptions) -> ComponentsConfiguration {
             hooks: "src/hooks".to_string(),
         },
         css: CssConfiguration {
-            entry: "assets/tailwind.css".to_string(),
+            // The Tailwind compiler *input* Dioxus's own `dx serve`/`dx
+            // build` already expects at this project-root path by
+            // convention (confirmed via `dx config schema`'s
+            // `tailwind_input` default and `dx`'s own cached standalone
+            // binary invocation) -- not the compiled `assets/tailwind.css`
+            // output. `plan_theme_install`/`adico css build` both read this
+            // field, so it must name the real input for either to work.
+            entry: "tailwind.css".to_string(),
             framework: "tailwind".to_string(),
         },
         registries: options.registries,
@@ -281,6 +323,10 @@ pub enum InitError {
     /// The explicit entrypoint-owned region could not be prepared safely.
     #[error("cannot prepare adico entrypoint module region: {0}")]
     Module(String),
+    /// The eagerly-bootstrapped Tailwind CSS entry could not be planned or
+    /// applied.
+    #[error("cannot prepare Tailwind CSS entry: {0}")]
+    Theme(#[from] CssThemeError),
 }
 
 #[cfg(test)]
@@ -347,8 +393,20 @@ mod tests {
         .expect("written configuration should validate");
         assert_eq!(configuration.default_registry.as_str(), "@adico");
         assert!(project.root.join("src/components/ui").is_dir());
-        assert!(project.root.join("assets").is_dir());
-        assert!(!project.root.join("assets/tailwind.css").exists());
+        // The compiled `assets/tailwind.css` output no longer needs a
+        // pre-created parent directory at init time: the Tailwind input now
+        // lives at the project root (see below), and `adico css build`
+        // creates `assets/` itself on first compile.
+        // A fresh `adico init` now eagerly bootstraps the project-root
+        // Tailwind input (matching `dx`'s own `tailwind_input` convention)
+        // so the project is compilable/styled-ready before any component is
+        // added -- closing the gap where `adico init` alone left a project
+        // that could not yet render styled output.
+        let tailwind_css = fs::read_to_string(project.root.join("tailwind.css"))
+            .expect("tailwind.css should be eagerly bootstrapped by init");
+        assert!(tailwind_css.starts_with("@import \"tailwindcss\";\n@source \"src\";\n\n"));
+        assert!(tailwind_css.contains("/* adico:theme:start */"));
+        assert!(project.root.join("Dioxus.toml").is_file());
         assert_eq!(
             fs::read_to_string(project.root.join("keep-me.txt")).expect("sentinel should remain"),
             "consumer-owned bytes\n"

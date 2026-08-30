@@ -8,18 +8,23 @@ Status: accepted for the M2 vertical slice
 | --- | --- | --- | --- | --- |
 | Dioxus | `=0.7.9` | MIT OR Apache-2.0 | Web, desktop, SSR, fullstack | Existing repository pin; all adico application manifests use its documented platform feature model. |
 | Dioxus CLI | `=0.7.9` | MIT OR Apache-2.0 | Web serving/building, Tailwind detection | Existing development baseline. |
-| Tailwind CLI | `@tailwindcss/cli =4.3.3` | MIT | CSS generation for web and CSS-capable Dioxus renderers | Use Tailwind v4 input syntax and Dioxus asset output. |
+| Tailwind CLI | Tailwind's standalone native CLI release `v4.1.5` (fetched from `tailwindlabs/tailwindcss` GitHub releases, not the npm-distributed `@tailwindcss/cli` package) | MIT | CSS generation for web and CSS-capable Dioxus renderers; `adico css build`/`adico css check` | Corrected in M4 task 4.8j: `dx serve`/`dx build` never actually used the npm package this row previously pinned -- they already fetch and cache this exact standalone binary into `~/.dx/tools/`. `adico-cli` does the same into a separate `~/.adico/tools/` cache (verified against Tailwind's published `sha256sums.txt`), so `adico init`/`adico add` can compile a consumer's CSS without requiring Node/npm anywhere in the chain. |
 | Dioxus Lucide icons | `dioxus-icons =0.1.0` | MIT AND ISC | Dioxus 0.7.x web, desktop, mobile, server/fullstack apps | Preferred registry icon dependency. It exposes one Dioxus component per Lucide icon, allowing the linker to retain only imported icons. |
 | Browser and visual tests | `@playwright/test =1.62.1` | Apache-2.0 | Web/Chromium CI and local browser interaction tests | Use one runner for interaction, accessibility snapshots, and visual screenshots. |
 | Automated accessibility | `@axe-core/playwright =4.13.0` | MIT | Web browser tests | Run alongside role/keyboard assertions; it supplements rather than replaces manual accessibility assessment. |
 
 ## Styling contract
 
-The M2 `adico init` implementation will create/adopt a project-root
-`tailwind.css` containing Tailwind v4's `@import "tailwindcss"` and an explicit
-Rust source directive, then write its generated file to `assets/tailwind.css`.
-Installed application roots include that asset with
-`document::Stylesheet { href: asset!("/assets/tailwind.css") }`.
+`adico init` creates a project-root `tailwind.css` (`components.json`'s
+`css.entry`) containing Tailwind v4's `@import "tailwindcss"`, an explicit
+Rust source directive, and the managed semantic-token/animation-utility
+region, then compiles it to `assets/tailwind.css` via `adico css build` (task
+4.8j) -- `adico init`/`adico add` call this automatically, and it is also
+available standalone (`adico css build`/`adico css check`) for manual
+recompiles or CI staleness gating. Installed application roots include that
+asset with `document::Stylesheet { href: asset!("/assets/tailwind.css") }`
+(added by hand today; `adico` warns if it is missing rather than editing an
+arbitrary entrypoint automatically).
 
 Dioxus 0.7 detects a root Tailwind input during `dx serve` and can configure
 different input/output locations through `Dioxus.toml`; adico retains the

@@ -5,6 +5,7 @@
 pub mod add;
 pub mod cargo;
 pub mod css;
+pub mod css_build;
 pub mod init;
 pub mod modules;
 pub mod project;

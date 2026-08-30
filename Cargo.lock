@@ -7,6 +7,8 @@ name = "adico-cli"
 version = "0.1.0"
 dependencies = [
  "adico-registry-core",
+ "dirs",
+ "reqwest",
  "serde",
  "serde_json",
  "sha2",

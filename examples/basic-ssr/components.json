@@ -13,7 +13,7 @@
     "hooks": "src/hooks"
   },
   "css": {
-    "entry": "assets/tailwind.css",
+    "entry": "tailwind.css",
     "framework": "tailwind"
   },
   "registries": {
