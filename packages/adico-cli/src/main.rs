@@ -643,6 +643,9 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/theme_switcher.rs") => {
                 Ok(include_bytes!("../../../registry/ui/theme_switcher.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/theme_builder.rs") => {
+                Ok(include_bytes!("../../../registry/ui/theme_builder.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"
@@ -918,6 +921,7 @@ mod tests {
                 "@adico/tabs".to_string(),
                 "@adico/tag-group".to_string(),
                 "@adico/textarea".to_string(),
+                "@adico/theme-builder".to_string(),
                 "@adico/theme-switcher".to_string(),
                 "@adico/toast".to_string(),
                 "@adico/toggle".to_string(),

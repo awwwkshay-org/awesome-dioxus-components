@@ -27,6 +27,7 @@ const DIOXUS_ONLY_EXTRAS: &[&str] = &[
     "color-picker",
     "drag-and-drop-list",
     "tag-group",
+    "theme-builder",
     "theme-switcher",
     "toolbar",
     "virtual-list",

@@ -1339,6 +1339,36 @@
         "slug": "theme-switcher",
         "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA`-style per design.md §7b and excluded from shadcn parity tracking (no parity.json entry). A distilled palette picker (Slate/Blue/Violet/Emerald/Rose/Amber presets recoloring --primary/--primary-foreground and their Tailwind aliases) productizing the concept prototyped in apps/playground's advanced customization tray, which keeps its own full 28-token editor unchanged."
       }
+    },
+    {
+      "name": "theme-builder",
+      "type": "registry:ui",
+      "description": "A source-owned Dioxus-only full theme customization builder for Dioxus (no shadcn equivalent), backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/theme_builder.rs",
+          "targetRoot": "ui",
+          "target": "theme_builder.rs",
+          "checksum": "04e2bef992cc8ae352587441d1dd5d1822526a1c67e8a9dcf4a17bcfb744e9ff"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "theme_builder", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "theme-builder",
+        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per design.md §7d and excluded from shadcn parity tracking (no parity.json entry). Promotes apps/playground's advanced customization tray -- the full 28-semantic-token editor with independent light/dark values, a deterministic 'generate theme' action, and CSS export -- into a real, generic, installable component, since none of it is actually playground-specific in nature. Applies its edited tokens live through adico_primitives::theme_mode::apply_root_properties, the same document-root mechanism theme-switcher already uses for its 4 properties, so theme-builder composes with mode-toggle/theme-switcher on one mechanism. Renders its CSS export into a read-only, selectable textarea rather than calling the browser clipboard API directly, so it stays free of browser-interop details and needs no new cargo dependencies."
+      }
     }
   ]
 }

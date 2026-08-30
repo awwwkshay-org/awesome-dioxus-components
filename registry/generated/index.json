@@ -46,6 +46,7 @@
     "tabs": "items/tabs.json",
     "tag-group": "items/tag-group.json",
     "textarea": "items/textarea.json",
+    "theme-builder": "items/theme-builder.json",
     "theme-switcher": "items/theme-switcher.json",
     "toast": "items/toast.json",
     "toggle": "items/toggle.json",

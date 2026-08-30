@@ -508,16 +508,23 @@ whichever was touched last wins for the specific properties it wrote, same
 as any other CSS custom-property cascade a consumer would expect, with no
 special-cased shell wrapper anywhere.
 
-**Output for "designing a new theme."** Matches `theme.rs`'s proven UX
-exactly: a built-in action producing the same paste-ready `:root {}`/
-`.dark {}` CSS block `css_export()` already generates today (this is what
-lets a consumer actually walk away with a new theme, not just preview one
-live). Additionally exposes an optional `on_theme_change: Callback<...>`
-prop so a consuming app can persist or react to edits programmatically
-instead of only copy-paste — the exact callback payload shape is an
-implementation detail decided while porting (reusing the existing
-`ThemeVariables`-shaped token table rather than inventing a new
-representation).
+**Output for "designing a new theme."** Reuses `theme.rs`'s `css_export()`
+logic verbatim to generate the same paste-ready `:root {}`/`.dark {}` CSS
+block (this is what lets a consumer actually walk away with a new theme, not
+just preview one live) — but *not* `theme.rs`'s `copy_theme_css`, which calls
+`web_sys`/`wasm_bindgen_futures` clipboard APIs directly. That would leak a
+browser-interop detail into registry UI source (prohibited by this repo's
+architecture rules: "Browser-only interop belongs behind target-aware
+primitive adapters") and require adding `web-sys`/`wasm-bindgen-futures` as
+new `cargoDependencies` for this one item, a pattern no other registry item
+uses. `ThemeBuilder` instead renders the generated CSS in a read-only,
+selectable `<textarea>` — still fully "paste-ready," with zero new browser
+API surface or cargo dependencies; the consumer selects and copies manually.
+Additionally exposes an optional `on_theme_change: Callback<...>` prop so a
+consuming app can persist or react to edits programmatically instead of only
+copy-paste — the exact callback payload shape is an implementation detail
+decided while porting (reusing the existing `ThemeVariables`-shaped token
+table rather than inventing a new representation).
 
 **Classification and provenance.** `EXISTING_DIOXUS_EXTRA`, same as
 `theme-switcher` — no shadcn upstream has an equivalent (ui.shadcn.com's own
