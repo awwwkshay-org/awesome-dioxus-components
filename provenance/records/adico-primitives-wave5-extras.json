@@ -11,7 +11,8 @@
     "primitives/src/virtual/utils.rs",
     "primitives/src/virtual/virtualizer.rs",
     "primitives/src/virtual_list.rs",
-    "primitives/src/tag_group.rs"
+    "primitives/src/tag_group.rs",
+    "primitives/src/drag_and_drop_list.rs"
   ],
   "localPaths": [
     "packages/adico-primitives/src/toolbar.rs",
@@ -20,7 +21,8 @@
     "packages/adico-primitives/src/virtual/utils.rs",
     "packages/adico-primitives/src/virtual/virtualizer.rs",
     "packages/adico-primitives/src/virtual_list.rs",
-    "packages/adico-primitives/src/tag_group.rs"
+    "packages/adico-primitives/src/tag_group.rs",
+    "packages/adico-primitives/src/drag_and_drop_list.rs"
   ],
   "changes": [
     {
@@ -34,6 +36,10 @@
     {
       "date": "2026-08-30",
       "summary": "Imported TagGroup/TagGroupMulti/TagGroupLabel/TagList/TagGroupEmpty/TagOption/TagRemoveButton (Wave 5 Dioxus-only extra, task 4.6, sub-batch 3) unmodified except for the doc-example import path change. Confirmed by reading the actual upstream source (not just the migration queue's one-line dependency note) that it composes only this crate's existing private collection/selectable/selection modules already imported for Select in M1; no document::eval, portal, or DOM measurement API anywhere in the module, so it is SSR-safe by construction and needed no target-gated adapter work."
+    },
+    {
+      "date": "2026-08-30",
+      "summary": "Imported DragAndDropList/DragAndDropListItems/DragAndDropListItem/DragAndDropDropIndicator/DragAndDropInstructions/DragAndDropLiveRegion/use_drag_and_drop_list_items (Wave 5 Dioxus-only extra, task 4.6, sub-batch 4) unmodified except for the doc-example import path change and one structural adaptation: `DragAndDropListItem`'s `ondragstart` handler registered a `document::eval` listener inline, which does not compile on native/server (dioxus_document is not imported there); it was extracted into a `watch_document_drop` helper behind this crate's established `#[cfg(any(feature = \"web\", feature = \"desktop\"))]` adapter pattern with a native/server no-op, matching context_menu.rs. Unlike the long-lived effect-mounted document::eval listeners already found broken in this Dioxus 0.7.9/0.7.10 web runtime (use_global_escape_listener, VirtualList's old scroll bridge), this eval is registered synchronously from inside a real browser dragstart event, a different shape not independently re-verified live here. The primary, live-tested interaction path is keyboard reordering (Enter to lift/drop, Arrow keys to move, Escape to cancel, Delete/Backspace to remove), which never touches document::eval. Native pointer/mouse drag-and-drop is compiled and wired but not independently browser-verified -- the same named risk this item already carries in the M3 migration queue, alongside Slider's equivalent unverified desktop pointer-capture gap."
     }
   ],
   "notices": [

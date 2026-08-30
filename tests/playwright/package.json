@@ -13,6 +13,7 @@
     "test:wave2-risk": "playwright test wave2-risk.spec.ts",
     "test:wave5-extras": "playwright test wave5-extras.spec.ts",
     "test:wave5-tag-group": "playwright test wave5-tag-group.spec.ts",
+    "test:wave5-drag-and-drop-list": "playwright test wave5-drag-and-drop-list.spec.ts",
     "test:fullstack": "playwright test fullstack.spec.ts"
   },
   "devDependencies": {

@@ -1187,6 +1187,37 @@
       "provenance": { "record": "provenance/records/adico-primitives-wave5-extras.json" }
     },
     {
+      "name": "drag-and-drop-list",
+      "type": "registry:ui",
+      "description": "A source-owned Dioxus-only Drag And Drop List component for Dioxus (no shadcn equivalent), backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/drag_and_drop_list.rs",
+          "targetRoot": "ui",
+          "target": "drag_and_drop_list.rs",
+          "checksum": "54080ec7d98e2ef57abb4ec7f517d5371341f0a9eb548c0487d501f9e030e25b"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "drag_and_drop_list", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "drag-and-drop-list",
+        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` in upstreams/dioxus-components/inventory.md and excluded from shadcn parity tracking. Pointer-drag list reordering that reuses the roving-focus collection infrastructure already imported for Select. Keyboard reordering (Enter to lift/drop, Arrow keys to move, Escape to cancel, Delete/Backspace to remove) is the always-tested accessible path. Native pointer/mouse drag-and-drop is compiled and wired but not independently browser-verified -- a named risk carried since the M3 migration queue, the same open question as Slider's unverified desktop pointer-capture behavior."
+      },
+      "provenance": { "record": "provenance/records/adico-primitives-wave5-extras.json" }
+    },
+    {
       "name": "tag-group",
       "type": "registry:ui",
       "description": "A source-owned Dioxus-only Tag Group component for Dioxus (no shadcn equivalent), backed by the owned adico primitive layer.",

@@ -540,6 +540,9 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/tag_group.rs") => {
                 Ok(include_bytes!("../../../registry/ui/tag_group.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/drag_and_drop_list.rs") => {
+                Ok(include_bytes!("../../../registry/ui/drag_and_drop_list.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"
@@ -785,6 +788,7 @@ mod tests {
                 "@adico/context-menu".to_string(),
                 "@adico/date-picker".to_string(),
                 "@adico/dialog".to_string(),
+                "@adico/drag-and-drop-list".to_string(),
                 "@adico/dropdown-menu".to_string(),
                 "@adico/hover-card".to_string(),
                 "@adico/input".to_string(),

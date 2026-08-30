@@ -1,0 +1,6 @@
+[application]
+name = "adico-wave5-drag-and-drop-list-consumer"
+default_platform = "web"
+
+[web.app]
+title = "adico Wave 5 drag-and-drop-list fixture"
