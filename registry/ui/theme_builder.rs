@@ -18,10 +18,22 @@
 //! browser-interop detail into this registry item's source and require new
 //! `web-sys`/`wasm-bindgen-futures` cargo dependencies no other registry
 //! item needs; see design.md §7d.
+//!
+//! Unlike `theme-switcher` (which only ever touches 4 properties, so
+//! whichever component last wrote them simply wins, an ordinary CSS
+//! custom-property cascade), `ThemeBuilder` covers the *entire* semantic
+//! token set, including `--background`/`--foreground` -- the same
+//! properties `mode-toggle`'s `.dark` class selector defines. An inline
+//! style always beats a class selector for the same property, so if
+//! `ThemeBuilder` left its properties in place after unmounting, opening it
+//! even once would permanently override `mode-toggle`'s dark-mode toggle
+//! for the rest of the session. A `use_drop` cleanup below removes every
+//! property this component applies as soon as it unmounts, handing control
+//! back to `mode-toggle`/`theme-switcher`'s class-based mechanism.
 
 use dioxus::prelude::*;
 
-use adico_primitives::theme_mode::apply_root_properties;
+use adico_primitives::theme_mode::{apply_root_properties, clear_root_properties};
 
 use crate::adico_lib::cn::cn;
 
@@ -803,6 +815,15 @@ pub fn ThemeBuilder(
         let current = selection();
         apply_root_properties(&current.active_tokens().root_property_pairs());
         on_theme_change.call(current.active_tokens().clone());
+    });
+
+    use_drop(move || {
+        let property_names: Vec<&str> = ThemeVariables::light()
+            .root_property_pairs()
+            .iter()
+            .map(|(name, _)| *name)
+            .collect();
+        clear_root_properties(&property_names);
     });
 
     let current = selection();

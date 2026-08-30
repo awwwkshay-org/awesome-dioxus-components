@@ -2,10 +2,8 @@ use dioxus::prelude::*;
 
 mod pages;
 mod routes;
-mod theme;
 
 use routes::Route;
-use theme::ThemeSelection;
 
 // Compiled by `dx serve`/`dx build` from the project-root `tailwind.css`
 // (which declares `@import "tailwindcss"` + `@source` + the adico theme
@@ -27,10 +25,6 @@ fn main() {
 
 #[component]
 fn App() -> Element {
-    let theme = use_signal(ThemeSelection::default);
-    use_context_provider(|| theme);
-    let selection = theme();
-
     rsx! {
         document::Title { "adico playground" }
         document::Stylesheet { href: TAILWIND_CSS }
@@ -39,9 +33,7 @@ fn App() -> Element {
         document::Link { rel: "icon", r#type: "image/png", sizes: "16x16", href: FAVICON_16 }
         document::Link { rel: "icon", r#type: "image/png", sizes: "32x32", href: FAVICON_32 }
         document::Link { rel: "apple-touch-icon", href: APPLE_TOUCH_ICON }
-        div { class: "{selection.shell_class()}", style: "{selection.variables()}",
-            Router::<Route> {}
-        }
+        div { class: "min-h-screen bg-background text-foreground", Router::<Route> {} }
     }
 }
 

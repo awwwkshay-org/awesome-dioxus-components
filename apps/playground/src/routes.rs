@@ -5,6 +5,8 @@
 
 use dioxus::prelude::*;
 
+use crate::components;
+use crate::components::theme_builder_launcher::ThemeBuilderLauncher;
 use crate::pages::{
     AccordionPage, AlertDialogPage, AspectRatioPage, AvatarPage, BadgePage, ButtonPage,
     CalendarPage, CardPage, CheckboxPage, CollapsiblePage, ColorPickerPage, ComboboxPage,
@@ -14,7 +16,6 @@ use crate::pages::{
     SkeletonPage, SliderPage, SwitchPage, TabsPage, TagGroupPage, TextareaPage, ThemeSwitcherPage,
     ToastPage, ToggleGroupPage, TogglePage, ToolbarPage, TooltipPage, VirtualListPage,
 };
-use crate::theme::{ThemeLauncher, ThemeModal, ThemeSelection};
 
 const PLAYGROUND_LOGO: Asset = asset!("/assets/web/android-chrome-192x192.png");
 
@@ -164,29 +165,52 @@ pub fn nav_items() -> Vec<(&'static str, Route)> {
 
 #[component]
 pub fn Layout() -> Element {
-    let theme = use_context::<Signal<ThemeSelection>>();
-    let theme_open = use_signal(|| false);
+    let navigator = use_navigator();
+    let current_route = use_route::<Route>();
 
     rsx! {
-        div { class: "mx-auto flex h-full min-h-0 w-full max-w-none flex-col gap-4 p-4 lg:w-4/5 lg:flex-row lg:gap-6 lg:p-6",
-            nav { class: "flex min-h-0 w-full flex-col rounded-lg border border-sidebar-border bg-sidebar p-3 text-sidebar-foreground lg:w-60 lg:shrink-0",
-                Link { class: "flex shrink-0 items-center gap-2 text-lg font-bold", to: Route::Home {},
-                    img { class: "size-8 rounded-md", src: PLAYGROUND_LOGO, alt: "adico logo" }
-                    span { "adico playground" }
+        components::ui::SidebarProvider {
+            components::ui::Sidebar {
+                components::ui::SidebarHeader {
+                    Link { class: "flex shrink-0 items-center gap-2 text-lg font-bold", to: Route::Home {},
+                        img { class: "size-8 rounded-md", src: PLAYGROUND_LOGO, alt: "adico logo" }
+                        span { "adico playground" }
+                    }
                 }
-                ul { class: "mt-4 min-h-0 flex-1 space-y-1 overflow-y-auto pr-1 text-sm",
-                    for (label , route) in nav_items() {
-                        li {
-                            Link { class: "block rounded px-2 py-1 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground", to: route, "{label}" }
+                components::ui::SidebarContent {
+                    components::ui::SidebarGroup {
+                        components::ui::SidebarGroupContent {
+                            components::ui::SidebarMenu {
+                                for (label , route) in nav_items() {
+                                    components::ui::SidebarMenuItem {
+                                        div {
+                                            onclick: move |_| { navigator.push(route.clone()); },
+                                            components::ui::SidebarMenuButton {
+                                                is_active: current_route == route,
+                                                "{label}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-                ThemeLauncher { open: theme_open }
+                components::ui::SidebarFooter {
+                    components::ui::ModeToggle {}
+                    components::ui::ThemeSwitcher {}
+                    ThemeBuilderLauncher {}
+                }
+                components::ui::SidebarRail {}
             }
-            main { class: "min-h-0 min-w-0 flex-1 overflow-hidden rounded-lg border border-border bg-muted/30 p-3 lg:p-6",
-                Outlet::<Route> {}
+            components::ui::SidebarInset {
+                div { class: "flex items-center gap-2 border-b border-border p-3",
+                    components::ui::SidebarTrigger { "☰" }
+                }
+                div { class: "min-h-0 flex-1 overflow-y-auto p-3 lg:p-6",
+                    Outlet::<Route> {}
+                }
             }
-            ThemeModal { theme, open: theme_open }
         }
     }
 }

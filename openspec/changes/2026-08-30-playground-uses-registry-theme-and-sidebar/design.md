@@ -76,13 +76,32 @@ native `<button type="button">` with no `as_child`/polymorphic escape
 hatch — there is no way to make it render an `<a>` instead. Nesting a
 router `Link` (itself an `<a>`) inside it would be invalid HTML
 (interactive element inside interactive element) and is not how any
-existing `Sidebar` usage in this repo composes navigation. Each
-`SidebarMenuButton` therefore gets `onclick: move |_| navigator().push(route)`
-(`dioxus_router::hooks::use_navigator`) via its extended `button`
-attributes, plus `is_active: current_route() == route` — which the
-current hand-rolled `<nav>` never had, since `Link` alone doesn't compute
-active state. This is a direct, real usability improvement from adopting
-the real component, not something added for its own sake.
+existing `Sidebar` usage in this repo composes navigation.
+
+Confirmed during implementation that `SidebarMenuButtonProps`'s
+`#[props(extends = GlobalAttributes)] #[props(extends = button)]`
+`attributes: Vec<Attribute>` field does not actually accept an `onclick`
+event handler through named-field `rsx!` syntax — unlike `registry/ui/button.rs`'s
+`Button`, which declares its own explicit `onclick: EventHandler<MouseEvent>`
+field precisely because the generic `extends` mechanism doesn't
+auto-generate event-handler setters, only plain-attribute ones. Two direct
+attempts confirmed this: a bare `onclick: ...` field fails with "no method
+named `onclick` found ... in `SidebarMenuButtonPropsBuilder`", and a quoted
+`"onclick": ...` fails because it's then treated as a plain string
+attribute, not a listener. So each nav item instead wraps its
+`SidebarMenuButton` in a plain `div` carrying
+`onclick: move |_| navigator.push(route.clone())`
+(`dioxus_router::hooks::use_navigator`) — an ordinary Dioxus composition
+pattern (a click-catching wrapper around a native button; clicks on the
+inner button bubble to the wrapper) needing zero registry changes, matching
+this change's own non-goals and the sibling spec's "compose around the
+existing API using ordinary Dioxus patterns" fallback. `SidebarMenuButton`
+still gets `is_active: current_route == route` directly (that prop *is*
+plain `bool`, not part of the attributes-extends set, and works as
+expected) — which the current hand-rolled `<nav>` never had, since `Link`
+alone doesn't compute active state. This is a direct, real usability
+improvement from adopting the real component, not something added for its
+own sake.
 
 Alternative considered: modify `SidebarMenuButton` to accept an
 `as_child`-style render-prop so a `Link` could be nested/substituted.
@@ -98,12 +117,24 @@ changes and is a completely ordinary way to make a button navigate.
 and wraps `Router::<Route> {}` in
 `div { class: "{selection.shell_class()}", style: "{selection.variables()}" }`.
 All of that is deleted. `App` becomes a plain shell: asset links,
-`document::Title`, and `Router::<Route> {}` directly — no theme context,
-no signal, no wrapper div — identical in spirit to how `examples/basic-ssr`
-mounts `ModeToggle`/`ThemeSwitcher` today with zero shell wrapper. Every
-page keeps working unmodified because none of them ever read the deleted
-`ThemeSelection` context directly (confirmed: only `Layout`/`App` touched
-it).
+`document::Title`, and `Router::<Route> {}` — no theme context, no signal,
+no *computed, per-selection* wrapper. Every page keeps working unmodified
+because none of them ever read the deleted `ThemeSelection` context
+directly (confirmed: only `Layout`/`App` touched it).
+
+Corrected during implementation: `examples/basic-ssr` does not actually
+mount `ModeToggle`/`ThemeSwitcher` with *zero* shell wrapper, as first
+written above — its own `App` has a static `main { class: "min-h-screen
+space-y-8 bg-background p-8 text-foreground", ... }`. Live-verified this
+distinction matters: without any `bg-background`/`text-foreground`
+anywhere in the tree, `body`'s computed text color is the browser's
+initial black regardless of light/dark mode, making unstyled text (e.g.
+`Home`'s `<h1>`) invisible. `App` therefore keeps a static (not
+computed, not signal-driven) `div { class: "min-h-screen bg-background
+text-foreground", Router::<Route> {} }` — the same class string on every
+render regardless of theme state, matching `examples/basic-ssr`'s actual
+pattern exactly, as distinct from `theme.rs`'s deleted `shell_class()`
+(which recomputed the class per `ThemeSelection`).
 
 ### 3. `ThemeBuilder`'s launcher is playground-only wiring, lives in `components/`, wraps but never forks the registry component
 
@@ -120,6 +151,46 @@ exactly like `demo.rs`/`controls.rs` do after
 `2026-08-30-refactor-playground-structure`. It contains zero theme logic
 of its own — it only composes `Dialog` (installed) + `ThemeBuilder`
 (installed).
+
+### 4a. `theme-builder` needed an unmount-cleanup fix, found while wiring the launcher
+
+Live-verifying `ThemeBuilderLauncher` (per the Migration Plan's step 7)
+surfaced a genuine defect in `theme-builder` itself (task 4.8k), not a
+playground composition issue: `ThemeBuilder`'s `use_effect` applies all 28
+tokens — including `--background`/`--foreground`, which `mode-toggle`'s
+`.dark` class selector also defines — via
+`adico_primitives::theme_mode::apply_root_properties` as soon as it
+mounts, even to display its own untouched default state. Since an inline
+style always wins over a class-selector rule for the same property, and
+nothing removed those properties on unmount, opening
+`ThemeBuilderLauncher` even once permanently froze the whole page at
+`ThemeBuilder`'s last-applied appearance — breaking `mode-toggle`'s
+Light/Dark toggle for the rest of the session, in *any* consumer app that
+mounts `theme-builder`, not just playground.
+
+Raised to the user (this is a task-4.8k registry defect, confirmed via
+`document.documentElement`'s inline `style` attribute and
+`getComputedStyle`, not something playground's composition could work
+around) with three options: clean up on unmount, gate the initial
+`apply_root_properties` call behind a "has the user actually edited
+anything" flag, or pause this change entirely. Chose the unmount-cleanup
+fix: added `adico_primitives::theme_mode::clear_root_properties(names:
+&[&str])` (new, `#[cfg(feature = "web")]`-gated exactly like its
+`apply_root_properties` sibling, no-op elsewhere — calls
+`root.style.removeProperty(name)` per name via `dioxus_document::eval`),
+and call it from a `use_drop` cleanup in `ThemeBuilder` with every
+property name `ThemeVariables::light().root_property_pairs()` names.
+Rejected gating on a "touched" flag alone: it only narrows the window (the
+poisoning would still occur after the user's first real edit, once they
+close the dialog), so it doesn't fix the underlying problem by itself.
+
+`registry/ui/theme_builder.rs`'s checksum in `registry.json` and the
+installed `apps/playground/src/components/ui/theme_builder.rs` copy were
+both refreshed through the real `adico add theme-builder --replace` path
+(rebuilding the `adico` binary first, since it embeds registry source at
+compile time) — not hand-patched. Live-reverified the exact failing
+sequence afterward: open the launcher, close it, then switch `ModeToggle`
+to Dark — `--background` now correctly reads the `.dark {}` value again.
 
 ### 4. Sequencing: this change cannot start before 4.8k lands
 

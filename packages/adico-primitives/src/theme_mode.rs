@@ -238,6 +238,31 @@ pub fn apply_root_properties(pairs: &[(&str, String)]) {
 #[cfg(not(feature = "web"))]
 pub fn apply_root_properties(_pairs: &[(&str, String)]) {}
 
+/// Removes a list of custom properties this consumer previously set with
+/// [`apply_root_properties`] from the document root, on `web`.
+///
+/// Exists so a component that live-previews an edit (for example one that
+/// applies every semantic token, not just a handful) can hand control back
+/// to ordinary class-selector CSS (`.dark { ... }`, as `apply_resolved_class`
+/// sets) when it stops being the active editor -- typically from a
+/// `use_drop` cleanup on unmount. Without this, an inline property this
+/// crate set never goes away on its own: inline styles always take
+/// precedence over a class selector for the same property, so a
+/// mode-switch component's `.dark` toggle would otherwise appear to stop
+/// working for any property a previously-mounted (now unmounted) consumer
+/// had touched.
+#[cfg(feature = "web")]
+pub fn clear_root_properties(names: &[&str]) {
+    let script = names
+        .iter()
+        .map(|name| format!("root.style.removeProperty('{name}');"))
+        .collect::<String>();
+    let _ = dioxus_document::eval(&format!("const root = document.documentElement; {script}"));
+}
+
+#[cfg(not(feature = "web"))]
+pub fn clear_root_properties(_names: &[&str]) {}
+
 /// A deliberately simple location: the OS temp directory rather than a real
 /// per-app data directory (which would need an additional dependency this
 /// crate doesn't otherwise need, e.g. `dirs`). Named, accepted v1 limitation

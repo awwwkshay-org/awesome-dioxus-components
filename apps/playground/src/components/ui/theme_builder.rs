@@ -1,19 +1,55 @@
-//! Playground-only controls for exercising the installed shadcn-style theme
-//! contract. The selected values are applied to the application shell, so
-//! copied registry components continue to consume ordinary CSS variables.
+//! Source-owned Dioxus-only theme customization builder for Dioxus (no
+//! shadcn equivalent), backed by the owned adico primitive layer.
+//!
+//! Productizes the full 28-semantic-token editor, independent light/dark
+//! values, deterministic "generate theme," and CSS export prototyped in
+//! `apps/playground/src/theme.rs`'s advanced customization tray. Unlike
+//! `theme-switcher` (which only distills the primary-color preset concept),
+//! `theme-builder` ports that tray's complete token coverage, since none of
+//! it is actually playground-specific in nature -- see design.md §7d.
+//!
+//! Applies its edited tokens live via
+//! [`adico_primitives::theme_mode::apply_root_properties`], the same
+//! document-root mechanism `theme-switcher` already uses for its 4
+//! properties, so `ThemeBuilder`, `ThemeSwitcher`, and `ModeToggle` can be
+//! mounted together and compose correctly. Its CSS export renders into a
+//! read-only, selectable `<textarea>` rather than calling the browser
+//! clipboard API directly -- a real one-click clipboard write would leak a
+//! browser-interop detail into this registry item's source and require new
+//! `web-sys`/`wasm-bindgen-futures` cargo dependencies no other registry
+//! item needs; see design.md §7d.
+//!
+//! Unlike `theme-switcher` (which only ever touches 4 properties, so
+//! whichever component last wrote them simply wins, an ordinary CSS
+//! custom-property cascade), `ThemeBuilder` covers the *entire* semantic
+//! token set, including `--background`/`--foreground` -- the same
+//! properties `mode-toggle`'s `.dark` class selector defines. An inline
+//! style always beats a class selector for the same property, so if
+//! `ThemeBuilder` left its properties in place after unmounting, opening it
+//! even once would permanently override `mode-toggle`'s dark-mode toggle
+//! for the rest of the session. A `use_drop` cleanup below removes every
+//! property this component applies as soon as it unmounts, handing control
+//! back to `mode-toggle`/`theme-switcher`'s class-based mechanism.
 
 use dioxus::prelude::*;
 
-use crate::components::ui;
+use adico_primitives::theme_mode::{apply_root_properties, clear_root_properties};
 
+use crate::adico_lib::cn::cn;
+
+/// Which appearance `ThemeBuilder` is currently editing/previewing. This is
+/// independent of the persisted `theme_mode` global signal `mode-toggle`
+/// drives -- `ThemeBuilder` is an editing surface a consumer mounts
+/// occasionally (for example behind a settings dialog), not an always-active
+/// mode switch, so it owns its own light/dark selection.
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
-pub enum ThemeMode {
+pub enum ThemeAppearance {
     #[default]
     Light,
     Dark,
 }
 
-impl ThemeMode {
+impl ThemeAppearance {
     const ALL: [Self; 2] = [Self::Light, Self::Dark];
 
     const fn label(self) -> &'static str {
@@ -35,6 +71,8 @@ impl ThemeMode {
     }
 }
 
+/// A palette preset applied to a semantic role group (primary, secondary, or
+/// tertiary/accent).
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub enum Palette {
     #[default]
@@ -67,67 +105,85 @@ impl Palette {
         }
     }
 
-    const fn primary_tokens(self, mode: ThemeMode) -> ColorTokens {
-        match (self, mode) {
-            (Self::Slate, ThemeMode::Light) => ColorTokens::new("222.2 47.4% 11.2%", "210 40% 98%"),
-            (Self::Blue, ThemeMode::Light) => ColorTokens::new("221.2 83.2% 53.3%", "210 40% 98%"),
-            (Self::Violet, ThemeMode::Light) => {
+    const fn primary_tokens(self, appearance: ThemeAppearance) -> ColorTokens {
+        match (self, appearance) {
+            (Self::Slate, ThemeAppearance::Light) => {
+                ColorTokens::new("222.2 47.4% 11.2%", "210 40% 98%")
+            }
+            (Self::Blue, ThemeAppearance::Light) => {
+                ColorTokens::new("221.2 83.2% 53.3%", "210 40% 98%")
+            }
+            (Self::Violet, ThemeAppearance::Light) => {
                 ColorTokens::new("262.1 83.3% 57.8%", "210 40% 98%")
             }
-            (Self::Emerald, ThemeMode::Light) => {
+            (Self::Emerald, ThemeAppearance::Light) => {
                 ColorTokens::new("160.1 84.1% 39.4%", "210 40% 98%")
             }
-            (Self::Rose, ThemeMode::Light) => ColorTokens::new("346.8 77.2% 49.8%", "210 40% 98%"),
-            (Self::Amber, ThemeMode::Light) => {
+            (Self::Rose, ThemeAppearance::Light) => {
+                ColorTokens::new("346.8 77.2% 49.8%", "210 40% 98%")
+            }
+            (Self::Amber, ThemeAppearance::Light) => {
                 ColorTokens::new("37.7 92.1% 50.2%", "26 83.3% 14.1%")
             }
-            (Self::Slate, ThemeMode::Dark) => ColorTokens::new("210 40% 98%", "222.2 47.4% 11.2%"),
-            (Self::Blue, ThemeMode::Dark) => {
+            (Self::Slate, ThemeAppearance::Dark) => {
+                ColorTokens::new("210 40% 98%", "222.2 47.4% 11.2%")
+            }
+            (Self::Blue, ThemeAppearance::Dark) => {
                 ColorTokens::new("213.1 93.9% 67.8%", "222.2 47.4% 11.2%")
             }
-            (Self::Violet, ThemeMode::Dark) => ColorTokens::new("263.4 70% 50.4%", "0 0% 100%"),
-            (Self::Emerald, ThemeMode::Dark) => {
+            (Self::Violet, ThemeAppearance::Dark) => {
+                ColorTokens::new("263.4 70% 50.4%", "0 0% 100%")
+            }
+            (Self::Emerald, ThemeAppearance::Dark) => {
                 ColorTokens::new("158.1 64.4% 51.6%", "2.7 19.3% 10.2%")
             }
-            (Self::Rose, ThemeMode::Dark) => ColorTokens::new("349.7 89.2% 60.2%", "0 0% 100%"),
-            (Self::Amber, ThemeMode::Dark) => {
+            (Self::Rose, ThemeAppearance::Dark) => {
+                ColorTokens::new("349.7 89.2% 60.2%", "0 0% 100%")
+            }
+            (Self::Amber, ThemeAppearance::Dark) => {
                 ColorTokens::new("47.9 95.8% 53.1%", "26 83.3% 14.1%")
             }
         }
     }
 
-    const fn surface_tokens(self, mode: ThemeMode) -> ColorTokens {
-        match (self, mode) {
-            (Self::Slate, ThemeMode::Light) => {
+    const fn surface_tokens(self, appearance: ThemeAppearance) -> ColorTokens {
+        match (self, appearance) {
+            (Self::Slate, ThemeAppearance::Light) => {
                 ColorTokens::new("210 40% 96.1%", "222.2 47.4% 11.2%")
             }
-            (Self::Blue, ThemeMode::Light) => {
+            (Self::Blue, ThemeAppearance::Light) => {
                 ColorTokens::new("214.3 94.6% 92.7%", "221.2 83.2% 29.4%")
             }
-            (Self::Violet, ThemeMode::Light) => {
+            (Self::Violet, ThemeAppearance::Light) => {
                 ColorTokens::new("250 100% 95.3%", "262.1 83.3% 30%")
             }
-            (Self::Emerald, ThemeMode::Light) => {
+            (Self::Emerald, ThemeAppearance::Light) => {
                 ColorTokens::new("152.4 76% 92.2%", "161.4 93.5% 16.9%")
             }
-            (Self::Rose, ThemeMode::Light) => {
+            (Self::Rose, ThemeAppearance::Light) => {
                 ColorTokens::new("355.6 100% 94.7%", "343.4 79.7% 25.7%")
             }
-            (Self::Amber, ThemeMode::Light) => ColorTokens::new("48 96.5% 88.8%", "26 83.3% 14.1%"),
-            (Self::Slate, ThemeMode::Dark) => ColorTokens::new("217.2 32.6% 17.5%", "210 40% 98%"),
-            (Self::Blue, ThemeMode::Dark) => {
+            (Self::Amber, ThemeAppearance::Light) => {
+                ColorTokens::new("48 96.5% 88.8%", "26 83.3% 14.1%")
+            }
+            (Self::Slate, ThemeAppearance::Dark) => {
+                ColorTokens::new("217.2 32.6% 17.5%", "210 40% 98%")
+            }
+            (Self::Blue, ThemeAppearance::Dark) => {
                 ColorTokens::new("217.2 32.6% 17.5%", "219.4 100% 92%")
             }
-            (Self::Violet, ThemeMode::Dark) => {
+            (Self::Violet, ThemeAppearance::Dark) => {
                 ColorTokens::new("263.4 38.6% 17.8%", "250 100% 92%")
             }
-            (Self::Emerald, ThemeMode::Dark) => {
+            (Self::Emerald, ThemeAppearance::Dark) => {
                 ColorTokens::new("163.1 36.7% 16.1%", "149.3 80.4% 90%")
             }
-            (Self::Rose, ThemeMode::Dark) => {
+            (Self::Rose, ThemeAppearance::Dark) => {
                 ColorTokens::new("343.4 43.8% 16.1%", "355.6 100% 94.7%")
             }
-            (Self::Amber, ThemeMode::Dark) => ColorTokens::new("30 47.8% 16.1%", "48 96.5% 88.8%"),
+            (Self::Amber, ThemeAppearance::Dark) => {
+                ColorTokens::new("30 47.8% 16.1%", "48 96.5% 88.8%")
+            }
         }
     }
 }
@@ -280,36 +336,40 @@ const THEME_GROUPS: [ThemeGroup; 4] = [
     },
 ];
 
+/// The complete set of semantic theme tokens for one appearance (light or
+/// dark). This is the payload shape [`ThemeBuilder`]'s `on_theme_change`
+/// callback delivers, so a consumer can persist or react to edits
+/// programmatically instead of only copy-pasting the CSS export.
 #[derive(Clone, Debug, PartialEq)]
-struct ThemeVariables {
-    background: String,
-    foreground: String,
-    card: String,
-    card_foreground: String,
-    popover: String,
-    popover_foreground: String,
-    primary: String,
-    primary_foreground: String,
-    secondary: String,
-    secondary_foreground: String,
-    muted: String,
-    muted_foreground: String,
-    accent: String,
-    accent_foreground: String,
-    destructive: String,
-    destructive_foreground: String,
-    border: String,
-    input: String,
-    ring: String,
-    radius: String,
-    sidebar_background: String,
-    sidebar_foreground: String,
-    sidebar_primary: String,
-    sidebar_primary_foreground: String,
-    sidebar_accent: String,
-    sidebar_accent_foreground: String,
-    sidebar_border: String,
-    sidebar_ring: String,
+pub struct ThemeVariables {
+    pub background: String,
+    pub foreground: String,
+    pub card: String,
+    pub card_foreground: String,
+    pub popover: String,
+    pub popover_foreground: String,
+    pub primary: String,
+    pub primary_foreground: String,
+    pub secondary: String,
+    pub secondary_foreground: String,
+    pub muted: String,
+    pub muted_foreground: String,
+    pub accent: String,
+    pub accent_foreground: String,
+    pub destructive: String,
+    pub destructive_foreground: String,
+    pub border: String,
+    pub input: String,
+    pub ring: String,
+    pub radius: String,
+    pub sidebar_background: String,
+    pub sidebar_foreground: String,
+    pub sidebar_primary: String,
+    pub sidebar_primary_foreground: String,
+    pub sidebar_accent: String,
+    pub sidebar_accent_foreground: String,
+    pub sidebar_border: String,
+    pub sidebar_ring: String,
 }
 
 impl ThemeVariables {
@@ -445,68 +505,121 @@ impl ThemeVariables {
         }
     }
 
-    fn variables(&self) -> String {
-        format!(
-            "--background: {background}; --foreground: {foreground}; --card: {card}; \
-             --card-foreground: {card_foreground}; --popover: {popover}; \
-             --popover-foreground: {popover_foreground}; --primary: {primary}; \
-             --primary-foreground: {primary_foreground}; --secondary: {secondary}; \
-             --secondary-foreground: {secondary_foreground}; --muted: {muted}; \
-             --muted-foreground: {muted_foreground}; --accent: {accent}; \
-             --accent-foreground: {accent_foreground}; --destructive: {destructive}; \
-             --destructive-foreground: {destructive_foreground}; --border: {border}; \
-             --input: {input}; --ring: {ring}; --radius: {radius}; \
-             --sidebar-background: {sidebar_background}; --sidebar-foreground: {sidebar_foreground}; \
-             --sidebar-primary: {sidebar_primary}; \
-             --sidebar-primary-foreground: {sidebar_primary_foreground}; \
-             --sidebar-accent: {sidebar_accent}; \
-             --sidebar-accent-foreground: {sidebar_accent_foreground}; \
-             --sidebar-border: {sidebar_border}; --sidebar-ring: {sidebar_ring}; \
-             --color-background: hsl({background}); --color-foreground: hsl({foreground}); \
-             --color-card: hsl({card}); --color-card-foreground: hsl({card_foreground}); \
-             --color-popover: hsl({popover}); --color-popover-foreground: hsl({popover_foreground}); \
-             --color-primary: hsl({primary}); --color-primary-foreground: hsl({primary_foreground}); \
-             --color-secondary: hsl({secondary}); --color-secondary-foreground: hsl({secondary_foreground}); \
-             --color-muted: hsl({muted}); --color-muted-foreground: hsl({muted_foreground}); \
-             --color-accent: hsl({accent}); --color-accent-foreground: hsl({accent_foreground}); \
-             --color-destructive: hsl({destructive}); --color-destructive-foreground: hsl({destructive_foreground}); \
-             --color-border: hsl({border}); --color-input: hsl({input}); --color-ring: hsl({ring}); \
-             --color-sidebar: hsl({sidebar_background}); \
-             --color-sidebar-foreground: hsl({sidebar_foreground}); \
-             --color-sidebar-primary: hsl({sidebar_primary}); \
-             --color-sidebar-primary-foreground: hsl({sidebar_primary_foreground}); \
-             --color-sidebar-accent: hsl({sidebar_accent}); \
-             --color-sidebar-accent-foreground: hsl({sidebar_accent_foreground}); \
-             --color-sidebar-border: hsl({sidebar_border}); --color-sidebar-ring: hsl({sidebar_ring});",
-            background = self.background,
-            foreground = self.foreground,
-            card = self.card,
-            card_foreground = self.card_foreground,
-            popover = self.popover,
-            popover_foreground = self.popover_foreground,
-            primary = self.primary,
-            primary_foreground = self.primary_foreground,
-            secondary = self.secondary,
-            secondary_foreground = self.secondary_foreground,
-            muted = self.muted,
-            muted_foreground = self.muted_foreground,
-            accent = self.accent,
-            accent_foreground = self.accent_foreground,
-            destructive = self.destructive,
-            destructive_foreground = self.destructive_foreground,
-            border = self.border,
-            input = self.input,
-            ring = self.ring,
-            radius = self.radius,
-            sidebar_background = self.sidebar_background,
-            sidebar_foreground = self.sidebar_foreground,
-            sidebar_primary = self.sidebar_primary,
-            sidebar_primary_foreground = self.sidebar_primary_foreground,
-            sidebar_accent = self.sidebar_accent,
-            sidebar_accent_foreground = self.sidebar_accent_foreground,
-            sidebar_border = self.sidebar_border,
-            sidebar_ring = self.sidebar_ring,
-        )
+    /// The token pairs [`apply_root_properties`] needs to apply this
+    /// appearance to the document root, including the `--color-*` Tailwind
+    /// aliases every installed component's utility classes resolve against.
+    fn root_property_pairs(&self) -> Vec<(&'static str, String)> {
+        vec![
+            ("--background", self.background.clone()),
+            ("--foreground", self.foreground.clone()),
+            ("--card", self.card.clone()),
+            ("--card-foreground", self.card_foreground.clone()),
+            ("--popover", self.popover.clone()),
+            ("--popover-foreground", self.popover_foreground.clone()),
+            ("--primary", self.primary.clone()),
+            ("--primary-foreground", self.primary_foreground.clone()),
+            ("--secondary", self.secondary.clone()),
+            ("--secondary-foreground", self.secondary_foreground.clone()),
+            ("--muted", self.muted.clone()),
+            ("--muted-foreground", self.muted_foreground.clone()),
+            ("--accent", self.accent.clone()),
+            ("--accent-foreground", self.accent_foreground.clone()),
+            ("--destructive", self.destructive.clone()),
+            (
+                "--destructive-foreground",
+                self.destructive_foreground.clone(),
+            ),
+            ("--border", self.border.clone()),
+            ("--input", self.input.clone()),
+            ("--ring", self.ring.clone()),
+            ("--radius", self.radius.clone()),
+            ("--sidebar-background", self.sidebar_background.clone()),
+            ("--sidebar-foreground", self.sidebar_foreground.clone()),
+            ("--sidebar-primary", self.sidebar_primary.clone()),
+            (
+                "--sidebar-primary-foreground",
+                self.sidebar_primary_foreground.clone(),
+            ),
+            ("--sidebar-accent", self.sidebar_accent.clone()),
+            (
+                "--sidebar-accent-foreground",
+                self.sidebar_accent_foreground.clone(),
+            ),
+            ("--sidebar-border", self.sidebar_border.clone()),
+            ("--sidebar-ring", self.sidebar_ring.clone()),
+            ("--color-background", format!("hsl({})", self.background)),
+            ("--color-foreground", format!("hsl({})", self.foreground)),
+            ("--color-card", format!("hsl({})", self.card)),
+            (
+                "--color-card-foreground",
+                format!("hsl({})", self.card_foreground),
+            ),
+            ("--color-popover", format!("hsl({})", self.popover)),
+            (
+                "--color-popover-foreground",
+                format!("hsl({})", self.popover_foreground),
+            ),
+            ("--color-primary", format!("hsl({})", self.primary)),
+            (
+                "--color-primary-foreground",
+                format!("hsl({})", self.primary_foreground),
+            ),
+            ("--color-secondary", format!("hsl({})", self.secondary)),
+            (
+                "--color-secondary-foreground",
+                format!("hsl({})", self.secondary_foreground),
+            ),
+            ("--color-muted", format!("hsl({})", self.muted)),
+            (
+                "--color-muted-foreground",
+                format!("hsl({})", self.muted_foreground),
+            ),
+            ("--color-accent", format!("hsl({})", self.accent)),
+            (
+                "--color-accent-foreground",
+                format!("hsl({})", self.accent_foreground),
+            ),
+            ("--color-destructive", format!("hsl({})", self.destructive)),
+            (
+                "--color-destructive-foreground",
+                format!("hsl({})", self.destructive_foreground),
+            ),
+            ("--color-border", format!("hsl({})", self.border)),
+            ("--color-input", format!("hsl({})", self.input)),
+            ("--color-ring", format!("hsl({})", self.ring)),
+            (
+                "--color-sidebar",
+                format!("hsl({})", self.sidebar_background),
+            ),
+            (
+                "--color-sidebar-foreground",
+                format!("hsl({})", self.sidebar_foreground),
+            ),
+            (
+                "--color-sidebar-primary",
+                format!("hsl({})", self.sidebar_primary),
+            ),
+            (
+                "--color-sidebar-primary-foreground",
+                format!("hsl({})", self.sidebar_primary_foreground),
+            ),
+            (
+                "--color-sidebar-accent",
+                format!("hsl({})", self.sidebar_accent),
+            ),
+            (
+                "--color-sidebar-accent-foreground",
+                format!("hsl({})", self.sidebar_accent_foreground),
+            ),
+            (
+                "--color-sidebar-border",
+                format!("hsl({})", self.sidebar_border),
+            ),
+            (
+                "--color-sidebar-ring",
+                format!("hsl({})", self.sidebar_ring),
+            ),
+        ]
     }
 
     fn css_declarations(&self) -> String {
@@ -559,8 +672,8 @@ impl ThemeVariables {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct ThemeSelection {
-    mode: ThemeMode,
+struct ThemeSelection {
+    appearance: ThemeAppearance,
     primary_palette: Palette,
     secondary_palette: Palette,
     tertiary_palette: Palette,
@@ -572,7 +685,7 @@ pub struct ThemeSelection {
 impl Default for ThemeSelection {
     fn default() -> Self {
         Self {
-            mode: ThemeMode::Light,
+            appearance: ThemeAppearance::Light,
             primary_palette: Palette::Slate,
             secondary_palette: Palette::Slate,
             tertiary_palette: Palette::Slate,
@@ -584,21 +697,10 @@ impl Default for ThemeSelection {
 }
 
 impl ThemeSelection {
-    pub const fn shell_class(&self) -> &'static str {
-        match self.mode {
-            ThemeMode::Light => "fixed inset-0 overflow-hidden bg-background text-foreground",
-            ThemeMode::Dark => "dark fixed inset-0 overflow-hidden bg-background text-foreground",
-        }
-    }
-
-    pub fn variables(&self) -> String {
-        self.active_tokens().variables()
-    }
-
     fn css_export(&self) -> String {
-        let selector = match self.mode {
-            ThemeMode::Light => ":root",
-            ThemeMode::Dark => ".dark",
+        let selector = match self.appearance {
+            ThemeAppearance::Light => ":root",
+            ThemeAppearance::Dark => ".dark",
         };
         format!(
             "{selector} {{\n{}\n}}\n",
@@ -607,31 +709,31 @@ impl ThemeSelection {
     }
 
     fn active_tokens(&self) -> &ThemeVariables {
-        match self.mode {
-            ThemeMode::Light => &self.light,
-            ThemeMode::Dark => &self.dark,
+        match self.appearance {
+            ThemeAppearance::Light => &self.light,
+            ThemeAppearance::Dark => &self.dark,
         }
     }
 
     fn active_tokens_mut(&mut self) -> &mut ThemeVariables {
-        match self.mode {
-            ThemeMode::Light => &mut self.light,
-            ThemeMode::Dark => &mut self.dark,
+        match self.appearance {
+            ThemeAppearance::Light => &mut self.light,
+            ThemeAppearance::Dark => &mut self.dark,
         }
     }
 
-    fn tokens_mut_for(&mut self, mode: ThemeMode) -> &mut ThemeVariables {
-        match mode {
-            ThemeMode::Light => &mut self.light,
-            ThemeMode::Dark => &mut self.dark,
+    fn tokens_mut_for(&mut self, appearance: ThemeAppearance) -> &mut ThemeVariables {
+        match appearance {
+            ThemeAppearance::Light => &mut self.light,
+            ThemeAppearance::Dark => &mut self.dark,
         }
     }
 
     fn set_primary_palette(&mut self, palette: Palette) {
         self.primary_palette = palette;
-        for mode in ThemeMode::ALL {
-            let colors = palette.primary_tokens(mode);
-            let tokens = self.tokens_mut_for(mode);
+        for appearance in ThemeAppearance::ALL {
+            let colors = palette.primary_tokens(appearance);
+            let tokens = self.tokens_mut_for(appearance);
             tokens.primary = colors.background.into();
             tokens.primary_foreground = colors.foreground.into();
             tokens.ring = colors.background.into();
@@ -643,9 +745,9 @@ impl ThemeSelection {
 
     fn set_secondary_palette(&mut self, palette: Palette) {
         self.secondary_palette = palette;
-        for mode in ThemeMode::ALL {
-            let colors = palette.surface_tokens(mode);
-            let tokens = self.tokens_mut_for(mode);
+        for appearance in ThemeAppearance::ALL {
+            let colors = palette.surface_tokens(appearance);
+            let tokens = self.tokens_mut_for(appearance);
             tokens.secondary = colors.background.into();
             tokens.secondary_foreground = colors.foreground.into();
             tokens.muted = colors.background.into();
@@ -655,9 +757,9 @@ impl ThemeSelection {
 
     fn set_tertiary_palette(&mut self, palette: Palette) {
         self.tertiary_palette = palette;
-        for mode in ThemeMode::ALL {
-            let colors = palette.surface_tokens(mode);
-            let tokens = self.tokens_mut_for(mode);
+        for appearance in ThemeAppearance::ALL {
+            let colors = palette.surface_tokens(appearance);
+            let tokens = self.tokens_mut_for(appearance);
             tokens.accent = colors.background.into();
             tokens.accent_foreground = colors.foreground.into();
             tokens.sidebar_accent = colors.background.into();
@@ -692,163 +794,122 @@ fn next_palette_index(state: &mut u64) -> usize {
     ((*state >> 32) as usize) % Palette::ALL.len()
 }
 
+/// A self-contained theme customization builder: a full 28-semantic-token
+/// editor with independent light/dark values, palette presets, a
+/// deterministic "generate theme" action, and a CSS export. Applies its
+/// edited tokens live to the document root via [`apply_root_properties`], so
+/// it composes with `mode-toggle`/`theme-switcher` on the same mechanism.
+///
+/// Unlike `mode-toggle`, `ThemeBuilder` does not read or write the persisted
+/// `theme_mode` global signal -- it owns its own light/dark appearance
+/// selection, since it's an editing surface a consumer mounts occasionally
+/// (for example behind a settings dialog), not an always-active mode switch.
 #[component]
-pub fn ThemeLauncher(mut open: Signal<bool>) -> Element {
-    let theme = use_context::<Signal<ThemeSelection>>();
-    let selection = theme();
+pub fn ThemeBuilder(
+    #[props(default)] on_theme_change: Callback<ThemeVariables>,
+    class: Option<String>,
+) -> Element {
+    let mut selection = use_signal(ThemeSelection::default);
+
+    use_effect(move || {
+        let current = selection();
+        apply_root_properties(&current.active_tokens().root_property_pairs());
+        on_theme_change.call(current.active_tokens().clone());
+    });
+
+    use_drop(move || {
+        let property_names: Vec<&str> = ThemeVariables::light()
+            .root_property_pairs()
+            .iter()
+            .map(|(name, _)| *name)
+            .collect();
+        clear_root_properties(&property_names);
+    });
+
+    let current = selection();
+    let active_tokens = current.active_tokens().clone();
+    let css_export = current.css_export();
+    let export_label = format!("{} CSS variables", current.appearance.label());
 
     rsx! {
-        section { class: "mt-3 shrink-0 rounded-lg border border-border bg-card p-3", aria_label: "Theme customization tray",
-            div { class: "flex items-center justify-between gap-2",
-                div { class: "min-w-0",
-                    h2 { class: "text-sm font-semibold", "Theme" }
-                    p { class: "truncate text-xs text-muted-foreground",
-                        "{selection.mode.label()} · {selection.primary_palette.label()} / {selection.secondary_palette.label()} / {selection.tertiary_palette.label()}"
-                    }
+        div {
+            class: cn(&["space-y-3", class.as_deref().unwrap_or_default()]),
+            ThemeAppearanceControl {
+                value: current.appearance,
+                on_change: move |appearance| selection.write().appearance = appearance,
+            }
+            PaletteControl {
+                label: "Primary",
+                appearance: current.appearance,
+                primary_role: true,
+                value: current.primary_palette,
+                on_change: move |palette| selection.write().set_primary_palette(palette),
+            }
+            PaletteControl {
+                label: "Secondary",
+                appearance: current.appearance,
+                primary_role: false,
+                value: current.secondary_palette,
+                on_change: move |palette| selection.write().set_secondary_palette(palette),
+            }
+            PaletteControl {
+                label: "Tertiary",
+                appearance: current.appearance,
+                primary_role: false,
+                value: current.tertiary_palette,
+                on_change: move |palette| selection.write().set_tertiary_palette(palette),
+            }
+            ActiveRolePreview {
+                primary: current.primary_palette,
+                secondary: current.secondary_palette,
+                tertiary: current.tertiary_palette,
+            }
+            div { class: "grid gap-2 sm:grid-cols-2",
+                button {
+                    class: "rounded-md bg-primary px-2 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90",
+                    r#type: "button",
+                    onclick: move |_| selection.write().generate_theme(),
+                    "Generate theme"
                 }
                 button {
-                    class: "shrink-0 rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90",
+                    class: "rounded-md border border-input bg-background px-2 py-1.5 text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground",
                     r#type: "button",
-                    aria_haspopup: "dialog",
-                    aria_expanded: open(),
-                    onclick: move |_| open.set(true),
-                    "Customize"
+                    onclick: move |_| selection.write().reset(),
+                    "Reset theme"
                 }
             }
-        }
-    }
-}
-
-#[component]
-pub fn ThemeModal(mut theme: Signal<ThemeSelection>, mut open: Signal<bool>) -> Element {
-    let copy_status = use_signal(|| None::<String>);
-    let selection = theme();
-    let active_tokens = selection.active_tokens().clone();
-    let css_export = selection.css_export();
-    let copy_label = format!("Copy {} CSS variables", selection.mode.label());
-
-    rsx! {
-        ui::Dialog {
-            open: open(),
-            on_open_change: move |value| open.set(value),
-            ui::DialogOverlay {}
-            ui::DialogContent { class: "max-h-[calc(100svh-2rem)] max-w-4xl overflow-y-auto p-5 sm:p-6",
-                div { class: "flex items-start justify-between gap-4",
-                    ui::DialogHeader {
-                        ui::DialogTitle { "Theme palette" }
-                        ui::DialogDescription { "Configure the live shadcn semantic theme contract, then copy the active appearance as CSS variables." }
-                    }
-                    button {
-                        class: "rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                        r#type: "button",
-                        aria_label: "Close theme palette",
-                        onclick: move |_| open.set(false),
-                        "×"
-                    }
-                }
-                div { class: "mt-4 space-y-3",
-                    ThemeModeControl {
-                        value: selection.mode,
-                        on_change: move |mode| theme.write().mode = mode,
-                    }
-                    PaletteControl {
-                        label: "Primary",
-                        mode: selection.mode,
-                        primary_role: true,
-                        value: selection.primary_palette,
-                        on_change: move |palette| theme.write().set_primary_palette(palette),
-                    }
-                    PaletteControl {
-                        label: "Secondary",
-                        mode: selection.mode,
-                        primary_role: false,
-                        value: selection.secondary_palette,
-                        on_change: move |palette| theme.write().set_secondary_palette(palette),
-                    }
-                    PaletteControl {
-                        label: "Tertiary",
-                        mode: selection.mode,
-                        primary_role: false,
-                        value: selection.tertiary_palette,
-                        on_change: move |palette| theme.write().set_tertiary_palette(palette),
-                    }
-                    ActiveRolePreview {
-                        primary: selection.primary_palette,
-                        secondary: selection.secondary_palette,
-                        tertiary: selection.tertiary_palette,
-                    }
-                    div { class: "grid gap-2 sm:grid-cols-3",
-                        button {
-                            class: "rounded-md bg-primary px-2 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90",
-                            r#type: "button",
-                            onclick: move |_| theme.write().generate_theme(),
-                            "Generate theme"
-                        }
-                        button {
-                            class: "rounded-md border border-input bg-background px-2 py-1.5 text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground",
-                            r#type: "button",
-                            onclick: move |_| theme.write().reset(),
-                            "Reset theme"
-                        }
-                        button {
-                            class: "rounded-md border border-input bg-background px-2 py-1.5 text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground",
-                            r#type: "button",
-                            onclick: move |_| copy_theme_css(css_export.clone(), copy_status),
-                            "{copy_label}"
-                        }
-                    }
-                    if let Some(status) = copy_status() {
-                        p { class: "text-xs text-muted-foreground", role: "status", "{status}" }
-                    }
-                    for group in THEME_GROUPS {
-                        details { class: "rounded-md border border-border p-2",
-                            summary { class: "cursor-pointer text-xs font-semibold", "{group.label}" }
-                            div { class: "mt-2 grid gap-2",
-                                for token in group.tokens {
-                                    SemanticTokenControl {
-                                        token: *token,
-                                        value: active_tokens.get(*token).to_owned(),
-                                        on_change: move |value| theme.write().active_tokens_mut().set(*token, value),
-                                    }
-                                }
+            for group in THEME_GROUPS {
+                details { class: "rounded-md border border-border p-2",
+                    summary { class: "cursor-pointer text-xs font-semibold", "{group.label}" }
+                    div { class: "mt-2 grid gap-2",
+                        for token in group.tokens {
+                            SemanticTokenControl {
+                                token: *token,
+                                value: active_tokens.get(*token).to_owned(),
+                                on_change: move |value| selection.write().active_tokens_mut().set(*token, value),
                             }
                         }
                     }
                 }
             }
+            label { class: "grid gap-1 text-xs",
+                span { class: "font-medium text-foreground", "{export_label}" }
+                textarea {
+                    class: "h-40 w-full rounded-md border border-input bg-background p-2 font-mono text-[11px] text-foreground",
+                    readonly: true,
+                    "aria-label": "{export_label}",
+                    value: "{css_export}",
+                }
+            }
         }
     }
 }
 
-#[cfg(target_arch = "wasm32")]
-fn copy_theme_css(css: String, mut status: Signal<Option<String>>) {
-    let Some(window) = web_sys::window() else {
-        status.set(Some(
-            "Clipboard is unavailable in this browser.".to_string(),
-        ));
-        return;
-    };
-
-    let promise = window.navigator().clipboard().write_text(&css);
-    wasm_bindgen_futures::spawn_local(async move {
-        let message = if wasm_bindgen_futures::JsFuture::from(promise).await.is_ok() {
-            "CSS variables copied to the clipboard."
-        } else {
-            "The browser did not allow clipboard access."
-        };
-        status.set(Some(message.to_string()));
-    });
-}
-
-#[cfg(not(target_arch = "wasm32"))]
-fn copy_theme_css(_: String, mut status: Signal<Option<String>>) {
-    status.set(Some(
-        "Clipboard copying is available in the web build.".to_string(),
-    ));
-}
-
 #[component]
-fn ThemeModeControl(value: ThemeMode, on_change: EventHandler<ThemeMode>) -> Element {
+fn ThemeAppearanceControl(
+    value: ThemeAppearance,
+    on_change: EventHandler<ThemeAppearance>,
+) -> Element {
     rsx! {
         label { class: "grid gap-1 text-xs font-medium",
             "Appearance"
@@ -856,12 +917,12 @@ fn ThemeModeControl(value: ThemeMode, on_change: EventHandler<ThemeMode>) -> Ele
                 class: "rounded-md border border-input bg-background px-2 py-1.5 text-sm text-foreground",
                 value: "{value.value()}",
                 onchange: move |event| {
-                    if let Some(mode) = ThemeMode::from_value(&event.value()) {
-                        on_change.call(mode);
+                    if let Some(appearance) = ThemeAppearance::from_value(&event.value()) {
+                        on_change.call(appearance);
                     }
                 },
-                for mode in ThemeMode::ALL {
-                    option { value: "{mode.value()}", "{mode.label()}" }
+                for appearance in ThemeAppearance::ALL {
+                    option { value: "{appearance.value()}", "{appearance.label()}" }
                 }
             }
         }
@@ -871,7 +932,7 @@ fn ThemeModeControl(value: ThemeMode, on_change: EventHandler<ThemeMode>) -> Ele
 #[component]
 fn PaletteControl(
     label: &'static str,
-    mode: ThemeMode,
+    appearance: ThemeAppearance,
     primary_role: bool,
     value: Palette,
     on_change: EventHandler<Palette>,
@@ -883,9 +944,9 @@ fn PaletteControl(
                 for palette in Palette::ALL {
                     {
                         let colors = if primary_role {
-                            palette.primary_tokens(mode)
+                            palette.primary_tokens(appearance)
                         } else {
-                            palette.surface_tokens(mode)
+                            palette.surface_tokens(appearance)
                         };
                         let style = format!(
                             "background-color: hsl({}); color: hsl({});",
@@ -1038,7 +1099,7 @@ fn parse_hsl(value: &str) -> Option<(f64, f64, f64)> {
 
 #[cfg(test)]
 mod tests {
-    use super::{Palette, ThemeMode, ThemeSelection, ThemeToken, hex_to_hsl, hsl_to_hex};
+    use super::{Palette, ThemeAppearance, ThemeSelection, ThemeToken, hex_to_hsl, hsl_to_hex};
 
     #[test]
     fn every_palette_combination_supplies_the_complete_semantic_contract() {
@@ -1049,38 +1110,40 @@ mod tests {
                     selection.set_primary_palette(primary);
                     selection.set_secondary_palette(secondary);
                     selection.set_tertiary_palette(tertiary);
-                    for mode in ThemeMode::ALL {
-                        selection.mode = mode;
-                        let variables = selection.variables();
+                    for appearance in ThemeAppearance::ALL {
+                        selection.appearance = appearance;
+                        let pairs = selection.active_tokens().root_property_pairs();
                         for token in [
-                            ThemeToken::Background,
-                            ThemeToken::Primary,
-                            ThemeToken::Secondary,
-                            ThemeToken::Accent,
-                            ThemeToken::Destructive,
-                            ThemeToken::Border,
-                            ThemeToken::Input,
-                            ThemeToken::Ring,
-                            ThemeToken::Radius,
-                            ThemeToken::SidebarBackground,
-                            ThemeToken::SidebarPrimary,
-                            ThemeToken::SidebarAccent,
+                            "--background",
+                            "--primary",
+                            "--secondary",
+                            "--accent",
+                            "--destructive",
+                            "--border",
+                            "--input",
+                            "--ring",
+                            "--radius",
+                            "--sidebar-background",
+                            "--sidebar-primary",
+                            "--sidebar-accent",
                         ] {
                             assert!(
-                                variables.contains(token.label()),
-                                "missing {}",
-                                token.label()
+                                pairs.iter().any(|(name, _)| *name == token),
+                                "missing {token}"
                             );
                         }
                         for alias in [
-                            "--color-primary:",
-                            "--color-secondary:",
-                            "--color-accent:",
-                            "--color-card:",
-                            "--color-sidebar:",
-                            "--color-sidebar-primary:",
+                            "--color-primary",
+                            "--color-secondary",
+                            "--color-accent",
+                            "--color-card",
+                            "--color-sidebar",
+                            "--color-sidebar-primary",
                         ] {
-                            assert!(variables.contains(alias), "missing {alias}");
+                            assert!(
+                                pairs.iter().any(|(name, _)| *name == alias),
+                                "missing {alias}"
+                            );
                         }
                     }
                 }
@@ -1094,12 +1157,12 @@ mod tests {
         selection
             .active_tokens_mut()
             .set(ThemeToken::Background, "240 100% 50%".into());
-        selection.mode = ThemeMode::Dark;
+        selection.appearance = ThemeAppearance::Dark;
         assert_ne!(
             selection.active_tokens().get(ThemeToken::Background),
             "240 100% 50%"
         );
-        selection.mode = ThemeMode::Light;
+        selection.appearance = ThemeAppearance::Light;
         assert_eq!(
             selection.active_tokens().get(ThemeToken::Background),
             "240 100% 50%"
@@ -1139,9 +1202,17 @@ mod tests {
         selection
             .active_tokens_mut()
             .set(ThemeToken::Primary, "221.2 83.2% 53.3%".into());
-        let variables = selection.variables();
-        assert!(variables.contains("--primary: 221.2 83.2% 53.3%"));
-        assert!(variables.contains("--color-primary: hsl(221.2 83.2% 53.3%)"));
+        let pairs = selection.active_tokens().root_property_pairs();
+        assert!(
+            pairs
+                .iter()
+                .any(|(name, value)| *name == "--primary" && value == "221.2 83.2% 53.3%")
+        );
+        assert!(
+            pairs.iter().any(
+                |(name, value)| *name == "--color-primary" && value == "hsl(221.2 83.2% 53.3%)"
+            )
+        );
     }
 
     #[test]
@@ -1156,7 +1227,7 @@ mod tests {
         assert!(light_css.contains("--sidebar-ring:"));
         assert!(!light_css.contains("--color-primary:"));
 
-        selection.mode = ThemeMode::Dark;
+        selection.appearance = ThemeAppearance::Dark;
         assert!(selection.css_export().starts_with(".dark {"));
     }
 
@@ -1164,7 +1235,7 @@ mod tests {
     fn reset_restores_the_default_theme() {
         let mut selection = ThemeSelection::default();
         selection.generate_theme();
-        selection.mode = ThemeMode::Dark;
+        selection.appearance = ThemeAppearance::Dark;
         selection.reset();
         assert_eq!(selection, ThemeSelection::default());
     }
