@@ -46,6 +46,7 @@ pub mod avatar;
 pub mod calendar;
 pub mod checkbox;
 pub mod collapsible;
+pub mod color_picker;
 pub mod combobox;
 pub mod context_menu;
 pub mod date_picker;

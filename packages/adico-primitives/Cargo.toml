@@ -16,6 +16,7 @@ dioxus-icons = "=0.1.0"
 tracing = { workspace = true }
 time = { version = "0.3.44", features = ["std", "macros", "parsing", "local-offset"] }
 num-integer = "0.1.46"
+palette = "0.7.6"
 
 [dev-dependencies]
 # Only used by calendar/date_picker unit tests to render static HTML for

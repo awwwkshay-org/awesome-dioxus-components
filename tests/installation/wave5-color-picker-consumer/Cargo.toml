@@ -1,0 +1,16 @@
+[package]
+name = "adico-wave5-color-picker-consumer"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+
+[dependencies]
+# A browser fixture explicitly selects the Dioxus web runtime. Runtime crates
+# must not make a consumer inherit fullstack or development-only features.
+dioxus = { version = "=0.7.9", default-features = false, features = ["web", "launch", "macro", "html", "signals", "hooks", "asset"] }
+adico-primitives = "=0.1.0"
+palette = "0.7.6"
+
+[patch.crates-io]
+adico-primitives = { path = "../../../packages/adico-primitives" }

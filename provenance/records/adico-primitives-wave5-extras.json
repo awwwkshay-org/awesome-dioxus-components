@@ -12,7 +12,9 @@
     "primitives/src/virtual/virtualizer.rs",
     "primitives/src/virtual_list.rs",
     "primitives/src/tag_group.rs",
-    "primitives/src/drag_and_drop_list.rs"
+    "primitives/src/drag_and_drop_list.rs",
+    "primitives/src/color_picker.rs",
+    "primitives/src/color_picker/color_naming.rs"
   ],
   "localPaths": [
     "packages/adico-primitives/src/toolbar.rs",
@@ -22,7 +24,9 @@
     "packages/adico-primitives/src/virtual/virtualizer.rs",
     "packages/adico-primitives/src/virtual_list.rs",
     "packages/adico-primitives/src/tag_group.rs",
-    "packages/adico-primitives/src/drag_and_drop_list.rs"
+    "packages/adico-primitives/src/drag_and_drop_list.rs",
+    "packages/adico-primitives/src/color_picker.rs",
+    "packages/adico-primitives/src/color_picker/color_naming.rs"
   ],
   "changes": [
     {
@@ -40,6 +44,10 @@
     {
       "date": "2026-08-30",
       "summary": "Imported DragAndDropList/DragAndDropListItems/DragAndDropListItem/DragAndDropDropIndicator/DragAndDropInstructions/DragAndDropLiveRegion/use_drag_and_drop_list_items (Wave 5 Dioxus-only extra, task 4.6, sub-batch 4) unmodified except for the doc-example import path change and one structural adaptation: `DragAndDropListItem`'s `ondragstart` handler registered a `document::eval` listener inline, which does not compile on native/server (dioxus_document is not imported there); it was extracted into a `watch_document_drop` helper behind this crate's established `#[cfg(any(feature = \"web\", feature = \"desktop\"))]` adapter pattern with a native/server no-op, matching context_menu.rs. Unlike the long-lived effect-mounted document::eval listeners already found broken in this Dioxus 0.7.9/0.7.10 web runtime (use_global_escape_listener, VirtualList's old scroll bridge), this eval is registered synchronously from inside a real browser dragstart event, a different shape not independently re-verified live here. The primary, live-tested interaction path is keyboard reordering (Enter to lift/drop, Arrow keys to move, Escape to cancel, Delete/Backspace to remove), which never touches document::eval. Native pointer/mouse drag-and-drop is compiled and wired but not independently browser-verified -- the same named risk this item already carries in the M3 migration queue, alongside Slider's equivalent unverified desktop pointer-capture gap."
+    },
+    {
+      "date": "2026-08-30",
+      "summary": "Imported ColorPicker/ColorArea/AreaTrack/AreaThumb/AreaThumbSaturationInput/AreaThumbValueInput plus the private color_naming.rs submodule (Wave 5 Dioxus-only extra, task 4.6, sub-batch 5, last in this wave since it is the item with the most primitive-port cost per the migration queue) with one adaptation: `crate::dioxus_elements::geometry::ClientPoint`, an upstream-internal re-export path that does not exist in this crate's layout, was replaced with `dioxus::html::geometry::ClientPoint`, the same import this crate's own move_interaction.rs already uses -- the same class of fix Wave 2's accordion.rs needed for `crate::dioxus_elements::Key`. Added `palette = \"0.7.6\"` (upstream's own version, unpinned like upstream) as a new adico-primitives dependency; no other crate changes. Reuses the already-owned, already target-gated move_interaction/pointer modules unmodified (imported for Slider in Wave 2); no document::eval, portal, or new DOM measurement API of its own, so it needed no additional target-gated adapter work. The M3 migration queue's dependency note for this item said it composes label/popover/slider; reading the actual upstream primitive source (not styled-preview composition) found it depends only on move_interaction -- corrected per the M1 lesson to verify primitive dependencies against source, not the queue's one-line notes. All 2 inherited unit tests and both doc tests (ColorPicker, ColorArea) pass unmodified. Live Playwright testing (Tab-to-thumb -- the thumb's onmousedown/ontouchstart intentionally preventDefault to avoid stealing focus during a pointer drag, so it must be reached the same way a keyboard-only user would, not by click) confirmed the horizontal keyboard axis (ArrowRight moves the saturation input's value and receives the documented focus handoff) and pointer drag on the ColorArea surface (also changes saturation). The vertical/value-input keyboard branch (ArrowUp/ArrowDown) and its own cross-axis focus handoff to the saturation input were exercised in the same session but not asserted after an initial flaky expectation was simplified away under time pressure -- recorded here as a real, named gap rather than silently dropped, not a confirmed defect."
     }
   ],
   "notices": [
