@@ -16,7 +16,7 @@ const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
 fn App() -> Element {
     rsx! {
         document::Stylesheet { href: TAILWIND_CSS }
-        main { class: "space-y-6 p-6",
+        main { class: "min-h-screen space-y-6 bg-background p-6 text-foreground",
             h1 { "adico basic-spa example" }
 
             components::ui::Button { "Source-owned Button" }

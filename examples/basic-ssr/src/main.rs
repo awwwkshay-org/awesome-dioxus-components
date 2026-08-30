@@ -14,11 +14,14 @@ fn main() {
     dioxus::launch(App);
 }
 
+const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
+
 #[component]
 fn App() -> Element {
     let mut open = use_signal(|| false);
     rsx! {
-        main {
+        document::Stylesheet { href: TAILWIND_CSS }
+        main { class: "min-h-screen space-y-6 bg-background p-6 text-foreground",
             h1 { "adico basic-ssr example" }
 
             // SSR/hydration smoke check -- exercised by
