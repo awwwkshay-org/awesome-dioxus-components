@@ -9,7 +9,7 @@ context: |
   `apps/playground`, and `examples/` are maintained Dioxus applications and
   consumer-style fixtures. Preserve separate Dioxus server and wasm32 web
   builds. Cargo.lock is committed and CI treats warnings as errors. Read
-  AGENTS.md and docs/architecture.md for the complete project rules.
+  CLAUDE.md and docs/architecture.md for the complete project rules.
 
 rules:
   proposal:
@@ -32,7 +32,7 @@ rules:
 operations:
   apply:
     guidance:
-      - Load the matching project skill under .agents/skills before implementation.
+      - Follow the architecture rules and working conventions in CLAUDE.md before implementation.
       - Implement only approved scope and update each task checkbox after validation.
   archive:
     guidance:

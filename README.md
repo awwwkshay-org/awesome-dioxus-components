@@ -51,5 +51,5 @@ The project is dual-licensed under [MIT](LICENSE-MIT) or
 
 ## AI coding agents
 
-Repository guidance is in [`AGENTS.md`](AGENTS.md). Significant changes use
+Repository guidance is in [`CLAUDE.md`](CLAUDE.md). Significant changes use
 the OpenSpec workflow: propose, review, implement, validate, then archive.
