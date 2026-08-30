@@ -31,10 +31,7 @@ mod tests {
 
     #[test]
     fn pressed_item_uses_the_same_semantic_accent_surface_as_toggle() {
-        let class = cn(&[
-            "data-[state=on]:bg-accent data-[state=on]:text-accent-foreground",
-            "",
-        ]);
+        let class = cn(&["data-[state=on]:bg-accent data-[state=on]:text-accent-foreground", ""]);
         assert!(class.contains("data-[state=on]:bg-accent"));
     }
 }

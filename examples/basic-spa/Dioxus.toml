@@ -1,6 +1,6 @@
 [application]
-name = "adico-basic-spa"
+name = "adico-example-basic-spa"
 default_platform = "web"
 
 [web.app]
-title = "adico basic-spa example"
+title = "adico-example-basic-spa"

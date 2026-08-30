@@ -65,10 +65,7 @@ mod tests {
 
     #[test]
     fn active_trigger_gets_a_semantic_surface() {
-        let class = cn(&[
-            "data-[state=active]:bg-background data-[state=active]:text-foreground",
-            "",
-        ]);
+        let class = cn(&["data-[state=active]:bg-background data-[state=active]:text-foreground", ""]);
         assert!(class.contains("data-[state=active]:bg-background"));
     }
 }

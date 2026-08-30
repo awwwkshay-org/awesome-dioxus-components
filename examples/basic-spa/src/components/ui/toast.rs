@@ -13,12 +13,12 @@
 
 use dioxus::prelude::*;
 
-use adico_primitives::toast::ToastProvider as ToastProviderPrimitive;
 pub use adico_primitives::toast::{
     Toast, ToastCloseButton, ToastContent, ToastDescription, ToastList, ToastListItem,
     ToastOptions, ToastProps, ToastPropsWithOwner, ToastTitle, ToastType, Toasts, consume_toast,
     use_toast,
 };
+use adico_primitives::toast::ToastProvider as ToastProviderPrimitive;
 use std::time::Duration;
 
 use crate::adico_lib::cn::cn;

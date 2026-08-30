@@ -4,12 +4,12 @@
 
 use dioxus::prelude::*;
 
+pub use adico_primitives::tag_group::{TagGroupEmpty, TagGroupEmptyProps};
 use adico_primitives::tag_group::{
     TagGroup as TagGroupPrimitive, TagGroupLabel as TagGroupLabelPrimitive,
     TagGroupMulti as TagGroupMultiPrimitive, TagList as TagListPrimitive,
     TagOption as TagOptionPrimitive, TagRemoveButton as TagRemoveButtonPrimitive,
 };
-pub use adico_primitives::tag_group::{TagGroupEmpty, TagGroupEmptyProps};
 
 use crate::adico_lib::cn::cn;
 
