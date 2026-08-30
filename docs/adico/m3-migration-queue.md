@@ -118,6 +118,10 @@ rigor as shadcn-equivalents, but registry/docs metadata must label them
 explicitly as extras so they never count toward shadcn parity credit
 (task 4.6's verification requirement).
 
+Migration record: [`m3-wave5-migration.md`](m3-wave5-migration.md). `form`
+is excluded there with evidence (no real upstream component to port); the
+other five items are migrated.
+
 | Item | Registry name | Upstream primitive source | Cargo (beyond `dioxus`) | Notes |
 | --- | --- | --- | --- | --- |
 | color-picker | `color-picker` | `src/color_picker.rs`, `src/color_picker/color_naming.rs` | `adico-primitives =0.1.0` | Composes `label`, `popover`, and `slider` — depends on Wave 2 (slider, label) and Wave 3 (popover); migrate last within this wave. |

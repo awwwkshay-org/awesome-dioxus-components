@@ -38,3 +38,16 @@ item is official adico source.
 The pinned upstream inventory, owned Dialog/Select closure, target compilation
 results, and offline refresh command are recorded in
 [`docs/adico/m1-primitive-ownership.md`](docs/adico/m1-primitive-ownership.md).
+
+## M3 evidence
+
+The existing-component migration queue and its per-wave migration records
+(provenance, registry entries, installation fixtures, and browser test
+results) are recorded in:
+
+- [`docs/adico/m3-migration-queue.md`](docs/adico/m3-migration-queue.md) — the full queue and its scope decisions
+- [`docs/adico/m3-wave1-migration.md`](docs/adico/m3-wave1-migration.md)
+- [`docs/adico/m3-wave2-migration.md`](docs/adico/m3-wave2-migration.md)
+- [`docs/adico/m3-wave3-migration.md`](docs/adico/m3-wave3-migration.md)
+- [`docs/adico/m3-wave4-migration.md`](docs/adico/m3-wave4-migration.md)
+- [`docs/adico/m3-wave5-migration.md`](docs/adico/m3-wave5-migration.md) — Dioxus-only extras (task 4.6); `form` is excluded there with evidence
