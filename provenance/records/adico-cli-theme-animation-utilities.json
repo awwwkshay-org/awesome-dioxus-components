@@ -1,0 +1,19 @@
+{
+  "id": "adico-cli-theme-animation-utilities",
+  "upstream": "https://github.com/Wombosvideo/tw-animate-css",
+  "revision": "1fc30d2b5ad6ab18baf7897828e44ab20a0a62ed",
+  "license": ["MIT"],
+  "importedAt": "2026-08-30",
+  "originalPaths": ["src/tw-animate.css"],
+  "localPaths": ["packages/adico-cli/src/css.rs"],
+  "changes": [
+    {
+      "date": "2026-08-30",
+      "summary": "Ported the `@property` declarations, the `enter`/`exit`/`accordion-down`/`accordion-up` `@theme` keyframes and animation variables, and the `fade-in(-*)`/`fade-out(-*)`/`zoom-in(-*)`/`zoom-out(-*)`/`slide-in-from-*`/`slide-out-to-*` `@utility` rules from `tw-animate-css` into `theme_region()`'s managed marker-region output, so shadcn-parity `data-[state=...]:animate-in`/`fade-in-0`/`zoom-in-95`/`slide-in-from-*` classes already present in several `registry/ui/*.rs` components (and added to more in M4 task 5.3a) actually resolve to real CSS instead of being dead class names. Narrowed to only the utilities adico's registry components reference: the upstream file's `blur-in(-*)`, `spin-in(-*)`/`spin-out(-*)`, `-zoom-in-*`/`-zoom-out-*` negative variants, RTL-aware `slide-in-from-start/end`/`slide-out-to-start/end` variants, `collapsible-down`/`collapsible-up` keyframes, `caret-blink`, and the `animation-duration-*`/`delay-*`/`repeat-*`/`direction-*`/`fill-mode-*`/`running`/`paused`/`play-state-*` timing-control utilities were left out as unused by any current adico component (not silently dropped from source, but a deliberate scope narrowing recorded here). No other CSS in the upstream file was altered beyond this selection."
+    }
+  ],
+  "notices": [
+    "Upstream is MIT licensed; its LICENSE text is retained in third_party/tw-animate-css/LICENSE-MIT.",
+    "The ported CSS lives inline in packages/adico-cli/src/css.rs's ANIMATION_UTILITIES_CSS constant (not a separate vendored file) because it is written into every consumer project's managed theme marker region by the existing idempotent plan/apply mechanism in plan_theme_install; keeping it as one Rust constant avoids introducing a second file-copy code path."
+  ]
+}

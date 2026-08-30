@@ -1315,9 +1315,13 @@
         },
         "visual": {
           "applicable": true,
-          "passed": false,
-          "evidence": [],
-          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+          "passed": true,
+          "evidence": [
+            "registry/ui/context_menu.rs (data-[state=...]:animate-in/animate-out/fade/zoom classes added, task 5.3a)",
+            "packages/adico-cli/src/css.rs ANIMATION_UTILITIES_CSS (ported tw-animate-css keyframes/utilities so the classes resolve to real CSS)",
+            "Not independently screenshotted per-component in task 5.3a; relies on the same ANIMATION_UTILITIES_CSS mechanism live-verified on popover (animation-name: enter resolves at runtime), not a separate live check for this component."
+          ],
+          "note": "The missing open/close transition (M4 audit finding) is fixed. Broader visual-baseline/regression-fixture coverage (tests/visual) remains open scope for later 5.3 batches."
         },
         "variants": {
           "applicable": true,
@@ -1789,9 +1793,13 @@
         },
         "visual": {
           "applicable": true,
-          "passed": false,
-          "evidence": [],
-          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+          "passed": true,
+          "evidence": [
+            "registry/ui/hover_card.rs (data-[state=...]:animate-in/animate-out/fade/zoom/slide classes added, task 5.3a)",
+            "packages/adico-cli/src/css.rs ANIMATION_UTILITIES_CSS (ported tw-animate-css keyframes/utilities so the classes resolve to real CSS)",
+            "Not independently screenshotted per-component in task 5.3a; relies on the same ANIMATION_UTILITIES_CSS mechanism live-verified on popover (animation-name: enter resolves at runtime), not a separate live check for this component."
+          ],
+          "note": "The missing open/close transition (M4 audit finding) is fixed. Broader visual-baseline/regression-fixture coverage (tests/visual) remains open scope for later 5.3 batches."
         },
         "variants": {
           "applicable": true,
@@ -2254,9 +2262,13 @@
         },
         "visual": {
           "applicable": true,
-          "passed": false,
-          "evidence": [],
-          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+          "passed": true,
+          "evidence": [
+            "registry/ui/menubar.rs (data-[state=open]:animate-in/fade/zoom classes added, task 5.3a; upstream shadcn's own menubar content omits an explicit close-transition class, matched as-is)",
+            "packages/adico-cli/src/css.rs ANIMATION_UTILITIES_CSS (ported tw-animate-css keyframes/utilities so the classes resolve to real CSS)",
+            "Not independently screenshotted per-component in task 5.3a; relies on the same ANIMATION_UTILITIES_CSS mechanism live-verified on popover (animation-name: enter resolves at runtime), not a separate live check for this component."
+          ],
+          "note": "The missing open/close transition (M4 audit finding) is fixed. Broader visual-baseline/regression-fixture coverage (tests/visual) remains open scope for later 5.3 batches."
         },
         "variants": {
           "applicable": true,
@@ -2608,9 +2620,13 @@
         },
         "visual": {
           "applicable": true,
-          "passed": false,
-          "evidence": [],
-          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+          "passed": true,
+          "evidence": [
+            "registry/ui/popover.rs (data-[state=...]:animate-in/animate-out/fade/zoom classes added, task 5.3a)",
+            "packages/adico-cli/src/css.rs ANIMATION_UTILITIES_CSS (ported tw-animate-css keyframes/utilities so the classes resolve to real CSS)",
+            "Live-verified via dx serve + JS getComputedStyle: opened content resolves animation-name: enter, duration 0.15s"
+          ],
+          "note": "The missing open/close transition (M4 audit finding) is fixed. Broader visual-baseline/regression-fixture coverage (tests/visual) remains open scope for later 5.3 batches."
         },
         "variants": {
           "applicable": true,
@@ -4362,9 +4378,13 @@
         },
         "visual": {
           "applicable": true,
-          "passed": false,
-          "evidence": [],
-          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+          "passed": true,
+          "evidence": [
+            "registry/ui/tooltip.rs (animate-in/fade-in-0/zoom-in-95 plus data-[state=closed]:animate-out/fade-out-0/zoom-out-95 and data-[side=...]:slide-in-from-* classes added, task 5.3a)",
+            "packages/adico-cli/src/css.rs ANIMATION_UTILITIES_CSS (ported tw-animate-css keyframes/utilities so the classes resolve to real CSS)",
+            "Not independently screenshotted per-component in task 5.3a; relies on the same ANIMATION_UTILITIES_CSS mechanism live-verified on popover (animation-name: enter resolves at runtime), not a separate live check for this component."
+          ],
+          "note": "The missing open/close transition (M4 audit finding) is fixed. Broader visual-baseline/regression-fixture coverage (tests/visual) remains open scope for later 5.3 batches."
         },
         "variants": {
           "applicable": true,

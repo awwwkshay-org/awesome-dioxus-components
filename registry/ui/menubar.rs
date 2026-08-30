@@ -43,7 +43,7 @@ pub fn MenubarTrigger(children: Element, class: Option<String>) -> Element {
 #[component]
 pub fn MenubarContent(children: Element, class: Option<String>) -> Element {
     let class = cn(&[
-        "z-50 min-w-[12rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
+        "z-50 min-w-[12rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

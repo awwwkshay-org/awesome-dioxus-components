@@ -334,7 +334,7 @@
           "source": "ui/tooltip.rs",
           "targetRoot": "ui",
           "target": "tooltip.rs",
-          "checksum": "d37d14e6dbbfb6cac11ea24a51fd2f7fe5b9b1031106dbb2ee042d426d95f029"
+          "checksum": "b0d7df68692a610924c35589f017022569e42985f0198a238ec1a09835ba21dc"
         }
       ],
       "registryDependencies": ["cn"],
@@ -365,7 +365,7 @@
           "source": "ui/popover.rs",
           "targetRoot": "ui",
           "target": "popover.rs",
-          "checksum": "e687386c9082f132c756c929b70b60c1dbcedcda9e1ad6789217ddd84d20d85e"
+          "checksum": "3868712f768cd40c955d505f3c92f4ddf38794dae7b0a0285d0aa7d3984253e2"
         }
       ],
       "registryDependencies": ["cn"],
@@ -396,7 +396,7 @@
           "source": "ui/hover_card.rs",
           "targetRoot": "ui",
           "target": "hover_card.rs",
-          "checksum": "f5af7dda147c3c676b5d92b95cfc2927eb714ce598e8007e9641f0f569608aeb"
+          "checksum": "ed4a457510e6cd4b3d5e5d68ad3c6b619ce97902147c2cc4a8bb6b21d94762ed"
         }
       ],
       "registryDependencies": ["cn"],
@@ -457,7 +457,7 @@
           "source": "ui/context_menu.rs",
           "targetRoot": "ui",
           "target": "context_menu.rs",
-          "checksum": "d6a677b6ae168729e2841da9691f022b0592f2a88bdc132783ad3b259659d7cd"
+          "checksum": "275e73d6b6571987c7a1dcb8498fb6bef49932c0d4622ccc88d81825bea1018e"
         }
       ],
       "registryDependencies": ["cn"],
@@ -488,7 +488,7 @@
           "source": "ui/menubar.rs",
           "targetRoot": "ui",
           "target": "menubar.rs",
-          "checksum": "9f5bf533255914a145c82e6e2779229b2b63a4ed7df32f3e9e9aedc72c67bc2a"
+          "checksum": "f732b40d705c2c8b214ec85f7ebc9dd7b224a8d97b135ca0616d9bab4ef0286c"
         }
       ],
       "registryDependencies": ["cn"],
