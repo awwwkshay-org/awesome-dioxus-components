@@ -379,6 +379,88 @@ value that other primitives or consumer code might want to read, and it
 cannot support live-updating `subscribe()`-style reactivity uniformly across
 web and desktop.
 
+### 7c. `adico css build`: a real, Node-free compile step for a shadcn-like DX
+
+Task 4.8h identified that `adico init`/`adico add` never guarantee a consumer
+project's Tailwind pipeline actually produces styled output — `examples/basic-ssr`
+proved this by shipping fully unstyled while every existing check
+(`registry validate`, `provenance check`, `parity`, text-content Playwright
+specs) passed. Investigating that gap during M4 surfaced a second, related
+problem: `assets/tailwind.css` (the *compiled* Tailwind output an installed
+app's `document::Stylesheet` links) is a generated artifact currently
+committed to source control with no tool that regenerates or checks its
+staleness — unlike `registry/generated/*`, which has exactly that pair
+(`cargo xtask registry build`/`registry validate`). This section specifies the
+fix: a real `adico` subcommand that compiles a consumer's `tailwind.css` input
+without requiring Node/npm anywhere in the chain, matching the "one CSS file
+with your theme tokens, the tool handles compiling it" experience shadcn/JS
+developers already expect.
+
+**Why a Node dependency was the wrong assumption.** `docs/adico/m0-toolchain-decisions.md`
+pins `@tailwindcss/cli` — the npm-distributed wrapper — but `dx serve`/`dx build`
+were never actually invoking it: Dioxus's CLI downloads and caches Tailwind's
+own official **standalone native CLI** (a self-contained executable per
+platform, confirmed present at `~/.dx/tools/tailwindcss-v4.1.5/tailwindcss` on
+a machine that has only ever run `dx serve`, never `npm install`). Tailwind
+v4's engine (Oxide) is native; the standalone CLI is Tailwind's own supported,
+Node-free distribution of it. `m0-toolchain-decisions.md`'s pin is corrected
+by this section to the standalone binary — the npm package is not adopted
+anywhere in the `adico` toolchain.
+
+**The command.** `adico-cli` gains `adico css build [--check]` (name chosen
+during implementation; folding into a broader `adico build` is acceptable if
+it stays a distinct, individually invocable mode):
+
+- Resolves a cached copy of Tailwind's standalone CLI for the host platform,
+  downloading and verifying it (checksum/signature per Tailwind's published
+  release artifacts) into a versioned local cache
+  (`~/.adico/tools/tailwindcss-<version>/`, mirroring `dx`'s own
+  `~/.dx/tools/` convention so the two tools' caches don't collide) on first
+  use. The version is pinned in `adico-cli` the same way other toolchain
+  versions are pinned in this repo, and is independently upgradable from the
+  `dx`-managed copy — the two happen to agree today but are not assumed to
+  stay in lockstep.
+- Invokes it against the consumer's project-root `tailwind.css` (the same
+  input `plan_theme_install` already manages) and writes `assets/tailwind.css`.
+- `--check` (or an equivalent `adico css check`) compiles into a temporary
+  location and diffs against the checked-in `assets/tailwind.css`, exiting
+  non-zero on drift — the `registry validate`-equivalent staleness gate for
+  this artifact, runnable in CI and by `cargo xtask` for this repo's own
+  examples/playground.
+- `adico init` and `adico add` are updated to close the actual 4.8h gap
+  precisely because this command now exists to call: `init` scaffolds
+  `Dioxus.toml` and the project-root `tailwind.css` if absent and invokes
+  `adico css build` once so a fresh project already renders styled; `add`
+  invokes it after every successful install so a consumer never has to
+  remember a separate compile step, matching `npx shadcn add`'s expectation
+  that the CSS is simply correct after the command returns.
+
+**Consequence for the committed-artifact question.** With `adico css build`/
+`--check` in place, `assets/tailwind.css` can be treated exactly like
+`registry/generated/*`: committed, but with a real regeneration command and a
+real staleness check, rather than a silently-trusted file nobody's tooling
+touches. Whether this repository additionally gitignores its own examples'
+`assets/tailwind.css` and relies on CI running `adico css build`/`--check` is
+an implementation-time call for whoever picks up this task, not a design
+constraint — either choice is now safe because a real command exists to keep
+the file correct, which is the actual property that was missing.
+
+**No consumer Node dependency.** Because the standalone binary is fetched and
+run entirely by `adico-cli` (a single Rust executable), a downstream project
+created via `adico init` never needs Node, npm, or any JS tooling installed
+to get correct, current CSS — only `adico` and `cargo`. This preserves the
+"pure Rust/Cargo Dioxus app" pitch that a per-consumer `build.rs` shelling out
+to the npm-based CLI would have quietly broken.
+
+Alternative considered: a per-consumer `build.rs` invoking the Tailwind CLI
+directly at `cargo build` time, so plain `cargo check` is self-sufficient with
+no separate `adico css build` step. Not rejected outright — it remains a
+reasonable follow-on once `adico css build`'s binary-management logic exists,
+since `build.rs` could shell out to the same cached binary — but sequenced
+after the CLI command because it changes every consumer's build graph
+(a network fetch or cache-miss inside `cargo build` itself) and deserves its
+own scrutiny once the simpler explicit-command version is proven.
+
 ### 8. Stable copied-component APIs and platform features
 
 Installed components expose idiomatic Dioxus composition (for example,

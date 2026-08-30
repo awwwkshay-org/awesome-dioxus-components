@@ -55,6 +55,12 @@ makes the platform useful while parity is progressively delivered.
   shadcn-equivalent `mode-toggle` and an adico-original `theme-switcher`
   palette picker, both persisted across reloads and installed into the
   examples through the real CLI.
+- Add `adico css build`/`--check`, a Node-free compile step for a consumer's
+  Tailwind CSS using Tailwind's own standalone native CLI (fetched and cached
+  by `adico-cli`, correcting `m0-toolchain-decisions.md`'s stale npm-package
+  pin), wired into `adico init`/`adico add` so a fresh or updated project
+  always renders styled output without a separate manual compile step — the
+  `npx shadcn add`-equivalent developer experience.
 
 ## Capabilities
 
@@ -70,7 +76,7 @@ makes the platform useful while parity is progressively delivered.
   configuration, Dioxus-project detection, destinations, styles/themes, and
   managed Rust-module conventions.
 - `adico-cli-installation`: Defines `adico init`, `adico add`, `add --all`,
-  `list`, `view`,
+  `list`, `view`, `css build`/`--check`,
   structured Cargo.toml updates, idempotency, conflict handling, and the
   source-ownership guarantee.
 - `adico-component-parity`: Defines upstream inventories, catalog snapshots,
@@ -103,6 +109,11 @@ makes the platform useful while parity is progressively delivered.
   Forked Dioxus Components code retains Apache-2.0 and MIT obligations and
   auditable provenance. `adico-primitives` also gains the MIT/Apache-2.0
   `dark-light` crate for cross-platform (web/desktop) theme-mode detection.
+  `adico-cli` gains the ability to download and cache Tailwind's standalone
+  native CLI release artifact; `m0-toolchain-decisions.md`'s prior pin on the
+  npm-distributed `@tailwindcss/cli` is corrected to this standalone binary,
+  which `dx serve`/`dx build` already use in practice. No Node/npm dependency
+  is introduced for `adico` itself or for any downstream consumer project.
 - **Non-goals:** This change does not require authenticated registry transport,
   registry discovery/marketplaces, MCP integration, every future CLI command,
   every shadcn block, or immediate completion of every missing shadcn
