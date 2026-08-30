@@ -22,7 +22,7 @@ fn main() {
         Some("css") => run_css(&arguments[1..]),
         _ => {
             eprintln!(
-                "usage:\n  adico init [--default-registry <@namespace>] [--registry <@namespace>=<embedded|relative-path|https-url>] [--dry-run]\n  adico add <component...> [--dry-run] [--replace]\n  adico list [--registry <@namespace>]\n  adico view <component>\n  adico css build\n  adico css check"
+                "usage:\n  adico init [--default-registry <@namespace>] [--registry <@namespace>=<embedded|relative-path|https-url>] [--dry-run]\n  adico add <component...> [--dry-run] [--replace]\n  adico add --all [--dry-run] [--replace]\n  adico list [--registry <@namespace>]\n  adico view <component>\n  adico css build\n  adico css check"
             );
             std::process::exit(2);
         }

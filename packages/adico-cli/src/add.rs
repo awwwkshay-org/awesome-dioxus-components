@@ -203,18 +203,18 @@ pub fn plan_source_install<R: RegistryFileReader>(
             let existing_checksum = existing_checksum(&path)?;
             if let Some(existing_checksum) = &existing_checksum {
                 if existing_checksum != &file.checksum {
-                    let relative_path = relative_display(project_root, &path);
-                    let installed_checksum = lock
-                        .items
-                        .iter()
-                        .find(|item| item.address == resolved.address.to_string())
-                        .and_then(|item| {
-                            item.files
-                                .iter()
-                                .find(|locked| locked.path == relative_path)
-                        })
-                        .map(|locked| &locked.checksum);
-                    if replace && installed_checksum == Some(existing_checksum) {
+                    if replace {
+                        // `--replace` means the caller has explicitly asked to
+                        // discard whatever is on disk (user-edited or merely
+                        // untracked by `adico.lock`, e.g. after a lock reset)
+                        // in favor of the current registry source. Do not
+                        // additionally require the on-disk checksum to match
+                        // `adico.lock`'s previously recorded value first --
+                        // that check only recognizes a narrow "registry
+                        // version bump, file otherwise untouched" case and
+                        // silently refused every other legitimate use of the
+                        // flag, including a genuinely user-modified file,
+                        // which is exactly what `--replace` exists to allow.
                         files.push(SourceFilePlan {
                             address: resolved.address.clone(),
                             path: path.clone(),
@@ -882,6 +882,43 @@ mod tests {
             Err(AddError::RegistryChecksumMismatch { .. })
         ));
         assert!(!root.join("adico.lock").exists());
+        fs::remove_dir_all(root).expect("temporary project should be removable");
+    }
+
+    #[test]
+    fn replace_overwrites_a_genuinely_user_modified_file() {
+        let root = temporary_project();
+        let bytes = b"pub fn dialog() {}\n";
+        let install = install("@adico", "dialog", "ui/dialog.rs", bytes);
+        let mut reader = FixtureReader::default();
+        reader.files.insert(
+            ("@adico/dialog".to_string(), "ui/dialog.rs".to_string()),
+            bytes.to_vec(),
+        );
+        let target = root.join("src/components/ui/dialog.rs");
+        fs::create_dir_all(target.parent().expect("target parent should exist"))
+            .expect("target parent should be created");
+        fs::write(&target, "consumer changes, never installed by adico\n")
+            .expect("consumer source should be written");
+
+        // Without `--replace`, a genuinely modified/untracked file is refused.
+        assert!(matches!(
+            plan_source_install(&root, &configuration(), &install, &reader, false),
+            Err(AddError::ModifiedConsumerFile { .. })
+        ));
+
+        // With `--replace`, the same file is overwritten with the current
+        // registry source -- this is the whole point of the flag, and it
+        // must work even when `adico.lock` has no prior record of this file
+        // at all (not just when the on-disk content happens to match some
+        // previously recorded checksum).
+        let plan = plan_source_install(&root, &configuration(), &install, &reader, true)
+            .expect("replace should plan");
+        plan.apply().expect("replace should apply");
+        assert_eq!(
+            fs::read(&target).expect("source should be overwritten"),
+            bytes
+        );
         fs::remove_dir_all(root).expect("temporary project should be removable");
     }
 
