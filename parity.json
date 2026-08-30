@@ -3559,8 +3559,10 @@
         "visual": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "No visual regression baseline yet; tests/visual is populated starting M4 (task 5.3)."
+          "evidence": [
+            "registry/ui/slider.rs (task 5.3b: removed `overflow-hidden` from SliderTrack, added `rounded-full` to SliderRange)"
+          ],
+          "note": "task 5.3b fixed the confirmed 'no visible thumb' clipping bug (verified live via browser JS bounding-rect measurement: track overflow is now visible and the size-4 thumb renders unclipped). Broader visual regression baseline still absent; tests/visual is populated starting M4 (task 5.3)."
         },
         "variants": {
           "applicable": true,
@@ -3571,8 +3573,10 @@
         "states": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "State parity audit against upstream shadcn is M4 scope (task 5.3)."
+          "evidence": [
+            "registry/ui/slider.rs (task 5.3b: thumb is no longer clipped by the track's overflow box)"
+          ],
+          "note": "task 5.3b fixed the thumb-visibility state defect. Broader state parity audit against upstream shadcn remains M4 scope (task 5.3)."
         },
         "keyboard": {
           "applicable": true,

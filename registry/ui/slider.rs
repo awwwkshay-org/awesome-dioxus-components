@@ -12,10 +12,20 @@ use adico_primitives::slider::{
 use crate::adico_lib::cn::cn;
 
 /// The track a [`Slider`]/[`RangeSlider`]'s thumb(s) move along.
+///
+/// Deliberately has no `overflow-hidden`: unlike upstream shadcn/Radix,
+/// where the thumb is a sibling of the track (both children of the slider
+/// root), adico's composition model nests [`SliderThumb`] *inside*
+/// [`SliderTrack`] (see the primitive's own doc example). An `overflow-hidden`
+/// track would therefore clip the thumb's `size-4` handle, which overflows
+/// the track's own `h-1.5`/`w-1.5` cross-axis size by design (the handle
+/// must be visibly larger than the track it rides on). [`SliderRange`]
+/// carries its own `rounded-full` instead, so the filled portion still
+/// renders with pill-shaped ends without relying on clipping.
 #[component]
 pub fn SliderTrack(class: Option<String>, children: Element) -> Element {
     let class = cn(&[
-        "relative grow overflow-hidden rounded-full bg-primary/20 data-[orientation=horizontal]:h-1.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1.5",
+        "relative grow rounded-full bg-primary/20 data-[orientation=horizontal]:h-1.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1.5",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -28,7 +38,7 @@ pub fn SliderTrack(class: Option<String>, children: Element) -> Element {
 #[component]
 pub fn SliderRange(class: Option<String>, children: Element) -> Element {
     let class = cn(&[
-        "absolute bg-primary data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full",
+        "absolute rounded-full bg-primary data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

@@ -138,7 +138,7 @@ fn App() -> Element {
                             components::ui::Avatar {
                                 components::ui::AvatarFallback { "AB" }
                             }
-                            div {
+                            div { class: "grid w-full max-w-sm gap-1.5",
                                 components::ui::Label { html_for: "name", "Display name" }
                                 components::ui::Input { id: "name", placeholder: "Ada Byron" }
                             }

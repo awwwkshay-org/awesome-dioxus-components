@@ -113,8 +113,10 @@ fn App() -> Element {
                     "16:9"
                 }
             }
-            components::ui::Label { html_for: "name", "Name" }
-            input { id: "name", placeholder: "Enter your name" }
+            div { class: "grid w-full max-w-sm gap-1.5",
+                components::ui::Label { html_for: "name", "Name" }
+                components::ui::Input { id: "name", placeholder: "Enter your name" }
+            }
             components::ui::Progress { value: 50.0 }
 
             h2 { "States and selection" }
