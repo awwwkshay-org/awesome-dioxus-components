@@ -11,6 +11,8 @@ publish = false
 # this declaration exactly as it would in a normal external Dioxus project.
 dioxus = { version = "=0.7.9", features = ["fullstack", "router"] }
 adico-primitives = { version = "=0.1.0", features = ["web"] }
+palette = "0.7.6"
+time = "=0.3.44"
 
 [features]
 default = ["web"]
