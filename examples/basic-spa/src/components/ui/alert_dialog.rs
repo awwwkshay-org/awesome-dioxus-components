@@ -4,14 +4,14 @@ use dioxus::prelude::*;
 
 use super::button::{Button, ButtonSize, ButtonVariant};
 use crate::adico_lib::cn::cn;
-pub use adico_primitives::alert_dialog::{
-    AlertDialogDescription, AlertDialogRoot as AlertDialog, AlertDialogTitle,
-};
 use adico_primitives::alert_dialog::{
     AlertDialogAction as AlertDialogActionPrimitive,
     AlertDialogActions as AlertDialogActionsPrimitive,
     AlertDialogCancel as AlertDialogCancelPrimitive,
     AlertDialogContent as AlertDialogContentPrimitive,
+};
+pub use adico_primitives::alert_dialog::{
+    AlertDialogDescription, AlertDialogRoot as AlertDialog, AlertDialogTitle,
 };
 
 /// Opens the surrounding [`AlertDialog`] with the installed [`Button`]

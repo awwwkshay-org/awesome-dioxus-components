@@ -55,7 +55,10 @@ mod tests {
 
     #[test]
     fn track_class_uses_semantic_primary_surface() {
-        let class = cn(&["relative h-2 w-full overflow-hidden rounded-full bg-primary/20", ""]);
+        let class = cn(&[
+            "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
+            "",
+        ]);
         assert!(class.contains("bg-primary/20"));
     }
 }

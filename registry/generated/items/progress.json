@@ -7,7 +7,7 @@
       "source": "ui/progress.rs",
       "targetRoot": "ui",
       "target": "progress.rs",
-      "checksum": "17984eaeb1ddfa193b546c14d6882b2feffc6aefdcdf57f84b0cc418377b192a"
+      "checksum": "5983179bdf1b609f614f77e360d37ab04317a7a19e28d2f49e12ca634f5733c7"
     }
   ],
   "registryDependencies": [

@@ -45,7 +45,10 @@ pub fn AccordionTrigger(class: Option<String>, children: Element) -> Element {
 /// The panel shown while the enclosing [`AccordionItem`] is open.
 #[component]
 pub fn AccordionContent(class: Option<String>, children: Element) -> Element {
-    let class = cn(&["overflow-hidden text-sm", class.as_deref().unwrap_or_default()]);
+    let class = cn(&[
+        "overflow-hidden text-sm",
+        class.as_deref().unwrap_or_default(),
+    ]);
     rsx! {
         AccordionContentPrimitive { class,
             div { class: "pb-4 pt-0", {children} }

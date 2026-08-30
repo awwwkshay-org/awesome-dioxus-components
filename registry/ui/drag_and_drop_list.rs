@@ -4,15 +4,15 @@
 
 use dioxus::prelude::*;
 
-pub use adico_primitives::drag_and_drop_list::{
-    DragAndDropInstructions, DragAndDropItemContext, DragAndDropLiveRegion,
-    DragAndDropListRenderItem, use_drag_and_drop_list_items,
-};
 use adico_primitives::drag_and_drop_list::{
     DragAndDropDropIndicator as DragAndDropDropIndicatorPrimitive,
     DragAndDropList as DragAndDropListPrimitive,
     DragAndDropListItem as DragAndDropListItemPrimitive,
     DragAndDropListItems as DragAndDropListItemsPrimitive,
+};
+pub use adico_primitives::drag_and_drop_list::{
+    DragAndDropInstructions, DragAndDropItemContext, DragAndDropListRenderItem,
+    DragAndDropLiveRegion, use_drag_and_drop_list_items,
 };
 
 use crate::adico_lib::cn::cn;
@@ -28,10 +28,7 @@ pub fn DragAndDropList(
     class: Option<String>,
     #[props(default)] children: Option<Element>,
 ) -> Element {
-    let class = cn(&[
-        "flex flex-col gap-1",
-        class.as_deref().unwrap_or_default(),
-    ]);
+    let class = cn(&["flex flex-col gap-1", class.as_deref().unwrap_or_default()]);
     rsx! {
         DragAndDropListPrimitive { items, aria_label, class, children }
     }
@@ -44,10 +41,7 @@ pub fn DragAndDropListItems(
     class: Option<String>,
     #[props(default)] children: Option<Element>,
 ) -> Element {
-    let class = cn(&[
-        "flex flex-col gap-1",
-        class.as_deref().unwrap_or_default(),
-    ]);
+    let class = cn(&["flex flex-col gap-1", class.as_deref().unwrap_or_default()]);
     rsx! {
         DragAndDropListItemsPrimitive { aria_label, class, children }
     }
@@ -72,8 +66,15 @@ pub fn DragAndDropListItem(
 
 /// The drop-position indicator rendered between rows.
 #[component]
-pub fn DragAndDropDropIndicator(index: usize, position: &'static str, class: Option<String>) -> Element {
-    let class = cn(&["h-0.5 rounded-full bg-primary", class.as_deref().unwrap_or_default()]);
+pub fn DragAndDropDropIndicator(
+    index: usize,
+    position: &'static str,
+    class: Option<String>,
+) -> Element {
+    let class = cn(&[
+        "h-0.5 rounded-full bg-primary",
+        class.as_deref().unwrap_or_default(),
+    ]);
     rsx! {
         DragAndDropDropIndicatorPrimitive { index, position, class }
     }

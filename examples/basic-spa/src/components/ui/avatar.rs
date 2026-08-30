@@ -53,7 +53,10 @@ pub struct AvatarImageProps {
 /// [`AvatarFallback`] takes over.
 #[component]
 pub fn AvatarImage(props: AvatarImageProps) -> Element {
-    let class = cn(&["aspect-square size-full", props.class.as_deref().unwrap_or_default()]);
+    let class = cn(&[
+        "aspect-square size-full",
+        props.class.as_deref().unwrap_or_default(),
+    ]);
     rsx! {
         AvatarImagePrimitive { src: props.src, alt: props.alt, class }
     }

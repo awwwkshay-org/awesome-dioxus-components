@@ -4,13 +4,13 @@
 
 use dioxus::prelude::*;
 
-pub use adico_primitives::color_picker::{
-    Color, ColorPickerContext, AreaThumbSaturationInput, AreaThumbSaturationInputProps,
-    AreaThumbValueInput, AreaThumbValueInputProps,
-};
 use adico_primitives::color_picker::{
     AreaThumb as AreaThumbPrimitive, AreaTrack as AreaTrackPrimitive,
     ColorArea as ColorAreaPrimitive, ColorPicker as ColorPickerPrimitive,
+};
+pub use adico_primitives::color_picker::{
+    AreaThumbSaturationInput, AreaThumbSaturationInputProps, AreaThumbValueInput,
+    AreaThumbValueInputProps, Color, ColorPickerContext,
 };
 
 use crate::adico_lib::cn::cn;
@@ -36,7 +36,11 @@ pub fn ColorPicker(
 
 /// A two-dimensional saturation/value drag surface.
 #[component]
-pub fn ColorArea(#[props(default = 1.0)] step: ReadSignal<f64>, class: Option<String>, children: Element) -> Element {
+pub fn ColorArea(
+    #[props(default = 1.0)] step: ReadSignal<f64>,
+    class: Option<String>,
+    children: Element,
+) -> Element {
     let class = cn(&[
         "relative size-48 touch-none rounded-md border border-input",
         class.as_deref().unwrap_or_default(),

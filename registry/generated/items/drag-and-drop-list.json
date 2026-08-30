@@ -7,7 +7,7 @@
       "source": "ui/drag_and_drop_list.rs",
       "targetRoot": "ui",
       "target": "drag_and_drop_list.rs",
-      "checksum": "54080ec7d98e2ef57abb4ec7f517d5371341f0a9eb548c0487d501f9e030e25b"
+      "checksum": "fa735c6e83dfe3e40292eccb14b34f446102d317440be8f42d24cbd6e7fb1ebe"
     }
   ],
   "registryDependencies": [

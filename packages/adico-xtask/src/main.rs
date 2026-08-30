@@ -205,6 +205,7 @@ fn validate_registry(source: Option<&Path>) -> Result<(), String> {
             official_root.join("registry.json").display()
         )
     })?;
+    check_registry_source_formatting(&official_root, &official_manifest)?;
     let source = source.map_or(RegistrySource::Embedded, |path| RegistrySource::Local {
         path: path.display().to_string(),
     });
@@ -215,6 +216,53 @@ fn validate_registry(source: Option<&Path>) -> Result<(), String> {
         manifest.namespace
     );
     Ok(())
+}
+
+/// Guards against the drift found in M4 task 5.3b: `registry/ui/*.rs` (and
+/// `registry/lib/*.rs`) are not Cargo workspace members, so `cargo fmt --all`
+/// never touches them, and a non-canonically-formatted registry source file
+/// silently fails every consumer's own `cargo fmt --all --check` the moment
+/// it's installed. Runs `rustfmt --edition 2024 --check` directly against
+/// each `.rs` file the official registry manifest declares, so drift is
+/// caught here instead of downstream in an installed consumer project.
+fn check_registry_source_formatting(
+    official_root: &Path,
+    official_manifest: &[u8],
+) -> Result<(), String> {
+    let declared: RegistryManifest = serde_json::from_slice(official_manifest)
+        .map_err(|error| format!("registry manifest is invalid: {error}"))?;
+
+    let mut rust_sources: BTreeSet<PathBuf> = BTreeSet::new();
+    for item in &declared.items {
+        for file in &item.files {
+            if file.source.ends_with(".rs") {
+                rust_sources.insert(official_root.join(&file.source));
+            }
+        }
+    }
+
+    let mut non_canonical = Vec::new();
+    for path in &rust_sources {
+        let status = Command::new("rustfmt")
+            .args(["--edition", "2024", "--check"])
+            .arg(path)
+            .stdout(std::process::Stdio::null())
+            .stderr(std::process::Stdio::null())
+            .status()
+            .map_err(|error| format!("failed to run rustfmt on {}: {error}", path.display()))?;
+        if !status.success() {
+            non_canonical.push(path.display().to_string());
+        }
+    }
+
+    if non_canonical.is_empty() {
+        Ok(())
+    } else {
+        Err(format!(
+            "registry source is not canonically rustfmt-formatted (run `rustfmt --edition 2024 <path>` to fix): {}",
+            non_canonical.join(", ")
+        ))
+    }
 }
 
 fn load_registry_manifest(
