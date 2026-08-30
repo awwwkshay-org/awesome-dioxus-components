@@ -317,6 +317,68 @@ Alternative considered: alter each installed component to accept palette
 props. Rejected because themes must remain a shared consumer concern rather
 than a divergent copied-component API.
 
+### 7b. Cross-platform theme mode and consumer-facing theme switcher
+
+Section 7a's playground launcher intentionally stayed playground-only, with
+"persistence, system-preference negotiation, and consumer-facing theme
+generation" explicitly out of that task's scope. This section supersedes that
+exclusion for a new, real, consumer-installable feature: a `mode-toggle`
+registry component (Light/Dark/System) and a `theme-switcher` registry
+component (the palette presets already prototyped in the playground tray),
+both installable through `adico add` like any other registry item.
+
+**Theme-mode primitive.** `adico-primitives` gains a `theme_mode` module
+exposing `ThemeMode::{Light, Dark, System}` and a `use_theme_mode()` hook that
+resolves `System` to a concrete `Light`/`Dark` value. Unlike this repo's
+existing web-only `document::eval` JS-bridge pattern (used for focus-trap,
+portals, and pointer capture), OS/browser theme-preference detection is
+delegated to the `dark-light` crate (MIT/Apache-2.0, `rust-version = "1.78"`,
+well under this repo's pinned `1.96.1` toolchain), which supports macOS,
+Windows, Linux/BSD (via the XDG Desktop Portal D-Bus API), and WebAssembly
+from one API — so `web` and `desktop` features share the same detection call
+rather than needing two divergent adapters. `dark-light::detect()` is a
+one-shot synchronous read; its `subscribe()`/`stream()` APIs give live
+OS-theme-change notification, and are used where the underlying target
+supports a listener without adding an async runtime dependency the crate
+doesn't already pull in. Native SSR/server builds (no `web` or `desktop`
+feature) get a deterministic `Light` fallback rather than calling `detect()`,
+matching the SSR-safety convention already established for every other
+target-gated primitive in this crate (dialog's focus trap, portal, etc.) —
+`System` is a real, selectable mode in that context, it simply resolves to
+`Light` until a client feature is active.
+
+**Registry components and classification.** `mode-toggle` composes an
+existing primitive (dropdown-menu or select — chosen during implementation
+based on the actual keyboard/ARIA fit, matching this repo's existing
+composition-first rule for registry source) and is classified
+`EXISTING_SHADCN_EQUIVALENT`-adjacent: shadcn's own theming documentation
+ships an equivalent Light/Dark/System dropdown pattern, so `mode-toggle`
+earns a real `parity.json` entry once implemented, following the same
+honest `applicable: true, passed: false` + task-referencing-note convention
+used for the 34 entries added in task 4.7. `theme-switcher` (the palette
+picker) has no shadcn equivalent — ui.shadcn.com's own theme customizer is a
+docs-site feature, not a shipped component — so it is classified
+`EXISTING_DIOXUS_EXTRA`-style: no `parity.json` entry, and its registry
+`description`/`compositionNote` avoid shadcn-equivalence framing, per the
+labeling mechanism already established and validated in the Wave 5 extras
+migration (task 4.6).
+
+**Persistence.** The selected mode and palette persist across reloads: on
+`web`, via `localStorage` through the same `document::eval` mechanism already
+used elsewhere for class-driven dark-mode toggling; on `desktop`, via a small
+JSON preferences file colocated with the consumer's Dioxus desktop data
+directory. Native SSR/server builds have no persistence target and read the
+deterministic default on every render, which is the same limitation every
+other stateful client primitive in this crate already accepts.
+
+Alternative considered: detect system preference via a pure
+`@media (prefers-color-scheme: dark)` CSS rule with no Rust-side detection.
+Rejected because it cannot drive a `desktop` (native window, no browser CSS
+engine for OS-level media queries in all cases) or Rust-side `ThemeMode`
+value that other primitives or consumer code might want to read, and it
+cannot support live-updating `subscribe()`-style reactivity uniformly across
+web and desktop.
+
 ### 8. Stable copied-component APIs and platform features
 
 Installed components expose idiomatic Dioxus composition (for example,

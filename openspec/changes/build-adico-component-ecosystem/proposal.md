@@ -49,6 +49,12 @@ makes the platform useful while parity is progressively delivered.
 - Add examples, compile/install fixtures, browser/keyboard/accessibility,
   SSR/hydration, desktop, and visual test organization so examples validate
   the same CLI installation path users follow.
+- Add a cross-platform theme-mode primitive (Light/Dark/System, detected via
+  the `dark-light` crate on web and desktop, with a deterministic SSR-safe
+  fallback) and two installable registry components built on it: a
+  shadcn-equivalent `mode-toggle` and an adico-original `theme-switcher`
+  palette picker, both persisted across reloads and installed into the
+  examples through the real CLI.
 
 ## Capabilities
 
@@ -95,7 +101,8 @@ makes the platform useful while parity is progressively delivered.
   structured TOML editor; final Dioxus, Tailwind, icon, and browser-test
   dependency versions are selected during the recorded compatibility audit.
   Forked Dioxus Components code retains Apache-2.0 and MIT obligations and
-  auditable provenance.
+  auditable provenance. `adico-primitives` also gains the MIT/Apache-2.0
+  `dark-light` crate for cross-platform (web/desktop) theme-mode detection.
 - **Non-goals:** This change does not require authenticated registry transport,
   registry discovery/marketplaces, MCP integration, every future CLI command,
   every shadcn block, or immediate completion of every missing shadcn
