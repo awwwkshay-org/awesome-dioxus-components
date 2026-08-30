@@ -10,7 +10,8 @@
     "primitives/src/virtual/types.rs",
     "primitives/src/virtual/utils.rs",
     "primitives/src/virtual/virtualizer.rs",
-    "primitives/src/virtual_list.rs"
+    "primitives/src/virtual_list.rs",
+    "primitives/src/tag_group.rs"
   ],
   "localPaths": [
     "packages/adico-primitives/src/toolbar.rs",
@@ -18,7 +19,8 @@
     "packages/adico-primitives/src/virtual/types.rs",
     "packages/adico-primitives/src/virtual/utils.rs",
     "packages/adico-primitives/src/virtual/virtualizer.rs",
-    "packages/adico-primitives/src/virtual_list.rs"
+    "packages/adico-primitives/src/virtual_list.rs",
+    "packages/adico-primitives/src/tag_group.rs"
   ],
   "changes": [
     {
@@ -28,6 +30,10 @@
     {
       "date": "2026-08-30",
       "summary": "Imported VirtualList (Wave 5 Dioxus-only extra, task 4.6, sub-batch 2), including its private virtual/{mod,types,utils,virtualizer}.rs support modules. virtual/{mod,types,utils,virtualizer}.rs port unmodified except for the doc-example import path change. virtual_list.rs's scroll/resize bridge was NOT ported as upstream wrote it: live Playwright testing (not just cargo check) found upstream's long-lived document::eval scroll subscription never registers in this Dioxus 0.7.9/0.7.10 web runtime -- the exact defect class docs/adico/m3-wave3-migration.md already recorded for use_global_escape_listener/use_outside_dismiss -- so VirtualList always rendered zero items (viewport_size stayed 0). Following that record's own fix pattern (native Dioxus event instead of root-causing the interpreter bug), the bridge was rewritten using native onscroll (dioxus::html::events::ScrollData, which already exposes scroll_top/client_height) and onmounted/MountedData for initial measurement and programmatic scroll correction -- the same MountedData API already used unconditionally elsewhere in this crate (move_interaction.rs, checkbox.rs, slider.rs), needing no web/desktop feature gate at all. This removed the serde/ScrollMsg JS-payload plumbing entirely (serde was added and then removed from adico-primitives's Cargo.toml in the same sub-batch) and is a strictly more reliable implementation of upstream's own documented behavior on every target: web, desktop, and native/server (which never fires a real scroll event and renders zero items, matching upstream's own unstyled/empty-until-interactive contract, not a capability loss)."
+    },
+    {
+      "date": "2026-08-30",
+      "summary": "Imported TagGroup/TagGroupMulti/TagGroupLabel/TagList/TagGroupEmpty/TagOption/TagRemoveButton (Wave 5 Dioxus-only extra, task 4.6, sub-batch 3) unmodified except for the doc-example import path change. Confirmed by reading the actual upstream source (not just the migration queue's one-line dependency note) that it composes only this crate's existing private collection/selectable/selection modules already imported for Select in M1; no document::eval, portal, or DOM measurement API anywhere in the module, so it is SSR-safe by construction and needed no target-gated adapter work."
     }
   ],
   "notices": [

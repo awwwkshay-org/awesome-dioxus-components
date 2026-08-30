@@ -537,6 +537,9 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/virtual_list.rs") => {
                 Ok(include_bytes!("../../../registry/ui/virtual_list.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/tag_group.rs") => {
+                Ok(include_bytes!("../../../registry/ui/tag_group.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"
@@ -800,6 +803,7 @@ mod tests {
                 "@adico/slider".to_string(),
                 "@adico/switch".to_string(),
                 "@adico/tabs".to_string(),
+                "@adico/tag-group".to_string(),
                 "@adico/textarea".to_string(),
                 "@adico/toast".to_string(),
                 "@adico/toggle".to_string(),

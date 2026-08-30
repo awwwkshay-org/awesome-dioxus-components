@@ -61,6 +61,7 @@ pub mod separator;
 pub mod slider;
 pub mod switch;
 pub mod tabs;
+pub mod tag_group;
 pub mod toast;
 pub mod toggle;
 pub mod toggle_group;
