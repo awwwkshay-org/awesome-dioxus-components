@@ -32,3 +32,5 @@ lcov.info
 *.tmp
 *.bak
 
+# Understand anything
+.ua
