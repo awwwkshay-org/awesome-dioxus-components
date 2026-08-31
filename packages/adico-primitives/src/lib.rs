@@ -12,10 +12,10 @@
 //! collection state, pointer/move-interaction tracking, scroll locking, the
 //! floating-content positioner, the shared open/close layer stack, listbox
 //! selection state, typeahead search) lives in its own public module
-//! alongside the primitives that consume it. The `dropdown_menu`/
-//! `context_menu`/`menubar` modules remain pending re-authoring onto `menu`,
-//! blocked on a design decision about a new active-vs-merely-mounted layer
-//! primitive.
+//! alongside the primitives that consume it. `dropdown_menu` re-exports
+//! `menu`'s components directly; `context_menu` and `menubar` remain their
+//! own independent implementations pending an evaluation of how much of
+//! their content/item rendering can reuse `menu`'s.
 
 #![forbid(unsafe_code)]
 

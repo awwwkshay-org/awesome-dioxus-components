@@ -8,12 +8,16 @@
 //! roving-focus [`crate::collection`] infrastructure and the [`crate::layer`]
 //! dismissable-layer stack already shared by dialog/popover.
 //!
-//! This is a new, additive primitive: `context_menu`, `dropdown_menu`, and
-//! `menubar` each still have their own independent (browser-verified) flat
-//! menu implementation. Migrating them onto this module is 7.8 scope, not
-//! done here — refactoring already-shipped, Playwright-tested components
-//! without a live browser to re-verify against would risk silently
-//! regressing tested behavior. `MenuSubmenuTrigger`'s hover-intent-delay
+//! `dropdown_menu` now delegates to this module directly (task 2.3): its
+//! `DropdownMenu`/`DropdownMenuTrigger`/`DropdownMenuContent`/`DropdownMenuItem`
+//! are re-exports of `Menu`/`MenuTrigger`/`MenuContent`/`MenuItem`, matching
+//! Base UI, which has no separate dropdown-menu component at all — `Menu` *is*
+//! the dropdown menu. `context_menu` and `menubar` still have their own
+//! independent implementations (click-point/long-press anchoring and
+//! multi-menu roving coordination, respectively, neither of which this module
+//! has a counterpart for); evaluating how much of their content/item
+//! rendering can reuse this module's is separate, remaining task 2.3 scope.
+//! `MenuSubmenuTrigger`'s hover-intent-delay
 //! (opening a submenu after a brief hover, matching Base UI/Radix) is not
 //! implemented — only click and `ArrowRight`/`ArrowLeft` keyboard open/close
 //! are, which are the browser-independent-to-reason-about paths; hover
@@ -714,111 +718,5 @@ pub fn MenuSubmenuTrigger(
             ..attributes,
             {children}
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[cfg(not(any(feature = "web", feature = "native")))]
-    fn render(root: fn() -> Element) -> String {
-        let mut dom = VirtualDom::new(root);
-        dom.rebuild_in_place();
-        dioxus_ssr::render(&dom)
-    }
-
-    #[component]
-    fn UncheckedCheckboxItem() -> Element {
-        rsx! {
-            Menu { default_open: true,
-                MenuTrigger { "Open" }
-                MenuContent {
-                    MenuCheckboxItem { index: 0usize, "Wrap words" }
-                }
-            }
-        }
-    }
-
-    #[component]
-    fn CheckedCheckboxItem() -> Element {
-        rsx! {
-            Menu { default_open: true,
-                MenuTrigger { "Open" }
-                MenuContent {
-                    MenuCheckboxItem { index: 0usize, default_checked: true, "Wrap words" }
-                }
-            }
-        }
-    }
-
-    // `MenuContent` gates on `use_animated_open`, whose real (`web`/`native`)
-    // implementation only flips its content-mounted signal from inside a
-    // `use_effect` — which a plain `rebuild_in_place()` schedules but does
-    // not itself drive to completion outside a running app. Matching
-    // `date_picker.rs`'s identical, already-established precedent for this
-    // exact class of test, these run only on the SSR-fallback path (no
-    // `web`/`native` feature), where `use_animated_open` returns `open`
-    // directly with no effect involved.
-    #[cfg(not(any(feature = "web", feature = "native")))]
-    #[test]
-    fn checkbox_item_defaults_to_unchecked() {
-        let html = render(UncheckedCheckboxItem);
-        assert!(html.contains("data-state=\"unchecked\""));
-    }
-
-    #[cfg(not(any(feature = "web", feature = "native")))]
-    #[test]
-    fn checkbox_item_honors_default_checked() {
-        let html = render(CheckedCheckboxItem);
-        assert!(html.contains("data-state=\"checked\""));
-    }
-
-    #[component]
-    fn RadioGroupWithDefaultSelection() -> Element {
-        rsx! {
-            Menu { default_open: true,
-                MenuTrigger { "Open" }
-                MenuContent {
-                    MenuRadioGroup::<String> { default_value: "b".to_string(),
-                        MenuRadioItem::<String> { value: "a", index: 0usize, "A" }
-                        MenuRadioItem::<String> { value: "b", index: 1usize, "B" }
-                    }
-                }
-            }
-        }
-    }
-
-    #[cfg(not(any(feature = "web", feature = "native")))]
-    #[test]
-    fn radio_group_marks_only_the_default_value_checked() {
-        let html = render(RadioGroupWithDefaultSelection);
-        assert!(html.contains(r#"data-state="unchecked" data-disabled=false tabindex="-1">A"#));
-        assert!(html.contains(r#"data-state="checked" data-disabled=false tabindex="-1">B"#));
-    }
-
-    #[component]
-    fn ClosedSubmenu() -> Element {
-        rsx! {
-            Menu { default_open: true,
-                MenuTrigger { "Open" }
-                MenuContent {
-                    MenuSubmenuRoot { index: 0usize,
-                        MenuSubmenuTrigger { "More" }
-                        MenuContent {
-                            MenuItem::<String> { value: "x".to_string(), index: 0usize, "X" }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    #[cfg(not(any(feature = "web", feature = "native")))]
-    #[test]
-    fn submenu_defaults_to_closed_and_its_content_is_not_rendered() {
-        let html = render(ClosedSubmenu);
-        assert!(html.contains("data-state=\"closed\""));
-        assert!(!html.contains("\">X<"));
     }
 }

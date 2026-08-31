@@ -181,6 +181,39 @@
       own doc comment already warns that migrating `context_menu`/`dropdown_menu`/`menubar`
       onto it without live-browser re-verification risks silently regressing tested behavior.
       Do not start this task until that design is settled with the user.
+      UNBLOCKED 2026-08-31 by task 6.3 (user: "Do it like baseui then" — the layer stack is now
+      open-state-scoped, matching Floating UI/Base UI's `useDismiss`, so `MenuSubmenuRoot`'s
+      always-registered-while-mounted concern above no longer applies). `dropdown_menu.rs`
+      portion DONE 2026-08-31: checked Base UI's actual source (mui/base-ui on GitHub) before
+      designing this, per standing instruction to check Base UI on an architectural dilemma —
+      Base UI has no separate dropdown-menu component at all; `context-menu/root/
+      ContextMenuRoot.tsx` renders `<Menu.Root {...props} />` directly and `menubar/
+      Menubar.tsx` is a thin roving-focus container around ordinary `Menu.Root`s, confirming
+      `Menu` itself is meant to be the dropdown-menu implementation. Compared
+      `dropdown_menu.rs`'s Props structs field-for-field against `menu::Menu`'s/`MenuTrigger`'s/
+      `MenuContent`'s/`MenuItem`'s: identical shape, and the component bodies were
+      logic-identical except `dropdown_menu.rs` rendered `role="listbox"`/`role="option"`/
+      `aria-haspopup="listbox"` instead of the WAI-ARIA APG Menu Button pattern's
+      `role="menu"`/`role="menuitem"`/`aria-haspopup="menu"` — an ARIA bug, not an intentional
+      divergence. `dropdown_menu.rs` is now `pub use crate::menu::{Menu as DropdownMenu, ...}`
+      re-exports; grepped `registry/`, `apps/`, `examples/`, `tests/installation/` for any
+      `role=listbox`/`role=option` selector before landing the role change — none found.
+      `menubar.rs`/`context_menu.rs` remain their own independent implementations — neither has
+      a `menu::Menu` counterpart for its trigger/anchoring model (click-point + long-press for
+      context_menu; multi-menu open-state coordination for menubar) — whether their
+      `MenuContent`/`MenuItem` rendering specifically can still be shared is remaining scope
+      here, to be evaluated per-file. Externalized `menu.rs`'s 5 inline tests to
+      `tests/test_menu.rs` (this crate's own test-placement convention) plus 1 new test
+      pinning the ARIA role contract; added 2 tests in `tests/test_dropdown_menu.rs` pinning
+      the re-export wiring and the role fix (8 tests total, `cargo test -p adico-primitives
+      menu` green). No `tests/playwright/*menu*.spec.ts` exist for any of the three files
+      (verified: `ls tests/playwright | grep -i menu` is empty) — recording that gap explicitly
+      rather than treating this verify line as satisfied; a live-browser spec for the role
+      change is deferred to task 2.4, matching how task 2.2 (combobox) handled the same
+      missing-coverage situation. Full baseline (fmt/check/clippy/test) plus `--target
+      wasm32-unknown-unknown --features web` green; `registry validate` unaffected (facade
+      untouched); provenance `2 imported record(s), 3 source unit(s)` (wave3-overlays record
+      drops to 2 units: `context_menu.rs`/`menubar.rs`).
 - [ ] 2.4 Update `registry/ui/select.rs`, `registry/ui/combobox.rs`,
       `registry/ui/dropdown-menu.rs`, `registry/ui/menubar.rs`, `registry/ui/context-menu.rs`
       facades and `registry/registry.json` for any public API change from 2.1-2.3; run
