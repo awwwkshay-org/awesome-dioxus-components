@@ -72,11 +72,15 @@ fn ClosedHoverCardForceMounted() -> Element {
 #[test]
 fn a_closed_hover_card_with_default_force_mount_still_does_not_render_its_content_on_ssr() {
     let html = render(ClosedHoverCardForceMounted);
+    // Positive anchor first: proves the tree actually rendered, so the negative assertion
+    // below isn't vacuously true from an unrelated render failure.
+    assert!(html.contains("Dioxus"), "{html}");
     assert!(!html.contains("Rich content"), "{html}");
 }
 
 #[test]
 fn a_closed_hover_card_without_force_mount_does_not_render_its_content() {
     let html = render(ClosedDisabledHoverCard);
+    assert!(html.contains("Dioxus"), "{html}");
     assert!(!html.contains("Rich content"), "{html}");
 }

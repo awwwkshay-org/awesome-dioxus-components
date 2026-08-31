@@ -8,11 +8,15 @@
 //
 // Writing tests surfaced a real, previously-undocumented interaction: `force_mount` only
 // bypasses `HoverCardContent`'s own early `!is_open && !force_mount` return -- every path still
-// ends at `use_animated_open`'s `render()` gate, whose SSR-fallback implementation returns
-// `open` unmodified with no force-mount override, so a closed `HoverCard`'s content does not
-// actually render on SSR/native even with the (default) `force_mount: true`. Not changed here
-// (no logic changes), since fixing it risks altering unrelated `web`/`native` animation-close
-// timing and no consumer in this repo currently relies on force-mounting.
+// ends at `use_animated_open`'s `render()` gate, and neither its SSR-fallback implementation
+// (returns `open` unmodified) nor its `web`/`native` one (`show_in_dom() || animating()`, where
+// `animating` is set nowhere) ever honors `force_mount`, so a closed `HoverCard`'s content does
+// not actually stay mounted on any target even with the (default) `force_mount: true` --
+// contradicting this file's own `HoverCardContentProps::force_mount` doc comment. Not changed
+// here (no logic changes; fixing risks altering unrelated animation-close timing). No consumer
+// in this repo sets `force_mount: true` to rely on the (non-functional) behavior --
+// `registry/ui/hover_card.rs`'s styled facade explicitly sets `force_mount: false`, itself
+// under a comment describing the same mistaken belief this doc comment states.
 
 //! Defines the [`HoverCard`] component and its subcomponents.
 
