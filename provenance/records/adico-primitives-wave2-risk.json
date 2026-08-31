@@ -8,7 +8,6 @@
     "primitives/src/scroll_area.rs",
     "primitives/src/alert_dialog.rs",
     "primitives/src/toast.rs",
-    "primitives/src/portal.rs",
     "primitives/src/pointer.rs",
     "primitives/src/move_interaction.rs",
     "primitives/src/slider.rs"
@@ -17,7 +16,6 @@
     "packages/adico-primitives/src/scroll_area.rs",
     "packages/adico-primitives/src/alert_dialog.rs",
     "packages/adico-primitives/src/toast.rs",
-    "packages/adico-primitives/src/portal.rs",
     "packages/adico-primitives/src/pointer.rs",
     "packages/adico-primitives/src/move_interaction.rs",
     "packages/adico-primitives/src/slider.rs"
@@ -30,6 +28,10 @@
     {
       "date": "2026-08-30",
       "summary": "slider.rs needed pointer.rs and move_interaction.rs as supporting infrastructure. pointer.rs's global window.addEventListener('pointerdown'/'pointermove'/'pointerup'/'pointercancel', ...) document::eval script (installed lazily the first time the pointer tracker is read) is now behind this crate's established `#[cfg(any(feature = \"web\", feature = \"desktop\"))]` target-gated pattern, with an SSR-safe stub (`track_pointer_down` no-op, `pointer_position` always `None`) for the native default -- upstream called `dioxus::document::eval` unconditionally; this crate's existing local `dioxus_document as document` import alias (matching every other eval call site in this crate) is used instead. move_interaction.rs and slider.rs themselves needed no adaptation: their only DOM access (`MountedData::get_client_rect()`) runs exclusively from event/mount callbacks, never during initial render, so no additional target gating was needed, and slider.rs's own pointer-drag path is simply inert on the native default (`pointer::pointer_position` always returns `None`) while keyboard arrow-key interaction, being pure Rust, works identically on every target. Verified for native (SSR-safe default), `--features web --target wasm32-unknown-unknown` (compile only, wasm unit tests require a wasm test runner not available in this environment), and `--features desktop` (compiles and its pointer unit test runs natively under this feature)."
+    },
+    {
+      "date": "2026-08-31",
+      "summary": "Re-authored packages/adico-primitives/src/portal.rs per openspec/changes/reauthor-primitives-from-independent-spec task 3.1. No ARIA pattern applies (this is a render-composition primitive, not a widget); its spec is its one real consumer's need (toast.rs) plus the deliberate scope line the module doc comment already drew against design.md §8a's separately-tracked, unimplemented real DOM-escaping portal in build-adico-component-ecosystem -- confirmed that inventory still lists a real DOM portal as net-new/unbuilt, so this task re-authors the existing same-VDOM relay, it does not implement that separate capability. The implementation itself is unchanged (already independently structured, admitted 'ported unmodified' by its own prior header). Added 6 tests in the new packages/adico-primitives/tests/test_portal.rs (none existed previously), which surfaced a real, previously-undocumented ordering requirement: PortalOut reads its portal's content at the moment PortalOut itself renders, with no way to react to a PortalIn that runs later in the same rebuild pass, so a PortalOut declared before its matching PortalIn renders stale (initially empty) content. toast.rs, this module's only consumer, already declares PortalIn first, which is why this was never hit in practice. Documented as a caveat in the module's own doc comment rather than silently left for the next caller to trip over; not changed, since fixing it (a reactive map read) risks altering unrelated ordering-independent behavior and no consumer needs it. Verified: cargo fmt --all --check, cargo check --locked --workspace, cargo clippy --locked -p adico-cli -p adico-primitives -p adico-registry-core -p adico-test-utils -p adico-xtask --all-targets -- -D warnings, cargo test --locked on the same five packages (all passing), cargo run -p adico-xtask -- provenance check (44 → 43 source units, this record's file count 7 → 6). No registry facade depends on portal.rs directly (toast.rs is the only consumer, and toast's own registry facade wasn't changed)."
     }
   ],
   "notices": [

@@ -205,9 +205,25 @@
 
 ## 3. Wave C — shared internals (dependencies of later waves)
 
-- [ ] 3.1 `portal.rs`: derive spec (real DOM portal semantics per `design.md` §8a in
+- [x] 3.1 `portal.rs`: derive spec (real DOM portal semantics per `design.md` §8a in
       `build-adico-component-ecosystem`); author/extend tests; re-author; drop header +
       record entry. Verify: `cargo test -p adico-primitives portal`, provenance count -1.
+      Done 2026-08-31: confirmed `build-adico-component-ecosystem`'s design.md §8a still lists
+      a real DOM-escaping portal as net-new/unbuilt (not among the primitives its own "real,
+      public, independently-tested modules today" list names) — this task re-authors the
+      existing same-VDOM relay `portal.rs` already is, not that separate, still-unimplemented
+      capability; the module's own doc comment already drew this scope line. Implementation
+      unchanged (already independently structured, its own prior header admitted "ported
+      unmodified"). Added 6 tests in the new `tests/test_portal.rs` (none existed before),
+      which surfaced a real, previously-undocumented ordering requirement: `PortalOut` reads
+      its content at the moment it renders and cannot react to a `PortalIn` that runs later in
+      the same pass, so declaring `PortalOut` first renders stale/empty content. `toast.rs`
+      (the only consumer) already declares `PortalIn` first, which is why this was never hit
+      in practice; documented as a caveat in the module doc comment, not fixed (no consumer
+      needs the reactive-order-independent version, and changing a `peek()`-based map read
+      risks altering unrelated behavior). Full baseline suite green; provenance `9 imported
+      record(s), 43 source unit(s)` (−1, exact). No registry facade depends on `portal.rs`
+      directly (`toast.rs` is the sole consumer; its own facade is untouched).
 - [ ] 3.2 `pointer.rs` + `move_interaction.rs`: derive spec from the existing unified
       press/long-press/drag gesture design (`gesture.rs` precedent); author/extend tests;
       re-author both; drop headers + record entries. Verify: `cargo test -p adico-primitives

@@ -1,14 +1,13 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/portal.rs. See provenance/records/adico-primitives-wave2-risk.json.
-//
-// Ported unmodified. This is a pure-Rust "logical" portal implemented purely
-// through Dioxus's own scope/context system (relaying a VNode from one place
-// in the component tree to another within the same virtual DOM) -- not a
-// `document::eval`/DOM-based portal. It has no browser API dependency and is
-// SSR-safe by construction, unlike the `document::eval`-based positioning
-// this crate has deliberately avoided elsewhere (see the Wave 3 record's
-// note that only `toast.rs` actually depends on this module upstream).
+// Implements a same-tree content relay: no ARIA pattern applies (this is a render-composition
+// primitive, not a widget), so its spec is its one real consumer's need (`toast.rs`, relaying a
+// toast's content from wherever `Toast` is authored to a fixed viewport slot) plus the
+// deliberate scope line the module doc comment below draws against `design.md` §8a's still
+// separately-tracked, unimplemented real DOM-escaping portal. This is a pure-Rust "logical"
+// portal implemented purely through Dioxus's own scope/context system (relaying a VNode from
+// one place in the component tree to another within the same virtual DOM) -- not a
+// `document::eval`/DOM-based portal. It has no browser API dependency and is SSR-safe by
+// construction, unlike the `document::eval`-based positioning this crate has deliberately
+// avoided elsewhere.
 
 //! A logical, VDOM-only content relay.
 //!
@@ -18,7 +17,17 @@
 //! `transform`, or stacking context. It is SSR-safe by construction, with no
 //! browser API dependency. A DOM-based portal with `Backdrop`/`Viewport`
 //! parts, needed for overlays to layer above ancestor stacking contexts, is
-//! tracked separately (see design.md §8a).
+//! tracked separately (see design.md §8a in `build-adico-component-ecosystem`)
+//! and not implemented here.
+//!
+//! **Ordering requirement:** [`PortalIn`] must render before the matching
+//! [`PortalOut`] within the same tree. `PortalOut` reads its portal's
+//! current content when *it* renders; it has no way to react to a
+//! `PortalIn` that runs later in the same pass, even though both mount
+//! together. Declaring `PortalOut` first renders stale (initially empty)
+//! content until some later, independent reactive update happens to
+//! re-render it. This module's real consumer ([`crate::toast`]) already
+//! follows the required order.
 
 use crate::dioxus_core::provide_root_context;
 use dioxus::prelude::*;
