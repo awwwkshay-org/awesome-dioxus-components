@@ -1,6 +1,9 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/popover.rs. See provenance/records/adico-primitives-wave3-overlays.json.
+// No dedicated WAI-ARIA APG "Popover" pattern exists; this follows the closest APG guidance --
+// the Dialog pattern -- applied conditionally: `PopoverContent` renders `role="dialog"` with
+// `aria-modal="true"` and focus-trapping only when `is_modal` is set (the default), otherwise
+// it's a non-modal disclosure positioned by the shared `Positioner`, dismissed on Escape or an
+// outside click. This file was already a genuine adaptation, not ported-unmodified, and that
+// adaptation is unchanged here:
 //
 // Adapted from upstream: `PopoverContent`'s inline `document::eval` focus-trap
 // script is replaced with this crate's existing target-gated

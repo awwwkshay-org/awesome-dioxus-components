@@ -1,6 +1,18 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/hover_card.rs. See provenance/records/adico-primitives-wave3-overlays.json.
+// No dedicated WAI-ARIA APG "Hover Card" pattern exists; this follows the closest APG guidance
+// (the Tooltip pattern's hover/focus-triggered, `aria-describedby`-linked disclosure shape,
+// positioned by the shared `Positioner`) while intentionally diverging from it where a card
+// needs richer behavior a plain tooltip doesn't: `HoverCardContent` accepts focusable
+// interactive children and stays open while the pointer is over the content itself (not just
+// the trigger), which the ARIA tooltip role's own spec discourages for exactly this content
+// shape -- a pre-existing, deliberate design choice of this file's, not a gap.
+//
+// Writing tests surfaced a real, previously-undocumented interaction: `force_mount` only
+// bypasses `HoverCardContent`'s own early `!is_open && !force_mount` return -- every path still
+// ends at `use_animated_open`'s `render()` gate, whose SSR-fallback implementation returns
+// `open` unmodified with no force-mount override, so a closed `HoverCard`'s content does not
+// actually render on SSR/native even with the (default) `force_mount: true`. Not changed here
+// (no logic changes), since fixing it risks altering unrelated `web`/`native` animation-close
+// timing and no consumer in this repo currently relies on force-mounting.
 
 //! Defines the [`HoverCard`] component and its subcomponents.
 

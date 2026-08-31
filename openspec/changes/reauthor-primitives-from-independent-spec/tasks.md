@@ -488,11 +488,39 @@
       remaining ones first); `registry validate`/`registry build` unaffected (46 items, same
       accepted static-pointer pattern as 5.1-5.3); `tests/installation/wave2-risk-consumer`
       compiles clean against `--target wasm32-unknown-unknown`.
-- [ ] 5.5 `wave3-overlays` record residue: `tooltip.rs`, `popover.rs`, `hover_card.rs`
+- [x] 5.5 `wave3-overlays` record residue: `tooltip.rs`, `popover.rs`, `hover_card.rs`
       (already migrated onto `Positioner` in prior work — verify no residual upstream text
       remains before dropping headers). Same recipe. Verify: tests pass, record
       `adico-primitives-wave3-overlays.json` deleted, provenance count -3 (or fewer if
-      dropdown_menu/menubar/context_menu already accounted for in Wave B).
+      dropdown_menu/menubar/context_menu already accounted for in Wave B). Done 2026-08-31: no
+      logic changes to any of the three. `dropdown_menu.rs`/`context_menu.rs`/`menubar.rs`
+      remain untouched — still blocked on task 2.3's menu-family design decision — so the
+      record is only reduced, not deleted; it now covers only those three menu files.
+      `tooltip.rs`: WAI-ARIA APG Tooltip pattern (aria-describedby-linked role=tooltip content,
+      hover/focus/Escape), already implemented. `popover.rs`: no dedicated APG "Popover"
+      pattern; spec is the closest APG guidance (Dialog) applied conditionally on `is_modal`,
+      already implemented and already delegating to the shared focus-trap/escape-key helpers.
+      `hover_card.rs`: no dedicated APG "Hover Card" pattern either; spec is the Tooltip
+      pattern's shape with an intentional, pre-existing divergence (interactive content, stays
+      open while hovered) documented as deliberate, not a gap. All three had zero tests; added
+      12 across three new files. `Positioner`'s own `data-side`/`data-align` and
+      `TooltipContent`'s id-to-trigger `aria-describedby` linkage are both real-DOM-measurement/
+      `use_effect`-driven and not assertable under a bare `rebuild_in_place()` — the same
+      effect-driven-state limitation documented elsewhere — so those tests assert
+      presence/role/state, not the exact linkage. Writing `hover_card.rs`'s tests surfaced a
+      real, previously-undocumented interaction: `HoverCardContent`'s `force_mount` prop
+      (default `true`) only bypasses its own early return; every path still ends at
+      `use_animated_open`'s SSR-fallback gate, which returns `open` unmodified with no
+      force-mount override, so a closed `HoverCard` never actually renders its content on SSR/
+      native even with `force_mount: true` — documented in the file's own header and the test,
+      not changed (no logic changes; fixing risks altering unrelated web/native animation-close
+      timing). Full baseline green; provenance `5 imported record(s), 12 source unit(s)` (record
+      count unchanged — still open pending task 2.3 — source units −3, exact); `registry
+      validate`/`registry build` unaffected (46 items, same accepted static-pointer pattern as
+      5.1-5.4); no dedicated `tests/installation/wave3-overlays-consumer` fixture exists for
+      this batch, so wasm32 coverage relied on `cargo check --target wasm32-unknown-unknown
+      --features web -p adico-primitives` (clean) plus the existing workspace consumers already
+      exercised by `cargo check --locked --workspace`.
 - [ ] 5.6 `wave4-collection` record residue: `calendar.rs` (2748 lines), `date_picker.rs`
       (1586 lines), `separator.rs`. Derive specs from ARIA APG Grid/Date-picker patterns;
       author tests first — these are the two largest remaining files, budget accordingly.

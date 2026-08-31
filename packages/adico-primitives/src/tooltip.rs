@@ -1,6 +1,8 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/tooltip.rs. See provenance/records/adico-primitives-wave3-overlays.json.
+// Implements the WAI-ARIA APG Tooltip pattern: a `TooltipTrigger` is described by a
+// `role="tooltip"` `TooltipContent` via `aria-describedby`, shown on hover or focus and
+// dismissed on Escape (or on blur/mouse-leave), positioned relative to the trigger by the
+// shared `Positioner`. This file was already a genuine adaptation, not ported-unmodified, and
+// that adaptation is unchanged here:
 //
 // Adapted from upstream: the trigger no longer depends on the upstream
 // `dioxus-attributes`/`merge_attributes` helpers or the polymorphic `r#as`
