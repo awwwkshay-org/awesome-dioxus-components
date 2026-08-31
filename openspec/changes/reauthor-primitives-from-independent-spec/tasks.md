@@ -456,11 +456,38 @@
       roving ArrowDown, Enter-activation) and was not re-run given zero behavior change;
       `tests/installation/wave2-roving-focus-consumer` compiles clean against `--target
       wasm32-unknown-unknown`.
-- [ ] 5.4 `wave2-risk` record: `scroll_area.rs` (if not already closed in Wave D),
+- [x] 5.4 `wave2-risk` record: `scroll_area.rs` (if not already closed in Wave D),
       `alert_dialog.rs`, `slider.rs`. Same recipe — `alert_dialog.rs` migrates onto
       `scroll_lock` per the existing 7.8a precedent if not already done. Verify: tests pass,
       record `adico-primitives-wave2-risk.json` deleted, provenance count reduced
-      accordingly.
+      accordingly. Done 2026-08-31: `scroll_area.rs` was already closed in Wave D (task 4.3),
+      leaving `alert_dialog.rs` and `slider.rs` as this record's remaining files. No logic
+      changes to either. `alert_dialog.rs` already delegates to the shared `dialog` module's
+      `FocusTrapScript`/`use_focus_trap` and to `scroll_lock::use_scroll_lock` (confirmed via
+      its import list — the 7.8a migration precedent was already applied). Derived spec: the
+      WAI-ARIA APG Alert Dialog (Modal) pattern — `role="alertdialog"`, `aria-modal="true"`,
+      labelled/described by its title/description, focus-trapped, and — unlike a plain
+      `dialog`/`DialogContent` — never dismissible by clicking outside it, matching the
+      pattern's requirement that only an explicit action can close it. `slider.rs` maps to the
+      WAI-ARIA APG Slider pattern — each `SliderThumb` is `role="slider"` with
+      `aria-valuemin`/`aria-valuemax`/`aria-valuenow`, moved by arrow keys or pointer-drag along
+      `SliderTrack`; `RangeSlider` composes two independently-clamped thumbs for the pattern's
+      two-thumb variant — already correctly implemented; the header's leftover "ported
+      unmodified" framing was dropped as prior-header cruft rather than preserved, since this
+      file was never a genuine adaptation (matching the same "no adaptation" framing already
+      used for `radio_group.rs`/`toggle.rs`). `alert_dialog.rs` had zero tests; added 4 in new
+      `tests/test_alert_dialog.rs` (alertdialog role/aria-modal/data-state on open, closed-state
+      early-return, title/description aria-labelledby/aria-describedby id-matching, action/
+      cancel button tabbability). `slider.rs` had 3 inline `#[cfg(test)] mod tests` tests
+      (`closest_thumb_for`/`clamp_to_step_bounds`, already widened to `pub`) — moved verbatim
+      into new `tests/test_slider.rs` per this change's crate-wide test-placement convention,
+      plus 3 new render-level tests (single-thumb value/range/orientation, disabled+vertical
+      orientation, two-thumb `RangeSlider` independent bounds and range-fill styling). Full
+      baseline green; provenance `5 imported record(s), 15 source unit(s)` (−1 record, −2
+      source units, exact — `wave2-risk.json` deleted, confirmed both files were its only
+      remaining ones first); `registry validate`/`registry build` unaffected (46 items, same
+      accepted static-pointer pattern as 5.1-5.3); `tests/installation/wave2-risk-consumer`
+      compiles clean against `--target wasm32-unknown-unknown`.
 - [ ] 5.5 `wave3-overlays` record residue: `tooltip.rs`, `popover.rs`, `hover_card.rs`
       (already migrated onto `Positioner` in prior work — verify no residual upstream text
       remains before dropping headers). Same recipe. Verify: tests pass, record

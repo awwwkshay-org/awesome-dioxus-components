@@ -1,6 +1,9 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/alert_dialog.rs. See provenance/records/adico-primitives-wave2-risk.json.
+// Implements the WAI-ARIA APG Alert Dialog (Modal) pattern: a `role="alertdialog"` element with
+// `aria-modal="true"`, labelled by its title and described by its description, that traps focus
+// while open and -- unlike a plain `dialog`/`DialogContent` -- must not be dismissible by
+// clicking outside it, since an alert dialog interrupts the user to require an explicit response.
+// This file was already a genuine adaptation, not ported-unmodified, and that adaptation is
+// unchanged here:
 //
 // Adapted from upstream: AlertDialogRoot's unconditional `document::Script`
 // and AlertDialogContent's own inline `document::eval` focus-trap script

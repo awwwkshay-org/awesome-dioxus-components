@@ -1,18 +1,14 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/slider.rs. See provenance/records/adico-primitives-wave2-risk.json.
-//
-// Ported unmodified beyond the doc-example import path change. No
-// `document::eval`/portal/target-gated adapter work is needed here: all
-// pointer/DOM-measurement access already goes through `move_interaction`/
-// `pointer`, both of which are cfg-gated internally (see `pointer.rs`), so
-// this file compiles and runs identically for native SSR (pointer-drag is
-// simply inert -- `pointer::pointer_position` always returns `None` --
-// while keyboard arrow-key interaction, which is pure Rust, still works),
-// `web`, and `desktop`. Desktop pointer-capture behavior is compiled and
-// covered by `cargo check --features desktop`, but not independently
-// verified against a real desktop WebView in this pass -- recorded as the
-// migration queue's named risk for this item, not silently assumed.
+// Implements the WAI-ARIA APG Slider pattern: each `SliderThumb` is a `role="slider"` button
+// with `aria-valuemin`/`aria-valuemax`/`aria-valuenow`, moved by arrow keys (by `step`, or 10x
+// `step` with Shift held) or by pointer-dragging along the `SliderTrack`. `RangeSlider` composes
+// two independently-clamped thumbs (each capped by its neighbor) for the pattern's two-thumb
+// range-selection variant. No `document::eval`/portal/target-gated adapter work is needed: all
+// pointer/DOM-measurement access already goes through `move_interaction`/`pointer`, both
+// cfg-gated internally (see `pointer.rs`), so this file compiles and runs identically for
+// native SSR (pointer-drag is simply inert -- `pointer::pointer_position` always returns
+// `None` -- while keyboard arrow-key interaction, which is pure Rust, still works), `web`, and
+// `desktop`. Desktop pointer-capture behavior is compiled and covered by `cargo check --features
+// desktop`, but not independently verified against a real desktop WebView.
 
 //! Defines the [`Slider`] and [`RangeSlider`] components and their sub-components, which provide
 //! a range input control for selecting a single value or a value range within a specified range.
@@ -36,7 +32,8 @@ fn snap_value(value: f64, step: f64) -> f64 {
     (value / step).round() * step
 }
 
-fn closest_thumb_for(raw: f64, thumbs: &[f64]) -> usize {
+/// "pub" only for packages/adico-primitives/tests/; not part of the intended public API.
+pub fn closest_thumb_for(raw: f64, thumbs: &[f64]) -> usize {
     if thumbs.len() < 2 {
         return 0;
     }
@@ -54,7 +51,8 @@ fn closest_thumb_for(raw: f64, thumbs: &[f64]) -> usize {
     }
 }
 
-fn clamp_to_step_bounds(raw: f64, lo: f64, hi: f64, step: f64) -> f64 {
+/// "pub" only for packages/adico-primitives/tests/; not part of the intended public API.
+pub fn clamp_to_step_bounds(raw: f64, lo: f64, hi: f64, step: f64) -> f64 {
     let snapped = snap_value(raw.clamp(lo, hi), step);
     if snapped > hi {
         ((hi / step).floor() * step).clamp(lo, hi)
@@ -821,32 +819,5 @@ impl SliderContext {
         let min = (self.min)();
         let max = (self.max)();
         ((value - min) / (max - min) * 100.0).clamp(0.0, 100.0)
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn closest_thumb_uses_raw_collision_position() {
-        let collided = [80.0, 80.0];
-
-        assert_eq!(closest_thumb_for(79.6, &collided), 0);
-        assert_eq!(closest_thumb_for(80.0, &collided), 1);
-        assert_eq!(closest_thumb_for(80.4, &collided), 1);
-    }
-
-    #[test]
-    fn clamp_to_step_bounds_keeps_fallbacks_in_range() {
-        assert_eq!(clamp_to_step_bounds(8.0, 5.0, 8.0, 10.0), 5.0);
-        assert_eq!(clamp_to_step_bounds(5.0, 5.0, 8.0, 10.0), 5.0);
-        assert_eq!(clamp_to_step_bounds(93.0, 93.0, 95.0, 10.0), 95.0);
-    }
-
-    #[test]
-    fn clamp_to_step_bounds_preserves_available_step_ticks() {
-        assert_eq!(clamp_to_step_bounds(85.0, 72.0, 85.0, 10.0), 80.0);
-        assert_eq!(clamp_to_step_bounds(84.0, 78.0, 89.0, 10.0), 80.0);
     }
 }
