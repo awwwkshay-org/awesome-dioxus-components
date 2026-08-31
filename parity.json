@@ -21,12 +21,13 @@
         },
         "api": {
           "applicable": true,
-          "passed": false,
+          "passed": true,
           "evidence": [
             "registry/ui/accordion.rs (AccordionTrigger: items-start alignment, rounded-md/outline-none/focus-visible:ring/disabled: classes added, matching apps/v4/registry/new-york-v4/ui/accordion.tsx)",
-            "Root disabled/collapsible/orientation(as horizontal bool) present and behaviorally equivalent; Item/Trigger/Content slot structure matches shadcn's four-part composition"
+            "Root disabled/collapsible/orientation(as horizontal bool) present and behaviorally equivalent; Item/Trigger/Content slot structure matches shadcn's four-part composition",
+            "packages/adico-primitives/src/accordion.rs (task 7.8b, 2026-08-31): Accordion (single, value: Option<String>/default_value/on_value_change) and AccordionMulti (values: Vec<String>/default_values/on_values_change) split shadcn's type: 'single'|'multiple' discriminant into two components, matching this crate's established Select/SelectMulti convention; AccordionItem is now addressed by a required string value (matching shadcn's string value exactly), not index: usize"
           ],
-          "note": "Interaction-state class parity (focus-visible ring, disabled-state styling) fixed against upstream shadcn's new-york-v4 style in M4 task 5.2's first sub-batch (docs/adico/m4-parity-audit.md); full prop-shape/slot composition audit beyond interaction-state classes remains open 5.2 scope. Follow-up prop/slot audit (task 5.2, batch pass 2026-08-30): Root has no controlled value/defaultValue/onValueChange API (shadcn's type: 'single'|'multiple' + string value) — adico primitive source itself has a TODO for a controlled version at accordion.rs:16, a genuine self-acknowledged gap. Items are addressed by index: usize instead of shadcn's string value; functionally equivalent but not prop-compatible. No asChild (expected Dioxus deviation, not a gap)."
+          "note": "Interaction-state class parity (focus-visible ring, disabled-state styling) fixed against upstream shadcn's new-york-v4 style in M4 task 5.2's first sub-batch (docs/adico/m4-parity-audit.md). Task 7.8b (2026-08-31) closed the controlled-value/type-split gap this dimension previously failed on: Root now has real controlled/uncontrolled value(s) state and a type-equivalent single/multiple split, and Item is value-addressed like shadcn. No asChild (expected Dioxus deviation, not a gap). AccordionItem's item-level default_open prop was removed (no longer meaningful once open state is root-controlled, matching Radix's own AccordionItem, which has no defaultOpen either) — a small, deliberate additional API narrowing beyond just closing the gap."
         },
         "visual": {
           "applicable": true,

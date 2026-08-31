@@ -3,11 +3,11 @@
   "items": [
     {
       "address": "@adico/accordion",
-      "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
+      "manifestDigest": "b3e19557cc0c6d00235338109676d42bb9adb8a56f83bef1686c8b94e43f7990",
       "files": [
         {
           "path": "src/components/ui/accordion.rs",
-          "checksum": "e8780cb4077da057fa78f93a951203ef3a6561cb7fe74b6a97089df718dfcbba"
+          "checksum": "598ef56bbdd321d21e0a7a565ecafc67ab899e8b50713df6ee748399baab5a0c"
         }
       ]
     },
@@ -93,7 +93,7 @@
     },
     {
       "address": "@adico/cn",
-      "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
+      "manifestDigest": "b3e19557cc0c6d00235338109676d42bb9adb8a56f83bef1686c8b94e43f7990",
       "files": [
         {
           "path": "src/adico_lib/cn.rs",

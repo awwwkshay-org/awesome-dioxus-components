@@ -5,12 +5,12 @@ fn app() -> Element {
     let mut tab_value = use_signal(|| "tab1".to_string());
 
     rsx! {
-        components::ui::Accordion { allow_multiple_open: false,
-            components::ui::AccordionItem { index: 0usize,
+        components::ui::Accordion {
+            components::ui::AccordionItem { value: "section-one", index: 0usize,
                 components::ui::AccordionTrigger { "Section one" }
                 components::ui::AccordionContent { "Section one content." }
             }
-            components::ui::AccordionItem { index: 1usize,
+            components::ui::AccordionItem { value: "section-two", index: 1usize,
                 components::ui::AccordionTrigger { "Section two" }
                 components::ui::AccordionContent { "Section two content." }
             }

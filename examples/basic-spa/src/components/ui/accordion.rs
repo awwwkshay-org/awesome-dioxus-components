@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-pub use adico_primitives::accordion::Accordion;
+pub use adico_primitives::accordion::{Accordion, AccordionMulti};
 use adico_primitives::accordion::{
     AccordionContent as AccordionContentPrimitive, AccordionItem as AccordionItemPrimitive,
     AccordionTrigger as AccordionTriggerPrimitive,
@@ -12,18 +12,18 @@ use adico_primitives::icons::ChevronDown;
 
 use crate::adico_lib::cn::cn;
 
-/// A single collapsible section within an [`Accordion`].
+/// A single collapsible section within an [`Accordion`]/[`AccordionMulti`].
 #[component]
 pub fn AccordionItem(
+    value: ReadSignal<String>,
     index: usize,
     #[props(default)] disabled: ReadSignal<bool>,
-    #[props(default)] default_open: bool,
     class: Option<String>,
     children: Element,
 ) -> Element {
     let class = cn(&["border-b", class.as_deref().unwrap_or_default()]);
     rsx! {
-        AccordionItemPrimitive { index, disabled, default_open, class, {children} }
+        AccordionItemPrimitive { value, index, disabled, class, {children} }
     }
 }
 

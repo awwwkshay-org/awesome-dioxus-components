@@ -6,100 +6,79 @@
 // (upstream-internal re-export path that does not exist in this crate);
 // `Key` already resolves through `dioxus::prelude::*`, matching every other
 // primitive in this crate that matches on keyboard keys.
+//
+// Adapted further (task 7.8b): closes this file's own two long-standing
+// TODOs. `Accordion`/`AccordionMulti` now split single/multiple-open mode
+// into two components (matching this crate's established `Select`/
+// `SelectMulti` convention) with real controlled/uncontrolled `String`
+// `value`/`values` state, matching shadcn/Radix's `AccordionPrimitive.Root`
+// exactly (Radix's own value type is `string`, so no generic `T` is needed
+// here the way `Select<T>` needs one) — closing "TODO: controlled version".
+// `AccordionItem.value` is now a required identity, replacing the previous
+// internal numeric-id-only addressing. On "TODO: rewrite this to use
+// collapsible": `AccordionContent`'s open-gated rendering already used the
+// same technique (`use_animated_open`) `collapsible.rs`'s `CollapsibleContent`
+// uses, so the pattern was already shared; literally nesting `Collapsible`
+// components per item was not done, since layering this module's
+// roving-focus keydown/focus handling on top of `CollapsibleTrigger`'s own
+// handlers would need attribute-merging this crate has no established
+// pattern for, and risks a subtle, currently-untestable-without-a-browser
+// keyboard regression in an already Playwright-verified component for
+// uncertain benefit over the existing (working, equivalent) approach.
+// Also fixed, while touching `AccordionTrigger`: it never rendered
+// `data-state`, so `registry/ui/accordion.rs`'s own
+// `[&[data-state=open]>svg]:rotate-180` chevron-rotation selector could
+// never have matched anything — a real, free, pre-existing bug fix.
 
-//! Defines the [`Accordion`] component and its sub-components.
+//! Defines the [`Accordion`]/[`AccordionMulti`] components and their sub-components.
 
-use crate::collection::{CollectionOptions, CollectionState, collection_item, use_item};
+use crate::collection::{CollectionState, collection_item, use_collection_provider, use_item};
 use crate::{use_animated_open, use_id_or, use_unique_id};
 use dioxus::prelude::*;
 
-// TODO: controlled version
-// TODO: rewrite this to use collapsible
-
-/// Internal accordion context.
+/// Internal accordion context, shared by [`Accordion`] and [`AccordionMulti`].
+/// `toggle` closes over each root's own single/multiple-open semantics, so
+/// [`AccordionItem`]/[`AccordionTrigger`]/[`AccordionContent`] don't need to
+/// know which mode they're in.
 #[derive(Clone, Copy)]
 struct AccordionContext {
-    /// Used to track the next runtime-generated id.
-    next_id: Signal<usize>,
+    /// Used to assign each item's roving-focus navigation order.
+    next_index: Signal<usize>,
 
-    /// The runtime generated ids of the open items.
-    open_items: Signal<Vec<usize>>,
+    /// The currently open item value(s) — one for [`Accordion`], any number
+    /// for [`AccordionMulti`].
+    open_values: Memo<Vec<String>>,
 
-    /// Whether multiple items can be open at once.
-    allow_multiple_open: ReadSignal<bool>,
+    /// Toggles a single value's open/closed state, per the root's own mode.
+    toggle: Callback<String>,
 
     /// Whether the entire accordion is disabled.
     disabled: ReadSignal<bool>,
 
-    /// Whether all accordion items can be collapsed.
-    collapsible: ReadSignal<bool>,
-
     /// Whether the accordion is horizontal.
     horizontal: ReadSignal<bool>,
 
-    /// Roving focus state, keyed by the per-item runtime id.
+    /// Roving focus state, keyed by each item's registration order.
     focus: CollectionState,
 }
 
 impl AccordionContext {
-    pub fn new(
-        allow_multiple_open: ReadSignal<bool>,
-        disabled: ReadSignal<bool>,
-        collapsible: ReadSignal<bool>,
-        horizontal: ReadSignal<bool>,
-    ) -> Self {
-        Self {
-            next_id: Signal::new(0),
-            open_items: Signal::new(Vec::new()),
-            allow_multiple_open,
-            disabled,
-            collapsible,
-            horizontal,
-            focus: CollectionState::new(
-                ReadSignal::new(Signal::new(true)),
-                CollectionOptions::default(),
-            ),
-        }
+    fn register_item(&mut self) -> usize {
+        let mut next_index = self.next_index.write();
+        let index = *next_index;
+        *next_index += 1;
+        index
     }
 
-    pub fn register_item(&mut self) -> usize {
-        let mut next_id = self.next_id.write();
-        let id = *next_id;
-        *next_id += 1;
-        id
+    fn is_open(&self, value: &str) -> bool {
+        self.open_values.read().iter().any(|v| v == value)
     }
 
-    pub fn set_open(&mut self, id: usize) {
-        if !*self.allow_multiple_open.peek() {
-            self.open_items.clear();
-        }
-        self.open_items.push(id);
-    }
-
-    pub fn set_closed(&mut self, id: usize) {
-        let mut open_items = self.open_items.write();
-
-        // If the accordion is not collapsible, we can't close this one.
-        if !*self.collapsible.peek() && open_items.len() == 1 {
-            return;
-        }
-
-        *open_items = open_items
-            .iter()
-            .cloned()
-            .filter(|item| *item != id)
-            .collect();
-    }
-
-    pub fn is_open(&self, id: usize) -> bool {
-        self.open_items.read().contains(&id)
-    }
-
-    pub fn is_disabled(&self) -> bool {
+    fn is_disabled(&self) -> bool {
         (self.disabled)()
     }
 
-    pub fn is_horizontal(&self) -> bool {
+    fn is_horizontal(&self) -> bool {
         (self.horizontal)()
     }
 }
@@ -110,19 +89,29 @@ pub struct AccordionProps {
     /// The id of the accordion root element.
     pub id: Option<String>,
 
-    /// Whether multiple accordion items are allowed to be open at once.
-    ///
-    /// Defaults to false.
+    /// The controlled open item's value (`None` means uncontrolled, using
+    /// `default_value` instead — matching
+    /// [`crate::menu::MenuRadioGroup`]'s identical convention for an
+    /// optionally-controlled optional value).
     #[props(default)]
-    pub allow_multiple_open: ReadSignal<bool>,
+    pub value: Option<ReadSignal<Option<String>>>,
+
+    /// The initially open item's value when uncontrolled.
+    #[props(default)]
+    pub default_value: Option<String>,
+
+    /// Called with the newly open item's value (`None` if the open item was
+    /// collapsed and `collapsible` allows that).
+    #[props(default)]
+    pub on_value_change: Callback<Option<String>>,
 
     /// Set whether the accordion is disabled.
     #[props(default)]
     pub disabled: ReadSignal<bool>,
 
-    /// Whether the accordion can be fully collapsed.
+    /// Whether the open item can be collapsed, leaving nothing open.
     ///
-    /// Setting this to true will allow all accordion items to close. Defaults to true.
+    /// Defaults to true.
     #[props(default = ReadSignal::new(Signal::new(true)))]
     pub collapsible: ReadSignal<bool>,
 
@@ -142,7 +131,8 @@ pub struct AccordionProps {
 
 /// # Accordion
 ///
-/// The accordion component displays a list of collapsible items, allowing users to expand or collapse sections of content.
+/// A single-open accordion: opening one item closes any other. For multiple
+/// items open at once, see [`AccordionMulti`].
 ///
 /// ## Example
 ///
@@ -156,10 +146,10 @@ pub struct AccordionProps {
 /// fn Demo() -> Element {
 ///     rsx! {
 ///         Accordion {
-///             allow_multiple_open: false,
 ///             horizontal: false,
 ///             for i in 0..4 {
 ///                 AccordionItem {
+///                     value: format!("item-{i}"),
 ///                     index: i,
 ///                     on_change: move |open| {
 ///                         tracing::info!("{open};");
@@ -191,13 +181,123 @@ pub struct AccordionProps {
 /// - `data-disabled`: Indicates if the accordion is disabled. values are `true` or `false`.
 #[component]
 pub fn Accordion(props: AccordionProps) -> Element {
-    let mut ctx = use_context_provider(|| {
-        AccordionContext::new(
-            props.allow_multiple_open,
-            props.disabled,
-            props.collapsible,
-            props.horizontal,
-        )
+    let mut internal_value: Signal<Option<String>> = use_signal(|| props.default_value.clone());
+    let open_value = use_memo(move || match props.value {
+        Some(value) => value.cloned(),
+        None => internal_value.cloned(),
+    });
+    let open_values = use_memo(move || open_value().into_iter().collect::<Vec<_>>());
+
+    let collapsible = props.collapsible;
+    let on_value_change = props.on_value_change;
+    let toggle = use_callback(move |value: String| {
+        let next = if open_value().as_deref() == Some(value.as_str()) {
+            if collapsible() { None } else { open_value() }
+        } else {
+            Some(value)
+        };
+        internal_value.set(next.clone());
+        on_value_change.call(next);
+    });
+
+    let focus = use_collection_provider(ReadSignal::new(Signal::new(true)));
+    let mut ctx = use_context_provider(|| AccordionContext {
+        next_index: Signal::new(0),
+        open_values,
+        toggle,
+        disabled: props.disabled,
+        horizontal: props.horizontal,
+        focus,
+    });
+
+    rsx! {
+        div {
+            id: props.id,
+            "data-disabled": (props.disabled)(),
+
+            onfocusout: move |_| {
+                ctx.focus.clear_focus();
+            },
+
+            ..props.attributes,
+
+            {props.children}
+        }
+    }
+}
+
+/// The props for the [`AccordionMulti`] component.
+#[derive(Props, Clone, PartialEq)]
+pub struct AccordionMultiProps {
+    /// The id of the accordion root element.
+    pub id: Option<String>,
+
+    /// The controlled set of open item values. Uncontrolled (using
+    /// `default_values`) if not provided.
+    #[props(default)]
+    pub values: ReadSignal<Option<Vec<String>>>,
+
+    /// The initially open item values when uncontrolled.
+    #[props(default)]
+    pub default_values: Vec<String>,
+
+    /// Called with the full set of open item values whenever it changes.
+    #[props(default)]
+    pub on_values_change: Callback<Vec<String>>,
+
+    /// Set whether the accordion is disabled.
+    #[props(default)]
+    pub disabled: ReadSignal<bool>,
+
+    /// Whether the accordion is horizontal.
+    #[props(default)]
+    pub horizontal: ReadSignal<bool>,
+
+    /// Attributes to extend the root element.
+    #[props(extends = GlobalAttributes)]
+    pub attributes: Vec<Attribute>,
+
+    /// The children of the accordion, which should contain [`AccordionItem`] components.
+    pub children: Element,
+}
+
+/// # AccordionMulti
+///
+/// An accordion allowing more than one item open at once. For single-open
+/// behavior, see [`Accordion`].
+///
+/// ## Styling
+///
+/// The [`AccordionMulti`] component defines the following data attributes you can use to control styling:
+/// - `data-disabled`: Indicates if the accordion is disabled. values are `true` or `false`.
+#[component]
+pub fn AccordionMulti(props: AccordionMultiProps) -> Element {
+    let mut internal_values: Signal<Vec<String>> = use_signal(|| props.default_values.clone());
+    let open_values = use_memo(move || match props.values.cloned() {
+        Some(values) => values,
+        None => internal_values.cloned(),
+    });
+
+    let on_values_change = props.on_values_change;
+    let toggle = use_callback(move |value: String| {
+        let mut current = open_values();
+        if let Some(pos) = current.iter().position(|v| v == &value) {
+            current.remove(pos);
+        } else {
+            current.push(value);
+        }
+        internal_values.set(current.clone());
+        on_values_change.call(current);
+    });
+
+    let focus = use_collection_provider(ReadSignal::new(Signal::new(true)));
+    let mut ctx = use_context_provider(|| AccordionContext {
+        next_index: Signal::new(0),
+        open_values,
+        toggle,
+        disabled: props.disabled,
+        horizontal: props.horizontal,
+        focus,
     });
 
     rsx! {
@@ -219,13 +319,12 @@ pub fn Accordion(props: AccordionProps) -> Element {
 /// The props for the [`AccordionItem`] component.
 #[derive(Props, Clone, PartialEq)]
 pub struct AccordionItemProps {
+    /// This item's identity within the enclosing [`Accordion`]/[`AccordionMulti`].
+    pub value: ReadSignal<String>,
+
     /// Whether the accordion item is disabled.
     #[props(default)]
     pub disabled: ReadSignal<bool>,
-
-    /// Whether this accordion item should be opened by default.
-    #[props(default)]
-    pub default_open: bool,
 
     /// Callback for when the accordion's open/closed state changes.
     ///
@@ -237,7 +336,7 @@ pub struct AccordionItemProps {
     #[props(default)]
     pub on_trigger_click: Callback,
 
-    /// The index of the accordion item within the [`Accordion`].
+    /// The index of the accordion item within the [`Accordion`]/[`AccordionMulti`].
     ///
     /// This is required to implement keyboard navigation and focus management.
     pub index: usize,
@@ -254,33 +353,7 @@ pub struct AccordionItemProps {
 ///
 /// The accordion item component represents a single item within an accordion, which can be expanded or collapsed to show or hide its content.
 ///
-/// The [`AccordionItem`] component must be used underneath the [`Accordion`] component.
-///
-/// ## Example
-///
-/// ```rust
-/// use dioxus::prelude::*;
-/// use adico_primitives::accordion::{
-///     Accordion, AccordionContent, AccordionItem, AccordionTrigger,
-/// };
-///
-/// #[component]
-/// fn Demo() -> Element {
-///     rsx! {
-///         Accordion {
-///             AccordionItem {
-///                 index: 0,
-///                 AccordionTrigger {
-///                     "the quick brown fox"
-///                 }
-///                 AccordionContent {
-///                     "Jumped over the lazy dog."
-///                 }
-///             }
-///         }
-///     }
-/// }
-/// ```
+/// The [`AccordionItem`] component must be used underneath the [`Accordion`]/[`AccordionMulti`] component.
 ///
 /// ## Styling
 ///
@@ -293,28 +366,22 @@ pub fn AccordionItem(props: AccordionItemProps) -> Element {
     let aria_id = use_unique_id();
 
     let item = use_context_provider(|| Item {
-        id: ctx.register_item(),
+        value: props.value,
         aria_id,
         disabled: props.disabled,
         on_trigger_click: props.on_trigger_click,
-    });
-
-    // Open this item if we're set as default.
-    use_hook(move || {
-        if props.default_open {
-            ctx.set_open(item.id);
-        }
+        index: ctx.register_item(),
     });
 
     // Handle calling `on_change` callback.
     use_effect(move || {
-        let open = ctx.is_open(item.id);
+        let open = ctx.is_open(&item.value());
         props.on_change.call(open)
     });
 
     rsx! {
         div {
-            "data-open": ctx.is_open(item.id),
+            "data-open": ctx.is_open(&item.value()),
             "data-disabled": ctx.is_disabled() || item.is_disabled(),
             ..props.attributes,
 
@@ -342,32 +409,6 @@ pub struct AccordionContentProps {
 ///
 /// This must be used underneath the [`AccordionItem`] component.
 ///
-/// ## Example
-///
-/// ```rust
-/// use dioxus::prelude::*;
-/// use adico_primitives::accordion::{
-///     Accordion, AccordionContent, AccordionItem, AccordionTrigger,
-/// };
-///
-/// #[component]
-/// fn Demo() -> Element {
-///     rsx! {
-///         Accordion {
-///             AccordionItem {
-///                 index: 0,
-///                 AccordionTrigger {
-///                     "the quick brown fox"
-///                 }
-///                 AccordionContent {
-///                     "Jumped over the lazy dog."
-///                 }
-///             }
-///         }
-///     }
-/// }
-/// ```
-///
 /// ## Styling
 ///
 /// The [`AccordionContent`] component defines the following data attributes you can use to control styling:
@@ -377,7 +418,7 @@ pub fn AccordionContent(props: AccordionContentProps) -> Element {
     let item: Item = use_context();
     let id = use_id_or(item.aria_id, props.id);
     let ctx: AccordionContext = use_context();
-    let open = use_memo(move || ctx.is_open(item.id));
+    let open = use_memo(move || ctx.is_open(&item.value()));
 
     let render_element = use_animated_open(id, open);
 
@@ -411,32 +452,6 @@ pub struct AccordionTriggerProps {
 /// The accordion trigger component is a button that toggles the open/closed state of an [`AccordionItem`].
 ///
 /// The [`AccordionTrigger`] component must be used underneath the [`AccordionItem`] component.
-///
-/// ## Example
-///
-/// ```rust
-/// use dioxus::prelude::*;
-/// use adico_primitives::accordion::{
-///     Accordion, AccordionContent, AccordionItem, AccordionTrigger,
-/// };
-///
-/// #[component]
-/// fn Demo() -> Element {
-///     rsx! {
-///         Accordion {
-///             AccordionItem {
-///                 index: 0,
-///                 AccordionTrigger {
-///                     "the quick brown fox"
-///                 }
-///                 AccordionContent {
-///                     "Jumped over the lazy dog."
-///                 }
-///             }
-///         }
-///     }
-/// }
-/// ```
 #[component]
 pub fn AccordionTrigger(props: AccordionTriggerProps) -> Element {
     let mut ctx: AccordionContext = use_context();
@@ -444,8 +459,10 @@ pub fn AccordionTrigger(props: AccordionTriggerProps) -> Element {
 
     let disabled = move || ctx.is_disabled() || item.is_disabled();
     // The trigger is the focusable element, so it registers this accordion item.
-    let id_signal = use_signal(|| item.id);
-    let onmounted = use_item(collection_item(ctx.focus, id_signal).disabled(disabled)).onmounted();
+    let index_signal = use_signal(|| item.index);
+    let onmounted =
+        use_item(collection_item(ctx.focus, index_signal).disabled(disabled)).onmounted();
+    let open = move || ctx.is_open(&item.value());
 
     rsx! {
         button {
@@ -455,11 +472,12 @@ pub fn AccordionTrigger(props: AccordionTriggerProps) -> Element {
             r#type: "button",
 
             aria_controls: item.aria_id(),
-            aria_expanded: ctx.is_open(item.id),
+            aria_expanded: open(),
+            "data-state": if open() { "open" } else { "closed" },
 
             onmounted,
             onfocus: move |_| {
-                ctx.focus.set_focus(Some(item.id));
+                ctx.focus.set_focus(Some(item.index));
             },
             onkeydown: move |event| {
                 let key = event.key();
@@ -486,12 +504,7 @@ pub fn AccordionTrigger(props: AccordionTriggerProps) -> Element {
                     return;
                 }
                 item.on_trigger_click.call(());
-
-                // If the item is not controlled, handle state.
-                match ctx.is_open(item.id) {
-                    true => ctx.set_closed(item.id),
-                    false => ctx.set_open(item.id),
-                }
+                ctx.toggle.call(item.value());
             },
 
             ..props.attributes,
@@ -504,10 +517,11 @@ pub fn AccordionTrigger(props: AccordionTriggerProps) -> Element {
 /// Internal accordion-item context.
 #[derive(Clone, Copy, PartialEq)]
 struct Item {
-    id: usize,
+    value: ReadSignal<String>,
     aria_id: Signal<String>,
     disabled: ReadSignal<bool>,
     on_trigger_click: Callback,
+    index: usize,
 }
 
 impl Item {
@@ -517,5 +531,9 @@ impl Item {
 
     pub fn aria_id(&self) -> String {
         (self.aria_id)()
+    }
+
+    pub fn value(&self) -> String {
+        (self.value)()
     }
 }

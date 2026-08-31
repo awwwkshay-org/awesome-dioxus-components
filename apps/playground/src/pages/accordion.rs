@@ -13,14 +13,27 @@ pub fn AccordionPage() -> Element {
             controls: rsx! {
                 BoolControl { label: "Allow multiple open", value: allow_multiple_open }
             },
-            components::ui::Accordion { allow_multiple_open: allow_multiple_open(),
-                components::ui::AccordionItem { index: 0usize,
-                    components::ui::AccordionTrigger { "Section one" }
-                    components::ui::AccordionContent { "Section one content." }
+            if allow_multiple_open() {
+                components::ui::AccordionMulti {
+                    components::ui::AccordionItem { value: "section-one", index: 0usize,
+                        components::ui::AccordionTrigger { "Section one" }
+                        components::ui::AccordionContent { "Section one content." }
+                    }
+                    components::ui::AccordionItem { value: "section-two", index: 1usize,
+                        components::ui::AccordionTrigger { "Section two" }
+                        components::ui::AccordionContent { "Section two content." }
+                    }
                 }
-                components::ui::AccordionItem { index: 1usize,
-                    components::ui::AccordionTrigger { "Section two" }
-                    components::ui::AccordionContent { "Section two content." }
+            } else {
+                components::ui::Accordion {
+                    components::ui::AccordionItem { value: "section-one", index: 0usize,
+                        components::ui::AccordionTrigger { "Section one" }
+                        components::ui::AccordionContent { "Section one content." }
+                    }
+                    components::ui::AccordionItem { value: "section-two", index: 1usize,
+                        components::ui::AccordionTrigger { "Section two" }
+                        components::ui::AccordionContent { "Section two content." }
+                    }
                 }
             }
         }
