@@ -82,7 +82,7 @@ permanent judgment call.
 
 ## 8. Final validation
 
-- [ ] 8.1 Run `cargo fmt --all --check`, `cargo check --locked --workspace`, `cargo clippy --locked -p adico-cli -p adico-primitives -p adico-registry-core -p adico-test-utils -p adico-xtask --all-targets -- -D warnings`, `cargo test --locked -p adico-cli -p adico-primitives -p adico-registry-core -p adico-test-utils -p adico-xtask`.
-- [ ] 8.2 Run `cargo xtask registry validate`, `cargo xtask primitive-usage check`, `cargo xtask styling-usage check`, `cargo xtask component-compat check`, `cargo xtask primitive-compat check`.
-- [ ] 8.3 Run `openspec validate enforce-registry-facade-standards --strict` and `openspec validate build-adico-component-ecosystem --strict`.
-- [ ] 8.4 Report which surfaces were exercised (Playwright, `dx serve`) versus skipped (desktop, SSR, wasm32, the network-dependent dual-reference audit) for the R1/R2/R4 behavior changes and section 6, per `docs/validation.md`'s honesty requirement — do not claim a skipped surface passed.
+- [x] 8.1 Run `cargo fmt --all --check`, `cargo check --locked --workspace`, `cargo clippy --locked -p adico-cli -p adico-primitives -p adico-registry-core -p adico-test-utils -p adico-xtask --all-targets -- -D warnings`, `cargo test --locked -p adico-cli -p adico-primitives -p adico-registry-core -p adico-test-utils -p adico-xtask`.
+- [x] 8.2 Run `cargo xtask registry validate`, `cargo xtask primitive-usage check`, `cargo xtask styling-usage check`, `cargo xtask component-compat check`, `cargo xtask primitive-compat check`.
+- [x] 8.3 Run `openspec validate enforce-registry-facade-standards --strict` and `openspec validate build-adico-component-ecosystem --strict`.
+- [x] 8.4 Report which surfaces were exercised (Playwright, `dx serve`) versus skipped (desktop, SSR, wasm32, the network-dependent dual-reference audit) for the R1/R2/R4 behavior changes and section 6, per `docs/validation.md`'s honesty requirement — do not claim a skipped surface passed.
