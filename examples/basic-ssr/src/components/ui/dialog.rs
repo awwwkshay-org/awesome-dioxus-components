@@ -40,7 +40,7 @@ pub fn DialogOverlay(class: Option<String>) -> Element {
         return rsx! {};
     }
     let class = cn(&[
-        "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out",
+        "fixed inset-0 z-50 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

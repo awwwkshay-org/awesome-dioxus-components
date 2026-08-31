@@ -3,6 +3,9 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
-  "inspiredBy": [],
-  "inspirationNote": ""
+  "inspiredBy": [
+    "shadcn",
+    "dioxus-components"
+  ],
+  "inspirationNote": "Nav-button and day-cell treatment (bg-accent, text-accent-foreground, text-muted-foreground) is consistent with shadcn's semantic-token usage. dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
 }

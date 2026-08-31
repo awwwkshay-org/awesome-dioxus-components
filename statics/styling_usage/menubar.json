@@ -3,6 +3,9 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
-  "inspiredBy": [],
-  "inspirationNote": ""
+  "inspiredBy": [
+    "shadcn",
+    "dioxus-components"
+  ],
+  "inspirationNote": "Content/trigger/item classes (bg-popover, bg-accent, absolute positioning fixed via this same change's R4) match shadcn's token usage. dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
 }

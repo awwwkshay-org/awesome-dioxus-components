@@ -8,6 +8,9 @@
   ],
   "tokenCompliant": true,
   "colorException": [],
-  "inspiredBy": [],
-  "inspirationNote": ""
+  "inspiredBy": [
+    "shadcn",
+    "dioxus-components"
+  ],
+  "inspirationNote": "bg-sidebar/bg-sidebar-accent/text-sidebar-accent-foreground token family matches shadcn's own sidebar token names; custom-property styleException already recorded, and shadcn's own sidebar also relies on a --sidebar-width custom property for the same reason. dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
 }

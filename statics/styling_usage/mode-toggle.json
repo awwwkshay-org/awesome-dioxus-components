@@ -4,5 +4,5 @@
   "tokenCompliant": true,
   "colorException": [],
   "inspiredBy": [],
-  "inspirationNote": ""
+  "inspirationNote": "No shadcn or dioxus-components equivalent; an adico-specific composition of DropdownMenu + theme_mode."
 }

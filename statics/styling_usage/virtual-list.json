@@ -3,6 +3,8 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
-  "inspiredBy": [],
-  "inspirationNote": ""
+  "inspiredBy": [
+    "dioxus-components"
+  ],
+  "inspirationNote": "No shadcn equivalent. dioxus-components' virtual_list uses a single non-Tailwind custom class (dx-virtual-list-container), not comparable class-for-class; adico's list is purely primitive-styled with no registry-facade classes of its own."
 }

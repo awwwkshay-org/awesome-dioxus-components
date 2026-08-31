@@ -3,6 +3,9 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
-  "inspiredBy": [],
-  "inspirationNote": ""
+  "inspiredBy": [
+    "shadcn",
+    "dioxus-components"
+  ],
+  "inspirationNote": "Uses bg-card/text-card-foreground/text-muted-foreground matching shadcn; adico spaces each region with its own p-6 padding rather than shadcn v4's container-query gap-based header, an independent structural choice, not a token gap. dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
 }

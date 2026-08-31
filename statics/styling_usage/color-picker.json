@@ -8,6 +8,8 @@
       "reason": "The area-thumb outline must stay visible against an arbitrary user-picked color; a semantic token could blend into some picked colors, defeating the affordance."
     }
   ],
-  "inspiredBy": [],
-  "inspirationNote": ""
+  "inspiredBy": [
+    "dioxus-components"
+  ],
+  "inspirationNote": "No shadcn equivalent. dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there; dioxus-components' color_picker uses its own CSS custom properties, structurally not comparable class-for-class. border-white thumb exception already recorded."
 }

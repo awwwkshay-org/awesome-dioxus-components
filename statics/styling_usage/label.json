@@ -3,6 +3,9 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
-  "inspiredBy": [],
-  "inspirationNote": ""
+  "inspiredBy": [
+    "shadcn",
+    "dioxus-components"
+  ],
+  "inspirationNote": "Core text-sm/font-medium/peer-disabled treatment matches shadcn; shadcn's current source additionally sets flex items-center gap-2 (icon-adjacent layout), select-none, and a group-data-[disabled=true] variant that adico's simpler text-only Label doesn't include -- a minor idiom gap noted, not fixed, since it would change the component's layout model. dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
 }

@@ -9,5 +9,5 @@
     }
   ],
   "inspiredBy": [],
-  "inspirationNote": ""
+  "inspirationNote": "No shadcn or dioxus-components equivalent; an adico-specific composition with its own preset-swatch colorException already recorded."
 }

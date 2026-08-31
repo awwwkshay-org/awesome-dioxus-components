@@ -8,6 +8,8 @@
       "reason": "A neutral, mode-aware hover-state tint independent of any accent color; a common pattern for a subtle interactive-state affordance that shouldn't tie to the active accent token."
     }
   ],
-  "inspiredBy": [],
-  "inspirationNote": ""
+  "inspiredBy": [
+    "dioxus-components"
+  ],
+  "inspirationNote": "No shadcn equivalent. dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there; hover tint exception already recorded."
 }

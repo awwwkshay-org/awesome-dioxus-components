@@ -3,6 +3,9 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
-  "inspiredBy": [],
-  "inspirationNote": ""
+  "inspiredBy": [
+    "shadcn",
+    "dioxus-components"
+  ],
+  "inspirationNote": "Core card-like treatment (border, bg-card, hover:bg-accent) is consistent with shadcn's tokens; shadcn v4 restructured Item into a much larger subcomponent family (ItemMedia/ItemHeader/ItemFooter/etc.) adico's single-component composition doesn't replicate, an independent scope choice. dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
 }

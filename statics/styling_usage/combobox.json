@@ -3,6 +3,9 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
-  "inspiredBy": [],
-  "inspirationNote": ""
+  "inspiredBy": [
+    "shadcn",
+    "dioxus-components"
+  ],
+  "inspirationNote": "bg-popover/text-popover-foreground/bg-accent family matches shadcn's token usage; shadcn v4's combobox was rebuilt on Base UI with a much larger chip/input-group API surface adico's simpler single-select/multi-select composition doesn't replicate (independent scope choice). dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
 }

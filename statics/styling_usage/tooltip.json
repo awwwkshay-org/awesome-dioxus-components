@@ -3,6 +3,9 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
-  "inspiredBy": [],
-  "inspirationNote": ""
+  "inspiredBy": [
+    "shadcn",
+    "dioxus-components"
+  ],
+  "inspirationNote": "Deliberately keeps adico's popover-family token pairing (bg-popover/text-popover-foreground) rather than shadcn v4's newer inverted bg-foreground/text-background bubble redesign -- an independent visual-language choice, not a defect. dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
 }

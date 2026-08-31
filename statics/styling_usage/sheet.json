@@ -8,6 +8,9 @@
       "reason": "Matches shadcn's own current new-york-v4 Dialog source exactly, which uses bg-black/80 (not a semantic token) for its overlay backdrop."
     }
   ],
-  "inspiredBy": [],
-  "inspirationNote": ""
+  "inspiredBy": [
+    "shadcn",
+    "dioxus-components"
+  ],
+  "inspirationNote": "Overlay opacity corrected from bg-black/80 to bg-black/50 to match shadcn's actual current new-york-v4 source (previously miscited). Side-variant slide classes otherwise match. dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
 }

@@ -8,6 +8,9 @@
       "reason": "Matches shadcn's own current new-york-v4 Button source exactly, which uses text-white (not a semantic token) for its destructive variant."
     }
   ],
-  "inspiredBy": [],
-  "inspirationNote": ""
+  "inspiredBy": [
+    "shadcn",
+    "dioxus-components"
+  ],
+  "inspirationNote": "Destructive variant's text-white matches shadcn's own current source exactly (shadcn hardcodes it too, not a token) -- confirms the existing colorException citation is accurate. dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
 }

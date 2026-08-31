@@ -8,6 +8,9 @@
       "reason": "The Verified variant deliberately uses a fixed, palette-independent success green so the checkmark badge reads consistently across every theme; an adico-specific addition with no shadcn or dioxus-components equivalent."
     }
   ],
-  "inspiredBy": [],
-  "inspirationNote": ""
+  "inspiredBy": [
+    "shadcn",
+    "dioxus-components"
+  ],
+  "inspirationNote": "Destructive variant uses the token text-destructive-foreground where shadcn's own source hardcodes text-white -- adico is more token-compliant here, not a gap. Verified variant (emerald/white) has no shadcn or dioxus-components equivalent, already recorded in colorException. dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
 }

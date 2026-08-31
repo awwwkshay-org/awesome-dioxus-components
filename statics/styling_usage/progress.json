@@ -8,6 +8,9 @@
   ],
   "tokenCompliant": true,
   "colorException": [],
-  "inspiredBy": [],
-  "inspirationNote": ""
+  "inspiredBy": [
+    "shadcn",
+    "dioxus-components"
+  ],
+  "inspirationNote": "Track and indicator classes (relative h-2 w-full overflow-hidden rounded-full bg-primary/20; h-full w-full flex-1 bg-primary transition-all) match shadcn's current source verbatim. dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
 }

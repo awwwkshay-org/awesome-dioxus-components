@@ -7,7 +7,7 @@
       "source": "ui/alert_dialog.rs",
       "targetRoot": "ui",
       "target": "alert_dialog.rs",
-      "checksum": "598d7c9909ba2d6aeb5f5a262e3e3526ce4ad95e0fdb4b71f6eec10407623849"
+      "checksum": "2c41967026291ed8d0ae2eaf03e532ed7ebaf4472c3caa490148d6317749f36d"
     }
   ],
   "registryDependencies": [

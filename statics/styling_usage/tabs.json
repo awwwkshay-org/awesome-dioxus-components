@@ -3,6 +3,9 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
-  "inspiredBy": [],
-  "inspirationNote": ""
+  "inspiredBy": [
+    "shadcn",
+    "dioxus-components"
+  ],
+  "inspirationNote": "Active-trigger treatment (data-[state=active]:bg-background data-[state=active]:text-foreground) matches shadcn's pre-v4 convention; deliberately doesn't replicate v4's newer line-variant/after-underline redesign, an independent scope choice. dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
 }
