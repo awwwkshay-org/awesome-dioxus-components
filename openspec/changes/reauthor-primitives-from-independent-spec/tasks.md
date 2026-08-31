@@ -998,7 +998,10 @@
       `docs/adico/`, matching the M-series evidence-recording pattern already used by
       `build-adico-component-ecosystem`. Confirm `provenance check` still reports zero and
       note that `remove-provenance-tracking` may now begin as a separate change.
-      Done 2026-08-31: `docs/adico/m5-primitives-reauthoring-acceptance.md` written, matching
+      Done 2026-08-31: `docs/adico/primitives-reauthoring-acceptance.md` written (named without
+      an `m<N>-` prefix — `M5` is already spoken for by shadcn gap-closing, task 7.9, per
+      `primitive_compat.rs`'s own notes; this change is an orthogonal re-authoring pass, not
+      that milestone), matching
       `m3-acceptance.md`'s format (status line, scope summary, verification table, closing
       acceptance statement). Records the task 2.3 menu-family unblock's own evidence trail,
       tests added (409 total in `adico-primitives`, 44 external test files), the two xtask

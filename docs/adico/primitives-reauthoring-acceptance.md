@@ -6,7 +6,9 @@ This records task 8.4, closing out
 [`reauthor-primitives-from-independent-spec`](../../openspec/changes/reauthor-primitives-from-independent-spec/proposal.md).
 That change's own `tasks.md` carries the full per-file evidence (spec
 derivation, test additions, compat-gap findings, provenance closure) for
-every one of the ~49 files it touched across waves A-G; this document
+every one of the 51 files it touched across waves A-G (50 in
+`packages/adico-primitives/src/`, plus `packages/adico-cli/src/css.rs`);
+this document
 synthesizes that record into an acceptance summary and, per this task's own
 text, the list of known gaps carried forward rather than silently dropped.
 
@@ -146,10 +148,17 @@ attributed gap rather than a silent omission:
    `test_menubar.rs`'s own header.
 6. `tests/playwright/wave2-*.spec.ts`, `wave4.spec.ts`, `wave5-*.spec.ts`,
    `mode-toggle.spec.ts`, `theme-switcher.spec.ts`, and `fullstack.spec.ts`
-   were **not** re-run during this change's closing sweep — none of those
-   specs' primitives were touched by any wave here (only `layer.rs` and
-   the menu family have live-browser-relevant changes), so re-running them
-   would have exercised nothing this change could have affected.
+   were **not** re-run during this change's closing sweep. This is a real
+   coverage gap, not a vacuous one: Waves D and E re-authored several of the
+   exact primitives those specs cover (`accordion.rs`/`wave2-roving-focus.spec.ts`,
+   `tag_group.rs`/`wave5-tag-group.spec.ts`, `toolbar.rs`/`scroll_area.rs`/
+   `tabs.rs`/`radio_group.rs`/`toggle_group.rs`/`virtual_list.rs`/`wave4.spec.ts`,
+   `toast.rs` has no dedicated spec at all). Every one of those waves'
+   `tasks.md` evidence states "no logic change" for its files, but that
+   claim was verified by unit tests and code review, not by re-running the
+   live-browser suite that already existed for them — this closing sweep
+   didn't re-confirm it either. Recorded here as an open item, not
+   something to claim covered.
 7. `tests/playwright/dialog.spec.ts`'s pre-existing focus-trap failure
    ("traps Tab focus... wraps at both ends", 1 of 4 tests, found during
    task 6.3's own live verification) is unrelated to and not touched by
