@@ -170,27 +170,69 @@ fn use_effect_with_cleanup<F: FnMut() -> C + 'static, C: FnOnce() + 'static>(mut
 }
 
 #[derive(Clone)]
-struct EscapeListenerStack(Rc<RefCell<Vec<ScopeId>>>);
+struct DismissableLayerStack(Rc<RefCell<Vec<ScopeId>>>);
 
-/// Call `on_escape` when Escape is pressed, but only for the topmost caller.
+/// A single caller's registration on the shared [`DismissableLayerStack`].
 ///
-/// Callers are ordered on a LIFO stack keyed by their component scope, so when
-/// several overlays are nested only the most-recently-mounted one reacts to a
-/// given Escape press.
-pub fn use_global_escape_listener(mut on_escape: impl FnMut() + Clone + 'static) {
+/// [`use_global_escape_listener`] and [`use_outside_dismiss`] both register
+/// through this one stack, so an overlay that calls either (or both) hooks
+/// occupies exactly one position in the same LIFO ordering: whichever
+/// component mounted most recently is topmost, and every dismiss channel
+/// (Escape, outside pointer/focus) only fires for the topmost registrant.
+/// This is a deliberate behavior tightening for outside-dismiss, which
+/// previously had no ordering at all and fired for every open layer
+/// unconditionally; no current consumer nests two `use_outside_dismiss`
+/// layers, so this changes no observed behavior today, but a future nested
+/// composition (e.g. a popover opened from inside a dialog, both portaled to
+/// the document body) will now correctly dismiss only the topmost one on an
+/// outside click, matching Escape's existing layering.
+#[derive(Clone)]
+struct DismissableLayer {
+    scope_id: ScopeId,
+    stack: DismissableLayerStack,
+}
+
+impl DismissableLayer {
+    fn is_topmost(&self) -> bool {
+        self.stack.0.borrow().last() == Some(&self.scope_id)
+    }
+}
+
+/// Register the calling component as a layer on the shared dismissable-layer
+/// stack. Safe to call more than once per component (e.g. once from
+/// [`use_global_escape_listener`] and once from [`use_outside_dismiss`]) —
+/// the scope is only pushed once and removed once its last registration
+/// drops.
+fn use_dismissable_layer() -> DismissableLayer {
     let scope_id = current_scope_id();
     let stack = use_hook(move || {
-        let stack: EscapeListenerStack = try_consume_context()
-            .unwrap_or_else(|| provide_context(EscapeListenerStack(Default::default())));
-        stack.0.borrow_mut().push(scope_id);
+        let stack: DismissableLayerStack = try_consume_context()
+            .unwrap_or_else(|| provide_context(DismissableLayerStack(Default::default())));
+        {
+            let mut layers = stack.0.borrow_mut();
+            if !layers.contains(&scope_id) {
+                layers.push(scope_id);
+            }
+        }
         stack
     });
     use_drop({
         let stack = stack.clone();
         move || stack.0.borrow_mut().retain(|id| *id != scope_id)
     });
+    DismissableLayer { scope_id, stack }
+}
+
+/// Call `on_escape` when Escape is pressed, but only for the topmost caller.
+///
+/// Callers are ordered on a LIFO stack keyed by their component scope (shared
+/// with [`use_outside_dismiss`] via [`use_dismissable_layer`]), so when
+/// several overlays are nested only the most-recently-mounted one reacts to a
+/// given Escape press.
+pub fn use_global_escape_listener(mut on_escape: impl FnMut() + Clone + 'static) {
+    let layer = use_dismissable_layer();
     use_global_keydown_listener("Escape", move || {
-        if stack.0.borrow().last() == Some(&scope_id) {
+        if layer.is_topmost() {
             on_escape();
         }
     });
@@ -228,12 +270,16 @@ fn use_global_keydown_listener(key: &'static str, on_keydown: impl FnMut() + Clo
 fn use_global_keydown_listener(_key: &'static str, _on_keydown: impl FnMut() + Clone + 'static) {}
 
 /// Call `on_dismiss` when a pointerdown or focus event lands outside the
-/// element identified by `id`. A no-op on targets without a DOM (SSR/native).
+/// element identified by `id`, but only for the topmost caller on the shared
+/// dismissable-layer stack (see [`use_dismissable_layer`], shared with
+/// [`use_global_escape_listener`]). A no-op on targets without a DOM
+/// (SSR/native).
 #[cfg(any(feature = "web", feature = "native"))]
 pub fn use_outside_dismiss(
     id: impl Readable<Target = String> + Copy + 'static,
     on_dismiss: impl FnMut() + Clone + 'static,
 ) {
+    let layer = use_dismissable_layer();
     use_effect_with_cleanup(move || {
         let mut eval = document::eval(
             "const id = await dioxus.recv();
@@ -249,9 +295,12 @@ pub fn use_outside_dismiss(
         );
         let _ = eval.send(id.cloned());
         let mut on_dismiss = on_dismiss.clone();
+        let layer = layer.clone();
         spawn(async move {
             while let Ok(true) = eval.recv().await {
-                on_dismiss();
+                if layer.is_topmost() {
+                    on_dismiss();
+                }
             }
         });
         move || {
@@ -432,5 +481,109 @@ impl LocalDateExt for ::time::OffsetDateTime {
         ::time::OffsetDateTime::now_local()
             .map(|x| x.date())
             .unwrap_or_else(|_| ::time::OffsetDateTime::now_utc().date())
+    }
+}
+
+#[cfg(test)]
+mod dismissable_layer_tests {
+    use super::*;
+
+    fn stack_with(scopes: &[usize]) -> DismissableLayerStack {
+        let stack = DismissableLayerStack(Rc::new(RefCell::new(Vec::new())));
+        stack
+            .0
+            .borrow_mut()
+            .extend(scopes.iter().map(|id| ScopeId(*id)));
+        stack
+    }
+
+    #[test]
+    fn topmost_is_the_most_recently_registered_layer() {
+        let stack = stack_with(&[0, 1]);
+        let outer = DismissableLayer {
+            scope_id: ScopeId(0),
+            stack: stack.clone(),
+        };
+        let inner = DismissableLayer {
+            scope_id: ScopeId(1),
+            stack: stack.clone(),
+        };
+
+        assert!(!outer.is_topmost());
+        assert!(inner.is_topmost());
+    }
+
+    #[test]
+    fn removing_the_topmost_layer_restores_the_next_one() {
+        let stack = stack_with(&[0, 1]);
+        let outer = DismissableLayer {
+            scope_id: ScopeId(0),
+            stack: stack.clone(),
+        };
+
+        stack.0.borrow_mut().retain(|id| *id != ScopeId(1));
+
+        assert!(outer.is_topmost());
+    }
+
+    #[test]
+    fn a_lone_layer_is_always_topmost() {
+        let stack = stack_with(&[0]);
+        let only = DismissableLayer {
+            scope_id: ScopeId(0),
+            stack,
+        };
+
+        assert!(only.is_topmost());
+    }
+
+    #[test]
+    fn three_nested_layers_only_the_innermost_is_topmost() {
+        let stack = stack_with(&[0, 1, 2]);
+        let outer = DismissableLayer {
+            scope_id: ScopeId(0),
+            stack: stack.clone(),
+        };
+        let middle = DismissableLayer {
+            scope_id: ScopeId(1),
+            stack: stack.clone(),
+        };
+        let inner = DismissableLayer {
+            scope_id: ScopeId(2),
+            stack: stack.clone(),
+        };
+
+        assert!(!outer.is_topmost());
+        assert!(!middle.is_topmost());
+        assert!(inner.is_topmost());
+    }
+
+    /// Exercises the real hook (not the raw stack), verifying that a
+    /// component calling [`use_dismissable_layer`] twice — matching
+    /// [`dialog`](crate::dialog) and [`popover`](crate::popover), which each
+    /// call both [`use_global_escape_listener`] and [`use_outside_dismiss`] —
+    /// still occupies exactly one slot on the shared stack rather than two.
+    #[test]
+    fn calling_the_hook_twice_in_one_component_registers_one_layer() {
+        #[component]
+        fn Root() -> Element {
+            let first = use_dismissable_layer();
+            let second = use_dismissable_layer();
+            let layer_count = first.stack.0.borrow().len();
+
+            assert_eq!(
+                layer_count, 1,
+                "duplicate hook calls must not duplicate the layer"
+            );
+            assert!(first.is_topmost());
+            assert!(second.is_topmost());
+
+            rsx! { "ok" }
+        }
+
+        let mut dom = VirtualDom::new(Root);
+        dom.rebuild_in_place();
+        let html = dioxus_ssr::render(&dom);
+        assert!(html.contains("ok"));
     }
 }
