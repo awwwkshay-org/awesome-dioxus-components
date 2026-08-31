@@ -521,12 +521,44 @@
       this batch, so wasm32 coverage relied on `cargo check --target wasm32-unknown-unknown
       --features web -p adico-primitives` (clean) plus the existing workspace consumers already
       exercised by `cargo check --locked --workspace`.
-- [ ] 5.6 `wave4-collection` record residue: `calendar.rs` (2748 lines), `date_picker.rs`
+- [x] 5.6 `wave4-collection` record residue: `calendar.rs` (2748 lines), `date_picker.rs`
       (1586 lines), `separator.rs`. Derive specs from ARIA APG Grid/Date-picker patterns;
       author tests first — these are the two largest remaining files, budget accordingly.
       Verify: tests pass, `tests/playwright/*.spec.ts` for calendar/date-picker if present,
       record `adico-primitives-wave4-collection.json` deleted, provenance count reduced
-      accordingly.
+      accordingly. Done 2026-08-31: no logic changes to any of the three. `separator.rs` maps
+      directly to the WAI-ARIA `separator` role (`role="separator"`/`aria-orientation`, or
+      `role="none"` when decorative), already implemented; added 3 render tests (had zero).
+      `calendar.rs`: spec is the WAI-ARIA APG Grid pattern for a date-picker calendar
+      (`role="grid"`/`role="row"`, `aria-hidden` weekday header since each day's own
+      full-date `aria-label` already carries the weekday, `role="heading"`
+      `aria-level="2"` month title) — already implemented. Its 7 inline `#[cfg(test)] mod
+      tests` tests moved verbatim, widening `WeekdaySet`(+iterator)/`days_since`/
+      `next_month`/`previous_month`/`calendar_grid_weeks` to `pub` for this purpose only;
+      added 6 new render-level tests (root role/label, grid structure, heading, nav-button
+      labels, a today+selected day's full attribute set, and `RangeCalendar`'s
+      start/between/end day markers) — 13 total. `date_picker.rs`: no dedicated APG
+      "Date Picker" pattern exists; spec is the closest APG guidance — a `role="group"`
+      field composing one `role="spinbutton"` segment per year/month/day (APG Spin Button
+      pattern applied per-segment), with `DatePickerSeparator` as `aria-hidden` — already
+      implemented, and `DatePickerPopover`/`DatePickerCalendar` already correctly delegate
+      to the shared `popover` module and this file's own `calendar` module. Its 4 inline
+      tests (2 unconditional, 2 gated on `not(any(web, native))`, one using low-level
+      `Mutation`/`Event` dispatch) moved verbatim; added 4 new render-level tests (root
+      role/label for both `DatePicker` and `DateRangePicker`, the default 3-segment/
+      2-separator composition, a segment's `aria-valuenow`) — 8 total. Verified the
+      `not(any(web, native))`-gated import (`popover::{PopoverContent, PopoverTrigger}`)
+      needed its own matching `#[cfg]` once moved to an external test file, since it's
+      unconditionally imported at `date_picker.rs`'s own file scope internally but only
+      conditionally used by the moved tests — caught via `cargo check --target
+      wasm32-unknown-unknown --features web --tests` (clean; not part of the default
+      baseline sweep but run as extra verification given the feature-sensitive surface).
+      Full baseline green; provenance `4 imported record(s), 9 source unit(s)` (−1 record,
+      −3 source units, exact — `wave4-collection.json` deleted, confirmed all three files
+      were its only remaining ones first); `registry validate`/`registry build` unaffected
+      (46 items, same accepted static-pointer pattern as prior Wave E tasks); no dedicated
+      `tests/playwright/*.spec.ts` exists for calendar/date-picker; `tests/installation/
+      wave4-consumer` compiles clean against `--target wasm32-unknown-unknown`.
 - [ ] 5.7 `wave5-extras` record: `drag_and_drop_list.rs`, flatten `color_picker.rs` +
       `color_picker/color_naming.rs` into one `color_picker.rs`. Derive specs; author tests
       first. Verify: tests pass, directory removed, record

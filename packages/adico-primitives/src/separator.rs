@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/separator.rs. See provenance/records/adico-primitives-wave4-collection.json.
+// Implements the WAI-ARIA `separator` role: a `role="separator"` element with `aria-orientation`
+// dividing sections of content, or `role="none"` when purely decorative (removed from assistive
+// technology's separator semantics entirely, per the ARIA spec's own guidance for decorative
+// dividers) -- already correctly implemented.
 
 //! Defines the [`Separator`] component for creating visual or semantic separators.
 

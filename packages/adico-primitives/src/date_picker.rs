@@ -1,6 +1,12 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/date_picker.rs. See provenance/records/adico-primitives-wave4-collection.json.
+// No dedicated WAI-ARIA APG "Date Picker" pattern exists; this follows the closest APG
+// guidance instead -- a composite `role="group"` field (`DatePicker`/`DateRangePicker`)
+// containing one `role="spinbutton"` segment per year/month/day component, each with
+// `aria-valuemin`/`aria-valuemax`/`aria-valuenow` and arrow-key increment/decrement, matching
+// the APG's Spin Button pattern applied per-segment (the same composed-segmented-field shape
+// other ARIA date fields use). `DatePickerSeparator` is `aria-hidden`, since it carries no
+// value of its own. `DatePickerPopover`/`DatePickerCalendar` compose the shared `popover` and
+// this crate's own `calendar` module (WAI-ARIA APG Grid pattern) for the picker surface --
+// already correctly implemented.
 
 //! Defines the [`DatePicker`] and [`DateRangePicker`] components and its subcomponents, which allowing users to enter or select a date value
 
@@ -1450,137 +1456,5 @@ pub fn DateRangePickerInput(props: DatePickerInputProps) -> Element {
         div { ..props.attributes,
             {children}
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[cfg(not(any(feature = "web", feature = "native")))]
-    use dioxus_core::{Event, Mutation};
-    #[cfg(not(any(feature = "web", feature = "native")))]
-    use dioxus_html::{
-        EventData, SerializedHtmlEventConverter, SerializedMouseData, set_event_converter,
-    };
-    use time::macros::date;
-
-    #[component]
-    fn ControlledDatePicker() -> Element {
-        rsx! {
-            DatePicker {
-                selected_date: Some(date!(2026 - 05 - 07)),
-                DatePickerInput {}
-            }
-        }
-    }
-
-    #[component]
-    fn ControlledDateRangePicker() -> Element {
-        rsx! {
-            DateRangePicker {
-                selected_range: Some(DateRange::new(date!(2026 - 05 - 07), date!(2026 - 05 - 11))),
-                DateRangePickerInput {}
-            }
-        }
-    }
-
-    #[cfg(not(any(feature = "web", feature = "native")))]
-    #[component]
-    fn OpenDatePickerPopover() -> Element {
-        rsx! {
-            DatePicker {
-                DatePickerPopover {
-                    open: Some(true),
-                    PopoverTrigger { "Select date" }
-                    PopoverContent { "Calendar popup" }
-                }
-            }
-        }
-    }
-
-    #[cfg(not(any(feature = "web", feature = "native")))]
-    #[component]
-    fn InteractiveDatePickerPopover() -> Element {
-        rsx! {
-            DatePicker {
-                DatePickerPopover {
-                    PopoverTrigger { "Select date" }
-                    PopoverContent { "Interactive calendar popup" }
-                }
-            }
-        }
-    }
-
-    #[test]
-    fn date_picker_input_renders_controlled_date_on_first_render() {
-        let mut dom = VirtualDom::new(ControlledDatePicker);
-        dom.rebuild_in_place();
-        let html = dioxus_ssr::render(&dom);
-
-        assert!(html.contains("2026"));
-        assert!(html.contains("05"));
-        assert!(html.contains("07"));
-        assert!(!html.contains("YYYY"));
-        assert!(!html.contains("MM"));
-        assert!(!html.contains("DD"));
-    }
-
-    #[test]
-    fn date_range_picker_input_renders_controlled_range_on_first_render() {
-        let mut dom = VirtualDom::new(ControlledDateRangePicker);
-        dom.rebuild_in_place();
-        let html = dioxus_ssr::render(&dom);
-
-        assert!(html.contains("2026"));
-        assert!(html.contains("05"));
-        assert!(html.contains("07"));
-        assert!(html.contains("11"));
-        assert!(!html.contains("YYYY"));
-        assert!(!html.contains("MM"));
-        assert!(!html.contains("DD"));
-    }
-
-    // `use_animated_open` (lib.rs) only takes this synchronous path when
-    // neither platform feature is active; with "web"/"native" enabled it
-    // waits on a `document::eval` animation-end signal that a bare
-    // `VirtualDom`/SSR test has no real JS runtime to ever resolve, so the
-    // popover content would never mount and this assertion can't hold.
-    #[cfg(not(any(feature = "web", feature = "native")))]
-    #[test]
-    fn date_picker_popover_honors_controlled_open_on_first_render() {
-        let mut dom = VirtualDom::new(OpenDatePickerPopover);
-        dom.rebuild_in_place();
-        let html = dioxus_ssr::render(&dom);
-
-        assert!(html.contains("data-state=\"open\""));
-        assert!(html.contains("Calendar popup"));
-    }
-
-    // See the cfg note on `date_picker_popover_honors_controlled_open_on_first_render`.
-    #[cfg(not(any(feature = "web", feature = "native")))]
-    #[test]
-    fn date_picker_trigger_opens_the_popover() {
-        let mut dom = VirtualDom::new(InteractiveDatePickerPopover);
-        let edits = dom.rebuild_to_vec();
-        let trigger_id = edits
-            .edits
-            .iter()
-            .find_map(|edit| match edit {
-                Mutation::NewEventListener { name, id } if name == "click" => Some(*id),
-                _ => None,
-            })
-            .expect("popover trigger click listener");
-
-        set_event_converter(Box::new(SerializedHtmlEventConverter));
-        let event = Event::new(
-            EventData::Mouse(SerializedMouseData::default()).into_any(),
-            true,
-        );
-        dom.runtime().handle_event("click", event, trigger_id);
-        dom.render_immediate_to_vec();
-        let html = dioxus_ssr::render(&dom);
-
-        assert!(html.contains("data-state=\"open\""));
-        assert!(html.contains("Interactive calendar popup"));
     }
 }

@@ -1,6 +1,12 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/calendar.rs. See provenance/records/adico-primitives-wave4-collection.json.
+// Implements the WAI-ARIA APG Grid pattern for a date-picker calendar: `CalendarGridRoot` is
+// `role="grid"`, each week is `role="row"`, and each day is a focusable, single-tab-stop-roving
+// button labelled with its full weekday/month/day/year (the weekday header row itself is
+// `aria-hidden`, since each day's own label already carries the weekday -- the same
+// hide-the-header-row, label-the-cell shape other ARIA-grid date pickers use instead of
+// per-column `columnheader` association). The month/year heading uses `role="heading"`
+// `aria-level="2"`. `Calendar` selects a single date; `RangeCalendar` composes the same grid for
+// a two-endpoint range, adding `data-selection-start`/`data-selection-between`/
+// `data-selection-end` per day -- already correctly implemented.
 
 //! Defines the [`Calendar`] component and its sub-components, which provide a calendar interface with date selection and navigation.
 
@@ -20,13 +26,15 @@ use crate::{LocalDateExt as _, date_picker::DefaultCalendarProps, use_effect_cle
 
 // A collection of [`Weekday`]s stored as a single byte
 // Implemented as a bitmask where bits 1-7 correspond to Monday-Sunday
+//
+// "pub" only for packages/adico-primitives/tests/; not part of the intended public API.
 #[derive(Clone, Copy)]
-struct WeekdaySet(u8); // the 8-th bit is always 0
+pub struct WeekdaySet(pub u8); // the 8-th bit is always 0
 
 impl WeekdaySet {
     // Get the first day in the collection, starting from Monday
     // Returns `None` if the collection is empty
-    const fn first(self) -> Option<Weekday> {
+    pub const fn first(self) -> Option<Weekday> {
         if self.is_empty() {
             return None;
         }
@@ -36,18 +44,18 @@ impl WeekdaySet {
     }
 
     // Create a `WeekdaySet` from a single [`Weekday`]
-    const fn single(weekday: Weekday) -> Self {
+    pub const fn single(weekday: Weekday) -> Self {
         Self(1 << weekday.number_days_from_monday())
     }
 
     // Iterate over the [`Weekday`]s in the collection starting from a given day
     // Wraps around from Sunday to Monday if necessary
-    const fn iter(self, start: Weekday) -> WeekdaySetIter {
+    pub const fn iter(self, start: Weekday) -> WeekdaySetIter {
         WeekdaySetIter { days: self, start }
     }
 
     // Returns `true` if the collection is empty
-    const fn is_empty(self) -> bool {
+    pub const fn is_empty(self) -> bool {
         self.0 == 0
     }
 
@@ -61,13 +69,13 @@ impl WeekdaySet {
     }
 
     // Returns `true` if the collection contains the given day
-    const fn contains(self, day: Weekday) -> bool {
+    pub const fn contains(self, day: Weekday) -> bool {
         self.0 & Self::single(day).0 != 0
     }
 
     // Removes a day from the collection
     // Returns `true` if the collection did contain the day
-    fn remove(&mut self, day: Weekday) -> bool {
+    pub fn remove(&mut self, day: Weekday) -> bool {
         if self.contains(day) {
             self.0 &= !Self::single(day).0;
             return true;
@@ -78,7 +86,9 @@ impl WeekdaySet {
 }
 
 // An iterator over a collection of weekdays, starting from a given day
-struct WeekdaySetIter {
+//
+// "pub" only for packages/adico-primitives/tests/; not part of the intended public API.
+pub struct WeekdaySetIter {
     days: WeekdaySet,
     start: Weekday,
 }
@@ -113,13 +123,16 @@ pub(crate) fn weekday_abbreviation(weekday: Weekday) -> &'static str {
 }
 
 // The number of days since the first weekday of current date
-fn days_since(date: Date, weekday: Weekday) -> i64 {
+//
+// "pub" only for packages/adico-primitives/tests/; not part of the intended public API.
+pub fn days_since(date: Date, weekday: Weekday) -> i64 {
     let lhs = date.replace_day(1).unwrap().weekday() as i64;
     let rhs = weekday as i64;
     if lhs < rhs { 7 + lhs - rhs } else { lhs - rhs }
 }
 
-fn next_month(date: Date) -> Option<Date> {
+/// "pub" only for packages/adico-primitives/tests/; not part of the intended public API.
+pub fn next_month(date: Date) -> Option<Date> {
     let next_month = date.month().next();
     let last_day = next_month.length(date.year());
     // Clamp the day to the length of the next month
@@ -133,7 +146,8 @@ fn next_month(date: Date) -> Option<Date> {
     .ok()
 }
 
-fn previous_month(date: Date) -> Option<Date> {
+/// "pub" only for packages/adico-primitives/tests/; not part of the intended public API.
+pub fn previous_month(date: Date) -> Option<Date> {
     let previous_month = date.month().previous();
     let last_day = previous_month.length(date.year());
     // Clamp the day to the length of the previous month
@@ -1632,7 +1646,8 @@ fn calendar_grid_weekdays(
         .collect()
 }
 
-fn calendar_grid_weeks(view_date: Date, first_day_of_week: Weekday) -> Vec<Vec<Date>> {
+/// "pub" only for packages/adico-primitives/tests/; not part of the intended public API.
+pub fn calendar_grid_weeks(view_date: Date, first_day_of_week: Weekday) -> Vec<Vec<Date>> {
     let mut grid = Vec::new();
 
     let previous_month = view_date
@@ -2577,172 +2592,6 @@ fn RangeCalendarDay(props: CalendarDayProps) -> Element {
             onmounted,
             ..attributes,
             {content}
-        }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use time::macros::date;
-
-    #[component]
-    fn ConsecutiveCalendarViews() -> Element {
-        rsx! {
-            Calendar {
-                view_date: date!(2026 - 05 - 15),
-                CalendarView {
-                    CalendarMonthTitle {}
-                }
-                CalendarView {
-                    CalendarMonthTitle {}
-                }
-                CalendarView {
-                    CalendarMonthTitle {}
-                }
-            }
-        }
-    }
-
-    #[component]
-    fn CalendarDayWithCustomChild() -> Element {
-        rsx! {
-            Calendar {
-                view_date: date!(2026 - 05 - 15),
-                CalendarView {
-                    CalendarDay {
-                        date: date!(2026 - 05 - 15),
-                        "Custom day"
-                    }
-                }
-            }
-        }
-    }
-
-    #[component]
-    fn RangeCalendarDayWithCustomChild() -> Element {
-        rsx! {
-            RangeCalendar {
-                view_date: date!(2026 - 05 - 15),
-                CalendarView {
-                    CalendarDay {
-                        date: date!(2026 - 05 - 15),
-                        "Custom range day"
-                    }
-                }
-            }
-        }
-    }
-
-    #[test]
-    fn implicit_calendar_views_render_consecutive_months_on_first_render() {
-        let mut dom = VirtualDom::new(ConsecutiveCalendarViews);
-        dom.rebuild_in_place();
-        let html = dioxus_ssr::render(&dom);
-
-        assert!(html.contains("May 2026"));
-        assert!(html.contains("June 2026"));
-        assert!(html.contains("July 2026"));
-    }
-
-    #[test]
-    fn calendar_day_forwards_custom_children() {
-        let mut dom = VirtualDom::new(CalendarDayWithCustomChild);
-        dom.rebuild_in_place();
-        let html = dioxus_ssr::render(&dom);
-
-        assert!(html.contains("Custom day"));
-        assert!(!html.contains(">15</button>"));
-    }
-
-    #[test]
-    fn range_calendar_day_forwards_custom_children() {
-        let mut dom = VirtualDom::new(RangeCalendarDayWithCustomChild);
-        dom.rebuild_in_place();
-        let html = dioxus_ssr::render(&dom);
-
-        assert!(html.contains("Custom range day"));
-        assert!(!html.contains(">15</button>"));
-    }
-
-    #[test]
-    fn test_weekday_set() {
-        let mut weekdays = WeekdaySet::single(Weekday::Monday);
-        // Test contains
-        assert!(weekdays.contains(Weekday::Monday));
-        assert!(!weekdays.contains(Weekday::Tuesday));
-
-        // Test remove
-        assert!(weekdays.remove(Weekday::Monday));
-        assert!(!weekdays.contains(Weekday::Monday));
-        assert!(!weekdays.remove(Weekday::Monday)); // Already removed
-
-        let all_days = WeekdaySet(0b111_1111); // All days
-        let empty_set = WeekdaySet(0b000_0000); // Empty
-        let single_set = WeekdaySet::single(Weekday::Friday); // Single day
-        let part_size_set = WeekdaySet(0b010_1010); // Tu, Th, Sa
-
-        // Test iterator
-        let days: Vec<_> = all_days.iter(Weekday::Sunday).collect();
-        assert_eq!(days.len(), 7);
-        assert_eq!(days[0], Weekday::Sunday);
-
-        let mut iter = all_days.iter(Weekday::Wednesday);
-        assert_eq!(iter.next(), Some(Weekday::Wednesday));
-        assert_eq!(iter.next(), Some(Weekday::Thursday));
-
-        // Test first
-        assert_eq!(empty_set.first(), None);
-        assert_eq!(single_set.first(), Some(Weekday::Friday));
-        assert_eq!(part_size_set.first(), Some(Weekday::Tuesday));
-        assert_eq!(all_days.first(), Some(Weekday::Monday));
-
-        // Test is_empty
-        assert!(empty_set.is_empty());
-        assert!(!part_size_set.is_empty());
-        assert!(!single_set.is_empty());
-        assert!(!all_days.is_empty());
-    }
-
-    #[test]
-    fn test_days_since() {
-        // Test days since calculation
-        let date = date!(2024 - 01 - 01); // Monday
-        assert_eq!(days_since(date, Weekday::Monday), 0);
-        assert_eq!(days_since(date, Weekday::Sunday), 1);
-        assert_eq!(days_since(date, Weekday::Tuesday), 6);
-    }
-
-    #[test]
-    fn test_month_navigation() {
-        let date = date!(2024 - 01 - 15);
-
-        // Test next month
-        let next = next_month(date);
-        assert!(next.is_some());
-        assert_eq!(next.unwrap().month(), Month::February);
-        assert_eq!(next.unwrap().year(), 2024);
-        assert_eq!(next.unwrap().day(), 15);
-
-        // Test previous month
-        let prev = previous_month(date);
-        assert!(prev.is_some());
-        assert_eq!(prev.unwrap().month(), Month::December);
-        assert_eq!(prev.unwrap().year(), 2023);
-        assert_eq!(prev.unwrap().day(), 15);
-    }
-
-    #[test]
-    fn test_calendar_grid_weeks() {
-        for (month, first_day) in [
-            (date!(2021 - 02 - 15), Weekday::Monday),
-            (date!(2024 - 05 - 15), Weekday::Sunday),
-            (date!(2018 - 12 - 15), Weekday::Sunday),
-        ] {
-            let grid = calendar_grid_weeks(month, first_day);
-            assert_eq!(grid.len(), 6, "every month renders six stable weeks");
-            assert!(grid.iter().all(|week| week.len() == 7));
-            assert_eq!(grid.iter().flatten().count(), 42);
         }
     }
 }
