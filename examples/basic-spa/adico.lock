@@ -93,7 +93,7 @@
     },
     {
       "address": "@adico/cn",
-      "manifestDigest": "b3e19557cc0c6d00235338109676d42bb9adb8a56f83bef1686c8b94e43f7990",
+      "manifestDigest": "f5e4d5d75d162e1436c99a3cb7c900dea31e5f403f08083b0367774da4d9963e",
       "files": [
         {
           "path": "src/adico_lib/cn.rs",
@@ -123,11 +123,11 @@
     },
     {
       "address": "@adico/combobox",
-      "manifestDigest": "f1951d2886650a99168363d4c431c9512b1291267a15f083f2f4e6c3e3d7c30c",
+      "manifestDigest": "f5e4d5d75d162e1436c99a3cb7c900dea31e5f403f08083b0367774da4d9963e",
       "files": [
         {
           "path": "src/components/ui/combobox.rs",
-          "checksum": "d53ee01f7fa8ca4c9e94bf837b8aff261c3d0ba93d7afa8960f311afa1fdf071"
+          "checksum": "e4a268e6a140022b11c02abb646be0b24d4dee133369547e9a07e160d00de080"
         }
       ]
     },
@@ -293,11 +293,11 @@
     },
     {
       "address": "@adico/select",
-      "manifestDigest": "f1951d2886650a99168363d4c431c9512b1291267a15f083f2f4e6c3e3d7c30c",
+      "manifestDigest": "f5e4d5d75d162e1436c99a3cb7c900dea31e5f403f08083b0367774da4d9963e",
       "files": [
         {
           "path": "src/components/ui/select.rs",
-          "checksum": "b5d9bf23b461db1aa81e807a08c5971a108f901406fe715b9264fc87352a5c8a"
+          "checksum": "b2c1e848351b69ce0029944a3b61392b8733b55d4d1093cadf70565d4de8f053"
         }
       ]
     },

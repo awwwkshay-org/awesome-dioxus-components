@@ -185,7 +185,23 @@
       `registry/ui/dropdown-menu.rs`, `registry/ui/menubar.rs`, `registry/ui/context-menu.rs`
       facades and `registry/registry.json` for any public API change from 2.1-2.3; run
       `cargo run -p adico-xtask -- registry build` then `registry validate`; install through
-      `examples/basic-spa` or a `tests/installation/*` fixture and confirm it builds.
+      `examples/basic-spa` or a `tests/installation/*` fixture and confirm it builds. Partially
+      done 2026-08-31 (the 2.1/2.2 portion only — the `dropdown-menu`/`menubar`/`context-menu`
+      portion isn't actionable until 2.3 is unblocked and done): no primitive *prop* API
+      changed for `select`/`combobox`, but both facades' `SelectList`/`ComboboxList` styling
+      relied on `absolute left-0 top-full` positioned against a `relative` root, which is now
+      wrong (`Positioner` renders `position: fixed`, whose containing block is the viewport,
+      not the root) — dropped those classes, added `z-50` for stacking (matching
+      `popover.rs`'s existing convention), and dropped `ComboboxList`'s `w-full` (would now
+      mean 100% of the *viewport*; `min-w-48` is the width baseline instead, matching
+      `popover.rs`'s own fixed-width precedent). Recomputed and updated both files' SHA-256
+      checksums in `registry/registry.json`; `registry build` and `registry validate` both
+      pass. Re-installed both components with `adico add <name> --replace` into
+      `tests/installation/select-consumer` (select) and `examples/basic-spa` (both — the only
+      place combobox is installed anywhere, since no combobox consumer fixture exists) to
+      confirm the new facade content round-trips through the real CLI install path, not just
+      `registry validate`'s structural check; `cargo check --locked --workspace` and a
+      `--target wasm32-unknown-unknown` check of both consumers are green.
 
 ## 3. Wave C — shared internals (dependencies of later waves)
 

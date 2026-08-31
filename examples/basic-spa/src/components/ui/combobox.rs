@@ -37,10 +37,7 @@ pub fn Combobox<T: Clone + PartialEq + 'static>(
     class: Option<String>,
     children: Element,
 ) -> Element {
-    let class = cn(&[
-        "group relative inline-block",
-        class.as_deref().unwrap_or_default(),
-    ]);
+    let class = cn(&["group inline-block", class.as_deref().unwrap_or_default()]);
     rsx! {
         PrimitiveCombobox::<T> {
             value,
@@ -146,10 +143,7 @@ pub fn ComboboxMulti<T: Clone + PartialEq + 'static>(
     class: Option<String>,
     children: Element,
 ) -> Element {
-    let class = cn(&[
-        "group relative inline-block",
-        class.as_deref().unwrap_or_default(),
-    ]);
+    let class = cn(&["group inline-block", class.as_deref().unwrap_or_default()]);
     rsx! {
         PrimitiveComboboxMulti::<T> {
             values,
@@ -194,8 +188,13 @@ pub fn ComboboxInput(
 /// An absolutely positioned listbox so opening it does not shift layout.
 #[component]
 pub fn ComboboxList(children: Element, id: Option<String>, class: Option<String>) -> Element {
+    // `w-full` would now mean 100% of the viewport (`Positioner`'s
+    // `position: fixed` has no positioned ancestor to size against, unlike
+    // the `absolute`-positioned listbox this replaced) — `min-w-48` is the
+    // width baseline instead, matching `popover.rs`'s own fixed-width
+    // precedent rather than trying to exactly match the input's width.
     let class = cn(&[
-        "absolute left-0 top-full z-50 max-h-72 w-full min-w-48 overflow-y-auto rounded-md bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        "z-50 max-h-72 min-w-48 overflow-y-auto rounded-md bg-popover p-1 text-popover-foreground shadow-md outline-none",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
