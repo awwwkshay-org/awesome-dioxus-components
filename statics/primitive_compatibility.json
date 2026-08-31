@@ -850,7 +850,7 @@
         },
         "adico_registry_item": "combobox",
         "name": "Combobox",
-        "notes": "",
+        "notes": "Flattened from a multi-file combobox/ module to a single combobox.rs at some point before this table was last synced; do not reintroduce a directory-style adico_file path here.",
         "status": "built"
       },
       {
@@ -962,8 +962,8 @@
         },
         "adico_registry_item": "context-menu",
         "name": "Context Menu",
-        "notes": "Deliberately kept independent of menu.rs (task 2.3): Base UI's own ContextMenuRoot delegates to Menu.Root only because Menu.Popup is Positioner-anchored from the start, and menu::MenuContent isn't -- ContextMenuContent's click-point position:fixed placement, viewport correction, scroll-lock, outside-dismiss, and focus management have no home there without new, untested props. Already implements the ARIA APG generic Menu pattern correctly.",
-        "status": "built"
+        "notes": "Deliberately kept independent of menu.rs (task 2.3): Base UI's own ContextMenuRoot delegates to Menu.Root only because Menu.Popup is Positioner-anchored from the start, and menu::MenuContent isn't. Already implements the ARIA APG generic Menu pattern correctly (role=menu/menuitem). Still Partial, not Built: ContextMenuContent's use_outside_dismiss depends on the long-lived document::eval listener pattern found (2026-08-25, via live-browser Playwright testing) to never actually register its addEventListener call in this Dioxus web runtime -- unverified and unfixed this pass (no live browser available), so outside-click dismissal is a known-broken dependency, not a working feature. See provenance/records/adico-primitives-wave3-overlays.json's git history (the record itself was removed in task 2.3's closing commit once its last source unit was re-authored).",
+        "status": "partial"
       },
       {
         "adico_components": [
@@ -2107,7 +2107,7 @@
         },
         "adico_registry_item": "select",
         "name": "Select",
-        "notes": "",
+        "notes": "Flattened from a multi-file select/ module to a single select.rs at some point before this table was last synced; do not reintroduce a directory-style adico_file path here.",
         "status": "built"
       },
       {
@@ -3003,9 +3003,9 @@
     },
     "summary": {
       "adico_only_extras": 10,
-      "components_built": 26,
+      "components_built": 25,
       "components_not_started": 10,
-      "components_partial": 1,
+      "components_partial": 2,
       "total_upstream_components": 37,
       "total_upstream_utils": 4
     },
@@ -7059,39 +7059,10 @@
         "status": "built"
       },
       {
-        "adico_components": [
-          "VirtualList"
-        ],
-        "adico_hooks_defined": [],
-        "adico_hooks_used": [],
-        "adico_primitive_file": "packages/adico-primitives/src/virtual_list.rs",
-        "adico_props": {
-          "VirtualListProps": [
-            {
-              "name": "count",
-              "type": "ReadSignal<usize>"
-            },
-            {
-              "default": "ReadSignal::new(Signal::new(8))",
-              "name": "buffer",
-              "type": "ReadSignal<usize>"
-            },
-            {
-              "name": "estimate_size",
-              "type": "Option<Callback<usize, u32>>"
-            },
-            {
-              "name": "render_item",
-              "type": "Callback<usize, Element>"
-            },
-            {
-              "name": "attributes",
-              "type": "Vec<Attribute>"
-            }
-          ]
-        },
+        "adico_primitive_file": null,
         "module": "virtual",
-        "status": "built"
+        "notes": "Catalog artifact, not a real component: this fetched entry has zero parts/props of its own -- it's the parent-namespace stub for upstream's `virtual::virtual_list` module tree. The actual component is separately fetched and tracked as `virtual_list`, which correctly resolves to `virtual_list.rs`. Do not add a file-path override for this entry; that would double-count the same adico file under two module names (tried and reverted -- see task 8.1's evidence in reauthor-primitives-from-independent-spec/tasks.md).",
+        "status": "not_started"
       },
       {
         "adico_components": [
@@ -7139,8 +7110,8 @@
     },
     "summary": {
       "adico_only_extras": 9,
-      "built": 41,
-      "not_started": 1,
+      "built": 40,
+      "not_started": 2,
       "total_modules": 42
     }
   },

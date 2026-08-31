@@ -140,14 +140,14 @@ const UPSTREAM_COMPONENTS: &[ComponentEntry] = &[
         status: Status::Built,
         adico_file: Some("combobox.rs"),
         adico_registry_item: Some("combobox"),
-        notes: "",
+        notes: "Flattened from a multi-file combobox/ module to a single combobox.rs at some point before this table was last synced; do not reintroduce a directory-style adico_file path here.",
     },
     ComponentEntry {
         name: "Context Menu",
-        status: Status::Built,
+        status: Status::Partial,
         adico_file: Some("context_menu.rs"),
         adico_registry_item: Some("context-menu"),
-        notes: "Deliberately kept independent of menu.rs (task 2.3): Base UI's own ContextMenuRoot delegates to Menu.Root only because Menu.Popup is Positioner-anchored from the start, and menu::MenuContent isn't -- ContextMenuContent's click-point position:fixed placement, viewport correction, scroll-lock, outside-dismiss, and focus management have no home there without new, untested props. Already implements the ARIA APG generic Menu pattern correctly.",
+        notes: "Deliberately kept independent of menu.rs (task 2.3): Base UI's own ContextMenuRoot delegates to Menu.Root only because Menu.Popup is Positioner-anchored from the start, and menu::MenuContent isn't. Already implements the ARIA APG generic Menu pattern correctly (role=menu/menuitem). Still Partial, not Built: ContextMenuContent's use_outside_dismiss depends on the long-lived document::eval listener pattern found (2026-08-25, via live-browser Playwright testing) to never actually register its addEventListener call in this Dioxus web runtime -- unverified and unfixed this pass (no live browser available), so outside-click dismissal is a known-broken dependency, not a working feature. See provenance/records/adico-primitives-wave3-overlays.json's git history (the record itself was removed in task 2.3's closing commit once its last source unit was re-authored).",
     },
     ComponentEntry {
         name: "Dialog",
@@ -273,7 +273,7 @@ const UPSTREAM_COMPONENTS: &[ComponentEntry] = &[
         status: Status::Built,
         adico_file: Some("select.rs"),
         adico_registry_item: Some("select"),
-        notes: "",
+        notes: "Flattened from a multi-file select/ module to a single select.rs at some point before this table was last synced; do not reintroduce a directory-style adico_file path here.",
     },
     ComponentEntry {
         name: "Separator",
@@ -372,18 +372,16 @@ const UPSTREAM_UTILS: &[UtilEntry] = &[
 /// adico module has no dioxus-components counterpart) is derived, not listed
 /// here. Keep in sync with `docs/adico/m3-acceptance.md` when a reason
 /// changes.
-const DIOXUS_MODULE_NOTES: &[(&str, &str)] = &[(
-    "navbar",
-    "Out of M3 scope by its own classification (NEEDS_PARITY_UPDATES, not \"suitable for current reuse\"); see docs/adico/m3-acceptance.md.",
-)];
-
-/// Hand-maintained overrides for dioxus-primitives modules whose upstream
-/// (raw, snake_case) name no longer matches an adico file/directory of the
-/// same name by [`dioxus_module_file_ref`]'s naming-convention lookup --
-/// e.g. because adico renamed the module during re-authoring. Without an
-/// entry here, such a module silently reports `not_started` even though the
-/// adico file exists under a different name.
-const DIOXUS_MODULE_FILE_OVERRIDES: &[(&str, &str)] = &[("virtual", "virtual_list.rs")];
+const DIOXUS_MODULE_NOTES: &[(&str, &str)] = &[
+    (
+        "navbar",
+        "Out of M3 scope by its own classification (NEEDS_PARITY_UPDATES, not \"suitable for current reuse\"); see docs/adico/m3-acceptance.md.",
+    ),
+    (
+        "virtual",
+        "Catalog artifact, not a real component: this fetched entry has zero parts/props of its own -- it's the parent-namespace stub for upstream's `virtual::virtual_list` module tree. The actual component is separately fetched and tracked as `virtual_list`, which correctly resolves to `virtual_list.rs`. Do not add a file-path override for this entry; that would double-count the same adico file under two module names (tried and reverted -- see task 8.1's evidence in reauthor-primitives-from-independent-spec/tasks.md).",
+    ),
+];
 
 /// Primitives/registry items adico has that Base UI has no equivalent for.
 const ADICO_ONLY_EXTRAS: &[(&str, &str)] = &[
@@ -494,12 +492,6 @@ fn adico_primitive_modules(root: &Path) -> BTreeSet<String> {
 }
 
 fn dioxus_module_file_ref(root: &Path, module: &str) -> Option<String> {
-    if let Some((_, file)) = DIOXUS_MODULE_FILE_OVERRIDES
-        .iter()
-        .find(|(name, _)| *name == module)
-    {
-        return Some((*file).to_string());
-    }
     let src = primitives_src(root);
     if src.join(format!("{module}.rs")).is_file() {
         Some(format!("{module}.rs"))

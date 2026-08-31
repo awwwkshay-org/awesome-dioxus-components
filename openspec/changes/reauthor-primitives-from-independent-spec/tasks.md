@@ -875,36 +875,56 @@
       (`packages/adico-xtask/src/primitive_compat.rs`): `"combobox/"` and `"select/"`, both
       pre-dating this session (from before either module was flattened to a single file;
       neither task 2.1/2.2 nor any earlier wave re-synced after flattening them). Fixed both to
-      `"combobox.rs"`/`"select.rs"`, clearing their now-stale "Multi-file module" notes. Re-sync
-      surfaced a second, unrelated pre-existing gap: `VirtualList` (adico's own extra, no Base
-      UI counterpart, so tracked only on the `dioxus_primitives` axis) reported `not_started`/
-      `adico_primitive_file: null` because that axis's module-to-file lookup
-      (`dioxus_module_file_ref`) only ever tries `{module}.rs`/`{module}/` by exact name match
-      against the *upstream* dioxus-primitives module name (`virtual`), with no override
-      mechanism — adico's own file is `virtual_list.rs` (renamed during task 4.4's flattening),
-      so the naming-convention match has been silently failing since that rename, previously
-      masked by the same never-re-synced staleness. Added a new, minimal
-      `DIOXUS_MODULE_FILE_OVERRIDES` table (one entry: `("virtual", "virtual_list.rs")`) and
-      wired it into `dioxus_module_file_ref` ahead of the naming-convention fallback, documented
-      as existing for exactly this rename case. With both fixes, `dioxus_primitives` axis
-      returned to `built: 41, not_started: 1` (matching its pre-drift baseline) and the
-      `Combobox`/`Select` diffs became legitimate, accurate introspection updates (newly
-      detected `use_effect`/`use_escape_key`/`use_outside_dismiss` hooks, correct component
-      ordering) rather than data loss. Separately updated three `UPSTREAM_COMPONENTS` entries'
-      hand-maintained `status`/`notes` to reflect this session's actual task 2.3 outcome rather
-      than its pre-2.3 "not yet migrated" framing: `Context Menu` and `Menubar` moved
-      `partial` → `built` (both re-authored, both deliberately and evidence-backed kept
-      independent of `menu.rs` rather than "not yet" migrated — see task 2.3's own entries for
-      the Base UI research behind each decision); `Menu`'s notes corrected to say it *is* now
-      consumed indirectly via the `dropdown-menu` registry item (through `dropdown_menu.rs`'s
-      re-export), while still correctly flagging its own remaining gaps (`Positioner`
-      composition, `use_typeahead` wiring) as real and unaddressed. No component/prop/hook
-      classification for any *other* primitive changed — this was solely fallout from task
-      2.3/2.4 and the pre-existing flattening-staleness it happened to surface, not a general
-      compat sweep of every primitive's Base UI feature parity (that remains `7.9`'s own scope,
-      as this task's own text already says). `primitive-compat check`/`diff` both clean;
-      `base_ui: components_built 24→26, components_partial 3→1`; `dioxus_primitives: built
-      40→41, not_started 2→1`. Full baseline (fmt/check/clippy/test) green; `registry validate`
+      `"combobox.rs"`/`"select.rs"`, with a note against future regression (do not reintroduce a
+      directory-style path here) rather than clearing the field to empty. Separately updated
+      `Context Menu`/`Menubar`/`Menu`'s hand-maintained `status`/`notes` in the same table to
+      reflect this session's actual task 2.3 outcome rather than its pre-2.3 "not yet migrated"
+      framing.
+      First-pass mistakes, caught by advisor review before landing, corrected in the same
+      commit: (1) re-sync also showed `VirtualList` (adico's own extra, tracked only on the
+      `dioxus_primitives` axis) as `not_started`/`adico_primitive_file: null`; assumed this was
+      a stale-naming bug like combobox/select (adico's file is `virtual_list.rs`, task 4.4's
+      renamed name) and added a `DIOXUS_MODULE_FILE_OVERRIDES` table mapping the upstream
+      module name `virtual` to `virtual_list.rs` *without checking the catalog's actual
+      contents first*. Checking `statics/catalogs/dioxus-primitives.json` after the fact showed
+      the fetched inventory has *two* separate `virtual*` entries: `virtual` (zero parts/props
+      — a parent-namespace catalog artifact, not a real component) and `virtual_list` (the real
+      one, snake_case, which *already* self-resolves to `virtual_list.rs` via the ordinary
+      naming-convention match with no override needed). The override was mapping an unrelated
+      stub module onto the same file `virtual_list` already covered, double-counting one file
+      as two "built" modules. Reverted the override entirely; added a `DIOXUS_MODULE_NOTES`
+      entry on `virtual` instead, documenting it as a non-component catalog artifact and
+      explicitly warning against re-adding a file-path override for it. (2) Also initially
+      marked `Context Menu`'s hand-maintained `status` `partial` → `built` alongside
+      `Menubar`'s (which is a correct, evidence-backed change) — wrong, because
+      `ContextMenuContent`'s `use_outside_dismiss` depends on the long-lived `document::eval`
+      listener pattern found (2026-08-25, via live-browser Playwright testing, recorded in
+      `adico-primitives-wave3-overlays.json`'s git history before that record was removed) to
+      never actually register its `addEventListener` call in this Dioxus web runtime — a
+      known-broken dependency, unverified and unfixed this pass with no live browser available,
+      so `context_menu.rs` is re-authored and ARIA-correct but not fully working, unlike
+      `menubar.rs`. Reverted `Context Menu` to `Partial` with a note naming both facts (the
+      deliberate independence decision *and* the unverified outside-dismiss dependency).
+      With all of the above, `dioxus_primitives` axis is `built: 40, not_started: 1` (an honest
+      2 total non-adico-covered upstream modules: the `virtual` stub and one genuine gap,
+      unchanged from before this task) and the `Combobox`/`Select` diffs are legitimate,
+      accurate introspection updates (newly detected `use_effect`/`use_escape_key`/
+      `use_outside_dismiss` hooks, correct component ordering) rather than data loss. No
+      component/prop/hook classification for any *other* primitive changed — this was solely
+      fallout from task 2.3/2.4 and the pre-existing flattening-staleness it happened to
+      surface, not a general compat sweep of every primitive's Base UI feature parity (that
+      remains `7.9`'s own scope, as this task's own text already says). `primitive-compat
+      check`/`diff` both clean; `base_ui: components_built 24→25, components_partial 3→2`
+      (only `Menubar` moved — `UPSTREAM_COMPONENTS` is the hand-maintained table the
+      `combobox.rs`/`select.rs` path fix lives in, and it directly drives this axis's
+      component-level counts, distinct from the `Combobox`/`Select` *module* entries the
+      `dioxus_primitives` axis separately derives below); `dioxus_primitives: built 40→40,
+      not_started 2→2`, literally unchanged start to finish -- that axis's own
+      `combobox`/`select` module entries were never affected by the `UPSTREAM_COMPONENTS`
+      path bug (they resolve independently, by lowercase module name, via
+      `dioxus_module_file_ref`'s own naming-convention check, which was already correct for
+      both), and the mistaken `virtual` override was purely additive then fully reverted,
+      netting to no change. Full baseline (fmt/check/clippy/test) green; `registry validate`
       and `provenance check` (`1 imported record(s), 1 source unit(s)`) both unaffected.
 - [x] 8.2 Confirm the one-file rule holds crate-wide: `find packages/adico-primitives/src
       -mindepth 2 -name '*.rs'` returns nothing outside `js/`.
