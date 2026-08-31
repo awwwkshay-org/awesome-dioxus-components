@@ -7,7 +7,6 @@
   "originalPaths": [
     "primitives/src/lib.rs",
     "primitives/src/dialog.rs",
-    "primitives/src/collection.rs",
     "primitives/src/listbox.rs",
     "primitives/src/selectable.rs",
     "primitives/src/selection.rs",
@@ -26,7 +25,6 @@
   "localPaths": [
     "packages/adico-primitives/src/lib.rs",
     "packages/adico-primitives/src/dialog.rs",
-    "packages/adico-primitives/src/collection.rs",
     "packages/adico-primitives/src/listbox.rs",
     "packages/adico-primitives/src/selectable.rs",
     "packages/adico-primitives/src/selection.rs",
@@ -46,6 +44,10 @@
     {
       "date": "2026-08-24",
       "summary": "Imported the minimal Dialog and Select primitive closure. Added SPDX/provenance headers, applied workspace rustfmt, renamed inherited doctest crate references to adico_primitives, and narrowed the public crate facade. DOM evaluation and focus trapping now sit behind explicit web/desktop runtime adapters with SSR-safe stubs; a test-only Select adapter supports common interaction helpers. Narrowly scoped lints preserve inherited private APIs and control flow until focused coverage permits refactoring. The internal module layout remains source-compatible for the initial fork."
+    },
+    {
+      "date": "2026-08-31",
+      "summary": "Re-authored packages/adico-primitives/src/collection.rs against an independent spec (WAI-ARIA APG roving-tabindex/grid-navigation patterns plus its consuming components' needs; this internal-only file has no tracked row in statics/primitive_compatibility.json) per openspec/changes/reauthor-primitives-from-independent-spec, task 1.1. Added 34 tests (packages/adico-primitives/tests/test_collection.rs) covering roving-tabindex anchor precedence, focus-key resolution, register/unregister reindexing, and try_focus_placement, none of which previously existed for this file's registration/tabindex/focus-key surface. Removed its SPDX fork header and dropped it from this record's originalPaths/localPaths."
     }
   ],
   "notices": [

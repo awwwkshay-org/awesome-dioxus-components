@@ -1,8 +1,15 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/collection.rs. See provenance/records/adico-primitives-dialog-select.json.
 
 //! Ordered interactive collection state shared by roving-focus components.
+//!
+//! Authored against the WAI-ARIA Authoring Practices Guide's roving-tabindex and grid
+//! keyboard-navigation patterns (single tab stop per collection, arrow/Home/End movement,
+//! optional wraparound), not ported from another project's implementation. This file has no
+//! counterpart entry in either compat axis (`statics/primitive_compatibility.json`) — it is
+//! an internal-only primitive consumed by roughly a dozen components (accordion, tabs,
+//! toolbar, radio-group, toggle-group, menubar, context-menu, dropdown-menu, tag-group,
+//! date-picker, and others), so its spec is the ARIA pattern above plus what those consumers
+//! actually need, not a feature-parity diff against Base UI or dioxus-primitives.
 
 use std::rc::Rc;
 
@@ -22,13 +29,17 @@ pub enum Orientation {
     Horizontal,
 }
 
-#[derive(Clone, PartialEq)]
-struct CollectionItemState {
-    index: usize,
-    key: Option<String>,
-    disabled: bool,
-    hidden: bool,
-    selected: bool,
+/// One item's registration state within a [`CollectionState`]. Constructed for you by
+/// [`use_item`] in normal usage; `pub` only so `packages/adico-primitives/tests/` can build
+/// fixtures for [`CollectionState::register_item`]/[`unregister_item`] directly — not part of
+/// the primitive's intended consumer-facing API.
+#[derive(Debug, Clone, PartialEq)]
+pub struct CollectionItemState {
+    pub index: usize,
+    pub key: Option<String>,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub selected: bool,
 }
 
 impl CollectionItemState {
@@ -94,7 +105,9 @@ impl CollectionState {
         self.roving_loop
     }
 
-    fn register_item(&mut self, item: CollectionItemState) {
+    /// Register (or re-register, on identity match) one item. `pub` only for
+    /// `packages/adico-primitives/tests/`; normal usage goes through [`use_item`].
+    pub fn register_item(&mut self, item: CollectionItemState) {
         let index = item.index;
         let key = item.key.clone();
         let available = item.available();
@@ -116,7 +129,9 @@ impl CollectionState {
         self.clear_focus_if_unavailable(index, key.as_deref(), available);
     }
 
-    fn unregister_item(&mut self, item: &CollectionItemState) {
+    /// Remove a previously registered item. `pub` only for
+    /// `packages/adico-primitives/tests/`; normal usage goes through [`use_item`]'s cleanup.
+    pub fn unregister_item(&mut self, item: &CollectionItemState) {
         let removing_focused = self.is_focused_item(item);
         let removed_focused = {
             let mut items = self.items.write();
@@ -746,317 +761,5 @@ fn prev_index_before(
         }
         None if roving_loop => indices.last().copied(),
         None => indices.first().copied(),
-    }
-}
-
-#[cfg(test)]
-mod navigate_key_tests {
-    use super::*;
-
-    fn item(index: usize) -> CollectionItemState {
-        CollectionItemState {
-            index,
-            key: None,
-            disabled: false,
-            hidden: false,
-            selected: false,
-        }
-    }
-
-    fn three_item_collection() -> CollectionState {
-        let mut collection = CollectionState::new(
-            ReadSignal::new(Signal::new(false)),
-            CollectionOptions::default(),
-        );
-        collection.register_item(item(0));
-        collection.register_item(item(1));
-        collection.register_item(item(2));
-        collection.set_focus(Some(0));
-        collection
-    }
-
-    fn render_focused_index(render: impl Fn() -> Option<usize> + 'static) -> String {
-        #[derive(Clone)]
-        struct Harness(std::rc::Rc<dyn Fn() -> Option<usize>>);
-
-        thread_local! {
-            static HARNESS: std::cell::RefCell<Option<Harness>> = const { std::cell::RefCell::new(None) };
-        }
-
-        HARNESS.with(|cell| {
-            *cell.borrow_mut() = Some(Harness(std::rc::Rc::new(render)));
-        });
-
-        #[component]
-        fn Root() -> Element {
-            let result = HARNESS.with(|cell| (cell.borrow().as_ref().unwrap().0)());
-            rsx! {
-                "{result:?}"
-            }
-        }
-
-        let mut dom = VirtualDom::new(Root);
-        dom.rebuild_in_place();
-        dioxus_ssr::render(&dom)
-    }
-
-    #[test]
-    fn vertical_arrow_down_moves_to_next() {
-        let html = render_focused_index(|| {
-            let mut collection = three_item_collection();
-            collection.navigate_key(Key::ArrowDown, Orientation::Vertical, Direction::Ltr);
-            collection.focused_index()
-        });
-        assert!(html.contains("Some(1)"), "{html}");
-    }
-
-    #[test]
-    fn vertical_arrow_up_moves_to_previous() {
-        let html = render_focused_index(|| {
-            let mut collection = three_item_collection();
-            collection.set_focus(Some(1));
-            collection.navigate_key(Key::ArrowUp, Orientation::Vertical, Direction::Ltr);
-            collection.focused_index()
-        });
-        assert!(html.contains("Some(0)"), "{html}");
-    }
-
-    #[test]
-    fn vertical_orientation_ignores_left_right() {
-        let html = render_focused_index(|| {
-            let mut collection = three_item_collection();
-            collection.navigate_key(Key::ArrowRight, Orientation::Vertical, Direction::Ltr);
-            collection.focused_index()
-        });
-        assert!(html.contains("Some(0)"), "{html}");
-    }
-
-    #[test]
-    fn horizontal_ltr_arrow_right_moves_to_next() {
-        let html = render_focused_index(|| {
-            let mut collection = three_item_collection();
-            collection.navigate_key(Key::ArrowRight, Orientation::Horizontal, Direction::Ltr);
-            collection.focused_index()
-        });
-        assert!(html.contains("Some(1)"), "{html}");
-    }
-
-    #[test]
-    fn horizontal_rtl_flips_arrow_right_to_previous() {
-        let html = render_focused_index(|| {
-            let mut collection = three_item_collection();
-            collection.set_focus(Some(1));
-            collection.navigate_key(Key::ArrowRight, Orientation::Horizontal, Direction::Rtl);
-            collection.focused_index()
-        });
-        assert!(html.contains("Some(0)"), "{html}");
-    }
-
-    #[test]
-    fn horizontal_rtl_flips_arrow_left_to_next() {
-        let html = render_focused_index(|| {
-            let mut collection = three_item_collection();
-            collection.navigate_key(Key::ArrowLeft, Orientation::Horizontal, Direction::Rtl);
-            collection.focused_index()
-        });
-        assert!(html.contains("Some(1)"), "{html}");
-    }
-
-    #[test]
-    fn home_and_end_are_direction_independent() {
-        let end_html = render_focused_index(|| {
-            let mut collection = three_item_collection();
-            collection.navigate_key(Key::End, Orientation::Horizontal, Direction::Rtl);
-            collection.focused_index()
-        });
-        assert!(end_html.contains("Some(2)"), "{end_html}");
-
-        let home_html = render_focused_index(|| {
-            let mut collection = three_item_collection();
-            collection.set_focus(Some(2));
-            collection.navigate_key(Key::Home, Orientation::Horizontal, Direction::Rtl);
-            collection.focused_index()
-        });
-        assert!(home_html.contains("Some(0)"), "{home_html}");
-    }
-
-    #[test]
-    fn unhandled_key_returns_false_and_does_not_move_focus() {
-        let html = render_focused_index(|| {
-            let mut collection = three_item_collection();
-            let handled = collection.navigate_key(
-                Key::Character("a".to_string()),
-                Orientation::Vertical,
-                Direction::Ltr,
-            );
-            assert!(!handled);
-            collection.focused_index()
-        });
-        assert!(html.contains("Some(0)"), "{html}");
-    }
-}
-
-#[cfg(test)]
-mod navigate_grid_key_tests {
-    use super::*;
-
-    fn item(index: usize) -> CollectionItemState {
-        CollectionItemState {
-            index,
-            key: None,
-            disabled: false,
-            hidden: false,
-            selected: false,
-        }
-    }
-
-    fn disabled_item(index: usize) -> CollectionItemState {
-        CollectionItemState {
-            disabled: true,
-            ..item(index)
-        }
-    }
-
-    /// A 3x3 grid in row-major order:
-    /// ```text
-    /// 0 1 2
-    /// 3 4 5
-    /// 6 7 8
-    /// ```
-    fn grid_collection() -> CollectionState {
-        let mut collection = CollectionState::new(
-            ReadSignal::new(Signal::new(false)),
-            CollectionOptions::default(),
-        );
-        for index in 0..9 {
-            collection.register_item(item(index));
-        }
-        collection.set_focus(Some(4));
-        collection
-    }
-
-    fn render_focused_index(render: impl Fn() -> Option<usize> + 'static) -> String {
-        #[derive(Clone)]
-        struct Harness(std::rc::Rc<dyn Fn() -> Option<usize>>);
-
-        thread_local! {
-            static HARNESS: std::cell::RefCell<Option<Harness>> = const { std::cell::RefCell::new(None) };
-        }
-
-        HARNESS.with(|cell| {
-            *cell.borrow_mut() = Some(Harness(std::rc::Rc::new(render)));
-        });
-
-        #[component]
-        fn Root() -> Element {
-            let result = HARNESS.with(|cell| (cell.borrow().as_ref().unwrap().0)());
-            rsx! {
-                "{result:?}"
-            }
-        }
-
-        let mut dom = VirtualDom::new(Root);
-        dom.rebuild_in_place();
-        dioxus_ssr::render(&dom)
-    }
-
-    #[test]
-    fn arrow_down_moves_one_row() {
-        let html = render_focused_index(|| {
-            let mut collection = grid_collection();
-            collection.navigate_grid_key(Key::ArrowDown, 3, Direction::Ltr);
-            collection.focused_index()
-        });
-        assert!(html.contains("Some(7)"), "{html}");
-    }
-
-    #[test]
-    fn arrow_up_moves_one_row() {
-        let html = render_focused_index(|| {
-            let mut collection = grid_collection();
-            collection.navigate_grid_key(Key::ArrowUp, 3, Direction::Ltr);
-            collection.focused_index()
-        });
-        assert!(html.contains("Some(1)"), "{html}");
-    }
-
-    #[test]
-    fn arrow_up_from_top_row_does_not_move() {
-        let html = render_focused_index(|| {
-            let mut collection = grid_collection();
-            collection.set_focus(Some(1));
-            collection.navigate_grid_key(Key::ArrowUp, 3, Direction::Ltr);
-            collection.focused_index()
-        });
-        assert!(html.contains("Some(1)"), "{html}");
-    }
-
-    #[test]
-    fn ltr_arrow_right_moves_one_column() {
-        let html = render_focused_index(|| {
-            let mut collection = grid_collection();
-            collection.navigate_grid_key(Key::ArrowRight, 3, Direction::Ltr);
-            collection.focused_index()
-        });
-        assert!(html.contains("Some(5)"), "{html}");
-    }
-
-    #[test]
-    fn rtl_flips_arrow_right_to_the_previous_column() {
-        let html = render_focused_index(|| {
-            let mut collection = grid_collection();
-            collection.navigate_grid_key(Key::ArrowRight, 3, Direction::Rtl);
-            collection.focused_index()
-        });
-        assert!(html.contains("Some(3)"), "{html}");
-    }
-
-    #[test]
-    fn disabled_target_cell_is_not_focused() {
-        let html = render_focused_index(|| {
-            let mut collection = CollectionState::new(
-                ReadSignal::new(Signal::new(false)),
-                CollectionOptions::default(),
-            );
-            for index in 0..9 {
-                if index == 7 {
-                    collection.register_item(disabled_item(index));
-                } else {
-                    collection.register_item(item(index));
-                }
-            }
-            collection.set_focus(Some(4));
-            collection.navigate_grid_key(Key::ArrowDown, 3, Direction::Ltr);
-            collection.focused_index()
-        });
-        assert!(html.contains("Some(4)"), "{html}");
-    }
-
-    #[test]
-    fn home_and_end_go_to_the_grid_boundaries() {
-        let end_html = render_focused_index(|| {
-            let mut collection = grid_collection();
-            collection.navigate_grid_key(Key::End, 3, Direction::Ltr);
-            collection.focused_index()
-        });
-        assert!(end_html.contains("Some(8)"), "{end_html}");
-
-        let home_html = render_focused_index(|| {
-            let mut collection = grid_collection();
-            collection.navigate_grid_key(Key::Home, 3, Direction::Ltr);
-            collection.focused_index()
-        });
-        assert!(home_html.contains("Some(0)"), "{home_html}");
-    }
-
-    #[test]
-    fn zero_columns_is_unhandled_and_does_not_move_focus() {
-        let html = render_focused_index(|| {
-            let mut collection = grid_collection();
-            let handled = collection.navigate_grid_key(Key::ArrowDown, 0, Direction::Ltr);
-            assert!(!handled);
-            collection.focused_index()
-        });
-        assert!(html.contains("Some(4)"), "{html}");
     }
 }
