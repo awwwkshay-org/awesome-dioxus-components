@@ -285,6 +285,25 @@ pub struct PositionerProps {
     /// `on_mouse_enter`.
     #[props(default)]
     pub on_mouse_leave: Callback<Event<MouseData>>,
+    /// Called once the positioned element mounts, alongside `Positioner`'s
+    /// own internal use of `onmounted` to measure and place it — lets a
+    /// caller obtain the same `MountedData` (e.g. to manage its own focus)
+    /// without nesting another element inside `Positioner` just to get an
+    /// `onmounted` of its own. See `on_mouse_enter`'s doc comment for why
+    /// this needs to be a dedicated prop rather than passed through
+    /// `attributes`.
+    #[props(default)]
+    pub on_mounted: Callback<Event<MountedData>>,
+    /// Called on a `keydown` targeting the positioned element or one of its
+    /// descendants. See `on_mouse_enter`'s doc comment for why this needs to
+    /// be a dedicated prop.
+    #[props(default)]
+    pub on_keydown: Callback<Event<KeyboardData>>,
+    /// Called when focus leaves the positioned element or one of its
+    /// descendants. See `on_mouse_enter`'s doc comment for why this needs to
+    /// be a dedicated prop.
+    #[props(default)]
+    pub on_blur: Callback<Event<FocusData>>,
     /// Additional attributes for the positioned element.
     #[props(extends = GlobalAttributes)]
     pub attributes: Vec<Attribute>,
@@ -375,12 +394,15 @@ pub fn Positioner(props: PositionerProps) -> Element {
             style,
             "data-side": position().map(|p| p.side.as_str()),
             "data-align": position().map(|p| p.align.as_str()),
-            onmounted: move |evt| {
+            onmounted: move |evt: Event<MountedData>| {
                 floating_ref.set(Some(evt.data()));
                 recompute();
+                props.on_mounted.call(evt);
             },
             onmouseenter: move |event| props.on_mouse_enter.call(event),
             onmouseleave: move |event| props.on_mouse_leave.call(event),
+            onkeydown: move |event| props.on_keydown.call(event),
+            onblur: move |event| props.on_blur.call(event),
             ..props.attributes,
             {props.children}
         }

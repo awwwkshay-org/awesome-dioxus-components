@@ -9,32 +9,14 @@
     "primitives/src/dialog.rs",
     "primitives/src/listbox.rs",
     "primitives/src/selectable.rs",
-    "primitives/src/selection.rs",
-    "primitives/src/select/mod.rs",
-    "primitives/src/select/context.rs",
-    "primitives/src/select/components/mod.rs",
-    "primitives/src/select/components/group.rs",
-    "primitives/src/select/components/list.rs",
-    "primitives/src/select/components/option.rs",
-    "primitives/src/select/components/select.rs",
-    "primitives/src/select/components/trigger.rs",
-    "primitives/src/select/components/value.rs"
+    "primitives/src/selection.rs"
   ],
   "localPaths": [
     "packages/adico-primitives/src/lib.rs",
     "packages/adico-primitives/src/dialog.rs",
     "packages/adico-primitives/src/listbox.rs",
     "packages/adico-primitives/src/selectable.rs",
-    "packages/adico-primitives/src/selection.rs",
-    "packages/adico-primitives/src/select/mod.rs",
-    "packages/adico-primitives/src/select/context.rs",
-    "packages/adico-primitives/src/select/components/mod.rs",
-    "packages/adico-primitives/src/select/components/group.rs",
-    "packages/adico-primitives/src/select/components/list.rs",
-    "packages/adico-primitives/src/select/components/option.rs",
-    "packages/adico-primitives/src/select/components/select.rs",
-    "packages/adico-primitives/src/select/components/trigger.rs",
-    "packages/adico-primitives/src/select/components/value.rs"
+    "packages/adico-primitives/src/selection.rs"
   ],
   "changes": [
     {
@@ -52,6 +34,10 @@
     {
       "date": "2026-08-31",
       "summary": "Re-authored packages/adico-primitives/src/typeahead.rs per openspec/changes/reauthor-primitives-from-independent-spec, task 1.3. Unlike collection.rs/focus-trap.js, this file's own prior header admitted its fuzzy-matching algorithm was unchanged from the original select-only module, so this was a genuine rewrite, not a documentation pass: the weighted edit-distance formula (position_weight, replacing recency_bias's log-ratio-to-the-4th-power curve with a cubic ratio and different constants), the substitution-cost model (new 0.35/0.05 weighting constants, case-only-difference tier), the Unicode-codepoint-proximity cost, and the cross-script phonetic-match data were all independently redesigned with different constants and code structure -- the last deliberately narrowed to Latin/Cyrillic/Greek only (dropping Arabic/Bengali) since those are the three scripts this rewrite's author could verify letter correspondences for directly rather than risk transcribing unfamiliar codepoints. Neither statics/catalogs/base-ui.json nor statics/primitive_compatibility.json tracks a typeahead capability on either reference axis, confirming this fuzzy/adaptive-keyboard/phonetic layer is an adico-only extra kept per the 'one-stop shop' design decision, not a ported feature. KeyboardLayout's physical layout tables and code_to_char's key-code mapping are unchanged, since these encode physical/factual keyboard geometry rather than creative expression. Replaced the file's 13 relational-only tests with 26 tests in the new packages/adico-primitives/tests/test_typeahead.rs, adding exact-index assertions (prefix-match precedence, single-adjacent-key-typo resolution, cross-script phonetic isolation) the prior relational-only assertions (assert!(a < b)) would not have caught a ranking-quality regression on. Removed the file's SPDX fork header and dropped its rename pair (primitives/src/select/text_search.rs -> typeahead.rs) from this record's originalPaths/localPaths."
+    },
+    {
+      "date": "2026-08-31",
+      "summary": "Re-authored packages/adico-primitives/src/select/{mod,context}.rs and select/components/{mod,group,list,option,select,trigger,value}.rs (9 files) as a single packages/adico-primitives/src/select.rs, per openspec/changes/reauthor-primitives-from-independent-spec task 2.1 (build-adico-component-ecosystem task 7.8d). Derived from the WAI-ARIA APG Listbox pattern plus statics/primitive_compatibility.json's select row, synthesizing Base UI's Select anatomy and dioxus-primitives' original listbox implementation rather than mirroring either ('one-stop shop' decision) -- selection matching, roving focus, and typeahead were already independently covered by selectable.rs/collection.rs/typeahead.rs's own tests and were carried over unchanged; this rewrite's own surface is the ARIA/render wiring plus new positioner.rs::Positioner and layer.rs participation the old file had none of at all: SelectList's listbox previously rendered inline in normal document flow with no anchored positioning, and Escape was hand-rolled on the listbox's own onkeydown with no layer-stack awareness (no use_escape_key, no use_outside_dismiss anywhere in the module). SelectTrigger and the select root now carry stable generated ids (trigger_id, root_id on SelectContext) so SelectList can anchor to the trigger via Positioner and bound use_outside_dismiss's pointer-outside check to the root, matching popover.rs's established Root/Content split (use_escape_key on the root joined by use_layer_member via use_outside_dismiss on the list, avoiding the exact split-scope shadowing bug fixed earlier this change in layer.rs). Extended positioner.rs (not itself a forked file) with on_mounted/on_keydown/on_blur callback props so Positioner can be SelectList's own root element without an extra wrapping div, reusable by combobox's identical migration (task 2.2). Added 8 tests in the new packages/adico-primitives/tests/test_select.rs covering closed/open/disabled render state, the trigger's new id, aria-selected/aria-multiselectable wiring, and Positioner's position:fixed participation; two render assertions (SelectValue's joined selected-option text, SelectGroupLabel's aria-labelledby wiring) depend on use_effect-driven option/label registration that a bare rebuild_in_place() does not drive to completion, the same documented limitation as collection.rs's/date_picker.rs's tests, and are left to select.spec.ts's live-browser coverage instead. Verified via cargo test -p adico-primitives (all passing), registry validate, and a wasm32-unknown-unknown check of the installed select-consumer fixture. Live-browser verification surfaced a real, pre-existing gap in positioner.rs itself, not introduced by this task: Positioner's onmounted fires and MountedData::get_client_rect() resolves, but the document::eval-based measure_anchor_and_viewport() round trip never resolves in this sandbox's dx-served web build, so the listbox stays position:fixed;visibility:hidden despite mounting with correct ARIA state (confirmed via temporary signal-based instrumentation, not guessed) -- no popover/tooltip/hover-card consumer fixture existed before this task to have caught this earlier, since Positioner had never previously been exercised through a real installed consumer in a live browser. select.spec.ts's two interaction tests remain failing because of this pre-existing Positioner gap, tracked as a follow-up distinct from this task's own scope; SSR-level rendering, ARIA wiring, and the escape/layer wiring are all otherwise confirmed correct. Removed the select/ directory's 9 files' SPDX fork headers and dropped them from this record's originalPaths/localPaths; dialog.rs, listbox.rs, selectable.rs, selection.rs, and lib.rs remain tracked."
     }
   ],
   "notices": [

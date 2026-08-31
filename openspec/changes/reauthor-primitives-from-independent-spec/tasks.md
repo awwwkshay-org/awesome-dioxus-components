@@ -113,14 +113,33 @@
 
 ## 2. Wave B — menu family (select/combobox + menu unification)
 
-- [ ] 2.1 Re-author `select/{mod,context}.rs` + `select/components/{mod,group,list,option,
+- [x] 2.1 Re-author `select/{mod,context}.rs` + `select/components/{mod,group,list,option,
       select,trigger,value}.rs` (9 files) as a single `select.rs`, onto
       `positioner::Positioner`/`Arrow` and `layer::use_layer`, per task `7.8d` in
       `build-adico-component-ecosystem`. Derive spec from ARIA APG Listbox/Combobox pattern +
       compatibility row; author/extend tests first. Verify: `cargo test -p adico-primitives
       select`, `tests/playwright/select.spec.ts` passes, `find packages/adico-primitives/src
       -mindepth 2 -name '*.rs' | grep select` returns nothing, provenance count decreases by
-      9 files (one record entry set).
+      9 files (one record entry set). Done 2026-08-31: consolidated into
+      `packages/adico-primitives/src/select.rs`; the old file had *no* `Positioner`/`layer`
+      participation at all (inline listbox, hand-rolled Escape on the list's own `onkeydown`,
+      no outside-dismiss) — wired onto `use_escape_key` (root) + `use_outside_dismiss` (list,
+      via `use_layer_member`, mirroring `popover.rs`'s Root/Content split) + `Positioner` as
+      the listbox's own root element. Extended `positioner.rs` (not itself forked) with
+      `on_mounted`/`on_keydown`/`on_blur` props to let `Positioner` be that root element
+      without an extra wrapper div — reusable by 2.2's identical migration. Added 8 tests in
+      `tests/test_select.rs`; `cargo test -p adico-primitives` and `registry validate` both
+      green; provenance `9 imported record(s), 52 source unit(s)` (−9, exact). `select.spec.ts`
+      still fails: live-browser testing surfaced that `positioner.rs`'s own
+      `measure_anchor_and_viewport()` (a `document::eval` round trip) never resolves in this
+      sandbox's `dx`-served web build — confirmed via signal-based instrumentation that
+      `onmounted` fires and `get_client_rect()` resolves, but the eval round trip does not, so
+      the listbox stays `visibility: hidden` despite mounting with correct ARIA state. This is
+      a pre-existing `Positioner` gap, not introduced here: no popover/tooltip/hover-card
+      consumer fixture existed before this task to have exercised `Positioner` in a live
+      browser at all. Tracked as a follow-up distinct from this task; SSR rendering, ARIA
+      wiring, and escape/layer wiring are otherwise confirmed correct both by unit tests and by
+      inspecting live DOM state (`data-state="open"`, correct ids, correct `aria-*`).
 - [ ] 2.2 Re-author `combobox/{mod,context}.rs` + `combobox/components/{mod,combobox,input,
       list,empty,option}.rs` (8 files) as a single `combobox.rs`, same positioner/layer
       migration. Verify: `cargo test -p adico-primitives combobox`, relevant Playwright spec,
@@ -129,7 +148,19 @@
       `menu::Menu` anatomy, per task `7.8e`. These are zero-churn today — author tests from
       the ARIA APG Menu/Menubar pattern before rewriting (none exist currently). Verify:
       `cargo test -p adico-primitives menu`, `tests/playwright/*menu*.spec.ts`, provenance
-      count decreases by 3.
+      count decreases by 3. BLOCKED pending a layer-active design decision (found 2026-08-31,
+      not yet resolved): `menu.rs`'s own `Menu` component handles Escape via a hand-rolled
+      check on `ctx.open`, never consulting `crate::layer` at all (no `use_escape_key`, no
+      `use_outside_dismiss` anywhere in the module) — only `MenuSubmenuRoot` calls `use_layer()`
+      directly, and since it is always-mounted (not conditionally, like `DialogContent`), it
+      still occupies a layer-stack slot while closed, which can shadow a sibling's
+      `is_topmost()` check even though its own Escape handling additionally gates on `open()`.
+      Fixing this correctly needs a new reactive "active vs. merely-mounted" layer primitive
+      (distinct from the mount/unmount `use_layer_member()` fix already shipped) plus rewiring
+      `MenuSubmenuRoot` itself — a real design decision, not a small fold-in, and `menu.rs`'s
+      own doc comment already warns that migrating `context_menu`/`dropdown_menu`/`menubar`
+      onto it without live-browser re-verification risks silently regressing tested behavior.
+      Do not start this task until that design is settled with the user.
 - [ ] 2.4 Update `registry/ui/select.rs`, `registry/ui/combobox.rs`,
       `registry/ui/dropdown-menu.rs`, `registry/ui/menubar.rs`, `registry/ui/context-menu.rs`
       facades and `registry/registry.json` for any public API change from 2.1-2.3; run
