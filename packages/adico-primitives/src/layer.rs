@@ -17,8 +17,10 @@ use dioxus::prelude::*;
 /// gets `BASE_Z_INDEX + depth`.
 const BASE_Z_INDEX: i32 = 1000;
 
+/// `pub` field only for `packages/adico-primitives/tests/` to build raw fixtures without
+/// going through the hooks; not part of this crate's intended public surface.
 #[derive(Clone, Default)]
-struct LayerStack(Rc<RefCell<Vec<ScopeId>>>);
+pub struct LayerStack(pub Rc<RefCell<Vec<ScopeId>>>);
 
 /// A single caller's registration on the shared layer stack.
 ///
@@ -26,11 +28,14 @@ struct LayerStack(Rc<RefCell<Vec<ScopeId>>>);
 /// when several overlays are nested the most-recently-mounted one is
 /// topmost. An overlay that registers more than once (e.g. a component
 /// calling both [`crate::use_escape_key`] and [`crate::use_outside_dismiss`])
-/// occupies exactly one position, not one per call.
+/// occupies exactly one position, not one per call, via [`use_layer_member`]
+/// joining the [`use_layer`]-registering component's own slot.
 #[derive(Clone)]
 pub struct Layer {
-    scope_id: ScopeId,
-    stack: LayerStack,
+    /// `pub` only for `packages/adico-primitives/tests/`; not part of the intended API.
+    pub scope_id: ScopeId,
+    /// `pub` only for `packages/adico-primitives/tests/`; not part of the intended API.
+    pub stack: LayerStack,
 }
 
 impl Layer {
@@ -60,9 +65,23 @@ impl Layer {
     }
 }
 
-/// Register the calling component as a layer on the shared overlay stack.
-/// Safe to call more than once per component — the scope is only pushed once
-/// and removed once its last registration drops.
+/// Marks which [`Layer`] the calling scope's overlay "owns", so other
+/// components belonging to the same logical overlay (e.g. a modal's content,
+/// registering separately from its root) can join that layer instead of
+/// each occupying their own stack slot. Provided by [`use_layer`], read by
+/// [`use_layer_member`].
+#[derive(Clone)]
+struct LayerOwner(Layer);
+
+/// Register the calling component as a fresh layer on the shared overlay
+/// stack, always creating a new slot — this is the entry point for whichever
+/// component establishes an overlay's identity (its "root": `DialogRoot`,
+/// `PopoverRoot`, and similarly-shaped components). It also provides a
+/// [`LayerOwner`] marker, scoped to its own subtree, so descendant calls to
+/// [`use_layer_member`] — including a *nested* overlay's own root, which
+/// must not join an ancestor's layer — resolve correctly: a nested root
+/// calls this function too, and providing its own marker here shadows the
+/// outer one for everything inside it.
 pub fn use_layer() -> Layer {
     let scope_id = current_scope_id();
     let stack = use_hook(move || {
@@ -80,92 +99,24 @@ pub fn use_layer() -> Layer {
         let stack = stack.clone();
         move || stack.0.borrow_mut().retain(|id| *id != scope_id)
     });
-    Layer { scope_id, stack }
+    let layer = Layer { scope_id, stack };
+    use_hook(|| provide_context(LayerOwner(layer.clone())));
+    layer
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    fn stack_with(scopes: &[usize]) -> LayerStack {
-        let stack = LayerStack(Rc::new(RefCell::new(Vec::new())));
-        stack
-            .0
-            .borrow_mut()
-            .extend(scopes.iter().map(|id| ScopeId(*id)));
-        stack
-    }
-
-    fn layer_at(stack: &LayerStack, scope_id: usize) -> Layer {
-        Layer {
-            scope_id: ScopeId(scope_id),
-            stack: stack.clone(),
-        }
-    }
-
-    #[test]
-    fn a_lone_layer_is_topmost_at_depth_zero() {
-        let stack = stack_with(&[0]);
-        let only = layer_at(&stack, 0);
-
-        assert!(only.is_topmost());
-        assert_eq!(only.depth(), 0);
-        assert_eq!(only.z_index(), BASE_Z_INDEX);
-    }
-
-    #[test]
-    fn three_nested_layers_have_increasing_depth_and_z_index() {
-        let stack = stack_with(&[0, 1, 2]);
-        let outer = layer_at(&stack, 0);
-        let middle = layer_at(&stack, 1);
-        let inner = layer_at(&stack, 2);
-
-        assert_eq!(outer.depth(), 0);
-        assert_eq!(middle.depth(), 1);
-        assert_eq!(inner.depth(), 2);
-        assert!(outer.z_index() < middle.z_index());
-        assert!(middle.z_index() < inner.z_index());
-
-        assert!(!outer.is_topmost());
-        assert!(!middle.is_topmost());
-        assert!(inner.is_topmost());
-    }
-
-    #[test]
-    fn removing_the_topmost_layer_restores_the_next_ones_topmost_status() {
-        let stack = stack_with(&[0, 1]);
-        let outer = layer_at(&stack, 0);
-
-        stack.0.borrow_mut().retain(|id| *id != ScopeId(1));
-
-        assert!(outer.is_topmost());
-        assert_eq!(outer.depth(), 0);
-    }
-
-    /// Exercises the real hook (not the raw stack), verifying that a
-    /// component calling [`use_layer`] twice still occupies exactly one slot
-    /// on the shared stack rather than two.
-    #[test]
-    fn calling_the_hook_twice_in_one_component_registers_one_layer() {
-        #[component]
-        fn Root() -> Element {
-            let first = use_layer();
-            let second = use_layer();
-            let layer_count = first.stack.0.borrow().len();
-
-            assert_eq!(
-                layer_count, 1,
-                "duplicate hook calls must not duplicate the layer"
-            );
-            assert!(first.is_topmost());
-            assert!(second.is_topmost());
-
-            rsx! { "ok" }
-        }
-
-        let mut dom = VirtualDom::new(Root);
-        dom.rebuild_in_place();
-        let html = dioxus_ssr::render(&dom);
-        assert!(html.contains("ok"));
+/// Join the nearest ancestor overlay's [`use_layer`] registration instead of
+/// registering a new stack slot — the entry point for a component that is
+/// part of the *same* logical overlay as an ancestor that already called
+/// [`use_layer`] (e.g. `DialogContent` joining its `DialogRoot`'s layer, so
+/// both agree on [`Layer::is_topmost`] rather than the later-mounted content
+/// always shadowing its own root). Falls back to [`use_layer`] if no owner
+/// is found, which should not happen in practice — every caller of this
+/// function has a `use_layer`-registering ancestor — but keeps this usable
+/// standalone rather than panicking on a missing context.
+pub fn use_layer_member() -> Layer {
+    let owner = use_hook(try_consume_context::<LayerOwner>);
+    match owner {
+        Some(owner) => owner.0,
+        None => use_layer(),
     }
 }

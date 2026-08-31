@@ -42,15 +42,29 @@
       Focus" spec citation; the implementation itself was unchanged (already independently
       structured — dual guard sentinels, tabindex-aware `focusable()`, non-modal `FocusScope`
       — no fork-text residue). Added a Tab-cycling test to `dialog.spec.ts` and a second
-      focusable element to the `dialog-consumer` fixture. **Verification gap, not a pass:**
-      this new test and the pre-existing "closes with Escape" test both fail in this sandbox
-      against a fresh, otherwise-unmodified `dialog-consumer` build — traced to `DialogRoot`'s
-      `use_escape_key`/`layer.is_topmost()` gate (`lib.rs`/`layer.rs`), not fixed here per
-      explicit user direction to keep this task scoped to `focus-trap.js`. Recorded in
-      `provenance/records/adico-primitives-dialog-select.json`'s changes log. `cargo test -p
-      adico-primitives` unaffected (no Rust changed) and passing; `cargo run -p adico-xtask --
-      provenance check` 63 → 62. Follow-up needed: a separate task/change to fix the
-      Escape/layer regression and re-run the full `tests/playwright` suite once fixed.
+      focusable element to the `dialog-consumer` fixture. **Verification gap, partially
+      closed:** this new test and the pre-existing "closes with Escape" test both failed in
+      this sandbox against a fresh, otherwise-unmodified `dialog-consumer` build, traced to
+      `DialogRoot`'s `use_escape_key`/`layer.is_topmost()` gate. Investigated and partially
+      fixed same-day (2026-08-31, separate commit, see `layer.rs`): a real bug where
+      `DialogContent`'s own `use_outside_dismiss` call registered a *second*, later-pushed
+      layer slot in a different scope than `DialogRoot`'s `use_escape_key`, permanently
+      shadowing the root's own `is_topmost()` check. Fixed in `layer.rs` via
+      `use_layer_member()` joining the root's slot instead of registering a new one; verified
+      by `packages/adico-primitives/tests/test_layer.rs` and by `dialog.spec.ts`'s outside-
+      interaction and nested-dialog-Escape tests, both now passing (the nested-dialog test
+      previously passed vacuously for the wrong reason before this fix — nesting wasn't
+      exercising the split-scope bug at all). **Two further, separate findings surfaced
+      during that investigation, deliberately left unfixed as out of scope** (see the
+      provenance record's changes log for full detail): (1) a closed-but-mounted overlay
+      (e.g. an unopened nested dialog) still occupies a layer-stack slot merely by mounting,
+      which can shadow an *open* ancestor's own Escape handling — a design gap in when a
+      layer should count as "active," not a small fix; (2) in this same browser sandbox, the
+      focus trap does not appear to move initial focus into a `DialogContent`'s children at
+      all (`document.activeElement` stays on the external trigger button), which is likely
+      why the new Tab-cycling test still fails, independent of the layer bug. `cargo test -p
+      adico-primitives` passing throughout; `cargo run -p adico-xtask -- provenance check`
+      63 → 62.
 - [x] 1.3 `typeahead.rs`: derive spec from ARIA APG typeahead guidance +
       `primitive_compatibility.json`; confirm the existing 15 unit tests cover the spec or
       extend them; re-author; drop header + record entry. Verify: `cargo test -p

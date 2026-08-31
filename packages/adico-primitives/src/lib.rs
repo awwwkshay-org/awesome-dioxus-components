@@ -261,7 +261,12 @@ pub fn use_outside_dismiss(
     id: impl Readable<Target = String> + Copy + 'static,
     on_dismiss: impl FnMut() + Clone + 'static,
 ) {
-    let layer = layer::use_layer();
+    // `use_layer_member`, not `use_layer`: this hook is typically called from a
+    // separate component/scope than the same overlay's `use_escape_key` (e.g.
+    // `DialogContent` here, `DialogRoot` there). Registering its own layer would
+    // give this later-mounted scope a higher stack position than its own root,
+    // permanently shadowing the root's `is_topmost()` check for Escape.
+    let layer = layer::use_layer_member();
     use_effect_with_cleanup(move || {
         let mut eval = document::eval(
             "const id = await dioxus.recv();
