@@ -1,6 +1,14 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/drag_and_drop_list.rs. See provenance/records/adico-primitives-wave5-extras.json.
+// No dedicated WAI-ARIA APG "Drag and Drop" pattern exists; this follows the widely-used
+// accessible-reordering convention built on primitives the APG does define: each
+// `DragAndDropListItem` is a keyboard-operable (single-tab-stop roving tabindex) `<li
+// aria-roledescription="sortable item" aria-grabbed>`, the list itself is `<ul
+// aria-roledescription="sortable list" aria-describedby>` pointing at visually-hidden
+// `DragAndDropInstructions`, and every lift/move/drop/cancel is announced through a
+// `DragAndDropLiveRegion` (`role="status" aria-live="assertive"`) -- the same
+// grab-announce-move-announce shape react-beautiful-dnd/dnd-kit popularized for accessible
+// sortable lists, composed here from this crate's own `collection` roving-focus
+// infrastructure. This file was already a genuine adaptation, not ported-unmodified, and that
+// adaptation is unchanged here:
 //
 // Adapted from upstream: `DragAndDropListItem`'s `ondragstart` handler
 // registers a `document::eval` listener for `dragover`/`drop`/`dragend` to

@@ -559,10 +559,34 @@
       (46 items, same accepted static-pointer pattern as prior Wave E tasks); no dedicated
       `tests/playwright/*.spec.ts` exists for calendar/date-picker; `tests/installation/
       wave4-consumer` compiles clean against `--target wasm32-unknown-unknown`.
-- [ ] 5.7 `wave5-extras` record: `drag_and_drop_list.rs`, flatten `color_picker.rs` +
+- [x] 5.7 `wave5-extras` record: `drag_and_drop_list.rs`, flatten `color_picker.rs` +
       `color_picker/color_naming.rs` into one `color_picker.rs`. Derive specs; author tests
       first. Verify: tests pass, directory removed, record
-      `adico-primitives-wave5-extras.json` deleted, provenance count -3.
+      `adico-primitives-wave5-extras.json` deleted, provenance count -3. Done 2026-08-31: no
+      logic changes to any of the three. `color_picker.rs`: no dedicated APG "Color Picker"
+      pattern; spec is the closest APG guidance (the Slider pattern) applied per axis and
+      composited into a 2D interaction — `role="group"` root/area, native `type="range"`
+      saturation/value axis inputs with descriptive `aria-valuetext` and `aria-orientation` —
+      already implemented. Flattened `color_picker/color_naming.rs`'s human-readable Oklch
+      naming logic (backs each axis input's `aria-valuetext`) directly into `color_picker.rs`
+      as plain top-level items (no logic change), then deleted the submodule file/directory;
+      widened `color_name` to `pub` for direct testing. Its 2 inline tests moved verbatim; added
+      8 new tests (4 direct `color_name` classification cases, 4 render-level: root role/label,
+      `AreaTrack`'s CSS custom property, `AreaThumb`'s label/dragging/position style, the two
+      axis inputs' roles/orientation/valuetext) — 10 total. `drag_and_drop_list.rs`: no
+      dedicated APG "Drag and Drop" pattern either; spec is the widely-used accessible-reorder
+      convention built on APG primitives it does define (roving-tabindex `aria-roledescription`
+      items, an instructions-linked list, a `role="status"` live region for lift/move/drop/
+      cancel announcements) — already implemented, already composing this crate's own
+      `collection` roving-focus infrastructure. Had zero tests; added 5 (list role/label/
+      describedby, hidden instructions text, live-region attributes, every item's role/
+      draggable/grabbed state, a custom `aria_label` override). Full baseline green; provenance
+      `3 imported record(s), 6 source unit(s)` (−1 record, −3 source units, exact —
+      `wave5-extras.json` deleted, confirmed all three files were its only remaining ones
+      first); `registry validate`/`registry build` unaffected (46 items; grepped
+      `registry/` for any reference to the deleted `color_naming` submodule path — none found);
+      `tests/installation/wave5-color-picker-consumer`, `wave5-drag-and-drop-list-consumer`,
+      and `wave5-extras-consumer` all compile clean against `--target wasm32-unknown-unknown`.
 - [ ] 5.8 `dialog-select` record residue: `dialog.rs`, `lib.rs`'s non-facade content if any
       remains outside Wave F's scope, `js/focus-trap.js` cross-check (already done in 1.2).
       Verify: tests pass, `tests/playwright/dialog.spec.ts` passes.
