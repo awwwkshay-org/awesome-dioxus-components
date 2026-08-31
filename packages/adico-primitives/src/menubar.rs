@@ -1,8 +1,24 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/menubar.rs. See provenance/records/adico-primitives-wave3-overlays.json.
 
-//! Defines the [`Menubar`] component and its sub-components.
+//! Defines the [`Menubar`] component and its sub-components, per the WAI-ARIA
+//! APG [Menubar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/):
+//! a `role="menubar"` roving-focus container of `role="menu"` menus, each
+//! opened by a `role="menuitem"` trigger, with only one menu open at a time
+//! and `ArrowLeft`/`ArrowRight` moving focus between menus (open or not).
+//!
+//! Deliberately independent of [`crate::menu`] (task 2.3), matching Base
+//! UI's own split: Base UI's `Menubar` shares nothing with `Menu` beyond a
+//! roving-focus composite container (`CompositeRoot`) -- consumers compose
+//! an ordinary `Menu.Root` inside each bar item themselves, rather than
+//! `Menubar` providing its own `Content`/`Item` built on `Menu`'s. This
+//! module already gets the equivalent roving-focus container from
+//! [`crate::collection`]; its `MenubarContent`/`MenubarItem` render the same
+//! `role="menu"`/`role="menuitem"` contract as [`crate::menu::MenuContent`]/
+//! [`crate::menu::MenuItem`], independently, because this module's own
+//! per-menu context's `is_open`/`set_open`-across-siblings coordination has
+//! no [`crate::menu::MenuContext`] counterpart to adapt onto -- forcing
+//! shared rendering code here would need that adapter without saving any of
+//! the actual APG-mandated behavior, which is this module's own already.
 
 use dioxus::prelude::*;
 
@@ -280,6 +296,8 @@ pub fn MenubarTrigger(props: MenubarTriggerProps) -> Element {
             },
             role: "menuitem",
             r#type: "button",
+            "data-disabled": disabled(),
+            disabled: disabled(),
             tabindex: if is_focused() { "0" } else { "-1" },
             ..props.attributes,
             {props.children}

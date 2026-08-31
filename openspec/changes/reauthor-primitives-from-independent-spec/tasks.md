@@ -214,6 +214,32 @@
       wasm32-unknown-unknown --features web` green; `registry validate` unaffected (facade
       untouched); provenance `2 imported record(s), 3 source unit(s)` (wave3-overlays record
       drops to 2 units: `context_menu.rs`/`menubar.rs`).
+      `menubar.rs` portion DONE 2026-08-31: kept independent of `crate::menu` rather than
+      forcing delegation — re-checked Base UI's `Menubar.tsx` and confirmed Base UI's own
+      Menubar shares nothing with `Menu` beyond a roving-focus `CompositeRoot` container (each
+      bar item composes its own ordinary `Menu.Root` in consumer code); `menubar.rs` already
+      gets the equivalent roving-focus container from `crate::collection`, and its per-menu
+      `is_open`/`set_open`-across-siblings coordination has no `menu::MenuContext` counterpart
+      to adapt onto, so shared rendering code would need that adapter without saving any of the
+      APG-mandated behavior, which was already correct here. Documented this decision in the
+      module's own doc comment. Writing tests against the APG Menubar pattern surfaced one real
+      bug, fixed: `MenubarTrigger` computed `disabled` but never rendered it (no `disabled`
+      attribute, no `data-disabled`), unlike `menu::MenuTrigger`'s own `"data-disabled":
+      disabled, disabled,` pair that this crate's registry facades style against everywhere
+      else — a disabled `MenubarMenu`'s trigger looked fully interactive with no visual or
+      assistive-tech indication. Fixed by adding the same attribute pair; grepped
+      `registry/ui/menubar.rs` and all installed fixtures first — the facade's own
+      `MenubarTrigger` doesn't accept a `disabled` prop at all, so nothing could have relied on
+      the old (missing) behavior. Added `tests/test_menubar.rs` (4 tests: `role="menubar"`,
+      `role="menu"` + default-closed content, trigger `role="menuitem"`, disabled propagation to
+      both the `MenubarMenu` wrapper and `MenubarTrigger`). `Menubar` has no `default_open`-style
+      prop (unlike `Accordion`'s `default_value`) — which menu is open derives entirely from
+      roving focus, itself driven by events a bare `rebuild_in_place()` never dispatches — so "a
+      menu is open, its content renders, only one menu open at a time" is a named,
+      undismissed coverage gap here, documented in the test file's own header (same class of
+      interaction-driven-state limitation already documented for `date_picker.rs`/
+      `hover_card.rs`). Full baseline green; provenance `2 imported record(s), 2 source
+      unit(s)` (record now covers only `context_menu.rs`).
 - [ ] 2.4 Update `registry/ui/select.rs`, `registry/ui/combobox.rs`,
       `registry/ui/dropdown-menu.rs`, `registry/ui/menubar.rs`, `registry/ui/context-menu.rs`
       facades and `registry/registry.json` for any public API change from 2.1-2.3; run
