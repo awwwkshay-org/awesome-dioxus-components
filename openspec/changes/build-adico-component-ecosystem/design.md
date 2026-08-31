@@ -629,6 +629,27 @@ inherited API deviations) and M6 (§7 of `tasks.md`) already own primitive
 expansion — this decision replaces M6's prose enumeration with this named,
 per-module inventory and the migration obligation for existing components.
 
+**Standing rule once a primitive exists: registry components compose it,
+they do not reimplement it.** As of task 7.6a, the net-new primitives listed
+above are no longer all hypothetical — `direction` (7.3a), `typeahead`
+(7.3c), `layer` (7.4a/7.4b, dismissable-layer stacking with `z_index()`),
+`scroll_lock` (7.4c), `use_escape_key` (7.4d), `positioner` (7.5a/7.5b,
+`Positioner`/`Arrow`), and `menu` (7.6a, the full `Menu` anatomy) are real,
+public, independently-tested modules in `adico-primitives` today. This
+obligation is not limited to task 7.8's migration of *existing* components:
+it applies equally to every *new* registry component built for the rest of
+this change, most immediately the task 7.9 Base-UI-parity tier —
+`Autocomplete` and `Navigation Menu` are anchored-overlay components and
+SHALL compose `Positioner`/`Arrow` rather than inventing their own placement
+math, `Autocomplete` SHALL compose `typeahead` for type-to-select, and
+`Preview Card` SHALL compose `Positioner` for its hover-anchored popup. A
+component proposed after this point that reimplements behavior an existing
+public primitive already provides is a design defect, not a style
+preference, and should be caught at review the same way a duplicate
+`Positioner` implementation would be today. `context_menu`/`dropdown_menu`/
+`menubar` remain the one deliberate, temporary exception until 7.8 migrates
+them onto `menu`, `positioner`, and `layer` — not a precedent for new work.
+
 Target-gating for these primitives follows two real interop tiers, not four:
 **web** (wasm/browser DOM) and **native** (desktop and mobile together) —
 plus SSR/server as the no-interop fallback every gated hook already has.
