@@ -164,7 +164,7 @@
       compounded by 2.1's already-documented pre-existing `positioner.rs` `document::eval`
       bug. SSR rendering, ARIA wiring, and the escape/layer wiring are otherwise confirmed
       correct by the unit tests and code review against 2.1's now-proven design.
-- [ ] 2.3 Re-author `dropdown_menu.rs`, `menubar.rs`, `context_menu.rs` onto the unified
+- [x] 2.3 Re-author `dropdown_menu.rs`, `menubar.rs`, `context_menu.rs` onto the unified
       `menu::Menu` anatomy, per task `7.8e`. These are zero-churn today — author tests from
       the ARIA APG Menu/Menubar pattern before rewriting (none exist currently). Verify:
       `cargo test -p adico-primitives menu`, `tests/playwright/*menu*.spec.ts`, provenance
@@ -240,7 +240,41 @@
       interaction-driven-state limitation already documented for `date_picker.rs`/
       `hover_card.rs`). Full baseline green; provenance `2 imported record(s), 2 source
       unit(s)` (record now covers only `context_menu.rs`).
-- [ ] 2.4 Update `registry/ui/select.rs`, `registry/ui/combobox.rs`,
+      `context_menu.rs` portion DONE 2026-08-31, completing this task: no dedicated ARIA APG
+      "Context Menu" pattern exists; the closest applicable spec is the generic Menu pattern
+      this file already implemented correctly (`role="menu"`/`"menuitem"`,
+      `aria-haspopup="menu"`), unlike `dropdown_menu.rs`'s pre-task-2.3 `role="listbox"` bug —
+      so no logic change was needed here either. Kept independent of `crate::menu`, same
+      reasoning as `menubar.rs`: Base UI's own `ContextMenuRoot` does literally render
+      `<Menu.Root>` with a virtual click-point anchor, reusing `Menu`'s `Popup`/`Item`
+      directly — but that works there specifically because Base UI's `Menu.Popup` is a
+      generic `Positioner`-anchored floating element from the start, and
+      `crate::menu::MenuContent` is not (it renders an unpositioned `div`, the same
+      registry-facade-owned `absolute`-in-`relative` layout `dropdown_menu.rs` relied on
+      before it delegated). `ContextMenuContent` instead owns click-point `position: fixed`
+      placement, Safari visual-viewport correction, scroll suppression while open,
+      `use_outside_dismiss`, and a focus-the-content effect — none of which has a home in
+      `MenuContent` without new props, and adding them untested would be new scope on an
+      already-shipped, previously browser-verified component with no live-browser
+      re-verification available in this pass. Checked Base UI's own `ContextMenuTrigger.tsx`
+      for a keyboard-open compat gap (Shift+F10/context-menu-key, per the generic ARIA APG
+      context-menu guidance): Base UI has no keyboard-open path either (right-click and
+      long-press only) — matching this file's existing scope, not a gap to close. Dropped the
+      fork-attribution header (SPDX-only now); documented the spec/scope decision in the
+      module's own doc comment. No test file existed; added `tests/test_context_menu.rs` (4
+      tests: closed-by-default content gating; the trigger's `role="button"`/
+      `aria-haspopup="menu"`/`aria-expanded` contract; an open menu's `role="menu"`/
+      `aria-orientation="vertical"`/`data-state` and its default `(0, 0)`
+      `position: fixed` placement — reachable because, unlike `Menubar`, `ContextMenu` does
+      support `default_open` directly; and disabled-item `aria-disabled`/`data-disabled`
+      propagation). Full baseline (fmt/check/clippy/test) green. `provenance/records/
+      adico-primitives-wave3-overlays.json`'s `originalPaths`/`localPaths` are now empty
+      (`dropdown_menu.rs` re-exported from `menu.rs`, `menubar.rs`/`context_menu.rs` both
+      re-authored in place) — removed the record file itself, per this change's established
+      convention for a fully-emptied provenance record (matching
+      `adico-primitives-dialog-select.json`'s precedent from task 6.1); `provenance check`
+      now reports `1 imported record(s), 1 source unit(s)` crate-wide.
+- [x] 2.4 Update `registry/ui/select.rs`, `registry/ui/combobox.rs`,
       `registry/ui/dropdown-menu.rs`, `registry/ui/menubar.rs`, `registry/ui/context-menu.rs`
       facades and `registry/registry.json` for any public API change from 2.1-2.3; run
       `cargo run -p adico-xtask -- registry build` then `registry validate`; install through
@@ -261,6 +295,21 @@
       confirm the new facade content round-trips through the real CLI install path, not just
       `registry validate`'s structural check; `cargo check --locked --workspace` and a
       `--target wasm32-unknown-unknown` check of both consumers are green.
+      `dropdown-menu`/`menubar`/`context-menu` portion DONE 2026-08-31, completing this task:
+      none of the three primitive re-authorings in task 2.3 changed a public prop API —
+      `dropdown_menu.rs`'s re-exported `Menu*` components have identical `Props` shapes to the
+      old `DropdownMenu*` ones (only internal `role`/`aria-haspopup` attribute *values*
+      changed, which the registry facades don't read or override), `menubar.rs`'s
+      `MenubarTrigger` fix only added HTML attributes it renders, and `context_menu.rs` had no
+      changes beyond its header/doc comment. So `registry/ui/dropdown-menu.rs`,
+      `registry/ui/menubar.rs`, and `registry/ui/context-menu.rs` need no edits, and
+      `registry/registry.json`'s checksums for them are unaffected (`registry/ui/*.rs` content
+      itself is untouched — `registry build`/`registry validate` both still pass at 46 items).
+      Confirmed by building `tests/installation/wave3-consumer` (the dedicated consumer
+      fixture for this exact batch, covering all three) with `cargo check --locked` against
+      the path-patched, freshly re-authored `adico-primitives` — compiles clean with no facade
+      changes required, i.e. the installed copies already round-trip through the real CLI
+      install content unmodified.
 
 ## 3. Wave C — shared internals (dependencies of later waves)
 

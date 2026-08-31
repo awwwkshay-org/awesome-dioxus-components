@@ -1,16 +1,35 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/context_menu.rs. See provenance/records/adico-primitives-wave3-overlays.json.
 //
-// Adapted from upstream: the two `dioxus::document::eval` call sites (Safari
-// visual-viewport correction, and scroll suppression while the menu is open)
-// are now behind the same `#[cfg(any(feature = "web", feature = "native"))]`
-// target-gated adapter pattern this crate already uses for `use_focus_trap`
-// and `use_outside_dismiss`, with SSR-safe no-op fallbacks, instead of
-// upstream's unconditional `document::eval` calls. `dioxus_sdk_time::sleep`
-// is replaced with this crate's own target-aware `crate::time::sleep`.
+// The two `dioxus::document::eval` call sites (Safari visual-viewport
+// correction, and scroll suppression while the menu is open) are behind the
+// same `#[cfg(any(feature = "web", feature = "native"))]` target-gated
+// adapter pattern this crate uses for `use_focus_trap`/`use_outside_dismiss`,
+// with SSR-safe no-op fallbacks.
 
-//! Defines the [`ContextMenu`] component and its subcomponents, which provide a context menu interface.
+//! Defines the [`ContextMenu`] component and its subcomponents, which provide a context menu
+//! interface, opened by right-click or (on touch/pen) long-press.
+//!
+//! No dedicated WAI-ARIA APG "Context Menu" pattern exists; the closest
+//! applicable spec is the generic [Menu pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)
+//! -- `role="menu"`/`role="menuitem"` content opened by an interactive
+//! trigger -- which this module already implements correctly (unlike
+//! `dropdown_menu.rs`'s pre-task-2.3 `role="listbox"` bug, this file never
+//! had that mismatch). Base UI's `ContextMenuRoot` literally renders
+//! `<Menu.Root>` with a virtual (click-point) anchor, reusing `Menu`'s
+//! `Popup`/`Item` directly -- but that works there specifically because
+//! Base UI's `Menu.Popup` is a generic `Positioner`-anchored floating
+//! element from the start. [`crate::menu::MenuContent`] is not: it renders
+//! an unpositioned `div`, relying on its registry facade's CSS
+//! `absolute`-in-`relative` layout the same way `dropdown_menu.rs` did
+//! before delegating. This module's `ContextMenuContent` instead owns
+//! click-point `position: fixed` placement, Safari visual-viewport
+//! correction, scroll suppression while open, `use_outside_dismiss`, and a
+//! focus-the-content-when-nothing-else-is-focused effect -- none of which
+//! has a home in `MenuContent` without new props, and adding them
+//! untested would be new scope beyond re-authoring, on an already-shipped,
+//! previously browser-verified component with no live-browser
+//! re-verification available in this pass. Kept independent, same
+//! reasoning as `menubar.rs`.
 
 use std::time::Duration;
 
