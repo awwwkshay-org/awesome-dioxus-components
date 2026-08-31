@@ -862,7 +862,7 @@
 
 ## 7. Wave G — `adico-cli` animation utilities (parallel, independent)
 
-- [ ] 7.1 Re-derive `packages/adico-cli/src/css.rs`'s Tailwind animation utilities from the
+- [x] 7.1 Re-derive `packages/adico-cli/src/css.rs`'s Tailwind animation utilities from the
       Tailwind v4 `@theme`/`@keyframes` documentation directly, replacing the
       `Wombosvideo/tw-animate-css`-derived content; or explicitly record the decision to keep
       this single narrow attribution if re-derivation is not warranted. Verify: `cargo test
@@ -870,6 +870,20 @@
       and drop `css.rs`'s header (note: `collect_imported_paths()` only scans
       `adico-primitives/src`, so this file is not covered by the automated gate — track its
       completion manually).
+      Done 2026-08-31: decided to keep the attribution rather than re-derive. Tailwind v4
+      itself does not define these shadcn/Radix-convention animation utility names
+      (`fade-in-0`, `zoom-in-95`, `slide-in-from-top-2`, etc.) — they are `tw-animate-css`'s
+      own codification of that external ecosystem convention, not something Tailwind's own
+      docs describe. "Re-deriving from Tailwind v4 docs" would in practice mean re-typing the
+      same numeric per-utility values (opacity/scale/translate) from memory of the same
+      convention, with no live-rendered animation available this session to catch a subtly
+      wrong value, and no actual reduction in what's being attributed. Documented this
+      reasoning in `css.rs`'s own doc comment and added a closing entry to
+      `provenance/records/adico-cli-theme-animation-utilities.json` explaining the decision —
+      the record stays open by design, adico-cli's one intentionally-retained provenance
+      record (it isn't covered by `provenance check`'s `adico-primitives`-only scan anyway, so
+      this doesn't move that gate's own count). `cargo test -p adico-cli css` green (10
+      tests). Full baseline (fmt/check/clippy/test) green.
 
 ## 8. Closing — parity sweep and acceptance
 

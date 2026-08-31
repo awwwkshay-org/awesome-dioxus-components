@@ -2,14 +2,24 @@
   "id": "adico-cli-theme-animation-utilities",
   "upstream": "https://github.com/Wombosvideo/tw-animate-css",
   "revision": "1fc30d2b5ad6ab18baf7897828e44ab20a0a62ed",
-  "license": ["MIT"],
+  "license": [
+    "MIT"
+  ],
   "importedAt": "2026-08-30",
-  "originalPaths": ["src/tw-animate.css"],
-  "localPaths": ["packages/adico-cli/src/css.rs"],
+  "originalPaths": [
+    "src/tw-animate.css"
+  ],
+  "localPaths": [
+    "packages/adico-cli/src/css.rs"
+  ],
   "changes": [
     {
       "date": "2026-08-30",
       "summary": "Ported the `@property` declarations, the `enter`/`exit`/`accordion-down`/`accordion-up` `@theme` keyframes and animation variables, and the `fade-in(-*)`/`fade-out(-*)`/`zoom-in(-*)`/`zoom-out(-*)`/`slide-in-from-*`/`slide-out-to-*` `@utility` rules from `tw-animate-css` into `theme_region()`'s managed marker-region output, so shadcn-parity `data-[state=...]:animate-in`/`fade-in-0`/`zoom-in-95`/`slide-in-from-*` classes already present in several `registry/ui/*.rs` components (and added to more in M4 task 5.3a) actually resolve to real CSS instead of being dead class names. Narrowed to only the utilities adico's registry components reference: the upstream file's `blur-in(-*)`, `spin-in(-*)`/`spin-out(-*)`, `-zoom-in-*`/`-zoom-out-*` negative variants, RTL-aware `slide-in-from-start/end`/`slide-out-to-start/end` variants, `collapsible-down`/`collapsible-up` keyframes, `caret-blink`, and the `animation-duration-*`/`delay-*`/`repeat-*`/`direction-*`/`fill-mode-*`/`running`/`paused`/`play-state-*` timing-control utilities were left out as unused by any current adico component (not silently dropped from source, but a deliberate scope narrowing recorded here). No other CSS in the upstream file was altered beyond this selection."
+    },
+    {
+      "date": "2026-08-31",
+      "summary": "Evaluated re-deriving this file's ported CSS from Tailwind v4's own @theme/@keyframes/@utility documentation directly, per reauthor-primitives-from-independent-spec task 7.1. Decided to keep the attributed port: Tailwind v4 does not itself define these shadcn/Radix-convention animation utility names (fade-in-0, zoom-in-95, slide-in-from-top-2, etc.) -- they are tw-animate-css's own codification of that external ecosystem convention, so re-deriving from Tailwind's docs would only mean re-typing the same numeric values from memory of the same convention, with no live-rendered animation available this session to verify correctness, and no reduction in what is actually being attributed. Documented this decision in css.rs's own doc comment. This record remains open by design, not oversight -- it is adico-cli's one intentionally-retained provenance record."
     }
   ],
   "notices": [

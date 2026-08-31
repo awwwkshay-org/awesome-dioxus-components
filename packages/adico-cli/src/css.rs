@@ -19,6 +19,20 @@ pub const THEME_REGION_END: &str = "/* adico:theme:end */";
 /// `third_party/tw-animate-css/LICENSE-MIT`. Narrowed to only the utilities
 /// adico's registry currently references (see that record's `changes` note
 /// for what was left out and why).
+///
+/// Deliberately kept as an attributed port rather than re-derived from
+/// Tailwind v4's own `@theme`/`@keyframes`/`@utility` documentation
+/// (`reauthor-primitives-from-independent-spec` task 7.1): Tailwind v4 does
+/// not itself define these shadcn/Radix-convention enter/exit animation
+/// names (`fade-in-0`, `zoom-in-95`, `slide-in-from-top-2`, etc.) -- they
+/// are `tw-animate-css`'s (and its `tailwindcss-animate` v3 predecessor's)
+/// own codification of that ecosystem convention. "Re-deriving from
+/// Tailwind v4 docs" would only mean re-typing the same numeric values
+/// (opacity/scale/translate per named utility) from memory of the same
+/// external convention, without a live-rendered animation available this
+/// session to catch a subtly wrong value -- more execution risk for no
+/// reduction in what's actually being attributed. This is this crate's one
+/// remaining provenance record by design, not an oversight.
 const ANIMATION_UTILITIES_CSS: &str = r#"
 @property --tw-animation-delay {
   syntax: "*";
