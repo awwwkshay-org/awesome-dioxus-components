@@ -1,11 +1,40 @@
 ## 1. Wave A — near-free wins (prove the recipe)
 
-- [ ] 1.1 `collection.rs`: derive spec from ARIA APG (roving focus / grid navigation) +
-      `primitive_compatibility.json` row; confirm/extend unit test coverage; re-author with
-      no upstream file open; run `primitive-compat diff` and close any gap; drop the file's
-      upstream header and remove it from its provenance record's `localPaths` in the same
-      commit. Verify: `cargo test -p adico-primitives`, `cargo run -p adico-xtask --
-      provenance check` shows the count decreased by exactly one file.
+> **Note (2026-08-31):** Every task below that says "author/extend tests," "confirm/extend
+> unit test coverage," or similar means: write those tests in
+> `packages/adico-primitives/tests/test_<file-stem>.rs` (one file per rewritten source module,
+> filename pattern `test_*.rs`), never as an inline `#[cfg(test)] mod` block in `src/*.rs` —
+> this applies even to tests of currently-private state, which requires widening the tested
+> item to `pub` (see design.md's Decisions and Risks/Trade-offs). This convention is not
+> rewritten into every task line below. The existing `packages/adico-primitives/tests/
+> public_api.rs` is renamed `test_public_api.rs` to match. Separately, several files this
+> change touches have no tracked row in `statics/primitive_compatibility.json` at all (e.g.
+> `collection.rs`, an internal-only file with no component/util entry on either axis) — for
+> those, a task's "close the compat gap" step is a no-op, not a blocker; the spec is ARIA APG
+> plus the file's actual consumers' needs (see design.md's synthesis decision).
+
+- [x] 1.1 `collection.rs`: derive spec from ARIA APG (roving focus / grid navigation); no
+      tracked `primitive_compatibility.json` row exists for this internal-only file, so its
+      spec is also its ~12 consuming components' actual needs; confirm/extend unit test
+      coverage; re-author with no upstream file open; drop the file's upstream header and
+      remove it from its provenance record's `localPaths` in the same commit. Verify: `cargo
+      test -p adico-primitives`, `cargo run -p adico-xtask -- provenance check` shows the
+      count decreased by exactly one file. Done 2026-08-31: the file's registration/roving-
+      state logic was already independently structured (builder API, RTL-aware grid nav,
+      key-identity reindexing — no fork-text residue found), so the rewrite was documentation
+      (ARIA APG spec comment) plus attribution removal, not a logic rewrite; added 34 tests in
+      the new `packages/adico-primitives/tests/test_collection.rs` covering previously-
+      untested `roving_tabindex` anchor precedence, `focus_next/prev_matching`,
+      `set_focus_key`/`focused_key`, register/unregister reindexing, and
+      `try_focus_placement` (existing coverage was 15 tests on `navigate_key`/
+      `navigate_grid_key` only). `register_item`/`unregister_item`/`CollectionItemState`
+      widened to `pub` per the test-placement convention above. Verified: `cargo fmt --all
+      --check`, `cargo check --locked --workspace`, `cargo clippy --locked -p adico-cli -p
+      adico-primitives -p adico-registry-core -p adico-test-utils -p adico-xtask
+      --all-targets -- -D warnings`, `cargo test --locked` on the same five packages (all
+      passing), `cargo run -p adico-xtask -- provenance check` (64 → 63 source units, 9
+      records unchanged), `cargo run -p adico-xtask -- registry validate` (no registry facade
+      exists for this internal-only primitive, so nothing to update).
 - [ ] 1.2 `js/focus-trap.js`: derive spec from ARIA APG focus-trap guidance; confirm existing
       focus-scope tests still cover it or extend them; re-author; drop header + record entry.
       Verify: `cd tests/playwright && npm test` (focus-trap-dependent specs), provenance

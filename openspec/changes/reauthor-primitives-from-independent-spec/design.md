@@ -63,6 +63,29 @@ build is ordinary interoperability; copying its implementation text is what crea
 derivative. Every rewritten file's target behavior is recorded so the claim is auditable, not
 asserted.
 
+**Synthesis, not mirroring: each rewritten primitive is a one-stop-shop union, not a copy of
+either reference.** Where `primitive-compat diff` finds a gap against Base UI or
+dioxus-primitives, the goal is not to match whichever reference happens to be "correct" — it's
+to combine both references' capabilities into adico's own shape, using the ARIA APG as the
+tie-breaker wherever the two references disagree or a straight union would be incoherent. This
+is a standing instruction for every wave, not just background motivation for the change as a
+whole. Internal-only files that no compat axis tracks as a component or util — `collection.rs`
+is the concrete example, consumed by roughly a dozen components but absent from
+`statics/primitive_compatibility.json` entirely — have no compat-diff gap to close; their spec
+is the ARIA APG pattern plus their actual consumers' needs, and any task's "close the compat
+gap" step is a no-op for them, not a blocker.
+
+**All tests live in `packages/adico-primitives/tests/`, not inline in `src/*.rs`.** Every
+`#[test]` for this crate — including tests of currently-private state (for example
+`collection.rs`'s `register_item`/`unregister_item`/`CollectionItemState`) — is authored as a
+black-box test in `packages/adico-primitives/tests/test_<file-stem>.rs` (one file per rewritten
+source module, filename pattern `test_*.rs`; the existing `tests/public_api.rs` is renamed
+`tests/test_public_api.rs` to match). Since `tests/*.rs` compiles as a separate crate and can
+only see `pub` items, this requires widening whatever internal API a test needs to reach to
+`pub` — a deliberate, repo-wide override of ordinary Rust white-box-testing practice, adopted
+because the user directed it explicitly, and accepted as a trade-off (see Risks/Trade-offs)
+against keeping every rewritten file's test scaffolding out of its own source file.
+
 **Sequencing: dependency depth first, then how clearly derivative a file is.** Rationale:
 files with dependents (the shared internals) must be re-specified before their consumers are
 rewritten against them, and the largest-line/zero-churn files carry the most derivation
@@ -101,7 +124,10 @@ ones.
 **Per-file recipe (five steps, applies to every task in Waves A-G):**
 1. Derive the behavior spec: ARIA APG pattern + the primitive's row in
    `statics/primitive_compatibility.json` for the Base UI/dioxus-primitives gap.
-2. Write or extend tests from that spec, before rewriting the implementation.
+2. Write or extend tests from that spec, before rewriting the implementation, in
+   `packages/adico-primitives/tests/test_<file-stem>.rs` — never as an inline `#[cfg(test)]`
+   module in `src/*.rs`. Widen any item a test needs to reach that is currently private
+   (a struct, field, or method) to `pub`.
 3. Author one flattened file implementing the spec, without the upstream file open.
 4. Close the parity gaps the compat diff named.
 5. Atomically, in the same commit: drop the file's upstream header lines and remove its entry
@@ -149,6 +175,13 @@ consumer fixture install — never by checking `registry/*.rs` alone.
 - **Flattened `select.rs`/`combobox.rs` may land very large** → the escape hatch is
   extracting a genuinely shared cross-primitive primitive (as `typeahead.rs` was already
   extracted from `select/text_search.rs`), never a private sub-module of the component.
+- **Externalizing all tests widens the crate's public surface.** Making previously-private
+  state (item registration, internal item structs, helper predicates) `pub` so
+  `tests/test_*.rs` can reach it means more of each primitive's implementation detail becomes
+  technically importable by consumers, not just its intended API. Mitigated by noting in the
+  doc comment of anything widened solely for testability that it is an implementation detail,
+  not part of the primitive's intended public surface — accepted anyway as the standing
+  convention this change adopts.
 - **Parity scope could grow without bound** against two live upstream projects → fixed by
   measuring against the pinned revisions in `statics/catalogs/`, refreshed only by explicit,
   separate `catalog fetch` runs, not implicitly during this change.
