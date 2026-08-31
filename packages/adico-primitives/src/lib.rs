@@ -50,6 +50,7 @@ pub mod date_picker;
 pub mod direction;
 pub mod drag_and_drop_list;
 pub mod dropdown_menu;
+pub mod gesture;
 pub mod hover_card;
 pub mod label;
 pub mod menu;

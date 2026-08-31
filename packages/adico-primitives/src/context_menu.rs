@@ -15,12 +15,12 @@
 use std::time::Duration;
 
 use dioxus::prelude::*;
-use dioxus_core::Task;
 #[cfg(any(feature = "web", feature = "native"))]
 use dioxus_document as document;
 
 use crate::{
     collection::{CollectionState, collection_item, use_collection_provider, use_item},
+    gesture::use_long_press,
     selectable::{pointer_select_cancel, pointer_select_commit, pointer_select_start},
     time::sleep,
     use_animated_open, use_controlled, use_id_or, use_outside_dismiss, use_unique_id,
@@ -245,25 +245,18 @@ pub fn ContextMenuTrigger(props: ContextMenuTriggerProps) -> Element {
     let ctx: ContextMenuCtx = use_context();
     // iOS Safari does not deliver `contextmenu` from a long-press on touch, so
     // we run a manual timer keyed on the initial touch position and fire it
-    // ourselves once the finger has held still long enough.
-    let mut long_press_task: Signal<Option<Task>> = use_signal(|| None);
-    let mut long_press_start: Signal<Option<(f64, f64)>> = use_signal(|| None);
+    // ourselves once the finger has held still long enough. Consolidated onto
+    // the shared `gesture::use_long_press` primitive (task 7.7); this
+    // component's own extra state is only the Android compat-window flag.
+    let mut long_press = use_long_press(LONG_PRESS_MOVE_TOLERANCE_SQ);
     let mut long_press_just_fired = ctx.long_press_just_fired;
-
-    let cancel_long_press =
-        move |mut task: Signal<Option<Task>>, mut start: Signal<Option<(f64, f64)>>| {
-            if let Some(t) = task.write().take() {
-                t.cancel();
-            }
-            start.set(None);
-        };
 
     let handle_context_menu = move |event: Event<MouseData>| {
         if !(ctx.disabled)() {
             // Android Chrome dispatches `contextmenu` ~500ms after a touch long
             // press, which can race our own timer. Defuse the race so only one
             // open lands.
-            cancel_long_press(long_press_task, long_press_start);
+            long_press.cancel();
             if long_press_just_fired.cloned() {
                 // Timer already opened the menu; suppress the browser context
                 // menu but don't open a second time. Leave the flag set —
@@ -292,16 +285,11 @@ pub fn ContextMenuTrigger(props: ContextMenuTriggerProps) -> Element {
         if event.pointer_type() == "mouse" || (ctx.disabled)() {
             return;
         }
-        cancel_long_press(long_press_task, long_press_start);
-        let p = event.client_coordinates();
-        long_press_start.set(Some((p.x, p.y)));
         let set_open = ctx.set_open;
         let mut position = ctx.position;
-        let task = spawn(async move {
-            sleep(LONG_PRESS_DURATION).await;
-            long_press_task.set(None);
+        long_press.on_pointer_down(&event, LONG_PRESS_DURATION, move |(x, y)| async move {
             let (off_x, off_y) = visual_viewport_offset().await;
-            position.set(((p.x + off_x) as i32, (p.y + off_y) as i32));
+            position.set(((x + off_x) as i32, (y + off_y) as i32));
             set_open.call(true);
             // Stay armed long enough to catch Android's compat `contextmenu`,
             // then disarm so future mouse right-clicks aren't suppressed.
@@ -309,23 +297,14 @@ pub fn ContextMenuTrigger(props: ContextMenuTriggerProps) -> Element {
             sleep(Duration::from_millis(700)).await;
             long_press_just_fired.set(false);
         });
-        long_press_task.set(Some(task));
     };
 
     let handle_pointer_move = move |event: Event<PointerData>| {
-        let Some((sx, sy)) = long_press_start.cloned() else {
-            return;
-        };
-        let p = event.client_coordinates();
-        let dx = p.x - sx;
-        let dy = p.y - sy;
-        if dx * dx + dy * dy > LONG_PRESS_MOVE_TOLERANCE_SQ {
-            cancel_long_press(long_press_task, long_press_start);
-        }
+        long_press.on_pointer_move(&event);
     };
 
     let handle_pointer_end = move |_event: Event<PointerData>| {
-        cancel_long_press(long_press_task, long_press_start);
+        long_press.cancel();
     };
 
     rsx! {
