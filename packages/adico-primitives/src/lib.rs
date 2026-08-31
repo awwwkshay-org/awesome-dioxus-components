@@ -347,30 +347,41 @@ pub fn use_animated_open(
     move || open.cloned()
 }
 
-/// Trap keyboard focus inside the element identified by `id` while `is_modal`
-/// and `open` are both true. Requires [`FocusTrapScript`] to be rendered
-/// somewhere in the tree. A no-op on targets without a DOM (SSR/native).
+/// Manage keyboard focus for the element identified by `id` while `open` is
+/// true. Requires [`FocusTrapScript`] to be rendered somewhere in the tree. A
+/// no-op on targets without a DOM (SSR/native).
+///
+/// When `is_modal` is true, this is a full trap: Tab cycles only among the
+/// container's focusable descendants (recognizing any element with an
+/// explicit `tabindex`, not just natively-focusable tags), backed by focus
+/// guards so focus can't otherwise escape, and closing restores focus to
+/// whatever was focused before it opened. When `is_modal` is false, this is a
+/// non-modal focus scope: Tab is never trapped and the user can freely leave
+/// the container, but closing still restores focus the same way — a modal
+/// dialog and a non-modal popover both give that courtesy, only the former
+/// also contains Tab.
 #[cfg(any(feature = "web", feature = "native"))]
 pub fn use_focus_trap(id: Memo<String>, open: Memo<bool>, is_modal: ReadSignal<bool>) {
     use_effect(move || {
-        if !is_modal() {
-            return;
-        }
         let eval = document::eval(
             r#"let id = await dioxus.recv();
             let is_open = await dioxus.recv();
-            let dialog = document.getElementById(id);
+            let is_modal = await dioxus.recv();
+            let container = document.getElementById(id);
 
-            if (is_open) {
-                dialog.trap = window.createFocusTrap(dialog);
+            if (is_open && !container.trap) {
+                container.trap = is_modal
+                    ? window.createFocusTrap(container)
+                    : window.createFocusScope();
             }
-            if (!is_open && dialog.trap) {
-                dialog.trap.remove();
-                dialog.trap = null;
+            if (!is_open && container.trap) {
+                container.trap.remove();
+                container.trap = null;
             }"#,
         );
         let _ = eval.send(id.to_string());
         let _ = eval.send(open.cloned());
+        let _ = eval.send(is_modal.cloned());
     });
 }
 
