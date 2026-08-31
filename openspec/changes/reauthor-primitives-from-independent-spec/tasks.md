@@ -993,8 +993,26 @@
       (path-patched against the re-authored `adico-primitives`) and were additionally exercised
       live via `dx serve` here; `cargo check --locked --workspace` (covering
       `examples/basic-spa`, `examples/basic-ssr`, `apps/playground`) green throughout.
-- [ ] 8.4 Record acceptance evidence (files rewritten, tests added, parity gaps closed,
+- [x] 8.4 Record acceptance evidence (files rewritten, tests added, parity gaps closed,
       known gaps carried forward — no native/desktop/mobile fixture) in a doc under
       `docs/adico/`, matching the M-series evidence-recording pattern already used by
       `build-adico-component-ecosystem`. Confirm `provenance check` still reports zero and
       note that `remove-provenance-tracking` may now begin as a separate change.
+      Done 2026-08-31: `docs/adico/m5-primitives-reauthoring-acceptance.md` written, matching
+      `m3-acceptance.md`'s format (status line, scope summary, verification table, closing
+      acceptance statement). Records the task 2.3 menu-family unblock's own evidence trail,
+      tests added (409 total in `adico-primitives`, 44 external test files), the two xtask
+      bugs task 8.1 found and fixed, and all 8 known gaps carried forward from this session
+      (the `positioner.rs`/`document::eval` measurement bug and the related never-registering
+      listener bug, named as one likely root cause with two symptoms; `hover_card.rs`
+      `force_mount`; `menu.rs`'s remaining `Positioner`/`use_typeahead` gaps; `Menubar`'s
+      untestable open-content path; the Playwright specs not re-run; the pre-existing dialog
+      focus-trap failure; `--features native` being compile-checked only). `provenance check`
+      does **not** report zero — it reports `1 imported record(s), 1 source unit(s)`, correctly
+      excluding the M0 all-zero-revision schema fixture — because `adico-cli`'s one record was
+      deliberately kept (task 7.1), not because anything was missed; the doc states this
+      precisely rather than claiming a bare "zero" that would misrepresent that decision.
+      `adico-primitives` itself carries zero real provenance records. Noted
+      `remove-provenance-tracking` may now begin as a separate change, per this task's own
+      text. This closes every task in this change (1.1 through 8.4); the change is ready to
+      archive.
