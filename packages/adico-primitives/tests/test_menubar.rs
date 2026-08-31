@@ -68,8 +68,11 @@ fn every_trigger_uses_the_menuitem_role() {
     assert_eq!(&head[start..start + "menuitem".len()], "menuitem", "{html}");
 }
 
+/// A disabled menubar item stays focusable (per the ARIA APG Menubar pattern) so keyboard
+/// users can navigate onto it and discover it's unavailable -- it must not carry a native
+/// `disabled` attribute, which would drop it out of the tab order entirely.
 #[test]
-fn the_disabled_menu_propagates_data_disabled_and_disabled_to_its_trigger() {
+fn the_disabled_menu_marks_its_trigger_aria_disabled_but_not_disabled() {
     let html = render(TwoMenuMenubar);
     let edit_pos = html.find("Edit").expect("Edit trigger renders");
     let button_start = html[..edit_pos]
@@ -77,7 +80,8 @@ fn the_disabled_menu_propagates_data_disabled_and_disabled_to_its_trigger() {
         .expect("Edit is inside a button");
     let button_tag = &html[button_start..edit_pos];
     assert!(button_tag.contains("data-disabled=true"), "{html}");
-    assert!(button_tag.contains("disabled=true"), "{html}");
+    assert!(button_tag.contains("aria-disabled=true"), "{html}");
+    assert!(!button_tag.contains(" disabled"), "{html}");
 
     let file_pos = html.find("File").expect("File trigger renders");
     let button_start = html[..file_pos]

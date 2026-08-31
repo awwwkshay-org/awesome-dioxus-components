@@ -297,7 +297,7 @@ pub fn MenubarTrigger(props: MenubarTriggerProps) -> Element {
             role: "menuitem",
             r#type: "button",
             "data-disabled": disabled(),
-            disabled: disabled(),
+            aria_disabled: disabled(),
             tabindex: if is_focused() { "0" } else { "-1" },
             ..props.attributes,
             {props.children}

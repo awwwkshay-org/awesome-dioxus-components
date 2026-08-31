@@ -61,3 +61,15 @@ fn dropdown_menu_content_is_not_rendered_while_closed() {
     assert!(html.contains("data-state=\"closed\""), "{html}");
     assert!(!html.contains("\">Edit<"), "{html}");
 }
+
+#[cfg(not(any(feature = "web", feature = "native")))]
+#[test]
+fn dropdown_menu_content_s_aria_labelledby_matches_its_trigger_s_id() {
+    let html = render(OpenDropdownMenuWithItem);
+    let attr = "aria-labelledby=\"";
+    let start = html.find(attr).expect("content has aria-labelledby") + attr.len();
+    let end = html[start..].find('"').unwrap() + start;
+    let labelledby_id = &html[start..end];
+
+    assert!(html.contains(&format!(r#"id="{labelledby_id}""#)), "{html}");
+}
