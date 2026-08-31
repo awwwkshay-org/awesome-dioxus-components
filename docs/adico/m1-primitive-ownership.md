@@ -8,20 +8,19 @@ Status: accepted for implementation
 - Immutable revision: `bf007c15d0cf4d04d3181cc46cf12325aa773955`
 - Styled component inventory: 45 items
 - Primitive source inventory: 65 Rust/JS/TS source units
-- Checked-in snapshot: [`../../upstreams/dioxus-components/catalog.json`](../../upstreams/dioxus-components/catalog.json)
-- Human classification/dependency audit: [`../../upstreams/dioxus-components/inventory.md`](../../upstreams/dioxus-components/inventory.md)
+- Checked-in snapshot: [`../../statics/catalogs/dioxus-components.json`](../../statics/catalogs/dioxus-components.json)
 
-`cargo xtask upstream dioxus-components` validates and reports the checked-in
-snapshot without network access. A maintainer refreshes from an explicitly
-supplied local clone:
+`cargo xtask primitive-compat check`/`component-compat check` validate
+against the checked-in snapshot without network access. A maintainer
+refreshes it with:
 
 ```sh
-cargo xtask upstream dioxus-components \
-  --source /path/to/dioxus-components \
-  --refreshed-at YYYY-MM-DD
+cargo xtask catalog fetch dioxus-components
 ```
 
-The command only reports the diff until `--write` is supplied.
+which live-fetches the pinned-sha tarball and overwrites
+`statics/catalogs/dioxus-components.json` in place (see `UPSTREAMS.md` and
+`packages/adico-xtask/src/catalog/`).
 
 ## Owned initial primitive closure
 

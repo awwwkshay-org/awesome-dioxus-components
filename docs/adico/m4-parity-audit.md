@@ -46,7 +46,7 @@ observed difference cited), **unmeasurable** (reason cited).
 - Cloned `shadcn-ui/ui` (`new-york-v4` style, `apps/v4/registry/new-york-v4/ui`)
   shallow/sparse into a scratch directory for source-of-truth comparison.
   Note: the pinned catalog revision `ac60ef5c4db4265d71454dd9ecd3f93e255d7211`
-  is the *component-name inventory* revision (`upstreams/shadcn/catalog.json`);
+  is the *component-name inventory* revision (`statics/catalogs/shadcn.json`);
   a shallow clone pins to current upstream `main` instead. The two are
   consistent for every component compared below (no renames/removals
   observed), but this is not the same as diffing byte-for-byte against the

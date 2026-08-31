@@ -1,38 +1,42 @@
 //! `cargo xtask primitive-compat sync|check|diff`: regenerates
 //! `statics/primitive_compatibility.json` -- `adico-primitives`' compatibility
-//! against **both** of its upstream primitive inventories: Base UI
-//! (<https://base-ui.com/react/components>, the architectural model for the
-//! headless/anatomy layer) and `DioxusLabs/dioxus-components` (the fork
-//! origin, pinned in `upstreams/dioxus-components/catalog.json`).
+//! against **both** of its upstream primitive inventories: Base UI and
+//! `DioxusLabs/dioxus-components`'s `primitives/src/` tree.
+//!
+//! Both inventories are read from `statics/catalogs/<axis>.json`, produced
+//! offline-reproducibly by `cargo xtask catalog fetch <axis>` (see
+//! `crate::catalog`) -- this module never touches the network. It filters
+//! `catalog::AXES` by [`crate::catalog::AxisKind::Primitive`] rather than
+//! naming `base-ui`/`dioxus-primitives` in its iteration, though each
+//! axis's specific hand-maintained judgment table below is inherently
+//! axis-shaped and still needs its own join logic.
 //!
 //! What this automates:
 //!   - Introspects each mapped `adico-primitives` file/module (component
 //!     functions, Props struct fields, hooks used/defined) via
 //!     [`crate::rust_introspect`].
-//!   - `sync`/`diff` best-effort live-fetch base-ui.com's own component list
-//!     to flag components added/removed upstream since [`UPSTREAM_COMPONENTS`]
-//!     was last reviewed by hand.
+//!   - Joins the fetched Base UI inventory against [`UPSTREAM_COMPONENTS`]
+//!     by name, and reports (offline, from committed statics) any fetched
+//!     component missing from that hand table, or any hand-table entry no
+//!     longer present in the fetched inventory.
 //!   - Derives the dioxus-primitives module inventory straight from
-//!     `upstreams/dioxus-components/catalog.json`'s `primitiveSourcePaths` --
-//!     no hand table for that axis, only a short exceptions list below.
+//!     `statics/catalogs/dioxus-primitives.json` -- no hand table for that
+//!     axis, only a short exceptions list below.
 //!
 //! What it does NOT automate (edit the tables below instead): classifying a
 //! Base UI component's status (built/partial/not_started/not_applicable) and
 //! which `adico-primitives` file/registry item it maps to -- that needs
-//! human/AI judgment, not a page scrape. There is also no live refresh for
-//! `upstreams/shadcn/catalog.json`'s sibling `upstreams/dioxus-components`
-//! catalog beyond `cargo xtask upstream dioxus-components`; this command only
-//! reads whatever revision is currently pinned there.
+//! human/AI judgment, not a page scrape. Fetch never writes these fields
+//! (see spec's "Hand-maintained judgment data survives fetch and sync").
 
 use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
+use crate::catalog::{self, AxisKind, CatalogSnapshot};
 use crate::rust_introspect::{self, FileIntrospection};
-
-const BASEUI_COMPONENTS_URL: &str = "https://base-ui.com/react/components";
 
 #[derive(Clone, Copy)]
 struct ComponentEntry {
@@ -70,8 +74,9 @@ impl Status {
     }
 }
 
-/// The full Base UI component inventory (37 as of 2026-08-31), hand-reviewed
-/// against `packages/adico-primitives/src/`. Keep in sync with
+/// Hand-reviewed judgment for the Base UI axis against
+/// `packages/adico-primitives/src/`, keyed by name and joined against the
+/// fetched `statics/catalogs/base-ui.json` inventory. Keep in sync with
 /// design.md §8a when a component's status changes.
 const UPSTREAM_COMPONENTS: &[ComponentEntry] = &[
     ComponentEntry {
@@ -388,7 +393,7 @@ const ADICO_ONLY_EXTRAS: &[(&str, &str)] = &[
 
 #[derive(Serialize)]
 struct ComponentOutput {
-    name: &'static str,
+    name: String,
     status: &'static str,
     adico_primitive_file: Option<String>,
     adico_registry_item: Option<&'static str>,
@@ -421,18 +426,13 @@ struct ExtraOutput {
 
 #[derive(Serialize)]
 struct UpstreamDrift {
-    checked_at: String,
-    added_upstream: Vec<String>,
-    removed_upstream: Vec<String>,
-}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
-struct DioxusComponentsCatalog {
-    upstream: String,
-    revision: String,
-    refreshed_at: String,
-    primitive_source_paths: Vec<String>,
+    /// Not in the fetched `statics/catalogs/base-ui.json` inventory but
+    /// hand-listed in [`UPSTREAM_COMPONENTS`] -- upstream may have removed
+    /// or renamed it since the table was last reviewed.
+    tracked_but_missing_upstream: Vec<String>,
+    /// In the fetched inventory but not yet reviewed into
+    /// [`UPSTREAM_COMPONENTS`] -- defaults to `not_started` until reviewed.
+    upstream_but_not_yet_tracked: Vec<String>,
 }
 
 #[derive(Serialize)]
@@ -460,33 +460,10 @@ fn output_path(root: &Path) -> PathBuf {
     root.join("statics/primitive_compatibility.json")
 }
 
-fn dioxus_components_catalog_path(root: &Path) -> PathBuf {
-    root.join("upstreams/dioxus-components/catalog.json")
-}
-
-/// Derives the dioxus-primitives module inventory from
-/// `primitiveSourcePaths` -- one entry per top-level `src/<module>(.rs|/)`,
-/// dropping `lib.rs` and the JS/TS interop files (no Rust module to track).
-fn dioxus_primitive_modules(paths: &[String]) -> BTreeSet<String> {
-    let mut modules = BTreeSet::new();
-    for path in paths {
-        let Some(rest) = path.strip_prefix("src/") else {
-            continue;
-        };
-        if rest == "lib.rs" || rest.starts_with("js/") || rest.starts_with("ts/") {
-            continue;
-        }
-        let first_segment = rest.split('/').next().unwrap_or(rest);
-        let module = first_segment.strip_suffix(".rs").unwrap_or(first_segment);
-        modules.insert(module.to_string());
-    }
-    modules
-}
-
 /// The adico-primitives crate's own top-level module names (one per
 /// `src/<name>.rs` file or `src/<name>/` directory), used to find this
-/// axis's status and its adico-only extras by set difference against
-/// [`dioxus_primitive_modules`].
+/// axis's status and its adico-only extras by set difference against the
+/// fetched dioxus-primitives module inventory.
 fn adico_primitive_modules(root: &Path) -> BTreeSet<String> {
     let mut modules = BTreeSet::new();
     let Ok(entries) = fs::read_dir(primitives_src(root)) else {
@@ -519,16 +496,14 @@ fn dioxus_module_file_ref(root: &Path, module: &str) -> Option<String> {
     }
 }
 
-fn build_dioxus_primitives_axis(root: &Path) -> serde_json::Value {
-    let catalog_path = dioxus_components_catalog_path(root);
-    let Ok(contents) = fs::read_to_string(&catalog_path) else {
-        return serde_json::json!({ "error": format!("cannot read {}", catalog_path.display()) });
-    };
-    let Ok(catalog) = serde_json::from_str::<DioxusComponentsCatalog>(&contents) else {
-        return serde_json::json!({ "error": format!("cannot parse {}", catalog_path.display()) });
-    };
-
-    let dioxus_modules = dioxus_primitive_modules(&catalog.primitive_source_paths);
+fn build_dioxus_primitives_axis(root: &Path, snapshot: &CatalogSnapshot) -> serde_json::Value {
+    // Fetched entries carry the module's raw (snake_case) name in `name`
+    // and a kebab-cased `id`; filesystem lookups need the raw form.
+    let dioxus_modules: BTreeSet<String> = snapshot
+        .entries
+        .iter()
+        .map(|entry| entry.name.clone())
+        .collect();
     let adico_modules = adico_primitive_modules(root);
 
     let mut built = 0usize;
@@ -571,11 +546,12 @@ fn build_dioxus_primitives_axis(root: &Path) -> serde_json::Value {
 
     serde_json::json!({
         "source": {
-            "upstream": catalog.upstream,
-            "revision": catalog.revision,
-            "catalog_refreshed_at": catalog.refreshed_at,
-            "catalog_path": "upstreams/dioxus-components/catalog.json",
-            "refresh_command": "cargo xtask upstream dioxus-components --source <local-clone> --refreshed-at <YYYY-MM-DD> --write",
+            "axis": snapshot.axis,
+            "source": snapshot.source,
+            "revision": snapshot.revision,
+            "catalog_refreshed_at": snapshot.refreshed_at,
+            "catalog_path": "statics/catalogs/dioxus-primitives.json",
+            "refresh_command": "cargo xtask catalog fetch dioxus-primitives",
         },
         "summary": {
             "total_modules": modules.len(),
@@ -597,31 +573,38 @@ fn introspect_for(root: &Path, file_ref: &str) -> FileIntrospection {
     }
 }
 
-fn build_document(root: &Path, check_upstream: bool) -> (serde_json::Value, [usize; 4]) {
-    let mut counts = [0usize; 4]; // built, partial, not_started, not_applicable
-    let components: Vec<ComponentOutput> = UPSTREAM_COMPONENTS
+fn build_base_ui_axis(root: &Path, snapshot: &CatalogSnapshot) -> (serde_json::Value, [usize; 3]) {
+    let mut counts = [0usize; 3]; // built, partial, not_started
+    let components: Vec<ComponentOutput> = snapshot
+        .entries
         .iter()
         .map(|entry| {
-            match entry.status {
+            let hand = UPSTREAM_COMPONENTS
+                .iter()
+                .find(|candidate| candidate.name == entry.name);
+            let status = hand
+                .map(|candidate| candidate.status)
+                .unwrap_or(Status::NotStarted);
+            match status {
                 Status::Built => counts[0] += 1,
                 Status::Partial => counts[1] += 1,
                 Status::NotStarted => counts[2] += 1,
-                Status::NotApplicable => counts[3] += 1,
+                Status::NotApplicable => {}
             }
+            let adico_file = hand.and_then(|candidate| candidate.adico_file);
             let mut output = ComponentOutput {
-                name: entry.name,
-                status: entry.status.as_str(),
-                adico_primitive_file: entry
-                    .adico_file
+                name: entry.name.clone(),
+                status: status.as_str(),
+                adico_primitive_file: adico_file
                     .map(|file| format!("packages/adico-primitives/src/{file}")),
-                adico_registry_item: entry.adico_registry_item,
-                notes: entry.notes,
+                adico_registry_item: hand.and_then(|candidate| candidate.adico_registry_item),
+                notes: hand.map(|candidate| candidate.notes).unwrap_or_default(),
                 adico_components: None,
                 adico_props: None,
                 adico_hooks_defined: None,
                 adico_hooks_used: None,
             };
-            if let Some(file_ref) = entry.adico_file {
+            if let Some(file_ref) = adico_file {
                 let introspection = introspect_for(root, file_ref);
                 output.adico_components = Some(introspection.components);
                 output.adico_props = Some(serde_json::to_value(&introspection.props).unwrap());
@@ -659,203 +642,158 @@ fn build_document(root: &Path, check_upstream: bool) -> (serde_json::Value, [usi
         })
         .collect();
 
-    let drift = if check_upstream {
-        fetch_upstream_drift()
-    } else {
-        None
-    };
+    let fetched_names: BTreeSet<&str> = snapshot
+        .entries
+        .iter()
+        .map(|entry| entry.name.as_str())
+        .collect();
+    let mut tracked_but_missing_upstream: Vec<String> = UPSTREAM_COMPONENTS
+        .iter()
+        .map(|entry| entry.name.to_string())
+        .filter(|name| !fetched_names.contains(name.as_str()))
+        .collect();
+    tracked_but_missing_upstream.sort();
+    let tracked_names: BTreeSet<&str> =
+        UPSTREAM_COMPONENTS.iter().map(|entry| entry.name).collect();
+    let mut upstream_but_not_yet_tracked: Vec<String> = snapshot
+        .entries
+        .iter()
+        .map(|entry| entry.name.clone())
+        .filter(|name| !tracked_names.contains(name.as_str()))
+        .collect();
+    upstream_but_not_yet_tracked.sort();
 
     let document = serde_json::json!({
-        "$schema_note": "Hand-maintain UPSTREAM_COMPONENTS/UPSTREAM_UTILS/ADICO_ONLY_EXTRAS/DIOXUS_MODULE_NOTES in packages/adico-xtask/src/primitive_compat.rs; everything else here is regenerated from repo introspection, and the dioxus_primitives axis's module inventory is fully derived from upstreams/dioxus-components/catalog.json (no hand table).",
-        "synced_at": today(),
-        "generator": "cargo xtask primitive-compat sync",
-        "base_ui": {
-            "source": BASEUI_COMPONENTS_URL,
-            "summary": {
-                "total_upstream_components": UPSTREAM_COMPONENTS.len(),
-                "total_upstream_utils": UPSTREAM_UTILS.len(),
-                "adico_only_extras": ADICO_ONLY_EXTRAS.len(),
-                "components_built": counts[0],
-                "components_partial": counts[1],
-                "components_not_started": counts[2],
-            },
-            "upstream_drift_check": drift,
-            "components": components,
-            "utils": utils,
-            "adico_only_extras": extras,
+        "source": {
+            "axis": snapshot.axis,
+            "source": snapshot.source,
+            "revision": snapshot.revision,
+            "catalog_refreshed_at": snapshot.refreshed_at,
+            "catalog_path": "statics/catalogs/base-ui.json",
+            "refresh_command": "cargo xtask catalog fetch base-ui",
         },
-        "dioxus_primitives": build_dioxus_primitives_axis(root),
+        "summary": {
+            "total_upstream_components": snapshot.entries.len(),
+            "total_upstream_utils": UPSTREAM_UTILS.len(),
+            "adico_only_extras": ADICO_ONLY_EXTRAS.len(),
+            "components_built": counts[0],
+            "components_partial": counts[1],
+            "components_not_started": counts[2],
+        },
+        "upstream_drift_check": UpstreamDrift {
+            tracked_but_missing_upstream,
+            upstream_but_not_yet_tracked,
+        },
+        "components": components,
+        "utils": utils,
+        "adico_only_extras": extras,
     });
     (document, counts)
 }
 
-fn today() -> String {
-    let output = std::process::Command::new("date").arg("+%Y-%m-%d").output();
-    match output {
-        Ok(output) if output.status.success() => {
-            String::from_utf8_lossy(&output.stdout).trim().to_string()
+fn build_document(root: &Path) -> Result<serde_json::Value, String> {
+    let mut axes = serde_json::Map::new();
+    let mut counts = [0usize; 3];
+
+    for axis in catalog::axes_of_kind(AxisKind::Primitive) {
+        let snapshot = catalog::read_snapshot(root, axis.id)?;
+        match axis.id {
+            "base-ui" => {
+                let (document, base_counts) = build_base_ui_axis(root, &snapshot);
+                counts = base_counts;
+                axes.insert("base_ui".to_string(), document);
+            }
+            "dioxus-primitives" => {
+                axes.insert(
+                    "dioxus_primitives".to_string(),
+                    build_dioxus_primitives_axis(root, &snapshot),
+                );
+            }
+            other => {
+                // A newly registered primitive axis with no bespoke
+                // hand-table integration yet: still surface its raw fetched
+                // inventory rather than silently dropping it.
+                axes.insert(
+                    other.replace('-', "_"),
+                    serde_json::json!({
+                        "source": {
+                            "axis": snapshot.axis,
+                            "source": snapshot.source,
+                            "revision": snapshot.revision,
+                            "catalog_refreshed_at": snapshot.refreshed_at,
+                        },
+                        "summary": { "total_entries": snapshot.entries.len() },
+                        "entries": snapshot.entries,
+                    }),
+                );
+            }
         }
-        _ => "unknown".to_string(),
     }
-}
 
-/// Best-effort live check of Base UI's own component list, to flag upstream
-/// drift. Returns `None` (not an error) if unreachable -- this command must
-/// still work fully offline for the sync/write path.
-fn fetch_upstream_names() -> Option<Vec<String>> {
-    let response = reqwest::blocking::Client::builder()
-        .timeout(std::time::Duration::from_secs(10))
-        .user_agent("adico-xtask/1.0")
-        .build()
-        .ok()?
-        .get(BASEUI_COMPONENTS_URL)
-        .send()
-        .ok()?;
-    let html = response.text().ok()?;
-
-    let mut slugs: Vec<String> = Vec::new();
-    let marker = "/react/components/";
-    let mut remaining = html.as_str();
-    while let Some(start) = remaining.find(marker) {
-        let after = &remaining[start + marker.len()..];
-        let end = after
-            .find(|c: char| !(c.is_ascii_alphanumeric() || c == '-'))
-            .unwrap_or(after.len());
-        let slug = &after[..end];
-        if !slug.is_empty() {
-            slugs.push(slug.to_string());
+    let mut document = serde_json::json!({
+        "$schema_note": "Hand-maintain UPSTREAM_COMPONENTS/UPSTREAM_UTILS/ADICO_ONLY_EXTRAS/DIOXUS_MODULE_NOTES in packages/adico-xtask/src/primitive_compat.rs; everything else here is regenerated from repo introspection and committed statics/catalogs/*.json (see `cargo xtask catalog fetch`).",
+        "synced_at": crate::today(),
+        "generator": "cargo xtask primitive-compat sync",
+    });
+    if let Some(map) = document.as_object_mut() {
+        for (key, value) in axes {
+            map.insert(key, value);
         }
-        remaining = &after[end..];
     }
-    slugs.sort();
-    slugs.dedup();
-    // Next.js embeds internal page-cache-id links matching this same URL
-    // shape (e.g. "page-694493450857fab0"); filter those out.
-    let names = slugs
-        .into_iter()
-        .filter(|slug| {
-            !(slug.starts_with("page-") && slug[5..].chars().all(|c| c.is_ascii_hexdigit()))
-        })
-        .map(|slug| {
-            slug.split('-')
-                .map(|part| {
-                    let mut chars = part.chars();
-                    match chars.next() {
-                        Some(first) => first.to_uppercase().collect::<String>() + chars.as_str(),
-                        None => String::new(),
-                    }
-                })
-                .collect::<Vec<_>>()
-                .join(" ")
-        })
-        .collect();
-    Some(names)
+    let _ = counts; // retained for the caller's println summary
+    Ok(document)
 }
 
-fn fetch_upstream_drift() -> Option<serde_json::Value> {
-    let live = fetch_upstream_names()?;
-    let tracked: std::collections::HashSet<String> = UPSTREAM_COMPONENTS
-        .iter()
-        .map(|entry| entry.name.to_lowercase())
-        .collect();
-    let live_set: std::collections::HashSet<String> =
-        live.iter().map(|name| name.to_lowercase()).collect();
-    let mut added: Vec<String> = live
-        .iter()
-        .filter(|name| !tracked.contains(&name.to_lowercase()))
-        .cloned()
-        .collect();
-    added.sort();
-    let mut removed: Vec<String> = UPSTREAM_COMPONENTS
-        .iter()
-        .map(|entry| entry.name.to_string())
-        .filter(|name| !live_set.contains(&name.to_lowercase()))
-        .collect();
-    removed.sort();
-    Some(
-        serde_json::to_value(UpstreamDrift {
-            checked_at: chrono_now(),
-            added_upstream: added,
-            removed_upstream: removed,
-        })
-        .unwrap(),
-    )
-}
-
-fn chrono_now() -> String {
-    let output = std::process::Command::new("date")
-        .arg("-u")
-        .arg("+%Y-%m-%dT%H:%M:%SZ")
-        .output();
-    match output {
-        Ok(output) if output.status.success() => {
-            String::from_utf8_lossy(&output.stdout).trim().to_string()
-        }
-        _ => "unknown".to_string(),
-    }
-}
-
-/// Strips fields that legitimately vary between an on-disk snapshot and a
-/// freshly rebuilt one (the sync timestamp, and the best-effort live drift
-/// check) so `check` compares only the parts that should be byte-identical.
+/// Strips fields that legitimately vary run-to-run (the sync timestamp) so
+/// `check` compares only the parts that should be byte-identical.
 fn strip_volatile_fields(document: &mut serde_json::Value) {
     if let Some(obj) = document.as_object_mut() {
         obj.remove("synced_at");
-        if let Some(base_ui) = obj.get_mut("base_ui").and_then(|v| v.as_object_mut()) {
-            base_ui.remove("upstream_drift_check");
-        }
     }
 }
 
 pub fn sync(root: &Path) -> Result<(), String> {
     fs::create_dir_all(root.join("statics"))
         .map_err(|error| format!("cannot create statics/: {error}"))?;
-    let (document, counts) = build_document(root, true);
+    let document = build_document(root)?;
     let path = output_path(root);
     let payload = serde_json::to_string_pretty(&document)
         .map_err(|error| format!("cannot serialize primitive_compatibility.json: {error}"))?;
     fs::write(&path, format!("{payload}\n"))
         .map_err(|error| format!("cannot write {}: {error}", path.display()))?;
     println!("Wrote {}", path.display());
-    println!(
-        "  base_ui components: {} tracked (built={}, partial={}, not_started={})",
-        UPSTREAM_COMPONENTS.len(),
-        counts[0],
-        counts[1],
-        counts[2]
-    );
+    if let Some(base_ui_summary) = document.get("base_ui").and_then(|axis| axis.get("summary")) {
+        println!("  base_ui: {base_ui_summary}");
+    }
     if let Some(dioxus_summary) = document
         .get("dioxus_primitives")
         .and_then(|axis| axis.get("summary"))
     {
-        println!("  dioxus_primitives modules: {dioxus_summary}");
+        println!("  dioxus_primitives: {dioxus_summary}");
     }
     if let Some(drift) = document
         .get("base_ui")
         .and_then(|axis| axis.get("upstream_drift_check"))
-        .filter(|value| !value.is_null())
     {
-        let added = drift["added_upstream"]
+        let missing = drift["tracked_but_missing_upstream"]
             .as_array()
             .map(|a| a.len())
             .unwrap_or(0);
-        let removed = drift["removed_upstream"]
+        let untracked = drift["upstream_but_not_yet_tracked"]
             .as_array()
             .map(|a| a.len())
             .unwrap_or(0);
-        if added == 0 && removed == 0 {
+        if missing == 0 && untracked == 0 {
             println!("  base_ui upstream drift check: no changes detected");
         } else {
             println!("  base_ui upstream drift detected: {drift}");
         }
-    } else {
-        println!("  base_ui upstream drift check skipped (network unreachable)");
     }
     Ok(())
 }
 
 pub fn check(root: &Path) -> Result<(), String> {
-    let (document, _) = build_document(root, false);
+    let document = build_document(root)?;
     let path = output_path(root);
     let existing = fs::read_to_string(&path).unwrap_or_default();
     let mut existing_value: serde_json::Value =
@@ -870,36 +808,83 @@ pub fn check(root: &Path) -> Result<(), String> {
     Ok(())
 }
 
-pub fn diff() -> Result<(), String> {
-    let Some(live) = fetch_upstream_names() else {
-        return Err("could not reach base-ui.com; drift check skipped.".to_string());
-    };
-    let tracked: std::collections::HashSet<String> = UPSTREAM_COMPONENTS
-        .iter()
-        .map(|entry| entry.name.to_lowercase())
-        .collect();
-    let live_set: std::collections::HashSet<String> =
-        live.iter().map(|name| name.to_lowercase()).collect();
-    let mut added: Vec<&String> = live
-        .iter()
-        .filter(|name| !tracked.contains(&name.to_lowercase()))
-        .collect();
-    added.sort();
-    let mut removed: Vec<&str> = UPSTREAM_COMPONENTS
-        .iter()
-        .map(|entry| entry.name)
-        .filter(|name| !live_set.contains(&name.to_lowercase()))
-        .collect();
-    removed.sort();
-    if added.is_empty() && removed.is_empty() {
-        println!("No upstream drift: tracked list matches base-ui.com.");
+/// Offline drift report: fetched `statics/catalogs/base-ui.json` vs.
+/// [`UPSTREAM_COMPONENTS`]. Run `cargo xtask catalog fetch base-ui` first to
+/// refresh the committed snapshot -- this command itself never touches the
+/// network (see spec's "Catalog fetch is the sole network-touching command").
+pub fn diff(root: &Path) -> Result<(), String> {
+    let snapshot = catalog::read_snapshot(root, "base-ui")?;
+    let (document, _) = build_base_ui_axis(root, &snapshot);
+    let drift = &document["upstream_drift_check"];
+    let missing = drift["tracked_but_missing_upstream"]
+        .as_array()
+        .cloned()
+        .unwrap_or_default();
+    let untracked = drift["upstream_but_not_yet_tracked"]
+        .as_array()
+        .cloned()
+        .unwrap_or_default();
+    if missing.is_empty() && untracked.is_empty() {
+        println!("No drift: UPSTREAM_COMPONENTS matches statics/catalogs/base-ui.json.");
     } else {
-        if !added.is_empty() {
-            println!("Added upstream (not yet tracked): {added:?}");
+        if !untracked.is_empty() {
+            println!("In statics/catalogs/base-ui.json but not yet tracked: {untracked:?}");
         }
-        if !removed.is_empty() {
-            println!("Removed upstream (still tracked): {removed:?}");
+        if !missing.is_empty() {
+            println!(
+                "Tracked in UPSTREAM_COMPONENTS but missing from statics/catalogs/base-ui.json: {missing:?}"
+            );
         }
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::catalog::schema::{CatalogEntry, PartEntry, PropsSource};
+
+    fn fake_snapshot(entry_names: &[&str]) -> CatalogSnapshot {
+        CatalogSnapshot {
+            axis: "base-ui".to_string(),
+            source: "https://base-ui.com/react/components".to_string(),
+            revision: "test".to_string(),
+            refreshed_at: "2026-08-31".to_string(),
+            entries: entry_names
+                .iter()
+                .map(|name| CatalogEntry {
+                    id: name.to_lowercase().replace(' ', "-"),
+                    name: name.to_string(),
+                    parts: vec![PartEntry {
+                        id: "root".to_string(),
+                        composition: Vec::new(),
+                        props_source: PropsSource::Unavailable,
+                    }],
+                })
+                .collect(),
+        }
+    }
+
+    #[test]
+    fn hand_maintained_status_survives_fetched_snapshot_changes() {
+        let root = std::env::temp_dir();
+        // "Dialog" is hand-tracked as Built in UPSTREAM_COMPONENTS; this must
+        // hold no matter what a freshly fetched snapshot contains, because
+        // fetch never writes the status field.
+        let (before, _) = build_base_ui_axis(&root, &fake_snapshot(&["Dialog"]));
+        let (after, _) = build_base_ui_axis(&root, &fake_snapshot(&["Dialog", "Some New Thing"]));
+        assert_eq!(before["components"][0]["status"], "built");
+        assert_eq!(after["components"][0]["status"], "built");
+    }
+
+    #[test]
+    fn untracked_fetched_entry_defaults_to_not_started() {
+        let root = std::env::temp_dir();
+        let (document, _) = build_base_ui_axis(&root, &fake_snapshot(&["Some New Thing"]));
+        assert_eq!(document["components"][0]["status"], "not_started");
+        assert_eq!(
+            document["upstream_drift_check"]["upstream_but_not_yet_tracked"][0],
+            "Some New Thing"
+        );
+    }
 }

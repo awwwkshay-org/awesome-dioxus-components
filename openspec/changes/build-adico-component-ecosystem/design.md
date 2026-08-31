@@ -753,6 +753,23 @@ refresh for `upstreams/shadcn/catalog.json` yet (only
 `upstreams/dioxus-components/catalog.json` has one, via `cargo xtask upstream
 dioxus-components`) — a known gap, not solved by this restructure.
 
+**Replaced 2026-08-31 (catalog-fetch-tooling):** the `upstreams/` directory,
+its hand-maintained/single-axis `cargo xtask upstream dioxus-components`
+refresh command, and the Base UI live-drift GET embedded in
+`primitive-compat sync`/`diff` are all replaced by a single `cargo xtask
+catalog fetch <axis|all>` command (`packages/adico-xtask/src/catalog/`)
+covering all four upstream axes (`shadcn`, `base-ui`, `dioxus-components`,
+`dioxus-primitives`) under one shared schema, writing revision-pinned
+snapshots to `statics/catalogs/<axis>.json`. This closes the "no live refresh
+for `upstreams/shadcn/catalog.json`" gap noted just above, and adds
+per-component prop/composition detail (with an explicit `props_source`
+discriminator, since the four axes are not symmetric in what prop data is
+even obtainable) that neither `upstreams/` catalog ever carried. `catalog
+fetch` is now the only network-touching adico-xtask command; `primitive-
+compat`/`component-compat` `sync`/`check`/`diff` read only the committed
+`statics/catalogs/*.json` snapshots. See
+`openspec/changes/catalog-fetch-tooling/` for the full proposal/design.
+
 ### 10. Examples, testing, and rollout
 
 Examples are product fixtures, not workspace-source shortcuts. `examples/`

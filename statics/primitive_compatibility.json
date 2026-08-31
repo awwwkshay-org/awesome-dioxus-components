@@ -1,5 +1,5 @@
 {
-  "$schema_note": "Hand-maintain UPSTREAM_COMPONENTS/UPSTREAM_UTILS/ADICO_ONLY_EXTRAS/DIOXUS_MODULE_NOTES in packages/adico-xtask/src/primitive_compat.rs; everything else here is regenerated from repo introspection, and the dioxus_primitives axis's module inventory is fully derived from upstreams/dioxus-components/catalog.json (no hand table).",
+  "$schema_note": "Hand-maintain UPSTREAM_COMPONENTS/UPSTREAM_UTILS/ADICO_ONLY_EXTRAS/DIOXUS_MODULE_NOTES in packages/adico-xtask/src/primitive_compat.rs; everything else here is regenerated from repo introspection and committed statics/catalogs/*.json (see `cargo xtask catalog fetch`).",
   "base_ui": {
     "adico_only_extras": [
       {
@@ -82,14 +82,17 @@
               "type": "ReadSignal<String>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_change",
               "type": "Callback<bool,()>"
             },
             {
+              "default": "default()",
               "name": "on_trigger_click",
               "type": "Callback"
             },
@@ -112,22 +115,27 @@
               "type": "Option<String>"
             },
             {
+              "default": "default()",
               "name": "values",
               "type": "ReadSignal<Option<Vec<String>>>"
             },
             {
+              "default": "default()",
               "name": "default_values",
               "type": "Vec<String>"
             },
             {
+              "default": "default()",
               "name": "on_values_change",
               "type": "Callback<Vec<String>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "horizontal",
               "type": "ReadSignal<bool>"
             },
@@ -146,26 +154,32 @@
               "type": "Option<String>"
             },
             {
+              "default": "default()",
               "name": "value",
               "type": "Option<ReadSignal<Option<String>>>"
             },
             {
+              "default": "default()",
               "name": "default_value",
               "type": "Option<String>"
             },
             {
+              "default": "default()",
               "name": "on_value_change",
               "type": "Callback<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "collapsible",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "horizontal",
               "type": "ReadSignal<bool>"
             },
@@ -220,6 +234,7 @@
         "adico_props": {
           "AlertDialogActionProps": [
             {
+              "default": "default()",
               "name": "on_click",
               "type": "Option<EventHandler<MouseEvent>>"
             },
@@ -244,6 +259,7 @@
           ],
           "AlertDialogCancelProps": [
             {
+              "default": "default()",
               "name": "on_click",
               "type": "Option<EventHandler<MouseEvent>>"
             },
@@ -262,6 +278,7 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "class",
               "type": "Option<String>"
             },
@@ -290,14 +307,17 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "open",
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
@@ -358,6 +378,7 @@
           ],
           "AvatarImageProps": [
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -366,6 +387,7 @@
               "type": "String"
             },
             {
+              "default": "default()",
               "name": "alt",
               "type": "Option<String>"
             },
@@ -376,14 +398,17 @@
           ],
           "AvatarProps": [
             {
+              "default": "default()",
               "name": "on_load",
               "type": "Option<EventHandler<()>>"
             },
             {
+              "default": "default()",
               "name": "on_error",
               "type": "Option<EventHandler<()>>"
             },
             {
+              "default": "default()",
               "name": "on_state_change",
               "type": "Option<EventHandler<AvatarState>>"
             },
@@ -437,26 +462,32 @@
               "type": "ReadSignal<Option<CheckboxState>>"
             },
             {
+              "default": "CheckboxState::Unchecked",
               "name": "default_checked",
               "type": "CheckboxState"
             },
             {
+              "default": "default()",
               "name": "required",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "name",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(String::from(\"on\")))",
               "name": "value",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "default()",
               "name": "on_checked_change",
               "type": "Callback<CheckboxState>"
             },
@@ -512,14 +543,17 @@
           ],
           "CollapsibleProps": [
             {
+              "default": "default()",
               "name": "keep_mounted",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -528,6 +562,7 @@
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
@@ -591,10 +626,12 @@
           ],
           "ComboboxInputProps": [
             {
+              "default": "default()",
               "name": "placeholder",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -611,6 +648,7 @@
           ],
           "ComboboxListProps": [
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -625,50 +663,62 @@
           ],
           "ComboboxMultiProps": [
             {
+              "default": "default()",
               "name": "values",
               "type": "ReadSignal<Option<Vec<T>>>"
             },
             {
+              "default": "default()",
               "name": "default_values",
               "type": "Vec<T>"
             },
             {
+              "default": "default()",
               "name": "on_values_change",
               "type": "Callback<Vec<T>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "open",
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "default()",
               "name": "query",
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "default_query",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "default()",
               "name": "on_query_change",
               "type": "Callback<String>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "Callback::new(|(q, t) :(String, String) | default_combobox_filter(& q, & t))",
               "name": "filter",
               "type": "Callback<(String, String), bool>"
             },
@@ -687,14 +737,17 @@
               "type": "ReadSignal<T>"
             },
             {
+              "default": "default()",
               "name": "text_value",
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -703,10 +756,12 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "aria_label",
               "type": "Option<String>"
             },
             {
+              "default": "default()",
               "name": "aria_roledescription",
               "type": "Option<String>"
             },
@@ -721,50 +776,62 @@
           ],
           "ComboboxProps": [
             {
+              "default": "default()",
               "name": "value",
               "type": "Option<ReadSignal<Option<T>>>"
             },
             {
+              "default": "default()",
               "name": "default_value",
               "type": "Option<T>"
             },
             {
+              "default": "default()",
               "name": "on_value_change",
               "type": "Callback<Option<T>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "open",
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "default()",
               "name": "query",
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "default_query",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "default()",
               "name": "on_query_change",
               "type": "Callback<String>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "Callback::new(|(q, t) :(String, String) | default_combobox_filter(& q, & t))",
               "name": "filter",
               "type": "Callback<(String, String), bool>"
             },
@@ -819,6 +886,7 @@
           ],
           "ContextMenuItemProps": [
             {
+              "default": "ReadSignal::new(Signal::new(false))",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -831,6 +899,7 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "on_select",
               "type": "Callback<String>"
             },
@@ -845,6 +914,7 @@
           ],
           "ContextMenuProps": [
             {
+              "default": "ReadSignal::new(Signal::new(false))",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -853,14 +923,17 @@
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
@@ -915,6 +988,7 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "class",
               "type": "Option<String>"
             },
@@ -947,6 +1021,7 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "is_modal",
               "type": "ReadSignal<bool>"
             },
@@ -955,10 +1030,12 @@
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
@@ -1059,18 +1136,22 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "checked",
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_checked",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_checked_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -1085,6 +1166,7 @@
           ],
           "MenuContentProps": [
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -1127,10 +1209,12 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_select",
               "type": "Callback<T>"
             },
@@ -1145,22 +1229,27 @@
           ],
           "MenuProps": [
             {
+              "default": "default()",
               "name": "open",
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
@@ -1175,14 +1264,17 @@
           ],
           "MenuRadioGroupProps": [
             {
+              "default": "default()",
               "name": "value",
               "type": "Option<ReadSignal<Option<T>>>"
             },
             {
+              "default": "default()",
               "name": "default_value",
               "type": "Option<T>"
             },
             {
+              "default": "default()",
               "name": "on_value_change",
               "type": "Callback<T>"
             },
@@ -1205,6 +1297,7 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -1229,18 +1322,22 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "open",
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -1322,10 +1419,12 @@
               "type": "String"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_select",
               "type": "Callback<String>"
             },
@@ -1344,6 +1443,7 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -1358,10 +1458,12 @@
           ],
           "MenubarProps": [
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
@@ -1443,14 +1545,17 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "class",
               "type": "Option<String>"
             },
             {
+              "default": "ContentSide::Bottom",
               "name": "side",
               "type": "ContentSide"
             },
             {
+              "default": "ContentAlign::Center",
               "name": "align",
               "type": "ContentAlign"
             },
@@ -1491,6 +1596,7 @@
           ],
           "PopoverRootProps": [
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "is_modal",
               "type": "ReadSignal<bool>"
             },
@@ -1499,10 +1605,12 @@
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
@@ -1567,6 +1675,7 @@
               "type": "ReadSignal<Option<f64>>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(100.0))",
               "name": "max",
               "type": "ReadSignal<f64>"
             },
@@ -1605,30 +1714,37 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "default_value",
               "type": "String"
             },
             {
+              "default": "default()",
               "name": "on_value_change",
               "type": "Callback<String>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "required",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "name",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "default()",
               "name": "horizontal",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
@@ -1651,6 +1767,7 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -1687,14 +1804,17 @@
         "adico_props": {
           "ScrollAreaProps": [
             {
+              "default": "default()",
               "name": "direction",
               "type": "ReadSignal<ScrollDirection>"
             },
             {
+              "default": "default()",
               "name": "always_show_scrollbars",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "scroll_type",
               "type": "ReadSignal<ScrollType>"
             },
@@ -1756,10 +1876,12 @@
           ],
           "SelectGroupProps": [
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -1780,6 +1902,7 @@
           ],
           "SelectListProps": [
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -1794,42 +1917,52 @@
           ],
           "SelectMultiProps": [
             {
+              "default": "default()",
               "name": "values",
               "type": "ReadSignal<Option<Vec<T>>>"
             },
             {
+              "default": "default()",
               "name": "default_values",
               "type": "Vec<T>"
             },
             {
+              "default": "default()",
               "name": "on_values_change",
               "type": "Callback<Vec<T>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "open",
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "default()",
               "name": "name",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(Duration::from_millis(1000)))",
               "name": "typeahead_timeout",
               "type": "ReadSignal<Duration>"
             },
@@ -1848,14 +1981,17 @@
               "type": "ReadSignal<T>"
             },
             {
+              "default": "default()",
               "name": "text_value",
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -1864,10 +2000,12 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "aria_label",
               "type": "Option<String>"
             },
             {
+              "default": "default()",
               "name": "aria_roledescription",
               "type": "Option<String>"
             },
@@ -1882,42 +2020,52 @@
           ],
           "SelectProps": [
             {
+              "default": "default()",
               "name": "value",
               "type": "Option<ReadSignal<Option<T>>>"
             },
             {
+              "default": "default()",
               "name": "default_value",
               "type": "Option<T>"
             },
             {
+              "default": "default()",
               "name": "on_value_change",
               "type": "Callback<Option<T>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "open",
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "default()",
               "name": "name",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(Duration::from_millis(1000)))",
               "name": "typeahead_timeout",
               "type": "ReadSignal<Duration>"
             },
@@ -1942,6 +2090,7 @@
           ],
           "SelectValueProps": [
             {
+              "default": "ReadSignal::new(Signal::new(String::from(\"Select an option\")))",
               "name": "placeholder",
               "type": "ReadSignal<String>"
             },
@@ -1966,10 +2115,12 @@
         "adico_props": {
           "SeparatorProps": [
             {
+              "default": "true",
               "name": "horizontal",
               "type": "bool"
             },
             {
+              "default": "false",
               "name": "decorative",
               "type": "bool"
             },
@@ -2010,34 +2161,42 @@
               "type": "ReadSignal<Option<Range<f64>>>"
             },
             {
+              "default": "ordered_range(0.0, 100.0)",
               "name": "default_value",
               "type": "Range<f64>"
             },
             {
+              "default": "0.0",
               "name": "min",
               "type": "ReadSignal<f64>"
             },
             {
+              "default": "100.0",
               "name": "max",
               "type": "ReadSignal<f64>"
             },
             {
+              "default": "1.0",
               "name": "step",
               "type": "ReadSignal<f64>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "true",
               "name": "horizontal",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "inverted",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_value_change",
               "type": "Callback<Range<f64>>"
             },
@@ -2060,34 +2219,42 @@
               "type": "ReadSignal<Option<f64>>"
             },
             {
+              "default": "0.0",
               "name": "default_value",
               "type": "f64"
             },
             {
+              "default": "0.0",
               "name": "min",
               "type": "ReadSignal<f64>"
             },
             {
+              "default": "100.0",
               "name": "max",
               "type": "ReadSignal<f64>"
             },
             {
+              "default": "1.0",
               "name": "step",
               "type": "ReadSignal<f64>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "true",
               "name": "horizontal",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "inverted",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_value_change",
               "type": "Callback<f64>"
             },
@@ -2116,6 +2283,7 @@
           ],
           "SliderThumbProps": [
             {
+              "default": "default()",
               "name": "index",
               "type": "Option<usize>"
             },
@@ -2161,26 +2329,32 @@
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "false",
               "name": "default_checked",
               "type": "bool"
             },
             {
+              "default": "ReadSignal::new(Signal::new(false))",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "required",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "name",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(String::from(\"on\")))",
               "name": "value",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "default()",
               "name": "on_checked_change",
               "type": "Callback<bool>"
             },
@@ -2272,6 +2446,7 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -2298,22 +2473,27 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "default_value",
               "type": "String"
             },
             {
+              "default": "default()",
               "name": "on_value_change",
               "type": "Callback<String>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "horizontal",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
@@ -2359,6 +2539,7 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
@@ -2379,6 +2560,7 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
@@ -2429,6 +2611,7 @@
               "type": "Callback<MouseEvent>"
             },
             {
+              "default": "false",
               "name": "permanent",
               "type": "bool"
             },
@@ -2441,20 +2624,24 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
           ],
           "ToastProviderProps": [
             {
+              "default": "ReadSignal::new(Signal::new(Some(Duration::from_secs(5))))",
               "name": "default_duration",
               "type": "ReadSignal<Option<Duration>>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(10))",
               "name": "max_toasts",
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "Callback::new(| props : ToastPropsWithOwner | rsx ! { Toast { .. props } })",
               "name": "render_toast",
               "type": "Callback<ToastPropsWithOwner, Element>"
             },
@@ -2473,6 +2660,7 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
@@ -2499,26 +2687,32 @@
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_pressed",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_pressed_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "default()",
               "name": "onmounted",
               "type": "Callback<Event<MountedData>>"
             },
             {
+              "default": "default()",
               "name": "onfocus",
               "type": "Callback<Event<FocusData>>"
             },
             {
+              "default": "default()",
               "name": "onkeydown",
               "type": "Callback<Event<KeyboardData>>"
             },
@@ -2552,6 +2746,7 @@
         "adico_props": {
           "ToggleGroupProps": [
             {
+              "default": "default()",
               "name": "default_pressed",
               "type": "HashSet<usize>"
             },
@@ -2560,22 +2755,27 @@
               "type": "ReadSignal<Option<HashSet<usize>>>"
             },
             {
+              "default": "default()",
               "name": "on_pressed_change",
               "type": "Callback<HashSet<usize>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "allow_multiple_pressed",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "horizontal",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
@@ -2594,6 +2794,7 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -2631,10 +2832,12 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_click",
               "type": "Callback<()>"
             },
@@ -2649,14 +2852,17 @@
           ],
           "ToolbarProps": [
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "horizontal",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "aria_label",
               "type": "Option<String>"
             },
@@ -2671,10 +2877,12 @@
           ],
           "ToolbarSeparatorProps": [
             {
+              "default": "default()",
               "name": "horizontal",
               "type": "Option<bool>"
             },
             {
+              "default": "false",
               "name": "decorative",
               "type": "bool"
             },
@@ -2706,14 +2914,17 @@
         "adico_props": {
           "TooltipContentProps": [
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "ContentSide::Top",
               "name": "side",
               "type": "ContentSide"
             },
             {
+              "default": "ContentAlign::Center",
               "name": "align",
               "type": "ContentAlign"
             },
@@ -2732,14 +2943,17 @@
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -2754,6 +2968,7 @@
           ],
           "TooltipTriggerProps": [
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -2773,7 +2988,14 @@
         "status": "built"
       }
     ],
-    "source": "https://base-ui.com/react/components",
+    "source": {
+      "axis": "base-ui",
+      "catalog_path": "statics/catalogs/base-ui.json",
+      "catalog_refreshed_at": "2026-08-31",
+      "refresh_command": "cargo xtask catalog fetch base-ui",
+      "revision": "2026-08-31T07:16:08Z",
+      "source": "https://base-ui.com/react/components"
+    },
     "summary": {
       "adico_only_extras": 10,
       "components_built": 24,
@@ -2783,9 +3005,8 @@
       "total_upstream_utils": 4
     },
     "upstream_drift_check": {
-      "added_upstream": [],
-      "checked_at": "2026-08-31T06:38:02Z",
-      "removed_upstream": []
+      "tracked_but_missing_upstream": [],
+      "upstream_but_not_yet_tracked": []
     },
     "utils": [
       {
@@ -2868,14 +3089,17 @@
               "type": "ReadSignal<String>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_change",
               "type": "Callback<bool,()>"
             },
             {
+              "default": "default()",
               "name": "on_trigger_click",
               "type": "Callback"
             },
@@ -2898,22 +3122,27 @@
               "type": "Option<String>"
             },
             {
+              "default": "default()",
               "name": "values",
               "type": "ReadSignal<Option<Vec<String>>>"
             },
             {
+              "default": "default()",
               "name": "default_values",
               "type": "Vec<String>"
             },
             {
+              "default": "default()",
               "name": "on_values_change",
               "type": "Callback<Vec<String>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "horizontal",
               "type": "ReadSignal<bool>"
             },
@@ -2932,26 +3161,32 @@
               "type": "Option<String>"
             },
             {
+              "default": "default()",
               "name": "value",
               "type": "Option<ReadSignal<Option<String>>>"
             },
             {
+              "default": "default()",
               "name": "default_value",
               "type": "Option<String>"
             },
             {
+              "default": "default()",
               "name": "on_value_change",
               "type": "Callback<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "collapsible",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "horizontal",
               "type": "ReadSignal<bool>"
             },
@@ -3004,6 +3239,7 @@
         "adico_props": {
           "AlertDialogActionProps": [
             {
+              "default": "default()",
               "name": "on_click",
               "type": "Option<EventHandler<MouseEvent>>"
             },
@@ -3028,6 +3264,7 @@
           ],
           "AlertDialogCancelProps": [
             {
+              "default": "default()",
               "name": "on_click",
               "type": "Option<EventHandler<MouseEvent>>"
             },
@@ -3046,6 +3283,7 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "class",
               "type": "Option<String>"
             },
@@ -3074,14 +3312,17 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "open",
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
@@ -3118,6 +3359,7 @@
         "adico_props": {
           "AspectRatioProps": [
             {
+              "default": "1.0",
               "name": "ratio",
               "type": "f64"
             },
@@ -3159,6 +3401,7 @@
           ],
           "AvatarImageProps": [
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -3167,6 +3410,7 @@
               "type": "String"
             },
             {
+              "default": "default()",
               "name": "alt",
               "type": "Option<String>"
             },
@@ -3177,14 +3421,17 @@
           ],
           "AvatarProps": [
             {
+              "default": "default()",
               "name": "on_load",
               "type": "Option<EventHandler<()>>"
             },
             {
+              "default": "default()",
               "name": "on_error",
               "type": "Option<EventHandler<()>>"
             },
             {
+              "default": "default()",
               "name": "on_state_change",
               "type": "Option<EventHandler<AvatarState>>"
             },
@@ -3247,6 +3494,7 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
@@ -3281,6 +3529,7 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
@@ -3307,6 +3556,7 @@
           ],
           "CalendarGridProps": [
             {
+              "default": "default()",
               "name": "id",
               "type": "Option<String>"
             },
@@ -3317,6 +3567,7 @@
           ],
           "CalendarGridRootProps": [
             {
+              "default": "default()",
               "name": "id",
               "type": "Option<String>"
             },
@@ -3341,6 +3592,7 @@
           ],
           "CalendarHeaderProps": [
             {
+              "default": "default()",
               "name": "id",
               "type": "Option<String>"
             },
@@ -3365,6 +3617,7 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Element"
             }
@@ -3391,50 +3644,62 @@
           ],
           "CalendarProps": [
             {
+              "default": "default()",
               "name": "selected_date",
               "type": "ReadSignal<Option<Date>>"
             },
             {
+              "default": "default()",
               "name": "on_date_change",
               "type": "Callback<Option<Date>>"
             },
             {
+              "default": "Callback::new(| weekday : Weekday | weekday_abbreviation(weekday) . to_string())",
               "name": "on_format_weekday",
               "type": "Callback<Weekday, String>"
             },
             {
+              "default": "Callback::new(| month : Month | month . to_string())",
               "name": "on_format_month",
               "type": "Callback<Month, String>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(OffsetDateTime::now_local_date()))",
               "name": "view_date",
               "type": "ReadSignal<Date>"
             },
             {
+              "default": "OffsetDateTime::now_local_date()",
               "name": "today",
               "type": "Date"
             },
             {
+              "default": "default()",
               "name": "on_view_change",
               "type": "Callback<Date>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(Weekday::Sunday))",
               "name": "first_day_of_week",
               "type": "ReadSignal<Weekday>"
             },
             {
+              "default": "date !(1925 - 01 - 01)",
               "name": "min_date",
               "type": "Date"
             },
             {
+              "default": "date !(2050 - 12 - 31)",
               "name": "max_date",
               "type": "Date"
             },
             {
+              "default": "default()",
               "name": "disabled_ranges",
               "type": "ReadSignal<Vec<DateRange>>"
             },
@@ -3457,6 +3722,7 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
@@ -3467,6 +3733,7 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Element"
             }
@@ -3483,6 +3750,7 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Element"
             }
@@ -3497,6 +3765,7 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
@@ -3507,6 +3776,7 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Element"
             }
@@ -3523,12 +3793,14 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Element"
             }
           ],
           "CalendarViewProps": [
             {
+              "default": "default()",
               "name": "offset",
               "type": "Option<u8>"
             },
@@ -3543,50 +3815,62 @@
           ],
           "RangeCalendarProps": [
             {
+              "default": "default()",
               "name": "selected_range",
               "type": "ReadSignal<Option<DateRange>>"
             },
             {
+              "default": "default()",
               "name": "on_range_change",
               "type": "Callback<Option<DateRange>>"
             },
             {
+              "default": "Callback::new(| weekday : Weekday | weekday_abbreviation(weekday) . to_string())",
               "name": "on_format_weekday",
               "type": "Callback<Weekday, String>"
             },
             {
+              "default": "Callback::new(| month : Month | month . to_string())",
               "name": "on_format_month",
               "type": "Callback<Month, String>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(OffsetDateTime::now_local_date()))",
               "name": "view_date",
               "type": "ReadSignal<Date>"
             },
             {
+              "default": "OffsetDateTime::now_local_date()",
               "name": "today",
               "type": "Date"
             },
             {
+              "default": "default()",
               "name": "on_view_change",
               "type": "Callback<Date>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(Weekday::Sunday))",
               "name": "first_day_of_week",
               "type": "ReadSignal<Weekday>"
             },
             {
+              "default": "date !(1925 - 01 - 01)",
               "name": "min_date",
               "type": "Date"
             },
             {
+              "default": "date !(2050 - 12 - 31)",
               "name": "max_date",
               "type": "Date"
             },
             {
+              "default": "default()",
               "name": "disabled_ranges",
               "type": "ReadSignal<Vec<DateRange>>"
             },
@@ -3631,26 +3915,32 @@
               "type": "ReadSignal<Option<CheckboxState>>"
             },
             {
+              "default": "CheckboxState::Unchecked",
               "name": "default_checked",
               "type": "CheckboxState"
             },
             {
+              "default": "default()",
               "name": "required",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "name",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(String::from(\"on\")))",
               "name": "value",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "default()",
               "name": "on_checked_change",
               "type": "Callback<CheckboxState>"
             },
@@ -3697,14 +3987,17 @@
           ],
           "CollapsibleProps": [
             {
+              "default": "default()",
               "name": "keep_mounted",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -3713,6 +4006,7 @@
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
@@ -3805,6 +4099,7 @@
           ],
           "ColorAreaProps": [
             {
+              "default": "1.0",
               "name": "step",
               "type": "ReadSignal<f64>"
             },
@@ -3819,14 +4114,17 @@
           ],
           "ColorPickerProps": [
             {
+              "default": "default()",
               "name": "color",
               "type": "ReadSignal<Hsv<encoding::Srgb, f64>>"
             },
             {
+              "default": "default()",
               "name": "on_color_change",
               "type": "Callback<Hsv<encoding::Srgb, f64>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -3878,10 +4176,12 @@
           ],
           "ComboboxInputProps": [
             {
+              "default": "default()",
               "name": "placeholder",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -3898,6 +4198,7 @@
           ],
           "ComboboxListProps": [
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -3912,50 +4213,62 @@
           ],
           "ComboboxMultiProps": [
             {
+              "default": "default()",
               "name": "values",
               "type": "ReadSignal<Option<Vec<T>>>"
             },
             {
+              "default": "default()",
               "name": "default_values",
               "type": "Vec<T>"
             },
             {
+              "default": "default()",
               "name": "on_values_change",
               "type": "Callback<Vec<T>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "open",
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "default()",
               "name": "query",
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "default_query",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "default()",
               "name": "on_query_change",
               "type": "Callback<String>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "Callback::new(|(q, t) :(String, String) | default_combobox_filter(& q, & t))",
               "name": "filter",
               "type": "Callback<(String, String), bool>"
             },
@@ -3974,14 +4287,17 @@
               "type": "ReadSignal<T>"
             },
             {
+              "default": "default()",
               "name": "text_value",
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -3990,10 +4306,12 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "aria_label",
               "type": "Option<String>"
             },
             {
+              "default": "default()",
               "name": "aria_roledescription",
               "type": "Option<String>"
             },
@@ -4008,50 +4326,62 @@
           ],
           "ComboboxProps": [
             {
+              "default": "default()",
               "name": "value",
               "type": "Option<ReadSignal<Option<T>>>"
             },
             {
+              "default": "default()",
               "name": "default_value",
               "type": "Option<T>"
             },
             {
+              "default": "default()",
               "name": "on_value_change",
               "type": "Callback<Option<T>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "open",
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "default()",
               "name": "query",
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "default_query",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "default()",
               "name": "on_query_change",
               "type": "Callback<String>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "Callback::new(|(q, t) :(String, String) | default_combobox_filter(& q, & t))",
               "name": "filter",
               "type": "Callback<(String, String), bool>"
             },
@@ -4104,6 +4434,7 @@
           ],
           "ContextMenuItemProps": [
             {
+              "default": "ReadSignal::new(Signal::new(false))",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -4116,6 +4447,7 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "on_select",
               "type": "Callback<String>"
             },
@@ -4130,6 +4462,7 @@
           ],
           "ContextMenuProps": [
             {
+              "default": "ReadSignal::new(Signal::new(false))",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -4138,14 +4471,17 @@
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
@@ -4200,42 +4536,52 @@
         "adico_props": {
           "DatePickerCalendarProps": [
             {
+              "default": "Callback::new(| weekday : Weekday | weekday_abbreviation(weekday) . to_string())",
               "name": "on_format_weekday",
               "type": "Callback<Weekday, String>"
             },
             {
+              "default": "Callback::new(| month : Month | month . to_string())",
               "name": "on_format_month",
               "type": "Callback<Month, String>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(OffsetDateTime::now_local_date()))",
               "name": "view_date",
               "type": "ReadSignal<Date>"
             },
             {
+              "default": "OffsetDateTime::now_local_date()",
               "name": "today",
               "type": "Date"
             },
             {
+              "default": "default()",
               "name": "on_view_change",
               "type": "Callback<Date>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "Weekday::Sunday",
               "name": "first_day_of_week",
               "type": "Weekday"
             },
             {
+              "default": "date !(1925 - 01 - 01)",
               "name": "min_date",
               "type": "Date"
             },
             {
+              "default": "date !(2050 - 12 - 31)",
               "name": "max_date",
               "type": "Date"
             },
             {
+              "default": "default()",
               "name": "disabled_ranges",
               "type": "ReadSignal<Vec<DateRange>>"
             },
@@ -4248,6 +4594,7 @@
               "type": "Element"
             },
             {
+              "default": "T::default_calendar",
               "name": "calendar",
               "type": "fn(T) ->Element"
             }
@@ -4260,14 +4607,17 @@
           ],
           "DatePickerInputProps": [
             {
+              "default": "Callback::new(| _ | \"D\" . to_string())",
               "name": "on_format_day_placeholder",
               "type": "Callback<(), String>"
             },
             {
+              "default": "Callback::new(| _ | \"M\" . to_string())",
               "name": "on_format_month_placeholder",
               "type": "Callback<(), String>"
             },
             {
+              "default": "Callback::new(| _ | \"Y\" . to_string())",
               "name": "on_format_year_placeholder",
               "type": "Callback<(), String>"
             },
@@ -4276,24 +4626,29 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
           ],
           "DatePickerInputValueProps": [
             {
+              "default": "Callback::new(| _ | \"D\" . to_string())",
               "name": "on_format_day_placeholder",
               "type": "Callback<(), String>"
             },
             {
+              "default": "Callback::new(| _ | \"M\" . to_string())",
               "name": "on_format_month_placeholder",
               "type": "Callback<(), String>"
             },
             {
+              "default": "Callback::new(| _ | \"Y\" . to_string())",
               "name": "on_format_year_placeholder",
               "type": "Callback<(), String>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
@@ -4306,6 +4661,7 @@
           ],
           "DatePickerPopoverProps": [
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "is_modal",
               "type": "ReadSignal<bool>"
             },
@@ -4314,10 +4670,12 @@
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
@@ -4330,40 +4688,49 @@
               "type": "Element"
             },
             {
+              "default": "PopoverRoot",
               "name": "popover_root",
               "type": "fn(PopoverRootProps) ->Element"
             }
           ],
           "DatePickerProps": [
             {
+              "default": "default()",
               "name": "on_value_change",
               "type": "Callback<Option<Date>>"
             },
             {
+              "default": "default()",
               "name": "selected_date",
               "type": "ReadSignal<Option<Date>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(false))",
               "name": "read_only",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "date !(1925 - 01 - 01)",
               "name": "min_date",
               "type": "Date"
             },
             {
+              "default": "date !(2050 - 12 - 31)",
               "name": "max_date",
               "type": "Date"
             },
             {
+              "default": "default()",
               "name": "disabled_ranges",
               "type": "ReadSignal<Vec<DateRange>>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(false))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
@@ -4378,6 +4745,7 @@
           ],
           "DatePickerSeparatorProps": [
             {
+              "default": "'-'",
               "name": "symbol",
               "type": "char"
             },
@@ -4394,58 +4762,71 @@
           ],
           "DateRangePickerEndValueProps": [
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
           ],
           "DateRangePickerInputValueProps": [
             {
+              "default": "Callback::new(| _ | \"D\" . to_string())",
               "name": "on_format_day_placeholder",
               "type": "Callback<(), String>"
             },
             {
+              "default": "Callback::new(| _ | \"M\" . to_string())",
               "name": "on_format_month_placeholder",
               "type": "Callback<(), String>"
             },
             {
+              "default": "Callback::new(| _ | \"Y\" . to_string())",
               "name": "on_format_year_placeholder",
               "type": "Callback<(), String>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
           ],
           "DateRangePickerProps": [
             {
+              "default": "default()",
               "name": "on_range_change",
               "type": "Callback<Option<DateRange>>"
             },
             {
+              "default": "default()",
               "name": "selected_range",
               "type": "ReadSignal<Option<DateRange>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(false))",
               "name": "read_only",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "date !(1925 - 01 - 01)",
               "name": "min_date",
               "type": "Date"
             },
             {
+              "default": "date !(2050 - 12 - 31)",
               "name": "max_date",
               "type": "Date"
             },
             {
+              "default": "default()",
               "name": "disabled_ranges",
               "type": "ReadSignal<Vec<DateRange>>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(false))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
@@ -4460,6 +4841,7 @@
           ],
           "DateRangePickerStartValueProps": [
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
@@ -4494,6 +4876,7 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "class",
               "type": "Option<String>"
             },
@@ -4526,6 +4909,7 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "is_modal",
               "type": "ReadSignal<bool>"
             },
@@ -4534,10 +4918,12 @@
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
@@ -4612,6 +4998,7 @@
               "type": "usize"
             },
             {
+              "default": "default()",
               "name": "item_key",
               "type": "Option<String>"
             },
@@ -4634,6 +5021,7 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
@@ -4644,6 +5032,7 @@
               "type": "Vec<Element>"
             },
             {
+              "default": "default()",
               "name": "aria_label",
               "type": "Option<String>"
             },
@@ -4652,6 +5041,7 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
@@ -4708,10 +5098,12 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_select",
               "type": "Callback<T>"
             },
@@ -4730,18 +5122,22 @@
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
@@ -4785,18 +5181,22 @@
         "adico_props": {
           "HoverCardContentProps": [
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "ContentSide::Top",
               "name": "side",
               "type": "ContentSide"
             },
             {
+              "default": "ContentAlign::Center",
               "name": "align",
               "type": "ContentAlign"
             },
             {
+              "default": "true",
               "name": "force_mount",
               "type": "bool"
             },
@@ -4815,14 +5215,17 @@
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -4837,6 +5240,7 @@
           ],
           "HoverCardTriggerProps": [
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -4951,10 +5355,12 @@
               "type": "String"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_select",
               "type": "Callback<String>"
             },
@@ -4973,6 +5379,7 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -4987,10 +5394,12 @@
           ],
           "MenubarProps": [
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
@@ -5068,14 +5477,17 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "class",
               "type": "Option<String>"
             },
             {
+              "default": "ContentSide::Bottom",
               "name": "side",
               "type": "ContentSide"
             },
             {
+              "default": "ContentAlign::Center",
               "name": "align",
               "type": "ContentAlign"
             },
@@ -5116,6 +5528,7 @@
           ],
           "PopoverRootProps": [
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "is_modal",
               "type": "ReadSignal<bool>"
             },
@@ -5124,10 +5537,12 @@
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
@@ -5216,6 +5631,7 @@
               "type": "ReadSignal<Option<f64>>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(100.0))",
               "name": "max",
               "type": "ReadSignal<f64>"
             },
@@ -5252,30 +5668,37 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "default_value",
               "type": "String"
             },
             {
+              "default": "default()",
               "name": "on_value_change",
               "type": "Callback<String>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "required",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "name",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "default()",
               "name": "horizontal",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
@@ -5298,6 +5721,7 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -5332,14 +5756,17 @@
         "adico_props": {
           "ScrollAreaProps": [
             {
+              "default": "default()",
               "name": "direction",
               "type": "ReadSignal<ScrollDirection>"
             },
             {
+              "default": "default()",
               "name": "always_show_scrollbars",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "scroll_type",
               "type": "ReadSignal<ScrollType>"
             },
@@ -5399,10 +5826,12 @@
           ],
           "SelectGroupProps": [
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -5423,6 +5852,7 @@
           ],
           "SelectListProps": [
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -5437,42 +5867,52 @@
           ],
           "SelectMultiProps": [
             {
+              "default": "default()",
               "name": "values",
               "type": "ReadSignal<Option<Vec<T>>>"
             },
             {
+              "default": "default()",
               "name": "default_values",
               "type": "Vec<T>"
             },
             {
+              "default": "default()",
               "name": "on_values_change",
               "type": "Callback<Vec<T>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "open",
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "default()",
               "name": "name",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(Duration::from_millis(1000)))",
               "name": "typeahead_timeout",
               "type": "ReadSignal<Duration>"
             },
@@ -5491,14 +5931,17 @@
               "type": "ReadSignal<T>"
             },
             {
+              "default": "default()",
               "name": "text_value",
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -5507,10 +5950,12 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "aria_label",
               "type": "Option<String>"
             },
             {
+              "default": "default()",
               "name": "aria_roledescription",
               "type": "Option<String>"
             },
@@ -5525,42 +5970,52 @@
           ],
           "SelectProps": [
             {
+              "default": "default()",
               "name": "value",
               "type": "Option<ReadSignal<Option<T>>>"
             },
             {
+              "default": "default()",
               "name": "default_value",
               "type": "Option<T>"
             },
             {
+              "default": "default()",
               "name": "on_value_change",
               "type": "Callback<Option<T>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "open",
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "default()",
               "name": "name",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(Duration::from_millis(1000)))",
               "name": "typeahead_timeout",
               "type": "ReadSignal<Duration>"
             },
@@ -5585,6 +6040,7 @@
           ],
           "SelectValueProps": [
             {
+              "default": "ReadSignal::new(Signal::new(String::from(\"Select an option\")))",
               "name": "placeholder",
               "type": "ReadSignal<String>"
             },
@@ -5633,10 +6089,12 @@
         "adico_props": {
           "SeparatorProps": [
             {
+              "default": "true",
               "name": "horizontal",
               "type": "bool"
             },
             {
+              "default": "false",
               "name": "decorative",
               "type": "bool"
             },
@@ -5675,34 +6133,42 @@
               "type": "ReadSignal<Option<Range<f64>>>"
             },
             {
+              "default": "ordered_range(0.0, 100.0)",
               "name": "default_value",
               "type": "Range<f64>"
             },
             {
+              "default": "0.0",
               "name": "min",
               "type": "ReadSignal<f64>"
             },
             {
+              "default": "100.0",
               "name": "max",
               "type": "ReadSignal<f64>"
             },
             {
+              "default": "1.0",
               "name": "step",
               "type": "ReadSignal<f64>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "true",
               "name": "horizontal",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "inverted",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_value_change",
               "type": "Callback<Range<f64>>"
             },
@@ -5725,34 +6191,42 @@
               "type": "ReadSignal<Option<f64>>"
             },
             {
+              "default": "0.0",
               "name": "default_value",
               "type": "f64"
             },
             {
+              "default": "0.0",
               "name": "min",
               "type": "ReadSignal<f64>"
             },
             {
+              "default": "100.0",
               "name": "max",
               "type": "ReadSignal<f64>"
             },
             {
+              "default": "1.0",
               "name": "step",
               "type": "ReadSignal<f64>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "true",
               "name": "horizontal",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "inverted",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_value_change",
               "type": "Callback<f64>"
             },
@@ -5781,6 +6255,7 @@
           ],
           "SliderThumbProps": [
             {
+              "default": "default()",
               "name": "index",
               "type": "Option<usize>"
             },
@@ -5824,26 +6299,32 @@
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "false",
               "name": "default_checked",
               "type": "bool"
             },
             {
+              "default": "ReadSignal::new(Signal::new(false))",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "required",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "name",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(String::from(\"on\")))",
               "name": "value",
               "type": "ReadSignal<String>"
             },
             {
+              "default": "default()",
               "name": "on_checked_change",
               "type": "Callback<bool>"
             },
@@ -5933,6 +6414,7 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -5959,22 +6441,27 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "default_value",
               "type": "String"
             },
             {
+              "default": "default()",
               "name": "on_value_change",
               "type": "Callback<String>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "horizontal",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
@@ -6025,6 +6512,7 @@
           ],
           "TagGroupLabelProps": [
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -6039,34 +6527,42 @@
           ],
           "TagGroupMultiProps": [
             {
+              "default": "default()",
               "name": "values",
               "type": "ReadSignal<Option<Vec<T>>>"
             },
             {
+              "default": "default()",
               "name": "default_values",
               "type": "Vec<T>"
             },
             {
+              "default": "default()",
               "name": "on_values_change",
               "type": "Callback<Vec<T>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "selectable",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "allow_empty_selection",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "escape_clears_selection",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
@@ -6081,34 +6577,42 @@
           ],
           "TagGroupProps": [
             {
+              "default": "default()",
               "name": "value",
               "type": "Option<ReadSignal<Option<T>>>"
             },
             {
+              "default": "default()",
               "name": "default_value",
               "type": "Option<T>"
             },
             {
+              "default": "default()",
               "name": "on_value_change",
               "type": "Callback<Option<T>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "selectable",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "allow_empty_selection",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "escape_clears_selection",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
@@ -6137,6 +6641,7 @@
               "type": "ReadSignal<T>"
             },
             {
+              "default": "default()",
               "name": "text_value",
               "type": "ReadSignal<Option<String>>"
             },
@@ -6145,10 +6650,12 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -6202,6 +6709,7 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
@@ -6222,6 +6730,7 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
@@ -6272,6 +6781,7 @@
               "type": "Callback<MouseEvent>"
             },
             {
+              "default": "false",
               "name": "permanent",
               "type": "bool"
             },
@@ -6284,20 +6794,24 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
           ],
           "ToastProviderProps": [
             {
+              "default": "ReadSignal::new(Signal::new(Some(Duration::from_secs(5))))",
               "name": "default_duration",
               "type": "ReadSignal<Option<Duration>>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(10))",
               "name": "max_toasts",
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "Callback::new(| props : ToastPropsWithOwner | rsx ! { Toast { .. props } })",
               "name": "render_toast",
               "type": "Callback<ToastPropsWithOwner, Element>"
             },
@@ -6316,6 +6830,7 @@
               "type": "Vec<Attribute>"
             },
             {
+              "default": "default()",
               "name": "children",
               "type": "Option<Element>"
             }
@@ -6340,26 +6855,32 @@
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_pressed",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_pressed_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "default()",
               "name": "onmounted",
               "type": "Callback<Event<MountedData>>"
             },
             {
+              "default": "default()",
               "name": "onfocus",
               "type": "Callback<Event<FocusData>>"
             },
             {
+              "default": "default()",
               "name": "onkeydown",
               "type": "Callback<Event<KeyboardData>>"
             },
@@ -6391,6 +6912,7 @@
         "adico_props": {
           "ToggleGroupProps": [
             {
+              "default": "default()",
               "name": "default_pressed",
               "type": "HashSet<usize>"
             },
@@ -6399,22 +6921,27 @@
               "type": "ReadSignal<Option<HashSet<usize>>>"
             },
             {
+              "default": "default()",
               "name": "on_pressed_change",
               "type": "Callback<HashSet<usize>>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "allow_multiple_pressed",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "horizontal",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "roving_loop",
               "type": "ReadSignal<bool>"
             },
@@ -6433,6 +6960,7 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -6468,10 +6996,12 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "on_click",
               "type": "Callback<()>"
             },
@@ -6486,14 +7016,17 @@
           ],
           "ToolbarProps": [
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(true))",
               "name": "horizontal",
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "default()",
               "name": "aria_label",
               "type": "Option<String>"
             },
@@ -6508,10 +7041,12 @@
           ],
           "ToolbarSeparatorProps": [
             {
+              "default": "default()",
               "name": "horizontal",
               "type": "Option<bool>"
             },
             {
+              "default": "false",
               "name": "decorative",
               "type": "bool"
             },
@@ -6541,14 +7076,17 @@
         "adico_props": {
           "TooltipContentProps": [
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "ContentSide::Top",
               "name": "side",
               "type": "ContentSide"
             },
             {
+              "default": "ContentAlign::Center",
               "name": "align",
               "type": "ContentAlign"
             },
@@ -6567,14 +7105,17 @@
               "type": "ReadSignal<Option<bool>>"
             },
             {
+              "default": "default()",
               "name": "default_open",
               "type": "bool"
             },
             {
+              "default": "default()",
               "name": "on_open_change",
               "type": "Callback<bool>"
             },
             {
+              "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
             },
@@ -6589,6 +7130,7 @@
           ],
           "TooltipTriggerProps": [
             {
+              "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
             },
@@ -6628,6 +7170,7 @@
               "type": "ReadSignal<usize>"
             },
             {
+              "default": "ReadSignal::new(Signal::new(8))",
               "name": "buffer",
               "type": "ReadSignal<usize>"
             },
@@ -6650,11 +7193,12 @@
       }
     ],
     "source": {
-      "catalog_path": "upstreams/dioxus-components/catalog.json",
-      "catalog_refreshed_at": "2026-08-24",
-      "refresh_command": "cargo xtask upstream dioxus-components --source <local-clone> --refreshed-at <YYYY-MM-DD> --write",
+      "axis": "dioxus-primitives",
+      "catalog_path": "statics/catalogs/dioxus-primitives.json",
+      "catalog_refreshed_at": "2026-08-31",
+      "refresh_command": "cargo xtask catalog fetch dioxus-primitives",
       "revision": "bf007c15d0cf4d04d3181cc46cf12325aa773955",
-      "upstream": "https://github.com/DioxusLabs/dioxus-components"
+      "source": "https://github.com/DioxusLabs/dioxus-components/tree/bf007c15d0cf4d04d3181cc46cf12325aa773955/primitives/src"
     },
     "summary": {
       "adico_only_extras": 9,

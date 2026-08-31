@@ -1,10 +1,10 @@
 //! `cargo xtask component-compat sync|check`: regenerates
 //! `statics/component_compatibility.json` -- the registry layer's
 //! compatibility against **both** of its upstream component catalogs
-//! (`upstreams/shadcn/catalog.json` and
-//! `upstreams/dioxus-components/catalog.json`'s `styledComponents`) plus a
-//! hooks-and-props-level snapshot of what's actually built for every
-//! `registry:ui`/`registry:component` item in `registry/registry.json`.
+//! (`statics/catalogs/shadcn.json` and
+//! `statics/catalogs/dioxus-components.json`) plus a hooks-and-props-level
+//! snapshot of what's actually built for every `registry:ui`/
+//! `registry:component` item in `registry/registry.json`.
 //!
 //! This tracks current state only -- what's built, right now, against which
 //! upstream -- not a multi-dimension completion ledger against an external
@@ -16,17 +16,19 @@
 //! from naming), extracting each one's public component functions,
 //! `#[derive(Props...)]` struct fields, and `use_*` hooks in use.
 //!
-//! Both upstream catalogs are revision-pinned offline snapshots. There is a
-//! refresh command for the dioxus-components one
-//! (`cargo xtask upstream dioxus-components ...`); `upstreams/shadcn/catalog.json`
-//! has no equivalent live fetcher yet -- that's a known gap, not solved here.
+//! Both upstream catalogs are read from `statics/catalogs/<axis>.json`,
+//! produced offline-reproducibly by `cargo xtask catalog fetch <axis>` (see
+//! `crate::catalog`) -- this module never touches the network. It filters
+//! `catalog::AXES` by [`crate::catalog::AxisKind::Component`] rather than
+//! naming `shadcn`/`dioxus-components` in its iteration.
 
 use std::fs;
 use std::path::{Path, PathBuf};
 
 use adico_registry_core::{RegistryItemType, RegistryManifest};
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
+use crate::catalog::{self, AxisKind, CatalogSnapshot};
 use crate::rust_introspect::{self, FileIntrospection};
 
 fn registry_root(root: &Path) -> PathBuf {
@@ -35,16 +37,6 @@ fn registry_root(root: &Path) -> PathBuf {
 
 fn output_path(root: &Path) -> PathBuf {
     root.join("statics/component_compatibility.json")
-}
-
-fn today() -> String {
-    let output = std::process::Command::new("date").arg("+%Y-%m-%d").output();
-    match output {
-        Ok(output) if output.status.success() => {
-            String::from_utf8_lossy(&output.stdout).trim().to_string()
-        }
-        _ => "unknown".to_string(),
-    }
 }
 
 #[derive(Serialize)]
@@ -188,31 +180,14 @@ fn build_registry_components(
 
 // --- Upstream catalog axes -------------------------------------------------
 //
-// Both `upstreams/shadcn/catalog.json` and
-// `upstreams/dioxus-components/catalog.json` are revision-pinned offline
-// snapshots. Status per catalog entry is derived by slug match against the
-// installed registry items -- `built` if present, `not_started` otherwise.
-// Only genuine exceptions (an entry that will never become a standalone
-// registry item, or was deliberately excluded) get a hand-written note below;
-// do not hand-list the full catalog.
-
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
-struct ShadcnCatalog {
-    source: String,
-    revision: String,
-    refreshed_at: String,
-    components: Vec<String>,
-}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
-struct DioxusComponentsCatalog {
-    upstream: String,
-    revision: String,
-    refreshed_at: String,
-    styled_components: Vec<String>,
-}
+// Both `statics/catalogs/shadcn.json` and
+// `statics/catalogs/dioxus-components.json` are revision-pinned offline
+// snapshots produced by `cargo xtask catalog fetch <axis>`. Status per
+// catalog entry is derived by id match against the installed registry
+// items -- `built` if present, `not_started` otherwise. Only genuine
+// exceptions (an entry that will never become a standalone registry item, or
+// was deliberately excluded) get a hand-written note below; do not hand-list
+// the full catalog.
 
 #[derive(Serialize)]
 struct CatalogEntryOutput {
@@ -224,8 +199,8 @@ struct CatalogEntryOutput {
     notes: Option<&'static str>,
 }
 
-/// Hand-maintained exceptions for the shadcn axis: a catalog entry name
-/// (kebab-case, as it appears in `upstreams/shadcn/catalog.json`) mapped to
+/// Hand-maintained exceptions for the shadcn axis: a catalog entry id
+/// (kebab-case, as it appears in `statics/catalogs/shadcn.json`) mapped to
 /// `(forced_status, note)`. `forced_status` overrides the derived
 /// built/not_started status; leave it `None` to just attach a note.
 const SHADCN_EXCEPTIONS: &[(&str, Option<&str>, &str)] = &[(
@@ -234,9 +209,7 @@ const SHADCN_EXCEPTIONS: &[(&str, Option<&str>, &str)] = &[(
     "No standalone shadcn-equivalent distributable: the separator primitive alone has no meaningful UI beyond the primitive itself, so it is not installed as its own registry:ui item (see docs/adico/m3-acceptance.md).",
 )];
 
-/// Same shape as [`SHADCN_EXCEPTIONS`], for the dioxus-components axis
-/// (entries there are snake_case and normalized to kebab-case before
-/// matching).
+/// Same shape as [`SHADCN_EXCEPTIONS`], for the dioxus-components axis.
 const DIOXUS_COMPONENT_EXCEPTIONS: &[(&str, Option<&str>, &str)] = &[
     (
         "form",
@@ -255,23 +228,19 @@ const DIOXUS_COMPONENT_EXCEPTIONS: &[(&str, Option<&str>, &str)] = &[
     ),
 ];
 
-fn kebab_case(name: &str) -> String {
-    name.replace('_', "-")
-}
-
 fn build_catalog_axis(
-    catalog_names: &[String],
-    normalize: impl Fn(&str) -> String,
+    snapshot: &CatalogSnapshot,
     registry_names: &std::collections::BTreeSet<String>,
     exceptions: &'static [(&'static str, Option<&'static str>, &'static str)],
 ) -> (Vec<CatalogEntryOutput>, [usize; 3]) {
     let mut counts = [0usize; 3]; // built, not_started, not_applicable
-    let entries = catalog_names
+    let entries = snapshot
+        .entries
         .iter()
-        .map(|raw_name| {
-            let slug = normalize(raw_name);
-            let exception = exceptions.iter().find(|(name, _, _)| *name == slug);
-            let registry_item = registry_names.contains(&slug).then(|| slug.clone());
+        .map(|entry| {
+            let slug = &entry.id;
+            let exception = exceptions.iter().find(|(name, _, _)| name == slug);
+            let registry_item = registry_names.contains(slug).then(|| slug.clone());
             let derived_status = if registry_item.is_some() {
                 "built"
             } else {
@@ -286,7 +255,7 @@ fn build_catalog_axis(
                 _ => counts[1] += 1,
             }
             CatalogEntryOutput {
-                name: slug,
+                name: slug.clone(),
                 status,
                 registry_item,
                 notes: exception.map(|(_, _, note)| *note),
@@ -296,20 +265,52 @@ fn build_catalog_axis(
     (entries, counts)
 }
 
-fn read_shadcn_catalog(root: &Path) -> Result<ShadcnCatalog, String> {
-    let path = root.join("upstreams/shadcn/catalog.json");
-    let contents = fs::read_to_string(&path)
-        .map_err(|error| format!("cannot read {}: {error}", path.display()))?;
-    serde_json::from_str(&contents)
-        .map_err(|error| format!("cannot parse {}: {error}", path.display()))
+fn catalog_source_summary(snapshot: &CatalogSnapshot, axis_id: &str) -> serde_json::Value {
+    serde_json::json!({
+        "axis": snapshot.axis,
+        "source": snapshot.source,
+        "revision": snapshot.revision,
+        "catalog_refreshed_at": snapshot.refreshed_at,
+        "catalog_path": format!("statics/catalogs/{axis_id}.json"),
+        "refresh_command": format!("cargo xtask catalog fetch {axis_id}"),
+    })
 }
 
-fn read_dioxus_components_catalog(root: &Path) -> Result<DioxusComponentsCatalog, String> {
-    let path = root.join("upstreams/dioxus-components/catalog.json");
-    let contents = fs::read_to_string(&path)
-        .map_err(|error| format!("cannot read {}: {error}", path.display()))?;
-    serde_json::from_str(&contents)
-        .map_err(|error| format!("cannot parse {}: {error}", path.display()))
+/// Builds one upstream axis's full output section (source metadata, summary
+/// counts, per-entry status). Deliberately axis-id-agnostic beyond looking
+/// up an optional hand-exceptions table -- an axis with no entry in that
+/// match still produces a complete, correctly-derived section, which is what
+/// lets a newly registered axis work without editing this file's control
+/// flow (see spec's "New upstream axes are addable without changing
+/// compat-tooling internals").
+fn build_axis_section(
+    snapshot: &CatalogSnapshot,
+    axis_id: &str,
+    registry_names: &std::collections::BTreeSet<String>,
+) -> serde_json::Value {
+    let exceptions = match axis_id {
+        "shadcn" => SHADCN_EXCEPTIONS,
+        "dioxus-components" => DIOXUS_COMPONENT_EXCEPTIONS,
+        _ => &[],
+    };
+    let (entries, counts) = build_catalog_axis(snapshot, registry_names, exceptions);
+    let mut section = catalog_source_summary(snapshot, axis_id);
+    if let Some(map) = section.as_object_mut() {
+        map.insert(
+            "summary".to_string(),
+            serde_json::json!({
+                "total_upstream_components": snapshot.entries.len(),
+                "built": counts[0],
+                "not_started": counts[1],
+                "not_applicable": counts[2],
+            }),
+        );
+        map.insert(
+            "components".to_string(),
+            serde_json::to_value(entries).unwrap(),
+        );
+    }
+    section
 }
 
 fn build_document(root: &Path) -> Result<serde_json::Value, String> {
@@ -318,59 +319,25 @@ fn build_document(root: &Path) -> Result<serde_json::Value, String> {
         items.iter().map(|item| item.name.clone()).collect();
     let components = build_registry_components(root, &items);
 
-    let shadcn_catalog = read_shadcn_catalog(root)?;
-    let (shadcn_entries, shadcn_counts) = build_catalog_axis(
-        &shadcn_catalog.components,
-        |name| name.to_string(),
-        &registry_names,
-        SHADCN_EXCEPTIONS,
-    );
-
-    let dioxus_catalog = read_dioxus_components_catalog(root)?;
-    let (dioxus_entries, dioxus_counts) = build_catalog_axis(
-        &dioxus_catalog.styled_components,
-        kebab_case,
-        &registry_names,
-        DIOXUS_COMPONENT_EXCEPTIONS,
-    );
-
-    Ok(serde_json::json!({
-        "$schema_note": "Fully generated by `cargo xtask component-compat sync` from registry.json, upstreams/shadcn/catalog.json, upstreams/dioxus-components/catalog.json, and live Rust source. Hand-maintain only SHADCN_EXCEPTIONS/DIOXUS_COMPONENT_EXCEPTIONS in packages/adico-xtask/src/component_compat.rs; everything else is derived. This tracks current state only, not a completion ledger (parity.json was removed, see design.md §9).",
-        "synced_at": today(),
+    let mut document = serde_json::json!({
+        "$schema_note": "Fully generated by `cargo xtask component-compat sync` from registry.json, statics/catalogs/shadcn.json, statics/catalogs/dioxus-components.json, and live Rust source. Hand-maintain only SHADCN_EXCEPTIONS/DIOXUS_COMPONENT_EXCEPTIONS in packages/adico-xtask/src/component_compat.rs; everything else is derived. This tracks current state only, not a completion ledger (parity.json was removed, see design.md §9).",
+        "synced_at": crate::today(),
         "generator": "cargo xtask component-compat sync",
         "adico_registry": {
             "summary": { "total_components": components.len() },
             "components": components,
         },
-        "shadcn": {
-            "source": shadcn_catalog.source,
-            "revision": shadcn_catalog.revision,
-            "catalog_refreshed_at": shadcn_catalog.refreshed_at,
-            "catalog_path": "upstreams/shadcn/catalog.json",
-            "refresh_command": null,
-            "summary": {
-                "total_upstream_components": shadcn_catalog.components.len(),
-                "built": shadcn_counts[0],
-                "not_started": shadcn_counts[1],
-                "not_applicable": shadcn_counts[2],
-            },
-            "components": shadcn_entries,
-        },
-        "dioxus_components": {
-            "upstream": dioxus_catalog.upstream,
-            "revision": dioxus_catalog.revision,
-            "catalog_refreshed_at": dioxus_catalog.refreshed_at,
-            "catalog_path": "upstreams/dioxus-components/catalog.json",
-            "refresh_command": "cargo xtask upstream dioxus-components --source <local-clone> --refreshed-at <YYYY-MM-DD> --write",
-            "summary": {
-                "total_upstream_components": dioxus_catalog.styled_components.len(),
-                "built": dioxus_counts[0],
-                "not_started": dioxus_counts[1],
-                "not_applicable": dioxus_counts[2],
-            },
-            "components": dioxus_entries,
-        },
-    }))
+    });
+
+    for axis in catalog::axes_of_kind(AxisKind::Component) {
+        let snapshot = catalog::read_snapshot(root, axis.id)?;
+        let section = build_axis_section(&snapshot, axis.id, &registry_names);
+        if let Some(map) = document.as_object_mut() {
+            map.insert(axis.id.replace('-', "_"), section);
+        }
+    }
+
+    Ok(document)
 }
 
 pub fn sync(root: &Path) -> Result<(), String> {
@@ -387,11 +354,15 @@ pub fn sync(root: &Path) -> Result<(), String> {
         "  adico registry: {} components",
         document["adico_registry"]["summary"]["total_components"]
     );
-    println!("  shadcn: {}", document["shadcn"]["summary"]);
-    println!(
-        "  dioxus-components: {}",
-        document["dioxus_components"]["summary"]
-    );
+    if let Some(shadcn) = document.get("shadcn").and_then(|axis| axis.get("summary")) {
+        println!("  shadcn: {shadcn}");
+    }
+    if let Some(dioxus) = document
+        .get("dioxus_components")
+        .and_then(|axis| axis.get("summary"))
+    {
+        println!("  dioxus-components: {dioxus}");
+    }
     Ok(())
 }
 
@@ -413,4 +384,72 @@ pub fn check(root: &Path) -> Result<(), String> {
     }
     println!("component_compatibility.json is up to date.");
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::catalog::schema::{CatalogEntry, PartEntry, PropsSource};
+    use std::collections::BTreeSet;
+
+    fn fake_snapshot(axis: &str, ids: &[&str]) -> CatalogSnapshot {
+        CatalogSnapshot {
+            axis: axis.to_string(),
+            source: "https://example.invalid".to_string(),
+            revision: "test".to_string(),
+            refreshed_at: "2026-08-31".to_string(),
+            entries: ids
+                .iter()
+                .map(|id| CatalogEntry {
+                    id: id.to_string(),
+                    name: id.to_string(),
+                    parts: vec![PartEntry {
+                        id: "root".to_string(),
+                        composition: Vec::new(),
+                        props_source: PropsSource::Unavailable,
+                    }],
+                })
+                .collect(),
+        }
+    }
+
+    #[test]
+    fn separator_exception_survives_regardless_of_fetched_entries() {
+        let registry_names: BTreeSet<String> = BTreeSet::new();
+        let before = build_axis_section(
+            &fake_snapshot("shadcn", &["separator"]),
+            "shadcn",
+            &registry_names,
+        );
+        let after = build_axis_section(
+            &fake_snapshot("shadcn", &["separator", "new-thing"]),
+            "shadcn",
+            &registry_names,
+        );
+        assert_eq!(before["components"][0]["status"], "not_applicable");
+        assert_eq!(after["components"][0]["status"], "not_applicable");
+    }
+
+    /// Proves a fifth, entirely unrecognized axis id is processed correctly
+    /// by the same control flow as `shadcn`/`dioxus-components` -- no match
+    /// arm, no special case, just the wildcard `_ => &[]` exceptions lookup.
+    /// This is the mechanism that lets `build_document`'s
+    /// `catalog::axes_of_kind(AxisKind::Component)` loop pick up a newly
+    /// registered axis without any change to this file beyond registering
+    /// it in `catalog::AXES`.
+    #[test]
+    fn unrecognized_axis_id_still_produces_a_valid_section() {
+        let mut registry_names = BTreeSet::new();
+        registry_names.insert("widget".to_string());
+        let section = build_axis_section(
+            &fake_snapshot("second-component-lib", &["widget", "gizmo"]),
+            "second-component-lib",
+            &registry_names,
+        );
+        assert_eq!(section["summary"]["total_upstream_components"], 2);
+        assert_eq!(section["summary"]["built"], 1);
+        assert_eq!(section["summary"]["not_started"], 1);
+        assert_eq!(section["components"][0]["status"], "built");
+        assert_eq!(section["components"][1]["status"], "not_started");
+    }
 }

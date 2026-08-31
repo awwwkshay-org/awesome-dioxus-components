@@ -27,6 +27,12 @@ pub struct PropField {
     pub name: String,
     #[serde(rename = "type")]
     pub type_name: String,
+    /// The field's `#[props(default = ...)]` expression, when present.
+    /// `None` for a field with no declared default, not evidence that one
+    /// doesn't exist at runtime (e.g. `Option<T>` fields default to `None`
+    /// implicitly without a `#[props(...)]` attribute).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub default: Option<String>,
 }
 
 /// Introspect one Rust source file. Returns `exists: false` (not an error)
@@ -127,6 +133,7 @@ fn walk_items(items: &[Item], result: &mut FileIntrospection) {
                             Some(PropField {
                                 name,
                                 type_name: type_to_string(&field.ty),
+                                default: props_default_expr(&field.attrs),
                             })
                         })
                         .collect();
@@ -186,6 +193,7 @@ fn inline_component_props(item_fn: &syn::ItemFn) -> Option<Vec<PropField>> {
                 Some(PropField {
                     name: pat_ident.ident.to_string(),
                     type_name: type_to_string(&pat_type.ty),
+                    default: None,
                 })
             }
             FnArg::Receiver(_) => None,
@@ -196,6 +204,42 @@ fn inline_component_props(item_fn: &syn::ItemFn) -> Option<Vec<PropField>> {
     } else {
         Some(fields)
     }
+}
+
+/// Extracts the `default = <expr>` argument from a `#[props(...)]` attribute,
+/// if present. Dioxus' `#[derive(Props)]` also accepts a bare `#[props(default)]`
+/// (meaning "use `Default::default()`"), reported here as `"default()"`.
+fn props_default_expr(attrs: &[syn::Attribute]) -> Option<String> {
+    use quote::ToTokens;
+    for attr in attrs {
+        if !attr.path().is_ident("props") {
+            continue;
+        }
+        let mut default_value = None;
+        let mut saw_bare_default = false;
+        let _ = attr.parse_nested_meta(|meta| {
+            if meta.path.is_ident("default") {
+                if meta.input.peek(syn::Token![=]) {
+                    let value: syn::Expr = meta.value()?.parse()?;
+                    default_value = Some(clean_token_string(value.to_token_stream().to_string()));
+                } else {
+                    saw_bare_default = true;
+                }
+            } else {
+                // Consume this meta item's value (if any) so parsing the
+                // rest of the attribute's other args doesn't fail.
+                let _ = meta.value().and_then(|value| value.parse::<syn::Expr>());
+            }
+            Ok(())
+        });
+        if let Some(value) = default_value {
+            return Some(value);
+        }
+        if saw_bare_default {
+            return Some("default()".to_string());
+        }
+    }
+    None
 }
 
 fn collect_use_names(tree: &UseTree, out: &mut Vec<String>) {
@@ -214,9 +258,12 @@ fn collect_use_names(tree: &UseTree, out: &mut Vec<String>) {
 
 fn type_to_string(ty: &Type) -> String {
     use quote::ToTokens;
-    let raw = ty.to_token_stream().to_string();
-    // `quote!`'s Display always separates tokens with a space; clean up the
-    // common punctuation so `Option < String >` reads as `Option<String>`.
+    clean_token_string(ty.to_token_stream().to_string())
+}
+
+/// `quote!`'s Display always separates tokens with a space; clean up the
+/// common punctuation so `Option < String >` reads as `Option<String>`.
+fn clean_token_string(raw: String) -> String {
     let mut cleaned = raw;
     for (pattern, replacement) in [
         (" ::", "::"),
@@ -243,5 +290,42 @@ impl AttrExt for syn::Attribute {
     fn to_token_stream_string(&self) -> String {
         use quote::ToTokens;
         self.to_token_stream().to_string()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::Write;
+
+    #[test]
+    fn extracts_declared_and_bare_defaults() {
+        let source = r#"
+            #[derive(Props, Clone, PartialEq)]
+            pub struct WidgetProps {
+                pub open: Signal<bool>,
+                #[props(default = false)]
+                pub disabled: bool,
+                #[props(default)]
+                pub label: String,
+            }
+        "#;
+        let mut file = tempfile::NamedTempFile::new().expect("tempfile");
+        file.write_all(source.as_bytes()).expect("write fixture");
+        let introspection = introspect_file(file.path());
+        assert!(introspection.exists);
+        let fields = introspection
+            .props
+            .get("WidgetProps")
+            .expect("WidgetProps struct introspected");
+
+        let open = fields.iter().find(|f| f.name == "open").unwrap();
+        assert_eq!(open.default, None);
+
+        let disabled = fields.iter().find(|f| f.name == "disabled").unwrap();
+        assert_eq!(disabled.default.as_deref(), Some("false"));
+
+        let label = fields.iter().find(|f| f.name == "label").unwrap();
+        assert_eq!(label.default.as_deref(), Some("default()"));
     }
 }

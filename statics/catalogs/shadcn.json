@@ -1,0 +1,3932 @@
+{
+  "axis": "shadcn",
+  "source": "https://github.com/shadcn-ui/ui/tree/b4a618b97e35f5dadf3a00d51f410c84a2567d4d/apps/v4/registry/new-york-v4/ui",
+  "revision": "b4a618b97e35f5dadf3a00d51f410c84a2567d4d",
+  "refreshedAt": "2026-08-31",
+  "entries": [
+    {
+      "id": "accordion",
+      "name": "Accordion",
+      "parts": [
+        {
+          "id": "content",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "accordion",
+              "part": "content"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.accordion.content"
+          }
+        },
+        {
+          "id": "item",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "accordion",
+              "part": "item"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.accordion.item"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "accordion",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.accordion.root"
+          }
+        },
+        {
+          "id": "trigger",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "accordion",
+              "part": "trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.accordion.trigger"
+          }
+        }
+      ]
+    },
+    {
+      "id": "alert",
+      "name": "Alert",
+      "parts": [
+        {
+          "id": "description",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "title",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "alert-dialog",
+      "name": "AlertDialog",
+      "parts": [
+        {
+          "id": "action",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "alert-dialog",
+              "part": "action"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.alert-dialog.action"
+          }
+        },
+        {
+          "id": "cancel",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "alert-dialog",
+              "part": "cancel"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.alert-dialog.cancel"
+          }
+        },
+        {
+          "id": "content",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "alert-dialog",
+              "part": "content"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "size",
+                "type": "\"default\" | \"sm\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "description",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "alert-dialog",
+              "part": "description"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.alert-dialog.description"
+          }
+        },
+        {
+          "id": "footer",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "header",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "media",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "overlay",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "alert-dialog",
+              "part": "overlay"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.alert-dialog.overlay"
+          }
+        },
+        {
+          "id": "portal",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "alert-dialog",
+              "part": "portal"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.alert-dialog.portal"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "alert-dialog",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.alert-dialog.root"
+          }
+        },
+        {
+          "id": "title",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "alert-dialog",
+              "part": "title"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.alert-dialog.title"
+          }
+        },
+        {
+          "id": "trigger",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "alert-dialog",
+              "part": "trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.alert-dialog.trigger"
+          }
+        }
+      ]
+    },
+    {
+      "id": "aspect-ratio",
+      "name": "AspectRatio",
+      "parts": [
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "aspect-ratio",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.aspect-ratio.root"
+          }
+        }
+      ]
+    },
+    {
+      "id": "attachment",
+      "name": "Attachment",
+      "parts": [
+        {
+          "id": "action",
+          "composition": [
+            {
+              "axis": "@/registry/new-york-v4/ui/button",
+              "component": "button"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "@/registry/new-york-v4/ui/button.button.root"
+          }
+        },
+        {
+          "id": "actions",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "description",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "group",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "media",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "state",
+                "type": "\"idle\" | \"uploading\" | \"processing\" | \"error\" | \"done\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "title",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "trigger",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "asChild",
+                "type": "boolean"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "avatar",
+      "name": "Avatar",
+      "parts": [
+        {
+          "id": "badge",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "fallback",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "avatar",
+              "part": "fallback"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.avatar.fallback"
+          }
+        },
+        {
+          "id": "group",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "group-count",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "image",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "avatar",
+              "part": "image"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.avatar.image"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "avatar",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "size",
+                "type": "\"default\" | \"sm\" | \"lg\""
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "badge",
+      "name": "Badge",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "asChild",
+                "type": "boolean"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "breadcrumb",
+      "name": "Breadcrumb",
+      "parts": [
+        {
+          "id": "ellipsis",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "item",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "link",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "asChild",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "list",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "page",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "separator",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bubble",
+      "name": "Bubble",
+      "parts": [
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "asChild",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "group",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "reactions",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "align",
+                "type": "\"start\" | \"end\""
+              },
+              {
+                "name": "side",
+                "type": "\"top\" | \"bottom\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "align",
+                "type": "\"start\" | \"end\""
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "button",
+      "name": "Button",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "asChild",
+                "type": "boolean"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "button-group",
+      "name": "ButtonGroup",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "separator",
+          "composition": [
+            {
+              "axis": "@/registry/new-york-v4/ui/separator",
+              "component": "separator"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "@/registry/new-york-v4/ui/separator.separator.root"
+          }
+        },
+        {
+          "id": "text",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "asChild",
+                "type": "boolean"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "calendar",
+      "name": "Calendar",
+      "parts": [
+        {
+          "id": "day-button",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "react-day-picker",
+              "component": "day-picker"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "buttonVariant",
+                "type": "React.ComponentProps<typeof Button>[\"variant\"]"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "card",
+      "name": "Card",
+      "parts": [
+        {
+          "id": "action",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "description",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "footer",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "header",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "title",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "carousel",
+      "name": "Carousel",
+      "parts": [
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "item",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "next",
+          "composition": [
+            {
+              "axis": "@/registry/new-york-v4/ui/button",
+              "component": "button"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "@/registry/new-york-v4/ui/button.button.root"
+          }
+        },
+        {
+          "id": "previous",
+          "composition": [
+            {
+              "axis": "@/registry/new-york-v4/ui/button",
+              "component": "button"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "@/registry/new-york-v4/ui/button.button.root"
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "chart",
+      "name": "Chart",
+      "parts": [
+        {
+          "id": "container",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "config",
+                "type": "ChartConfig"
+              },
+              {
+                "name": "children",
+                "type": "React.ComponentProps<"
+              },
+              {
+                "name": "initialDimension",
+                "type": "{"
+              },
+              {
+                "name": "width",
+                "type": "number"
+              },
+              {
+                "name": "height",
+                "type": "number"
+              }
+            ]
+          }
+        },
+        {
+          "id": "legend-content",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "tooltip-content",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "checkbox",
+      "name": "Checkbox",
+      "parts": [
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "checkbox",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.checkbox.root"
+          }
+        }
+      ]
+    },
+    {
+      "id": "collapsible",
+      "name": "Collapsible",
+      "parts": [
+        {
+          "id": "content",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "collapsible",
+              "part": "collapsible-content"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.collapsible.collapsible-content"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "collapsible",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.collapsible.root"
+          }
+        },
+        {
+          "id": "trigger",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "collapsible",
+              "part": "collapsible-trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.collapsible.collapsible-trigger"
+          }
+        }
+      ]
+    },
+    {
+      "id": "combobox",
+      "name": "Combobox",
+      "parts": [
+        {
+          "id": "chip",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "chips",
+          "composition": [
+            {
+              "axis": "base-ui",
+              "component": "combobox",
+              "part": "chips"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "base-ui.combobox.chips"
+          }
+        },
+        {
+          "id": "chips-input",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "clear",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "collection",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "empty",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "group",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "input",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "item",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "label",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "list",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "separator",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "trigger",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "value",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "command",
+      "name": "Command",
+      "parts": [
+        {
+          "id": "dialog",
+          "composition": [
+            {
+              "axis": "@/registry/new-york-v4/ui/dialog",
+              "component": "dialog"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "title",
+                "type": "string"
+              },
+              {
+                "name": "description",
+                "type": "string"
+              },
+              {
+                "name": "className",
+                "type": "string"
+              },
+              {
+                "name": "showCloseButton",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "empty",
+          "composition": [
+            {
+              "axis": "cmdk",
+              "component": "command",
+              "part": "empty"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "cmdk.command.empty"
+          }
+        },
+        {
+          "id": "group",
+          "composition": [
+            {
+              "axis": "cmdk",
+              "component": "command",
+              "part": "group"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "cmdk.command.group"
+          }
+        },
+        {
+          "id": "input",
+          "composition": [
+            {
+              "axis": "cmdk",
+              "component": "command",
+              "part": "input"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "cmdk.command.input"
+          }
+        },
+        {
+          "id": "item",
+          "composition": [
+            {
+              "axis": "cmdk",
+              "component": "command",
+              "part": "item"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "cmdk.command.item"
+          }
+        },
+        {
+          "id": "list",
+          "composition": [
+            {
+              "axis": "cmdk",
+              "component": "command",
+              "part": "list"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "cmdk.command.list"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "cmdk",
+              "component": "command"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "cmdk.command.root"
+          }
+        },
+        {
+          "id": "separator",
+          "composition": [
+            {
+              "axis": "cmdk",
+              "component": "command",
+              "part": "separator"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "cmdk.command.separator"
+          }
+        },
+        {
+          "id": "shortcut",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "context-menu",
+      "name": "ContextMenu",
+      "parts": [
+        {
+          "id": "checkbox-item",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "context-menu",
+              "part": "checkbox-item"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.context-menu.checkbox-item"
+          }
+        },
+        {
+          "id": "content",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "context-menu",
+              "part": "content"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.context-menu.content"
+          }
+        },
+        {
+          "id": "group",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "context-menu",
+              "part": "group"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.context-menu.group"
+          }
+        },
+        {
+          "id": "item",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "context-menu",
+              "part": "item"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "inset",
+                "type": "boolean"
+              },
+              {
+                "name": "variant",
+                "type": "\"default\" | \"destructive\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "label",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "context-menu",
+              "part": "label"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "inset",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "portal",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "context-menu",
+              "part": "portal"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.context-menu.portal"
+          }
+        },
+        {
+          "id": "radio-group",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "context-menu",
+              "part": "radio-group"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.context-menu.radio-group"
+          }
+        },
+        {
+          "id": "radio-item",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "context-menu",
+              "part": "radio-item"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.context-menu.radio-item"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "context-menu",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.context-menu.root"
+          }
+        },
+        {
+          "id": "separator",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "context-menu",
+              "part": "separator"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.context-menu.separator"
+          }
+        },
+        {
+          "id": "shortcut",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "sub",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "context-menu",
+              "part": "sub"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.context-menu.sub"
+          }
+        },
+        {
+          "id": "sub-content",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "context-menu",
+              "part": "sub-content"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.context-menu.sub-content"
+          }
+        },
+        {
+          "id": "sub-trigger",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "context-menu",
+              "part": "sub-trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "inset",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "trigger",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "context-menu",
+              "part": "trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.context-menu.trigger"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dialog",
+      "name": "Dialog",
+      "parts": [
+        {
+          "id": "close",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dialog",
+              "part": "close"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dialog.close"
+          }
+        },
+        {
+          "id": "content",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dialog",
+              "part": "content"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "showCloseButton",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "description",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dialog",
+              "part": "description"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dialog.description"
+          }
+        },
+        {
+          "id": "footer",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "showCloseButton",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "header",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "overlay",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dialog",
+              "part": "overlay"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dialog.overlay"
+          }
+        },
+        {
+          "id": "portal",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dialog",
+              "part": "portal"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dialog.portal"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dialog",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dialog.root"
+          }
+        },
+        {
+          "id": "title",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dialog",
+              "part": "title"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dialog.title"
+          }
+        },
+        {
+          "id": "trigger",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dialog",
+              "part": "trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dialog.trigger"
+          }
+        }
+      ]
+    },
+    {
+      "id": "direction",
+      "name": "Direction",
+      "parts": [
+        {
+          "id": "provider",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "direction",
+              "part": "direction-provider"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "direction",
+                "type": "React.ComponentProps<typeof Direction.DirectionProvider>[\"dir\"]"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "drawer",
+      "name": "Drawer",
+      "parts": [
+        {
+          "id": "close",
+          "composition": [
+            {
+              "axis": "vaul",
+              "component": "drawer",
+              "part": "close"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "vaul.drawer.close"
+          }
+        },
+        {
+          "id": "content",
+          "composition": [
+            {
+              "axis": "vaul",
+              "component": "drawer",
+              "part": "content"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "vaul.drawer.content"
+          }
+        },
+        {
+          "id": "description",
+          "composition": [
+            {
+              "axis": "vaul",
+              "component": "drawer",
+              "part": "description"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "vaul.drawer.description"
+          }
+        },
+        {
+          "id": "footer",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "header",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "overlay",
+          "composition": [
+            {
+              "axis": "vaul",
+              "component": "drawer",
+              "part": "overlay"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "vaul.drawer.overlay"
+          }
+        },
+        {
+          "id": "portal",
+          "composition": [
+            {
+              "axis": "vaul",
+              "component": "drawer",
+              "part": "portal"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "vaul.drawer.portal"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "vaul",
+              "component": "drawer",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "vaul.drawer.root"
+          }
+        },
+        {
+          "id": "title",
+          "composition": [
+            {
+              "axis": "vaul",
+              "component": "drawer",
+              "part": "title"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "vaul.drawer.title"
+          }
+        },
+        {
+          "id": "trigger",
+          "composition": [
+            {
+              "axis": "vaul",
+              "component": "drawer",
+              "part": "trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "vaul.drawer.trigger"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dropdown-menu",
+      "name": "DropdownMenu",
+      "parts": [
+        {
+          "id": "checkbox-item",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dropdown-menu",
+              "part": "checkbox-item"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dropdown-menu.checkbox-item"
+          }
+        },
+        {
+          "id": "content",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dropdown-menu",
+              "part": "content"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dropdown-menu.content"
+          }
+        },
+        {
+          "id": "group",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dropdown-menu",
+              "part": "group"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dropdown-menu.group"
+          }
+        },
+        {
+          "id": "item",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dropdown-menu",
+              "part": "item"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "inset",
+                "type": "boolean"
+              },
+              {
+                "name": "variant",
+                "type": "\"default\" | \"destructive\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "label",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dropdown-menu",
+              "part": "label"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "inset",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "portal",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dropdown-menu",
+              "part": "portal"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dropdown-menu.portal"
+          }
+        },
+        {
+          "id": "radio-group",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dropdown-menu",
+              "part": "radio-group"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dropdown-menu.radio-group"
+          }
+        },
+        {
+          "id": "radio-item",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dropdown-menu",
+              "part": "radio-item"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dropdown-menu.radio-item"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dropdown-menu",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dropdown-menu.root"
+          }
+        },
+        {
+          "id": "separator",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dropdown-menu",
+              "part": "separator"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dropdown-menu.separator"
+          }
+        },
+        {
+          "id": "shortcut",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "sub",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dropdown-menu",
+              "part": "sub"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dropdown-menu.sub"
+          }
+        },
+        {
+          "id": "sub-content",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dropdown-menu",
+              "part": "sub-content"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dropdown-menu.sub-content"
+          }
+        },
+        {
+          "id": "sub-trigger",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dropdown-menu",
+              "part": "sub-trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "inset",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "trigger",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dropdown-menu",
+              "part": "trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dropdown-menu.trigger"
+          }
+        }
+      ]
+    },
+    {
+      "id": "empty",
+      "name": "Empty",
+      "parts": [
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "description",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "header",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "media",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "title",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "field",
+      "name": "Field",
+      "parts": [
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "description",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "error",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "errors",
+                "type": "Array<{ message?: string } | undefined>"
+              }
+            ]
+          }
+        },
+        {
+          "id": "group",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "label",
+          "composition": [
+            {
+              "axis": "@/registry/new-york-v4/ui/label",
+              "component": "label"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "@/registry/new-york-v4/ui/label.label.root"
+          }
+        },
+        {
+          "id": "legend",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "variant",
+                "type": "\"legend\" | \"label\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "separator",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "children",
+                "type": "React.ReactNode"
+              }
+            ]
+          }
+        },
+        {
+          "id": "set",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "title",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "form",
+      "name": "Form",
+      "parts": [
+        {
+          "id": "control",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "slot",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.slot.root"
+          }
+        },
+        {
+          "id": "description",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "item",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "label",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "message",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "hover-card",
+      "name": "HoverCard",
+      "parts": [
+        {
+          "id": "content",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "hover-card",
+              "part": "content"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.hover-card.content"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "hover-card",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.hover-card.root"
+          }
+        },
+        {
+          "id": "trigger",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "hover-card",
+              "part": "trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.hover-card.trigger"
+          }
+        }
+      ]
+    },
+    {
+      "id": "input",
+      "name": "Input",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "input-group",
+      "name": "InputGroup",
+      "parts": [
+        {
+          "id": "addon",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "button",
+          "composition": [
+            {
+              "axis": "@/registry/new-york-v4/ui/button",
+              "component": "button"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "@/registry/new-york-v4/ui/button.button.root"
+          }
+        },
+        {
+          "id": "input",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "text",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "textarea",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "input-otp",
+      "name": "InputOtp",
+      "parts": [
+        {
+          "id": "input-o-t-p",
+          "composition": [
+            {
+              "axis": "input-otp",
+              "component": "o-t-p-input"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "containerClassName",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        {
+          "id": "input-o-t-p-group",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "input-o-t-p-separator",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "input-o-t-p-slot",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "index",
+                "type": "number"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "item",
+      "name": "Item",
+      "parts": [
+        {
+          "id": "actions",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "description",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "footer",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "group",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "header",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "media",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "asChild",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "separator",
+          "composition": [
+            {
+              "axis": "@/registry/new-york-v4/ui/separator",
+              "component": "separator"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "@/registry/new-york-v4/ui/separator.separator.root"
+          }
+        },
+        {
+          "id": "title",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "kbd",
+      "name": "Kbd",
+      "parts": [
+        {
+          "id": "group",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "label",
+      "name": "Label",
+      "parts": [
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "label",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.label.root"
+          }
+        }
+      ]
+    },
+    {
+      "id": "marker",
+      "name": "Marker",
+      "parts": [
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "icon",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "asChild",
+                "type": "boolean"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "menubar",
+      "name": "Menubar",
+      "parts": [
+        {
+          "id": "checkbox-item",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "menubar",
+              "part": "checkbox-item"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.menubar.checkbox-item"
+          }
+        },
+        {
+          "id": "content",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "menubar",
+              "part": "content"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.menubar.content"
+          }
+        },
+        {
+          "id": "group",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "menubar",
+              "part": "group"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.menubar.group"
+          }
+        },
+        {
+          "id": "item",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "menubar",
+              "part": "item"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "inset",
+                "type": "boolean"
+              },
+              {
+                "name": "variant",
+                "type": "\"default\" | \"destructive\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "label",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "menubar",
+              "part": "label"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "inset",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "menu",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "menubar",
+              "part": "menu"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.menubar.menu"
+          }
+        },
+        {
+          "id": "portal",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "menubar",
+              "part": "portal"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.menubar.portal"
+          }
+        },
+        {
+          "id": "radio-group",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "menubar",
+              "part": "radio-group"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.menubar.radio-group"
+          }
+        },
+        {
+          "id": "radio-item",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "menubar",
+              "part": "radio-item"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.menubar.radio-item"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "menubar",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.menubar.root"
+          }
+        },
+        {
+          "id": "separator",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "menubar",
+              "part": "separator"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.menubar.separator"
+          }
+        },
+        {
+          "id": "shortcut",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "sub",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "menubar",
+              "part": "sub"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.menubar.sub"
+          }
+        },
+        {
+          "id": "sub-content",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "menubar",
+              "part": "sub-content"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.menubar.sub-content"
+          }
+        },
+        {
+          "id": "sub-trigger",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "menubar",
+              "part": "sub-trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "inset",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "trigger",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "menubar",
+              "part": "trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.menubar.trigger"
+          }
+        }
+      ]
+    },
+    {
+      "id": "message",
+      "name": "Message",
+      "parts": [
+        {
+          "id": "avatar",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "footer",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "group",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "header",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "align",
+                "type": "\"start\" | \"end\""
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "message-scroller",
+      "name": "MessageScroller",
+      "parts": [
+        {
+          "id": "button",
+          "composition": [
+            {
+              "axis": "@shadcn/react/message-scroller",
+              "component": "message-scroller",
+              "part": "button"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "@shadcn/react/message-scroller.message-scroller.button"
+          }
+        },
+        {
+          "id": "content",
+          "composition": [
+            {
+              "axis": "@shadcn/react/message-scroller",
+              "component": "message-scroller",
+              "part": "content"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "@shadcn/react/message-scroller.message-scroller.content"
+          }
+        },
+        {
+          "id": "item",
+          "composition": [
+            {
+              "axis": "@shadcn/react/message-scroller",
+              "component": "message-scroller",
+              "part": "item"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "@shadcn/react/message-scroller.message-scroller.item"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "@shadcn/react/message-scroller",
+              "component": "message-scroller",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "@shadcn/react/message-scroller.message-scroller.root"
+          }
+        },
+        {
+          "id": "viewport",
+          "composition": [
+            {
+              "axis": "@shadcn/react/message-scroller",
+              "component": "message-scroller",
+              "part": "viewport"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "@shadcn/react/message-scroller.message-scroller.viewport"
+          }
+        }
+      ]
+    },
+    {
+      "id": "native-select",
+      "name": "NativeSelect",
+      "parts": [
+        {
+          "id": "opt-group",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "option",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "size",
+                "type": "\"sm\" | \"default\""
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "navigation-menu",
+      "name": "NavigationMenu",
+      "parts": [
+        {
+          "id": "content",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "navigation-menu",
+              "part": "content"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.navigation-menu.content"
+          }
+        },
+        {
+          "id": "indicator",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "navigation-menu",
+              "part": "indicator"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.navigation-menu.indicator"
+          }
+        },
+        {
+          "id": "item",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "navigation-menu",
+              "part": "item"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.navigation-menu.item"
+          }
+        },
+        {
+          "id": "link",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "navigation-menu",
+              "part": "link"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.navigation-menu.link"
+          }
+        },
+        {
+          "id": "list",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "navigation-menu",
+              "part": "list"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.navigation-menu.list"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "navigation-menu",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "viewport",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "trigger",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "navigation-menu",
+              "part": "trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.navigation-menu.trigger"
+          }
+        },
+        {
+          "id": "viewport",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "navigation-menu",
+              "part": "viewport"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.navigation-menu.viewport"
+          }
+        }
+      ]
+    },
+    {
+      "id": "pagination",
+      "name": "Pagination",
+      "parts": [
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "ellipsis",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "item",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "link",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "next",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "previous",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "popover",
+      "name": "Popover",
+      "parts": [
+        {
+          "id": "anchor",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "popover",
+              "part": "anchor"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.popover.anchor"
+          }
+        },
+        {
+          "id": "content",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "popover",
+              "part": "content"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.popover.content"
+          }
+        },
+        {
+          "id": "description",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "header",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "popover",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.popover.root"
+          }
+        },
+        {
+          "id": "title",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "trigger",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "popover",
+              "part": "trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.popover.trigger"
+          }
+        }
+      ]
+    },
+    {
+      "id": "progress",
+      "name": "Progress",
+      "parts": [
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "progress",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.progress.root"
+          }
+        }
+      ]
+    },
+    {
+      "id": "radio-group",
+      "name": "RadioGroup",
+      "parts": [
+        {
+          "id": "item",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "radio-group",
+              "part": "item"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.radio-group.item"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "radio-group",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.radio-group.root"
+          }
+        }
+      ]
+    },
+    {
+      "id": "resizable",
+      "name": "Resizable",
+      "parts": [
+        {
+          "id": "handle",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "panel",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "panel-group",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scroll-area",
+      "name": "ScrollArea",
+      "parts": [
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "scroll-area",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.scroll-area.root"
+          }
+        },
+        {
+          "id": "scroll-bar",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "scroll-area",
+              "part": "scroll-area-scrollbar"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.scroll-area.scroll-area-scrollbar"
+          }
+        }
+      ]
+    },
+    {
+      "id": "select",
+      "name": "Select",
+      "parts": [
+        {
+          "id": "content",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "select",
+              "part": "content"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.select.content"
+          }
+        },
+        {
+          "id": "group",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "select",
+              "part": "group"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.select.group"
+          }
+        },
+        {
+          "id": "item",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "select",
+              "part": "item"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.select.item"
+          }
+        },
+        {
+          "id": "label",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "select",
+              "part": "label"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.select.label"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "select",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.select.root"
+          }
+        },
+        {
+          "id": "scroll-down-button",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "select",
+              "part": "scroll-down-button"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.select.scroll-down-button"
+          }
+        },
+        {
+          "id": "scroll-up-button",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "select",
+              "part": "scroll-up-button"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.select.scroll-up-button"
+          }
+        },
+        {
+          "id": "separator",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "select",
+              "part": "separator"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.select.separator"
+          }
+        },
+        {
+          "id": "trigger",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "select",
+              "part": "trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "size",
+                "type": "\"sm\" | \"default\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "value",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "select",
+              "part": "value"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.select.value"
+          }
+        }
+      ]
+    },
+    {
+      "id": "separator",
+      "name": "Separator",
+      "parts": [
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "separator",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.separator.root"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sheet",
+      "name": "Sheet",
+      "parts": [
+        {
+          "id": "close",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dialog",
+              "part": "close"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dialog.close"
+          }
+        },
+        {
+          "id": "content",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dialog",
+              "part": "content"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "side",
+                "type": "\"top\" | \"right\" | \"bottom\" | \"left\""
+              },
+              {
+                "name": "showCloseButton",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "description",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dialog",
+              "part": "description"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dialog.description"
+          }
+        },
+        {
+          "id": "footer",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "header",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "overlay",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dialog",
+              "part": "overlay"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dialog.overlay"
+          }
+        },
+        {
+          "id": "portal",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dialog",
+              "part": "portal"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dialog.portal"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dialog",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dialog.root"
+          }
+        },
+        {
+          "id": "title",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dialog",
+              "part": "title"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dialog.title"
+          }
+        },
+        {
+          "id": "trigger",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "dialog",
+              "part": "trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.dialog.trigger"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sidebar",
+      "name": "Sidebar",
+      "parts": [
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "footer",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "group",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "group-action",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "asChild",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "group-content",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "group-label",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "asChild",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "header",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "input",
+          "composition": [
+            {
+              "axis": "@/registry/new-york-v4/ui/input",
+              "component": "input"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "@/registry/new-york-v4/ui/input.input.root"
+          }
+        },
+        {
+          "id": "inset",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "menu",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "menu-action",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "asChild",
+                "type": "boolean"
+              },
+              {
+                "name": "showOnHover",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "menu-badge",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "menu-button",
+          "composition": [
+            {
+              "axis": "@/registry/new-york-v4/ui/tooltip",
+              "component": "tooltip-content"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "@/registry/new-york-v4/ui/tooltip.tooltip-content.root"
+          }
+        },
+        {
+          "id": "menu-item",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "menu-skeleton",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "showIcon",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "menu-sub",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "menu-sub-button",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "asChild",
+                "type": "boolean"
+              },
+              {
+                "name": "size",
+                "type": "\"sm\" | \"md\""
+              },
+              {
+                "name": "isActive",
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        {
+          "id": "menu-sub-item",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "provider",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "rail",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "side",
+                "type": "\"left\" | \"right\""
+              },
+              {
+                "name": "variant",
+                "type": "\"sidebar\" | \"floating\" | \"inset\""
+              },
+              {
+                "name": "collapsible",
+                "type": "\"offcanvas\" | \"icon\" | \"none\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "separator",
+          "composition": [
+            {
+              "axis": "@/registry/new-york-v4/ui/separator",
+              "component": "separator"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "@/registry/new-york-v4/ui/separator.separator.root"
+          }
+        },
+        {
+          "id": "trigger",
+          "composition": [
+            {
+              "axis": "@/registry/new-york-v4/ui/button",
+              "component": "button"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "@/registry/new-york-v4/ui/button.button.root"
+          }
+        }
+      ]
+    },
+    {
+      "id": "skeleton",
+      "name": "Skeleton",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "slider",
+      "name": "Slider",
+      "parts": [
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "slider",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.slider.root"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sonner",
+      "name": "Sonner"
+    },
+    {
+      "id": "spinner",
+      "name": "Spinner",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "switch",
+      "name": "Switch",
+      "parts": [
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "switch",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "size",
+                "type": "\"sm\" | \"default\""
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "table",
+      "name": "Table",
+      "parts": [
+        {
+          "id": "body",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "caption",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "cell",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "footer",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "head",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "header",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "row",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tabs",
+      "name": "Tabs",
+      "parts": [
+        {
+          "id": "content",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "tabs",
+              "part": "content"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.tabs.content"
+          }
+        },
+        {
+          "id": "list",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "tabs",
+              "part": "list"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.tabs.list"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "tabs",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.tabs.root"
+          }
+        },
+        {
+          "id": "trigger",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "tabs",
+              "part": "trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.tabs.trigger"
+          }
+        }
+      ]
+    },
+    {
+      "id": "textarea",
+      "name": "Textarea",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "toggle",
+      "name": "Toggle",
+      "parts": [
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "toggle",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.toggle.root"
+          }
+        }
+      ]
+    },
+    {
+      "id": "toggle-group",
+      "name": "ToggleGroup",
+      "parts": [
+        {
+          "id": "item",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "toggle-group",
+              "part": "item"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.toggle-group.item"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "toggle-group",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "spacing",
+                "type": "number"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "tooltip",
+      "name": "Tooltip",
+      "parts": [
+        {
+          "id": "content",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "tooltip",
+              "part": "content"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.tooltip.content"
+          }
+        },
+        {
+          "id": "provider",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "tooltip",
+              "part": "provider"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.tooltip.provider"
+          }
+        },
+        {
+          "id": "root",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "tooltip",
+              "part": "root"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.tooltip.root"
+          }
+        },
+        {
+          "id": "trigger",
+          "composition": [
+            {
+              "axis": "radix",
+              "component": "tooltip",
+              "part": "trigger"
+            }
+          ],
+          "propsSource": {
+            "kind": "inherits_from",
+            "reference": "radix.tooltip.trigger"
+          }
+        }
+      ]
+    }
+  ]
+}

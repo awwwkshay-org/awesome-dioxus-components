@@ -16,3 +16,8 @@ serde_json = { workspace = true }
 reqwest = { workspace = true }
 syn = { version = "2", features = ["full", "extra-traits"] }
 quote = "1"
+tempfile = "3"
+flate2 = "1"
+tar = "0.4"
+scraper = "0.21"
+regex = "1"

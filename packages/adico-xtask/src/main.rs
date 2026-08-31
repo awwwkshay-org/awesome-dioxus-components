@@ -1,8 +1,32 @@
 //! Repository automation for Awesome Dioxus Components.
 
+mod catalog;
 mod component_compat;
 mod primitive_compat;
 mod rust_introspect;
+
+pub(crate) fn today() -> String {
+    let output = Command::new("date").arg("+%Y-%m-%d").output();
+    match output {
+        Ok(output) if output.status.success() => {
+            String::from_utf8_lossy(&output.stdout).trim().to_string()
+        }
+        _ => "unknown".to_string(),
+    }
+}
+
+pub(crate) fn now_utc() -> String {
+    let output = Command::new("date")
+        .arg("-u")
+        .arg("+%Y-%m-%dT%H:%M:%SZ")
+        .output();
+    match output {
+        Ok(output) if output.status.success() => {
+            String::from_utf8_lossy(&output.stdout).trim().to_string()
+        }
+        _ => "unknown".to_string(),
+    }
+}
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::env;
@@ -23,16 +47,6 @@ struct ProvenanceRecord {
     id: String,
     revision: String,
     local_paths: Vec<String>,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-#[serde(rename_all = "camelCase")]
-struct DioxusComponentsSnapshot {
-    upstream: String,
-    revision: String,
-    refreshed_at: String,
-    styled_components: Vec<String>,
-    primitive_source_paths: Vec<String>,
 }
 
 #[derive(Debug, Serialize)]
@@ -75,46 +89,6 @@ fn main() {
                 std::process::exit(1);
             }
         }
-        [command, upstream] if command == "upstream" && upstream == "dioxus-components" => {
-            if let Err(error) = report_dioxus_components_snapshot() {
-                eprintln!("upstream inventory failed: {error}");
-                std::process::exit(1);
-            }
-        }
-        [command, upstream, flag, source, date_flag, refreshed_at]
-            if command == "upstream"
-                && upstream == "dioxus-components"
-                && flag == "--source"
-                && date_flag == "--refreshed-at" =>
-        {
-            if let Err(error) =
-                refresh_dioxus_components_snapshot(Path::new(source), refreshed_at, false)
-            {
-                eprintln!("upstream inventory failed: {error}");
-                std::process::exit(1);
-            }
-        }
-        [
-            command,
-            upstream,
-            flag,
-            source,
-            date_flag,
-            refreshed_at,
-            write_flag,
-        ] if command == "upstream"
-            && upstream == "dioxus-components"
-            && flag == "--source"
-            && date_flag == "--refreshed-at"
-            && write_flag == "--write" =>
-        {
-            if let Err(error) =
-                refresh_dioxus_components_snapshot(Path::new(source), refreshed_at, true)
-            {
-                eprintln!("upstream inventory failed: {error}");
-                std::process::exit(1);
-            }
-        }
         [command, subcommand] if command == "primitive-compat" && subcommand == "sync" => {
             run_compat(primitive_compat::sync);
         }
@@ -122,10 +96,7 @@ fn main() {
             run_compat(primitive_compat::check);
         }
         [command, subcommand] if command == "primitive-compat" && subcommand == "diff" => {
-            if let Err(error) = primitive_compat::diff() {
-                eprintln!("primitive-compat diff failed: {error}");
-                std::process::exit(1);
-            }
+            run_compat(primitive_compat::diff);
         }
         [command, subcommand] if command == "component-compat" && subcommand == "sync" => {
             run_compat(component_compat::sync);
@@ -133,13 +104,67 @@ fn main() {
         [command, subcommand] if command == "component-compat" && subcommand == "check" => {
             run_compat(component_compat::check);
         }
+        [command, subcommand, axis] if command == "catalog" && subcommand == "fetch" => {
+            if let Err(error) = catalog_fetch(axis, None) {
+                eprintln!("catalog fetch failed: {error}");
+                std::process::exit(1);
+            }
+        }
+        [command, subcommand, axis, flag, revision]
+            if command == "catalog" && subcommand == "fetch" && flag == "--revision" =>
+        {
+            if let Err(error) = catalog_fetch(axis, Some(revision.as_str())) {
+                eprintln!("catalog fetch failed: {error}");
+                std::process::exit(1);
+            }
+        }
+        [command, subcommand] if command == "catalog" && subcommand == "fetch" => {
+            eprintln!(
+                "usage: cargo xtask catalog fetch <axis|all> [--revision <sha>]\nknown axes:\n{}",
+                catalog::usage_lines()
+            );
+            std::process::exit(2);
+        }
         _ => {
             eprintln!(
-                "usage:\n  cargo xtask provenance check\n  cargo xtask registry build\n  cargo xtask registry validate [--source <registry-directory-or-manifest>]\n  cargo xtask upstream dioxus-components\n  cargo xtask upstream dioxus-components --source <local-clone> --refreshed-at <YYYY-MM-DD> [--write]\n  cargo xtask primitive-compat sync|check|diff\n  cargo xtask component-compat sync|check"
+                "usage:\n  cargo xtask provenance check\n  cargo xtask registry build\n  cargo xtask registry validate [--source <registry-directory-or-manifest>]\n  cargo xtask catalog fetch <axis|all> [--revision <sha>]\n  cargo xtask primitive-compat sync|check|diff\n  cargo xtask component-compat sync|check"
             );
             std::process::exit(2);
         }
     }
+}
+
+fn catalog_fetch(axis: &str, revision: Option<&str>) -> Result<(), String> {
+    let root = repository_root()?;
+    let axis_ids: Vec<&str> = if axis == "all" {
+        catalog::AXES.iter().map(|axis| axis.id).collect()
+    } else {
+        vec![axis]
+    };
+
+    for axis_id in axis_ids {
+        let Some(axis_def) = catalog::find(axis_id) else {
+            return Err(format!(
+                "unknown axis '{axis_id}'; known axes:\n{}",
+                catalog::usage_lines()
+            ));
+        };
+        let snapshot = (axis_def.fetch)(revision)?;
+        let dir = catalog::statics_dir(&root);
+        fs::create_dir_all(&dir)
+            .map_err(|error| format!("cannot create {}: {error}", dir.display()))?;
+        let path = catalog::statics_path(&root, axis_id);
+        let payload = serde_json::to_string_pretty(&snapshot)
+            .map_err(|error| format!("cannot serialize {axis_id} catalog: {error}"))?;
+        write_if_changed(&path, &format!("{payload}\n"))?;
+        println!(
+            "wrote {} ({} entries, revision {})",
+            path.display(),
+            snapshot.entries.len(),
+            snapshot.revision
+        );
+    }
+    Ok(())
 }
 
 fn run_compat(action: impl FnOnce(&Path) -> Result<(), String>) {
@@ -312,199 +337,6 @@ fn write_if_changed(path: &Path, contents: &str) -> Result<(), String> {
             .map_err(|error| format!("cannot write {}: {error}", path.display()))?;
     }
     Ok(())
-}
-
-fn report_dioxus_components_snapshot() -> Result<(), String> {
-    let root = repository_root()?;
-    let path = dioxus_components_snapshot_path(&root);
-    let snapshot = read_dioxus_components_snapshot(&path)?;
-    validate_sorted_unique(&snapshot.styled_components, "styled components")?;
-    validate_sorted_unique(&snapshot.primitive_source_paths, "primitive source paths")?;
-    println!(
-        "Dioxus Components snapshot: {} styled component(s), {} primitive source unit(s), revision {} (refreshed {})",
-        snapshot.styled_components.len(),
-        snapshot.primitive_source_paths.len(),
-        snapshot.revision,
-        snapshot.refreshed_at
-    );
-    Ok(())
-}
-
-fn refresh_dioxus_components_snapshot(
-    source: &Path,
-    refreshed_at: &str,
-    write: bool,
-) -> Result<(), String> {
-    let root = repository_root()?;
-    let path = dioxus_components_snapshot_path(&root);
-    let previous = path
-        .exists()
-        .then(|| read_dioxus_components_snapshot(&path))
-        .transpose()?;
-    let next = inspect_dioxus_components_source(source, refreshed_at)?;
-
-    if let Some(previous) = previous {
-        report_inventory_diff(
-            "styled components",
-            &previous.styled_components,
-            &next.styled_components,
-        );
-        report_inventory_diff(
-            "primitive source units",
-            &previous.primitive_source_paths,
-            &next.primitive_source_paths,
-        );
-    } else {
-        println!(
-            "Dioxus Components initial snapshot: {} styled component(s), {} primitive source unit(s)",
-            next.styled_components.len(),
-            next.primitive_source_paths.len()
-        );
-    }
-
-    if write {
-        let serialized = serde_json::to_string_pretty(&next)
-            .map_err(|error| format!("cannot serialize upstream snapshot: {error}"))?;
-        fs::write(&path, format!("{serialized}\n"))
-            .map_err(|error| format!("cannot write {}: {error}", path.display()))?;
-        println!("wrote {}", path.display());
-    } else {
-        println!("dry run only; pass --write to update the checked-in snapshot");
-    }
-    Ok(())
-}
-
-fn inspect_dioxus_components_source(
-    source: &Path,
-    refreshed_at: &str,
-) -> Result<DioxusComponentsSnapshot, String> {
-    if !refreshed_at.bytes().enumerate().all(|(index, byte)| {
-        matches!(index, 4 | 7) && byte == b'-' || !matches!(index, 4 | 7) && byte.is_ascii_digit()
-    }) || refreshed_at.len() != 10
-    {
-        return Err("--refreshed-at must use YYYY-MM-DD".to_string());
-    }
-    let revision = Command::new("git")
-        .args(["-C"])
-        .arg(source)
-        .args(["rev-parse", "HEAD"])
-        .output()
-        .map_err(|error| format!("cannot inspect git revision: {error}"))?;
-    if !revision.status.success() {
-        return Err(format!("cannot read revision from {}", source.display()));
-    }
-    let revision = String::from_utf8(revision.stdout)
-        .map_err(|error| format!("git revision was not UTF-8: {error}"))?
-        .trim()
-        .to_string();
-    let styled_components = names_in_directory(&source.join("preview/src/components"))?;
-    let mut primitive_source_paths = Vec::new();
-    collect_relative_source_paths(
-        &source.join("primitives/src"),
-        &source.join("primitives"),
-        &mut primitive_source_paths,
-    )?;
-    primitive_source_paths.sort();
-
-    Ok(DioxusComponentsSnapshot {
-        upstream: "https://github.com/DioxusLabs/dioxus-components".to_string(),
-        revision,
-        refreshed_at: refreshed_at.to_string(),
-        styled_components,
-        primitive_source_paths,
-    })
-}
-
-fn dioxus_components_snapshot_path(root: &Path) -> PathBuf {
-    root.join("upstreams/dioxus-components/catalog.json")
-}
-
-fn read_dioxus_components_snapshot(path: &Path) -> Result<DioxusComponentsSnapshot, String> {
-    let contents = fs::read_to_string(path)
-        .map_err(|error| format!("cannot read {}: {error}", path.display()))?;
-    serde_json::from_str(&contents)
-        .map_err(|error| format!("{} is invalid: {error}", path.display()))
-}
-
-fn names_in_directory(directory: &Path) -> Result<Vec<String>, String> {
-    let mut names = Vec::new();
-    for entry in fs::read_dir(directory)
-        .map_err(|error| format!("cannot read {}: {error}", directory.display()))?
-    {
-        let entry = entry.map_err(|error| format!("cannot read directory entry: {error}"))?;
-        if entry.path().is_dir() {
-            names.push(entry.file_name().to_string_lossy().into_owned());
-        }
-    }
-    names.sort();
-    Ok(names)
-}
-
-fn collect_relative_source_paths(
-    directory: &Path,
-    base: &Path,
-    paths: &mut Vec<String>,
-) -> Result<(), String> {
-    for entry in fs::read_dir(directory)
-        .map_err(|error| format!("cannot read {}: {error}", directory.display()))?
-    {
-        let entry = entry.map_err(|error| format!("cannot read source entry: {error}"))?;
-        let path = entry.path();
-        if path.is_dir() {
-            collect_relative_source_paths(&path, base, paths)?;
-        } else if matches!(
-            path.extension().and_then(|value| value.to_str()),
-            Some("rs") | Some("js") | Some("ts")
-        ) {
-            let relative = path
-                .strip_prefix(base)
-                .map_err(|error| format!("cannot relativize {}: {error}", path.display()))?;
-            paths.push(relative.to_string_lossy().into_owned());
-        }
-    }
-    Ok(())
-}
-
-fn validate_sorted_unique(values: &[String], label: &str) -> Result<(), String> {
-    if values.windows(2).all(|pair| pair[0] < pair[1]) {
-        Ok(())
-    } else {
-        Err(format!("snapshot {label} must be sorted and unique"))
-    }
-}
-
-fn report_inventory_diff(label: &str, previous: &[String], next: &[String]) {
-    let previous: BTreeSet<_> = previous.iter().collect();
-    let next: BTreeSet<_> = next.iter().collect();
-    let added: Vec<_> = next.difference(&previous).collect();
-    let removed: Vec<_> = previous.difference(&next).collect();
-    println!(
-        "{label}: {} added, {} removed{}{}",
-        added.len(),
-        removed.len(),
-        added
-            .is_empty()
-            .then(String::new)
-            .unwrap_or_else(|| format!(
-                " (added: {})",
-                added
-                    .iter()
-                    .map(|value| value.as_str())
-                    .collect::<Vec<_>>()
-                    .join(", ")
-            )),
-        removed
-            .is_empty()
-            .then(String::new)
-            .unwrap_or_else(|| format!(
-                " (removed: {})",
-                removed
-                    .iter()
-                    .map(|value| value.as_str())
-                    .collect::<Vec<_>>()
-                    .join(", ")
-            ))
-    );
 }
 
 fn check_provenance() -> Result<(), String> {

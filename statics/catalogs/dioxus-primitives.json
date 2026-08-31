@@ -1,0 +1,4531 @@
+{
+  "axis": "dioxus-primitives",
+  "source": "https://github.com/DioxusLabs/dioxus-components/tree/bf007c15d0cf4d04d3181cc46cf12325aa773955/primitives/src",
+  "revision": "bf007c15d0cf4d04d3181cc46cf12325aa773955",
+  "refreshedAt": "2026-08-31",
+  "entries": [
+    {
+      "id": "accordion",
+      "name": "accordion",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "Option<String>"
+              },
+              {
+                "name": "allow_multiple_open",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "collapsible",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "horizontal",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "item",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "default_open",
+                "type": "bool",
+                "default": "default()"
+              },
+              {
+                "name": "on_change",
+                "type": "Callback<bool,()>",
+                "default": "default()"
+              },
+              {
+                "name": "on_trigger_click",
+                "type": "Callback",
+                "default": "default()"
+              },
+              {
+                "name": "index",
+                "type": "usize"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "trigger",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "alert-dialog",
+      "name": "alert_dialog",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "default_open",
+                "type": "bool",
+                "default": "default()"
+              },
+              {
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>",
+                "default": "default()"
+              },
+              {
+                "name": "on_open_change",
+                "type": "Callback<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "title",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "description",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "actions",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "action",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "on_click",
+                "type": "Option<EventHandler<MouseEvent>>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cancel",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "on_click",
+                "type": "Option<EventHandler<MouseEvent>>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "aspect-ratio",
+      "name": "aspect_ratio",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "ratio",
+                "type": "f64",
+                "default": "1.0"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "avatar",
+      "name": "avatar",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "on_load",
+                "type": "Option<EventHandler<()>>",
+                "default": "default()"
+              },
+              {
+                "name": "on_error",
+                "type": "Option<EventHandler<()>>",
+                "default": "default()"
+              },
+              {
+                "name": "on_state_change",
+                "type": "Option<EventHandler<AvatarState>>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fallback",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "image",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>",
+                "default": "default()"
+              },
+              {
+                "name": "src",
+                "type": "String"
+              },
+              {
+                "name": "alt",
+                "type": "Option<String>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "calendar",
+      "name": "calendar",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "selected_date",
+                "type": "ReadSignal<Option<Date>>",
+                "default": "default()"
+              },
+              {
+                "name": "on_date_change",
+                "type": "Callback<Option<Date>>",
+                "default": "default()"
+              },
+              {
+                "name": "on_format_weekday",
+                "type": "Callback<Weekday, String>",
+                "default": "Callback::new(| weekday : Weekday | weekday_abbreviation(weekday) . to_string())"
+              },
+              {
+                "name": "on_format_month",
+                "type": "Callback<Month, String>",
+                "default": "Callback::new(| month : Month | month . to_string())"
+              },
+              {
+                "name": "view_date",
+                "type": "ReadSignal<Date>",
+                "default": "ReadSignal::new(Signal::new(OffsetDateTime::now_local_date()))"
+              },
+              {
+                "name": "today",
+                "type": "Date",
+                "default": "OffsetDateTime::now_local_date()"
+              },
+              {
+                "name": "on_view_change",
+                "type": "Callback<Date>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "first_day_of_week",
+                "type": "Weekday",
+                "default": "Weekday::Sunday"
+              },
+              {
+                "name": "min_date",
+                "type": "Date",
+                "default": "date !(1925 - 01 - 01)"
+              },
+              {
+                "name": "max_date",
+                "type": "Date",
+                "default": "date !(2050 - 12 - 31)"
+              },
+              {
+                "name": "disabled_ranges",
+                "type": "ReadSignal<Vec<DateRange>>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "range-calendar",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "selected_range",
+                "type": "ReadSignal<Option<DateRange>>",
+                "default": "default()"
+              },
+              {
+                "name": "on_range_change",
+                "type": "Callback<Option<DateRange>>",
+                "default": "default()"
+              },
+              {
+                "name": "on_format_weekday",
+                "type": "Callback<Weekday, String>",
+                "default": "Callback::new(| weekday : Weekday | weekday_abbreviation(weekday) . to_string())"
+              },
+              {
+                "name": "on_format_month",
+                "type": "Callback<Month, String>",
+                "default": "Callback::new(| month : Month | month . to_string())"
+              },
+              {
+                "name": "view_date",
+                "type": "ReadSignal<Date>",
+                "default": "ReadSignal::new(Signal::new(OffsetDateTime::now_local_date()))"
+              },
+              {
+                "name": "today",
+                "type": "Date",
+                "default": "OffsetDateTime::now_local_date()"
+              },
+              {
+                "name": "on_view_change",
+                "type": "Callback<Date>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "first_day_of_week",
+                "type": "Weekday",
+                "default": "Weekday::Sunday"
+              },
+              {
+                "name": "min_date",
+                "type": "Date",
+                "default": "date !(1925 - 01 - 01)"
+              },
+              {
+                "name": "max_date",
+                "type": "Date",
+                "default": "date !(2050 - 12 - 31)"
+              },
+              {
+                "name": "disabled_ranges",
+                "type": "ReadSignal<Vec<DateRange>>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "view",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "offset",
+                "type": "Option<u8>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "header",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "Option<String>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "navigation",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "previous-month-button",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "next-month-button",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "month-title",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        },
+        {
+          "id": "grid",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "Option<String>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        },
+        {
+          "id": "grid-root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "Option<String>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "grid-head",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "grid-header-row",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "grid-day-header",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "weekday",
+                "type": "Weekday"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Option<Element>",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "grid-body",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "grid-week",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "grid-cell",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "select-month",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "select-month-select",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        },
+        {
+          "id": "select-month-option",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "month",
+                "type": "Month"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Option<Element>",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "select-month-value",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "select-year",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "select-year-select",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        },
+        {
+          "id": "select-year-option",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "year",
+                "type": "i32"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Option<Element>",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "select-year-value",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "day",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "date",
+                "type": "Date"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Option<Element>",
+                "default": "default()"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "checkbox",
+      "name": "checkbox",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "checked",
+                "type": "ReadSignal<Option<CheckboxState>>"
+              },
+              {
+                "name": "default_checked",
+                "type": "CheckboxState",
+                "default": "CheckboxState::Unchecked"
+              },
+              {
+                "name": "required",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "name",
+                "type": "ReadSignal<String>",
+                "default": "default()"
+              },
+              {
+                "name": "value",
+                "type": "ReadSignal<String>",
+                "default": "ReadSignal::new(Signal::new(String::from(\"on\")))"
+              },
+              {
+                "name": "on_checked_change",
+                "type": "Callback<CheckboxState>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "indicator",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "collapsible",
+      "name": "collapsible",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "keep_mounted",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "default_open",
+                "type": "bool",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "name": "on_open_change",
+                "type": "Callback<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "r#as",
+                "type": "Option<Callback<Vec<Attribute>, Element>>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "trigger",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "r#as",
+                "type": "Option<Callback<Vec<Attribute>, Element>>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "collection",
+      "name": "collection"
+    },
+    {
+      "id": "color-picker",
+      "name": "color_picker"
+    },
+    {
+      "id": "color-picker",
+      "name": "color_picker",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "color",
+                "type": "ReadSignal<Hsv<encoding::Srgb, f64>>",
+                "default": "default()"
+              },
+              {
+                "name": "on_color_change",
+                "type": "Callback<Hsv<encoding::Srgb, f64>>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "color-area",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "step",
+                "type": "ReadSignal<f64>",
+                "default": "1.0"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "area-track",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "area-thumb",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "area-thumb-saturation-input",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        },
+        {
+          "id": "area-thumb-value-input",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "combobox",
+      "name": "combobox",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "value",
+                "type": "Option<ReadSignal<Option<T>>>",
+                "default": "default()"
+              },
+              {
+                "name": "default_value",
+                "type": "Option<T>",
+                "default": "default()"
+              },
+              {
+                "name": "on_value_change",
+                "type": "Callback<Option<T>>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>",
+                "default": "default()"
+              },
+              {
+                "name": "default_open",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "on_open_change",
+                "type": "Callback<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "query",
+                "type": "ReadSignal<Option<String>>",
+                "default": "default()"
+              },
+              {
+                "name": "default_query",
+                "type": "ReadSignal<String>",
+                "default": "default()"
+              },
+              {
+                "name": "on_query_change",
+                "type": "Callback<String>",
+                "default": "default()"
+              },
+              {
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "filter",
+                "type": "Callback<(String, String), bool>",
+                "default": "Callback::new(|(q, t) :(String, String) | default_combobox_filter(& q, & t))"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "empty",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "input",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "placeholder",
+                "type": "ReadSignal<String>",
+                "default": "default()"
+              },
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        },
+        {
+          "id": "list",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "option",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "value",
+                "type": "ReadSignal<T>"
+              },
+              {
+                "name": "text_value",
+                "type": "ReadSignal<Option<String>>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>",
+                "default": "default()"
+              },
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "aria_label",
+                "type": "Option<String>",
+                "default": "default()"
+              },
+              {
+                "name": "aria_roledescription",
+                "type": "Option<String>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "item-indicator",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "context-menu",
+      "name": "context_menu",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(false))"
+              },
+              {
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "name": "default_open",
+                "type": "bool",
+                "default": "default()"
+              },
+              {
+                "name": "on_open_change",
+                "type": "Callback<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "trigger",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "item",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(false))"
+              },
+              {
+                "name": "value",
+                "type": "ReadSignal<String>"
+              },
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "on_select",
+                "type": "Callback<String>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "date-picker",
+      "name": "date_picker",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "on_value_change",
+                "type": "Callback<Option<Date>>",
+                "default": "default()"
+              },
+              {
+                "name": "selected_date",
+                "type": "ReadSignal<Option<Date>>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "read_only",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(false))"
+              },
+              {
+                "name": "min_date",
+                "type": "Date",
+                "default": "date !(1925 - 01 - 01)"
+              },
+              {
+                "name": "max_date",
+                "type": "Date",
+                "default": "date !(2050 - 12 - 31)"
+              },
+              {
+                "name": "disabled_ranges",
+                "type": "ReadSignal<Vec<DateRange>>",
+                "default": "default()"
+              },
+              {
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(false))"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "date-range-picker",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "on_range_change",
+                "type": "Callback<Option<DateRange>>",
+                "default": "default()"
+              },
+              {
+                "name": "selected_range",
+                "type": "ReadSignal<Option<DateRange>>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "read_only",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(false))"
+              },
+              {
+                "name": "min_date",
+                "type": "Date",
+                "default": "date !(1925 - 01 - 01)"
+              },
+              {
+                "name": "max_date",
+                "type": "Date",
+                "default": "date !(2050 - 12 - 31)"
+              },
+              {
+                "name": "disabled_ranges",
+                "type": "ReadSignal<Vec<DateRange>>",
+                "default": "default()"
+              },
+              {
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(false))"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "popover",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "is_modal",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "name": "default_open",
+                "type": "bool",
+                "default": "default()"
+              },
+              {
+                "name": "on_open_change",
+                "type": "Callback<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "popover_root",
+                "type": "fn(PopoverRootProps) ->Element",
+                "default": "PopoverRoot"
+              }
+            ]
+          }
+        },
+        {
+          "id": "calendar",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "on_format_weekday",
+                "type": "Callback<Weekday, String>",
+                "default": "Callback::new(| weekday : Weekday | weekday_abbreviation(weekday) . to_string())"
+              },
+              {
+                "name": "on_format_month",
+                "type": "Callback<Month, String>",
+                "default": "Callback::new(| month : Month | month . to_string())"
+              },
+              {
+                "name": "view_date",
+                "type": "ReadSignal<Date>",
+                "default": "ReadSignal::new(Signal::new(OffsetDateTime::now_local_date()))"
+              },
+              {
+                "name": "today",
+                "type": "Date",
+                "default": "OffsetDateTime::now_local_date()"
+              },
+              {
+                "name": "on_view_change",
+                "type": "Callback<Date>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "first_day_of_week",
+                "type": "Weekday",
+                "default": "Weekday::Sunday"
+              },
+              {
+                "name": "min_date",
+                "type": "Date",
+                "default": "date !(1925 - 01 - 01)"
+              },
+              {
+                "name": "max_date",
+                "type": "Date",
+                "default": "date !(2050 - 12 - 31)"
+              },
+              {
+                "name": "disabled_ranges",
+                "type": "ReadSignal<Vec<DateRange>>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "calendar",
+                "type": "fn(T) ->Element",
+                "default": "T::default_calendar"
+              }
+            ]
+          }
+        },
+        {
+          "id": "date-range-picker-calendar",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "year-segment",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        },
+        {
+          "id": "month-segment",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        },
+        {
+          "id": "day-segment",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        },
+        {
+          "id": "separator",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "symbol",
+                "type": "char",
+                "default": "'-'"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        },
+        {
+          "id": "input-value",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "on_format_day_placeholder",
+                "type": "Callback<(), String>",
+                "default": "Callback::new(| _ | \"D\" . to_string())"
+              },
+              {
+                "name": "on_format_month_placeholder",
+                "type": "Callback<(), String>",
+                "default": "Callback::new(| _ | \"M\" . to_string())"
+              },
+              {
+                "name": "on_format_year_placeholder",
+                "type": "Callback<(), String>",
+                "default": "Callback::new(| _ | \"Y\" . to_string())"
+              },
+              {
+                "name": "children",
+                "type": "Option<Element>",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "date-range-picker-input-value",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "on_format_day_placeholder",
+                "type": "Callback<(), String>",
+                "default": "Callback::new(| _ | \"D\" . to_string())"
+              },
+              {
+                "name": "on_format_month_placeholder",
+                "type": "Callback<(), String>",
+                "default": "Callback::new(| _ | \"M\" . to_string())"
+              },
+              {
+                "name": "on_format_year_placeholder",
+                "type": "Callback<(), String>",
+                "default": "Callback::new(| _ | \"Y\" . to_string())"
+              },
+              {
+                "name": "children",
+                "type": "Option<Element>",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "date-range-picker-start-value",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "children",
+                "type": "Option<Element>",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "date-range-picker-end-value",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "children",
+                "type": "Option<Element>",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "input",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "on_format_day_placeholder",
+                "type": "Callback<(), String>",
+                "default": "Callback::new(| _ | \"D\" . to_string())"
+              },
+              {
+                "name": "on_format_month_placeholder",
+                "type": "Callback<(), String>",
+                "default": "Callback::new(| _ | \"M\" . to_string())"
+              },
+              {
+                "name": "on_format_year_placeholder",
+                "type": "Callback<(), String>",
+                "default": "Callback::new(| _ | \"Y\" . to_string())"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Option<Element>",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "date-range-picker-input",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dialog",
+      "name": "dialog",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "is_modal",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "name": "default_open",
+                "type": "bool",
+                "default": "default()"
+              },
+              {
+                "name": "on_open_change",
+                "type": "Callback<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "title",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "description",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "drag-and-drop-list",
+      "name": "drag_and_drop_list",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "items",
+                "type": "Vec<Element>"
+              },
+              {
+                "name": "aria_label",
+                "type": "Option<String>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Option<Element>",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "items",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "aria_label",
+                "type": "String"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Option<Element>",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "drag-and-drop-instructions",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        },
+        {
+          "id": "drag-and-drop-live-region",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        },
+        {
+          "id": "item",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "index",
+                "type": "usize"
+              },
+              {
+                "name": "item_key",
+                "type": "Option<String>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "drag-and-drop-drop-indicator",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "index",
+                "type": "usize"
+              },
+              {
+                "name": "position",
+                "type": "& 'static str"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "dropdown-menu",
+      "name": "dropdown_menu",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "name": "default_open",
+                "type": "bool",
+                "default": "default()"
+              },
+              {
+                "name": "on_open_change",
+                "type": "Callback<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "trigger",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "r#as",
+                "type": "Option<Callback<Vec<Attribute>, Element>>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "item",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "value",
+                "type": "ReadSignal<T>"
+              },
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "on_select",
+                "type": "Callback<T>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "hover-card",
+      "name": "hover_card",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "name": "default_open",
+                "type": "bool",
+                "default": "default()"
+              },
+              {
+                "name": "on_open_change",
+                "type": "Callback<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "trigger",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>",
+                "default": "default()"
+              },
+              {
+                "name": "side",
+                "type": "ContentSide",
+                "default": "ContentSide::Top"
+              },
+              {
+                "name": "align",
+                "type": "ContentAlign",
+                "default": "ContentAlign::Center"
+              },
+              {
+                "name": "force_mount",
+                "type": "bool",
+                "default": "true"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "label",
+      "name": "label",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "html_for",
+                "type": "ReadSignal<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "listbox",
+      "name": "listbox"
+    },
+    {
+      "id": "menubar",
+      "name": "menubar",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "menu",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "trigger",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "item",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "value",
+                "type": "String"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "on_select",
+                "type": "Callback<String>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "move-interaction",
+      "name": "move_interaction"
+    },
+    {
+      "id": "navbar",
+      "name": "navbar",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "nav",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "trigger",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "item",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "value",
+                "type": "String"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "on_select",
+                "type": "Callback<String>",
+                "default": "default()"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "active_class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "new_tab",
+                "type": "bool",
+                "default": "default()"
+              },
+              {
+                "name": "onclick",
+                "type": "Option<EventHandler<MouseEvent>>"
+              },
+              {
+                "name": "onmounted",
+                "type": "Option<EventHandler<MountedEvent>>"
+              },
+              {
+                "name": "onclick_only",
+                "type": "bool",
+                "default": "default()"
+              },
+              {
+                "name": "rel",
+                "type": "Option<String>"
+              },
+              {
+                "name": "to",
+                "type": "NavigationTarget"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "pointer",
+      "name": "pointer"
+    },
+    {
+      "id": "popover",
+      "name": "popover",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "is_modal",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "name": "default_open",
+                "type": "bool",
+                "default": "default()"
+              },
+              {
+                "name": "on_open_change",
+                "type": "Callback<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>",
+                "default": "default()"
+              },
+              {
+                "name": "side",
+                "type": "ContentSide",
+                "default": "ContentSide::Bottom"
+              },
+              {
+                "name": "align",
+                "type": "ContentAlign",
+                "default": "ContentAlign::Center"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "content-rendered",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "trigger",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "portal",
+      "name": "portal",
+      "parts": [
+        {
+          "id": "in",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        },
+        {
+          "id": "out",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "progress",
+      "name": "progress",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "value",
+                "type": "ReadSignal<Option<f64>>"
+              },
+              {
+                "name": "max",
+                "type": "ReadSignal<f64>",
+                "default": "ReadSignal::new(Signal::new(100.0))"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "indicator",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "radio-group",
+      "name": "radio_group",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "value",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "default_value",
+                "type": "String",
+                "default": "default()"
+              },
+              {
+                "name": "on_value_change",
+                "type": "Callback<String>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "required",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "name",
+                "type": "ReadSignal<String>",
+                "default": "default()"
+              },
+              {
+                "name": "horizontal",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "radio-item",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "value",
+                "type": "ReadSignal<String>"
+              },
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "id",
+                "type": "Option<String>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "scroll-area",
+      "name": "scroll_area",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>",
+                "default": "default()"
+              },
+              {
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "select",
+      "name": "select",
+      "parts": [
+        {
+          "id": "group",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "group-label",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "list",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "option",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "value",
+                "type": "ReadSignal<T>"
+              },
+              {
+                "name": "text_value",
+                "type": "ReadSignal<Option<String>>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>",
+                "default": "default()"
+              },
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "aria_label",
+                "type": "Option<String>",
+                "default": "default()"
+              },
+              {
+                "name": "aria_roledescription",
+                "type": "Option<String>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "item-indicator",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "value",
+                "type": "Option<ReadSignal<Option<T>>>",
+                "default": "default()"
+              },
+              {
+                "name": "default_value",
+                "type": "Option<T>",
+                "default": "default()"
+              },
+              {
+                "name": "on_value_change",
+                "type": "Callback<Option<T>>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>",
+                "default": "default()"
+              },
+              {
+                "name": "default_open",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "on_open_change",
+                "type": "Callback<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "name",
+                "type": "ReadSignal<String>",
+                "default": "default()"
+              },
+              {
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "typeahead_timeout",
+                "type": "ReadSignal<Duration>",
+                "default": "ReadSignal::new(Signal::new(Duration::from_millis(1000)))"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "multi",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "values",
+                "type": "ReadSignal<Option<Vec<T>>>",
+                "default": "default()"
+              },
+              {
+                "name": "default_values",
+                "type": "Vec<T>",
+                "default": "default()"
+              },
+              {
+                "name": "on_values_change",
+                "type": "Callback<Vec<T>>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>",
+                "default": "default()"
+              },
+              {
+                "name": "default_open",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "on_open_change",
+                "type": "Callback<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "name",
+                "type": "ReadSignal<String>",
+                "default": "default()"
+              },
+              {
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "typeahead_timeout",
+                "type": "ReadSignal<Duration>",
+                "default": "ReadSignal::new(Signal::new(Duration::from_millis(1000)))"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "trigger",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "value",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "placeholder",
+                "type": "ReadSignal<String>",
+                "default": "ReadSignal::new(Signal::new(String::from(\"Select an option\")))"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "selectable",
+      "name": "selectable"
+    },
+    {
+      "id": "selection",
+      "name": "selection"
+    },
+    {
+      "id": "separator",
+      "name": "separator",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "horizontal",
+                "type": "bool",
+                "default": "true"
+              },
+              {
+                "name": "decorative",
+                "type": "bool",
+                "default": "false"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "slider",
+      "name": "slider",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "value",
+                "type": "ReadSignal<Option<f64>>"
+              },
+              {
+                "name": "default_value",
+                "type": "f64",
+                "default": "0.0"
+              },
+              {
+                "name": "min",
+                "type": "ReadSignal<f64>",
+                "default": "0.0"
+              },
+              {
+                "name": "max",
+                "type": "ReadSignal<f64>",
+                "default": "100.0"
+              },
+              {
+                "name": "step",
+                "type": "ReadSignal<f64>",
+                "default": "1.0"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "horizontal",
+                "type": "bool",
+                "default": "true"
+              },
+              {
+                "name": "inverted",
+                "type": "bool",
+                "default": "default()"
+              },
+              {
+                "name": "on_value_change",
+                "type": "Callback<f64>",
+                "default": "default()"
+              },
+              {
+                "name": "label",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "range-slider",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "value",
+                "type": "ReadSignal<Option<Range<f64>>>"
+              },
+              {
+                "name": "default_value",
+                "type": "Range<f64>",
+                "default": "ordered_range(0.0, 100.0)"
+              },
+              {
+                "name": "min",
+                "type": "ReadSignal<f64>",
+                "default": "0.0"
+              },
+              {
+                "name": "max",
+                "type": "ReadSignal<f64>",
+                "default": "100.0"
+              },
+              {
+                "name": "step",
+                "type": "ReadSignal<f64>",
+                "default": "1.0"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "horizontal",
+                "type": "bool",
+                "default": "true"
+              },
+              {
+                "name": "inverted",
+                "type": "bool",
+                "default": "default()"
+              },
+              {
+                "name": "on_value_change",
+                "type": "Callback<Range<f64>>",
+                "default": "default()"
+              },
+              {
+                "name": "label",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "track",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "range",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "thumb",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "index",
+                "type": "Option<usize>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "switch",
+      "name": "switch",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "checked",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "name": "default_checked",
+                "type": "bool",
+                "default": "false"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(false))"
+              },
+              {
+                "name": "required",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "name",
+                "type": "ReadSignal<String>",
+                "default": "default()"
+              },
+              {
+                "name": "value",
+                "type": "ReadSignal<String>",
+                "default": "ReadSignal::new(Signal::new(String::from(\"on\")))"
+              },
+              {
+                "name": "on_checked_change",
+                "type": "Callback<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "thumb",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "tabs",
+      "name": "tabs",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "value",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "default_value",
+                "type": "String",
+                "default": "default()"
+              },
+              {
+                "name": "on_value_change",
+                "type": "Callback<String>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "horizontal",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "tab-list",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "tab-trigger",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "value",
+                "type": "String"
+              },
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "id",
+                "type": "Option<String>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "tab-content",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "value",
+                "type": "String"
+              },
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "tag-group",
+      "name": "tag_group",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "value",
+                "type": "Option<ReadSignal<Option<T>>>",
+                "default": "default()"
+              },
+              {
+                "name": "default_value",
+                "type": "Option<T>",
+                "default": "default()"
+              },
+              {
+                "name": "on_value_change",
+                "type": "Callback<Option<T>>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "selectable",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "allow_empty_selection",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "escape_clears_selection",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "multi",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "values",
+                "type": "ReadSignal<Option<Vec<T>>>",
+                "default": "default()"
+              },
+              {
+                "name": "default_values",
+                "type": "Vec<T>",
+                "default": "default()"
+              },
+              {
+                "name": "on_values_change",
+                "type": "Callback<Vec<T>>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "selectable",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "allow_empty_selection",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "escape_clears_selection",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "label",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "tag-list",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "empty",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "tag-option",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "value",
+                "type": "ReadSignal<T>"
+              },
+              {
+                "name": "text_value",
+                "type": "ReadSignal<Option<String>>",
+                "default": "default()"
+              },
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "tag-remove-button",
+          "propsSource": {
+            "kind": "unavailable"
+          }
+        }
+      ]
+    },
+    {
+      "id": "toast",
+      "name": "toast",
+      "parts": [
+        {
+          "id": "provider",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "default_duration",
+                "type": "ReadSignal<Option<Duration>>",
+                "default": "ReadSignal::new(Signal::new(Some(Duration::from_secs(5))))"
+              },
+              {
+                "name": "max_toasts",
+                "type": "ReadSignal<usize>",
+                "default": "ReadSignal::new(Signal::new(10))"
+              },
+              {
+                "name": "render_toast",
+                "type": "Callback<ToastPropsWithOwner, Element>",
+                "default": "Callback::new(| props : ToastPropsWithOwner | rsx ! { Toast { .. props } })"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "list",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "list-item",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "usize"
+              },
+              {
+                "name": "index",
+                "type": "usize"
+              },
+              {
+                "name": "title",
+                "type": "String"
+              },
+              {
+                "name": "description",
+                "type": "Option<String>"
+              },
+              {
+                "name": "toast_type",
+                "type": "ToastType"
+              },
+              {
+                "name": "on_close",
+                "type": "Callback<MouseEvent>"
+              },
+              {
+                "name": "permanent",
+                "type": "bool",
+                "default": "false"
+              },
+              {
+                "name": "duration",
+                "type": "Option<Duration>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Option<Element>",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "title",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Option<Element>",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "description",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Option<Element>",
+                "default": "default()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "close-button",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Option<Element>",
+                "default": "default()"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "toggle",
+      "name": "toggle",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "pressed",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "name": "default_pressed",
+                "type": "bool",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "on_pressed_change",
+                "type": "Callback<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "onmounted",
+                "type": "Callback<Event<MountedData>>",
+                "default": "default()"
+              },
+              {
+                "name": "onfocus",
+                "type": "Callback<Event<FocusData>>",
+                "default": "default()"
+              },
+              {
+                "name": "onkeydown",
+                "type": "Callback<Event<KeyboardData>>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "toggle-group",
+      "name": "toggle_group",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "default_pressed",
+                "type": "HashSet<usize>",
+                "default": "default()"
+              },
+              {
+                "name": "pressed",
+                "type": "ReadSignal<Option<HashSet<usize>>>"
+              },
+              {
+                "name": "on_pressed_change",
+                "type": "Callback<HashSet<usize>>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "allow_multiple_pressed",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "horizontal",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "toggle-item",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "toolbar",
+      "name": "toolbar",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "horizontal",
+                "type": "ReadSignal<bool>",
+                "default": "ReadSignal::new(Signal::new(true))"
+              },
+              {
+                "name": "aria_label",
+                "type": "Option<String>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "button",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "on_click",
+                "type": "Callback<()>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "separator",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "horizontal",
+                "type": "Option<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "decorative",
+                "type": "bool",
+                "default": "false"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "tooltip",
+      "name": "tooltip",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "name": "default_open",
+                "type": "bool",
+                "default": "default()"
+              },
+              {
+                "name": "on_open_change",
+                "type": "Callback<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "trigger",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "Option<String>",
+                "default": "default()"
+              },
+              {
+                "name": "r#as",
+                "type": "Option<Callback<Vec<Attribute>, Element>>",
+                "default": "default()"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        {
+          "id": "content",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>",
+                "default": "default()"
+              },
+              {
+                "name": "side",
+                "type": "ContentSide",
+                "default": "ContentSide::Top"
+              },
+              {
+                "name": "align",
+                "type": "ContentAlign",
+                "default": "ContentAlign::Center"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "virtual",
+      "name": "virtual"
+    },
+    {
+      "id": "virtual-list",
+      "name": "virtual_list",
+      "parts": [
+        {
+          "id": "root",
+          "propsSource": {
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "count",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "buffer",
+                "type": "ReadSignal<usize>",
+                "default": "ReadSignal::new(Signal::new(8))"
+              },
+              {
+                "name": "estimate_size",
+                "type": "Option<Callback<usize, u32>>"
+              },
+              {
+                "name": "render_item",
+                "type": "Callback<usize, Element>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

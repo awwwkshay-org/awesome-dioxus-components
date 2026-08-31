@@ -21,6 +21,16 @@ they were imported together and have identical origin and license details.
 5. Run `cargo xtask provenance check` once M1 introduces that command. Until
    then, validate records against the checked-in schema during review.
 
+Provenance records above track *imported source*. Separately, `adico`'s own
+compatibility tooling (`primitive-compat`, `component-compat`) compares
+itself against upstream *inventories* (component/primitive lists, props,
+composition) for shadcn, Base UI, dioxus-components, and dioxus-primitives.
+Those are revision-pinned snapshots at `statics/catalogs/<axis>.json`,
+refreshed only by the explicit, network-touching `cargo xtask catalog fetch
+<axis|all> [--revision <sha>]` command -- every other adico-xtask command,
+including `primitive-compat`/`component-compat` themselves, reads only the
+committed snapshots and never touches the network.
+
 ## Initial upstream candidates
 
 | Upstream | Intended use | License | Status |
