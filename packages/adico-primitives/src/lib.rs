@@ -77,6 +77,7 @@ pub mod listbox;
 pub mod move_interaction;
 pub mod pointer;
 pub mod portal;
+pub mod positioner;
 pub mod scroll_lock;
 pub mod selectable;
 pub mod selection;
@@ -434,6 +435,17 @@ impl ContentSide {
             Self::Right => "right",
             Self::Bottom => "bottom",
             Self::Left => "left",
+        }
+    }
+
+    /// The side directly across from this one, used by [`crate::positioner`]
+    /// to flip placement when the preferred side has no room.
+    pub(crate) fn opposite(self) -> Self {
+        match self {
+            Self::Top => Self::Bottom,
+            Self::Bottom => Self::Top,
+            Self::Left => Self::Right,
+            Self::Right => Self::Left,
         }
     }
 }
