@@ -304,6 +304,13 @@ pub struct PositionerProps {
     /// be a dedicated prop.
     #[props(default)]
     pub on_blur: Callback<Event<FocusData>>,
+    /// Called on `pointerdown` targeting the positioned element or one of
+    /// its descendants — e.g. so a combobox's listbox can
+    /// `event.prevent_default()` to keep focus in its input rather than
+    /// having it stolen by the pointer interaction. See `on_mouse_enter`'s
+    /// doc comment for why this needs to be a dedicated prop.
+    #[props(default)]
+    pub on_pointer_down: Callback<Event<PointerData>>,
     /// Additional attributes for the positioned element.
     #[props(extends = GlobalAttributes)]
     pub attributes: Vec<Attribute>,
@@ -403,6 +410,7 @@ pub fn Positioner(props: PositionerProps) -> Element {
             onmouseleave: move |event| props.on_mouse_leave.call(event),
             onkeydown: move |event| props.on_keydown.call(event),
             onblur: move |event| props.on_blur.call(event),
+            onpointerdown: move |event| props.on_pointer_down.call(event),
             ..props.attributes,
             {props.children}
         }

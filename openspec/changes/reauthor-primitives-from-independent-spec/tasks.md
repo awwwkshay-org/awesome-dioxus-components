@@ -140,10 +140,30 @@
       browser at all. Tracked as a follow-up distinct from this task; SSR rendering, ARIA
       wiring, and escape/layer wiring are otherwise confirmed correct both by unit tests and by
       inspecting live DOM state (`data-state="open"`, correct ids, correct `aria-*`).
-- [ ] 2.2 Re-author `combobox/{mod,context}.rs` + `combobox/components/{mod,combobox,input,
+- [x] 2.2 Re-author `combobox/{mod,context}.rs` + `combobox/components/{mod,combobox,input,
       list,empty,option}.rs` (8 files) as a single `combobox.rs`, same positioner/layer
       migration. Verify: `cargo test -p adico-primitives combobox`, relevant Playwright spec,
-      directory removed, provenance count decreases by 8.
+      directory removed, provenance count decreases by 8. Done 2026-08-31: consolidated into
+      `packages/adico-primitives/src/combobox.rs`, mirroring 2.1's design exactly (root
+      `use_escape_key`, list `use_outside_dismiss` + `Positioner`, both via a new `root_id`).
+      `ComboboxInput` already generated its own overridable id pre-rewrite (unlike
+      `SelectTrigger`) — preserved that and published it to a new `ComboboxContext.input_id`
+      for `Positioner`'s anchor instead of replacing it. `positioner.rs` needed one more prop
+      beyond 2.1's three: `on_pointer_down`, since the listbox already prevented pointer-down
+      default to keep DOM focus in the input (combobox never moves focus into options, unlike
+      select). Added 6 tests in `tests/test_combobox.rs`; two draft per-option assertions
+      (selection, filter-visibility, the empty state) were written, found to pass only
+      vacuously — `ComboboxOption`'s own visibility depends on the same `use_effect`-driven
+      option-registration hook `select.rs`'s tests already found untestable under a bare
+      `rebuild_in_place()`, so a matches-everything and a matches-nothing query produced
+      identical, entirely-optionless output — and removed rather than kept as misleading
+      coverage. `cargo test -p adico-primitives` and `registry validate` both green;
+      provenance `9 imported record(s), 44 source unit(s)` (−8, exact). No consumer fixture or
+      Playwright spec exists for combobox at all (unlike select) — creating one is task 2.4's
+      scope, not this one's — so live-browser verification remains an open gap here too,
+      compounded by 2.1's already-documented pre-existing `positioner.rs` `document::eval`
+      bug. SSR rendering, ARIA wiring, and the escape/layer wiring are otherwise confirmed
+      correct by the unit tests and code review against 2.1's now-proven design.
 - [ ] 2.3 Re-author `dropdown_menu.rs`, `menubar.rs`, `context_menu.rs` onto the unified
       `menu::Menu` anatomy, per task `7.8e`. These are zero-churn today — author tests from
       the ARIA APG Menu/Menubar pattern before rewriting (none exist currently). Verify:
