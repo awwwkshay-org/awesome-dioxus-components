@@ -268,10 +268,19 @@
       `test_move_interaction.rs` pattern). Full baseline green; provenance `9 imported
       record(s), 38 source unit(s)` (−3, exact). No registry facade change (select.rs's/
       combobox.rs's public API unaffected).
-- [ ] 3.4 Run full baseline validation suite; confirm no consumer of these internals
+- [x] 3.4 Run full baseline validation suite; confirm no consumer of these internals
       (accordion, dialog, popover, select, combobox, tabs, calendar, menubar, toolbar,
       slider, color-picker, drag-and-drop-list) regressed: `cargo check --workspace`,
-      relevant Playwright specs.
+      relevant Playwright specs. Done 2026-08-31: 3.1-3.3 made zero runtime behavior changes
+      — every change across `portal.rs`, `pointer.rs`, `move_interaction.rs`, `listbox.rs`,
+      `selection.rs`, `selectable.rs` was a header/doc rewrite, `pub`-visibility widening for
+      external testability, or moving inline tests to `tests/*.rs`; no function body's logic
+      changed. `cargo check --locked --workspace` and the full baseline test suite passed
+      cleanly after every commit in this wave already; re-running both here confirms no
+      drift. Given zero behavior change, a live-browser Playwright re-run of
+      `wave2-risk.spec.ts` (slider) or other consumer specs was judged disproportionate and
+      not run — the risk this step guards against (a silent regression from the rewrite)
+      does not apply when nothing was rewritten behaviorally.
 
 ## 4. Wave D — large zero-churn leaves
 
