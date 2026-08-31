@@ -23,9 +23,10 @@
           "applicable": true,
           "passed": false,
           "evidence": [
-            "registry/ui/accordion.rs (AccordionTrigger: items-start alignment, rounded-md/outline-none/focus-visible:ring/disabled: classes added, matching apps/v4/registry/new-york-v4/ui/accordion.tsx)"
+            "registry/ui/accordion.rs (AccordionTrigger: items-start alignment, rounded-md/outline-none/focus-visible:ring/disabled: classes added, matching apps/v4/registry/new-york-v4/ui/accordion.tsx)",
+            "Root disabled/collapsible/orientation(as horizontal bool) present and behaviorally equivalent; Item/Trigger/Content slot structure matches shadcn's four-part composition"
           ],
-          "note": "Interaction-state class parity (focus-visible ring, disabled-state styling) fixed against upstream shadcn's new-york-v4 style in M4 task 5.2's first sub-batch (docs/adico/m4-parity-audit.md); full prop-shape/slot composition audit beyond interaction-state classes remains open 5.2 scope."
+          "note": "Interaction-state class parity (focus-visible ring, disabled-state styling) fixed against upstream shadcn's new-york-v4 style in M4 task 5.2's first sub-batch (docs/adico/m4-parity-audit.md); full prop-shape/slot composition audit beyond interaction-state classes remains open 5.2 scope. Follow-up prop/slot audit (task 5.2, batch pass 2026-08-30): Root has no controlled value/defaultValue/onValueChange API (shadcn's type: 'single'|'multiple' + string value) — adico primitive source itself has a TODO for a controlled version at accordion.rs:16, a genuine self-acknowledged gap. Items are addressed by index: usize instead of shadcn's string value; functionally equivalent but not prop-compatible. No asChild (expected Dioxus deviation, not a gap)."
         },
         "visual": {
           "applicable": true,
@@ -110,7 +111,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -141,8 +142,12 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "registry/ui/alert_dialog.rs + packages/adico-primitives/src/alert_dialog.rs vs shadcn alert-dialog.tsx",
+            "Root open/default_open/on_open_change controlled API present and matches Radix Root's open/defaultOpen/onOpenChange",
+            "Header/Title/Description/Cancel/Action slots all present"
+          ],
+          "note": "AlertDialogAction/AlertDialogCancel hardcode their visual classes instead of exposing shadcn's `variant`/`size` Button passthrough props, so callers can't restyle them via props (only via `class`). Missing shadcn's newer `AlertDialogMedia` slot and `size` ('default'|'sm') on Content. Footer is named `AlertDialogActions` vs shadcn's `AlertDialogFooter` (harmless rename, but a naming mismatch for anyone porting code). (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -227,7 +232,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -257,9 +262,13 @@
         },
         "api": {
           "applicable": true,
-          "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "passed": true,
+          "evidence": [
+            "registry/ui/aspect_ratio.rs re-exports adico_primitives::aspect_ratio::AspectRatio",
+            "packages/adico-primitives/src/aspect_ratio.rs AspectRatioProps: ratio (f64, default 1.0) + extends GlobalAttributes",
+            "shadcn's aspect-ratio.tsx is a thin Radix AspectRatioPrimitive.Root wrapper whose only meaningful prop is `ratio`"
+          ],
+          "note": "1:1 prop parity — both are single-prop (`ratio`) wrappers with attribute/className passthrough. No gaps found. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -373,8 +382,12 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "registry/ui/avatar.rs vs shadcn avatar.tsx (Radix AvatarPrimitive)",
+            "Avatar/AvatarImage/AvatarFallback three-part structure matches",
+            "AvatarImage src/alt/class present; Avatar aria_label extra addition beyond shadcn"
+          ],
+          "note": "AvatarFallback is missing Radix's `delayMs` prop (delay before showing fallback while image loads) — a real, minor capability gap, not just a styling difference. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -457,7 +470,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -487,9 +500,13 @@
         },
         "api": {
           "applicable": true,
-          "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "passed": true,
+          "evidence": [
+            "registry/ui/badge.rs vs shadcn badge.tsx",
+            "variant enum covers shadcn's default/secondary/destructive/outline",
+            "attributes extends GlobalAttributes+span for passthrough (aria/events), matching shadcn's spread-props approach"
+          ],
+          "note": "adico adds a `Verified` variant not in shadcn (documented extra, not a gap). Missing shadcn's `asChild` (Slot-based polymorphism) — expected/justified Dioxus deviation since there's no Slot equivalent; not counted as a defect. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -602,9 +619,14 @@
         },
         "api": {
           "applicable": true,
-          "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "passed": true,
+          "evidence": [
+            "registry/ui/button.rs vs shadcn button.tsx",
+            "ButtonVariant covers all 6 shadcn variants (default/destructive/outline/secondary/ghost/link) with matching class semantics",
+            "ButtonSize covers shadcn's default/sm/lg/icon plus extra xs/icon-xs/icon-sm/icon-lg sizes",
+            "attributes extends GlobalAttributes+button for full native passthrough (disabled, type, form, aria-invalid styling included)"
+          ],
+          "note": "Only gap vs shadcn is `asChild` (Slot polymorphism) — not applicable to Dioxus's composition model and consistent with how other adico components handle this, so not treated as a defect. Extra size variants are additive, not missing anything. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -725,8 +747,11 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "registry/ui/calendar.rs exposes a fully decomposed compound-component API (CalendarView/CalendarHeader/CalendarNavigation/CalendarGrid/CalendarSelectMonth+Year/etc.) instead of shadcn's single `<Calendar>` wrapping react-day-picker's `DayPicker`",
+            "shadcn calendar.tsx (rev ac60ef5) props: showOutsideDays (default true), captionLayout ('label'|'dropdown'|...), buttonVariant (default 'ghost'), formatters, components, classNames, plus full DayPicker passthrough (mode, selected/onSelect, numberOfMonths, showWeekNumber, disabled matcher fn, weekStartsOn, etc.)"
+          ],
+          "note": "Not a props diff so much as a different API model: shadcn is one monolithic component configured via props/formatters/components overrides; adico is headless composition with no equivalent for captionLayout, buttonVariant, showOutsideDays, formatters, or a disabled-date matcher. Could not verify adico-primitives::calendar's own prop surface (only re-exported here), so some may live one layer down. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -812,7 +837,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave4-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave4-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -843,8 +868,12 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "registry/ui/card.rs has Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter",
+            "shadcn card.tsx (rev ac60ef5) has all of those plus a `CardAction` slot (header-corner actions) that adico has no equivalent for",
+            "shadcn tags every slot with `data-slot=\"card-*\"`; adico has none"
+          ],
+          "note": "Missing CardAction slot is a real gap. adico also uses semantic elements (section/header/h3/p/footer) vs shadcn's plain data-slot divs — a deliberate but real markup deviation, and the missing data-slot attributes break any cross-component CSS hook that upstream relies on (e.g. transparent calendar-in-card background). (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -958,8 +987,11 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "adico CheckboxProps: checked, default_checked, disabled, required, name, on_checked_change, class, aria_label",
+            "shadcn Checkbox extends Radix CheckboxPrimitive.Root props: checked/defaultChecked/onCheckedChange/disabled/required/name plus `value` (form value) and `form` (form association), and styles `aria-invalid` state"
+          ],
+          "note": "Missing `value` and `form` props, and no aria-invalid support (no prop or CSS hook for invalid/error state, which shadcn's current revision explicitly styles). adico does add an indeterminate visual treatment that upstream's pinned revision lacks — a genuine improvement, not a gap. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -1044,7 +1076,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -1074,9 +1106,12 @@
         },
         "api": {
           "applicable": true,
-          "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "passed": true,
+          "evidence": [
+            "registry/ui/collapsible.rs is a pure re-export (Collapsible/CollapsibleContent/CollapsibleTrigger) with no added styling or props",
+            "shadcn collapsible.tsx is likewise a pure unstyled Radix passthrough with only a `data-slot` attribute added, no custom props"
+          ],
+          "note": "Both are intentionally bare passthroughs, so surface shape matches at this layer. Could not verify prop parity of the underlying adico-primitives::collapsible implementation itself (out of scope here), so this passes only for the registry/ui wrapper layer, not the primitive. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -1161,7 +1196,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -1192,8 +1227,11 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "shadcn has no dedicated combobox.tsx — it's a doc-page composition of Popover + Command (Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem, CommandSeparator, CommandShortcut)",
+            "adico combobox.rs provides Combobox, ComboboxOption, ComboboxEmpty, ComboboxMulti, ComboboxInput, ComboboxList, ComboboxItemIndicator with built-in controlled value/query/open state and a pluggable `filter` callback"
+          ],
+          "note": "adico has no equivalent to CommandGroup (grouped options with a heading), CommandSeparator, or CommandShortcut — real gaps for grouped/sectioned option lists. Default filter is a plain substring match vs cmdk's fuzzy command-score, but pluggable via `filter` so not a hard gap. ComboboxMulti (built-in multi-select) is an adico-only extra with no canonical shadcn counterpart. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -1279,7 +1317,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave4-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave4-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -1310,8 +1348,12 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "adico context_menu.rs exposes only ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem(value, index, disabled, on_select, class, children)",
+            "shadcn context-menu.tsx (rev ac60ef5) additionally exports ContextMenuCheckboxItem, ContextMenuRadioItem, ContextMenuRadioGroup, ContextMenuLabel, ContextMenuSeparator, ContextMenuShortcut, ContextMenuGroup, ContextMenuPortal, ContextMenuSub/SubContent/SubTrigger — none of which exist in adico",
+            "shadcn's ContextMenuItem also takes `inset?: boolean` and `variant: 'default'|'destructive'`; adico's ContextMenuItem has neither"
+          ],
+          "note": "Largest API gap found in this audit: no checkbox/radio items, no labels/separators/shortcuts, and no submenu support at all, plus ContextMenuItem is missing inset and destructive-variant styling. Functionally adico's context menu only covers the simplest flat-list case. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -1400,7 +1442,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -1430,9 +1472,12 @@
         },
         "api": {
           "applicable": true,
-          "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "passed": true,
+          "evidence": [
+            "shadcn has no standalone date-picker registry component: https://ui.shadcn.com/docs/components/date-picker is a hand-composed example wiring Popover+Calendar+Button with useState<Date>.",
+            "registry/ui/date_picker.rs implements a fuller, purpose-built DatePicker/DateRangePicker with segmented editable input, min/max bounds, disabled_ranges, and roving_loop — a superset of the docs-page composition pattern."
+          ],
+          "note": "No upstream component API to diff against since shadcn doesn't ship this as a registry item; adico's version is intentionally richer than the docs-page example (task 5.2 audit, batch pass 2026-08-30)."
         },
         "visual": {
           "applicable": true,
@@ -1518,7 +1563,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave4-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave4-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -1550,8 +1595,10 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "registry/ui/dialog.rs vs shadcn dialog.tsx: DialogTrigger/DialogContent/DialogTitle/DialogDescription/DialogHeader present with equivalent semantics"
+          ],
+          "note": "Missing DialogClose (no explicit close-button slot beyond overlay-click/escape), DialogFooter, DialogPortal, and a showCloseButton toggle on DialogContent (shadcn defaults to a built-in X button). DialogTrigger is hard-coded to the installed Button with no asChild-equivalent for arbitrary trigger elements — a documented, intentional deviation rather than an omission. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -1671,8 +1718,10 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "adico has DropdownMenu (root), DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem — core open/select flow matches shadcn's equivalents structurally"
+          ],
+          "note": "Large gap vs shadcn: missing DropdownMenuCheckboxItem, RadioGroup/RadioItem, Label, Separator, Shortcut, Sub/SubTrigger/SubContent (submenus), and Portal. DropdownMenuItem also lacks shadcn's `inset` and `variant` (\"destructive\") props. Effectively a minimal single-level menu, not full parity with shadcn's menu composition. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -1757,7 +1806,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -1788,8 +1837,11 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "HoverCardTrigger and HoverCardContent both present with side/align matching shadcn's side/align",
+            "force_mount deliberately hardcoded false to match Popover/Tooltip mount behavior — documented intentional deviation"
+          ],
+          "note": "Missing openDelay/closeDelay props on the HoverCard root (shadcn exposes both, defaulting 700ms/300ms), and no sideOffset on HoverCardContent (shadcn defaults 4). No avoidCollisions/collisionPadding/sticky passthrough either, though those are lower-priority Radix positioning knobs. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -1878,7 +1930,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -1908,9 +1960,12 @@
         },
         "api": {
           "applicable": true,
-          "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "passed": true,
+          "evidence": [
+            "shadcn Input is minimal (className, type, native spread props)",
+            "adico's InputProps covers type, value, placeholder, disabled, readonly, required, invalid (mapped to aria-invalid), oninput, class, plus `attributes` extending native input/GlobalAttributes for anything else"
+          ],
+          "note": "No material gaps — adico's typed props are a superset of shadcn's spread-everything approach, and invalid→aria-invalid styling matches shadcn's `aria-invalid:` Tailwind selectors. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -2025,8 +2080,10 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "Item, ItemGroup, ItemMedia, ItemContent, ItemTitle, ItemDescription, ItemActions, ItemHeader, ItemFooter, ItemSeparator all present with matching slot names"
+          ],
+          "note": "Item has no `size` prop (shadcn: default|sm) and its variant enum (Default/Muted/Interactive) omits shadcn's `outline` variant while adding an extra `Interactive` variant not in shadcn. ItemMedia has no `variant` prop (shadcn: default|icon|image). ItemSeparator is hardcoded to `<hr>` (horizontal only) with no `orientation` prop. Also see states dimension: Interactive variant has no onkeydown handler despite being focusable. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -2050,7 +2107,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "registry/ui/item.rs's Interactive variant sets tabindex=0 and onclick but has no onkeydown handler, so a plain <div> cannot be activated with Enter/Space by keyboard users even though it is focusable \u2014 a real, found-by-reading-source gap, not yet fixed."
+          "note": "registry/ui/item.rs's Interactive variant sets tabindex=0 and onclick but has no onkeydown handler, so a plain <div> cannot be activated with Enter/Space by keyboard users even though it is focusable — a real, found-by-reading-source gap, not yet fixed."
         },
         "accessibility": {
           "applicable": true,
@@ -2140,8 +2197,10 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "registry/ui/label.rs: html_for/class/children match shadcn's htmlFor/className/children passthrough"
+          ],
+          "note": "Prop shape matches, but default class string is missing shadcn's `flex items-center gap-2 select-none` and `group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50` (icon+text layout support and group-disabled variant) — a visual/behavioral gap, not just a props gap, since it changes what the component visually supports. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -2256,9 +2315,10 @@
           "applicable": true,
           "passed": false,
           "evidence": [
-            "registry/ui/menubar.rs (MenubarTrigger: data-[state=open]:bg-accent/text-accent-foreground added, matching apps/v4/registry/new-york-v4/ui/menubar.tsx; focus:bg-accent treatment was already present and already matched upstream)"
+            "registry/ui/menubar.rs (MenubarTrigger: data-[state=open]:bg-accent/text-accent-foreground added, matching apps/v4/registry/new-york-v4/ui/menubar.tsx; focus:bg-accent treatment was already present and already matched upstream)",
+            "registry/ui/menubar.rs implements only Menubar, MenubarTrigger, MenubarContent, MenubarItem (plus MenubarMenu re-exported from adico-primitives)"
           ],
-          "note": "Interaction-state class parity (focus-visible ring, disabled-state styling) fixed against upstream shadcn's new-york-v4 style in M4 task 5.2's first sub-batch (docs/adico/m4-parity-audit.md); full prop-shape/slot composition audit beyond interaction-state classes remains open 5.2 scope."
+          "note": "Interaction-state class parity (focus-visible ring, disabled-state styling) fixed against upstream shadcn's new-york-v4 style in M4 task 5.2's first sub-batch (docs/adico/m4-parity-audit.md); full prop-shape/slot composition audit beyond interaction-state classes remains open 5.2 scope. Follow-up prop/slot audit (task 5.2, batch pass 2026-08-30): Missing sub-components entirely: MenubarGroup, MenubarPortal, MenubarRadioGroup, MenubarCheckboxItem, MenubarRadioItem, MenubarLabel, MenubarSeparator, MenubarShortcut, MenubarSub/SubTrigger/SubContent. MenubarItem is missing inset/variant (destructive) props; MenubarContent is missing align/alignOffset/sideOffset. Largest API gap found across the full 37-component sweep."
         },
         "visual": {
           "applicable": true,
@@ -2347,7 +2407,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -2498,9 +2558,10 @@
           "applicable": true,
           "passed": false,
           "evidence": [
-            "registry/ui/pagination.rs (PaginationLink: outline-none/focus-visible:ring classes added; upstream reuses buttonVariants' focus treatment directly)"
+            "registry/ui/pagination.rs (PaginationLink: outline-none/focus-visible:ring classes added; upstream reuses buttonVariants' focus treatment directly)",
+            "registry/ui/pagination.rs: Pagination/PaginationContent/PaginationItem/PaginationLink/PaginationPrevious/PaginationNext/PaginationEllipsis all present with GlobalAttributes+`a` extends for native anchor passthrough"
           ],
-          "note": "Interaction-state class parity (focus-visible ring, disabled-state styling) fixed against upstream shadcn's new-york-v4 style in M4 task 5.2's first sub-batch (docs/adico/m4-parity-audit.md); full prop-shape/slot composition audit beyond interaction-state classes remains open 5.2 scope."
+          "note": "Interaction-state class parity (focus-visible ring, disabled-state styling) fixed against upstream shadcn's new-york-v4 style in M4 task 5.2's first sub-batch (docs/adico/m4-parity-audit.md); full prop-shape/slot composition audit beyond interaction-state classes remains open 5.2 scope. Follow-up prop/slot audit (task 5.2, batch pass 2026-08-30): Close parity otherwise. Minor gap: no size variant (icon/default/sm/lg) on PaginationLink — adico's compact bool on Previous/Next covers the icon-only case but isn't a general size prop."
         },
         "visual": {
           "applicable": true,
@@ -2615,8 +2676,10 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "registry/ui/popover.rs + adico_primitives::popover: Popover has open/default_open/on_open_change/is_modal; PopoverContent has side/align"
+          ],
+          "note": "Missing PopoverAnchor, PopoverHeader, PopoverTitle, PopoverDescription sub-components present upstream. PopoverContent is missing a `sideOffset` prop (shadcn defaults to 4). (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -2705,7 +2768,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -2735,9 +2798,11 @@
         },
         "api": {
           "applicable": true,
-          "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "passed": true,
+          "evidence": [
+            "registry/ui/progress.rs: value/max/class/aria_label vs shadcn's value/className"
+          ],
+          "note": "adico meets and exceeds shadcn's prop surface: configurable `max` (shadcn hardcodes 100) and `Option<f64>` value to support an indeterminate state, plus `aria_label`. No gaps. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -2850,9 +2915,12 @@
         },
         "api": {
           "applicable": true,
-          "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "passed": true,
+          "evidence": [
+            "adico_primitives::radio_group::RadioGroupProps has value/default_value/on_value_change/disabled/required/name/horizontal(orientation)/GlobalAttributes extends",
+            "registry/ui/radio_group.rs RadioItem has value/index/disabled/id/class/children"
+          ],
+          "note": "Full parity including orientation (via `horizontal`) and aria-* passthrough via GlobalAttributes. `index` is a Dioxus-idiom addition needed for roving-focus, not present upstream but justified. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -2937,7 +3005,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -2968,8 +3036,11 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "registry/ui/scroll_area.rs only re-exports adico_primitives::scroll_area::{ScrollArea, ScrollDirection, ScrollType}",
+            "adico_primitives ScrollAreaProps has direction/always_show_scrollbars/scroll_type + native GlobalAttributes passthrough, driving `data-scroll-direction` on a native-overflow div"
+          ],
+          "note": "Architectural mismatch, not just missing props: shadcn's ScrollArea wraps Radix's ScrollAreaPrimitive.Root + a separate styled `ScrollBar` sub-component (custom draggable scrollbar thumb with its own `orientation` prop) rendered via a corner element. adico ships one component that toggles native browser scrollbars via CSS/data-attributes — there is no custom-styled scrollbar thumb sub-component at all. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -3054,7 +3125,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -3086,8 +3157,11 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "adico Select/SelectMulti carry the full controlled/uncontrolled value, open, disabled, name, roving_loop, typeahead_timeout props matching Radix's value/defaultValue/onValueChange/open/onOpenChange/disabled/name",
+            "SelectTrigger has aria_label/aria_invalid; SelectOption has value/text_value/disabled/id/index/aria_label/aria_roledescription; SelectValue has placeholder"
+          ],
+          "note": "Missing sub-components/props: no `SelectContent` distinct from `SelectList` with `position`/`align`; no `SelectLabel` (adico only has SelectGroupLabel); no `SelectSeparator`; no `SelectScrollUpButton`/`SelectScrollDownButton` (native overflow scroll instead); `SelectTrigger` has no `size: 'sm'|'default'` variant. adico's generic `T: Clone + PartialEq` typed value model is a deliberate, justified Rust idiom vs shadcn's string-only Radix value — not a gap. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -3207,8 +3281,12 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "registry/ui/sheet.rs composes the Dialog primitive: Sheet/SheetTitle/SheetDescription are direct aliases of DialogRoot/DialogTitle/DialogDescription",
+            "SheetContent has side: SheetSide (Top/Right/Bottom/Left, default Right) matching shadcn's side prop and default",
+            "SheetTrigger, SheetOverlay, SheetHeader, SheetFooter all present with matching semantics"
+          ],
+          "note": "Missing SheetClose (shadcn exposes an explicit close-trigger primitive; adico expects callers to call context.set_open(false) manually — a real API gap not just styling) and SheetPortal. SheetContent has no `showCloseButton: boolean` prop; needs verification whether adico's DialogPrimitiveContent renders a close affordance by default, otherwise a discoverability/parity gap for keyboard users. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -3232,7 +3310,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "Sheet composes the owned dialog primitive's Escape/focus-trap behavior, but unlike Dialog (tests/playwright/dialog.spec.ts) it has no dedicated Playwright spec \u2014 its own composition has not been independently re-verified. Tracked gap, matching the Wave 1 no-dedicated-spec precedent recorded in docs/adico/m3-wave1-migration.md."
+          "note": "Sheet composes the owned dialog primitive's Escape/focus-trap behavior, but unlike Dialog (tests/playwright/dialog.spec.ts) it has no dedicated Playwright spec — its own composition has not been independently re-verified. Tracked gap, matching the Wave 1 no-dedicated-spec precedent recorded in docs/adico/m3-wave1-migration.md."
         },
         "accessibility": {
           "applicable": true,
@@ -3290,7 +3368,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave1-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave1-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -3321,8 +3399,12 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "SidebarProvider has open/default_open/on_open_change matching shadcn's open/defaultOpen/onOpenChange",
+            "Sidebar has side (Left/Right) and collapsible (Offcanvas/Icon/None) matching shadcn's side and collapsible enums",
+            "SidebarMenuButton has is_active/disabled/class/attributes matching shadcn's isActive; SidebarTrigger/SidebarRail/SidebarInset/SidebarHeader/SidebarFooter/SidebarContent/SidebarGroup*/SidebarMenu*/SidebarSeparator all present with matching slot names"
+          ],
+          "note": "Confirmed gaps, several self-documented in the file's own header comment: (1) no `variant: 'sidebar'|'floating'|'inset'` prop on Sidebar; (2) no cookie-based open-state persistence or Ctrl/Cmd+B shortcut on SidebarProvider; (3) no real mobile/viewport-driven Sheet-swap mode (deliberately deferred, pending a document::eval limitation fix); (4) SidebarMenuButton has no asChild/variant/size/tooltip prop; (5) missing SidebarGroupAction, SidebarInput, SidebarMenuAction, SidebarMenuBadge, SidebarMenuSkeleton, SidebarMenuSub/SidebarMenuSubItem/SidebarMenuSubButton entirely. Most incomplete component in this audit, though gaps are transparently tracked in-file. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -3407,7 +3489,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave4-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave4-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -3438,8 +3520,11 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "registry/ui/skeleton.rs has variant: SkeletonVariant (Default/Circle), class, decorative (aria-hidden toggle), and GlobalAttributes/div passthrough",
+            "shadcn Skeleton only has className + native div props, defaulting classes to 'animate-pulse rounded-md bg-accent'"
+          ],
+          "note": "adico's variant/decorative props are extras beyond shadcn's single-prop surface — a reasonable enhancement rather than a gap. No missing shadcn prop; marked not-passed only because this is a superset deviation that should be reviewed as an intentional API difference during 5.2, not overlooked as an oversight. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -3553,8 +3638,11 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "adico_primitives SliderProps/RangeSliderProps have value/default_value/min/max/step/disabled/horizontal/inverted/on_value_change/label, all ReadSignal-typed where controllable",
+            "SliderTrack/SliderRange/SliderThumb sub-components match Radix's internal Track/Range/Thumb parts, with SliderThumb taking an index for RangeSlider's two-thumb case"
+          ],
+          "note": "adico splits single-value and range sliders into distinct Slider/RangeSlider components with f64/Range<f64> value types, vs Radix's single component taking value/defaultValue: number[] (arbitrary N thumbs) — a documented architectural choice, but a real capability gap for 3+ thumb sliders. adico exposes `horizontal: bool` instead of shadcn's `orientation` string enum, and `inverted: bool` where shadcn only gets this via Radix passthrough — functionally equivalent but a naming/type-shape mismatch. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -3674,8 +3762,10 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "adico Switch matches checked/default_checked/disabled/name/on_checked_change/class against Radix Switch.Root+Thumb"
+          ],
+          "note": "Missing shadcn's `size` prop (\"sm\"|\"default\" via data-size, thumb/track dimensions change accordingly) — adico's Switch is single-size only. Also no `value` (form value) or `required` passthrough. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -3760,7 +3850,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -3792,9 +3882,10 @@
           "applicable": true,
           "passed": false,
           "evidence": [
-            "registry/ui/tabs.rs (TabTrigger: focus-visible:border-ring/ring/outline classes added, matching apps/v4/registry/new-york-v4/ui/tabs.tsx)"
+            "registry/ui/tabs.rs (TabTrigger: focus-visible:border-ring/ring/outline classes added, matching apps/v4/registry/new-york-v4/ui/tabs.tsx)",
+            "TabTrigger/TabContent value+index-based API is a deliberate Dioxus idiom (no children-order reflection like React), functionally equivalent to Radix value matching"
           ],
-          "note": "Interaction-state class parity (focus-visible ring, disabled-state styling) fixed against upstream shadcn's new-york-v4 style in M4 task 5.2's first sub-batch (docs/adico/m4-parity-audit.md); full prop-shape/slot composition audit beyond interaction-state classes remains open 5.2 scope."
+          "note": "Interaction-state class parity (focus-visible ring, disabled-state styling) fixed against upstream shadcn's new-york-v4 style in M4 task 5.2's first sub-batch (docs/adico/m4-parity-audit.md); full prop-shape/slot composition audit beyond interaction-state classes remains open 5.2 scope. Follow-up prop/slot audit (task 5.2, batch pass 2026-08-30): TabList has no variant prop (shadcn: \"default\"|\"line\", underline vs filled-pill styling). Tabs root has no orientation prop surfaced at this layer — registry file re-exports adico_primitives::tabs::Tabs directly so orientation support, if any, lives unaudited in adico-primitives, not confirmed here."
         },
         "visual": {
           "applicable": true,
@@ -3879,7 +3970,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -3909,9 +4000,13 @@
         },
         "api": {
           "applicable": true,
-          "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "passed": true,
+          "evidence": [
+            "value/placeholder/disabled/readonly/required/rows/oninput/class all present",
+            "extends GlobalAttributes+textarea via #[props(extends)] covers arbitrary native attribute passthrough, matching shadcn's `{...props}` spread",
+            "aria-invalid handling present via `invalid` prop, matching shadcn's aria-invalid: classes"
+          ],
+          "note": "No material gap. shadcn's `field-sizing-content` auto-grow CSS behavior isn't replicated in adico's class string (fixed min-h vs shadcn's field-sizing-content), a minor visual-not-API difference. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -4026,8 +4121,11 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "GitHub directory listing at pinned revision ac60ef5 confirms no toast.tsx exists in apps/v4/registry/new-york-v4/ui — only sonner.tsx",
+            "sonner.tsx wraps the third-party `sonner` npm library's <Toaster>, not a Radix Toast primitive: props are theme/className/icons/style passthrough to Sonner, entirely different shape from a Radix-style toast API"
+          ],
+          "note": "Upstream shadcn no longer has a Toast component to compare against — it was replaced by a Sonner wrapper. adico's toast.rs implements a custom primitive-backed toast system (ToastProvider/ToastList/ToastContent/etc.) with no equivalent upstream API at all. Not a prop gap so much as an architecture mismatch against a moving/defunct target; recommend re-scoping this component's parity target to Sonner's API (theme, richColors, position, duration, toast() signature) in a follow-up, rather than auditing against a defunct Radix Toast. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -4112,7 +4210,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -4143,8 +4241,11 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "pressed/default_pressed/disabled/on_pressed_change/class match Radix Toggle.Root's pressed/defaultPressed/disabled/onPressedChange/className",
+            "size variant (Sm/Default/Lg) present and class-equivalent to shadcn's h-8/h-9/h-10 sizes"
+          ],
+          "note": "Missing shadcn's `variant` prop entirely (\"default\" transparent vs \"outline\" bordered+shadow) — adico's Toggle only ever renders the transparent/default variant, no outline option exists. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -4229,7 +4330,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -4260,8 +4361,10 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "ToggleItem's index/disabled/class match the primitive item shape"
+          ],
+          "note": "adico's registry-layer ToggleItem has no variant/size/spacing props and no context-inheritance mechanism (shadcn's ToggleGroupContext lets ToggleGroup set variant/size/spacing once and have every ToggleGroupItem inherit it, with per-item override). ToggleGroup itself is re-exported raw from adico_primitives with no props shown in this file — variant/size/spacing support is unconfirmed/likely absent at the registry layer entirely. (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -4346,7 +4449,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave2-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
@@ -4377,8 +4480,10 @@
         "api": {
           "applicable": true,
           "passed": false,
-          "evidence": [],
-          "note": "Composition/API deviation audit against upstream shadcn is M4 scope (task 5.2)."
+          "evidence": [
+            "TooltipTrigger/TooltipContent side+align match Radix's positioning API shape"
+          ],
+          "note": "Missing TooltipProvider entirely (shadcn's app-level wrapper controlling shared delayDuration, default 0ms) — adico has no equivalent, so per-app open-delay tuning isn't exposed. Missing sideOffset prop on TooltipContent. Missing the Arrow sub-component (shadcn renders a rotated pointer arrow inside TooltipContent; adico's has none). (task 5.2 audit, batch pass 2026-08-30)"
         },
         "visual": {
           "applicable": true,
@@ -4467,7 +4572,7 @@
           "applicable": true,
           "passed": false,
           "evidence": [],
-          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) \u2014 a named, tracked gap matching button's own desktop dimension."
+          "note": "adico-primitives compiles under --features desktop (docs/adico/m3-wave3-migration.md verification table), but no consumer-app desktop-target build/run fixture exists since examples/desktop was removed by the consolidate-examples change (2026-08-30) — a named, tracked gap matching button's own desktop dimension."
         },
         "ssrHydration": {
           "applicable": true,
