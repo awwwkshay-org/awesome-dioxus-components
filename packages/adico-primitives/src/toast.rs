@@ -1,23 +1,10 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/toast.rs. See provenance/records/adico-primitives-wave2-risk.json.
-//
-// Adapted from upstream: `dioxus_sdk_time::use_timeout` is replaced with this
-// crate's own target-aware `crate::time::sleep` inside a single `spawn`,
-// matching the pattern already established by `context_menu.rs`'s long-press
-// timer (see provenance/records/adico-primitives-wave3-overlays.json). A
-// toast's auto-dismiss duration never changes after it is created, so the
-// general-purpose restart semantics of `use_timeout` are not needed here --
-// a single one-shot `spawn` on mount is equivalent and avoids a new
-// dependency. `crate::portal::{use_portal, PortalIn, PortalOut}` -- a pure
-// Rust relay through Dioxus's own scope/context system, not a
-// `document::eval`/DOM portal -- is imported for the first time in this
-// crate (see provenance/records/adico-primitives-wave2-risk.json for why
-// this is safe/SSR-compatible), correcting the Wave 3 record's finding that
-// only `toast.rs` actually needs it among the items audited so far.
-// `props.index % 2 == 0`/`== 1` is rewritten as `.is_multiple_of(2)` to
-// satisfy this repo's `-D warnings` clippy lint level (upstream predates the
-// lint); behavior is unchanged.
+// Implements the WAI-ARIA APG "alert" pattern (each Toast is `role="alertdialog"` wrapping a
+// `role="alert"` live region) plus a shared notification-queue manager (`ToastProvider`) with
+// no APG pattern of its own to derive from — its spec is `crate::portal`'s existing same-VDOM
+// relay contract (this file is the module that first needed it) and this file's own prior,
+// already-correct target-aware timer design: `crate::time::sleep` inside a single `spawn`,
+// since a toast's auto-dismiss duration never changes after creation, so a one-shot sleep is
+// equivalent to (and simpler than) a restartable timeout hook.
 
 //! Defines the [`Toast`] component and its sub-components, which provide a notification system for displaying temporary messages to users.
 
@@ -54,15 +41,30 @@ impl ToastType {
     }
 }
 
-// A single toast item
+/// A single toast item. `pub` only for `packages/adico-primitives/tests/`; not part of the
+/// intended public API.
 #[derive(Debug, Clone, PartialEq)]
-struct ToastRecord {
-    id: usize,
-    title: String,
-    description: Option<String>,
-    toast_type: ToastType,
-    duration: Option<Duration>,
-    permanent: bool,
+pub struct ToastRecord {
+    pub id: usize,
+    pub title: String,
+    pub description: Option<String>,
+    pub toast_type: ToastType,
+    pub duration: Option<Duration>,
+    pub permanent: bool,
+}
+
+/// Drop toasts from the front of the queue until `toasts.len() <= max`, preferring to remove
+/// a non-permanent toast first; if every remaining toast is permanent, the oldest is removed
+/// anyway rather than letting the queue grow unbounded. `pub` only for
+/// `packages/adico-primitives/tests/`; not part of the intended public API.
+pub fn enforce_max_toasts(toasts: &mut VecDeque<ToastRecord>, max: usize) {
+    while toasts.len() > max {
+        if let Some(pos) = toasts.iter().position(|t| !t.permanent) {
+            toasts.remove(pos);
+        } else {
+            toasts.pop_front();
+        }
+    }
 }
 
 // Type alias for the complex callback type
@@ -222,16 +224,7 @@ pub fn ToastProvider(props: ToastProviderProps) -> Element {
             toasts_vec.push_back(toast.clone());
 
             // Limit the number of toasts, but prioritize keeping permanent toasts
-            let max = (props.max_toasts)();
-            while toasts_vec.len() > max {
-                // Try to find a non-permanent toast to remove first
-                if let Some(pos) = toasts_vec.iter().position(|t| !t.permanent) {
-                    toasts_vec.remove(pos);
-                } else {
-                    // If all toasts are permanent, remove the oldest one
-                    toasts_vec.pop_front();
-                }
-            }
+            enforce_max_toasts(&mut toasts_vec, (props.max_toasts)());
 
             // We'll handle auto-dismissal in the Toast component
         },

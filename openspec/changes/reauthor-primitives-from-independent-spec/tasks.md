@@ -305,10 +305,28 @@
       imported record(s), 37 source unit(s)` (−1, exact). `registry/ui/tag_group.rs`'s facade
       only consumes the public component API, none of which changed — confirmed via
       `registry validate` (unaffected).
-- [ ] 4.2 `toast.rs` (761 lines, zero unit tests, timer-driven): derive spec from ARIA APG
+- [x] 4.2 `toast.rs` (761 lines, zero unit tests, timer-driven): derive spec from ARIA APG
       alert/status pattern; author tests covering auto-dismiss timing first; re-author; drop
       header + record entry. Verify: `cargo test -p adico-primitives toast`, provenance
-      count -1.
+      count -1. Done 2026-08-31: no logic changes to the already-correct timer/portal design
+      (this file's own prior header already documented it as genuine adaptation work, not
+      ported-unmodified). Spec is the WAI-ARIA APG alert pattern (`role="alertdialog"`
+      wrapping `role="alert"`); `ToastProvider`'s queue manager has no APG pattern of its own,
+      so its spec is `portal.rs`'s task-3.1 relay contract plus this file's own prior timer
+      design. Extracted the max-toast eviction logic into a new `pub fn enforce_max_toasts`
+      and widened `ToastRecord` to `pub` — the only genuinely testable pure logic in an
+      otherwise Signal-heavy, 761-line, zero-test file. Added 8 tests in the new
+      `tests/test_toast.rs` (4 direct `enforce_max_toasts`, 4 render-level via `Toast`'s props
+      constructed directly inside a bare `ToastProvider` ancestor). **Auto-dismiss timing
+      itself has no coverage**: attempted a `#[tokio::test(start_paused = true)]` harness
+      advancing virtual time past the timer, but even the prerequisite — a toast added via
+      `use_toast().info(...)` from a hook or effect — never appeared in rendered output after
+      `rebuild_in_place()` + `VirtualDom::wait_for_work()`, confirming the same
+      effect/signal-timing limitation found elsewhere in this change extends even to a
+      from-scratch async/paused-clock harness. `wave2-risk.spec.ts`'s existing toast-appears
+      test covers creation via a real click, not auto-dismiss; that gap is carried forward.
+      Full baseline green; provenance `9 imported record(s), 36 source unit(s)` (−1, exact);
+      `registry validate` unaffected (Toast's public API unchanged).
 - [ ] 4.3 `toolbar.rs`, `scroll_area.rs`, `tabs.rs`, `radio_group.rs`, `toggle_group.rs`:
       derive specs from their ARIA APG patterns; author tests first; re-author each; drop
       headers + record entries. Verify: `cargo test -p adico-primitives toolbar scroll_area
