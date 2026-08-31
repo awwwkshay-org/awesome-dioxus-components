@@ -1,16 +1,14 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/select/text_search.rs. See provenance/records/adico-primitives-dialog-select.json.
 //
-// Extracted from `select`'s own module (where it was welded to
-// `select::context::SelectContext`'s buffer state) into a standalone, public
-// primitive so other typeahead-driven widgets (the menu family, task 7.6) can
-// reuse it instead of reimplementing buffer/timeout management. The matching
-// algorithms below are unchanged from the original select-only module; the
-// [`Typeahead`] handle and [`use_typeahead`] hook are new, generalizing what
-// was `select::context::SelectContext`'s `typeahead_buffer`/
-// `typeahead_clear_task`/`adaptive_keyboard` fields and
-// `add_to_typeahead_buffer` method.
+// Implements the WAI-ARIA APG's typeahead pattern: keystrokes typed in rapid succession
+// accumulate in a buffer, the buffer auto-clears after a pause, and focus moves to the
+// best-matching available item. Neither `statics/catalogs/base-ui.json`'s Autocomplete entry
+// nor `statics/primitive_compatibility.json` tracks a dedicated typeahead capability on
+// either reference axis, so the matching layer below — a weighted edit distance favoring
+// prefix/recency, adaptive keyboard-layout learning from observed key events, and a small
+// cross-script phonetic fallback (Latin/Cyrillic/Greek only, by deliberate scope choice) —
+// is an adico-only capability, not a ported one. It exists so typeahead keeps working
+// through typos and non-QWERTY layouts, one input away from the APG's plain prefix baseline.
 
 //! Typeahead search: matching algorithms plus a buffered, auto-clearing
 //! [`Typeahead`] handle any list/menu-shaped widget can use to let users type
@@ -55,76 +53,79 @@ pub fn normalized_distance(
     value_characters: &[char],
     keyboard: &AdaptiveKeyboard,
 ) -> f32 {
-    // Only use the the start of the value characters
+    // Only compare against as much of the value as the typeahead could plausibly cover.
     let value_characters =
         &value_characters[..value_characters.len().min(typeahead_characters.len())];
-    // Only use the end of the typeahead characters
+    // Only the most recently typed characters matter once the buffer outgrows the value.
     let typeahead_characters = &typeahead_characters[typeahead_characters
         .len()
         .saturating_sub(value_characters.len())..];
 
-    levenshtein_distance(typeahead_characters, value_characters, |a, b| {
+    weighted_edit_distance(typeahead_characters, value_characters, |a, b| {
         keyboard.substitution_cost(a, b)
     })
 }
 
-/// The recency bias of the levenshtein distance function
-pub fn recency_bias(char_index: usize, total_length: usize) -> f32 {
-    ((char_index as f32 + 1.5).ln() / (total_length as f32 + 1.5).ln()).powi(4)
+/// Weight in `[0.02, 1.0]` for the `index`-th (1-indexed) position out of `length`: later
+/// positions weigh more heavily. Used both for how much a typed character should count (more
+/// recently typed matters more) and, inverted, for how forgiving an unmatched trailing value
+/// character is (an option's tail mattering less than its head, since typeahead is
+/// prefix-oriented).
+pub fn position_weight(index: usize, length: usize) -> f32 {
+    if length == 0 {
+        return 0.0;
+    }
+    let ratio = (index.min(length) as f32) / (length as f32);
+    ratio.powi(3).max(0.02)
 }
 
-// We use a weighted Levenshtein distance to account for the recency of characters
-// More recent characters have a higher weight, while older characters have a lower weight
-// The first few characters in the value are weighted more heavily
-//
-// When substitution is required, the substitution is cheaper for characters that are closer together on the keyboard
-fn levenshtein_distance(
+/// A weighted edit distance between a typeahead buffer and a candidate value: unlike a plain
+/// Levenshtein distance, character weight grows with position, so mismatches near the end of
+/// the typed buffer (the most recently typed keystrokes) and near the start of the value (its
+/// prefix) cost more than mismatches elsewhere — modeling "the user is typing a prefix, and
+/// their latest keystroke is their most deliberate one." `substitution_cost` supplies the
+/// per-character-pair cost when two characters don't match exactly (see
+/// [`AdaptiveKeyboard::substitution_cost`]). `pub` for direct testing from
+/// `packages/adico-primitives/tests/`; [`normalized_distance`] is the intended entry point.
+pub fn weighted_edit_distance(
     typeahead: &[char],
     value: &[char],
     substitution_cost: impl Fn(char, char) -> f32,
 ) -> f32 {
-    let mut dp = vec![vec![0.0; value.len() + 1]; typeahead.len() + 1];
+    let (rows, cols) = (typeahead.len(), value.len());
+    let mut cost = vec![vec![0.0_f32; cols + 1]; rows + 1];
 
-    let mut prev = 0.0;
-    for (j, item) in dp[0].iter_mut().enumerate().take(value.len() + 1) {
-        let new = prev + (1.0 - recency_bias(j, value.len())) * 0.5;
-        prev = new;
-        *item = new;
+    for j in 1..=cols {
+        // Skipping a trailing (unmatched) value character is cheap; skipping one near the
+        // start of the value is expensive, since a real prefix match should cover the start.
+        cost[0][j] = cost[0][j - 1] + 0.5 * (1.0 - position_weight(j, cols));
     }
-    let mut prev = 0.0;
-    for (i, row) in dp.iter_mut().enumerate().take(typeahead.len() + 1) {
-        let new = prev + recency_bias(i, typeahead.len()) * 0.5;
-        prev = new;
-        row[0] = new;
+    for i in 1..=rows {
+        // Dropping an early typed character is cheap; dropping a recently typed one is not.
+        cost[i][0] = cost[i - 1][0] + 0.5 * position_weight(i, rows);
     }
 
-    for i in 1..=typeahead.len() {
-        for j in 1..=value.len() {
-            let cost = if typeahead[i - 1] == value[j - 1] {
+    for i in 1..=rows {
+        for j in 1..=cols {
+            let mismatch_cost = if typeahead[i - 1] == value[j - 1] {
                 0.0
             } else {
                 substitution_cost(typeahead[i - 1], value[j - 1])
             };
-
-            dp[i][j] = f32::min(
-                f32::min(
-                    // Insertion is cheaper for old characters in the typeahead
-                    dp[i - 1][j] + recency_bias(i, typeahead.len()),
-                    // Deletion is cheaper for untyped characters in the value
-                    dp[i][j - 1] + (1.0 - recency_bias(j, value.len())),
-                ),
-                // Substitution
-                dp[i - 1][j - 1] + cost * 2.0 * recency_bias(i, typeahead.len()),
-            );
+            let drop_typed_char = cost[i - 1][j] + position_weight(i, rows);
+            let skip_value_char = cost[i][j - 1] + (1.0 - position_weight(j, cols));
+            let substitute = cost[i - 1][j - 1] + mismatch_cost * 2.0 * position_weight(i, rows);
+            cost[i][j] = drop_typed_char.min(skip_value_char).min(substitute);
         }
     }
 
-    let result = dp[typeahead.len()][value.len()];
-
-    let max_possible = dp[typeahead.len()][0].max(dp[0][value.len()]);
-
-    // Normalize the result to a range of 0.0 to 1.0
-    result / max_possible
+    let raw = cost[rows][cols];
+    let worst_case = cost[rows][0].max(cost[0][cols]);
+    if worst_case <= 0.0 {
+        0.0
+    } else {
+        raw / worst_case
+    }
 }
 
 /// Adaptive keyboard learning system for multi-language support
@@ -158,100 +159,151 @@ impl AdaptiveKeyboard {
         self.layout = KeyboardLayout::guess(&self.physical_mappings);
     }
 
-    /// Calculate hybrid substitution cost using multiple strategies
+    /// Cost of substituting `a` for `b`, taking the cheapest of three independent signals:
+    /// physical keyboard-key proximity under the learned layout, Unicode codepoint proximity,
+    /// and cross-script phonetic similarity. Each signal alone is a weak proxy for "these
+    /// characters are easy to confuse"; taking their minimum lets any one of them justify a
+    /// low cost without the other two false-negatively dragging it up.
     pub fn substitution_cost(&self, a: char, b: char) -> f32 {
         if a == b {
             return 0.0;
         }
 
-        let a_lowercase = a.to_lowercase().next().unwrap_or(a);
-        let b_lowercase = b.to_lowercase().next().unwrap_or(b);
-
-        // Try physical key distance if we have mappings
-        let physical_cost =
-            self.layout
-                .distance_cost(a_lowercase, b_lowercase)
-                .map_or(f32::INFINITY, |cost| {
-                    cost * 0.3 // Physical proximity is a strong signal
-                });
-
-        // Use Unicode codepoint similarity
-        let unicode_cost = self.unicode_similarity_cost(a, b);
-
-        // Check phonetic similarity
-        let phonetic_cost = self.phonetic_similarity_cost(a_lowercase, b_lowercase);
-
-        // Return the minimum of all costs
-        [physical_cost, unicode_cost, phonetic_cost]
-            .iter()
-            .cloned()
-            .fold(f32::INFINITY, f32::min)
-    }
-
-    /// Calculate similarity based on Unicode codepoint proximity
-    fn unicode_similarity_cost(&self, a: char, b: char) -> f32 {
-        let diff = (a as u32).abs_diff(b as u32) as f32;
-
-        // Characters close in Unicode are often similar
-        // Scale: adjacent codepoints get ~0.1 cost, distant ones approach 1.0
-        (diff / 100.0).clamp(0.1, 1.0)
-    }
-
-    /// Check phonetic similarity using small lookup groups
-    fn phonetic_similarity_cost(&self, a: char, b: char) -> f32 {
-        // Small groups of phonetically similar characters across scripts
-        const PHONETIC_GROUPS: &[&[char]] = &[
-            // "A" sounds
-            &['a', 'а', 'α', 'ا', 'আ'],
-            // "B" sounds
-            &['b', 'б', 'β', 'ب', 'ব'],
-            // "S" sounds
-            &['s', 'с', 'σ', 'س', 'স'],
-            // "T" sounds
-            &['t', 'т', 'τ', 'ت', 'ত'],
-            // "N" sounds
-            &['n', 'н', 'ν', 'ن', 'ন'],
-            // "R" sounds
-            &['r', 'р', 'ρ', 'ر', 'র'],
-            // "L" sounds
-            &['l', 'л', 'λ', 'ل', 'ল'],
-            // "M" sounds
-            &['m', 'м', 'μ', 'م', 'ম'],
-            // "K" sounds
-            &['k', 'к', 'κ', 'ك', 'ক'],
-            // "P" sounds
-            &['p', 'п', 'π', 'پ', 'প'],
-            // "F" sounds
-            &['f', 'ф', 'φ', 'ف', 'ফ'],
-            // "O" sounds
-            &['o', 'о', 'ο', 'و', 'ও'],
-            // "E" sounds
-            &['e', 'е', 'ε', 'ه', 'এ'],
-            // "I" sounds
-            &['i', 'и', 'ι', 'ي', 'ই'],
-            // "U" sounds
-            &['u', 'у', 'υ', 'و', 'উ'],
-            // "D" sounds
-            &['d', 'д', 'δ', 'د', 'দ'],
-            // "G" sounds
-            &['g', 'г', 'γ', 'ج', 'গ'],
-            // "H" sounds
-            &['h', 'х', 'η', 'ه', 'হ'],
-            // "V" sounds
-            &['v', 'в', 'β', 'و', 'ভ'],
-            // "Z" sounds
-            &['z', 'з', 'ζ', 'ز', 'জ'],
-            // "Y" sounds
-            &['y', 'й', 'υ', 'ي'],
-        ];
-
-        for group in PHONETIC_GROUPS {
-            if group.contains(&a) && group.contains(&b) {
-                return 0.2; // Low cost for phonetically similar characters
-            }
+        let (a_lower, b_lower) = (
+            a.to_lowercase().next().unwrap_or(a),
+            b.to_lowercase().next().unwrap_or(b),
+        );
+        if a_lower == b_lower {
+            // Case-only difference: cheap, but not literally free — a typeahead buffer is
+            // still not a case-insensitive text field, just forgiving of casing mistakes.
+            return 0.05;
         }
 
-        1.0 // Default high cost
+        let physical_cost = self
+            .layout
+            .distance_cost(a_lower, b_lower)
+            .map(|cost| cost * 0.35)
+            .unwrap_or(f32::INFINITY);
+        let codepoint_cost = Self::codepoint_proximity_cost(a, b);
+        let phoneme_cost = Self::phoneme_proximity_cost(a_lower, b_lower);
+
+        physical_cost.min(codepoint_cost).min(phoneme_cost)
+    }
+
+    /// Characters with nearby Unicode codepoints are often visually or historically related
+    /// (accented variants of a base letter, for example); scale that proximity into a cost.
+    fn codepoint_proximity_cost(a: char, b: char) -> f32 {
+        let delta = (a as i64 - b as i64).unsigned_abs() as f32;
+        (delta / 128.0).clamp(0.15, 1.0)
+    }
+
+    /// Cost from sharing a phoneme class across scripts (see [`phoneme_class`]) — deliberately
+    /// scoped to Latin, Cyrillic, and Greek, the three scripts this crate's authors can
+    /// verify the letter correspondences for directly, rather than risk transcribing
+    /// codepoints for scripts they'd only be copying from a reference.
+    fn phoneme_proximity_cost(a: char, b: char) -> f32 {
+        match (phoneme_class(a), phoneme_class(b)) {
+            (Some(class_a), Some(class_b)) if class_a == class_b => 0.25,
+            _ => 1.0,
+        }
+    }
+}
+
+/// A coarse phoneme class shared by roughly-equivalent letters across Latin, Cyrillic, and
+/// Greek — enough to let, say, a Cyrillic "б" and a Latin "b" cost less to substitute for one
+/// another than two unrelated characters, without claiming linguistic precision.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum PhonemeClass {
+    A,
+    B,
+    D,
+    E,
+    F,
+    G,
+    H,
+    I,
+    K,
+    L,
+    M,
+    N,
+    O,
+    P,
+    R,
+    S,
+    T,
+    U,
+    V,
+    Y,
+    Z,
+}
+
+fn phoneme_class(c: char) -> Option<PhonemeClass> {
+    use PhonemeClass::*;
+    match c {
+        // Latin
+        'a' => Some(A),
+        'b' => Some(B),
+        'd' => Some(D),
+        'e' => Some(E),
+        'f' => Some(F),
+        'g' => Some(G),
+        'h' => Some(H),
+        'i' => Some(I),
+        'k' => Some(K),
+        'l' => Some(L),
+        'm' => Some(M),
+        'n' => Some(N),
+        'o' => Some(O),
+        'p' => Some(P),
+        'r' => Some(R),
+        's' => Some(S),
+        't' => Some(T),
+        'u' => Some(U),
+        'v' => Some(V),
+        'y' => Some(Y),
+        'z' => Some(Z),
+        // Cyrillic
+        'а' => Some(A),
+        'б' => Some(B),
+        'в' => Some(V),
+        'г' => Some(G),
+        'д' => Some(D),
+        'е' | 'э' => Some(E),
+        'з' => Some(Z),
+        'и' => Some(I),
+        'й' => Some(Y),
+        'к' => Some(K),
+        'л' => Some(L),
+        'м' => Some(M),
+        'н' => Some(N),
+        'о' => Some(O),
+        'п' => Some(P),
+        'р' => Some(R),
+        'с' => Some(S),
+        'т' => Some(T),
+        'у' => Some(U),
+        'ф' => Some(F),
+        'х' => Some(H),
+        // Greek
+        'α' => Some(A),
+        'β' => Some(V),
+        'γ' => Some(G),
+        'δ' => Some(D),
+        'ε' => Some(E),
+        'ζ' => Some(Z),
+        'ι' => Some(I),
+        'κ' => Some(K),
+        'λ' => Some(L),
+        'μ' => Some(M),
+        'ν' => Some(N),
+        'ο' | 'ω' => Some(O),
+        'π' => Some(P),
+        'ρ' => Some(R),
+        'σ' => Some(S),
+        'τ' => Some(T),
+        'υ' => Some(U),
+        'φ' => Some(F),
+        _ => None,
     }
 }
 
@@ -303,7 +355,9 @@ impl KeyboardLayout {
             .unwrap_or_default()
     }
 
-    /// Calculate substitution cost between two characters based on keyboard distance
+    /// Euclidean distance between two keys on this layout, scaled to a `[0.05, 1.0]`
+    /// substitution cost — physically adjacent keys (a common source of typos) cost little,
+    /// keys on opposite sides of the board cost close to the maximum.
     pub fn distance_cost(&self, a: char, b: char) -> Option<f32> {
         let (a_pos, b_pos) = match (self.char_position(a), self.char_position(b)) {
             (Some(a_pos), Some(b_pos)) => (a_pos, b_pos),
@@ -314,8 +368,7 @@ impl KeyboardLayout {
         let dy = (a_pos.1 as f32 - b_pos.1 as f32).abs();
         let distance = (dx * dx + dy * dy).sqrt();
 
-        // Scale the distance to be between 0.0 and 1.0
-        Some((distance / 10.0).clamp(0.0, 1.0))
+        Some((distance / 8.0).clamp(0.05, 1.0))
     }
 
     /// Get the position of a character on the keyboard layout
@@ -508,339 +561,5 @@ impl Typeahead {
             task.cancel();
         }
         self.buffer.take();
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::selectable::{OptionState, RcPartialEqValue};
-    use std::collections::HashMap;
-
-    fn option(index: usize, value: &'static str, text_value: &str) -> OptionState {
-        OptionState {
-            id: format!("option-{index}"),
-            index,
-            value: RcPartialEqValue::new(value),
-            text_value: text_value.to_string(),
-        }
-    }
-
-    #[test]
-    fn test_levenshtein_distance() {
-        let typeahead = ['a', 'b', 'c'];
-        let value = ['a', 'b', 'c'];
-        let distance = levenshtein_distance(&typeahead, &value, |_, _| 1.0);
-        assert!(distance < 0.01); // Very small but not exactly 0 due to recency bias
-
-        let typeahead = ['a', 'b', 'c'];
-        let value = ['a', 'b', 'd'];
-        let distance = levenshtein_distance(&typeahead, &value, |_, _| 1.0);
-        assert!(distance > 0.0);
-
-        let typeahead = ['a', 'b'];
-        let value = ['a', 'b', 'c'];
-        let distance = levenshtein_distance(&typeahead, &value, |_, _| 1.0);
-        assert!(distance > 0.0);
-
-        let typeahead = ['a', 'b', 'c'];
-        let value = ['a', 'b'];
-        let distance = levenshtein_distance(&typeahead, &value, |_, _| 1.0);
-        assert!(distance > 0.0);
-
-        // Test with keyboard-aware substitution costs
-        let typeahead = ['q', 'w'];
-        let value = ['q', 'e'];
-        let qwerty_distance = levenshtein_distance(&typeahead, &value, |a, b| {
-            KeyboardLayout::Qwerty.distance_cost(a, b).unwrap()
-        });
-        let uniform_distance = levenshtein_distance(&typeahead, &value, |_, _| 1.0);
-
-        // 'w' and 'e' are adjacent on QWERTY, so should have lower cost than uniform
-        assert!(qwerty_distance < uniform_distance);
-    }
-
-    #[test]
-    fn test_normalized_distance() {
-        let typeahead_chars = ['a', 'b', 'c'];
-        let value_chars = ['a', 'b', 'c'];
-        let keyboard = AdaptiveKeyboard::default();
-
-        let distance = normalized_distance(&typeahead_chars, &value_chars, &keyboard);
-        assert!(distance < 0.01); // Very small but not exactly 0 due to recency bias
-
-        let typeahead_chars = ['a', 'b', 'c'];
-        let value_chars = ['a', 'b', 'd'];
-        let distance = normalized_distance(&typeahead_chars, &value_chars, &keyboard);
-        assert!(distance > 0.0);
-
-        // Test truncation behavior
-        let typeahead_chars = ['a', 'b', 'c', 'd', 'e'];
-        let value_chars = ['x', 'y', 'z'];
-        let distance = normalized_distance(&typeahead_chars, &value_chars, &keyboard);
-        assert!(distance > 0.0);
-
-        // Test with keyboard-aware costs
-        let typeahead_chars = ['q'];
-        let value_chars = ['w'];
-        let qwerty_distance = normalized_distance(&typeahead_chars, &value_chars, &keyboard);
-
-        let typeahead_chars = ['q'];
-        let value_chars = ['p'];
-        let far_distance = normalized_distance(&typeahead_chars, &value_chars, &keyboard);
-
-        // Adjacent keys should have lower distance than distant keys
-        assert!(qwerty_distance < far_distance);
-    }
-
-    #[test]
-    fn test_detect_keyboard_layout() {
-        // Test QWERTY detection
-        let mut known_positions = HashMap::new();
-        known_positions.insert("KeyQ".to_string(), 'q');
-        known_positions.insert("KeyW".to_string(), 'w');
-        known_positions.insert("KeyE".to_string(), 'e');
-
-        let detected = KeyboardLayout::guess(&known_positions);
-        assert_eq!(detected, KeyboardLayout::Qwerty);
-
-        // Test with colemak dh matches
-        let mut known_positions = HashMap::new();
-        known_positions.insert("KeyQ".to_string(), 'q');
-        known_positions.insert("KeyW".to_string(), 'w');
-        known_positions.insert("KeyE".to_string(), 'f');
-        known_positions.insert("KeyR".to_string(), 'p');
-
-        let detected = KeyboardLayout::guess(&known_positions);
-        assert_eq!(detected, KeyboardLayout::ColemakDH);
-
-        // Test empty input
-        let known_positions = HashMap::new();
-        let detected = KeyboardLayout::guess(&known_positions);
-        assert_eq!(detected, KeyboardLayout::Qwerty);
-    }
-
-    #[test]
-    fn test_keyboard_layout_substitution_cost() {
-        let layout = KeyboardLayout::Qwerty;
-
-        // Same character should have zero cost
-        assert_eq!(layout.distance_cost('a', 'a'), Some(0.0));
-
-        // Adjacent characters should have lower cost than distant ones
-        let adjacent_cost = layout.distance_cost('q', 'w');
-        let distant_cost = layout.distance_cost('q', 'p');
-        assert!(adjacent_cost < distant_cost);
-
-        // Unknown characters should return None
-        let unknown_cost = layout.distance_cost('α', 'β');
-        assert_eq!(unknown_cost, None);
-    }
-
-    #[test]
-    fn test_best_match() {
-        let options = vec![
-            option(0, "apple", "Apple"),
-            option(1, "banana", "Banana"),
-            option(2, "cherry", "Cherry"),
-        ];
-
-        let layout = AdaptiveKeyboard::default();
-
-        // Exact prefix match
-        let result = best_match(&layout, "App", &options, |_| true);
-        assert_eq!(result, Some(0));
-
-        // Partial match
-        let result = best_match(&layout, "ban", &options, |_| true);
-        assert_eq!(result, Some(1));
-
-        // Empty typeahead should return None
-        let result = best_match(&layout, "", &options, |_| true);
-        assert_eq!(result, None);
-
-        // No match should return closest option
-        let result = best_match(&layout, "xyz", &options, |_| true);
-        assert!(result.is_some());
-    }
-
-    #[test]
-    fn test_recency_bias() {
-        // Later characters should have higher bias (recency bias favors recent chars)
-        let early_bias = recency_bias(0, 10);
-        let late_bias = recency_bias(9, 10);
-        assert!(late_bias > early_bias);
-
-        // Single character should have maximum bias
-        let single_bias = recency_bias(0, 1);
-        assert!(single_bias > 0.0);
-        assert!(single_bias <= 1.0);
-    }
-
-    #[test]
-    fn test_adaptive_keyboard_learning() {
-        let mut adaptive = AdaptiveKeyboard::new();
-
-        // Test learning from keyboard events
-        adaptive.learn_from_event("KeyA", 'ф'); // Russian 'f' sound on A key
-        adaptive.learn_from_event("KeyS", 'ы'); // Russian 'y' sound on S key
-        assert_eq!(adaptive.layout, KeyboardLayout::Unknown);
-
-        // Should have learned the mappings
-        assert_eq!(adaptive.physical_mappings.get("KeyA"), Some(&'ф'));
-        assert_eq!(adaptive.physical_mappings.get("KeyS"), Some(&'ы'));
-
-        let options = vec![option(0, "ф", "ф"), option(1, "banana", "Banana")];
-
-        // ы should be a closer match to ф than banana
-        let result = best_match(&adaptive, "ф", &options, |_| true);
-        assert_eq!(result, Some(0));
-
-        // b should still match banana
-        let result = best_match(&adaptive, "b", &options, |_| true);
-        assert_eq!(result, Some(1));
-    }
-
-    #[test]
-    fn test_unicode_similarity() {
-        let adaptive = AdaptiveKeyboard::new();
-
-        // Close Unicode codepoints should have low cost
-        let close_cost = adaptive.unicode_similarity_cost('a', 'b'); // U+0061 vs U+0062
-        let far_cost = adaptive.unicode_similarity_cost('a', '中'); // U+0061 vs U+4E2D
-
-        assert!(close_cost < far_cost);
-        assert!(close_cost >= 0.1);
-        assert!(far_cost <= 1.0);
-
-        // Same characters should have zero cost handled by main function
-        assert_eq!(adaptive.substitution_cost('a', 'a'), 0.0);
-    }
-
-    #[test]
-    fn test_phonetic_similarity() {
-        let adaptive = AdaptiveKeyboard::new();
-
-        // Test Latin and Cyrillic 'a' sounds
-        let phonetic_cost = adaptive.phonetic_similarity_cost('a', 'а');
-        assert_eq!(phonetic_cost, 0.2); // Should be low cost
-
-        // Test Latin and Arabic 'b' sounds
-        let phonetic_cost = adaptive.phonetic_similarity_cost('b', 'ب');
-        assert_eq!(phonetic_cost, 0.2);
-
-        // Test unrelated characters
-        let unrelated_cost = adaptive.phonetic_similarity_cost('x', 'ж');
-        assert_eq!(unrelated_cost, 1.0); // Should be high cost
-    }
-
-    #[test]
-    fn test_hybrid_substitution_cost() {
-        let mut adaptive = AdaptiveKeyboard::new();
-
-        // Set up some learned mappings and corrections
-        adaptive.learn_from_event("KeyA", 'ф');
-        adaptive.learn_from_event("KeyS", 'ы');
-
-        // Test physical key cost for mapped characters
-        let physical_cost = adaptive.substitution_cost('ф', 'ы');
-        assert!(physical_cost < 1.0); // Should use physical distance
-
-        // Test phonetic similarity fallback
-        let phonetic_cost = adaptive.substitution_cost('b', 'ب');
-        assert_eq!(phonetic_cost, 0.2);
-
-        // Test unicode similarity fallback
-        let unicode_cost = adaptive.substitution_cost('x', 'y');
-        assert!(unicode_cost < 1.0);
-        assert!(unicode_cost >= 0.1);
-    }
-
-    #[test]
-    fn test_multilingual_matching() {
-        let mut adaptive = AdaptiveKeyboard::new();
-
-        // Russian
-        adaptive.learn_from_event("KeyA", 'ф');
-        adaptive.learn_from_event("KeyB", 'и');
-
-        // Arabic
-        adaptive.learn_from_event("KeyS", 'س');
-        adaptive.learn_from_event("KeyT", 'ت');
-
-        // Chinese characters that are far apart in Unicode get high cost
-        let distant_chinese_cost = adaptive.substitution_cost('中', '国');
-        assert_eq!(distant_chinese_cost, 1.0); // Distant characters should have max cost
-
-        // But closer Chinese characters should have lower cost
-        let close_chinese_cost = adaptive.substitution_cost('中', '丰'); // U+4E2D vs U+4E30
-        assert!(close_chinese_cost < 1.0); // Close Unicode characters should work
-
-        // Mixed script matching - test f/ф which are phonetically similar
-        let mixed_cost = adaptive.substitution_cost('f', 'ф');
-        assert!(mixed_cost < 1.0); // Should work through phonetic similarity
-    }
-}
-
-#[cfg(test)]
-mod typeahead_handle_tests {
-    use super::*;
-    use crate::selectable::RcPartialEqValue;
-
-    fn option(index: usize, text_value: &str) -> OptionState {
-        OptionState {
-            id: format!("option-{index}"),
-            index,
-            value: RcPartialEqValue::new(index),
-            text_value: text_value.to_string(),
-        }
-    }
-
-    fn render(root: fn() -> Element) -> String {
-        let mut dom = VirtualDom::new(root);
-        dom.rebuild_in_place();
-        dioxus_ssr::render(&dom)
-    }
-
-    #[component]
-    fn AccumulatesAcrossCalls() -> Element {
-        let mut typeahead = use_typeahead(ReadSignal::new(Signal::new(Duration::from_secs(1))));
-        let options = [option(0, "Apple"), option(1, "Banana"), option(2, "Cherry")];
-
-        // A single "b" is ambiguous with nothing else here, but the buffer
-        // must accumulate: "b" then "a" together should land on "Banana",
-        // not re-match "b" alone on every call.
-        typeahead.on_input("b", &options, |_| true);
-        let result = typeahead.on_input("a", &options, |_| true);
-
-        rsx! {
-            "{result:?}"
-        }
-    }
-
-    #[component]
-    fn ClearResetsTheBuffer() -> Element {
-        let mut typeahead = use_typeahead(ReadSignal::new(Signal::new(Duration::from_secs(1))));
-        let options = [option(0, "Apple"), option(1, "Banana")];
-
-        typeahead.on_input("b", &options, |_| true);
-        typeahead.clear();
-        let result = typeahead.on_input("a", &options, |_| true);
-
-        rsx! {
-            "{result:?}"
-        }
-    }
-
-    #[test]
-    fn on_input_accumulates_the_buffer_across_calls() {
-        assert!(render(AccumulatesAcrossCalls).contains("Some(1)"));
-    }
-
-    #[test]
-    fn clear_resets_the_buffer_between_input_sequences() {
-        // After clear(), "a" alone should match "Apple" (index 0), not
-        // continue matching against the discarded "b" prefix.
-        assert!(render(ClearResetsTheBuffer).contains("Some(0)"));
     }
 }

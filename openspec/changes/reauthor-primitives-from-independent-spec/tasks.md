@@ -51,10 +51,34 @@
       adico-primitives` unaffected (no Rust changed) and passing; `cargo run -p adico-xtask --
       provenance check` 63 → 62. Follow-up needed: a separate task/change to fix the
       Escape/layer regression and re-run the full `tests/playwright` suite once fixed.
-- [ ] 1.3 `typeahead.rs`: derive spec from ARIA APG typeahead guidance +
+- [x] 1.3 `typeahead.rs`: derive spec from ARIA APG typeahead guidance +
       `primitive_compatibility.json`; confirm the existing 15 unit tests cover the spec or
       extend them; re-author; drop header + record entry. Verify: `cargo test -p
-      adico-primitives typeahead`, provenance count decreases by one.
+      adico-primitives typeahead`, provenance count decreases by one. Done 2026-08-31: unlike
+      1.1/1.2, this file's own prior header admitted its matching algorithm was unchanged
+      from the original module, so this was a genuine rewrite, not documentation-only.
+      Neither `statics/catalogs/base-ui.json` nor `statics/primitive_compatibility.json`
+      tracks a typeahead capability on either axis, confirming the fuzzy/adaptive-
+      keyboard/phonetic matching layer is an adico-only extra (kept per the "one-stop shop"
+      decision), not a ported feature. Independently redesigned: the weighted edit-distance
+      formula (`position_weight` replaces `recency_bias`'s log-ratio-to-the-4th-power curve
+      with a cubic ratio, new constants), the substitution-cost model (new weighting
+      constants, added a case-only-difference tier), Unicode-codepoint proximity, and the
+      cross-script phonetic table (deliberately narrowed to Latin/Cyrillic/Greek, dropping
+      Arabic/Bengali, to avoid transcribing codepoints the rewrite's author couldn't verify
+      directly). `KeyboardLayout`'s physical layout tables and `code_to_char` are unchanged
+      (physical/factual keyboard geometry, not creative expression). Replaced 13
+      relational-only tests (`assert!(a < b)`, which pass for nearly any sane fuzzy matcher)
+      with 26 tests in the new `packages/adico-primitives/tests/test_typeahead.rs`, adding
+      exact-index regression coverage (prefix-match precedence, single-adjacent-key-typo
+      resolution, cross-script phonetic isolation). Verified: `cargo fmt --all --check`,
+      `cargo check --locked --workspace`, `cargo clippy --locked -p adico-cli -p
+      adico-primitives -p adico-registry-core -p adico-test-utils -p adico-xtask
+      --all-targets -- -D warnings`, `cargo test --locked` on the same five packages (all
+      passing), `cargo run -p adico-xtask -- provenance check` (62 → 61 source units, 9
+      records unchanged, correctly removing the `text_search.rs`→`typeahead.rs` rename pair),
+      `cargo run -p adico-xtask -- registry validate` (no facade change needed — the
+      `Typeahead`/`use_typeahead` public API is unchanged).
 - [ ] 1.4 Run the full baseline validation suite (`cargo fmt --all --check`, `cargo check
       --locked --workspace`, `cargo clippy --locked -p adico-cli -p adico-primitives -p
       adico-registry-core -p adico-test-utils -p adico-xtask --all-targets -- -D warnings`,

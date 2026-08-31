@@ -12,7 +12,6 @@
     "primitives/src/selection.rs",
     "primitives/src/select/mod.rs",
     "primitives/src/select/context.rs",
-    "primitives/src/select/text_search.rs",
     "primitives/src/select/components/mod.rs",
     "primitives/src/select/components/group.rs",
     "primitives/src/select/components/list.rs",
@@ -29,7 +28,6 @@
     "packages/adico-primitives/src/selection.rs",
     "packages/adico-primitives/src/select/mod.rs",
     "packages/adico-primitives/src/select/context.rs",
-    "packages/adico-primitives/src/typeahead.rs",
     "packages/adico-primitives/src/select/components/mod.rs",
     "packages/adico-primitives/src/select/components/group.rs",
     "packages/adico-primitives/src/select/components/list.rs",
@@ -50,6 +48,10 @@
     {
       "date": "2026-08-31",
       "summary": "Re-authored packages/adico-primitives/src/js/focus-trap.js against the WAI-ARIA APG 'Trapping Focus' pattern (modal focus containment, Tab/Shift+Tab wraparound, focus restoration on close; FocusScope as its non-modal counterpart), per openspec/changes/reauthor-primitives-from-independent-spec, task 1.2. Added a Tab-cycling Playwright test (tests/playwright/dialog.spec.ts, 'traps Tab focus within its content and wraps at both ends') and a second focusable element to tests/installation/dialog-consumer's fixture so the trap has more than one item to cycle through. This test, and the pre-existing 'closes with Escape' test, could not be verified in this sandbox: both fail against a freshly built, otherwise-unmodified dialog-consumer fixture with no console/JS errors, traced as far as DialogRoot's use_escape_key/layer.is_topmost() gate (packages/adico-primitives/src/lib.rs, layer.rs) without a fix, since diagnosing that regression is outside this task's scope. Verified via cargo test -p adico-primitives (unaffected, all passing) and code review only; Playwright verification is an open gap, not a passed check. Removed the file's SPDX fork header and dropped it from this record's originalPaths/localPaths."
+    },
+    {
+      "date": "2026-08-31",
+      "summary": "Re-authored packages/adico-primitives/src/typeahead.rs per openspec/changes/reauthor-primitives-from-independent-spec, task 1.3. Unlike collection.rs/focus-trap.js, this file's own prior header admitted its fuzzy-matching algorithm was unchanged from the original select-only module, so this was a genuine rewrite, not a documentation pass: the weighted edit-distance formula (position_weight, replacing recency_bias's log-ratio-to-the-4th-power curve with a cubic ratio and different constants), the substitution-cost model (new 0.35/0.05 weighting constants, case-only-difference tier), the Unicode-codepoint-proximity cost, and the cross-script phonetic-match data were all independently redesigned with different constants and code structure -- the last deliberately narrowed to Latin/Cyrillic/Greek only (dropping Arabic/Bengali) since those are the three scripts this rewrite's author could verify letter correspondences for directly rather than risk transcribing unfamiliar codepoints. Neither statics/catalogs/base-ui.json nor statics/primitive_compatibility.json tracks a typeahead capability on either reference axis, confirming this fuzzy/adaptive-keyboard/phonetic layer is an adico-only extra kept per the 'one-stop shop' design decision, not a ported feature. KeyboardLayout's physical layout tables and code_to_char's key-code mapping are unchanged, since these encode physical/factual keyboard geometry rather than creative expression. Replaced the file's 13 relational-only tests with 26 tests in the new packages/adico-primitives/tests/test_typeahead.rs, adding exact-index assertions (prefix-match precedence, single-adjacent-key-typo resolution, cross-script phonetic isolation) the prior relational-only assertions (assert!(a < b)) would not have caught a ranking-quality regression on. Removed the file's SPDX fork header and dropped its rename pair (primitives/src/select/text_search.rs -> typeahead.rs) from this record's originalPaths/localPaths."
     }
   ],
   "notices": [
