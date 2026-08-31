@@ -1,0 +1,13 @@
+{
+  "tailwindOnly": false,
+  "styleException": [
+    {
+      "description": "indicator's computed fill width (style: indicator_style at progress.rs:46)",
+      "reason": "The indicator's width is a runtime percentage computed from the current value; Tailwind has no static utility for an arbitrary runtime percentage."
+    }
+  ],
+  "tokenCompliant": true,
+  "colorException": [],
+  "inspiredBy": [],
+  "inspirationNote": ""
+}

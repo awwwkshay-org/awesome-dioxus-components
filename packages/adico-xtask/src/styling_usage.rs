@@ -166,6 +166,15 @@ fn check_item(item_name: &str, source: &str, record: &StylingUsageRecord) -> Vec
             "{item_name}: classified tailwindOnly but source contains a raw style construct with no matching styleException"
         ));
     }
+    // `tailwindOnly: false` is only meaningful as a *documented* exception --
+    // an item cannot silently opt out of the check by claiming false with no
+    // exception recorded (that would defeat the point: every non-static value
+    // must be named and justified, not merely disclaimed).
+    if !record.tailwind_only && record.style_exception.is_empty() {
+        violations.push(format!(
+            "{item_name}: classified tailwindOnly: false but has no recorded styleException"
+        ));
+    }
 
     if record.token_compliant
         && contains_non_token_color(source)
@@ -173,6 +182,11 @@ fn check_item(item_name: &str, source: &str, record: &StylingUsageRecord) -> Vec
     {
         violations.push(format!(
             "{item_name}: classified tokenCompliant but source contains a non-token color with no matching colorException"
+        ));
+    }
+    if !record.token_compliant && record.color_exception.is_empty() {
+        violations.push(format!(
+            "{item_name}: classified tokenCompliant: false but has no recorded colorException"
         ));
     }
 
@@ -229,6 +243,26 @@ pub fn sync(root: &Path) -> Result<(), String> {
     Ok(())
 }
 
+/// Checks a single already-loaded registry item against its own record.
+/// `Err` means the record itself is missing/unreadable; `Ok` carries every
+/// rule violation found (empty = compliant). Shared by the aggregate
+/// `check(root)` loop and each item's own dedicated regression test.
+fn check_real_item(
+    root: &Path,
+    item: &adico_registry_core::RegistryItem,
+) -> Result<Vec<String>, String> {
+    let path = record_path(root, &item.name);
+    let record = load_record(&path).map_err(|_| {
+        format!(
+            "{}: no styling-usage record (expected {})",
+            item.name,
+            path.display()
+        )
+    })?;
+    let source = read_item_source(root, item);
+    Ok(check_item(&item.name, &source, &record))
+}
+
 pub fn check(root: &Path) -> Result<(), String> {
     let items = load_registry_items(root)?;
     let item_names: BTreeSet<String> = items.iter().map(|item| item.name.clone()).collect();
@@ -259,17 +293,10 @@ pub fn check(root: &Path) -> Result<(), String> {
     }
 
     for item in &items {
-        let path = record_path(root, &item.name);
-        let Ok(record) = load_record(&path) else {
-            violations.push(format!(
-                "{}: no styling-usage record (expected {})",
-                item.name,
-                path.display()
-            ));
-            continue;
-        };
-        let source = read_item_source(root, item);
-        violations.extend(check_item(&item.name, &source, &record));
+        match check_real_item(root, item) {
+            Ok(item_violations) => violations.extend(item_violations),
+            Err(error) => violations.push(error),
+        }
     }
 
     if violations.is_empty() {
@@ -413,6 +440,32 @@ mod tests {
     }
 
     #[test]
+    fn tailwind_only_false_requires_a_recorded_exception() {
+        let mut record = compliant_record();
+        record.tailwind_only = false;
+        let violations = check_item("widget", "", &record);
+        assert!(
+            violations
+                .iter()
+                .any(|v| v.contains("no recorded styleException")),
+            "{violations:?}"
+        );
+    }
+
+    #[test]
+    fn token_compliant_false_requires_a_recorded_exception() {
+        let mut record = compliant_record();
+        record.token_compliant = false;
+        let violations = check_item("widget", "", &record);
+        assert!(
+            violations
+                .iter()
+                .any(|v| v.contains("no recorded colorException")),
+            "{violations:?}"
+        );
+    }
+
+    #[test]
     fn condition_d_fails_on_empty_style_exception_reason() {
         let mut record = compliant_record();
         record.style_exception.push(StyleException {
@@ -446,4 +499,89 @@ mod tests {
         let violations = check_item("widget", r#"class: "bg-primary text-foreground","#, &record);
         assert!(violations.is_empty(), "{violations:?}");
     }
+}
+
+/// One dedicated regression test per real registry item, pinning that item's
+/// actual `registry/ui/*.rs` source against its own committed
+/// `statics/styling_usage/<item>.json` record. See `primitive_usage.rs`'s
+/// `item_tests` module for the identical rationale.
+#[cfg(test)]
+mod item_tests {
+    use super::check_real_item;
+    use crate::registry_introspect::load_registry_items;
+    use std::path::{Path, PathBuf};
+
+    fn repo_root() -> PathBuf {
+        Path::new(env!("CARGO_MANIFEST_DIR"))
+            .parent()
+            .and_then(Path::parent)
+            .expect("packages/adico-xtask has two parent directories")
+            .to_path_buf()
+    }
+
+    fn assert_item_matches_its_record(item_name: &str) {
+        let root = repo_root();
+        let items = load_registry_items(&root).expect("registry.json should load");
+        let item = items
+            .iter()
+            .find(|item| item.name == item_name)
+            .unwrap_or_else(|| panic!("registry.json has no item named '{item_name}'"));
+        let violations = check_real_item(&root, item).unwrap_or_else(|error| panic!("{error}"));
+        assert!(violations.is_empty(), "{violations:?}");
+    }
+
+    macro_rules! styling_usage_item_test {
+        ($fn_name:ident, $item_name:literal) => {
+            #[test]
+            fn $fn_name() {
+                assert_item_matches_its_record($item_name);
+            }
+        };
+    }
+
+    styling_usage_item_test!(styling_usage_accordion, "accordion");
+    styling_usage_item_test!(styling_usage_alert_dialog, "alert-dialog");
+    styling_usage_item_test!(styling_usage_aspect_ratio, "aspect-ratio");
+    styling_usage_item_test!(styling_usage_avatar, "avatar");
+    styling_usage_item_test!(styling_usage_badge, "badge");
+    styling_usage_item_test!(styling_usage_button, "button");
+    styling_usage_item_test!(styling_usage_calendar, "calendar");
+    styling_usage_item_test!(styling_usage_card, "card");
+    styling_usage_item_test!(styling_usage_checkbox, "checkbox");
+    styling_usage_item_test!(styling_usage_collapsible, "collapsible");
+    styling_usage_item_test!(styling_usage_color_picker, "color-picker");
+    styling_usage_item_test!(styling_usage_combobox, "combobox");
+    styling_usage_item_test!(styling_usage_context_menu, "context-menu");
+    styling_usage_item_test!(styling_usage_date_picker, "date-picker");
+    styling_usage_item_test!(styling_usage_dialog, "dialog");
+    styling_usage_item_test!(styling_usage_drag_and_drop_list, "drag-and-drop-list");
+    styling_usage_item_test!(styling_usage_dropdown_menu, "dropdown-menu");
+    styling_usage_item_test!(styling_usage_hover_card, "hover-card");
+    styling_usage_item_test!(styling_usage_input, "input");
+    styling_usage_item_test!(styling_usage_item, "item");
+    styling_usage_item_test!(styling_usage_label, "label");
+    styling_usage_item_test!(styling_usage_menubar, "menubar");
+    styling_usage_item_test!(styling_usage_mode_toggle, "mode-toggle");
+    styling_usage_item_test!(styling_usage_pagination, "pagination");
+    styling_usage_item_test!(styling_usage_popover, "popover");
+    styling_usage_item_test!(styling_usage_progress, "progress");
+    styling_usage_item_test!(styling_usage_radio_group, "radio-group");
+    styling_usage_item_test!(styling_usage_scroll_area, "scroll-area");
+    styling_usage_item_test!(styling_usage_select, "select");
+    styling_usage_item_test!(styling_usage_sheet, "sheet");
+    styling_usage_item_test!(styling_usage_sidebar, "sidebar");
+    styling_usage_item_test!(styling_usage_skeleton, "skeleton");
+    styling_usage_item_test!(styling_usage_slider, "slider");
+    styling_usage_item_test!(styling_usage_switch, "switch");
+    styling_usage_item_test!(styling_usage_tabs, "tabs");
+    styling_usage_item_test!(styling_usage_tag_group, "tag-group");
+    styling_usage_item_test!(styling_usage_textarea, "textarea");
+    styling_usage_item_test!(styling_usage_theme_builder, "theme-builder");
+    styling_usage_item_test!(styling_usage_theme_switcher, "theme-switcher");
+    styling_usage_item_test!(styling_usage_toast, "toast");
+    styling_usage_item_test!(styling_usage_toggle, "toggle");
+    styling_usage_item_test!(styling_usage_toggle_group, "toggle-group");
+    styling_usage_item_test!(styling_usage_toolbar, "toolbar");
+    styling_usage_item_test!(styling_usage_tooltip, "tooltip");
+    styling_usage_item_test!(styling_usage_virtual_list, "virtual-list");
 }

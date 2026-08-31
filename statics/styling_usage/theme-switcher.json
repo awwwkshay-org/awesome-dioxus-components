@@ -1,0 +1,13 @@
+{
+  "tailwindOnly": true,
+  "styleException": [],
+  "tokenCompliant": false,
+  "colorException": [
+    {
+      "value": "bg-slate-500/bg-blue-500/bg-violet-500/bg-emerald-500/bg-rose-500 (preset swatches)",
+      "reason": "Preset swatches are literal previews of the palette options being offered and are documented as independent of the active light/dark mode; they must show the actual preset color, not the current theme's token value."
+    }
+  ],
+  "inspiredBy": [],
+  "inspirationNote": ""
+}

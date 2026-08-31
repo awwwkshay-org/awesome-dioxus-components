@@ -1,0 +1,18 @@
+{
+  "tailwindOnly": false,
+  "styleException": [
+    {
+      "description": "generated live-preview inline style (style: \"{style}\" at theme_builder.rs:960)",
+      "reason": "Theme Builder's preview pane renders arbitrary user-selected theme values at runtime; these cannot be expressed as static Tailwind classes by definition."
+    }
+  ],
+  "tokenCompliant": false,
+  "colorException": [
+    {
+      "value": "#000000 fallback in hsl_to_hex (theme_builder.rs:997)",
+      "reason": "Fallback default for a hex-color-conversion utility function, used only if HSL parsing fails; not a themable UI color."
+    }
+  ],
+  "inspiredBy": [],
+  "inspirationNote": ""
+}

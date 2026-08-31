@@ -1,0 +1,13 @@
+{
+  "tailwindOnly": true,
+  "styleException": [],
+  "tokenCompliant": false,
+  "colorException": [
+    {
+      "value": "text-white (Destructive variant)",
+      "reason": "Matches shadcn's own current new-york-v4 Button source exactly, which uses text-white (not a semantic token) for its destructive variant."
+    }
+  ],
+  "inspiredBy": [],
+  "inspirationNote": ""
+}

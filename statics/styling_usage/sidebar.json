@@ -1,0 +1,13 @@
+{
+  "tailwindOnly": false,
+  "styleException": [
+    {
+      "description": "--sidebar-width/--sidebar-width-icon CSS custom properties (sidebar.rs:111)",
+      "reason": "Tailwind utility classes cannot set CSS custom properties; these two custom properties feed the sidebar's own Tailwind width classes elsewhere in the file."
+    }
+  ],
+  "tokenCompliant": true,
+  "colorException": [],
+  "inspiredBy": [],
+  "inspirationNote": ""
+}

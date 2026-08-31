@@ -1,0 +1,13 @@
+{
+  "tailwindOnly": true,
+  "styleException": [],
+  "tokenCompliant": false,
+  "colorException": [
+    {
+      "value": "bg-emerald-600 text-white dark:bg-emerald-500 dark:hover:bg-emerald-500/80 (Verified variant)",
+      "reason": "The Verified variant deliberately uses a fixed, palette-independent success green so the checkmark badge reads consistently across every theme; an adico-specific addition with no shadcn or dioxus-components equivalent."
+    }
+  ],
+  "inspiredBy": [],
+  "inspirationNote": ""
+}
