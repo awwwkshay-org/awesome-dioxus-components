@@ -356,6 +356,50 @@ impl CollectionState {
         true
     }
 
+    /// Move focus in a 2-D grid, where items are laid out `columns` wide in
+    /// row-major index order (for example, a calendar month grid). Unlike
+    /// [`Self::navigate_key`], a move onto an unavailable or out-of-bounds
+    /// cell is dropped rather than skipping to the next available one —
+    /// grids don't auto-skip past disabled cells the way a 1-D roving list
+    /// does — and there is no wraparound regardless of [`Self::loops`].
+    /// `ArrowLeft`/`ArrowRight` move by one column, flipped for
+    /// [`Direction::Rtl`]; `ArrowUp`/`ArrowDown` move by one row. Returns
+    /// whether the key was handled, so callers can conditionally call
+    /// `prevent_default()`.
+    pub fn navigate_grid_key(&mut self, key: Key, columns: usize, direction: Direction) -> bool {
+        if columns == 0 {
+            return false;
+        }
+        let columns = columns as isize;
+        let rtl = direction.is_rtl();
+        match key {
+            Key::ArrowUp => self.move_by_grid_offset(-columns),
+            Key::ArrowDown => self.move_by_grid_offset(columns),
+            Key::ArrowLeft => self.move_by_grid_offset(if rtl { 1 } else { -1 }),
+            Key::ArrowRight => self.move_by_grid_offset(if rtl { -1 } else { 1 }),
+            Key::Home => self.focus_first(),
+            Key::End => self.focus_last(),
+            _ => return false,
+        }
+        true
+    }
+
+    /// Move focus to `focused_index() + offset` if that index exists and is
+    /// available; otherwise leave focus unchanged. Absent any current focus,
+    /// lands on the first available item instead of computing an offset.
+    fn move_by_grid_offset(&mut self, offset: isize) {
+        let Some(current) = self.focused_index() else {
+            self.try_focus_placement(CollectionPlacement::First);
+            return;
+        };
+        let Some(target) = current.checked_add_signed(offset) else {
+            return;
+        };
+        if self.is_available(target) {
+            self.set_focus(Some(target));
+        }
+    }
+
     pub fn try_focus_placement(&mut self, placement: CollectionPlacement) -> bool {
         let index = match placement {
             CollectionPlacement::First => self.first_available_index(),
@@ -849,5 +893,170 @@ mod navigate_key_tests {
             collection.focused_index()
         });
         assert!(html.contains("Some(0)"), "{html}");
+    }
+}
+
+#[cfg(test)]
+mod navigate_grid_key_tests {
+    use super::*;
+
+    fn item(index: usize) -> CollectionItemState {
+        CollectionItemState {
+            index,
+            key: None,
+            disabled: false,
+            hidden: false,
+            selected: false,
+        }
+    }
+
+    fn disabled_item(index: usize) -> CollectionItemState {
+        CollectionItemState {
+            disabled: true,
+            ..item(index)
+        }
+    }
+
+    /// A 3x3 grid in row-major order:
+    /// ```text
+    /// 0 1 2
+    /// 3 4 5
+    /// 6 7 8
+    /// ```
+    fn grid_collection() -> CollectionState {
+        let mut collection = CollectionState::new(
+            ReadSignal::new(Signal::new(false)),
+            CollectionOptions::default(),
+        );
+        for index in 0..9 {
+            collection.register_item(item(index));
+        }
+        collection.set_focus(Some(4));
+        collection
+    }
+
+    fn render_focused_index(render: impl Fn() -> Option<usize> + 'static) -> String {
+        #[derive(Clone)]
+        struct Harness(std::rc::Rc<dyn Fn() -> Option<usize>>);
+
+        thread_local! {
+            static HARNESS: std::cell::RefCell<Option<Harness>> = const { std::cell::RefCell::new(None) };
+        }
+
+        HARNESS.with(|cell| {
+            *cell.borrow_mut() = Some(Harness(std::rc::Rc::new(render)));
+        });
+
+        #[component]
+        fn Root() -> Element {
+            let result = HARNESS.with(|cell| (cell.borrow().as_ref().unwrap().0)());
+            rsx! {
+                "{result:?}"
+            }
+        }
+
+        let mut dom = VirtualDom::new(Root);
+        dom.rebuild_in_place();
+        dioxus_ssr::render(&dom)
+    }
+
+    #[test]
+    fn arrow_down_moves_one_row() {
+        let html = render_focused_index(|| {
+            let mut collection = grid_collection();
+            collection.navigate_grid_key(Key::ArrowDown, 3, Direction::Ltr);
+            collection.focused_index()
+        });
+        assert!(html.contains("Some(7)"), "{html}");
+    }
+
+    #[test]
+    fn arrow_up_moves_one_row() {
+        let html = render_focused_index(|| {
+            let mut collection = grid_collection();
+            collection.navigate_grid_key(Key::ArrowUp, 3, Direction::Ltr);
+            collection.focused_index()
+        });
+        assert!(html.contains("Some(1)"), "{html}");
+    }
+
+    #[test]
+    fn arrow_up_from_top_row_does_not_move() {
+        let html = render_focused_index(|| {
+            let mut collection = grid_collection();
+            collection.set_focus(Some(1));
+            collection.navigate_grid_key(Key::ArrowUp, 3, Direction::Ltr);
+            collection.focused_index()
+        });
+        assert!(html.contains("Some(1)"), "{html}");
+    }
+
+    #[test]
+    fn ltr_arrow_right_moves_one_column() {
+        let html = render_focused_index(|| {
+            let mut collection = grid_collection();
+            collection.navigate_grid_key(Key::ArrowRight, 3, Direction::Ltr);
+            collection.focused_index()
+        });
+        assert!(html.contains("Some(5)"), "{html}");
+    }
+
+    #[test]
+    fn rtl_flips_arrow_right_to_the_previous_column() {
+        let html = render_focused_index(|| {
+            let mut collection = grid_collection();
+            collection.navigate_grid_key(Key::ArrowRight, 3, Direction::Rtl);
+            collection.focused_index()
+        });
+        assert!(html.contains("Some(3)"), "{html}");
+    }
+
+    #[test]
+    fn disabled_target_cell_is_not_focused() {
+        let html = render_focused_index(|| {
+            let mut collection = CollectionState::new(
+                ReadSignal::new(Signal::new(false)),
+                CollectionOptions::default(),
+            );
+            for index in 0..9 {
+                if index == 7 {
+                    collection.register_item(disabled_item(index));
+                } else {
+                    collection.register_item(item(index));
+                }
+            }
+            collection.set_focus(Some(4));
+            collection.navigate_grid_key(Key::ArrowDown, 3, Direction::Ltr);
+            collection.focused_index()
+        });
+        assert!(html.contains("Some(4)"), "{html}");
+    }
+
+    #[test]
+    fn home_and_end_go_to_the_grid_boundaries() {
+        let end_html = render_focused_index(|| {
+            let mut collection = grid_collection();
+            collection.navigate_grid_key(Key::End, 3, Direction::Ltr);
+            collection.focused_index()
+        });
+        assert!(end_html.contains("Some(8)"), "{end_html}");
+
+        let home_html = render_focused_index(|| {
+            let mut collection = grid_collection();
+            collection.navigate_grid_key(Key::Home, 3, Direction::Ltr);
+            collection.focused_index()
+        });
+        assert!(home_html.contains("Some(0)"), "{home_html}");
+    }
+
+    #[test]
+    fn zero_columns_is_unhandled_and_does_not_move_focus() {
+        let html = render_focused_index(|| {
+            let mut collection = grid_collection();
+            let handled = collection.navigate_grid_key(Key::ArrowDown, 0, Direction::Ltr);
+            assert!(!handled);
+            collection.focused_index()
+        });
+        assert!(html.contains("Some(4)"), "{html}");
     }
 }
