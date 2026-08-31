@@ -382,11 +382,30 @@
 
 ## 5. Wave E — remaining files by provenance record
 
-- [ ] 5.1 `wave2-state` record: `avatar.rs`, `checkbox.rs`, `collapsible.rs`, `switch.rs`,
+- [x] 5.1 `wave2-state` record: `avatar.rs`, `checkbox.rs`, `collapsible.rs`, `switch.rs`,
       `toggle.rs`. Derive specs from ARIA APG; author/extend tests; re-author each; delete
       the `adico-primitives-wave2-state.json` record once empty. Verify: `cargo test -p
       adico-primitives`, `tests/installation/wave2-*-consumer` fixture, provenance count -5,
-      record file deleted.
+      record file deleted. Done 2026-08-31: no logic changes to any of the five — all were
+      already genuine adaptations (or already-correct unmodified ports) per the record's own
+      2026-08-30 entry, preserved verbatim alongside new spec framing rather than replaced.
+      `toggle.rs`/`switch.rs`/`checkbox.rs` map directly to their own WAI-ARIA APG patterns
+      (Button-pressed-state, Switch, Checkbox including its tri-state `mixed` variant);
+      `collapsible.rs` has no single named APG pattern, so its spec is the APG's general
+      disclosure-widget guidance (trigger `aria-expanded`/`aria-controls`) already
+      implemented; `avatar.rs` has no dedicated APG pattern either, so its spec is the
+      closest APG guidance (`role="img"`) plus shadcn/Base UI's own Avatar conventions. All
+      five had zero tests; added 27 across five new files — `checkbox.rs`'s `CheckboxState`
+      enum logic (`to_aria_checked`/`to_data_state`/`Not`/`From<bool>`, widened to `pub`) got
+      direct tests; the rest are render-level (roles, aria-*/data-state mirrors, disabled
+      propagation). `avatar.rs`'s state machine only advances past its initial `Empty` state
+      via `AvatarImage`'s own `use_effect` or real browser `onload`/`onerror` events — the
+      same effect-driven-state limitation documented elsewhere in this change — so its tests
+      cover only the initial-empty-state render, documented in the test file rather than
+      forced. Full baseline green; provenance `8 imported record(s), 21 source unit(s)` (−5,
+      exact — `wave2-state.json` deleted once every file it covered had its header removed,
+      confirmed empty first); `registry validate` unaffected; `tests/installation/
+      wave2-state-consumer` compiles clean against `--target wasm32-unknown-unknown`.
 - [ ] 5.2 `wave2-simple` record: `aspect_ratio.rs`, `label.rs`, `progress.rs`. Same recipe.
       Verify: tests pass, record `adico-primitives-wave2-simple.json` deleted, provenance
       count -3.

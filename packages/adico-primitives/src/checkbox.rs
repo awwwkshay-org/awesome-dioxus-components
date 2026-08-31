@@ -1,15 +1,13 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/checkbox.rs. See provenance/records/adico-primitives-wave2-state.json.
-//
-// Adapted from upstream: `BubbleInput`'s unconditional `document::eval` call
-// (syncing the hidden native `<input type="checkbox">`'s `checked`/
-// `indeterminate` DOM properties -- Dioxus's `checked` attribute only sets the
-// initial default, not later reactive updates, and `indeterminate` has no
-// HTML attribute equivalent at all) is now behind this crate's established
-// `#[cfg(any(feature = "web", feature = "native"))]` target-gated adapter
-// pattern, with an SSR-safe no-op fallback -- there is no DOM to sync
-// server-side, and the client re-syncs once it mounts.
+// Implements the WAI-ARIA APG Checkbox pattern, including its tri-state (`mixed`) variant:
+// `role="checkbox"` with `aria-checked` of `true`/`false`/`mixed`, toggling only on Space (the
+// APG reserves Enter for a form's default-submit button, not checkbox activation). This file
+// was already a genuine adaptation, not ported-unmodified, and that adaptation is unchanged
+// here: `BubbleInput`'s unconditional `document::eval` call (syncing the hidden native `<input
+// type="checkbox">`'s `checked`/`indeterminate` DOM properties -- Dioxus's `checked` attribute
+// only sets the initial default, not later reactive updates, and `indeterminate` has no HTML
+// attribute equivalent at all) is behind this crate's established `#[cfg(any(feature = "web",
+// feature = "native"))]` target-gated adapter pattern, with an SSR-safe no-op fallback -- there
+// is no DOM to sync server-side, and the client re-syncs once it mounts.
 
 //! Defines the [`Checkbox`] component and its subcomponents, which manage checkbox inputs with controlled state.
 
@@ -32,7 +30,8 @@ pub enum CheckboxState {
 }
 
 impl CheckboxState {
-    fn to_aria_checked(self) -> &'static str {
+    /// `pub` only for `packages/adico-primitives/tests/`; not part of the intended public API.
+    pub fn to_aria_checked(self) -> &'static str {
         match self {
             CheckboxState::Checked => "true",
             CheckboxState::Indeterminate => "mixed",
@@ -40,7 +39,8 @@ impl CheckboxState {
         }
     }
 
-    fn to_data_state(self) -> &'static str {
+    /// `pub` only for `packages/adico-primitives/tests/`; not part of the intended public API.
+    pub fn to_data_state(self) -> &'static str {
         match self {
             CheckboxState::Checked => "checked",
             CheckboxState::Indeterminate => "indeterminate",

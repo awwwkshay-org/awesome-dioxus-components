@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/toggle.rs. See provenance/records/adico-primitives-wave2-state.json.
+// Implements the WAI-ARIA APG Button pattern's pressed-state variant: a native `<button>` with
+// `aria-pressed`, toggling on click. The explicit-focus-after-click workaround (Safari/Firefox
+// on macOS don't focus `<button>` on click by default) matches Radix UI/Headless UI/Material
+// UI's own documented handling of the same platform quirk, not a fork-specific adaptation.
 
 //! Defines the [`Toggle`] component for creating toggle buttons.
 

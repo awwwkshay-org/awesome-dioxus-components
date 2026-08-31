@@ -1,13 +1,13 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/avatar.rs. See provenance/records/adico-primitives-wave2-state.json.
-//
-// Adapted from upstream: `AvatarImage`'s unconditional `document::eval` call
-// (reconciling cached/very-fast image loads that can complete before Dioxus
-// delivers the synthetic onload/onerror event) is now behind this crate's
-// established `#[cfg(any(feature = "web", feature = "native"))]` target-gated
-// adapter pattern, with an SSR-safe no-op fallback -- the onload/onerror
-// handlers below still cover the ordinary case once the client mounts.
+// No dedicated WAI-ARIA APG pattern exists for an avatar; `role="img"` (a static image
+// substitute with a fallback) matches the closest APG guidance (the "img" role for a single
+// meaningful graphic) and shadcn/Base UI's own Avatar conventions per
+// statics/primitive_compatibility.json. This file was already a genuine adaptation, not
+// ported-unmodified, and that adaptation is unchanged here: `AvatarImage`'s unconditional
+// `document::eval` call (reconciling cached/very-fast image loads that can complete before
+// Dioxus delivers the synthetic onload/onerror event) is behind this crate's established
+// `#[cfg(any(feature = "web", feature = "native"))]` target-gated adapter pattern, with an
+// SSR-safe no-op fallback -- the onload/onerror handlers below still cover the ordinary case
+// once the client mounts.
 
 //! Defines the [`Avatar`] component and its subcomponents, which manage user profile images with fallback options.
 

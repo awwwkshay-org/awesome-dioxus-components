@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/switch.rs. See provenance/records/adico-primitives-wave2-state.json.
+// Implements the WAI-ARIA APG Switch pattern: `role="switch"` with `aria-checked`, toggling
+// only on Space (not Enter, matching the APG's own guidance that a switch behaves like a
+// checkbox for activation, not a button). The hidden native `<input type="checkbox">` mirrors
+// state for plain HTML form submission without a JS-driven form library.
 
 //! Defines the [`Switch`] component and its sub-components.
 

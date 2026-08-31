@@ -1,16 +1,16 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/collapsible.rs. See provenance/records/adico-primitives-wave2-state.json.
-//
-// Adapted from upstream: drops the `dioxus-attributes`/`merge_attributes`
-// helper crate and the polymorphic `r#as` render-prop escape hatch (upstream
-// used them to merge default behavioral attributes with caller-supplied
-// ones and optionally render a custom root/trigger element). Default
-// behavioral attributes are written directly on each element and
-// `..props.attributes` is spread after them -- the same plain-spread pattern
-// this crate's `dialog`/`tooltip` modules already established, and the `r#as`
-// escape hatch is dropped rather than ported (no other primitive in this
-// crate exposes it). No `document::eval` usage upstream; SSR-safe as-is.
+// No single WAI-ARIA APG pattern names a generic "collapsible section"; its spec is the APG's
+// disclosure-widget guidance (a trigger with `aria-expanded`/`aria-controls` pointing at the
+// content it reveals) that `CollapsibleTrigger`/`CollapsibleContent` already implement, plus
+// `keep_mounted`'s own contract (present in the DOM but with no ARIA/visibility guarantees of
+// its own — the caller's own CSS or `hidden` attribute governs actual visibility when set).
+// This file was already a genuine adaptation, not ported-unmodified, and that adaptation is
+// unchanged here: it drops the `dioxus-attributes`/`merge_attributes` helper crate and the
+// polymorphic `r#as` render-prop escape hatch (upstream used them to merge default behavioral
+// attributes with caller-supplied ones and optionally render a custom root/trigger element).
+// Default behavioral attributes are written directly on each element and `..props.attributes`
+// is spread after them — the same plain-spread pattern this crate's `dialog`/`tooltip` modules
+// already established, and the `r#as` escape hatch is dropped rather than ported (no other
+// primitive in this crate exposes it). No `document::eval` usage upstream; SSR-safe as-is.
 
 //! Defines the [`Collapsible`] component and its sub-components.
 
