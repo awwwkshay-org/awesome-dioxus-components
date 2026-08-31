@@ -8,7 +8,19 @@ use std::rc::Rc;
 
 use dioxus::prelude::*;
 
+use crate::direction::Direction;
 use crate::use_effect_cleanup;
+
+/// Which axis arrow-key navigation moves along, for [`CollectionState::navigate_key`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum Orientation {
+    /// `ArrowUp`/`ArrowDown` move focus; `ArrowLeft`/`ArrowRight` are ignored.
+    #[default]
+    Vertical,
+    /// `ArrowLeft`/`ArrowRight` move focus (flipped for [`Direction::Rtl`]);
+    /// `ArrowUp`/`ArrowDown` are ignored.
+    Horizontal,
+}
 
 #[derive(Clone, PartialEq)]
 struct CollectionItemState {
@@ -35,22 +47,22 @@ impl CollectionItemState {
 
 /// A requested initial focus placement.
 #[derive(Clone, Copy)]
-pub(crate) enum CollectionPlacement {
+pub enum CollectionPlacement {
     First,
     Last,
 }
 
 /// Group-level options for a collection.
 #[derive(Clone, Copy, Default)]
-pub(crate) struct CollectionOptions {
+pub struct CollectionOptions {
     /// When no item is selected and none is focused, make every available item
     /// a tab stop instead of only the first. Native HTML radio-group semantics.
-    pub(crate) tabbable_when_empty: bool,
+    pub tabbable_when_empty: bool,
 }
 
 /// A cloneable handle for ordered item registration and roving-focus navigation.
 #[derive(Clone, Copy)]
-pub(crate) struct CollectionState {
+pub struct CollectionState {
     roving_loop: ReadSignal<bool>,
     tabbable_when_empty: bool,
     recent: Signal<Option<usize>>,
@@ -60,7 +72,7 @@ pub(crate) struct CollectionState {
 }
 
 impl CollectionState {
-    pub(crate) fn new(roving_loop: ReadSignal<bool>, options: CollectionOptions) -> Self {
+    pub fn new(roving_loop: ReadSignal<bool>, options: CollectionOptions) -> Self {
         Self {
             roving_loop,
             tabbable_when_empty: options.tabbable_when_empty,
@@ -72,13 +84,13 @@ impl CollectionState {
     }
 
     /// Whether arrow navigation wraps around the ends of the collection.
-    pub(crate) fn loops(&self) -> bool {
+    pub fn loops(&self) -> bool {
         (self.roving_loop)()
     }
 
     /// The backing loop signal, for nested collections that inherit the parent's
     /// looping behavior.
-    pub(crate) fn loop_signal(&self) -> ReadSignal<bool> {
+    pub fn loop_signal(&self) -> ReadSignal<bool> {
         self.roving_loop
     }
 
@@ -118,7 +130,7 @@ impl CollectionState {
         }
     }
 
-    pub(crate) fn set_focus(&mut self, index: Option<usize>) {
+    pub fn set_focus(&mut self, index: Option<usize>) {
         let target = match index {
             Some(idx) if self.is_known_unavailable(idx) => None,
             other => other,
@@ -139,7 +151,7 @@ impl CollectionState {
         }
     }
 
-    pub(crate) fn set_focus_key(&mut self, key: Option<String>) {
+    pub fn set_focus_key(&mut self, key: Option<String>) {
         let index = key.as_deref().and_then(|key| self.index_for_key(key));
         if let Some(index) = index {
             self.recent.set(Some(index));
@@ -152,19 +164,19 @@ impl CollectionState {
         }
     }
 
-    pub(crate) fn clear_focus(&mut self) {
+    pub fn clear_focus(&mut self) {
         self.set_focus(None);
     }
 
-    pub(crate) fn focused_index(&self) -> Option<usize> {
+    pub fn focused_index(&self) -> Option<usize> {
         (self.focused)()
     }
 
-    pub(crate) fn recent_focus(&self) -> Option<usize> {
+    pub fn recent_focus(&self) -> Option<usize> {
         (self.recent)()
     }
 
-    pub(crate) fn recent_focus_or_default(&self) -> usize {
+    pub fn recent_focus_or_default(&self) -> usize {
         self.recent_focus()
             .filter(|&index| self.is_available(index))
             .or_else(|| self.selected_available_index())
@@ -172,7 +184,7 @@ impl CollectionState {
             .unwrap_or_default()
     }
 
-    pub(crate) fn focused_key(&self) -> Option<String> {
+    pub fn focused_key(&self) -> Option<String> {
         let focused = self.focused_index()?;
         let key = (self.focus_key)();
         let items = self.items.read();
@@ -188,22 +200,22 @@ impl CollectionState {
         }
     }
 
-    pub(crate) fn any_focused(&self) -> bool {
+    pub fn any_focused(&self) -> bool {
         self.focused.read().is_some()
     }
 
-    pub(crate) fn is_focused(&self, index: usize) -> bool {
+    pub fn is_focused(&self, index: usize) -> bool {
         self.focused_index() == Some(index)
     }
 
-    pub(crate) fn is_available(&self, index: usize) -> bool {
+    pub fn is_available(&self, index: usize) -> bool {
         self.items
             .read()
             .iter()
             .any(|item| item.index == index && item.available())
     }
 
-    pub(crate) fn first_available_index(&self) -> Option<usize> {
+    pub fn first_available_index(&self) -> Option<usize> {
         self.items
             .read()
             .iter()
@@ -211,7 +223,7 @@ impl CollectionState {
             .map(|item| item.index)
     }
 
-    pub(crate) fn last_available_index(&self) -> Option<usize> {
+    pub fn last_available_index(&self) -> Option<usize> {
         self.items
             .read()
             .iter()
@@ -220,7 +232,7 @@ impl CollectionState {
             .map(|item| item.index)
     }
 
-    pub(crate) fn selected_available_index(&self) -> Option<usize> {
+    pub fn selected_available_index(&self) -> Option<usize> {
         self.items
             .read()
             .iter()
@@ -228,7 +240,7 @@ impl CollectionState {
             .map(|item| item.index)
     }
 
-    pub(crate) fn roving_tabindex(&self, index: usize) -> &'static str {
+    pub fn roving_tabindex(&self, index: usize) -> &'static str {
         if !self.is_available(index) {
             return "-1";
         }
@@ -258,15 +270,15 @@ impl CollectionState {
         }
     }
 
-    pub(crate) fn focus_first(&mut self) {
+    pub fn focus_first(&mut self) {
         self.set_focus(self.first_available_index());
     }
 
-    pub(crate) fn focus_last(&mut self) {
+    pub fn focus_last(&mut self) {
         self.set_focus(self.last_available_index());
     }
 
-    pub(crate) fn focus_next(&mut self) {
+    pub fn focus_next(&mut self) {
         let indices = self.available_indices();
         self.set_focus(next_index_after(
             &indices,
@@ -275,7 +287,7 @@ impl CollectionState {
         ));
     }
 
-    pub(crate) fn focus_prev(&mut self) {
+    pub fn focus_prev(&mut self) {
         let indices = self.available_indices();
         self.set_focus(prev_index_before(
             &indices,
@@ -287,7 +299,7 @@ impl CollectionState {
     /// Move focus to the next available item matching `predicate`, starting from
     /// the currently focused item. The collection owns the ordering; callers only
     /// describe which items qualify.
-    pub(crate) fn focus_next_matching(&mut self, predicate: impl Fn(usize) -> bool) {
+    pub fn focus_next_matching(&mut self, predicate: impl Fn(usize) -> bool) {
         let indices = self.available_indices_matching(predicate);
         self.set_focus(next_index_after(
             &indices,
@@ -298,7 +310,7 @@ impl CollectionState {
 
     /// Move focus to the previous available item matching `predicate`, starting
     /// from the currently focused item.
-    pub(crate) fn focus_prev_matching(&mut self, predicate: impl Fn(usize) -> bool) {
+    pub fn focus_prev_matching(&mut self, predicate: impl Fn(usize) -> bool) {
         let indices = self.available_indices_matching(predicate);
         self.set_focus(prev_index_before(
             &indices,
@@ -307,7 +319,44 @@ impl CollectionState {
         ));
     }
 
-    pub(crate) fn try_focus_placement(&mut self, placement: CollectionPlacement) -> bool {
+    /// Move focus in response to an arrow/Home/End key press, honoring
+    /// `orientation` and `direction` (in [`Orientation::Horizontal`], a
+    /// right-to-left [`Direction`] flips which physical arrow key means
+    /// "next"). Returns whether the key was handled, so callers can
+    /// conditionally call `prevent_default()` — this replaces each
+    /// component's own hand-rolled arrow-key match arms with one shared,
+    /// direction-aware implementation.
+    pub fn navigate_key(
+        &mut self,
+        key: Key,
+        orientation: Orientation,
+        direction: Direction,
+    ) -> bool {
+        match key {
+            Key::ArrowUp if orientation == Orientation::Vertical => self.focus_prev(),
+            Key::ArrowDown if orientation == Orientation::Vertical => self.focus_next(),
+            Key::ArrowLeft if orientation == Orientation::Horizontal => {
+                if direction.is_rtl() {
+                    self.focus_next();
+                } else {
+                    self.focus_prev();
+                }
+            }
+            Key::ArrowRight if orientation == Orientation::Horizontal => {
+                if direction.is_rtl() {
+                    self.focus_prev();
+                } else {
+                    self.focus_next();
+                }
+            }
+            Key::Home => self.focus_first(),
+            Key::End => self.focus_last(),
+            _ => return false,
+        }
+        true
+    }
+
+    pub fn try_focus_placement(&mut self, placement: CollectionPlacement) -> bool {
         let index = match placement {
             CollectionPlacement::First => self.first_available_index(),
             CollectionPlacement::Last => self.last_available_index(),
@@ -428,11 +477,11 @@ impl CollectionState {
     }
 }
 
-pub(crate) fn use_collection_provider(roving_loop: ReadSignal<bool>) -> CollectionState {
+pub fn use_collection_provider(roving_loop: ReadSignal<bool>) -> CollectionState {
     use_collection_provider_with(roving_loop, CollectionOptions::default())
 }
 
-pub(crate) fn use_collection_provider_with(
+pub fn use_collection_provider_with(
     roving_loop: ReadSignal<bool>,
     options: CollectionOptions,
 ) -> CollectionState {
@@ -444,22 +493,22 @@ pub(crate) fn use_collection_provider_with(
 /// `useSelectableItem`, which returns one `itemProps` bundle (tabindex, focus
 /// handling, focused state) instead of forcing each component to hand-roll it.
 #[derive(Clone, Copy)]
-pub(crate) struct CollectionItem {
+pub struct CollectionItem {
     /// Roving `tabindex` for the item's focusable element (`"0"` or `"-1"`).
-    pub(crate) tabindex: Memo<&'static str>,
+    pub tabindex: Memo<&'static str>,
     focused: Memo<bool>,
     controlled_ref: Signal<Option<Rc<MountedData>>>,
 }
 
 impl CollectionItem {
     /// Whether this item is the currently focused one.
-    pub(crate) fn focused(&self) -> bool {
+    pub fn focused(&self) -> bool {
         (self.focused)()
     }
 
     /// A mounted handler that lets the collection drive DOM focus for this item.
     /// Attach it to the focusable element.
-    pub(crate) fn onmounted(self) -> impl FnMut(MountedEvent) {
+    pub fn onmounted(self) -> impl FnMut(MountedEvent) {
         let mut controlled_ref = self.controlled_ref;
         move |event: MountedEvent| controlled_ref.set(Some(event.data()))
     }
@@ -470,7 +519,7 @@ impl CollectionItem {
 /// the builder to [`use_item`]. Unset inputs default to "none".
 ///
 /// This is a plain constructor and runs no hooks; the hook is [`use_item`].
-pub(crate) fn collection_item(
+pub fn collection_item(
     collection: CollectionState,
     index: impl Readable<Target = usize> + Copy + 'static,
 ) -> CollectionItemBuilder {
@@ -487,7 +536,7 @@ pub(crate) fn collection_item(
 /// Builder for a single collection item. Construct it with [`collection_item`]
 /// and pass it to [`use_item`] to register.
 #[must_use = "pass the builder to use_item() to register the item"]
-pub(crate) struct CollectionItemBuilder {
+pub struct CollectionItemBuilder {
     collection: CollectionState,
     index: Rc<dyn Fn() -> usize>,
     key: Rc<dyn Fn() -> Option<String>>,
@@ -498,19 +547,19 @@ pub(crate) struct CollectionItemBuilder {
 
 impl CollectionItemBuilder {
     /// Whether the item is currently disabled (skipped by roving focus).
-    pub(crate) fn disabled(mut self, disabled: impl Fn() -> bool + 'static) -> Self {
+    pub fn disabled(mut self, disabled: impl Fn() -> bool + 'static) -> Self {
         self.disabled = Rc::new(disabled);
         self
     }
 
     /// The item key, used for focus identity and `focused_key()` lookups.
-    pub(crate) fn key(mut self, key: impl Fn() -> Option<String> + 'static) -> Self {
+    pub fn key(mut self, key: impl Fn() -> Option<String> + 'static) -> Self {
         self.key = Rc::new(key);
         self
     }
 
     /// Whether the item is currently hidden (e.g. filtered out or removed).
-    pub(crate) fn hidden(mut self, hidden: impl Fn() -> bool + 'static) -> Self {
+    pub fn hidden(mut self, hidden: impl Fn() -> bool + 'static) -> Self {
         self.hidden = Rc::new(hidden);
         self
     }
@@ -518,7 +567,7 @@ impl CollectionItemBuilder {
     /// Whether this item is the selected one. When nothing is focused yet, the
     /// selected item becomes the roving tab stop — mirrors React Aria seeding
     /// `focusedKey` from `firstSelectedKey`.
-    pub(crate) fn selected(mut self, selected: impl Fn() -> bool + 'static) -> Self {
+    pub fn selected(mut self, selected: impl Fn() -> bool + 'static) -> Self {
         self.selected = Rc::new(selected);
         self
     }
@@ -528,7 +577,7 @@ impl CollectionItemBuilder {
 /// `focused()` state, and an `onmounted()` focus handler. This is the hook — it
 /// calls `use_effect`/`use_signal`/`use_memo`, so call it unconditionally, once
 /// per render.
-pub(crate) fn use_item(builder: CollectionItemBuilder) -> CollectionItem {
+pub fn use_item(builder: CollectionItemBuilder) -> CollectionItem {
     let CollectionItemBuilder {
         mut collection,
         index,
@@ -595,7 +644,7 @@ pub(crate) fn use_item(builder: CollectionItemBuilder) -> CollectionItem {
     }
 }
 
-pub(crate) fn use_deferred_collection_focus(
+pub fn use_deferred_collection_focus(
     mut collection: CollectionState,
     mut placement: Signal<Option<CollectionPlacement>>,
     active: impl Fn() -> bool + Copy + 'static,
@@ -653,5 +702,152 @@ fn prev_index_before(
         }
         None if roving_loop => indices.last().copied(),
         None => indices.first().copied(),
+    }
+}
+
+#[cfg(test)]
+mod navigate_key_tests {
+    use super::*;
+
+    fn item(index: usize) -> CollectionItemState {
+        CollectionItemState {
+            index,
+            key: None,
+            disabled: false,
+            hidden: false,
+            selected: false,
+        }
+    }
+
+    fn three_item_collection() -> CollectionState {
+        let mut collection = CollectionState::new(
+            ReadSignal::new(Signal::new(false)),
+            CollectionOptions::default(),
+        );
+        collection.register_item(item(0));
+        collection.register_item(item(1));
+        collection.register_item(item(2));
+        collection.set_focus(Some(0));
+        collection
+    }
+
+    fn render_focused_index(render: impl Fn() -> Option<usize> + 'static) -> String {
+        #[derive(Clone)]
+        struct Harness(std::rc::Rc<dyn Fn() -> Option<usize>>);
+
+        thread_local! {
+            static HARNESS: std::cell::RefCell<Option<Harness>> = const { std::cell::RefCell::new(None) };
+        }
+
+        HARNESS.with(|cell| {
+            *cell.borrow_mut() = Some(Harness(std::rc::Rc::new(render)));
+        });
+
+        #[component]
+        fn Root() -> Element {
+            let result = HARNESS.with(|cell| (cell.borrow().as_ref().unwrap().0)());
+            rsx! {
+                "{result:?}"
+            }
+        }
+
+        let mut dom = VirtualDom::new(Root);
+        dom.rebuild_in_place();
+        dioxus_ssr::render(&dom)
+    }
+
+    #[test]
+    fn vertical_arrow_down_moves_to_next() {
+        let html = render_focused_index(|| {
+            let mut collection = three_item_collection();
+            collection.navigate_key(Key::ArrowDown, Orientation::Vertical, Direction::Ltr);
+            collection.focused_index()
+        });
+        assert!(html.contains("Some(1)"), "{html}");
+    }
+
+    #[test]
+    fn vertical_arrow_up_moves_to_previous() {
+        let html = render_focused_index(|| {
+            let mut collection = three_item_collection();
+            collection.set_focus(Some(1));
+            collection.navigate_key(Key::ArrowUp, Orientation::Vertical, Direction::Ltr);
+            collection.focused_index()
+        });
+        assert!(html.contains("Some(0)"), "{html}");
+    }
+
+    #[test]
+    fn vertical_orientation_ignores_left_right() {
+        let html = render_focused_index(|| {
+            let mut collection = three_item_collection();
+            collection.navigate_key(Key::ArrowRight, Orientation::Vertical, Direction::Ltr);
+            collection.focused_index()
+        });
+        assert!(html.contains("Some(0)"), "{html}");
+    }
+
+    #[test]
+    fn horizontal_ltr_arrow_right_moves_to_next() {
+        let html = render_focused_index(|| {
+            let mut collection = three_item_collection();
+            collection.navigate_key(Key::ArrowRight, Orientation::Horizontal, Direction::Ltr);
+            collection.focused_index()
+        });
+        assert!(html.contains("Some(1)"), "{html}");
+    }
+
+    #[test]
+    fn horizontal_rtl_flips_arrow_right_to_previous() {
+        let html = render_focused_index(|| {
+            let mut collection = three_item_collection();
+            collection.set_focus(Some(1));
+            collection.navigate_key(Key::ArrowRight, Orientation::Horizontal, Direction::Rtl);
+            collection.focused_index()
+        });
+        assert!(html.contains("Some(0)"), "{html}");
+    }
+
+    #[test]
+    fn horizontal_rtl_flips_arrow_left_to_next() {
+        let html = render_focused_index(|| {
+            let mut collection = three_item_collection();
+            collection.navigate_key(Key::ArrowLeft, Orientation::Horizontal, Direction::Rtl);
+            collection.focused_index()
+        });
+        assert!(html.contains("Some(1)"), "{html}");
+    }
+
+    #[test]
+    fn home_and_end_are_direction_independent() {
+        let end_html = render_focused_index(|| {
+            let mut collection = three_item_collection();
+            collection.navigate_key(Key::End, Orientation::Horizontal, Direction::Rtl);
+            collection.focused_index()
+        });
+        assert!(end_html.contains("Some(2)"), "{end_html}");
+
+        let home_html = render_focused_index(|| {
+            let mut collection = three_item_collection();
+            collection.set_focus(Some(2));
+            collection.navigate_key(Key::Home, Orientation::Horizontal, Direction::Rtl);
+            collection.focused_index()
+        });
+        assert!(home_html.contains("Some(0)"), "{home_html}");
+    }
+
+    #[test]
+    fn unhandled_key_returns_false_and_does_not_move_focus() {
+        let html = render_focused_index(|| {
+            let mut collection = three_item_collection();
+            let handled = collection.navigate_key(
+                Key::Character("a".to_string()),
+                Orientation::Vertical,
+                Direction::Ltr,
+            );
+            assert!(!handled);
+            collection.focused_index()
+        });
+        assert!(html.contains("Some(0)"), "{html}");
     }
 }

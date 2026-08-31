@@ -1,7 +1,7 @@
 //! Cross-platform light/dark/system theme-mode primitive.
 //!
 //! `ThemeMode::System` resolves to a concrete [`ResolvedTheme`] using the OS
-//! or browser color-scheme preference on the `web`/`desktop` features (via
+//! or browser color-scheme preference on the `web`/`native` features (via
 //! the `dark-light` crate, which covers macOS/Windows/Linux+BSD/WASM from one
 //! API); native SSR/server builds with neither feature enabled deterministic-
 //! ally resolve `System` to [`ResolvedTheme::Light`] rather than attempting
@@ -33,7 +33,7 @@ pub enum ResolvedTheme {
 impl ThemeMode {
     /// Resolve this mode to a concrete [`ResolvedTheme`], detecting the
     /// OS/browser preference for [`ThemeMode::System`] where a client
-    /// feature (`web` or `desktop`) is enabled.
+    /// feature (`web` or `native`) is enabled.
     pub fn resolve(self) -> ResolvedTheme {
         match self {
             ThemeMode::Light => ResolvedTheme::Light,
@@ -54,7 +54,7 @@ impl ResolvedTheme {
     }
 }
 
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 fn detect_system_theme() -> ResolvedTheme {
     match dark_light::detect() {
         Ok(dark_light::Mode::Dark) => ResolvedTheme::Dark,
@@ -65,7 +65,7 @@ fn detect_system_theme() -> ResolvedTheme {
     }
 }
 
-#[cfg(not(any(feature = "web", feature = "desktop")))]
+#[cfg(not(any(feature = "web", feature = "native")))]
 fn detect_system_theme() -> ResolvedTheme {
     ResolvedTheme::Light
 }
@@ -111,11 +111,11 @@ static MODE: GlobalSignal<ThemeMode> = Global::new(ThemeMode::default);
 
 /// An uncontrolled `ThemeMode` signal, shared app-wide, that persists the
 /// user's selection across reloads (`localStorage` on `web`; a small JSON
-/// preferences file on `desktop`) and applies the resolved appearance's class
+/// preferences file on `native`) and applies the resolved appearance's class
 /// to the document root on `web`. Builds with neither feature enabled have no
 /// persistence or DOM target and behave like a plain in-memory shared signal
 /// defaulting to [`ThemeMode::System`] every render — the same accepted
-/// limitation this crate's other stateful client primitives have for native
+/// limitation this crate's other stateful client primitives have for
 /// SSR/server builds.
 ///
 /// Accepted v1 limitation (see `design.md` §7b): the persisted value is read
@@ -157,7 +157,7 @@ fn load_persisted_mode(on_loaded: Callback<ThemeMode>) {
     });
 }
 
-#[cfg(feature = "desktop")]
+#[cfg(feature = "native")]
 fn load_persisted_mode(on_loaded: Callback<ThemeMode>) {
     use_effect(move || {
         if let Some(token) = read_desktop_preferences()
@@ -168,7 +168,7 @@ fn load_persisted_mode(on_loaded: Callback<ThemeMode>) {
     });
 }
 
-#[cfg(not(any(feature = "web", feature = "desktop")))]
+#[cfg(not(any(feature = "web", feature = "native")))]
 fn load_persisted_mode(_on_loaded: Callback<ThemeMode>) {}
 
 #[cfg(feature = "web")]
@@ -180,20 +180,21 @@ fn persist_mode(mode: ThemeMode) {
     let _ = eval.send((STORAGE_KEY, mode_token(mode)));
 }
 
-#[cfg(feature = "desktop")]
+#[cfg(feature = "native")]
 fn persist_mode(mode: ThemeMode) {
     write_desktop_preferences(mode_token(mode));
 }
 
-#[cfg(not(any(feature = "web", feature = "desktop")))]
+#[cfg(not(any(feature = "web", feature = "native")))]
 fn persist_mode(_mode: ThemeMode) {}
 
 /// Applies `MODE`'s resolved appearance's CSS class to the document root on
 /// `web`, matching the `class`-driven dark-mode convention `adico-cli`'s CSS
-/// installer sets up. `desktop`'s native window has no shared document root
-/// for installed component CSS to react to, so this is a `web`-only effect;
-/// desktop consumers apply the resolved theme through their own window/webview
-/// styling, same as every other web-only visual primitive in this crate.
+/// installer sets up. `native`'s window has no shared document root for
+/// installed component CSS to react to, so this is a `web`-only effect;
+/// native (desktop/mobile) consumers apply the resolved theme through their
+/// own window/webview styling, same as every other web-only visual primitive
+/// in this crate.
 ///
 /// Reads `MODE` directly inside the effect body (rather than taking it as a
 /// parameter captured by value) so Dioxus's automatic reactive-dependency
@@ -223,9 +224,9 @@ fn apply_resolved_class() {}
 /// Sets a list of `--custom-property: value` pairs on the document root
 /// (`:root`) on `web`, so a consumer's `theme-switcher`-style palette picker
 /// can recolor semantic tokens live without becoming a second DOM-eval call
-/// site outside this crate. No-op on every other target — `desktop`'s native
-/// window has no shared CSS custom-property root for installed component
-/// styling to react to, matching `apply_resolved_class`'s own scoping.
+/// site outside this crate. No-op on every other target — `native`'s window
+/// has no shared CSS custom-property root for installed component styling to
+/// react to, matching `apply_resolved_class`'s own scoping.
 #[cfg(feature = "web")]
 pub fn apply_root_properties(pairs: &[(&str, String)]) {
     let script = pairs
@@ -269,12 +270,12 @@ pub fn clear_root_properties(_names: &[&str]) {}
 /// — a production consumer wanting a proper app-data location can override
 /// this by writing their own persistence around `use_theme_mode` instead of
 /// `use_persisted_theme_mode`.
-#[cfg(feature = "desktop")]
+#[cfg(feature = "native")]
 fn desktop_preferences_path() -> std::path::PathBuf {
     std::env::temp_dir().join("adico-theme-mode.json")
 }
 
-#[cfg(feature = "desktop")]
+#[cfg(feature = "native")]
 fn read_desktop_preferences() -> Option<String> {
     let contents = std::fs::read_to_string(desktop_preferences_path()).ok()?;
     contents
@@ -283,7 +284,7 @@ fn read_desktop_preferences() -> Option<String> {
         .map(|(mode, _)| mode.to_string())
 }
 
-#[cfg(feature = "desktop")]
+#[cfg(feature = "native")]
 fn write_desktop_preferences(mode: &str) {
     let _ = std::fs::write(
         desktop_preferences_path(),
@@ -313,13 +314,13 @@ mod tests {
     // flaked: it assumed feature isolation `cargo test --workspace` does not
     // provide). These two tests are written to hold under both profiles.
     #[test]
-    #[cfg(not(any(feature = "web", feature = "desktop")))]
+    #[cfg(not(any(feature = "web", feature = "native")))]
     fn system_resolves_to_light_without_a_client_feature() {
         assert_eq!(ThemeMode::System.resolve(), ResolvedTheme::Light);
     }
 
     #[test]
-    #[cfg(any(feature = "web", feature = "desktop"))]
+    #[cfg(any(feature = "web", feature = "native"))]
     fn system_resolves_to_a_real_detected_appearance_with_a_client_feature() {
         // No specific variant is asserted -- the real OS/browser preference
         // is environment-dependent -- only that resolution is deterministic

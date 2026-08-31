@@ -13,21 +13,21 @@ use crate::{
 };
 
 #[derive(Clone, Copy)]
-pub(crate) struct ListboxContext {
-    pub(crate) render: ReadSignal<bool>,
+pub struct ListboxContext {
+    pub render: ReadSignal<bool>,
 }
 
 #[derive(Clone, Copy)]
-pub(crate) struct ListboxOptionContext {
-    pub(crate) selected: ReadSignal<bool>,
+pub struct ListboxOptionContext {
+    pub selected: ReadSignal<bool>,
 }
 
-pub(crate) struct ListboxState {
-    pub(crate) id: Memo<String>,
-    pub(crate) render: Memo<bool>,
+pub struct ListboxState {
+    pub id: Memo<String>,
+    pub render: Memo<bool>,
 }
 
-pub(crate) fn use_listbox_id(
+pub fn use_listbox_id(
     id: ReadSignal<Option<String>>,
     mut list_id: Signal<Option<String>>,
 ) -> Memo<String> {
@@ -41,7 +41,7 @@ pub(crate) fn use_listbox_id(
     id
 }
 
-pub(crate) fn use_listbox_render(
+pub fn use_listbox_render(
     id: impl Readable<Target = String> + Copy + 'static,
     open: impl Readable<Target = bool> + Copy + 'static,
 ) -> Memo<bool> {
@@ -49,7 +49,7 @@ pub(crate) fn use_listbox_render(
     use_memo(render)
 }
 
-pub(crate) fn use_listbox_container(
+pub fn use_listbox_container(
     id: ReadSignal<Option<String>>,
     mut selectable: SelectableContext,
 ) -> ListboxState {
@@ -75,7 +75,7 @@ pub(crate) fn use_listbox_container(
     ListboxState { id, render }
 }
 
-pub(crate) fn use_listbox_option<T: Clone + PartialEq + 'static>(
+pub fn use_listbox_option<T: Clone + PartialEq + 'static>(
     id: ReadSignal<Option<String>>,
     index: ReadSignal<usize>,
     value: ReadSignal<T>,
@@ -120,7 +120,7 @@ pub(crate) fn use_listbox_option<T: Clone + PartialEq + 'static>(
 }
 
 #[component]
-pub(crate) fn ListboxItemIndicator(children: Element) -> Element {
+pub fn ListboxItemIndicator(children: Element) -> Element {
     let ctx: ListboxOptionContext = use_context();
     if !(ctx.selected)() {
         return rsx! {};

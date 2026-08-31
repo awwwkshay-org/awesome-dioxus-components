@@ -1,15 +1,30 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 // Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
 // Upstream path: primitives/src/select/text_search.rs. See provenance/records/adico-primitives-dialog-select.json.
+//
+// Extracted from `select`'s own module (where it was welded to
+// `select::context::SelectContext`'s buffer state) into a standalone, public
+// primitive so other typeahead-driven widgets (the menu family, task 7.6) can
+// reuse it instead of reimplementing buffer/timeout management. The matching
+// algorithms below are unchanged from the original select-only module; the
+// [`Typeahead`] handle and [`use_typeahead`] hook are new, generalizing what
+// was `select::context::SelectContext`'s `typeahead_buffer`/
+// `typeahead_clear_task`/`adaptive_keyboard` fields and
+// `add_to_typeahead_buffer` method.
 
-//! Text search and matching algorithms for the select component.
+//! Typeahead search: matching algorithms plus a buffered, auto-clearing
+//! [`Typeahead`] handle any list/menu-shaped widget can use to let users type
+//! to focus a matching item, adapting to the user's keyboard layout.
 
 use crate::selectable::OptionState;
 use core::f32;
+use dioxus::prelude::*;
+use dioxus_core::Task;
 use std::collections::HashMap;
+use std::time::Duration;
 
 /// Find the best matching option based on typeahead input
-pub(super) fn best_match(
+pub fn best_match(
     keyboard: &AdaptiveKeyboard,
     typeahead: &str,
     options: &[OptionState],
@@ -35,7 +50,7 @@ pub(super) fn best_match(
 }
 
 /// Calculate normalized distance between typeahead and value characters
-pub(super) fn normalized_distance(
+pub fn normalized_distance(
     typeahead_characters: &[char],
     value_characters: &[char],
     keyboard: &AdaptiveKeyboard,
@@ -54,7 +69,7 @@ pub(super) fn normalized_distance(
 }
 
 /// The recency bias of the levenshtein distance function
-pub(super) fn recency_bias(char_index: usize, total_length: usize) -> f32 {
+pub fn recency_bias(char_index: usize, total_length: usize) -> f32 {
     ((char_index as f32 + 1.5).ln() / (total_length as f32 + 1.5).ln()).powi(4)
 }
 
@@ -328,7 +343,7 @@ impl KeyboardLayout {
 }
 
 /// Convert a key code to a character
-pub(super) fn code_to_char(code: &str) -> Option<char> {
+pub fn code_to_char(code: &str) -> Option<char> {
     match code {
         "KeyA" => Some('a'),
         "KeyB" => Some('b'),
@@ -419,6 +434,82 @@ static QWERTZ_KEYBOARD_LAYOUT: [[char; 10]; 4] = [
     ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ö'],
     ['y', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '-'],
 ];
+
+/// A buffered, auto-clearing typeahead handle: append keystrokes with
+/// [`Typeahead::on_input`], get back the best-matching available option's
+/// index, and the buffer clears itself if the caller stops typing for the
+/// configured timeout. Also adapts to the user's keyboard layout via
+/// [`Typeahead::learn_from_keyboard_event`].
+#[derive(Clone, Copy)]
+pub struct Typeahead {
+    adaptive_keyboard: Signal<AdaptiveKeyboard>,
+    buffer: Signal<String>,
+    clear_task: Signal<Option<Task>>,
+    timeout: ReadSignal<Duration>,
+}
+
+/// Create a [`Typeahead`] handle. `timeout` is how long to wait after the
+/// last keystroke before clearing the buffer.
+pub fn use_typeahead(timeout: ReadSignal<Duration>) -> Typeahead {
+    Typeahead {
+        adaptive_keyboard: use_signal(AdaptiveKeyboard::new),
+        buffer: use_signal(String::new),
+        clear_task: use_signal(|| None),
+        timeout,
+    }
+}
+
+impl Typeahead {
+    /// Learn from a keyboard event mapping physical key to logical character,
+    /// so later matches account for non-QWERTY layouts.
+    pub fn learn_from_keyboard_event(&mut self, physical_code: &str, logical_char: char) {
+        let mut adaptive = self.adaptive_keyboard.write();
+        let logical_char = logical_char.to_lowercase().next().unwrap_or(logical_char);
+        adaptive.learn_from_event(physical_code, logical_char);
+    }
+
+    /// Append `text` to the buffer and return the index of the best-matching
+    /// available option, if any. Schedules the buffer to clear itself after
+    /// the configured timeout, canceling any previously scheduled clear.
+    pub fn on_input(
+        &mut self,
+        text: &str,
+        options: &[OptionState],
+        is_available: impl Fn(usize) -> bool,
+    ) -> Option<usize> {
+        if let Some(existing_task) = self.clear_task.write().take() {
+            existing_task.cancel();
+        }
+
+        let typeahead = {
+            let mut buffer = self.buffer.write();
+            buffer.push_str(text);
+            buffer.clone()
+        };
+
+        let mut buffer_signal = self.buffer;
+        let mut clear_task_signal = self.clear_task;
+        let timeout = self.timeout.cloned();
+        let new_task = spawn(async move {
+            crate::time::sleep(timeout).await;
+            buffer_signal.write().clear();
+            clear_task_signal.write().take();
+        });
+        self.clear_task.write().replace(new_task);
+
+        let keyboard = self.adaptive_keyboard.read();
+        best_match(&keyboard, &typeahead, options, is_available)
+    }
+
+    /// Clear the buffer and cancel any pending auto-clear task, e.g. when the
+    /// consuming widget closes.
+    pub fn clear(&mut self) {
+        if let Some(task) = self.clear_task.write().take() {
+            task.cancel();
+        }
+        self.buffer.take();
+    }
+}
 
 #[cfg(test)]
 mod tests {
@@ -688,5 +779,68 @@ mod tests {
         // Mixed script matching - test f/ф which are phonetically similar
         let mixed_cost = adaptive.substitution_cost('f', 'ф');
         assert!(mixed_cost < 1.0); // Should work through phonetic similarity
+    }
+}
+
+#[cfg(test)]
+mod typeahead_handle_tests {
+    use super::*;
+    use crate::selectable::RcPartialEqValue;
+
+    fn option(index: usize, text_value: &str) -> OptionState {
+        OptionState {
+            id: format!("option-{index}"),
+            index,
+            value: RcPartialEqValue::new(index),
+            text_value: text_value.to_string(),
+        }
+    }
+
+    fn render(root: fn() -> Element) -> String {
+        let mut dom = VirtualDom::new(root);
+        dom.rebuild_in_place();
+        dioxus_ssr::render(&dom)
+    }
+
+    #[component]
+    fn AccumulatesAcrossCalls() -> Element {
+        let mut typeahead = use_typeahead(ReadSignal::new(Signal::new(Duration::from_secs(1))));
+        let options = [option(0, "Apple"), option(1, "Banana"), option(2, "Cherry")];
+
+        // A single "b" is ambiguous with nothing else here, but the buffer
+        // must accumulate: "b" then "a" together should land on "Banana",
+        // not re-match "b" alone on every call.
+        typeahead.on_input("b", &options, |_| true);
+        let result = typeahead.on_input("a", &options, |_| true);
+
+        rsx! {
+            "{result:?}"
+        }
+    }
+
+    #[component]
+    fn ClearResetsTheBuffer() -> Element {
+        let mut typeahead = use_typeahead(ReadSignal::new(Signal::new(Duration::from_secs(1))));
+        let options = [option(0, "Apple"), option(1, "Banana")];
+
+        typeahead.on_input("b", &options, |_| true);
+        typeahead.clear();
+        let result = typeahead.on_input("a", &options, |_| true);
+
+        rsx! {
+            "{result:?}"
+        }
+    }
+
+    #[test]
+    fn on_input_accumulates_the_buffer_across_calls() {
+        assert!(render(AccumulatesAcrossCalls).contains("Some(1)"));
+    }
+
+    #[test]
+    fn clear_resets_the_buffer_between_input_sequences() {
+        // After clear(), "a" alone should match "Apple" (index 0), not
+        // continue matching against the discarded "b" prefix.
+        assert!(render(ClearResetsTheBuffer).contains("Some(0)"));
     }
 }

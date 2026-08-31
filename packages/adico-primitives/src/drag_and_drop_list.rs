@@ -10,20 +10,20 @@
 // `VirtualList`'s old scroll bridge), this one is registered synchronously
 // from inside a real browser `dragstart` event rather than a component mount
 // effect, so it is extracted into its own `#[cfg(any(feature = "web", feature
-// = "desktop"))]`-gated helper (matching this crate's established adapter
-// pattern) purely so the crate still compiles on native/server, where
-// `dioxus_document` itself is not imported. The primary, always-tested
-// interaction path is keyboard reordering (Enter to lift/drop, Arrow keys to
-// move, Escape to cancel, Delete/Backspace to remove), which never touches
-// `document::eval` at all. Native pointer/mouse drag-and-drop is compiled but
-// not independently browser-verified here -- the same named risk this item
-// already carries in the M3 migration queue, alongside Slider's equivalent
-// unverified desktop pointer-capture gap.
+// = "native"))]`-gated helper (matching this crate's established adapter
+// pattern) purely so the crate still compiles on the non-interop default/
+// server target, where `dioxus_document` itself is not imported. The primary,
+// always-tested interaction path is keyboard reordering (Enter to lift/drop,
+// Arrow keys to move, Escape to cancel, Delete/Backspace to remove), which
+// never touches `document::eval` at all. Native pointer/mouse drag-and-drop
+// is compiled but not independently browser-verified here -- the same named
+// risk this item already carries in the M3 migration queue, alongside
+// Slider's equivalent unverified native (desktop/mobile) pointer-capture gap.
 
 //! Defines the [`DragAndDropList`] component and its sub-components.
 use crate::collection::{CollectionState, collection_item, use_collection_provider, use_item};
 use dioxus::prelude::*;
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 use dioxus_document as document;
 
 #[derive(Clone, Copy, PartialEq, Debug)]
@@ -584,7 +584,7 @@ pub struct DragAndDropListRenderItem {
 /// Listens for the document-level `dragover`/`drop`/`dragend` events that
 /// finish a native HTML5 pointer drag started by `DragAndDropListItem`'s
 /// `ondragstart`. Only meaningful on a renderer with a DOM.
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 fn watch_document_drop(mut ctx: DragAndDropContext) {
     let mut document_drop = document::eval(
         r#"
@@ -630,7 +630,7 @@ fn watch_document_drop(mut ctx: DragAndDropContext) {
     });
 }
 
-#[cfg(not(any(feature = "web", feature = "desktop")))]
+#[cfg(not(any(feature = "web", feature = "native")))]
 fn watch_document_drop(_ctx: DragAndDropContext) {}
 
 #[component]

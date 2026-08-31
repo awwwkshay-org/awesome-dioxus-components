@@ -5,22 +5,30 @@
 // Adapted from upstream: the global `window.addEventListener('pointer*', ...)`
 // `document::eval` script (installed lazily the first time the pointer
 // tracker is read) is now behind this crate's established
-// `#[cfg(any(feature = "web", feature = "desktop"))]` target-gated pattern
+// `#[cfg(any(feature = "web", feature = "native"))]` target-gated pattern
 // with an SSR-safe stub for the native default, instead of an unconditional
 // `dioxus::document::eval` call. `dioxus_document as document` (this crate's
 // existing document-interop alias, see `lib.rs`) is used in place of
-// upstream's `dioxus::document`. Desktop pointer-capture behavior beyond
-// compiling under the `desktop` feature is not independently verified here
-// (Dioxus desktop's WebView pointer-event delivery may differ from a real
-// browser); this matches the migration queue's named risk for this file and
-// is recorded, not silently assumed, in the Wave 2 migration record.
+// upstream's `dioxus::document`. Desktop/mobile pointer-capture behavior
+// beyond compiling under the `native` feature is not independently verified
+// here (a WebView's pointer-event delivery may differ from a real browser's);
+// this matches the migration queue's named risk for this file and is
+// recorded, not silently assumed, in the Wave 2 migration record.
 
-#[cfg(any(feature = "web", feature = "desktop"))]
+//! A global pointer-position registry.
+//!
+//! Tracks the last-known screen position of every active pointer (touch,
+//! pen, or mouse) via a single window-level listener, so controls that need
+//! pointer position during a drag (see [`crate::move_interaction`]) don't
+//! each install their own. Target-gated with an SSR-safe no-op on targets
+//! without a DOM (SSR/native).
+
+#[cfg(any(feature = "web", feature = "native"))]
 use crate::dioxus_core::{Runtime, queue_effect};
 use dioxus::html::geometry::ClientPoint;
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 use dioxus::prelude::*;
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 use dioxus_document as document;
 
 #[derive(Debug)]
@@ -29,7 +37,7 @@ struct Pointer {
     position: ClientPoint,
 }
 
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 static POINTERS: GlobalSignal<Vec<Pointer>> = Global::new(|| {
     let runtime = Runtime::current();
     queue_effect(move || {
@@ -70,16 +78,16 @@ static POINTERS: GlobalSignal<Vec<Pointer>> = Global::new(|| {
     Vec::new()
 });
 
-#[cfg(any(feature = "web", feature = "desktop"))]
-pub(crate) fn track_pointer_down(pointer_id: i32, position: ClientPoint) {
+#[cfg(any(feature = "web", feature = "native"))]
+pub fn track_pointer_down(pointer_id: i32, position: ClientPoint) {
     add_pointer(pointer_id, position);
 }
 
-#[cfg(not(any(feature = "web", feature = "desktop")))]
-pub(crate) fn track_pointer_down(_pointer_id: i32, _position: ClientPoint) {}
+#[cfg(not(any(feature = "web", feature = "native")))]
+pub fn track_pointer_down(_pointer_id: i32, _position: ClientPoint) {}
 
-#[cfg(any(feature = "web", feature = "desktop"))]
-pub(crate) fn pointer_position(pointer_id: i32) -> Option<ClientPoint> {
+#[cfg(any(feature = "web", feature = "native"))]
+pub fn pointer_position(pointer_id: i32) -> Option<ClientPoint> {
     POINTERS
         .read()
         .iter()
@@ -87,18 +95,18 @@ pub(crate) fn pointer_position(pointer_id: i32) -> Option<ClientPoint> {
         .map(|pointer| pointer.position)
 }
 
-#[cfg(not(any(feature = "web", feature = "desktop")))]
-pub(crate) fn pointer_position(_pointer_id: i32) -> Option<ClientPoint> {
+#[cfg(not(any(feature = "web", feature = "native")))]
+pub fn pointer_position(_pointer_id: i32) -> Option<ClientPoint> {
     None
 }
 
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 fn add_pointer(pointer_id: i32, position: ClientPoint) {
     let mut pointers = POINTERS.write();
     upsert_pointer(&mut pointers, pointer_id, position);
 }
 
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 fn upsert_pointer(pointers: &mut Vec<Pointer>, pointer_id: i32, position: ClientPoint) {
     if let Some(pointer) = pointers.iter_mut().find(|pointer| pointer.id == pointer_id) {
         pointer.position = position;
@@ -110,7 +118,7 @@ fn upsert_pointer(pointers: &mut Vec<Pointer>, pointer_id: i32, position: Client
     }
 }
 
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 fn update_pointer(pointer_id: i32, position: ClientPoint) {
     if let Some(pointer) = POINTERS
         .write()
@@ -121,12 +129,12 @@ fn update_pointer(pointer_id: i32, position: ClientPoint) {
     }
 }
 
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 fn remove_pointer(pointer_id: i32) {
     POINTERS.write().retain(|pointer| pointer.id != pointer_id);
 }
 
-#[cfg(all(test, any(feature = "web", feature = "desktop")))]
+#[cfg(all(test, any(feature = "web", feature = "native")))]
 mod tests {
     use super::*;
 

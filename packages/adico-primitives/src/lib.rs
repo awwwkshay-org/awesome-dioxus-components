@@ -24,9 +24,9 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 
 use dioxus::core::{current_scope_id, use_drop};
 use dioxus::prelude::*;
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 use dioxus::prelude::{Asset, asset, manganis};
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 use dioxus_document as document;
 
 pub use ::dioxus_core;
@@ -50,6 +50,7 @@ pub mod color_picker;
 pub mod combobox;
 pub mod context_menu;
 pub mod date_picker;
+pub mod direction;
 pub mod drag_and_drop_list;
 pub mod dropdown_menu;
 pub mod hover_card;
@@ -70,23 +71,24 @@ pub mod toggle;
 pub mod toggle_group;
 pub mod toolbar;
 pub mod tooltip;
+pub mod typeahead;
 pub mod virtual_list;
 
-mod collection;
-mod listbox;
-mod move_interaction;
-mod pointer;
-mod portal;
-mod selectable;
-mod selection;
+pub mod collection;
+pub mod listbox;
+pub mod move_interaction;
+pub mod pointer;
+pub mod portal;
+pub mod selectable;
+pub mod selection;
 mod time;
 mod r#virtual;
 
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 const FOCUS_TRAP_JS: Asset = asset!("/src/js/focus-trap.js");
 
 /// Generate a runtime-unique identifier suitable for ARIA relationships.
-fn use_unique_id() -> Signal<String> {
+pub fn use_unique_id() -> Signal<String> {
     static NEXT_ID: AtomicUsize = AtomicUsize::new(0);
 
     #[allow(unused_mut)]
@@ -98,7 +100,11 @@ fn use_unique_id() -> Signal<String> {
     use_signal(|| initial_value)
 }
 
-fn use_id_or<T: Clone + PartialEq + 'static>(
+/// Resolve to `user_id` when set, falling back to `generated_id` otherwise.
+///
+/// Lets a component accept an optional caller-supplied `id` prop while still
+/// generating one internally (via [`use_unique_id`]) for ARIA relationships.
+pub fn use_id_or<T: Clone + PartialEq + 'static>(
     mut generated_id: Signal<T>,
     user_id: ReadSignal<Option<T>>,
 ) -> Memo<T> {
@@ -117,12 +123,16 @@ fn use_id_or<T: Clone + PartialEq + 'static>(
     })
 }
 
-/// A controlled-or-uncontrolled prop trio for internal primitive state.
+/// A controlled-or-uncontrolled prop trio for primitive state, consumed by
+/// [`use_controlled`]-style hooks such as [`selectable::use_selectable_root`].
 #[derive(Clone, Copy)]
-pub(crate) struct Controlled<T: Clone + PartialEq + 'static> {
-    pub(crate) value: ReadSignal<Option<T>>,
-    pub(crate) default: ReadSignal<T>,
-    pub(crate) on_change: Callback<T>,
+pub struct Controlled<T: Clone + PartialEq + 'static> {
+    /// The externally controlled value, if the caller is controlling it.
+    pub value: ReadSignal<Option<T>>,
+    /// The initial value when uncontrolled.
+    pub default: ReadSignal<T>,
+    /// Called whenever the value changes, controlled or not.
+    pub on_change: Callback<T>,
 }
 
 /// Make a signal controllable by an optional external value.
@@ -162,7 +172,12 @@ fn use_effect_with_cleanup<F: FnMut() -> C + 'static, C: FnOnce() + 'static>(mut
 #[derive(Clone)]
 struct EscapeListenerStack(Rc<RefCell<Vec<ScopeId>>>);
 
-fn use_global_escape_listener(mut on_escape: impl FnMut() + Clone + 'static) {
+/// Call `on_escape` when Escape is pressed, but only for the topmost caller.
+///
+/// Callers are ordered on a LIFO stack keyed by their component scope, so when
+/// several overlays are nested only the most-recently-mounted one reacts to a
+/// given Escape press.
+pub fn use_global_escape_listener(mut on_escape: impl FnMut() + Clone + 'static) {
     let scope_id = current_scope_id();
     let stack = use_hook(move || {
         let stack: EscapeListenerStack = try_consume_context()
@@ -181,7 +196,7 @@ fn use_global_escape_listener(mut on_escape: impl FnMut() + Clone + 'static) {
     });
 }
 
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 fn use_global_keydown_listener(key: &'static str, on_keydown: impl FnMut() + Clone + 'static) {
     use_effect_with_cleanup(move || {
         let mut eval = document::eval(
@@ -209,11 +224,13 @@ fn use_global_keydown_listener(key: &'static str, on_keydown: impl FnMut() + Clo
     });
 }
 
-#[cfg(not(any(feature = "web", feature = "desktop")))]
+#[cfg(not(any(feature = "web", feature = "native")))]
 fn use_global_keydown_listener(_key: &'static str, _on_keydown: impl FnMut() + Clone + 'static) {}
 
-#[cfg(any(feature = "web", feature = "desktop"))]
-fn use_outside_dismiss(
+/// Call `on_dismiss` when a pointerdown or focus event lands outside the
+/// element identified by `id`. A no-op on targets without a DOM (SSR/native).
+#[cfg(any(feature = "web", feature = "native"))]
+pub fn use_outside_dismiss(
     id: impl Readable<Target = String> + Copy + 'static,
     on_dismiss: impl FnMut() + Clone + 'static,
 ) {
@@ -243,15 +260,21 @@ fn use_outside_dismiss(
     });
 }
 
-#[cfg(not(any(feature = "web", feature = "desktop")))]
-fn use_outside_dismiss(
+/// Call `on_dismiss` when a pointerdown or focus event lands outside the
+/// element identified by `id`. A no-op on targets without a DOM (SSR/native).
+#[cfg(not(any(feature = "web", feature = "native")))]
+pub fn use_outside_dismiss(
     _id: impl Readable<Target = String> + Copy + 'static,
     _on_dismiss: impl FnMut() + Clone + 'static,
 ) {
 }
 
-#[cfg(any(feature = "web", feature = "desktop"))]
-fn use_animated_open(
+/// Presence: keep content mounted (returning `true`) until any CSS animations
+/// on the element identified by `id` finish, so a close transition can play
+/// before the element is removed. Returns `open` unmodified on targets
+/// without a DOM (SSR/native), where there is no animation to await.
+#[cfg(any(feature = "web", feature = "native"))]
+pub fn use_animated_open(
     id: impl Readable<Target = String> + Copy + 'static,
     open: impl Readable<Target = bool> + Copy + 'static,
 ) -> impl Fn() -> bool + Copy {
@@ -284,16 +307,23 @@ fn use_animated_open(
     move || show_in_dom() || animating()
 }
 
-#[cfg(not(any(feature = "web", feature = "desktop")))]
-fn use_animated_open(
+/// Presence: keep content mounted (returning `true`) until any CSS animations
+/// on the element identified by `id` finish, so a close transition can play
+/// before the element is removed. Returns `open` unmodified on targets
+/// without a DOM (SSR/native), where there is no animation to await.
+#[cfg(not(any(feature = "web", feature = "native")))]
+pub fn use_animated_open(
     _id: impl Readable<Target = String> + Copy + 'static,
     open: impl Readable<Target = bool> + Copy + 'static,
 ) -> impl Fn() -> bool + Copy {
     move || open.cloned()
 }
 
-#[cfg(any(feature = "web", feature = "desktop"))]
-pub(crate) fn use_focus_trap(id: Memo<String>, open: Memo<bool>, is_modal: ReadSignal<bool>) {
+/// Trap keyboard focus inside the element identified by `id` while `is_modal`
+/// and `open` are both true. Requires [`FocusTrapScript`] to be rendered
+/// somewhere in the tree. A no-op on targets without a DOM (SSR/native).
+#[cfg(any(feature = "web", feature = "native"))]
+pub fn use_focus_trap(id: Memo<String>, open: Memo<bool>, is_modal: ReadSignal<bool>) {
     use_effect(move || {
         if !is_modal() {
             return;
@@ -316,12 +346,18 @@ pub(crate) fn use_focus_trap(id: Memo<String>, open: Memo<bool>, is_modal: ReadS
     });
 }
 
-#[cfg(not(any(feature = "web", feature = "desktop")))]
-pub(crate) fn use_focus_trap(_id: Memo<String>, _open: Memo<bool>, _is_modal: ReadSignal<bool>) {}
+/// Trap keyboard focus inside the element identified by `id` while `is_modal`
+/// and `open` are both true. Requires [`FocusTrapScript`] to be rendered
+/// somewhere in the tree. A no-op on targets without a DOM (SSR/native).
+#[cfg(not(any(feature = "web", feature = "native")))]
+pub fn use_focus_trap(_id: Memo<String>, _open: Memo<bool>, _is_modal: ReadSignal<bool>) {}
 
-#[cfg(any(feature = "web", feature = "desktop"))]
+/// Loads the focus-trap browser script that [`use_focus_trap`] depends on.
+/// Render this once, anywhere in the tree, alongside any component that uses
+/// `use_focus_trap`. Renders nothing on targets without a DOM (SSR/native).
+#[cfg(any(feature = "web", feature = "native"))]
 #[component]
-pub(crate) fn FocusTrapScript() -> Element {
+pub fn FocusTrapScript() -> Element {
     rsx! {
         document::Script {
             src: FOCUS_TRAP_JS,
@@ -330,9 +366,12 @@ pub(crate) fn FocusTrapScript() -> Element {
     }
 }
 
-#[cfg(not(any(feature = "web", feature = "desktop")))]
+/// Loads the focus-trap browser script that [`use_focus_trap`] depends on.
+/// Render this once, anywhere in the tree, alongside any component that uses
+/// `use_focus_trap`. Renders nothing on targets without a DOM (SSR/native).
+#[cfg(not(any(feature = "web", feature = "native")))]
 #[component]
-pub(crate) fn FocusTrapScript() -> Element {
+pub fn FocusTrapScript() -> Element {
     rsx! {}
 }
 

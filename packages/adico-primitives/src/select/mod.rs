@@ -72,7 +72,6 @@
 // Internal modules
 mod components;
 mod context;
-pub(crate) mod text_search;
 
 // Re-export all public components and types
 pub use components::{
@@ -86,8 +85,8 @@ pub use components::{
 #[cfg(feature = "test-utils")]
 #[doc(hidden)]
 pub mod test_support {
-    use super::text_search::{AdaptiveKeyboard, best_match};
     use crate::selection::{OptionState, RcPartialEqValue};
+    use crate::typeahead::{AdaptiveKeyboard, best_match};
 
     /// Returns the selected option index for a typeahead sequence.
     pub fn typeahead_best_match(query: &str, options: &[&str]) -> Option<usize> {

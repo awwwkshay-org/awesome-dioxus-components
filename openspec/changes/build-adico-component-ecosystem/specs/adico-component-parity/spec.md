@@ -68,3 +68,19 @@ components, and newer chat/agent components.
 - **THEN** the shared primitive is scheduled and validated before the dependent
   component is declared complete
 
+### Requirement: The api parity dimension depends on the primitive layer
+A component's `api` parity dimension SHALL NOT be marked passed while a
+primitive behavior it requires is absent, incomplete, or not exposed as a
+public `adico-primitives` API (see the `adico-primitives` capability). Where a
+component's own composition/API deviation traces to a missing or crate-private
+primitive rather than to the component's own source, the parity evidence SHALL
+name that primitive dependency rather than record the gap as component-only.
+
+#### Scenario: A component's API gap is caused by a missing primitive
+- **WHEN** the 2026-08-30 shadcn props parity audit found context-menu,
+  dropdown-menu, and menubar each missing submenu, checkbox-item, and
+  radio-item support
+- **THEN** their `api` dimension evidence names the absent unified `Menu`
+  primitive as the dependency, and the dimension cannot pass until that
+  primitive exists and the component is migrated onto it
+

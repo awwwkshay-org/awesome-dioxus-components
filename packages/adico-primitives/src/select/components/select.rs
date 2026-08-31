@@ -12,10 +12,10 @@ use crate::{
     selectable::{
         RcPartialEqValue, SelectionMode, use_selectable_root, use_single_selectable_value,
     },
+    typeahead::use_typeahead,
     use_controlled, use_effect,
 };
 use dioxus::prelude::*;
-use dioxus_core::Task;
 
 use super::super::context::SelectContext;
 
@@ -142,26 +142,18 @@ fn use_select_root(
         roving_loop,
         open,
     );
-    let mut typeahead_buffer = use_signal(String::new);
-    let adaptive_keyboard = use_signal(super::super::text_search::AdaptiveKeyboard::new);
-    let mut typeahead_clear_task: Signal<Option<Task>> = use_signal(|| None);
+    let mut typeahead = use_typeahead(typeahead_timeout);
     let open = selectable.open;
 
     // Clear the typeahead buffer when the select is closed
     use_effect(move || {
         if !open() {
-            if let Some(task) = typeahead_clear_task.write().take() {
-                task.cancel();
-            }
-            typeahead_buffer.take();
+            typeahead.clear();
         }
     });
     use_context_provider(|| SelectContext {
         selectable,
-        adaptive_keyboard,
-        typeahead_buffer,
-        typeahead_clear_task,
-        typeahead_timeout,
+        typeahead,
     });
 
     open

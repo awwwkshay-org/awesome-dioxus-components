@@ -19,6 +19,7 @@
 
 //! Defines the [`ColorPicker`] component and its sub-components.
 
+use crate::direction::use_direction;
 use crate::move_interaction::{MoveEvent, use_move_interaction};
 use dioxus::html::geometry::ClientPoint;
 use dioxus::html::geometry::PixelsSize;
@@ -392,6 +393,7 @@ pub struct AreaThumbValueInputProps {
 pub fn AreaThumb(props: AreaThumbProps) -> Element {
     let picker_ctx = use_context::<ColorPickerContext>();
     let area_ctx = use_context::<ColorAreaContext>();
+    let direction = use_direction();
 
     let mut button_ref: Signal<Option<Rc<MountedData>>> = use_signal(|| None);
     let saturation_input_ref: Signal<Option<Rc<MountedData>>> = use_signal(|| None);
@@ -443,7 +445,8 @@ pub fn AreaThumb(props: AreaThumbProps) -> Element {
             // First arrow press from the wrapper applies the step and hands
             // focus to the matching axis input so AT announces the channel.
             onkeydown: move |evt: Event<KeyboardData>| async move {
-                let Some(move_event) = MoveEvent::from_keyboard(&evt, (area_ctx.step)()) else {
+                let Some(move_event) = MoveEvent::from_keyboard(&evt, (area_ctx.step)(), direction)
+                else {
                     return;
                 };
                 evt.prevent_default();
@@ -473,6 +476,7 @@ pub fn AreaThumbSaturationInput(props: AreaThumbSaturationInputProps) -> Element
     let picker_ctx = use_context::<ColorPickerContext>();
     let area_ctx = use_context::<ColorAreaContext>();
     let mut thumb_ctx = use_context::<AreaThumbContext>();
+    let direction = use_direction();
 
     let percent = area_percent((area_ctx.value)());
     let current = (area_ctx.value)();
@@ -499,7 +503,8 @@ pub fn AreaThumbSaturationInput(props: AreaThumbSaturationInputProps) -> Element
             // Cross-axis arrows hand focus to the value input so AT
             // announces the new channel.
             onkeydown: move |evt: Event<KeyboardData>| async move {
-                let Some(move_event) = MoveEvent::from_keyboard(&evt, (area_ctx.step)()) else {
+                let Some(move_event) = MoveEvent::from_keyboard(&evt, (area_ctx.step)(), direction)
+                else {
                     return;
                 };
                 evt.prevent_default();
@@ -534,6 +539,7 @@ pub fn AreaThumbValueInput(props: AreaThumbValueInputProps) -> Element {
     let picker_ctx = use_context::<ColorPickerContext>();
     let area_ctx = use_context::<ColorAreaContext>();
     let mut thumb_ctx = use_context::<AreaThumbContext>();
+    let direction = use_direction();
 
     let percent = area_percent((area_ctx.value)());
     let current = (area_ctx.value)();
@@ -558,7 +564,8 @@ pub fn AreaThumbValueInput(props: AreaThumbValueInputProps) -> Element {
                 thumb_ctx.value_input_ref.set(Some(evt.data()));
             },
             onkeydown: move |evt: Event<KeyboardData>| async move {
-                let Some(move_event) = MoveEvent::from_keyboard(&evt, (area_ctx.step)()) else {
+                let Some(move_event) = MoveEvent::from_keyboard(&evt, (area_ctx.step)(), direction)
+                else {
                     return;
                 };
                 evt.prevent_default();

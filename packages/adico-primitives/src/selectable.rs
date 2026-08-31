@@ -14,11 +14,11 @@ use crate::{
     selection, use_controlled,
 };
 
-pub(crate) use crate::selection::{OptionState, RcPartialEqValue};
+pub use crate::selection::{OptionState, RcPartialEqValue};
 
 /// Whether selecting an option should replace the current value or toggle it.
 #[derive(Clone, Copy, PartialEq)]
-pub(crate) enum SelectionMode {
+pub enum SelectionMode {
     /// A single value is selected and the popup closes after selection.
     Single,
     /// Multiple values can be selected and the popup stays open after selection.
@@ -26,7 +26,7 @@ pub(crate) enum SelectionMode {
 }
 
 impl SelectionMode {
-    pub(crate) fn is_multiple(self) -> bool {
+    pub fn is_multiple(self) -> bool {
         matches!(self, Self::Multiple)
     }
 
@@ -37,45 +37,45 @@ impl SelectionMode {
 
 /// Shared context for components built around a selectable listbox.
 #[derive(Clone, Copy)]
-pub(crate) struct SelectableContext {
-    pub(crate) open: Memo<bool>,
-    pub(crate) set_open: Callback<bool>,
-    pub(crate) values: Memo<Vec<RcPartialEqValue>>,
-    pub(crate) set_value: Callback<RcPartialEqValue>,
-    pub(crate) selection_mode: SelectionMode,
-    pub(crate) options: Signal<Vec<OptionState>>,
-    pub(crate) list_id: Signal<Option<String>>,
-    pub(crate) collection: CollectionState,
-    pub(crate) initial_focus: Signal<Option<usize>>,
-    pub(crate) disabled: ReadSignal<bool>,
+pub struct SelectableContext {
+    pub open: Memo<bool>,
+    pub set_open: Callback<bool>,
+    pub values: Memo<Vec<RcPartialEqValue>>,
+    pub set_value: Callback<RcPartialEqValue>,
+    pub selection_mode: SelectionMode,
+    pub options: Signal<Vec<OptionState>>,
+    pub list_id: Signal<Option<String>>,
+    pub collection: CollectionState,
+    pub initial_focus: Signal<Option<usize>>,
+    pub disabled: ReadSignal<bool>,
 }
 
 #[derive(Clone, Copy)]
-pub(crate) struct SelectableOption<T: Clone + PartialEq + 'static> {
-    pub(crate) id: Memo<String>,
-    pub(crate) disabled: Memo<bool>,
-    pub(crate) selected: Memo<bool>,
-    pub(crate) focused: Memo<bool>,
-    pub(crate) down_pos: Signal<Option<(f64, f64)>>,
-    pub(crate) index: ReadSignal<usize>,
-    pub(crate) value: ReadSignal<T>,
+pub struct SelectableOption<T: Clone + PartialEq + 'static> {
+    pub id: Memo<String>,
+    pub disabled: Memo<bool>,
+    pub selected: Memo<bool>,
+    pub focused: Memo<bool>,
+    pub down_pos: Signal<Option<(f64, f64)>>,
+    pub index: ReadSignal<usize>,
+    pub value: ReadSignal<T>,
 }
 
-pub(crate) struct SelectableOptionConfig<T: Clone + PartialEq + 'static> {
-    pub(crate) id: ReadSignal<Option<String>>,
-    pub(crate) index: ReadSignal<usize>,
-    pub(crate) value: ReadSignal<T>,
-    pub(crate) text_value: ReadSignal<Option<String>>,
-    pub(crate) option_disabled: ReadSignal<bool>,
-    pub(crate) component_name: &'static str,
+pub struct SelectableOptionConfig<T: Clone + PartialEq + 'static> {
+    pub id: ReadSignal<Option<String>>,
+    pub index: ReadSignal<usize>,
+    pub value: ReadSignal<T>,
+    pub text_value: ReadSignal<Option<String>>,
+    pub option_disabled: ReadSignal<bool>,
+    pub component_name: &'static str,
 }
 
 impl SelectableContext {
-    pub(crate) fn set_open(&mut self, open: bool) {
+    pub fn set_open(&mut self, open: bool) {
         self.set_open.call(open);
     }
 
-    pub(crate) fn selected_text(&self) -> Option<String> {
+    pub fn selected_text(&self) -> Option<String> {
         let values = self.values.read();
         let options = self.options.read();
         selection::selected_text(values.iter(), &options)
@@ -83,7 +83,7 @@ impl SelectableContext {
 
     /// Returns selected option labels in selection order. Multi-select inputs
     /// use this to present all selected values without owning selection state.
-    pub(crate) fn selected_texts(&self) -> Vec<String> {
+    pub fn selected_texts(&self) -> Vec<String> {
         let values = self.values.read();
         let options = self.options.read();
         values
@@ -97,19 +97,19 @@ impl SelectableContext {
             .collect()
     }
 
-    pub(crate) fn is_selected(&self, value: &RcPartialEqValue) -> bool {
+    pub fn is_selected(&self, value: &RcPartialEqValue) -> bool {
         self.values.read().iter().any(|selected| selected == value)
     }
 
-    pub(crate) fn is_empty(&self) -> bool {
+    pub fn is_empty(&self) -> bool {
         self.values.read().is_empty()
     }
 
-    pub(crate) fn focused_option_id(&self) -> Option<String> {
+    pub fn focused_option_id(&self) -> Option<String> {
         self.collection.focused_key()
     }
 
-    pub(crate) fn select_focused(&mut self) {
+    pub fn select_focused(&mut self) {
         if !self.open.cloned() {
             return;
         }
@@ -143,21 +143,21 @@ impl SelectableContext {
         indices
     }
 
-    pub(crate) fn first_matching_enabled_index(
+    pub fn first_matching_enabled_index(
         &self,
         predicate: impl Fn(&OptionState) -> bool,
     ) -> Option<usize> {
         self.matching_enabled_indices(predicate).first().copied()
     }
 
-    pub(crate) fn last_matching_enabled_index(
+    pub fn last_matching_enabled_index(
         &self,
         predicate: impl Fn(&OptionState) -> bool,
     ) -> Option<usize> {
         self.matching_enabled_indices(predicate).last().copied()
     }
 
-    pub(crate) fn focus_next_where(&mut self, predicate: impl Fn(&OptionState) -> bool) {
+    pub fn focus_next_where(&mut self, predicate: impl Fn(&OptionState) -> bool) {
         let options = self.options;
         self.collection.focus_next_matching(move |index| {
             options
@@ -167,7 +167,7 @@ impl SelectableContext {
         });
     }
 
-    pub(crate) fn focus_prev_where(&mut self, predicate: impl Fn(&OptionState) -> bool) {
+    pub fn focus_prev_where(&mut self, predicate: impl Fn(&OptionState) -> bool) {
         let options = self.options;
         self.collection.focus_prev_matching(move |index| {
             options
@@ -177,17 +177,17 @@ impl SelectableContext {
         });
     }
 
-    pub(crate) fn focus_first_where(&mut self, predicate: impl Fn(&OptionState) -> bool) {
+    pub fn focus_first_where(&mut self, predicate: impl Fn(&OptionState) -> bool) {
         let index = self.first_matching_enabled_index(predicate);
         self.collection.set_focus(index);
     }
 
-    pub(crate) fn focus_last_where(&mut self, predicate: impl Fn(&OptionState) -> bool) {
+    pub fn focus_last_where(&mut self, predicate: impl Fn(&OptionState) -> bool) {
         let index = self.last_matching_enabled_index(predicate);
         self.collection.set_focus(index);
     }
 
-    pub(crate) fn select_value(&mut self, value: RcPartialEqValue) {
+    pub fn select_value(&mut self, value: RcPartialEqValue) {
         self.set_value.call(value);
         if self.selection_mode.closes_on_select() {
             self.set_open(false);
@@ -195,7 +195,7 @@ impl SelectableContext {
     }
 }
 
-pub(crate) fn use_single_selectable_value<T: Clone + PartialEq + 'static>(
+pub fn use_single_selectable_value<T: Clone + PartialEq + 'static>(
     controlled_value: Option<ReadSignal<Option<T>>>,
     default_value: Option<T>,
     on_change: Callback<Option<T>>,
@@ -219,7 +219,7 @@ pub(crate) fn use_single_selectable_value<T: Clone + PartialEq + 'static>(
     (values, set_value)
 }
 
-pub(crate) fn use_selectable_root(
+pub fn use_selectable_root(
     values: Memo<Vec<RcPartialEqValue>>,
     set_value: Callback<RcPartialEqValue>,
     selection_mode: SelectionMode,
@@ -247,7 +247,7 @@ pub(crate) fn use_selectable_root(
     }
 }
 
-pub(crate) fn use_selectable_option<T: Clone + PartialEq + 'static>(
+pub fn use_selectable_option<T: Clone + PartialEq + 'static>(
     selectable: SelectableContext,
     option: SelectableOptionConfig<T>,
 ) -> SelectableOption<T> {
@@ -290,7 +290,7 @@ pub(crate) fn use_selectable_option<T: Clone + PartialEq + 'static>(
     }
 }
 
-pub(crate) fn pointer_select_start(
+pub fn pointer_select_start(
     event: &Event<PointerData>,
     disabled: bool,
     mut down_pos: Signal<Option<(f64, f64)>>,
@@ -303,7 +303,7 @@ pub(crate) fn pointer_select_start(
     down_pos.set(Some((p.x, p.y)));
 }
 
-pub(crate) fn pointer_select_commit(
+pub fn pointer_select_commit(
     event: &Event<PointerData>,
     disabled: bool,
     mut down_pos: Signal<Option<(f64, f64)>>,
@@ -325,6 +325,6 @@ pub(crate) fn pointer_select_commit(
     true
 }
 
-pub(crate) fn pointer_select_cancel(mut down_pos: Signal<Option<(f64, f64)>>) {
+pub fn pointer_select_cancel(mut down_pos: Signal<Option<(f64, f64)>>) {
     down_pos.set(None);
 }

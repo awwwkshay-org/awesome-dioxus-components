@@ -102,7 +102,7 @@ pub fn SelectList(props: SelectListProps) -> Element {
 
         let mut arrow_key_navigation = |event: KeyboardEvent| {
             // Clear the typeahead buffer
-            ctx.typeahead_buffer.take();
+            ctx.typeahead.clear();
             event.prevent_default();
             event.stop_propagation();
         };

@@ -335,12 +335,12 @@ portals, and pointer capture), OS/browser theme-preference detection is
 delegated to the `dark-light` crate (MIT/Apache-2.0, `rust-version = "1.78"`,
 well under this repo's pinned `1.96.1` toolchain), which supports macOS,
 Windows, Linux/BSD (via the XDG Desktop Portal D-Bus API), and WebAssembly
-from one API — so `web` and `desktop` features share the same detection call
+from one API — so `web` and `native` features share the same detection call
 rather than needing two divergent adapters. `dark-light::detect()` is a
 one-shot synchronous read; its `subscribe()`/`stream()` APIs give live
 OS-theme-change notification, and are used where the underlying target
 supports a listener without adding an async runtime dependency the crate
-doesn't already pull in. Native SSR/server builds (no `web` or `desktop`
+doesn't already pull in. SSR/server builds (no `web` or `native`
 feature) get a deterministic `Light` fallback rather than calling `detect()`,
 matching the SSR-safety convention already established for every other
 target-gated primitive in this crate (dialog's focus trap, portal, etc.) —
@@ -365,19 +365,19 @@ migration (task 4.6).
 
 **Persistence.** The selected mode and palette persist across reloads: on
 `web`, via `localStorage` through the same `document::eval` mechanism already
-used elsewhere for class-driven dark-mode toggling; on `desktop`, via a small
-JSON preferences file colocated with the consumer's Dioxus desktop data
-directory. Native SSR/server builds have no persistence target and read the
+used elsewhere for class-driven dark-mode toggling; on `native`, via a small
+JSON preferences file colocated with the consumer's Dioxus desktop/mobile data
+directory. SSR/server builds have no persistence target and read the
 deterministic default on every render, which is the same limitation every
 other stateful client primitive in this crate already accepts.
 
 Alternative considered: detect system preference via a pure
 `@media (prefers-color-scheme: dark)` CSS rule with no Rust-side detection.
-Rejected because it cannot drive a `desktop` (native window, no browser CSS
-engine for OS-level media queries in all cases) or Rust-side `ThemeMode`
-value that other primitives or consumer code might want to read, and it
-cannot support live-updating `subscribe()`-style reactivity uniformly across
-web and desktop.
+Rejected because it cannot drive a `native` (desktop/mobile window, no
+browser CSS engine for OS-level media queries in all cases) or Rust-side
+`ThemeMode` value that other primitives or consumer code might want to read,
+and it cannot support live-updating `subscribe()`-style reactivity uniformly
+across web and native.
 
 ### 7c. `adico css build`: a real, Node-free compile step for a shadcn-like DX
 
@@ -559,6 +559,118 @@ needed); copied components depend on stable public capabilities rather than
 private modules. SSR paths render deterministic markup and defer DOM work until
 client mount. Browser bridges (observers, measurement, scrolling, pointer
 capture) are internal runtime adapters with no consumer JS surface.
+
+### 8a. A named, public, Base-UI-shaped shared primitive layer
+
+The 2026-08-30 shadcn props parity audit (`parity.json`, `api` dimension,
+per-component evidence) found 29 of 38 tracked components with real API gaps,
+and the gaps cluster around missing *shared behavior*, not styling: three
+independent flat menu implementations with no submenu, checkbox-item, or
+radio-item support (context-menu, dropdown-menu, menubar); accordion's
+self-acknowledged missing controlled `value`/`on_value_change`; and a
+`sideOffset`/open-close-delay gap repeated across popover, hover-card, and
+tooltip because each reimplements positioning independently. Base UI
+(`base-ui.com`) demonstrates the fix: every anchored-overlay component shares
+one anatomy, and one `Menu` primitive backs every menu-shaped component.
+
+Adopt that anatomy and inventory as the target shape for `adico-primitives`:
+
+- A shared anchored-overlay anatomy of named, reusable parts: `Portal`,
+  `Backdrop`, `Positioner`, `Popup`, `Viewport`, `Arrow`. `Positioner` owns
+  collision-aware placement (side/align/offset/collision boundary/padding/
+  sticky/anchor tracking); every popup-shaped component (popover, hover-card,
+  tooltip, select, combobox, dropdown-menu, context-menu, menubar) composes it
+  instead of reimplementing placement.
+- A single `Menu` primitive with `SubmenuRoot`/`SubmenuTrigger` (arbitrarily
+  nested), `CheckboxItem`, `RadioGroup`/`RadioItem`, `Group`/`GroupLabel`, and
+  `Separator`, composed by the context-menu, dropdown-menu, and menubar
+  registry items rather than each hand-rolling menu behavior.
+- Existing crate-private shared behavior is promoted to a documented public
+  surface rather than re-invented: `use_controlled` is already public and
+  becomes the uniform controlled/uncontrolled pattern every primitive follows;
+  `use_unique_id`/`use_id_or`, `use_animated_open` (presence), `use_focus_trap`,
+  `use_outside_dismiss`/`use_global_escape_listener` (dismissable layer), and
+  the `collection`, `selection`/`selectable`/`listbox`, `portal`, and
+  `pointer`/`move_interaction` modules are all real, working primitives today,
+  but are `fn`/`pub(crate)`/private-`mod` and therefore unusable by more than
+  one component internally — which is precisely why the three menu components
+  above were each written flat. Promotion is not sufficient by itself:
+  several of these are also incomplete and need extending, not just exporting
+  — the existing `portal` module is a logical VDOM relay that cannot escape
+  `overflow`/`transform`/stacking contexts (a real DOM portal is needed for
+  dialog/popover/tooltip/menus to layer correctly), `collection`'s roving focus
+  is one-dimensional with no orientation or RTL flip (blocking calendar,
+  menubar, and toolbar), and `use_focus_trap`'s underlying `js/focus-trap.js`
+  only recognizes `A/INPUT/BUTTON/SELECT/TEXTAREA` as focusable, silently
+  excluding the `[tabindex]` roving-focus items most adico components rely on.
+- Net-new primitives genuinely absent today: the `Positioner`/`Arrow` engine
+  itself, the unified `Menu`, a direction/RTL context (Base UI's Direction
+  Provider equivalent), a real DOM portal, z-order overlay/layer stacking
+  (today only Escape-key dismissal is stack-ordered, via `EscapeListenerStack`;
+  there is no shared z-index registry), shared scroll locking (today only a
+  private, file-local helper inside `context_menu.rs`; dialog and alert-dialog
+  do not lock scroll at all), a unified pointer/gesture primitive (today split
+  across three overlapping helpers, with `drag_and_drop_list` and
+  `context_menu`'s long-press each reimplementing their own), a shared
+  `use_typeahead` (today welded into `select`'s own context), and
+  resize/intersection/mutation observer adapters.
+- Base UI's inventory extends past current shadcn-mapped components; track
+  Field/Fieldset/Form (field semantics), Number Field, OTP Field, Meter,
+  Autocomplete, Navigation Menu, Preview Card, and Checkbox Group as primitive
+  targets for shadcn components adico does not implement yet. Two Base UI
+  concepts have no Dioxus analogue and are recorded here rather than silently
+  dropped: `mergeProps`/`useRender` correspond to the `#[props(extends =
+  GlobalAttributes)]` + `Element` composition adico already uses throughout,
+  and `CSP Provider` is a React inline-style injection concern with no
+  Dioxus/Tailwind equivalent.
+
+This section does not introduce new milestone scope: task 5.2 (closing
+inherited API deviations) and M6 (§7 of `tasks.md`) already own primitive
+expansion — this decision replaces M6's prose enumeration with this named,
+per-module inventory and the migration obligation for existing components.
+
+Target-gating for these primitives follows two real interop tiers, not four:
+**web** (wasm/browser DOM) and **native** (desktop and mobile together) —
+plus SSR/server as the no-interop fallback every gated hook already has.
+Dioxus's desktop and mobile renderers both embed a platform WebView (`wry`/
+`tao`: WebView2 on Windows, WebKitGTK on Linux, WKWebView on macOS and iOS,
+Android's system WebView) showing the same HTML/CSS the web target renders —
+Dioxus does not render native OS widgets on any platform — so a WebView
+answers `document::eval`-style JS calls the same way a real browser does.
+This is why every existing browser-interop hook (dismissable layer, focus
+trap, presence, pointer tracking) is gated
+`#[cfg(any(feature = "web", feature = "native"))]` with an SSR-safe no-op
+fallback: a WebView answers those `document::eval`-style JS calls the same
+way a real browser does, so one gate correctly covers desktop and mobile
+together. `adico-primitives`' Cargo feature for this tier is named `native`
+(renamed from its earlier `desktop` name) precisely so it isn't confused with
+Dioxus's own `dioxus`-crate `desktop`/`web`/`mobile` platform features, which
+select the *renderer* an application enables and are a separate concern from
+this crate's own interop-capability flag. `docs/validation.md`'s platform
+matrix row for this tier explicitly covers Android and iOS alongside desktop
+for the same reason.
+
+The rename was made before `adico-primitives` reaches its first published
+release (`version = "0.1.0"`, not yet on crates.io — every registry item's
+`cargoDependencies` entry pins it by path/version, not a released crate), and
+no registry item or generated consumer `Cargo.toml` ever referenced the old
+`desktop` feature name (every installed component is unconditionally pinned
+to `features = ["web"]` today, a separate, already-tracked gap — see
+`parity.json`'s `desktop` dimension notes on `dialog`/`accordion`/etc.), so
+the rename has no compatibility cost to any real consumer.
+
+Alternative considered: keep positioning and menu behavior implemented
+per-component, as today. Rejected because it is the direct, evidenced cause of
+the audit's largest gap (three divergent, incomplete menu implementations) and
+guarantees the same class of gap recurs for every future anchored-overlay
+component. Also considered: leave the existing shared hooks/modules
+crate-private and only add the missing pieces. Rejected because it does not
+fix the root cause named above — components would keep reimplementing behavior
+that already exists one file away, and it contradicts this section's own goal
+of one implementation per concern. Exposing raw primitive internals directly to
+consumers (bypassing registry composition) was also considered and rejected,
+consistent with §8's existing constraint that copied components depend on
+stable public capabilities, not private modules.
 
 ### 9. Parity manifest, upstream snapshots, and synchronization
 

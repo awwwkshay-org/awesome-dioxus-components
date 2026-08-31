@@ -10,6 +10,16 @@
 // this crate has deliberately avoided elsewhere (see the Wave 3 record's
 // note that only `toast.rs` actually depends on this module upstream).
 
+//! A logical, VDOM-only content relay.
+//!
+//! This portal moves a [`dioxus::prelude::Element`] from one place in the
+//! component tree to another *within the same virtual DOM* — it is not a
+//! `document::eval`/DOM-based portal and cannot escape a CSS `overflow`,
+//! `transform`, or stacking context. It is SSR-safe by construction, with no
+//! browser API dependency. A DOM-based portal with `Backdrop`/`Viewport`
+//! parts, needed for overlays to layer above ancestor stacking contexts, is
+//! tracked separately (see design.md §8a).
+
 use crate::dioxus_core::provide_root_context;
 use dioxus::prelude::*;
 use std::collections::HashMap;
@@ -17,7 +27,7 @@ use std::collections::HashMap;
 use crate::use_effect_cleanup;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub(crate) struct PortalId(usize);
+pub struct PortalId(usize);
 
 #[derive(Clone, Copy, PartialEq)]
 struct PortalCtx {
@@ -25,7 +35,7 @@ struct PortalCtx {
 }
 
 /// Create a portal.
-pub(crate) fn use_portal() -> PortalId {
+pub fn use_portal() -> PortalId {
     static NEXT_ID: GlobalSignal<usize> = Signal::global(|| 0);
 
     let (sig, id) = use_hook(|| {
@@ -59,7 +69,7 @@ pub(crate) fn use_portal() -> PortalId {
 }
 
 #[component]
-pub(crate) fn PortalIn(portal: PortalId, children: Element) -> Element {
+pub fn PortalIn(portal: PortalId, children: Element) -> Element {
     if let Some(mut ctx) = try_use_context::<PortalCtx>() {
         let mut portals = ctx.portals.write();
         if let Some(portal) = portals.get_mut(&portal.0) {
@@ -71,7 +81,7 @@ pub(crate) fn PortalIn(portal: PortalId, children: Element) -> Element {
 }
 
 #[component]
-pub(crate) fn PortalOut(portal: PortalId) -> Element {
+pub fn PortalOut(portal: PortalId) -> Element {
     if let Some(ctx) = try_use_context::<PortalCtx>() {
         if let Some(children) = ctx.portals.peek().get(&portal.0) {
             return rsx! {

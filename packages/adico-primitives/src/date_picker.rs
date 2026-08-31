@@ -1456,9 +1456,9 @@ pub fn DateRangePickerInput(props: DatePickerInputProps) -> Element {
 #[cfg(test)]
 mod tests {
     use super::*;
-    #[cfg(not(any(feature = "web", feature = "desktop")))]
+    #[cfg(not(any(feature = "web", feature = "native")))]
     use dioxus_core::{Event, Mutation};
-    #[cfg(not(any(feature = "web", feature = "desktop")))]
+    #[cfg(not(any(feature = "web", feature = "native")))]
     use dioxus_html::{
         EventData, SerializedHtmlEventConverter, SerializedMouseData, set_event_converter,
     };
@@ -1484,7 +1484,7 @@ mod tests {
         }
     }
 
-    #[cfg(not(any(feature = "web", feature = "desktop")))]
+    #[cfg(not(any(feature = "web", feature = "native")))]
     #[component]
     fn OpenDatePickerPopover() -> Element {
         rsx! {
@@ -1498,7 +1498,7 @@ mod tests {
         }
     }
 
-    #[cfg(not(any(feature = "web", feature = "desktop")))]
+    #[cfg(not(any(feature = "web", feature = "native")))]
     #[component]
     fn InteractiveDatePickerPopover() -> Element {
         rsx! {
@@ -1541,11 +1541,11 @@ mod tests {
     }
 
     // `use_animated_open` (lib.rs) only takes this synchronous path when
-    // neither platform feature is active; with "web"/"desktop" enabled it
+    // neither platform feature is active; with "web"/"native" enabled it
     // waits on a `document::eval` animation-end signal that a bare
     // `VirtualDom`/SSR test has no real JS runtime to ever resolve, so the
     // popover content would never mount and this assertion can't hold.
-    #[cfg(not(any(feature = "web", feature = "desktop")))]
+    #[cfg(not(any(feature = "web", feature = "native")))]
     #[test]
     fn date_picker_popover_honors_controlled_open_on_first_render() {
         let mut dom = VirtualDom::new(OpenDatePickerPopover);
@@ -1557,7 +1557,7 @@ mod tests {
     }
 
     // See the cfg note on `date_picker_popover_honors_controlled_open_on_first_render`.
-    #[cfg(not(any(feature = "web", feature = "desktop")))]
+    #[cfg(not(any(feature = "web", feature = "native")))]
     #[test]
     fn date_picker_trigger_opens_the_popover() {
         let mut dom = VirtualDom::new(InteractiveDatePickerPopover);

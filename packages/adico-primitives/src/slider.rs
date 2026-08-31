@@ -17,6 +17,7 @@
 //! Defines the [`Slider`] and [`RangeSlider`] components and their sub-components, which provide
 //! a range input control for selecting a single value or a value range within a specified range.
 
+use crate::direction::use_direction;
 use crate::move_interaction::{MoveEvent, use_move_interaction};
 use crate::use_controlled;
 use dioxus::prelude::*;
@@ -709,6 +710,7 @@ pub fn SliderThumb(props: SliderThumbProps) -> Element {
     });
 
     let aria_label = ctx.label;
+    let direction = use_direction();
     let (_, vmin, vmax) = bounds();
 
     rsx! {
@@ -743,7 +745,8 @@ pub fn SliderThumb(props: SliderThumbProps) -> Element {
                     return;
                 }
 
-                let Some(move_event) = MoveEvent::from_keyboard(&evt, (ctx.step)()) else {
+                let Some(move_event) = MoveEvent::from_keyboard(&evt, (ctx.step)(), direction)
+                else {
                     return;
                 };
 

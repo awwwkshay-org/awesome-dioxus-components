@@ -18,7 +18,7 @@ time = { version = "0.3.44", features = ["std", "macros", "parsing", "local-offs
 num-integer = "0.1.46"
 palette = "0.7.6"
 # Cross-platform OS/browser theme-preference detection for `theme_mode`'s
-# `ThemeMode::System` resolution on `web` and `desktop` (macOS/Windows/
+# `ThemeMode::System` resolution on `web` and `native` (macOS/Windows/
 # Linux+BSD via XDG Desktop Portal/WASM from one API). See design.md §7b.
 dark-light = "3.0.0"
 
@@ -38,9 +38,13 @@ tokio = { version = "1", features = ["time"] }
 default = []
 # Enables browser DOM interop for WebAssembly consumers.
 # `time`'s `local-offset` needs the browser's timezone via wasm-bindgen when
-# targeting wasm; native (desktop/native SSR) resolves it through the OS.
+# targeting wasm; native (see the `native` feature) resolves it through the OS.
 web = ["time/wasm-bindgen"]
-# Enables WebView DOM interop for Dioxus desktop consumers.
-desktop = []
+# Enables WebView DOM interop for Dioxus desktop and mobile (Android/iOS)
+# consumers. Named `native` rather than `desktop` because Dioxus's desktop and
+# mobile renderers both embed the same platform WebView family (wry/tao) and
+# share identical interop needs, unlike a true native-widget renderer; see
+# design.md §8a.
+native = []
 # Exposes narrowly scoped test adapters for `adico-test-utils`; not required by consumers.
 test-utils = []

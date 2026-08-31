@@ -4,7 +4,7 @@
 //
 // Adapted from upstream: the two `dioxus::document::eval` call sites (Safari
 // visual-viewport correction, and scroll suppression while the menu is open)
-// are now behind the same `#[cfg(any(feature = "web", feature = "desktop"))]`
+// are now behind the same `#[cfg(any(feature = "web", feature = "native"))]`
 // target-gated adapter pattern this crate already uses for `use_focus_trap`
 // and `use_outside_dismiss`, with SSR-safe no-op fallbacks, instead of
 // upstream's unconditional `document::eval` calls. `dioxus_sdk_time::sleep`
@@ -16,7 +16,7 @@ use std::time::Duration;
 
 use dioxus::prelude::*;
 use dioxus_core::Task;
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 use dioxus_document as document;
 
 use crate::{
@@ -38,7 +38,7 @@ const LONG_PRESS_MOVE_TOLERANCE_SQ: f64 = 100.0;
 /// coords (matching `position: fixed`), so the correction must not be applied
 /// there — it would double-count the pan offset and shift the menu by 2× the
 /// pan distance.
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 async fn visual_viewport_offset() -> (f64, f64) {
     let mut eval = document::eval(
         "const vv = window.visualViewport; \
@@ -50,7 +50,7 @@ async fn visual_viewport_offset() -> (f64, f64) {
 }
 
 /// SSR-safe fallback: there is no browser viewport to correct against.
-#[cfg(not(any(feature = "web", feature = "desktop")))]
+#[cfg(not(any(feature = "web", feature = "native")))]
 async fn visual_viewport_offset() -> (f64, f64) {
     (0.0, 0.0)
 }
@@ -59,7 +59,7 @@ async fn visual_viewport_offset() -> (f64, f64) {
 /// click target as soon as the page scrolls. Native context menus block
 /// scroll while open; match that by suppressing wheel/touchmove outside
 /// the menu without mutating page-level overflow styles.
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 fn use_scroll_lock_while_open(open: Memo<bool>, root_id: Signal<String>) {
     crate::use_effect_with_cleanup(move || {
         if !open() {
@@ -85,7 +85,7 @@ fn use_scroll_lock_while_open(open: Memo<bool>, root_id: Signal<String>) {
 }
 
 /// SSR-safe fallback: there is no document to suppress scroll on.
-#[cfg(not(any(feature = "web", feature = "desktop")))]
+#[cfg(not(any(feature = "web", feature = "native")))]
 fn use_scroll_lock_while_open(_open: Memo<bool>, _root_id: Signal<String>) {}
 
 #[derive(Clone, Copy)]

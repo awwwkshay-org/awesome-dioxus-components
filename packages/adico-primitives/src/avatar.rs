@@ -5,14 +5,14 @@
 // Adapted from upstream: `AvatarImage`'s unconditional `document::eval` call
 // (reconciling cached/very-fast image loads that can complete before Dioxus
 // delivers the synthetic onload/onerror event) is now behind this crate's
-// established `#[cfg(any(feature = "web", feature = "desktop"))]` target-gated
+// established `#[cfg(any(feature = "web", feature = "native"))]` target-gated
 // adapter pattern, with an SSR-safe no-op fallback -- the onload/onerror
 // handlers below still cover the ordinary case once the client mounts.
 
 //! Defines the [`Avatar`] component and its subcomponents, which manage user profile images with fallback options.
 
 use dioxus::prelude::*;
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 use dioxus_document as document;
 
 use crate::{use_id_or, use_unique_id};
@@ -250,7 +250,7 @@ pub struct AvatarImageProps {
 /// Reconciles cached or very fast image loads that can complete before Dioxus
 /// delivers the synthetic load/error event. Only meaningful when a browser
 /// DOM exists to query `image.complete`/`naturalWidth` against.
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 fn use_cached_image_load_reconciliation(
     image_id: Memo<String>,
     src: String,
@@ -321,7 +321,7 @@ fn use_cached_image_load_reconciliation(
 /// SSR-safe fallback: there is no DOM to query for a cached/fast image load,
 /// so the ordinary onload/onerror handlers (fired once the client mounts)
 /// are the only source of truth.
-#[cfg(not(any(feature = "web", feature = "desktop")))]
+#[cfg(not(any(feature = "web", feature = "native")))]
 fn use_cached_image_load_reconciliation(
     _image_id: Memo<String>,
     _src: String,

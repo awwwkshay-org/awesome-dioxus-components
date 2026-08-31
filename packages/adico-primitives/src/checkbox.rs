@@ -7,7 +7,7 @@
 // `indeterminate` DOM properties -- Dioxus's `checked` attribute only sets the
 // initial default, not later reactive updates, and `indeterminate` has no
 // HTML attribute equivalent at all) is now behind this crate's established
-// `#[cfg(any(feature = "web", feature = "desktop"))]` target-gated adapter
+// `#[cfg(any(feature = "web", feature = "native"))]` target-gated adapter
 // pattern, with an SSR-safe no-op fallback -- there is no DOM to sync
 // server-side, and the client re-syncs once it mounts.
 
@@ -15,7 +15,7 @@
 
 use crate::{use_controlled, use_unique_id};
 use dioxus::prelude::*;
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 use dioxus_document as document;
 use std::ops::Not;
 use std::rc::Rc;
@@ -255,7 +255,7 @@ pub fn CheckboxIndicator(
 
 /// Syncs the hidden native input's `checked`/`indeterminate` DOM properties
 /// to the virtual checkbox state. Only meaningful when a browser DOM exists.
-#[cfg(any(feature = "web", feature = "desktop"))]
+#[cfg(any(feature = "web", feature = "native"))]
 fn use_bubble_input_sync(id: Signal<String>, checked: ReadSignal<CheckboxState>) {
     use_effect(move || {
         let checked = checked();
@@ -289,7 +289,7 @@ fn use_bubble_input_sync(id: Signal<String>, checked: ReadSignal<CheckboxState>)
 
 /// SSR-safe fallback: there is no hidden native input DOM node to sync
 /// server-side; the client re-syncs once it mounts.
-#[cfg(not(any(feature = "web", feature = "desktop")))]
+#[cfg(not(any(feature = "web", feature = "native")))]
 fn use_bubble_input_sync(_id: Signal<String>, _checked: ReadSignal<CheckboxState>) {}
 
 #[component]

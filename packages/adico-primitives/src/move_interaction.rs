@@ -6,6 +6,16 @@
 // callbacks (never during initial render), so no additional target gating
 // is needed beyond the gating already applied inside `pointer.rs`.
 
+//! Shared pointer-drag and arrow-key movement for track-style controls
+//! (slider, color picker) via [`use_move_interaction`], built on
+//! [`crate::pointer`]'s global position registry.
+//!
+//! This is one of three overlapping pointer/gesture helpers in the crate
+//! (alongside [`crate::pointer`] and `selectable::pointer_select_*`); a
+//! unified press/long-press/drag primitive consolidating all three is
+//! tracked separately (see design.md §8a).
+
+use crate::direction::Direction;
 use crate::pointer;
 use dioxus::html::geometry::ClientPoint;
 use dioxus::html::geometry::Pixels;
@@ -17,11 +27,11 @@ use std::rc::Rc;
 
 /// Keyboard modifier state attached to a move event.
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
-pub(crate) struct MoveModifiers {
-    pub(crate) alt_key: bool,
-    pub(crate) ctrl_key: bool,
-    pub(crate) meta_key: bool,
-    pub(crate) shift_key: bool,
+pub struct MoveModifiers {
+    pub alt_key: bool,
+    pub ctrl_key: bool,
+    pub meta_key: bool,
+    pub shift_key: bool,
 }
 
 /// A normalized movement delta.
@@ -29,14 +39,23 @@ pub(crate) struct MoveModifiers {
 /// Pointer deltas are reported in CSS pixels. Keyboard deltas use the caller's
 /// provided step value.
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub(crate) struct MoveEvent {
-    pub(crate) delta_x: f64,
-    pub(crate) delta_y: f64,
-    pub(crate) modifiers: MoveModifiers,
+pub struct MoveEvent {
+    pub delta_x: f64,
+    pub delta_y: f64,
+    pub modifiers: MoveModifiers,
 }
 
 impl MoveEvent {
-    pub(crate) fn from_keyboard(event: &Event<KeyboardData>, step: f64) -> Option<Self> {
+    /// Build a movement delta from an arrow-key press. `direction` flips
+    /// which physical key (`ArrowLeft`/`ArrowRight`) produces a positive
+    /// `delta_x`, so a caller's "next" direction stays consistent between
+    /// LTR and RTL layouts; `ArrowUp`/`ArrowDown` are unaffected, since
+    /// vertical axes have no handedness.
+    pub fn from_keyboard(
+        event: &Event<KeyboardData>,
+        step: f64,
+        direction: Direction,
+    ) -> Option<Self> {
         let modifiers = event.data().modifiers();
         let modifiers = MoveModifiers {
             alt_key: modifiers.alt(),
@@ -49,12 +68,13 @@ impl MoveEvent {
         } else {
             step
         };
+        let rtl = direction.is_rtl();
 
         let (delta_x, delta_y) = match event.data().key() {
             Key::ArrowUp => (0.0, delta),
             Key::ArrowDown => (0.0, -delta),
-            Key::ArrowRight => (delta, 0.0),
-            Key::ArrowLeft => (-delta, 0.0),
+            Key::ArrowRight => (if rtl { -delta } else { delta }, 0.0),
+            Key::ArrowLeft => (if rtl { delta } else { -delta }, 0.0),
             _ => return None,
         };
 
@@ -68,7 +88,7 @@ impl MoveEvent {
 
 /// Shared movement state for controls that support pointer dragging and arrow keys.
 #[derive(Clone, Copy)]
-pub(crate) struct MoveInteraction {
+pub struct MoveInteraction {
     rect: Signal<Option<Rect<f64, Pixels>>>,
     element: Signal<Option<Rc<MountedData>>>,
     active_pointer_id: Signal<Option<i32>>,
@@ -76,7 +96,7 @@ pub(crate) struct MoveInteraction {
     dragging: Signal<bool>,
 }
 
-pub(crate) fn use_move_interaction(dragging: Signal<bool>) -> MoveInteraction {
+pub fn use_move_interaction(dragging: Signal<bool>) -> MoveInteraction {
     let rect = use_signal(|| None);
     let element = use_signal(|| None);
     let active_pointer_id = use_signal(|| None);
@@ -92,18 +112,18 @@ pub(crate) fn use_move_interaction(dragging: Signal<bool>) -> MoveInteraction {
 }
 
 impl MoveInteraction {
-    pub(crate) fn rect(&self) -> Option<Rect<f64, Pixels>> {
+    pub fn rect(&self) -> Option<Rect<f64, Pixels>> {
         self.rect.cloned()
     }
 
-    pub(crate) async fn set_mounted(&mut self, mounted: Rc<MountedData>) {
+    pub async fn set_mounted(&mut self, mounted: Rc<MountedData>) {
         if let Ok(rect) = mounted.get_client_rect().await {
             self.rect.set(Some(rect));
         }
         self.element.set(Some(mounted));
     }
 
-    pub(crate) async fn refresh_rect(&mut self) -> Option<Rect<f64, Pixels>> {
+    pub async fn refresh_rect(&mut self) -> Option<Rect<f64, Pixels>> {
         let element = (self.element)()?;
 
         if let Ok(rect) = element.get_client_rect().await {
@@ -114,7 +134,7 @@ impl MoveInteraction {
         }
     }
 
-    pub(crate) fn start_pointer(&mut self, event: &Event<PointerData>) -> bool {
+    pub fn start_pointer(&mut self, event: &Event<PointerData>) -> bool {
         event.prevent_default();
         event.stop_propagation();
 
@@ -130,7 +150,7 @@ impl MoveInteraction {
         true
     }
 
-    pub(crate) fn pointer_move(&mut self) -> Option<MoveEvent> {
+    pub fn pointer_move(&mut self) -> Option<MoveEvent> {
         if !(self.dragging)() {
             return None;
         }
@@ -156,7 +176,7 @@ impl MoveInteraction {
         })
     }
 
-    pub(crate) fn end_pointer(&mut self) {
+    pub fn end_pointer(&mut self) {
         self.active_pointer_id.take();
         self.last_pointer_position.set(None);
         self.dragging.set(false);
@@ -216,7 +236,11 @@ mod tests {
     #[test]
     fn keyboard_move_maps_arrow_keys() {
         assert_eq!(
-            MoveEvent::from_keyboard(&keyboard_event(Key::ArrowUp, Modifiers::empty()), 2.0),
+            MoveEvent::from_keyboard(
+                &keyboard_event(Key::ArrowUp, Modifiers::empty()),
+                2.0,
+                Direction::Ltr
+            ),
             Some(MoveEvent {
                 delta_x: 0.0,
                 delta_y: 2.0,
@@ -224,19 +248,63 @@ mod tests {
             })
         );
         assert_eq!(
-            MoveEvent::from_keyboard(&keyboard_event(Key::ArrowDown, Modifiers::empty()), 2.0)
-                .map(|event| (event.delta_x, event.delta_y)),
+            MoveEvent::from_keyboard(
+                &keyboard_event(Key::ArrowDown, Modifiers::empty()),
+                2.0,
+                Direction::Ltr
+            )
+            .map(|event| (event.delta_x, event.delta_y)),
             Some((0.0, -2.0))
         );
         assert_eq!(
-            MoveEvent::from_keyboard(&keyboard_event(Key::ArrowRight, Modifiers::empty()), 2.0)
-                .map(|event| (event.delta_x, event.delta_y)),
+            MoveEvent::from_keyboard(
+                &keyboard_event(Key::ArrowRight, Modifiers::empty()),
+                2.0,
+                Direction::Ltr
+            )
+            .map(|event| (event.delta_x, event.delta_y)),
             Some((2.0, 0.0))
         );
         assert_eq!(
-            MoveEvent::from_keyboard(&keyboard_event(Key::ArrowLeft, Modifiers::empty()), 2.0)
-                .map(|event| (event.delta_x, event.delta_y)),
+            MoveEvent::from_keyboard(
+                &keyboard_event(Key::ArrowLeft, Modifiers::empty()),
+                2.0,
+                Direction::Ltr
+            )
+            .map(|event| (event.delta_x, event.delta_y)),
             Some((-2.0, 0.0))
+        );
+    }
+
+    #[test]
+    fn keyboard_move_flips_left_right_for_rtl() {
+        assert_eq!(
+            MoveEvent::from_keyboard(
+                &keyboard_event(Key::ArrowRight, Modifiers::empty()),
+                2.0,
+                Direction::Rtl
+            )
+            .map(|event| (event.delta_x, event.delta_y)),
+            Some((-2.0, 0.0))
+        );
+        assert_eq!(
+            MoveEvent::from_keyboard(
+                &keyboard_event(Key::ArrowLeft, Modifiers::empty()),
+                2.0,
+                Direction::Rtl
+            )
+            .map(|event| (event.delta_x, event.delta_y)),
+            Some((2.0, 0.0))
+        );
+        // Vertical keys are unaffected by direction.
+        assert_eq!(
+            MoveEvent::from_keyboard(
+                &keyboard_event(Key::ArrowUp, Modifiers::empty()),
+                2.0,
+                Direction::Rtl
+            )
+            .map(|event| (event.delta_x, event.delta_y)),
+            Some((0.0, 2.0))
         );
     }
 
@@ -248,8 +316,12 @@ mod tests {
         };
 
         assert_eq!(
-            MoveEvent::from_keyboard(&keyboard_event(Key::ArrowRight, Modifiers::SHIFT), 2.0)
-                .map(|event| (event.delta_x, event.delta_y, event.modifiers)),
+            MoveEvent::from_keyboard(
+                &keyboard_event(Key::ArrowRight, Modifiers::SHIFT),
+                2.0,
+                Direction::Ltr
+            )
+            .map(|event| (event.delta_x, event.delta_y, event.modifiers)),
             Some((20.0, 0.0, expected_modifiers))
         );
     }
@@ -259,7 +331,8 @@ mod tests {
         assert_eq!(
             MoveEvent::from_keyboard(
                 &keyboard_event(Key::Character("a".to_string()), Modifiers::empty()),
-                2.0
+                2.0,
+                Direction::Ltr
             ),
             None
         );

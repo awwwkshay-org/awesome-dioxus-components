@@ -19,25 +19,25 @@ impl<T: PartialEq + 'static> DynPartialEq for T {
 
 /// Type-erased value that still supports equality.
 #[derive(Clone)]
-pub(crate) struct RcPartialEqValue {
+pub struct RcPartialEqValue {
     value: Rc<dyn DynPartialEq>,
 }
 
 impl RcPartialEqValue {
     /// Create a new type-erased value.
-    pub(crate) fn new<T: PartialEq + 'static>(value: T) -> Self {
+    pub fn new<T: PartialEq + 'static>(value: T) -> Self {
         Self {
             value: Rc::new(value),
         }
     }
 
     /// Borrow this value as [`Any`].
-    pub(crate) fn as_any(&self) -> &dyn Any {
+    pub fn as_any(&self) -> &dyn Any {
         (&*self.value) as &dyn Any
     }
 
     /// Downcast this value to its concrete type.
-    pub(crate) fn as_ref<T: PartialEq + 'static>(&self) -> Option<&T> {
+    pub fn as_ref<T: PartialEq + 'static>(&self) -> Option<&T> {
         self.as_any().downcast_ref::<T>()
     }
 }
@@ -50,19 +50,19 @@ impl PartialEq for RcPartialEqValue {
 
 /// Registered option metadata shared by select-like components.
 #[derive(PartialEq)]
-pub(crate) struct OptionState {
+pub struct OptionState {
     /// Stable option identity.
-    pub(crate) id: String,
+    pub id: String,
     /// Collection index.
-    pub(crate) index: usize,
+    pub index: usize,
     /// Programmatic option value.
-    pub(crate) value: RcPartialEqValue,
+    pub value: RcPartialEqValue,
     /// Display/search text.
-    pub(crate) text_value: String,
+    pub text_value: String,
 }
 
 /// Resolve an option's searchable text value.
-pub(crate) fn option_text_value<T: 'static>(
+pub fn option_text_value<T: 'static>(
     value: &T,
     text_value: Option<String>,
     component_name: &str,
@@ -83,7 +83,7 @@ pub(crate) fn option_text_value<T: 'static>(
 }
 
 /// Display text for selected values in selection order.
-pub(crate) fn selected_text<'a>(
+pub fn selected_text<'a>(
     values: impl IntoIterator<Item = &'a RcPartialEqValue>,
     options: &[OptionState],
 ) -> Option<String> {
@@ -101,7 +101,7 @@ pub(crate) fn selected_text<'a>(
 }
 
 /// Insert or update a registered option.
-pub(crate) fn sync_option(mut options: Signal<Vec<OptionState>>, option_state: OptionState) {
+pub fn sync_option(mut options: Signal<Vec<OptionState>>, option_state: OptionState) {
     sync_option_state(&mut options.write(), option_state);
 }
 
@@ -125,7 +125,7 @@ fn insert_option(options: &mut Vec<OptionState>, option_state: OptionState) {
 }
 
 /// Remove a registered option by id.
-pub(crate) fn remove_option(mut options: Signal<Vec<OptionState>>, id: &str) {
+pub fn remove_option(mut options: Signal<Vec<OptionState>>, id: &str) {
     remove_option_state(&mut options.write(), id);
 }
 
