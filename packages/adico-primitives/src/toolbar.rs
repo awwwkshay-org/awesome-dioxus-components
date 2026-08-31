@@ -1,6 +1,8 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/toolbar.rs. See provenance/records/adico-primitives-wave5-extras.json.
+// Implements the WAI-ARIA APG Toolbar pattern: `role="toolbar"` with a single-tab-stop roving
+// tabindex among its buttons (arrow keys move focus along the toolbar's own orientation,
+// Home/End jump to the ends), plus an optional `role="separator"` between logical groups (or
+// `role="none"` when purely decorative, per the APG's guidance that a decorative separator
+// should not be exposed to assistive tech at all).
 
 //! Defines the [`Toolbar`] component and its sub-components, which provide a container to group related buttons and controls with keyboard navigation.
 

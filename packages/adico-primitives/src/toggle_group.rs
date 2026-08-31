@@ -1,6 +1,10 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/toggle_group.rs. See provenance/records/adico-primitives-wave2-roving-focus.json.
+// No dedicated WAI-ARIA APG pattern exists for a toggle-button group (each `ToggleItem`
+// composes `toggle.rs`'s own `Toggle`, an APG "Button" with `aria-pressed"); this file's own
+// contribution is the roving-tabindex group semantics (a WAI-ARIA APG Toolbar-shaped
+// single-tab-stop, arrow-key navigation along the group's own orientation) plus single- vs.
+// multiple-pressed selection state, informed by shadcn/Base UI's Toggle Group conventions per
+// statics/primitive_compatibility.json rather than an ARIA-authored precedent for the group
+// itself.
 
 //! Defines the [`ToggleGroup`] component and its sub-components, which manage a group of toggle buttons with single or multiple selection.
 

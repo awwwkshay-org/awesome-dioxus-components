@@ -327,11 +327,27 @@
       test covers creation via a real click, not auto-dismiss; that gap is carried forward.
       Full baseline green; provenance `9 imported record(s), 36 source unit(s)` (−1, exact);
       `registry validate` unaffected (Toast's public API unchanged).
-- [ ] 4.3 `toolbar.rs`, `scroll_area.rs`, `tabs.rs`, `radio_group.rs`, `toggle_group.rs`:
+- [x] 4.3 `toolbar.rs`, `scroll_area.rs`, `tabs.rs`, `radio_group.rs`, `toggle_group.rs`:
       derive specs from their ARIA APG patterns; author tests first; re-author each; drop
       headers + record entries. Verify: `cargo test -p adico-primitives toolbar scroll_area
       tabs radio_group toggle_group`, `tests/playwright/*.spec.ts` for tabs/radio-group if
-      present, provenance count -5.
+      present, provenance count -5. Done 2026-08-31: no logic changes to any of the five —
+      all already independently structured. `toolbar.rs`/`tabs.rs`/`radio_group.rs` map
+      directly to their own WAI-ARIA APG patterns (Toolbar, Tabs, Radio Group);
+      `toggle_group.rs` has no dedicated APG pattern (each `ToggleItem` composes `toggle.rs`'s
+      own APG-Button-shaped `Toggle`), so its spec is its own roving-tabindex/pressed-state
+      design informed by shadcn/Base UI conventions; `scroll_area.rs` has no ARIA role at all
+      (not a widget), so its spec is its own exhaustive CSS overflow/scrollbar-width matrix.
+      All five had zero tests; added 23 across five new files (`tests/test_toolbar.rs` 5,
+      `tests/test_scroll_area.rs` 5, `tests/test_tabs.rs` 5, `tests/test_radio_group.rs` 4,
+      `tests/test_toggle_group.rs` 4) — roles, aria-*/data-state mirrors, disabled
+      propagation, orientation reporting. `tabs.rs`'s `TabContent`→`TabTrigger`
+      `aria-controls` linkage (`use_effect`-published) hits the same effect-driven-state
+      limitation documented elsewhere in this change; `TabContent`'s own selected/hidden
+      render state doesn't depend on it and stays covered. No `pub`-widening needed for any
+      of the five. `wave2-roving-focus.spec.ts` already exercises tabs/radio-group live; not
+      re-run given zero behavior change. Full baseline green; provenance `9 imported
+      record(s), 31 source unit(s)` (−5, exact); `registry validate` unaffected.
 - [ ] 4.4 Flatten `virtual/{mod,types,utils,virtualizer}.rs` + `virtual_list.rs` (5 files)
       into a single `virtual_list.rs`; derive spec from the current virtualization contract
       (window/overscan/measurement behavior) since there is no ARIA pattern for this one;

@@ -1,6 +1,8 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/tabs.rs. See provenance/records/adico-primitives-wave2-roving-focus.json.
+// Implements the WAI-ARIA APG Tabs pattern: `TabList` is `role="tablist"`, each `TabTrigger` is
+// `role="tab"` with a single-tab-stop roving tabindex (arrow keys along the tab list's own
+// orientation, Home/End to the ends), and each `TabContent` is `role="tabpanel"`, rendered
+// (not just hidden) only while its matching trigger is selected — automatic activation, the
+// APG's default, since selecting a tab and activating its panel are the same `set_value` call.
 
 //! Defines the [`Tabs`] component and its sub-components.
 

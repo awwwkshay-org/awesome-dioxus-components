@@ -2,19 +2,16 @@
   "id": "adico-primitives-wave2-roving-focus",
   "upstream": "https://github.com/DioxusLabs/dioxus-components",
   "revision": "bf007c15d0cf4d04d3181cc46cf12325aa773955",
-  "license": ["MIT", "Apache-2.0"],
+  "license": [
+    "MIT",
+    "Apache-2.0"
+  ],
   "importedAt": "2026-08-30",
   "originalPaths": [
-    "primitives/src/accordion.rs",
-    "primitives/src/radio_group.rs",
-    "primitives/src/tabs.rs",
-    "primitives/src/toggle_group.rs"
+    "primitives/src/accordion.rs"
   ],
   "localPaths": [
-    "packages/adico-primitives/src/accordion.rs",
-    "packages/adico-primitives/src/radio_group.rs",
-    "packages/adico-primitives/src/tabs.rs",
-    "packages/adico-primitives/src/toggle_group.rs"
+    "packages/adico-primitives/src/accordion.rs"
   ],
   "changes": [
     {
@@ -24,6 +21,10 @@
     {
       "date": "2026-08-30",
       "summary": "Imported toggle_group.rs into the same sub-batch once its hard dependency (`crate::toggle::Toggle`, imported in the concurrent Wave 2 state sub-batch, commit 6664368) landed. ToggleGroup/ToggleItem compose the collection roving-focus infrastructure exactly like Accordion/RadioGroup/Tabs above and the existing owned Toggle primitive directly (matching the migration queue's Wave 5 color-picker precedent of a registry item composing another owned primitive as a plain Rust dependency, not a registry dependency edge). Ported unmodified beyond the doc-example import path change. SSR-safe by construction; no target-gated adapter work needed."
+    },
+    {
+      "date": "2026-08-31",
+      "summary": "Re-authored packages/adico-primitives/src/tabs.rs, radio_group.rs, and toggle_group.rs per openspec/changes/reauthor-primitives-from-independent-spec task 4.3. No logic changes to any of the three -- all already independently structured. tabs.rs: derived from the WAI-ARIA APG Tabs pattern (role=tablist/tab/tabpanel, single-tab-stop roving tabindex, automatic activation since selecting a tab and activating its panel are the same set_value call). radio_group.rs: derived from the WAI-ARIA APG Radio Group pattern (role=radiogroup/radio, roving tabindex where arrow keys both move focus and select), noting the file's own native-radio-semantics deviation from a plain listbox (every radio stays tabbable until one is focused or checked, with nothing yet selected) as intentional, not a gap. toggle_group.rs: no dedicated APG pattern exists for a toggle-button group (each ToggleItem composes toggle.rs's own APG-Button-shaped Toggle); its own contribution is roving-tabindex group semantics plus single-/multiple-pressed state, informed by shadcn/Base UI's Toggle Group conventions rather than an ARIA-authored precedent. All three had zero tests; added 5 tests in the new tests/test_tabs.rs, 4 in tests/test_radio_group.rs, and 4 in tests/test_toggle_group.rs (roles, aria-selected/aria-checked/aria-pressed and their data-state mirrors, disabled propagation, orientation reporting, TabContent's selected-panel-only rendering). tabs.rs's TabContent publishes its id into TabsContext.tab_content_ids (for TabTrigger's aria-controls) via a use_effect -- the same effect-driven-state limitation this change has documented elsewhere (test_select.rs's module doc comment) -- so that linkage isn't assertable here, though TabContent's own selected/hidden render state does not depend on it and stays covered. No pub-widening needed for any of the three; all testable through their existing public component APIs. tests/playwright/wave2-roving-focus.spec.ts already exercises tabs/radio-group in a live browser; not re-run given zero behavior change. Verified: cargo fmt --all --check, cargo check --locked --workspace, cargo clippy --locked -p adico-cli -p adico-primitives -p adico-registry-core -p adico-test-utils -p adico-xtask --all-targets -- -D warnings, cargo test --locked on the same five packages (all passing), cargo run -p adico-xtask -- provenance check (34 -> 31 source units, -3 exact), cargo run -p adico-xtask -- registry validate (unaffected -- no prop API change on any of the three)."
     }
   ],
   "notices": [

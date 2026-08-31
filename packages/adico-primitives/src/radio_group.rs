@@ -1,6 +1,9 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/radio_group.rs. See provenance/records/adico-primitives-wave2-roving-focus.json.
+// Implements the WAI-ARIA APG Radio Group pattern: `role="radiogroup"` containing `role="radio"`
+// items with a single-tab-stop roving tabindex (arrow keys move focus *and* select, along the
+// group's own orientation; Home/End jump to the ends and select). Native radio-group semantics
+// govern the empty-selection case: with nothing yet selected, every radio stays in the tab
+// order until one is focused or checked, rather than defaulting focus to the first item the
+// way a plain listbox would.
 
 //! Defines the [`RadioGroup`] component and its sub-components.
 

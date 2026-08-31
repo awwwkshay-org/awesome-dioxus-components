@@ -1,6 +1,6 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/scroll_area.rs. See provenance/records/adico-primitives-wave2-risk.json.
+// No ARIA role applies (a scrollable container is not itself a widget); its spec is pure CSS
+// overflow/scrollbar-width composition from its own `ScrollDirection`/`ScrollType` enums, one
+// axis each, matching the 3x3 combinations `ScrollArea` itself already exhaustively matches on.
 
 //! Defines the [`ScrollArea`] component for creating scrollable areas with customizable scrollbars.
 
