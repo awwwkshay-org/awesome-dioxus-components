@@ -79,11 +79,23 @@
       records unchanged, correctly removing the `text_search.rs`→`typeahead.rs` rename pair),
       `cargo run -p adico-xtask -- registry validate` (no facade change needed — the
       `Typeahead`/`use_typeahead` public API is unchanged).
-- [ ] 1.4 Run the full baseline validation suite (`cargo fmt --all --check`, `cargo check
+- [x] 1.4 Run the full baseline validation suite (`cargo fmt --all --check`, `cargo check
       --locked --workspace`, `cargo clippy --locked -p adico-cli -p adico-primitives -p
       adico-registry-core -p adico-test-utils -p adico-xtask --all-targets -- -D warnings`,
       `cargo test --locked` on the same five packages) and confirm `provenance/records/`
-      reflects exactly 3 fewer imported files than baseline.
+      reflects exactly 3 fewer imported files than baseline. Done 2026-08-31: full suite
+      green across all five packages; `cargo run -p adico-xtask -- provenance check` reports
+      `9 imported record(s), 61 source unit(s)` — exactly 3 fewer than the 64-file baseline
+      (`collection.rs`, `js/focus-trap.js`, `typeahead.rs`). Wave A's stated purpose — prove
+      the five-step recipe and the provenance burn-down mechanics before scaling — is met:
+      one file needed only attribution/documentation work (`collection.rs`), one needed the
+      same plus new browser-test coverage that the sandbox couldn't verify
+      (`js/focus-trap.js`, an unrelated pre-existing Escape/layer regression recorded as a
+      follow-up, not fixed here), and one needed a genuine line-level algorithm rewrite
+      (`typeahead.rs`) — a real spread of the difficulty this change will keep encountering
+      across Waves B-G, not a uniformly "near-free" set. `cargo run -p adico-xtask --
+      registry validate` unaffected throughout (no registry facade touched by any of the
+      three files).
 
 ## 2. Wave B — menu family (select/combobox + menu unification)
 
