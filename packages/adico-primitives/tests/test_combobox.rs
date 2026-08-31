@@ -12,8 +12,7 @@
 //! hits here too).
 
 use adico_primitives::combobox::{
-    Combobox, ComboboxEmpty, ComboboxInput, ComboboxItemIndicator, ComboboxList, ComboboxMulti,
-    ComboboxOption,
+    Combobox, ComboboxEmpty, ComboboxInput, ComboboxList, ComboboxMulti, ComboboxOption,
 };
 use dioxus::prelude::*;
 
@@ -92,6 +91,7 @@ fn disabled_combobox_disables_its_input_and_marks_the_root() {
 #[cfg(not(any(feature = "web", feature = "native")))]
 mod open_by_default {
     use super::*;
+    use adico_primitives::combobox::ComboboxItemIndicator;
 
     #[component]
     fn OpenFruitCombobox() -> Element {

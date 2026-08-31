@@ -1,19 +1,20 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/pointer.rs. See provenance/records/adico-primitives-wave2-risk.json.
-//
-// Adapted from upstream: the global `window.addEventListener('pointer*', ...)`
-// `document::eval` script (installed lazily the first time the pointer
-// tracker is read) is now behind this crate's established
-// `#[cfg(any(feature = "web", feature = "native"))]` target-gated pattern
-// with an SSR-safe stub for the native default, instead of an unconditional
-// `dioxus::document::eval` call. `dioxus_document as document` (this crate's
-// existing document-interop alias, see `lib.rs`) is used in place of
-// upstream's `dioxus::document`. Desktop/mobile pointer-capture behavior
-// beyond compiling under the `native` feature is not independently verified
-// here (a WebView's pointer-event delivery may differ from a real browser's);
-// this matches the migration queue's named risk for this file and is
-// recorded, not silently assumed, in the Wave 2 migration record.
+// This crate's own established target-gating pattern is the spec here — no ARIA pattern
+// applies to a low-level pointer-position registry, and design.md §8a's "unified
+// press/long-press/drag" primitive that `gesture.rs` began is press/long-press only
+// (context_menu.rs's/selectable.rs's duplicated timers): it does not cover this file's
+// separate concern, continuous drag-position tracking, which `move_interaction.rs` still
+// depends on unconsolidated, matching the same architecture this file already used —
+// `#[cfg(any(feature = "web", feature = "native"))]` target-gating around a
+// `document::eval`-backed global listener, with an SSR-safe stub for targets without a DOM.
+// **Unverified in a live browser**, same finding `gesture.rs`'s own doc comment already
+// records for this exact file: the `window.addEventListener('pointer*', ...)` listener is
+// installed by the same long-lived, repeatedly-firing `document::eval` pattern
+// `provenance/records/adico-primitives-wave3-overlays.json` documents as never actually
+// registering in this Dioxus 0.7.9/0.7.10 web runtime. If that defect applies here too
+// (plausible, not independently re-confirmed by this task), pointer dragging on
+// `slider`/`color_picker` does not track position on `web` today. Not re-investigated here;
+// see `gesture.rs`'s doc comment for why a fix is out of scope for a small task (no drop-in
+// native-Dioxus-event substitute for a *global*, not per-element, pointer tracker).
 
 //! A global pointer-position registry.
 //!
@@ -31,10 +32,14 @@ use dioxus::prelude::*;
 #[cfg(any(feature = "web", feature = "native"))]
 use dioxus_document as document;
 
-#[derive(Debug)]
-struct Pointer {
-    id: i32,
-    position: ClientPoint,
+/// `pub` only for `packages/adico-primitives/tests/`; not part of the intended public API.
+/// Not target-gated, unlike `POINTERS`/`add_pointer`/etc.: this struct and [`upsert_pointer`]
+/// are pure `Vec` bookkeeping with no DOM dependency, so they stay testable under default
+/// (no `web`/`native`) features even though their only real caller is gated.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Pointer {
+    pub id: i32,
+    pub position: ClientPoint,
 }
 
 #[cfg(any(feature = "web", feature = "native"))]
@@ -106,8 +111,8 @@ fn add_pointer(pointer_id: i32, position: ClientPoint) {
     upsert_pointer(&mut pointers, pointer_id, position);
 }
 
-#[cfg(any(feature = "web", feature = "native"))]
-fn upsert_pointer(pointers: &mut Vec<Pointer>, pointer_id: i32, position: ClientPoint) {
+/// `pub` only for `packages/adico-primitives/tests/`; not part of the intended public API.
+pub fn upsert_pointer(pointers: &mut Vec<Pointer>, pointer_id: i32, position: ClientPoint) {
     if let Some(pointer) = pointers.iter_mut().find(|pointer| pointer.id == pointer_id) {
         pointer.position = position;
     } else {
@@ -132,22 +137,4 @@ fn update_pointer(pointer_id: i32, position: ClientPoint) {
 #[cfg(any(feature = "web", feature = "native"))]
 fn remove_pointer(pointer_id: i32) {
     POINTERS.write().retain(|pointer| pointer.id != pointer_id);
-}
-
-#[cfg(all(test, any(feature = "web", feature = "native")))]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn upsert_pointer_updates_existing_pointer() {
-        let mut pointers = vec![Pointer {
-            id: 1,
-            position: ClientPoint::new(10.0, 20.0),
-        }];
-
-        upsert_pointer(&mut pointers, 1, ClientPoint::new(30.0, 40.0));
-
-        assert_eq!(pointers.len(), 1);
-        assert_eq!(pointers[0].position, ClientPoint::new(30.0, 40.0));
-    }
 }

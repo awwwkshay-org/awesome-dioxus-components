@@ -23,8 +23,7 @@
 //! the joined-text case is left to `tests/playwright/select.spec.ts`, which already exercises it.
 
 use adico_primitives::select::{
-    Select, SelectGroup, SelectGroupLabel, SelectItemIndicator, SelectList, SelectMulti,
-    SelectOption, SelectTrigger, SelectValue,
+    Select, SelectList, SelectMulti, SelectOption, SelectTrigger, SelectValue,
 };
 use dioxus::prelude::*;
 
@@ -130,6 +129,7 @@ fn select_with_a_default_value_stops_showing_the_placeholder() {
 #[cfg(not(any(feature = "web", feature = "native")))]
 mod open_by_default {
     use super::*;
+    use adico_primitives::select::{SelectGroup, SelectGroupLabel, SelectItemIndicator};
 
     #[component]
     fn OpenFruitSelect() -> Element {

@@ -224,10 +224,32 @@
       risks altering unrelated behavior). Full baseline suite green; provenance `9 imported
       record(s), 43 source unit(s)` (−1, exact). No registry facade depends on `portal.rs`
       directly (`toast.rs` is the sole consumer; its own facade is untouched).
-- [ ] 3.2 `pointer.rs` + `move_interaction.rs`: derive spec from the existing unified
+- [x] 3.2 `pointer.rs` + `move_interaction.rs`: derive spec from the existing unified
       press/long-press/drag gesture design (`gesture.rs` precedent); author/extend tests;
       re-author both; drop headers + record entries. Verify: `cargo test -p adico-primitives
-      pointer move_interaction`, provenance count -2.
+      pointer move_interaction`, provenance count -2. Done 2026-08-31: confirmed `gesture.rs`
+      only unified press/long-press (context_menu.rs's/selectable.rs's duplicated timers), not
+      these two files' separate concern (continuous drag-position tracking) — re-authored
+      against their existing target-gated architecture instead of merging into `gesture.rs`.
+      Inherited a significant finding `gesture.rs`'s own doc comment already recorded rather
+      than re-investigating it: `pointer.rs`'s global listener is installed by the same
+      document::eval pattern the `wave3-overlays` record documents as never actually
+      registering in this web runtime — now stated directly in `pointer.rs`'s own doc comment
+      too. Ungated and widened `Pointer`/`upsert_pointer` to `pub` (pure `Vec` logic, no DOM
+      dependency) so they're testable under default features — this also surfaced that
+      `pointer.rs`'s one prior test never ran under this repo's baseline `cargo test` at all
+      (gated to `web`/`native`, default features are `[]`). Added 3 tests in the new
+      `tests/test_pointer.rs` and 10 in the new `tests/test_move_interaction.rs` (4 keyboard
+      tests moved unchanged, 6 new pointer-drag tests via a synthetic `HasPointerData` impl
+      driving the already-fully-public `MoveInteraction` API directly, no further `pub`
+      widening needed there). Also fixed a latent gap tasks 2.1/2.2 left: `test_select.rs`/
+      `test_combobox.rs` had imports used only inside their `web`/`native`-excluded gated
+      submodules declared at file scope, failing `cargo clippy --features web` (not part of
+      the default baseline, which is why it was never caught) — moved into the submodules.
+      Full baseline green, plus `cargo test`/`clippy --features web`/`--features native` all
+      green (neither part of the default baseline either); provenance `9 imported record(s),
+      41 source unit(s)` (−2, exact). No registry facade depends on either file directly
+      (`slider.rs`/`color_picker.rs` are the only consumers, neither touched here).
 - [ ] 3.3 `listbox.rs`, `selection.rs`, `selectable.rs`: derive spec from ARIA APG selection
       patterns; author/extend tests; re-author; drop headers + record entries. Verify: `cargo
       test -p adico-primitives listbox selection selectable`, provenance count -3.
