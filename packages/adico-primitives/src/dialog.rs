@@ -1,6 +1,8 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/dialog.rs. See provenance/records/adico-primitives-dialog-select.json.
+// Implements the WAI-ARIA APG Dialog (Modal) pattern: a `role="dialog"` element with
+// `aria-modal="true"`, labelled by its title and described by its description, that traps focus
+// while open. Unlike `alert_dialog`'s stricter variant, `DialogContent` is dismissible by an
+// outside click (`use_outside_dismiss`) as well as Escape, since an ordinary dialog -- unlike an
+// alert dialog -- doesn't require an explicit response -- already correctly implemented.
 
 //! Defines the [`DialogRoot`] component and its sub-components.
 

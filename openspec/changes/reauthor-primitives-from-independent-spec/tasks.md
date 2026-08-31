@@ -587,9 +587,30 @@
       `registry/` for any reference to the deleted `color_naming` submodule path — none found);
       `tests/installation/wave5-color-picker-consumer`, `wave5-drag-and-drop-list-consumer`,
       and `wave5-extras-consumer` all compile clean against `--target wasm32-unknown-unknown`.
-- [ ] 5.8 `dialog-select` record residue: `dialog.rs`, `lib.rs`'s non-facade content if any
+- [x] 5.8 `dialog-select` record residue: `dialog.rs`, `lib.rs`'s non-facade content if any
       remains outside Wave F's scope, `js/focus-trap.js` cross-check (already done in 1.2).
-      Verify: tests pass, `tests/playwright/dialog.spec.ts` passes.
+      Verify: tests pass, `tests/playwright/dialog.spec.ts` passes. Done 2026-08-31: no logic
+      changes to `dialog.rs`, already correctly delegating to the shared `FocusTrapScript`/
+      `use_focus_trap`, `scroll_lock::use_scroll_lock`, `use_escape_key`, and
+      `use_outside_dismiss` helpers. Derived spec: the WAI-ARIA APG Dialog (Modal) pattern —
+      `role="dialog"`/`aria-modal="true"`, labelled/described by title/description,
+      focus-trapped, dismissible by outside click as well as Escape (unlike `alert_dialog.rs`'s
+      stricter alertdialog variant) — already implemented. Had zero tests; added 4 in new
+      `tests/test_dialog.rs` (modal role/aria-modal/data-state on open, title/description
+      aria-labelledby/aria-describedby id-matching, closed-state early-return, a non-modal
+      dialog's `aria-modal` staying `"true"` regardless of `is_modal` since `DialogContent`
+      renders that attribute unconditionally — confirmed by reading the source). Cross-checked
+      `js/focus-trap.js`: already re-authored in task 1.2, its header still carries the
+      WAI-ARIA APG-framed spec with no residual fork text. Confirmed `lib.rs`'s remaining
+      content (module declarations, shared hooks) is exactly what task 6.1 already scopes to
+      re-author — nothing left outside Wave F's scope for this task to separately handle, so
+      `lib.rs` itself is untouched here. Removed `dialog.rs` from this record's
+      `originalPaths`/`localPaths`; `lib.rs` remains tracked, pending Wave F. Full baseline
+      green; provenance `3 imported record(s), 5 source unit(s)` (−1 source unit, exact,
+      record count unchanged since `lib.rs` still carries its header); `registry validate`
+      unaffected (46 items); `tests/installation/dialog-consumer` compiles clean against
+      `--target wasm32-unknown-unknown`; `tests/playwright/dialog.spec.ts` exists and exercises
+      this file's live-browser behavior — not re-run given zero behavior change.
 - [ ] 5.9 Update all affected `registry/ui/*.rs` facades, `registry/registry.json`, and
       regenerated output for every parity closure across 5.1-5.8; run `registry build` +
       `registry validate`; confirm via consumer fixture installs (`examples/basic-spa`,

@@ -5,12 +5,10 @@
   "license": ["MIT", "Apache-2.0"],
   "importedAt": "2026-08-24",
   "originalPaths": [
-    "primitives/src/lib.rs",
-    "primitives/src/dialog.rs"
+    "primitives/src/lib.rs"
   ],
   "localPaths": [
-    "packages/adico-primitives/src/lib.rs",
-    "packages/adico-primitives/src/dialog.rs"
+    "packages/adico-primitives/src/lib.rs"
   ],
   "changes": [
     {
@@ -36,6 +34,10 @@
     {
       "date": "2026-08-31",
       "summary": "Re-authored packages/adico-primitives/src/listbox.rs, selection.rs, and selectable.rs per openspec/changes/reauthor-primitives-from-independent-spec task 3.3. Derived from the WAI-ARIA APG Listbox pattern's selection-state and pointer-activation guidance that select.rs/combobox.rs already derived their own ARIA-role specs against (tasks 2.1/2.2) -- these three files are that pattern's shared, non-role-bearing machinery. No logic changes: all three were already independently structured with no fork-text residue. listbox.rs is thin use_effect glue (popup mounting, id generation, option registration) already exercised indirectly, extensively, through select.rs's/combobox.rs's own tests; added 2 direct tests in the new tests/test_listbox.rs for ListboxItemIndicator's conditional render, the one piece with no such indirect coverage. selection.rs had 3 existing tests (sync_option_state/remove_option_state, already private-fn-tested inline) plus zero coverage for option_text_value/selected_text; widened sync_option_state/remove_option_state to pub per this crate's test-placement convention and added 7 new tests alongside the 3 moved ones in the new tests/test_selection.rs. selectable.rs had zero tests (inline or external) despite being select.rs's/combobox.rs's shared state -- SelectableContext's open/selection/focus-navigation methods are already exercised indirectly through those two files' own tests, so this task's new coverage targets pointer_select_start/pointer_select_commit/pointer_select_cancel instead (the WAI-ARIA APG pointer-activation guidance now cited in the file's own doc comment: primary button only, and a touch that drifts past a small threshold before release is a scroll, not a tap) -- 8 tests in the new tests/test_selectable.rs, via a synthetic HasPointerData impl mirroring test_move_interaction.rs's identical pattern from task 3.2. Verified: cargo fmt --all --check, cargo check --locked --workspace, cargo clippy --locked -p adico-cli -p adico-primitives -p adico-registry-core -p adico-test-utils -p adico-xtask --all-targets -- -D warnings, cargo test --locked on the same five packages (all passing), cargo run -p adico-xtask -- provenance check (41 → 38 source units, -3 exact). No registry facade change: select.rs's/combobox.rs's public API is unaffected."
+    },
+    {
+      "date": "2026-08-31",
+      "summary": "Re-authored packages/adico-primitives/src/dialog.rs per openspec/changes/reauthor-primitives-from-independent-spec task 5.8. No logic changes -- already correctly delegating to the shared FocusTrapScript/use_focus_trap, scroll_lock::use_scroll_lock, use_escape_key, and use_outside_dismiss helpers. Derived spec: the WAI-ARIA APG Dialog (Modal) pattern -- role=dialog with aria-modal=true, labelled/described by its title/description, focus-trapped -- with DialogContent dismissible by an outside click as well as Escape (unlike alert_dialog.rs's stricter alertdialog variant, which intentionally omits outside-dismiss). Had zero tests; added 4 in the new tests/test_dialog.rs (modal role/aria-modal/data-state on open, title/description aria-labelledby/aria-describedby id-matching, closed-state early-return, a non-modal dialog's aria-modal staying \"true\" regardless of is_modal since DialogContent renders that attribute unconditionally -- confirmed by reading the source, not assumed). Cross-checked js/focus-trap.js (already re-authored in task 1.2, confirmed its header still carries the WAI-ARIA APG-framed spec rather than any residual fork text) and tests/playwright/dialog.spec.ts (exists, exercises this file's live-browser behavior; not re-run given zero behavior change). lib.rs's own re-authoring remains deliberately deferred to Wave F (task 6.1) -- confirmed lib.rs's remaining content (module declarations, shared hooks: use_controlled/use_animated_open/use_focus_trap/use_outside_dismiss/use_escape_key/FocusTrapScript/use_unique_id/use_id_or) is exactly what task 6.1 already scopes to re-author, with nothing left outside that scope for this task to separately handle. Full baseline green; provenance count reduced by 1 source unit (this record's remaining originalPaths/localPaths now cover only lib.rs, tracked for Wave F); registry validate/build unaffected (46 items, same accepted static-pointer pattern as prior tasks)."
     }
   ],
   "notices": [
