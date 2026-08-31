@@ -36,7 +36,10 @@
 
 //! Defines the [`AlertDialogRoot`] component and its sub-components.
 
-use crate::{FocusTrapScript, use_escape_key, use_focus_trap, use_id_or, use_unique_id};
+use crate::{
+    FocusTrapScript, scroll_lock::use_scroll_lock, use_escape_key, use_focus_trap, use_id_or,
+    use_unique_id,
+};
 use dioxus::prelude::*;
 
 /// Context for the [`AlertDialogRoot`] component.
@@ -247,6 +250,9 @@ pub fn AlertDialogContent(props: AlertDialogContentProps) -> Element {
     // listener is installed, matching the WAI-ARIA alertdialog pattern's
     // requirement that only an explicit action can close it.
     use_focus_trap(id, open, ReadSignal::new(Signal::new(true)));
+    // Only rendered while open (see the early return above), matching
+    // `dialog::DialogContent`'s identical scroll-lock wiring.
+    use_scroll_lock(open);
 
     rsx! {
         div {

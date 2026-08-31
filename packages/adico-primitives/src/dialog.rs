@@ -7,8 +7,8 @@
 use dioxus::prelude::*;
 
 use crate::{
-    FocusTrapScript, use_animated_open, use_controlled, use_escape_key, use_focus_trap, use_id_or,
-    use_outside_dismiss, use_unique_id,
+    FocusTrapScript, scroll_lock::use_scroll_lock, use_animated_open, use_controlled,
+    use_escape_key, use_focus_trap, use_id_or, use_outside_dismiss, use_unique_id,
 };
 
 /// Context for the [`DialogRoot`] component
@@ -234,6 +234,13 @@ pub fn DialogContent(props: DialogContentProps) -> Element {
 
     use_outside_dismiss(id, move || set_open.call(false));
     use_focus_trap(id, open, is_modal);
+    // `DialogContent` only exists in the tree while the dialog is open (see
+    // the early return above), so locking unconditionally here and relying
+    // on `use_scroll_lock`'s own unmount cleanup to release it matches
+    // `DialogRoot`'s existing always-mounted-root/self-gating-content
+    // pattern, rather than needing a reactive `open` read that would never
+    // actually observe a `false` transition from inside this component.
+    use_scroll_lock(open);
 
     rsx! {
         div {
