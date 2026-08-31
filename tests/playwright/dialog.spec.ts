@@ -19,6 +19,32 @@ test("installed Dialog opens, exposes ARIA semantics, restores focus, and closes
   await expect(trigger).toBeFocused();
 });
 
+test("installed Dialog traps Tab focus within its content and wraps at both ends", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Open dialog" }).click();
+  const dialog = page.getByRole("dialog", { name: "Edit profile" });
+  await expect(dialog).toBeVisible();
+
+  const save = page.getByRole("button", { name: "Save changes" });
+  const nestedTrigger = page.getByRole("button", { name: "Open nested dialog" });
+  await expect(save).toBeFocused();
+
+  await page.keyboard.press("Tab");
+  await expect(nestedTrigger).toBeFocused();
+
+  // Forward from the last focusable item wraps back to the first, rather
+  // than escaping the trap onto the page's own "Open dialog" trigger.
+  await page.keyboard.press("Tab");
+  await expect(save).toBeFocused();
+
+  // Shift+Tab from the first item wraps backward to the last.
+  await page.keyboard.press("Shift+Tab");
+  await expect(nestedTrigger).toBeFocused();
+
+  await page.keyboard.press("Shift+Tab");
+  await expect(save).toBeFocused();
+});
+
 test("installed Dialog closes after outside interaction and has no critical axe violations", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Open dialog" }).click();

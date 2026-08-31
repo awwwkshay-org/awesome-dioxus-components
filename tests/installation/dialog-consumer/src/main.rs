@@ -13,6 +13,7 @@ fn app() -> Element {
                         components::ui::DialogTitle { "Edit profile" }
                         components::ui::DialogDescription { "Update your information." }
                     }
+                    components::ui::Button { "Save changes" }
                     components::ui::Dialog {
                         components::ui::DialogTrigger { "Open nested dialog" }
                         components::ui::DialogOverlay {}

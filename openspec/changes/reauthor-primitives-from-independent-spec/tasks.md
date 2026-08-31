@@ -35,10 +35,22 @@
       passing), `cargo run -p adico-xtask -- provenance check` (64 → 63 source units, 9
       records unchanged), `cargo run -p adico-xtask -- registry validate` (no registry facade
       exists for this internal-only primitive, so nothing to update).
-- [ ] 1.2 `js/focus-trap.js`: derive spec from ARIA APG focus-trap guidance; confirm existing
+- [x] 1.2 `js/focus-trap.js`: derive spec from ARIA APG focus-trap guidance; confirm existing
       focus-scope tests still cover it or extend them; re-author; drop header + record entry.
       Verify: `cd tests/playwright && npm test` (focus-trap-dependent specs), provenance
-      count decreases by one.
+      count decreases by one. Done 2026-08-31: rewrote the header as an ARIA APG "Trapping
+      Focus" spec citation; the implementation itself was unchanged (already independently
+      structured — dual guard sentinels, tabindex-aware `focusable()`, non-modal `FocusScope`
+      — no fork-text residue). Added a Tab-cycling test to `dialog.spec.ts` and a second
+      focusable element to the `dialog-consumer` fixture. **Verification gap, not a pass:**
+      this new test and the pre-existing "closes with Escape" test both fail in this sandbox
+      against a fresh, otherwise-unmodified `dialog-consumer` build — traced to `DialogRoot`'s
+      `use_escape_key`/`layer.is_topmost()` gate (`lib.rs`/`layer.rs`), not fixed here per
+      explicit user direction to keep this task scoped to `focus-trap.js`. Recorded in
+      `provenance/records/adico-primitives-dialog-select.json`'s changes log. `cargo test -p
+      adico-primitives` unaffected (no Rust changed) and passing; `cargo run -p adico-xtask --
+      provenance check` 63 → 62. Follow-up needed: a separate task/change to fix the
+      Escape/layer regression and re-run the full `tests/playwright` suite once fixed.
 - [ ] 1.3 `typeahead.rs`: derive spec from ARIA APG typeahead guidance +
       `primitive_compatibility.json`; confirm the existing 15 unit tests cover the spec or
       extend them; re-author; drop header + record entry. Verify: `cargo test -p

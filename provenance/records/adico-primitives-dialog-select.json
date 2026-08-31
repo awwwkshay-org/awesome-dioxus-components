@@ -19,8 +19,7 @@
     "primitives/src/select/components/option.rs",
     "primitives/src/select/components/select.rs",
     "primitives/src/select/components/trigger.rs",
-    "primitives/src/select/components/value.rs",
-    "primitives/src/js/focus-trap.js"
+    "primitives/src/select/components/value.rs"
   ],
   "localPaths": [
     "packages/adico-primitives/src/lib.rs",
@@ -37,8 +36,7 @@
     "packages/adico-primitives/src/select/components/option.rs",
     "packages/adico-primitives/src/select/components/select.rs",
     "packages/adico-primitives/src/select/components/trigger.rs",
-    "packages/adico-primitives/src/select/components/value.rs",
-    "packages/adico-primitives/src/js/focus-trap.js"
+    "packages/adico-primitives/src/select/components/value.rs"
   ],
   "changes": [
     {
@@ -48,6 +46,10 @@
     {
       "date": "2026-08-31",
       "summary": "Re-authored packages/adico-primitives/src/collection.rs against an independent spec (WAI-ARIA APG roving-tabindex/grid-navigation patterns plus its consuming components' needs; this internal-only file has no tracked row in statics/primitive_compatibility.json) per openspec/changes/reauthor-primitives-from-independent-spec, task 1.1. Added 34 tests (packages/adico-primitives/tests/test_collection.rs) covering roving-tabindex anchor precedence, focus-key resolution, register/unregister reindexing, and try_focus_placement, none of which previously existed for this file's registration/tabindex/focus-key surface. Removed its SPDX fork header and dropped it from this record's originalPaths/localPaths."
+    },
+    {
+      "date": "2026-08-31",
+      "summary": "Re-authored packages/adico-primitives/src/js/focus-trap.js against the WAI-ARIA APG 'Trapping Focus' pattern (modal focus containment, Tab/Shift+Tab wraparound, focus restoration on close; FocusScope as its non-modal counterpart), per openspec/changes/reauthor-primitives-from-independent-spec, task 1.2. Added a Tab-cycling Playwright test (tests/playwright/dialog.spec.ts, 'traps Tab focus within its content and wraps at both ends') and a second focusable element to tests/installation/dialog-consumer's fixture so the trap has more than one item to cycle through. This test, and the pre-existing 'closes with Escape' test, could not be verified in this sandbox: both fail against a freshly built, otherwise-unmodified dialog-consumer fixture with no console/JS errors, traced as far as DialogRoot's use_escape_key/layer.is_topmost() gate (packages/adico-primitives/src/lib.rs, layer.rs) without a fix, since diagnosing that regression is outside this task's scope. Verified via cargo test -p adico-primitives (unaffected, all passing) and code review only; Playwright verification is an open gap, not a passed check. Removed the file's SPDX fork header and dropped it from this record's originalPaths/localPaths."
     }
   ],
   "notices": [

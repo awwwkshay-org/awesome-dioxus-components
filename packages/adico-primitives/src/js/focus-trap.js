@@ -1,17 +1,18 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/js/focus-trap.js. See provenance/records/adico-primitives-dialog-select.json.
 //
-// Adapted from upstream (task 7.4e): `focusable()` now also recognizes any
-// element with an explicit `tabindex` attribute (roving-focus items managed
-// by this crate's `collection.rs`, e.g. `tabindex="0"`/`"-1"` toggled on
-// listbox/menu items), not just a fixed set of natively-focusable tags.
-// `FocusTrap` now also inserts two focus-guard sentinel elements around the
-// container, redirecting focus back inside when reached (a more robust
-// backstop than the keydown-based Tab interception alone, e.g. when focus
-// would otherwise escape via a click on a non-focusable area). A new
-// `FocusScope` class supports a non-modal scope: it only restores focus to
-// whatever was focused before it was created, without trapping Tab at all.
+// Implements the WAI-ARIA Authoring Practices Guide's "Trapping Focus" pattern for modal
+// dialogs: on open, focus moves inside the container; Tab and Shift+Tab cycle only through
+// the container's focusable descendants, wrapping from the last back to the first (and vice
+// versa) instead of escaping to the rest of the page; on close, focus returns to whatever
+// triggered the dialog. `FocusTrap` implements this with two mechanisms working together —
+// a `keydown` listener that intercepts Tab/Shift+Tab directly, and a pair of invisible focus
+// guard sentinels bracketing the container that redirect focus back inside if it ever lands
+// outside by another route (for example a pointer click on a non-focusable area). `focusable()`
+// also recognizes any element carrying an explicit `tabindex` attribute, not just a fixed set
+// of natively-focusable tags, so it correctly walks roving-focus collections managed by this
+// crate's `collection.rs` (listbox/menu items toggling `tabindex="0"`/`"-1"`). `FocusScope` is
+// the same pattern's non-modal counterpart — APG's dismissible, non-trapping popups (menus,
+// comboboxes) only need focus restored on close, not contained while open.
 
 var focusable = function (element) {
   if (element.tabIndex < 0 || element.getAttribute("disabled")) return false;
