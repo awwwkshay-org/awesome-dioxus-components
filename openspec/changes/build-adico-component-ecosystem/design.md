@@ -731,6 +731,28 @@ current-state snapshot of what's built vs. Base UI's/shadcn's own component
 inventories, with prop/hook detail introspected from the live source, rather
 than a hand-maintained, multi-dimension completion ledger.
 
+**Restructured 2026-08-31:** `baseui-compat`/`shadcn-compat` are replaced by
+`primitive-compat`/`component-compat` (same Rust/`syn`/`reqwest::blocking`
+approach) because adico has two upstreams per layer, not one: the primitive
+layer forked from `DioxusLabs/dioxus-components`' primitives as well as
+following Base UI's architecture, and the registry models both shadcn and
+that repo's styled components. `cargo xtask primitive-compat sync|check|diff`
+now covers both the Base UI axis (unchanged: hand-maintained inventory + live
+drift check) and a dioxus-primitives axis derived entirely from
+`upstreams/dioxus-components/catalog.json`'s `primitiveSourcePaths` (no hand
+table beyond a short exceptions list). `cargo xtask component-compat
+sync|check` covers both a shadcn axis (derived from
+`upstreams/shadcn/catalog.json`) and a dioxus-components axis (from the same
+catalog's `styledComponents`) alongside the existing per-registry-item
+props/hooks introspection. Both commands now write to a repo-root `statics/`
+directory (`statics/primitive_compatibility.json`,
+`statics/component_compatibility.json`) instead of living inside
+`packages/adico-primitives/` or `registry/`, since a generated tracking
+snapshot isn't shippable package or registry content. There is no live
+refresh for `upstreams/shadcn/catalog.json` yet (only
+`upstreams/dioxus-components/catalog.json` has one, via `cargo xtask upstream
+dioxus-components`) — a known gap, not solved by this restructure.
+
 ### 10. Examples, testing, and rollout
 
 Examples are product fixtures, not workspace-source shortcuts. `examples/`

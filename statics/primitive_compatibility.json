@@ -1,0 +1,6668 @@
+{
+  "$schema_note": "Hand-maintain UPSTREAM_COMPONENTS/UPSTREAM_UTILS/ADICO_ONLY_EXTRAS/DIOXUS_MODULE_NOTES in packages/adico-xtask/src/primitive_compat.rs; everything else here is regenerated from repo introspection, and the dioxus_primitives axis's module inventory is fully derived from upstreams/dioxus-components/catalog.json (no hand table).",
+  "base_ui": {
+    "adico_only_extras": [
+      {
+        "adico_primitive_file": "packages/adico-primitives/src/date_picker.rs",
+        "name": "DatePicker"
+      },
+      {
+        "adico_primitive_file": "packages/adico-primitives/src/color_picker.rs",
+        "name": "ColorPicker"
+      },
+      {
+        "adico_primitive_file": "packages/adico-primitives/src/drag_and_drop_list.rs",
+        "name": "DragAndDropList"
+      },
+      {
+        "adico_primitive_file": "packages/adico-primitives/src/tag_group.rs",
+        "name": "TagGroup"
+      },
+      {
+        "adico_primitive_file": "packages/adico-primitives/src/hover_card.rs",
+        "name": "HoverCard"
+      },
+      {
+        "adico_primitive_file": "packages/adico-primitives/src/virtual_list.rs",
+        "name": "VirtualList"
+      },
+      {
+        "adico_primitive_file": "packages/adico-primitives/src/calendar.rs",
+        "name": "Calendar"
+      },
+      {
+        "adico_primitive_file": "packages/adico-primitives/src/aspect_ratio.rs",
+        "name": "AspectRatio"
+      },
+      {
+        "adico_primitive_file": "packages/adico-primitives/src/label.rs",
+        "name": "Label"
+      },
+      {
+        "adico_primitive_file": "packages/adico-primitives/src/theme_mode.rs",
+        "name": "ThemeMode"
+      }
+    ],
+    "components": [
+      {
+        "adico_components": [
+          "Accordion",
+          "AccordionMulti",
+          "AccordionItem",
+          "AccordionContent",
+          "AccordionTrigger"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_animated_open",
+          "use_collection_provider",
+          "use_id_or",
+          "use_item",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/accordion.rs",
+        "adico_props": {
+          "AccordionContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AccordionItemProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_change",
+              "type": "Callback<bool,()>"
+            },
+            {
+              "name": "on_trigger_click",
+              "type": "Callback"
+            },
+            {
+              "name": "index",
+              "type": "usize"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AccordionMultiProps": [
+            {
+              "name": "id",
+              "type": "Option<String>"
+            },
+            {
+              "name": "values",
+              "type": "ReadSignal<Option<Vec<String>>>"
+            },
+            {
+              "name": "default_values",
+              "type": "Vec<String>"
+            },
+            {
+              "name": "on_values_change",
+              "type": "Callback<Vec<String>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "horizontal",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AccordionProps": [
+            {
+              "name": "id",
+              "type": "Option<String>"
+            },
+            {
+              "name": "value",
+              "type": "Option<ReadSignal<Option<String>>>"
+            },
+            {
+              "name": "default_value",
+              "type": "Option<String>"
+            },
+            {
+              "name": "on_value_change",
+              "type": "Callback<Option<String>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "collapsible",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "horizontal",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AccordionTriggerProps": [
+            {
+              "name": "id",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "accordion",
+        "name": "Accordion",
+        "notes": "Split into Accordion (single)/AccordionMulti, matching this crate's Select/SelectMulti convention rather than a type:'single'|'multiple' prop (task 7.8b).",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "AlertDialogRoot",
+          "AlertDialogContent",
+          "AlertDialogTitle",
+          "AlertDialogDescription",
+          "AlertDialogActions",
+          "AlertDialogAction",
+          "AlertDialogCancel"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_escape_key",
+          "use_focus_trap",
+          "use_id_or",
+          "use_scroll_lock",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/alert_dialog.rs",
+        "adico_props": {
+          "AlertDialogActionProps": [
+            {
+              "name": "on_click",
+              "type": "Option<EventHandler<MouseEvent>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AlertDialogActionsProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AlertDialogCancelProps": [
+            {
+              "name": "on_click",
+              "type": "Option<EventHandler<MouseEvent>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AlertDialogContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AlertDialogDescriptionProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AlertDialogRootProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "default_open",
+              "type": "bool"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AlertDialogTitleProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "alert-dialog",
+        "name": "Alert Dialog",
+        "notes": "",
+        "status": "built"
+      },
+      {
+        "adico_primitive_file": null,
+        "adico_registry_item": null,
+        "name": "Autocomplete",
+        "notes": "Base-UI-parity tier target, task 7.9.",
+        "status": "not_started"
+      },
+      {
+        "adico_components": [
+          "Avatar",
+          "AvatarFallback",
+          "AvatarImage"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_id_or",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/avatar.rs",
+        "adico_props": {
+          "AvatarFallbackProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AvatarImageProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "src",
+              "type": "String"
+            },
+            {
+              "name": "alt",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ],
+          "AvatarProps": [
+            {
+              "name": "on_load",
+              "type": "Option<EventHandler<()>>"
+            },
+            {
+              "name": "on_error",
+              "type": "Option<EventHandler<()>>"
+            },
+            {
+              "name": "on_state_change",
+              "type": "Option<EventHandler<AvatarState>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "avatar",
+        "name": "Avatar",
+        "notes": "",
+        "status": "built"
+      },
+      {
+        "adico_primitive_file": null,
+        "adico_registry_item": "button",
+        "name": "Button",
+        "notes": "Native <button> semantics; no dedicated primitive needed, matching Base UI's own Button.",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Checkbox",
+          "CheckboxIndicator"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_controlled",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/checkbox.rs",
+        "adico_props": {
+          "CheckboxIndicator": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CheckboxProps": [
+            {
+              "name": "checked",
+              "type": "ReadSignal<Option<CheckboxState>>"
+            },
+            {
+              "name": "default_checked",
+              "type": "CheckboxState"
+            },
+            {
+              "name": "required",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "name",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "value",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "on_checked_change",
+              "type": "Callback<CheckboxState>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "checkbox",
+        "name": "Checkbox",
+        "notes": "",
+        "status": "built"
+      },
+      {
+        "adico_primitive_file": null,
+        "adico_registry_item": null,
+        "name": "Checkbox Group",
+        "notes": "Base-UI-parity tier target, task 7.9.",
+        "status": "not_started"
+      },
+      {
+        "adico_components": [
+          "Collapsible",
+          "CollapsibleContent",
+          "CollapsibleTrigger"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_controlled",
+          "use_id_or",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/collapsible.rs",
+        "adico_props": {
+          "CollapsibleContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CollapsibleProps": [
+            {
+              "name": "keep_mounted",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "default_open",
+              "type": "bool"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CollapsibleTriggerProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "collapsible",
+        "name": "Collapsible",
+        "notes": "",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Combobox",
+          "ComboboxMulti",
+          "ComboboxEmpty",
+          "ComboboxInput",
+          "ComboboxList",
+          "ComboboxOption",
+          "ComboboxItemIndicator"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_controlled",
+          "use_id_or",
+          "use_item",
+          "use_listbox_container",
+          "use_selectable_option",
+          "use_selectable_root",
+          "use_single_selectable_value",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/combobox/",
+        "adico_props": {
+          "ComboboxEmptyProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ComboboxInputProps": [
+            {
+              "name": "placeholder",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ],
+          "ComboboxItemIndicatorProps": [
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ComboboxListProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ComboboxMultiProps": [
+            {
+              "name": "values",
+              "type": "ReadSignal<Option<Vec<T>>>"
+            },
+            {
+              "name": "default_values",
+              "type": "Vec<T>"
+            },
+            {
+              "name": "on_values_change",
+              "type": "Callback<Vec<T>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "query",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "default_query",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "on_query_change",
+              "type": "Callback<String>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "filter",
+              "type": "Callback<(String, String), bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ComboboxOptionProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<T>"
+            },
+            {
+              "name": "text_value",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "aria_label",
+              "type": "Option<String>"
+            },
+            {
+              "name": "aria_roledescription",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ComboboxProps": [
+            {
+              "name": "value",
+              "type": "Option<ReadSignal<Option<T>>>"
+            },
+            {
+              "name": "default_value",
+              "type": "Option<T>"
+            },
+            {
+              "name": "on_value_change",
+              "type": "Callback<Option<T>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "query",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "default_query",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "on_query_change",
+              "type": "Callback<String>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "filter",
+              "type": "Callback<(String, String), bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "combobox",
+        "name": "Combobox",
+        "notes": "Multi-file module (combobox/components/*).",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "ContextMenu",
+          "ContextMenuTrigger",
+          "ContextMenuContent",
+          "ContextMenuItem"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_animated_open",
+          "use_collection_provider",
+          "use_controlled",
+          "use_id_or",
+          "use_item",
+          "use_long_press",
+          "use_outside_dismiss",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/context_menu.rs",
+        "adico_props": {
+          "ContextMenuContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ContextMenuItemProps": [
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "value",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "on_select",
+              "type": "Callback<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ContextMenuProps": [
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "bool"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ContextMenuTriggerProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "context-menu",
+        "name": "Context Menu",
+        "notes": "Flat, independently-implemented menu; not yet migrated onto the unified menu.rs primitive (task 7.8e).",
+        "status": "partial"
+      },
+      {
+        "adico_components": [
+          "DialogRoot",
+          "DialogContent",
+          "DialogTitle",
+          "DialogDescription"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_animated_open",
+          "use_controlled",
+          "use_escape_key",
+          "use_focus_trap",
+          "use_id_or",
+          "use_outside_dismiss",
+          "use_scroll_lock",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/dialog.rs",
+        "adico_props": {
+          "DialogContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "DialogDescriptionProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "DialogRootProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "is_modal",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "bool"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "DialogTitleProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "dialog",
+        "name": "Dialog",
+        "notes": "",
+        "status": "built"
+      },
+      {
+        "adico_primitive_file": null,
+        "adico_registry_item": "sheet",
+        "name": "Drawer",
+        "notes": "adico's 'Sheet' registry item is the shadcn/Base-UI Drawer equivalent; no dedicated primitive file.",
+        "status": "built"
+      },
+      {
+        "adico_primitive_file": null,
+        "adico_registry_item": null,
+        "name": "Field",
+        "notes": "Base-UI-parity tier target, task 7.9 (field semantics).",
+        "status": "not_started"
+      },
+      {
+        "adico_primitive_file": null,
+        "adico_registry_item": null,
+        "name": "Fieldset",
+        "notes": "Base-UI-parity tier target, task 7.9.",
+        "status": "not_started"
+      },
+      {
+        "adico_primitive_file": null,
+        "adico_registry_item": null,
+        "name": "Form",
+        "notes": "Base-UI-parity tier target, task 7.9. shadcn's own Form was found unportable (wave5-extras); Base UI's may differ, needs its own read.",
+        "status": "not_started"
+      },
+      {
+        "adico_primitive_file": null,
+        "adico_registry_item": "input",
+        "name": "Input",
+        "notes": "Native <input> semantics; no dedicated primitive needed.",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Menu",
+          "MenuTrigger",
+          "MenuContent",
+          "MenuItem",
+          "MenuCheckboxItem",
+          "MenuRadioGroup",
+          "MenuRadioItem",
+          "MenuGroup",
+          "MenuGroupLabel",
+          "MenuSeparator",
+          "MenuSubmenuRoot",
+          "MenuSubmenuTrigger"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_animated_open",
+          "use_collection_provider",
+          "use_controlled",
+          "use_id_or",
+          "use_item",
+          "use_layer",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/menu.rs",
+        "adico_props": {
+          "MenuCheckboxItemProps": [
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "checked",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_checked",
+              "type": "bool"
+            },
+            {
+              "name": "on_checked_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenuContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenuGroupLabel": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenuGroupProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenuItemProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<T>"
+            },
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_select",
+              "type": "Callback<T>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenuProps": [
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "bool"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenuRadioGroupProps": [
+            {
+              "name": "value",
+              "type": "Option<ReadSignal<Option<T>>>"
+            },
+            {
+              "name": "default_value",
+              "type": "Option<T>"
+            },
+            {
+              "name": "on_value_change",
+              "type": "Callback<T>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenuRadioItemProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<T>"
+            },
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenuSeparator": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ],
+          "MenuSubmenuRootProps": [
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "bool"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenuSubmenuTrigger": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenuTriggerProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": null,
+        "name": "Menu",
+        "notes": "Unified anatomy built (task 7.6a), but not yet composed on positioner::Positioner, not wired to use_typeahead, and not yet consumed by any registry item (task 7.8e).",
+        "status": "partial"
+      },
+      {
+        "adico_components": [
+          "Menubar",
+          "MenubarMenu",
+          "MenubarTrigger",
+          "MenubarContent",
+          "MenubarItem"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_animated_open",
+          "use_collection_provider",
+          "use_deferred_collection_focus",
+          "use_id_or",
+          "use_item",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/menubar.rs",
+        "adico_props": {
+          "MenubarContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenubarItemProps": [
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "value",
+              "type": "String"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_select",
+              "type": "Callback<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenubarMenuProps": [
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenubarProps": [
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenubarTriggerProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "menubar",
+        "name": "Menubar",
+        "notes": "Flat, independently-implemented; not yet migrated onto menu.rs (task 7.8e).",
+        "status": "partial"
+      },
+      {
+        "adico_primitive_file": null,
+        "adico_registry_item": null,
+        "name": "Meter",
+        "notes": "Base-UI-parity tier target, task 7.9.",
+        "status": "not_started"
+      },
+      {
+        "adico_primitive_file": null,
+        "adico_registry_item": null,
+        "name": "Navigation Menu",
+        "notes": "Base-UI-parity tier target, task 7.9.",
+        "status": "not_started"
+      },
+      {
+        "adico_primitive_file": null,
+        "adico_registry_item": null,
+        "name": "Number Field",
+        "notes": "Base-UI-parity tier target, task 7.9.",
+        "status": "not_started"
+      },
+      {
+        "adico_primitive_file": null,
+        "adico_registry_item": null,
+        "name": "OTP Field",
+        "notes": "Base-UI-parity tier target, task 7.9.",
+        "status": "not_started"
+      },
+      {
+        "adico_components": [
+          "PopoverRoot",
+          "PopoverContent",
+          "PopoverContentRendered",
+          "PopoverTrigger"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_animated_open",
+          "use_controlled",
+          "use_escape_key",
+          "use_focus_trap",
+          "use_id_or",
+          "use_outside_dismiss",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/popover.rs",
+        "adico_props": {
+          "PopoverContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "name": "side",
+              "type": "ContentSide"
+            },
+            {
+              "name": "align",
+              "type": "ContentAlign"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "PopoverContentRendered": [
+            {
+              "name": "id",
+              "type": "String"
+            },
+            {
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "name": "side",
+              "type": "ContentSide"
+            },
+            {
+              "name": "align",
+              "type": "ContentAlign"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "PopoverRootProps": [
+            {
+              "name": "is_modal",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "bool"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "PopoverTriggerProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "popover",
+        "name": "Popover",
+        "notes": "Composes positioner::Positioner for real collision-aware placement (task 7.8c); sideOffset/Arrow prop gaps vs shadcn remain.",
+        "status": "built"
+      },
+      {
+        "adico_primitive_file": null,
+        "adico_registry_item": null,
+        "name": "Preview Card",
+        "notes": "Base-UI-parity tier target, task 7.9 -- the original inspiration for this crate's shared-primitive redesign.",
+        "status": "not_started"
+      },
+      {
+        "adico_components": [
+          "Progress",
+          "ProgressIndicator"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [],
+        "adico_primitive_file": "packages/adico-primitives/src/progress.rs",
+        "adico_props": {
+          "ProgressIndicatorProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ProgressProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<Option<f64>>"
+            },
+            {
+              "name": "max",
+              "type": "ReadSignal<f64>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "progress",
+        "name": "Progress",
+        "notes": "",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "RadioGroup",
+          "RadioItem"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_collection_provider_with",
+          "use_controlled",
+          "use_effect_with_cleanup",
+          "use_item"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/radio_group.rs",
+        "adico_props": {
+          "RadioGroupProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "default_value",
+              "type": "String"
+            },
+            {
+              "name": "on_value_change",
+              "type": "Callback<String>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "required",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "name",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "horizontal",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "RadioItemProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "id",
+              "type": "Option<String>"
+            },
+            {
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "radio-group",
+        "name": "Radio",
+        "notes": "adico names it RadioGroup/RadioItem, matching Radix's own naming more than Base UI's bare 'Radio'.",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "ScrollArea"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [],
+        "adico_primitive_file": "packages/adico-primitives/src/scroll_area.rs",
+        "adico_props": {
+          "ScrollAreaProps": [
+            {
+              "name": "direction",
+              "type": "ReadSignal<ScrollDirection>"
+            },
+            {
+              "name": "always_show_scrollbars",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "scroll_type",
+              "type": "ReadSignal<ScrollType>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "scroll-area",
+        "name": "Scroll Area",
+        "notes": "Native-overflow/CSS toggle, not a custom-styled scrollbar-thumb sub-component.",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "SelectGroup",
+          "SelectGroupLabel",
+          "SelectList",
+          "SelectOption",
+          "SelectItemIndicator",
+          "Select",
+          "SelectMulti",
+          "SelectTrigger",
+          "SelectValue"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_controlled",
+          "use_effect",
+          "use_id_or",
+          "use_item",
+          "use_listbox_container",
+          "use_selectable_option",
+          "use_selectable_root",
+          "use_single_selectable_value",
+          "use_typeahead",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/select/",
+        "adico_props": {
+          "SelectGroupLabelProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SelectGroupProps": [
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SelectItemIndicatorProps": [
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SelectListProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SelectMultiProps": [
+            {
+              "name": "values",
+              "type": "ReadSignal<Option<Vec<T>>>"
+            },
+            {
+              "name": "default_values",
+              "type": "Vec<T>"
+            },
+            {
+              "name": "on_values_change",
+              "type": "Callback<Vec<T>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "name",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "typeahead_timeout",
+              "type": "ReadSignal<Duration>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SelectOptionProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<T>"
+            },
+            {
+              "name": "text_value",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "aria_label",
+              "type": "Option<String>"
+            },
+            {
+              "name": "aria_roledescription",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SelectProps": [
+            {
+              "name": "value",
+              "type": "Option<ReadSignal<Option<T>>>"
+            },
+            {
+              "name": "default_value",
+              "type": "Option<T>"
+            },
+            {
+              "name": "on_value_change",
+              "type": "Callback<Option<T>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "name",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "typeahead_timeout",
+              "type": "ReadSignal<Duration>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SelectTriggerProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SelectValueProps": [
+            {
+              "name": "placeholder",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ]
+        },
+        "adico_registry_item": "select",
+        "name": "Select",
+        "notes": "Multi-file module (select/components/*, select/context.rs, select/mod.rs).",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Separator"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [],
+        "adico_primitive_file": "packages/adico-primitives/src/separator.rs",
+        "adico_props": {
+          "SeparatorProps": [
+            {
+              "name": "horizontal",
+              "type": "bool"
+            },
+            {
+              "name": "decorative",
+              "type": "bool"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "separator",
+        "name": "Separator",
+        "notes": "",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Slider",
+          "RangeSlider",
+          "SliderTrack",
+          "SliderRange",
+          "SliderThumb"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_controlled",
+          "use_direction",
+          "use_move_interaction"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/slider.rs",
+        "adico_props": {
+          "RangeSliderProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<Option<Range<f64>>>"
+            },
+            {
+              "name": "default_value",
+              "type": "Range<f64>"
+            },
+            {
+              "name": "min",
+              "type": "ReadSignal<f64>"
+            },
+            {
+              "name": "max",
+              "type": "ReadSignal<f64>"
+            },
+            {
+              "name": "step",
+              "type": "ReadSignal<f64>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "horizontal",
+              "type": "bool"
+            },
+            {
+              "name": "inverted",
+              "type": "bool"
+            },
+            {
+              "name": "on_value_change",
+              "type": "Callback<Range<f64>>"
+            },
+            {
+              "name": "label",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SliderProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<Option<f64>>"
+            },
+            {
+              "name": "default_value",
+              "type": "f64"
+            },
+            {
+              "name": "min",
+              "type": "ReadSignal<f64>"
+            },
+            {
+              "name": "max",
+              "type": "ReadSignal<f64>"
+            },
+            {
+              "name": "step",
+              "type": "ReadSignal<f64>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "horizontal",
+              "type": "bool"
+            },
+            {
+              "name": "inverted",
+              "type": "bool"
+            },
+            {
+              "name": "on_value_change",
+              "type": "Callback<f64>"
+            },
+            {
+              "name": "label",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SliderRangeProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SliderThumbProps": [
+            {
+              "name": "index",
+              "type": "Option<usize>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SliderTrackProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "slider",
+        "name": "Slider",
+        "notes": "Pointer-drag on web is suspected non-functional (task 7.7 finding, unverified without a browser); keyboard control is tested and works.",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Switch",
+          "SwitchThumb"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_controlled"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/switch.rs",
+        "adico_props": {
+          "SwitchProps": [
+            {
+              "name": "checked",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_checked",
+              "type": "bool"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "required",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "name",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "value",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "on_checked_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SwitchThumbProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "switch",
+        "name": "Switch",
+        "notes": "",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Tabs",
+          "TabList",
+          "TabTrigger",
+          "TabContent"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_collection_provider",
+          "use_controlled",
+          "use_id_or",
+          "use_item",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/tabs.rs",
+        "adico_props": {
+          "TabContentProps": [
+            {
+              "name": "value",
+              "type": "String"
+            },
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "TabListProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "TabTriggerProps": [
+            {
+              "name": "value",
+              "type": "String"
+            },
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "id",
+              "type": "Option<String>"
+            },
+            {
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "TabsProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "default_value",
+              "type": "String"
+            },
+            {
+              "name": "on_value_change",
+              "type": "Callback<String>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "horizontal",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "tabs",
+        "name": "Tabs",
+        "notes": "",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "ToastProvider",
+          "ToastList",
+          "ToastListItem",
+          "Toast",
+          "ToastContent",
+          "ToastTitle",
+          "ToastDescription",
+          "ToastCloseButton"
+        ],
+        "adico_hooks_defined": [
+          "use_toast"
+        ],
+        "adico_hooks_used": [
+          "use_global_keydown_listener",
+          "use_portal",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/toast.rs",
+        "adico_props": {
+          "ToastCloseButtonProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ],
+          "ToastContentProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ToastDescriptionProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ],
+          "ToastListItemProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ToastListProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ToastProps": [
+            {
+              "name": "id",
+              "type": "usize"
+            },
+            {
+              "name": "index",
+              "type": "usize"
+            },
+            {
+              "name": "title",
+              "type": "String"
+            },
+            {
+              "name": "description",
+              "type": "Option<String>"
+            },
+            {
+              "name": "toast_type",
+              "type": "ToastType"
+            },
+            {
+              "name": "on_close",
+              "type": "Callback<MouseEvent>"
+            },
+            {
+              "name": "permanent",
+              "type": "bool"
+            },
+            {
+              "name": "duration",
+              "type": "Option<Duration>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ],
+          "ToastProviderProps": [
+            {
+              "name": "default_duration",
+              "type": "ReadSignal<Option<Duration>>"
+            },
+            {
+              "name": "max_toasts",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "render_toast",
+              "type": "Callback<ToastPropsWithOwner, Element>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ToastTitleProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ]
+        },
+        "adico_registry_item": "toast",
+        "name": "Toast",
+        "notes": "Its F6 focus-region shortcut uses the same long-lived document::eval listener pattern confirmed broken elsewhere (task 7.4d finding); likely non-functional on web, unverified.",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Toggle"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_controlled"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/toggle.rs",
+        "adico_props": {
+          "ToggleProps": [
+            {
+              "name": "pressed",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_pressed",
+              "type": "bool"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_pressed_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "onmounted",
+              "type": "Callback<Event<MountedData>>"
+            },
+            {
+              "name": "onfocus",
+              "type": "Callback<Event<FocusData>>"
+            },
+            {
+              "name": "onkeydown",
+              "type": "Callback<Event<KeyboardData>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "toggle",
+        "name": "Toggle",
+        "notes": "",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "ToggleGroup",
+          "ToggleItem"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_collection_provider",
+          "use_controlled",
+          "use_item"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/toggle_group.rs",
+        "adico_props": {
+          "ToggleGroupProps": [
+            {
+              "name": "default_pressed",
+              "type": "HashSet<usize>"
+            },
+            {
+              "name": "pressed",
+              "type": "ReadSignal<Option<HashSet<usize>>>"
+            },
+            {
+              "name": "on_pressed_change",
+              "type": "Callback<HashSet<usize>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "allow_multiple_pressed",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "horizontal",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ToggleItemProps": [
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "toggle-group",
+        "name": "Toggle Group",
+        "notes": "",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Toolbar",
+          "ToolbarButton",
+          "ToolbarSeparator"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_collection_provider",
+          "use_item"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/toolbar.rs",
+        "adico_props": {
+          "ToolbarButtonProps": [
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_click",
+              "type": "Callback<()>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ToolbarProps": [
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "horizontal",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "aria_label",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ToolbarSeparatorProps": [
+            {
+              "name": "horizontal",
+              "type": "Option<bool>"
+            },
+            {
+              "name": "decorative",
+              "type": "bool"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ]
+        },
+        "adico_registry_item": "toolbar",
+        "name": "Toolbar",
+        "notes": "",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Tooltip",
+          "TooltipTrigger",
+          "TooltipContent"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_animated_open",
+          "use_controlled",
+          "use_id_or",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/tooltip.rs",
+        "adico_props": {
+          "TooltipContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "side",
+              "type": "ContentSide"
+            },
+            {
+              "name": "align",
+              "type": "ContentAlign"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "TooltipProps": [
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "bool"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "TooltipTriggerProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "adico_registry_item": "tooltip",
+        "name": "Tooltip",
+        "notes": "Composes positioner::Positioner for real collision-aware placement (task 7.8c); TooltipProvider/sideOffset/Arrow gaps vs shadcn remain.",
+        "status": "built"
+      }
+    ],
+    "source": "https://base-ui.com/react/components",
+    "summary": {
+      "adico_only_extras": 10,
+      "components_built": 24,
+      "components_not_started": 10,
+      "components_partial": 3,
+      "total_upstream_components": 37,
+      "total_upstream_utils": 4
+    },
+    "upstream_drift_check": {
+      "added_upstream": [],
+      "checked_at": "2026-08-31T06:38:02Z",
+      "removed_upstream": []
+    },
+    "utils": [
+      {
+        "adico_primitive_file": null,
+        "name": "CSP Provider",
+        "notes": "React inline-style injection concern; no Dioxus/Tailwind equivalent (design.md §8a).",
+        "status": "not_applicable"
+      },
+      {
+        "adico_hooks_defined": [
+          "use_direction"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/direction.rs",
+        "name": "Direction Provider",
+        "notes": "Direction/DirectionProvider/use_direction (task 7.3a).",
+        "status": "built"
+      },
+      {
+        "adico_primitive_file": null,
+        "name": "mergeProps",
+        "notes": "Maps to #[props(extends = GlobalAttributes)] + Element composition, already this crate's established pattern (design.md §8a).",
+        "status": "not_applicable"
+      },
+      {
+        "adico_primitive_file": null,
+        "name": "useRender",
+        "notes": "Same mapping as mergeProps.",
+        "status": "not_applicable"
+      }
+    ]
+  },
+  "dioxus_primitives": {
+    "adico_only_extras": [
+      "direction",
+      "gesture",
+      "layer",
+      "menu",
+      "positioner",
+      "scroll_lock",
+      "theme_mode",
+      "time",
+      "typeahead"
+    ],
+    "modules": [
+      {
+        "adico_components": [
+          "Accordion",
+          "AccordionMulti",
+          "AccordionItem",
+          "AccordionContent",
+          "AccordionTrigger"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_animated_open",
+          "use_collection_provider",
+          "use_id_or",
+          "use_item",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/accordion.rs",
+        "adico_props": {
+          "AccordionContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AccordionItemProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_change",
+              "type": "Callback<bool,()>"
+            },
+            {
+              "name": "on_trigger_click",
+              "type": "Callback"
+            },
+            {
+              "name": "index",
+              "type": "usize"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AccordionMultiProps": [
+            {
+              "name": "id",
+              "type": "Option<String>"
+            },
+            {
+              "name": "values",
+              "type": "ReadSignal<Option<Vec<String>>>"
+            },
+            {
+              "name": "default_values",
+              "type": "Vec<String>"
+            },
+            {
+              "name": "on_values_change",
+              "type": "Callback<Vec<String>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "horizontal",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AccordionProps": [
+            {
+              "name": "id",
+              "type": "Option<String>"
+            },
+            {
+              "name": "value",
+              "type": "Option<ReadSignal<Option<String>>>"
+            },
+            {
+              "name": "default_value",
+              "type": "Option<String>"
+            },
+            {
+              "name": "on_value_change",
+              "type": "Callback<Option<String>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "collapsible",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "horizontal",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AccordionTriggerProps": [
+            {
+              "name": "id",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "accordion",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "AlertDialogRoot",
+          "AlertDialogContent",
+          "AlertDialogTitle",
+          "AlertDialogDescription",
+          "AlertDialogActions",
+          "AlertDialogAction",
+          "AlertDialogCancel"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_escape_key",
+          "use_focus_trap",
+          "use_id_or",
+          "use_scroll_lock",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/alert_dialog.rs",
+        "adico_props": {
+          "AlertDialogActionProps": [
+            {
+              "name": "on_click",
+              "type": "Option<EventHandler<MouseEvent>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AlertDialogActionsProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AlertDialogCancelProps": [
+            {
+              "name": "on_click",
+              "type": "Option<EventHandler<MouseEvent>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AlertDialogContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AlertDialogDescriptionProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AlertDialogRootProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "default_open",
+              "type": "bool"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AlertDialogTitleProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "alert_dialog",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "AspectRatio"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [],
+        "adico_primitive_file": "packages/adico-primitives/src/aspect_ratio.rs",
+        "adico_props": {
+          "AspectRatioProps": [
+            {
+              "name": "ratio",
+              "type": "f64"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "aspect_ratio",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Avatar",
+          "AvatarFallback",
+          "AvatarImage"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_id_or",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/avatar.rs",
+        "adico_props": {
+          "AvatarFallbackProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AvatarImageProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "src",
+              "type": "String"
+            },
+            {
+              "name": "alt",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ],
+          "AvatarProps": [
+            {
+              "name": "on_load",
+              "type": "Option<EventHandler<()>>"
+            },
+            {
+              "name": "on_error",
+              "type": "Option<EventHandler<()>>"
+            },
+            {
+              "name": "on_state_change",
+              "type": "Option<EventHandler<AvatarState>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "avatar",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Calendar",
+          "RangeCalendar",
+          "CalendarView",
+          "CalendarHeader",
+          "CalendarNavigation",
+          "CalendarPreviousMonthButton",
+          "CalendarNextMonthButton",
+          "CalendarMonthTitle",
+          "CalendarGrid",
+          "CalendarGridRoot",
+          "CalendarGridHead",
+          "CalendarGridHeaderRow",
+          "CalendarGridDayHeader",
+          "CalendarGridBody",
+          "CalendarGridWeek",
+          "CalendarGridCell",
+          "CalendarSelectMonth",
+          "CalendarSelectMonthSelect",
+          "CalendarSelectMonthOption",
+          "CalendarSelectMonthValue",
+          "CalendarSelectYear",
+          "CalendarSelectYearSelect",
+          "CalendarSelectYearOption",
+          "CalendarSelectYearValue",
+          "CalendarDay"
+        ],
+        "adico_hooks_defined": [
+          "use_calendar_grid"
+        ],
+        "adico_hooks_used": [
+          "use_effect_cleanup"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/calendar.rs",
+        "adico_props": {
+          "CalendarDayProps": [
+            {
+              "name": "date",
+              "type": "Date"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ],
+          "CalendarGridBodyProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CalendarGridCellProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CalendarGridDayHeaderProps": [
+            {
+              "name": "weekday",
+              "type": "Weekday"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ],
+          "CalendarGridHeadProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CalendarGridHeaderRowProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CalendarGridProps": [
+            {
+              "name": "id",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ],
+          "CalendarGridRootProps": [
+            {
+              "name": "id",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CalendarGridWeekProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CalendarHeaderProps": [
+            {
+              "name": "id",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CalendarMonthTitleProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ],
+          "CalendarNavigationProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CalendarNextMonthButtonProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CalendarPreviousMonthButtonProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CalendarProps": [
+            {
+              "name": "selected_date",
+              "type": "ReadSignal<Option<Date>>"
+            },
+            {
+              "name": "on_date_change",
+              "type": "Callback<Option<Date>>"
+            },
+            {
+              "name": "on_format_weekday",
+              "type": "Callback<Weekday, String>"
+            },
+            {
+              "name": "on_format_month",
+              "type": "Callback<Month, String>"
+            },
+            {
+              "name": "view_date",
+              "type": "ReadSignal<Date>"
+            },
+            {
+              "name": "today",
+              "type": "Date"
+            },
+            {
+              "name": "on_view_change",
+              "type": "Callback<Date>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "first_day_of_week",
+              "type": "ReadSignal<Weekday>"
+            },
+            {
+              "name": "min_date",
+              "type": "Date"
+            },
+            {
+              "name": "max_date",
+              "type": "Date"
+            },
+            {
+              "name": "disabled_ranges",
+              "type": "ReadSignal<Vec<DateRange>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CalendarSelectMonthOptionProps": [
+            {
+              "name": "month",
+              "type": "Month"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ],
+          "CalendarSelectMonthProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CalendarSelectMonthSelectProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ],
+          "CalendarSelectMonthValueProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CalendarSelectYearOptionProps": [
+            {
+              "name": "year",
+              "type": "i32"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ],
+          "CalendarSelectYearProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CalendarSelectYearSelectProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ],
+          "CalendarSelectYearValueProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CalendarViewProps": [
+            {
+              "name": "offset",
+              "type": "Option<u8>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "RangeCalendarProps": [
+            {
+              "name": "selected_range",
+              "type": "ReadSignal<Option<DateRange>>"
+            },
+            {
+              "name": "on_range_change",
+              "type": "Callback<Option<DateRange>>"
+            },
+            {
+              "name": "on_format_weekday",
+              "type": "Callback<Weekday, String>"
+            },
+            {
+              "name": "on_format_month",
+              "type": "Callback<Month, String>"
+            },
+            {
+              "name": "view_date",
+              "type": "ReadSignal<Date>"
+            },
+            {
+              "name": "today",
+              "type": "Date"
+            },
+            {
+              "name": "on_view_change",
+              "type": "Callback<Date>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "first_day_of_week",
+              "type": "ReadSignal<Weekday>"
+            },
+            {
+              "name": "min_date",
+              "type": "Date"
+            },
+            {
+              "name": "max_date",
+              "type": "Date"
+            },
+            {
+              "name": "disabled_ranges",
+              "type": "ReadSignal<Vec<DateRange>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "calendar",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Checkbox",
+          "CheckboxIndicator"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_controlled",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/checkbox.rs",
+        "adico_props": {
+          "CheckboxIndicator": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CheckboxProps": [
+            {
+              "name": "checked",
+              "type": "ReadSignal<Option<CheckboxState>>"
+            },
+            {
+              "name": "default_checked",
+              "type": "CheckboxState"
+            },
+            {
+              "name": "required",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "name",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "value",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "on_checked_change",
+              "type": "Callback<CheckboxState>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "checkbox",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Collapsible",
+          "CollapsibleContent",
+          "CollapsibleTrigger"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_controlled",
+          "use_id_or",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/collapsible.rs",
+        "adico_props": {
+          "CollapsibleContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CollapsibleProps": [
+            {
+              "name": "keep_mounted",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "default_open",
+              "type": "bool"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "CollapsibleTriggerProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "collapsible",
+        "status": "built"
+      },
+      {
+        "adico_components": [],
+        "adico_hooks_defined": [
+          "use_collection_provider",
+          "use_collection_provider_with",
+          "use_deferred_collection_focus",
+          "use_item"
+        ],
+        "adico_hooks_used": [
+          "use_effect_cleanup"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/collection.rs",
+        "adico_props": {},
+        "module": "collection",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "ColorPicker",
+          "ColorArea",
+          "AreaTrack",
+          "AreaThumb",
+          "AreaThumbSaturationInput",
+          "AreaThumbValueInput"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_direction",
+          "use_move_interaction"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/color_picker.rs",
+        "adico_props": {
+          "AreaThumbProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AreaThumbSaturationInputProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ],
+          "AreaThumbValueInputProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ],
+          "AreaTrackProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ColorAreaProps": [
+            {
+              "name": "step",
+              "type": "ReadSignal<f64>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ColorPickerProps": [
+            {
+              "name": "color",
+              "type": "ReadSignal<Hsv<encoding::Srgb, f64>>"
+            },
+            {
+              "name": "on_color_change",
+              "type": "Callback<Hsv<encoding::Srgb, f64>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "color_picker",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Combobox",
+          "ComboboxMulti",
+          "ComboboxEmpty",
+          "ComboboxInput",
+          "ComboboxList",
+          "ComboboxOption",
+          "ComboboxItemIndicator"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_controlled",
+          "use_id_or",
+          "use_item",
+          "use_listbox_container",
+          "use_selectable_option",
+          "use_selectable_root",
+          "use_single_selectable_value",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/combobox/",
+        "adico_props": {
+          "ComboboxEmptyProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ComboboxInputProps": [
+            {
+              "name": "placeholder",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ],
+          "ComboboxItemIndicatorProps": [
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ComboboxListProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ComboboxMultiProps": [
+            {
+              "name": "values",
+              "type": "ReadSignal<Option<Vec<T>>>"
+            },
+            {
+              "name": "default_values",
+              "type": "Vec<T>"
+            },
+            {
+              "name": "on_values_change",
+              "type": "Callback<Vec<T>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "query",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "default_query",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "on_query_change",
+              "type": "Callback<String>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "filter",
+              "type": "Callback<(String, String), bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ComboboxOptionProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<T>"
+            },
+            {
+              "name": "text_value",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "aria_label",
+              "type": "Option<String>"
+            },
+            {
+              "name": "aria_roledescription",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ComboboxProps": [
+            {
+              "name": "value",
+              "type": "Option<ReadSignal<Option<T>>>"
+            },
+            {
+              "name": "default_value",
+              "type": "Option<T>"
+            },
+            {
+              "name": "on_value_change",
+              "type": "Callback<Option<T>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "query",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "default_query",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "on_query_change",
+              "type": "Callback<String>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "filter",
+              "type": "Callback<(String, String), bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "combobox",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "ContextMenu",
+          "ContextMenuTrigger",
+          "ContextMenuContent",
+          "ContextMenuItem"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_animated_open",
+          "use_collection_provider",
+          "use_controlled",
+          "use_id_or",
+          "use_item",
+          "use_long_press",
+          "use_outside_dismiss",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/context_menu.rs",
+        "adico_props": {
+          "ContextMenuContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ContextMenuItemProps": [
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "value",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "on_select",
+              "type": "Callback<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ContextMenuProps": [
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "bool"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ContextMenuTriggerProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "context_menu",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "DatePicker",
+          "DateRangePicker",
+          "DatePickerPopover",
+          "DatePickerCalendar",
+          "DateRangePickerCalendar",
+          "DatePickerYearSegment",
+          "DatePickerMonthSegment",
+          "DatePickerDaySegment",
+          "DatePickerSeparator",
+          "DatePickerInputValue",
+          "DateRangePickerInputValue",
+          "DateRangePickerStartValue",
+          "DateRangePickerEndValue",
+          "DatePickerInput",
+          "DateRangePickerInput"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_collection_provider",
+          "use_item",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/date_picker.rs",
+        "adico_props": {
+          "DatePickerCalendarProps": [
+            {
+              "name": "on_format_weekday",
+              "type": "Callback<Weekday, String>"
+            },
+            {
+              "name": "on_format_month",
+              "type": "Callback<Month, String>"
+            },
+            {
+              "name": "view_date",
+              "type": "ReadSignal<Date>"
+            },
+            {
+              "name": "today",
+              "type": "Date"
+            },
+            {
+              "name": "on_view_change",
+              "type": "Callback<Date>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "first_day_of_week",
+              "type": "Weekday"
+            },
+            {
+              "name": "min_date",
+              "type": "Date"
+            },
+            {
+              "name": "max_date",
+              "type": "Date"
+            },
+            {
+              "name": "disabled_ranges",
+              "type": "ReadSignal<Vec<DateRange>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            },
+            {
+              "name": "calendar",
+              "type": "fn(T) ->Element"
+            }
+          ],
+          "DatePickerDaySegmentProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ],
+          "DatePickerInputProps": [
+            {
+              "name": "on_format_day_placeholder",
+              "type": "Callback<(), String>"
+            },
+            {
+              "name": "on_format_month_placeholder",
+              "type": "Callback<(), String>"
+            },
+            {
+              "name": "on_format_year_placeholder",
+              "type": "Callback<(), String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ],
+          "DatePickerInputValueProps": [
+            {
+              "name": "on_format_day_placeholder",
+              "type": "Callback<(), String>"
+            },
+            {
+              "name": "on_format_month_placeholder",
+              "type": "Callback<(), String>"
+            },
+            {
+              "name": "on_format_year_placeholder",
+              "type": "Callback<(), String>"
+            },
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ],
+          "DatePickerMonthSegmentProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ],
+          "DatePickerPopoverProps": [
+            {
+              "name": "is_modal",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "bool"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            },
+            {
+              "name": "popover_root",
+              "type": "fn(PopoverRootProps) ->Element"
+            }
+          ],
+          "DatePickerProps": [
+            {
+              "name": "on_value_change",
+              "type": "Callback<Option<Date>>"
+            },
+            {
+              "name": "selected_date",
+              "type": "ReadSignal<Option<Date>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "read_only",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "min_date",
+              "type": "Date"
+            },
+            {
+              "name": "max_date",
+              "type": "Date"
+            },
+            {
+              "name": "disabled_ranges",
+              "type": "ReadSignal<Vec<DateRange>>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "DatePickerSeparatorProps": [
+            {
+              "name": "symbol",
+              "type": "char"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ],
+          "DatePickerYearSegmentProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ],
+          "DateRangePickerEndValueProps": [
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ],
+          "DateRangePickerInputValueProps": [
+            {
+              "name": "on_format_day_placeholder",
+              "type": "Callback<(), String>"
+            },
+            {
+              "name": "on_format_month_placeholder",
+              "type": "Callback<(), String>"
+            },
+            {
+              "name": "on_format_year_placeholder",
+              "type": "Callback<(), String>"
+            },
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ],
+          "DateRangePickerProps": [
+            {
+              "name": "on_range_change",
+              "type": "Callback<Option<DateRange>>"
+            },
+            {
+              "name": "selected_range",
+              "type": "ReadSignal<Option<DateRange>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "read_only",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "min_date",
+              "type": "Date"
+            },
+            {
+              "name": "max_date",
+              "type": "Date"
+            },
+            {
+              "name": "disabled_ranges",
+              "type": "ReadSignal<Vec<DateRange>>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "DateRangePickerStartValueProps": [
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ]
+        },
+        "module": "date_picker",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "DialogRoot",
+          "DialogContent",
+          "DialogTitle",
+          "DialogDescription"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_animated_open",
+          "use_controlled",
+          "use_escape_key",
+          "use_focus_trap",
+          "use_id_or",
+          "use_outside_dismiss",
+          "use_scroll_lock",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/dialog.rs",
+        "adico_props": {
+          "DialogContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "DialogDescriptionProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "DialogRootProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "is_modal",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "bool"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "DialogTitleProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "dialog",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "DragAndDropList",
+          "DragAndDropListItems",
+          "DragAndDropInstructions",
+          "DragAndDropLiveRegion",
+          "DragAndDropListItem",
+          "DragAndDropDropIndicator"
+        ],
+        "adico_hooks_defined": [
+          "use_drag_and_drop_list_items"
+        ],
+        "adico_hooks_used": [
+          "use_collection_provider",
+          "use_item"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/drag_and_drop_list.rs",
+        "adico_props": {
+          "DragAndDropDropIndicatorProps": [
+            {
+              "name": "index",
+              "type": "usize"
+            },
+            {
+              "name": "position",
+              "type": "& 'static str"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ],
+          "DragAndDropInstructionsProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ],
+          "DragAndDropListItemProps": [
+            {
+              "name": "index",
+              "type": "usize"
+            },
+            {
+              "name": "item_key",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "DragAndDropListItemsProps": [
+            {
+              "name": "aria_label",
+              "type": "String"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ],
+          "DragAndDropListProps": [
+            {
+              "name": "items",
+              "type": "Vec<Element>"
+            },
+            {
+              "name": "aria_label",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ],
+          "DragAndDropLiveRegionProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ]
+        },
+        "module": "drag_and_drop_list",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "DropdownMenu",
+          "DropdownMenuTrigger",
+          "DropdownMenuContent",
+          "DropdownMenuItem"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_animated_open",
+          "use_collection_provider",
+          "use_controlled",
+          "use_id_or",
+          "use_item",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/dropdown_menu.rs",
+        "adico_props": {
+          "DropdownMenuContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "DropdownMenuItemProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<T>"
+            },
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_select",
+              "type": "Callback<T>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "DropdownMenuProps": [
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "bool"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "DropdownMenuTriggerProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "dropdown_menu",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "HoverCard",
+          "HoverCardTrigger",
+          "HoverCardContent"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_animated_open",
+          "use_controlled",
+          "use_id_or",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/hover_card.rs",
+        "adico_props": {
+          "HoverCardContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "side",
+              "type": "ContentSide"
+            },
+            {
+              "name": "align",
+              "type": "ContentAlign"
+            },
+            {
+              "name": "force_mount",
+              "type": "bool"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "HoverCardProps": [
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "bool"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "HoverCardTriggerProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "hover_card",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Label"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [],
+        "adico_primitive_file": "packages/adico-primitives/src/label.rs",
+        "adico_props": {
+          "LabelProps": [
+            {
+              "name": "html_for",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "label",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "ListboxItemIndicator"
+        ],
+        "adico_hooks_defined": [
+          "use_listbox_container",
+          "use_listbox_id",
+          "use_listbox_option",
+          "use_listbox_render"
+        ],
+        "adico_hooks_used": [
+          "use_animated_open",
+          "use_effect",
+          "use_effect_cleanup",
+          "use_id_or",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/listbox.rs",
+        "adico_props": {
+          "ListboxItemIndicator": [
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "listbox",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Menubar",
+          "MenubarMenu",
+          "MenubarTrigger",
+          "MenubarContent",
+          "MenubarItem"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_animated_open",
+          "use_collection_provider",
+          "use_deferred_collection_focus",
+          "use_id_or",
+          "use_item",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/menubar.rs",
+        "adico_props": {
+          "MenubarContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenubarItemProps": [
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "value",
+              "type": "String"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_select",
+              "type": "Callback<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenubarMenuProps": [
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenubarProps": [
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "MenubarTriggerProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "menubar",
+        "status": "built"
+      },
+      {
+        "adico_components": [],
+        "adico_hooks_defined": [
+          "use_move_interaction"
+        ],
+        "adico_hooks_used": [],
+        "adico_primitive_file": "packages/adico-primitives/src/move_interaction.rs",
+        "adico_props": {},
+        "module": "move_interaction",
+        "status": "built"
+      },
+      {
+        "adico_primitive_file": null,
+        "module": "navbar",
+        "notes": "Out of M3 scope by its own classification (NEEDS_PARITY_UPDATES, not \"suitable for current reuse\"); see docs/adico/m3-acceptance.md.",
+        "status": "not_started"
+      },
+      {
+        "adico_components": [],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [],
+        "adico_primitive_file": "packages/adico-primitives/src/pointer.rs",
+        "adico_props": {},
+        "module": "pointer",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "PopoverRoot",
+          "PopoverContent",
+          "PopoverContentRendered",
+          "PopoverTrigger"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_animated_open",
+          "use_controlled",
+          "use_escape_key",
+          "use_focus_trap",
+          "use_id_or",
+          "use_outside_dismiss",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/popover.rs",
+        "adico_props": {
+          "PopoverContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "name": "side",
+              "type": "ContentSide"
+            },
+            {
+              "name": "align",
+              "type": "ContentAlign"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "PopoverContentRendered": [
+            {
+              "name": "id",
+              "type": "String"
+            },
+            {
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "name": "side",
+              "type": "ContentSide"
+            },
+            {
+              "name": "align",
+              "type": "ContentAlign"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "PopoverRootProps": [
+            {
+              "name": "is_modal",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "bool"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "PopoverTriggerProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "popover",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "PortalIn",
+          "PortalOut"
+        ],
+        "adico_hooks_defined": [
+          "use_portal"
+        ],
+        "adico_hooks_used": [
+          "use_effect_cleanup"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/portal.rs",
+        "adico_props": {
+          "PortalIn": [
+            {
+              "name": "portal",
+              "type": "PortalId"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "PortalOut": [
+            {
+              "name": "portal",
+              "type": "PortalId"
+            }
+          ]
+        },
+        "module": "portal",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Progress",
+          "ProgressIndicator"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [],
+        "adico_primitive_file": "packages/adico-primitives/src/progress.rs",
+        "adico_props": {
+          "ProgressIndicatorProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ProgressProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<Option<f64>>"
+            },
+            {
+              "name": "max",
+              "type": "ReadSignal<f64>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "progress",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "RadioGroup",
+          "RadioItem"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_collection_provider_with",
+          "use_controlled",
+          "use_effect_with_cleanup",
+          "use_item"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/radio_group.rs",
+        "adico_props": {
+          "RadioGroupProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "default_value",
+              "type": "String"
+            },
+            {
+              "name": "on_value_change",
+              "type": "Callback<String>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "required",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "name",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "horizontal",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "RadioItemProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "id",
+              "type": "Option<String>"
+            },
+            {
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "radio_group",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "ScrollArea"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [],
+        "adico_primitive_file": "packages/adico-primitives/src/scroll_area.rs",
+        "adico_props": {
+          "ScrollAreaProps": [
+            {
+              "name": "direction",
+              "type": "ReadSignal<ScrollDirection>"
+            },
+            {
+              "name": "always_show_scrollbars",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "scroll_type",
+              "type": "ReadSignal<ScrollType>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "scroll_area",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "SelectGroup",
+          "SelectGroupLabel",
+          "SelectList",
+          "SelectOption",
+          "SelectItemIndicator",
+          "Select",
+          "SelectMulti",
+          "SelectTrigger",
+          "SelectValue"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_controlled",
+          "use_effect",
+          "use_id_or",
+          "use_item",
+          "use_listbox_container",
+          "use_selectable_option",
+          "use_selectable_root",
+          "use_single_selectable_value",
+          "use_typeahead",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/select/",
+        "adico_props": {
+          "SelectGroupLabelProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SelectGroupProps": [
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SelectItemIndicatorProps": [
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SelectListProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SelectMultiProps": [
+            {
+              "name": "values",
+              "type": "ReadSignal<Option<Vec<T>>>"
+            },
+            {
+              "name": "default_values",
+              "type": "Vec<T>"
+            },
+            {
+              "name": "on_values_change",
+              "type": "Callback<Vec<T>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "name",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "typeahead_timeout",
+              "type": "ReadSignal<Duration>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SelectOptionProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<T>"
+            },
+            {
+              "name": "text_value",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "aria_label",
+              "type": "Option<String>"
+            },
+            {
+              "name": "aria_roledescription",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SelectProps": [
+            {
+              "name": "value",
+              "type": "Option<ReadSignal<Option<T>>>"
+            },
+            {
+              "name": "default_value",
+              "type": "Option<T>"
+            },
+            {
+              "name": "on_value_change",
+              "type": "Callback<Option<T>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "name",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "typeahead_timeout",
+              "type": "ReadSignal<Duration>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SelectTriggerProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SelectValueProps": [
+            {
+              "name": "placeholder",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ]
+        },
+        "module": "select",
+        "status": "built"
+      },
+      {
+        "adico_components": [],
+        "adico_hooks_defined": [
+          "use_selectable_option",
+          "use_selectable_root",
+          "use_single_selectable_value"
+        ],
+        "adico_hooks_used": [
+          "use_collection_provider",
+          "use_controlled",
+          "use_listbox_option"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/selectable.rs",
+        "adico_props": {},
+        "module": "selectable",
+        "status": "built"
+      },
+      {
+        "adico_components": [],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [],
+        "adico_primitive_file": "packages/adico-primitives/src/selection.rs",
+        "adico_props": {},
+        "module": "selection",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Separator"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [],
+        "adico_primitive_file": "packages/adico-primitives/src/separator.rs",
+        "adico_props": {
+          "SeparatorProps": [
+            {
+              "name": "horizontal",
+              "type": "bool"
+            },
+            {
+              "name": "decorative",
+              "type": "bool"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "separator",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Slider",
+          "RangeSlider",
+          "SliderTrack",
+          "SliderRange",
+          "SliderThumb"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_controlled",
+          "use_direction",
+          "use_move_interaction"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/slider.rs",
+        "adico_props": {
+          "RangeSliderProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<Option<Range<f64>>>"
+            },
+            {
+              "name": "default_value",
+              "type": "Range<f64>"
+            },
+            {
+              "name": "min",
+              "type": "ReadSignal<f64>"
+            },
+            {
+              "name": "max",
+              "type": "ReadSignal<f64>"
+            },
+            {
+              "name": "step",
+              "type": "ReadSignal<f64>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "horizontal",
+              "type": "bool"
+            },
+            {
+              "name": "inverted",
+              "type": "bool"
+            },
+            {
+              "name": "on_value_change",
+              "type": "Callback<Range<f64>>"
+            },
+            {
+              "name": "label",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SliderProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<Option<f64>>"
+            },
+            {
+              "name": "default_value",
+              "type": "f64"
+            },
+            {
+              "name": "min",
+              "type": "ReadSignal<f64>"
+            },
+            {
+              "name": "max",
+              "type": "ReadSignal<f64>"
+            },
+            {
+              "name": "step",
+              "type": "ReadSignal<f64>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "horizontal",
+              "type": "bool"
+            },
+            {
+              "name": "inverted",
+              "type": "bool"
+            },
+            {
+              "name": "on_value_change",
+              "type": "Callback<f64>"
+            },
+            {
+              "name": "label",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SliderRangeProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SliderThumbProps": [
+            {
+              "name": "index",
+              "type": "Option<usize>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SliderTrackProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "slider",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Switch",
+          "SwitchThumb"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_controlled"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/switch.rs",
+        "adico_props": {
+          "SwitchProps": [
+            {
+              "name": "checked",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_checked",
+              "type": "bool"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "required",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "name",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "value",
+              "type": "ReadSignal<String>"
+            },
+            {
+              "name": "on_checked_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "SwitchThumbProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "switch",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Tabs",
+          "TabList",
+          "TabTrigger",
+          "TabContent"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_collection_provider",
+          "use_controlled",
+          "use_id_or",
+          "use_item",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/tabs.rs",
+        "adico_props": {
+          "TabContentProps": [
+            {
+              "name": "value",
+              "type": "String"
+            },
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "TabListProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "TabTriggerProps": [
+            {
+              "name": "value",
+              "type": "String"
+            },
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "id",
+              "type": "Option<String>"
+            },
+            {
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "TabsProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "default_value",
+              "type": "String"
+            },
+            {
+              "name": "on_value_change",
+              "type": "Callback<String>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "horizontal",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "tabs",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "TagGroup",
+          "TagGroupMulti",
+          "TagGroupLabel",
+          "TagList",
+          "TagGroupEmpty",
+          "TagOption",
+          "TagRemoveButton"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_collection_provider",
+          "use_controlled",
+          "use_effect_cleanup",
+          "use_effect_with_cleanup",
+          "use_id_or",
+          "use_item",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/tag_group.rs",
+        "adico_props": {
+          "TagGroupEmptyProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "TagGroupLabelProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "TagGroupMultiProps": [
+            {
+              "name": "values",
+              "type": "ReadSignal<Option<Vec<T>>>"
+            },
+            {
+              "name": "default_values",
+              "type": "Vec<T>"
+            },
+            {
+              "name": "on_values_change",
+              "type": "Callback<Vec<T>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "selectable",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "allow_empty_selection",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "escape_clears_selection",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "TagGroupProps": [
+            {
+              "name": "value",
+              "type": "Option<ReadSignal<Option<T>>>"
+            },
+            {
+              "name": "default_value",
+              "type": "Option<T>"
+            },
+            {
+              "name": "on_value_change",
+              "type": "Callback<Option<T>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "selectable",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "allow_empty_selection",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "escape_clears_selection",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "TagListProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "TagOptionProps": [
+            {
+              "name": "value",
+              "type": "ReadSignal<T>"
+            },
+            {
+              "name": "text_value",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "TagRemoveButton": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "tag_group",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "ToastProvider",
+          "ToastList",
+          "ToastListItem",
+          "Toast",
+          "ToastContent",
+          "ToastTitle",
+          "ToastDescription",
+          "ToastCloseButton"
+        ],
+        "adico_hooks_defined": [
+          "use_toast"
+        ],
+        "adico_hooks_used": [
+          "use_global_keydown_listener",
+          "use_portal",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/toast.rs",
+        "adico_props": {
+          "ToastCloseButtonProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ],
+          "ToastContentProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ToastDescriptionProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ],
+          "ToastListItemProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ToastListProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ToastProps": [
+            {
+              "name": "id",
+              "type": "usize"
+            },
+            {
+              "name": "index",
+              "type": "usize"
+            },
+            {
+              "name": "title",
+              "type": "String"
+            },
+            {
+              "name": "description",
+              "type": "Option<String>"
+            },
+            {
+              "name": "toast_type",
+              "type": "ToastType"
+            },
+            {
+              "name": "on_close",
+              "type": "Callback<MouseEvent>"
+            },
+            {
+              "name": "permanent",
+              "type": "bool"
+            },
+            {
+              "name": "duration",
+              "type": "Option<Duration>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ],
+          "ToastProviderProps": [
+            {
+              "name": "default_duration",
+              "type": "ReadSignal<Option<Duration>>"
+            },
+            {
+              "name": "max_toasts",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "render_toast",
+              "type": "Callback<ToastPropsWithOwner, Element>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ToastTitleProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Option<Element>"
+            }
+          ]
+        },
+        "module": "toast",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Toggle"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_controlled"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/toggle.rs",
+        "adico_props": {
+          "ToggleProps": [
+            {
+              "name": "pressed",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_pressed",
+              "type": "bool"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_pressed_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "onmounted",
+              "type": "Callback<Event<MountedData>>"
+            },
+            {
+              "name": "onfocus",
+              "type": "Callback<Event<FocusData>>"
+            },
+            {
+              "name": "onkeydown",
+              "type": "Callback<Event<KeyboardData>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "toggle",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "ToggleGroup",
+          "ToggleItem"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_collection_provider",
+          "use_controlled",
+          "use_item"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/toggle_group.rs",
+        "adico_props": {
+          "ToggleGroupProps": [
+            {
+              "name": "default_pressed",
+              "type": "HashSet<usize>"
+            },
+            {
+              "name": "pressed",
+              "type": "ReadSignal<Option<HashSet<usize>>>"
+            },
+            {
+              "name": "on_pressed_change",
+              "type": "Callback<HashSet<usize>>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "allow_multiple_pressed",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "horizontal",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "roving_loop",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ToggleItemProps": [
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "toggle_group",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Toolbar",
+          "ToolbarButton",
+          "ToolbarSeparator"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_collection_provider",
+          "use_item"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/toolbar.rs",
+        "adico_props": {
+          "ToolbarButtonProps": [
+            {
+              "name": "index",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "on_click",
+              "type": "Callback<()>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ToolbarProps": [
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "horizontal",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "aria_label",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ToolbarSeparatorProps": [
+            {
+              "name": "horizontal",
+              "type": "Option<bool>"
+            },
+            {
+              "name": "decorative",
+              "type": "bool"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ]
+        },
+        "module": "toolbar",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "Tooltip",
+          "TooltipTrigger",
+          "TooltipContent"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [
+          "use_animated_open",
+          "use_controlled",
+          "use_id_or",
+          "use_unique_id"
+        ],
+        "adico_primitive_file": "packages/adico-primitives/src/tooltip.rs",
+        "adico_props": {
+          "TooltipContentProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "side",
+              "type": "ContentSide"
+            },
+            {
+              "name": "align",
+              "type": "ContentAlign"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "TooltipProps": [
+            {
+              "name": "open",
+              "type": "ReadSignal<Option<bool>>"
+            },
+            {
+              "name": "default_open",
+              "type": "bool"
+            },
+            {
+              "name": "on_open_change",
+              "type": "Callback<bool>"
+            },
+            {
+              "name": "disabled",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "TooltipTriggerProps": [
+            {
+              "name": "id",
+              "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ]
+        },
+        "module": "tooltip",
+        "status": "built"
+      },
+      {
+        "adico_components": [],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [],
+        "adico_primitive_file": "packages/adico-primitives/src/virtual/",
+        "adico_props": {},
+        "module": "virtual",
+        "status": "built"
+      },
+      {
+        "adico_components": [
+          "VirtualList"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [],
+        "adico_primitive_file": "packages/adico-primitives/src/virtual_list.rs",
+        "adico_props": {
+          "VirtualListProps": [
+            {
+              "name": "count",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "buffer",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "estimate_size",
+              "type": "Option<Callback<usize, u32>>"
+            },
+            {
+              "name": "render_item",
+              "type": "Callback<usize, Element>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ]
+        },
+        "module": "virtual_list",
+        "status": "built"
+      }
+    ],
+    "source": {
+      "catalog_path": "upstreams/dioxus-components/catalog.json",
+      "catalog_refreshed_at": "2026-08-24",
+      "refresh_command": "cargo xtask upstream dioxus-components --source <local-clone> --refreshed-at <YYYY-MM-DD> --write",
+      "revision": "bf007c15d0cf4d04d3181cc46cf12325aa773955",
+      "upstream": "https://github.com/DioxusLabs/dioxus-components"
+    },
+    "summary": {
+      "adico_only_extras": 9,
+      "built": 41,
+      "not_started": 1,
+      "total_modules": 42
+    }
+  },
+  "generator": "cargo xtask primitive-compat sync",
+  "synced_at": "2026-08-31"
+}

@@ -1,7 +1,9 @@
-//! `cargo xtask baseui-compat sync|check|diff`: regenerates
-//! `packages/adico-primitives/baseui_compatibility.json` against Base UI's
-//! (<https://base-ui.com/react/components>) component/util inventory and
-//! this crate's actual current source.
+//! `cargo xtask primitive-compat sync|check|diff`: regenerates
+//! `statics/primitive_compatibility.json` -- `adico-primitives`' compatibility
+//! against **both** of its upstream primitive inventories: Base UI
+//! (<https://base-ui.com/react/components>, the architectural model for the
+//! headless/anatomy layer) and `DioxusLabs/dioxus-components` (the fork
+//! origin, pinned in `upstreams/dioxus-components/catalog.json`).
 //!
 //! What this automates:
 //!   - Introspects each mapped `adico-primitives` file/module (component
@@ -10,16 +12,23 @@
 //!   - `sync`/`diff` best-effort live-fetch base-ui.com's own component list
 //!     to flag components added/removed upstream since [`UPSTREAM_COMPONENTS`]
 //!     was last reviewed by hand.
+//!   - Derives the dioxus-primitives module inventory straight from
+//!     `upstreams/dioxus-components/catalog.json`'s `primitiveSourcePaths` --
+//!     no hand table for that axis, only a short exceptions list below.
 //!
 //! What it does NOT automate (edit the tables below instead): classifying a
-//! component's status (built/partial/not_started/not_applicable) and which
-//! `adico-primitives` file/registry item it maps to -- that needs human/AI
-//! judgment, not a page scrape.
+//! Base UI component's status (built/partial/not_started/not_applicable) and
+//! which `adico-primitives` file/registry item it maps to -- that needs
+//! human/AI judgment, not a page scrape. There is also no live refresh for
+//! `upstreams/shadcn/catalog.json`'s sibling `upstreams/dioxus-components`
+//! catalog beyond `cargo xtask upstream dioxus-components`; this command only
+//! reads whatever revision is currently pinned there.
 
+use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use crate::rust_introspect::{self, FileIntrospection};
 
@@ -353,6 +362,16 @@ const UPSTREAM_UTILS: &[UtilEntry] = &[
     },
 ];
 
+/// Hand-maintained notes for dioxus-primitives modules that need one --
+/// everything else on that axis (which modules exist, which are built, which
+/// adico module has no dioxus-components counterpart) is derived, not listed
+/// here. Keep in sync with `docs/adico/m3-acceptance.md` when a reason
+/// changes.
+const DIOXUS_MODULE_NOTES: &[(&str, &str)] = &[(
+    "navbar",
+    "Out of M3 scope by its own classification (NEEDS_PARITY_UPDATES, not \"suitable for current reuse\"); see docs/adico/m3-acceptance.md.",
+)];
+
 /// Primitives/registry items adico has that Base UI has no equivalent for.
 const ADICO_ONLY_EXTRAS: &[(&str, &str)] = &[
     ("DatePicker", "date_picker.rs"),
@@ -407,12 +426,166 @@ struct UpstreamDrift {
     removed_upstream: Vec<String>,
 }
 
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct DioxusComponentsCatalog {
+    upstream: String,
+    revision: String,
+    refreshed_at: String,
+    primitive_source_paths: Vec<String>,
+}
+
+#[derive(Serialize)]
+struct DioxusModuleOutput {
+    module: String,
+    status: &'static str,
+    adico_primitive_file: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    notes: Option<&'static str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    adico_components: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    adico_props: Option<serde_json::Value>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    adico_hooks_defined: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    adico_hooks_used: Option<Vec<String>>,
+}
+
 fn primitives_src(root: &Path) -> PathBuf {
     root.join("packages/adico-primitives/src")
 }
 
 fn output_path(root: &Path) -> PathBuf {
-    root.join("packages/adico-primitives/baseui_compatibility.json")
+    root.join("statics/primitive_compatibility.json")
+}
+
+fn dioxus_components_catalog_path(root: &Path) -> PathBuf {
+    root.join("upstreams/dioxus-components/catalog.json")
+}
+
+/// Derives the dioxus-primitives module inventory from
+/// `primitiveSourcePaths` -- one entry per top-level `src/<module>(.rs|/)`,
+/// dropping `lib.rs` and the JS/TS interop files (no Rust module to track).
+fn dioxus_primitive_modules(paths: &[String]) -> BTreeSet<String> {
+    let mut modules = BTreeSet::new();
+    for path in paths {
+        let Some(rest) = path.strip_prefix("src/") else {
+            continue;
+        };
+        if rest == "lib.rs" || rest.starts_with("js/") || rest.starts_with("ts/") {
+            continue;
+        }
+        let first_segment = rest.split('/').next().unwrap_or(rest);
+        let module = first_segment.strip_suffix(".rs").unwrap_or(first_segment);
+        modules.insert(module.to_string());
+    }
+    modules
+}
+
+/// The adico-primitives crate's own top-level module names (one per
+/// `src/<name>.rs` file or `src/<name>/` directory), used to find this
+/// axis's status and its adico-only extras by set difference against
+/// [`dioxus_primitive_modules`].
+fn adico_primitive_modules(root: &Path) -> BTreeSet<String> {
+    let mut modules = BTreeSet::new();
+    let Ok(entries) = fs::read_dir(primitives_src(root)) else {
+        return modules;
+    };
+    for entry in entries.flatten() {
+        let path = entry.path();
+        let Some(name) = path.file_stem().and_then(|stem| stem.to_str()) else {
+            continue;
+        };
+        if path.is_dir() {
+            if name != "js" && name != "ts" {
+                modules.insert(name.to_string());
+            }
+        } else if path.extension().and_then(|ext| ext.to_str()) == Some("rs") && name != "lib" {
+            modules.insert(name.to_string());
+        }
+    }
+    modules
+}
+
+fn dioxus_module_file_ref(root: &Path, module: &str) -> Option<String> {
+    let src = primitives_src(root);
+    if src.join(format!("{module}.rs")).is_file() {
+        Some(format!("{module}.rs"))
+    } else if src.join(module).is_dir() {
+        Some(format!("{module}/"))
+    } else {
+        None
+    }
+}
+
+fn build_dioxus_primitives_axis(root: &Path) -> serde_json::Value {
+    let catalog_path = dioxus_components_catalog_path(root);
+    let Ok(contents) = fs::read_to_string(&catalog_path) else {
+        return serde_json::json!({ "error": format!("cannot read {}", catalog_path.display()) });
+    };
+    let Ok(catalog) = serde_json::from_str::<DioxusComponentsCatalog>(&contents) else {
+        return serde_json::json!({ "error": format!("cannot parse {}", catalog_path.display()) });
+    };
+
+    let dioxus_modules = dioxus_primitive_modules(&catalog.primitive_source_paths);
+    let adico_modules = adico_primitive_modules(root);
+
+    let mut built = 0usize;
+    let mut not_started = 0usize;
+    let modules: Vec<DioxusModuleOutput> = dioxus_modules
+        .iter()
+        .map(|module| {
+            let file_ref = dioxus_module_file_ref(root, module);
+            let status = if file_ref.is_some() {
+                built += 1;
+                "built"
+            } else {
+                not_started += 1;
+                "not_started"
+            };
+            let notes = DIOXUS_MODULE_NOTES
+                .iter()
+                .find(|(name, _)| name == module)
+                .map(|(_, note)| *note);
+            let introspection = file_ref
+                .as_deref()
+                .map(|reference| introspect_for(root, reference));
+            DioxusModuleOutput {
+                module: module.clone(),
+                status,
+                adico_primitive_file: file_ref
+                    .map(|reference| format!("packages/adico-primitives/src/{reference}")),
+                notes,
+                adico_components: introspection.as_ref().map(|i| i.components.clone()),
+                adico_props: introspection
+                    .as_ref()
+                    .map(|i| serde_json::to_value(&i.props).unwrap()),
+                adico_hooks_defined: introspection.as_ref().map(|i| i.hooks_defined.clone()),
+                adico_hooks_used: introspection.as_ref().map(|i| i.hooks_used.clone()),
+            }
+        })
+        .collect();
+
+    let adico_only_extras: Vec<&String> = adico_modules.difference(&dioxus_modules).collect();
+
+    serde_json::json!({
+        "source": {
+            "upstream": catalog.upstream,
+            "revision": catalog.revision,
+            "catalog_refreshed_at": catalog.refreshed_at,
+            "catalog_path": "upstreams/dioxus-components/catalog.json",
+            "refresh_command": "cargo xtask upstream dioxus-components --source <local-clone> --refreshed-at <YYYY-MM-DD> --write",
+        },
+        "summary": {
+            "total_modules": modules.len(),
+            "built": built,
+            "not_started": not_started,
+            "adico_only_extras": adico_only_extras.len(),
+        },
+        "modules": modules,
+        "adico_only_extras": adico_only_extras,
+    })
 }
 
 fn introspect_for(root: &Path, file_ref: &str) -> FileIntrospection {
@@ -493,22 +666,25 @@ fn build_document(root: &Path, check_upstream: bool) -> (serde_json::Value, [usi
     };
 
     let document = serde_json::json!({
-        "$schema_note": "Hand-maintain UPSTREAM_COMPONENTS/UPSTREAM_UTILS/ADICO_ONLY_EXTRAS in packages/adico-xtask/src/baseui_compat.rs; everything else here is regenerated from repo introspection.",
-        "source": BASEUI_COMPONENTS_URL,
+        "$schema_note": "Hand-maintain UPSTREAM_COMPONENTS/UPSTREAM_UTILS/ADICO_ONLY_EXTRAS/DIOXUS_MODULE_NOTES in packages/adico-xtask/src/primitive_compat.rs; everything else here is regenerated from repo introspection, and the dioxus_primitives axis's module inventory is fully derived from upstreams/dioxus-components/catalog.json (no hand table).",
         "synced_at": today(),
-        "generator": "cargo xtask baseui-compat sync",
-        "summary": {
-            "total_upstream_components": UPSTREAM_COMPONENTS.len(),
-            "total_upstream_utils": UPSTREAM_UTILS.len(),
-            "adico_only_extras": ADICO_ONLY_EXTRAS.len(),
-            "components_built": counts[0],
-            "components_partial": counts[1],
-            "components_not_started": counts[2],
+        "generator": "cargo xtask primitive-compat sync",
+        "base_ui": {
+            "source": BASEUI_COMPONENTS_URL,
+            "summary": {
+                "total_upstream_components": UPSTREAM_COMPONENTS.len(),
+                "total_upstream_utils": UPSTREAM_UTILS.len(),
+                "adico_only_extras": ADICO_ONLY_EXTRAS.len(),
+                "components_built": counts[0],
+                "components_partial": counts[1],
+                "components_not_started": counts[2],
+            },
+            "upstream_drift_check": drift,
+            "components": components,
+            "utils": utils,
+            "adico_only_extras": extras,
         },
-        "upstream_drift_check": drift,
-        "components": components,
-        "utils": utils,
-        "adico_only_extras": extras,
+        "dioxus_primitives": build_dioxus_primitives_axis(root),
     });
     (document, counts)
 }
@@ -619,23 +795,44 @@ fn chrono_now() -> String {
     }
 }
 
+/// Strips fields that legitimately vary between an on-disk snapshot and a
+/// freshly rebuilt one (the sync timestamp, and the best-effort live drift
+/// check) so `check` compares only the parts that should be byte-identical.
+fn strip_volatile_fields(document: &mut serde_json::Value) {
+    if let Some(obj) = document.as_object_mut() {
+        obj.remove("synced_at");
+        if let Some(base_ui) = obj.get_mut("base_ui").and_then(|v| v.as_object_mut()) {
+            base_ui.remove("upstream_drift_check");
+        }
+    }
+}
+
 pub fn sync(root: &Path) -> Result<(), String> {
+    fs::create_dir_all(root.join("statics"))
+        .map_err(|error| format!("cannot create statics/: {error}"))?;
     let (document, counts) = build_document(root, true);
     let path = output_path(root);
     let payload = serde_json::to_string_pretty(&document)
-        .map_err(|error| format!("cannot serialize baseui_compatibility.json: {error}"))?;
+        .map_err(|error| format!("cannot serialize primitive_compatibility.json: {error}"))?;
     fs::write(&path, format!("{payload}\n"))
         .map_err(|error| format!("cannot write {}: {error}", path.display()))?;
     println!("Wrote {}", path.display());
     println!(
-        "  components: {} tracked (built={}, partial={}, not_started={})",
+        "  base_ui components: {} tracked (built={}, partial={}, not_started={})",
         UPSTREAM_COMPONENTS.len(),
         counts[0],
         counts[1],
         counts[2]
     );
+    if let Some(dioxus_summary) = document
+        .get("dioxus_primitives")
+        .and_then(|axis| axis.get("summary"))
+    {
+        println!("  dioxus_primitives modules: {dioxus_summary}");
+    }
     if let Some(drift) = document
-        .get("upstream_drift_check")
+        .get("base_ui")
+        .and_then(|axis| axis.get("upstream_drift_check"))
         .filter(|value| !value.is_null())
     {
         let added = drift["added_upstream"]
@@ -647,12 +844,12 @@ pub fn sync(root: &Path) -> Result<(), String> {
             .map(|a| a.len())
             .unwrap_or(0);
         if added == 0 && removed == 0 {
-            println!("  upstream drift check: no changes detected");
+            println!("  base_ui upstream drift check: no changes detected");
         } else {
-            println!("  upstream drift detected: {drift}");
+            println!("  base_ui upstream drift detected: {drift}");
         }
     } else {
-        println!("  upstream drift check skipped (network unreachable)");
+        println!("  base_ui upstream drift check skipped (network unreachable)");
     }
     Ok(())
 }
@@ -663,19 +860,13 @@ pub fn check(root: &Path) -> Result<(), String> {
     let existing = fs::read_to_string(&path).unwrap_or_default();
     let mut existing_value: serde_json::Value =
         serde_json::from_str(&existing).unwrap_or(serde_json::Value::Null);
-    if let Some(obj) = existing_value.as_object_mut() {
-        obj.remove("synced_at");
-        obj.remove("upstream_drift_check");
-    }
+    strip_volatile_fields(&mut existing_value);
     let mut comparable = document.clone();
-    if let Some(obj) = comparable.as_object_mut() {
-        obj.remove("synced_at");
-        obj.remove("upstream_drift_check");
-    }
+    strip_volatile_fields(&mut comparable);
     if existing_value != comparable {
-        return Err("baseui_compatibility.json is stale; run `cargo xtask baseui-compat sync` to regenerate.".to_string());
+        return Err("primitive_compatibility.json is stale; run `cargo xtask primitive-compat sync` to regenerate.".to_string());
     }
-    println!("baseui_compatibility.json is up to date.");
+    println!("primitive_compatibility.json is up to date.");
     Ok(())
 }
 

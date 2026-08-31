@@ -1,5 +1,5 @@
 //! Real Rust-source introspection (via `syn`) for the compatibility-tracking
-//! commands (`baseui-compat`, `shadcn-compat`): which component functions,
+//! commands (`primitive-compat`, `component-compat`): which component functions,
 //! `#[derive(Props...)]` struct fields, and `use_*` hooks a file exposes.
 //!
 //! Not a semantic analyzer -- it reads syntax only, so it can't tell a

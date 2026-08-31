@@ -1,8 +1,8 @@
 //! Repository automation for Awesome Dioxus Components.
 
-mod baseui_compat;
+mod component_compat;
+mod primitive_compat;
 mod rust_introspect;
-mod shadcn_compat;
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::env;
@@ -115,27 +115,27 @@ fn main() {
                 std::process::exit(1);
             }
         }
-        [command, subcommand] if command == "baseui-compat" && subcommand == "sync" => {
-            run_compat(baseui_compat::sync);
+        [command, subcommand] if command == "primitive-compat" && subcommand == "sync" => {
+            run_compat(primitive_compat::sync);
         }
-        [command, subcommand] if command == "baseui-compat" && subcommand == "check" => {
-            run_compat(baseui_compat::check);
+        [command, subcommand] if command == "primitive-compat" && subcommand == "check" => {
+            run_compat(primitive_compat::check);
         }
-        [command, subcommand] if command == "baseui-compat" && subcommand == "diff" => {
-            if let Err(error) = baseui_compat::diff() {
-                eprintln!("baseui-compat diff failed: {error}");
+        [command, subcommand] if command == "primitive-compat" && subcommand == "diff" => {
+            if let Err(error) = primitive_compat::diff() {
+                eprintln!("primitive-compat diff failed: {error}");
                 std::process::exit(1);
             }
         }
-        [command, subcommand] if command == "shadcn-compat" && subcommand == "sync" => {
-            run_compat(shadcn_compat::sync);
+        [command, subcommand] if command == "component-compat" && subcommand == "sync" => {
+            run_compat(component_compat::sync);
         }
-        [command, subcommand] if command == "shadcn-compat" && subcommand == "check" => {
-            run_compat(shadcn_compat::check);
+        [command, subcommand] if command == "component-compat" && subcommand == "check" => {
+            run_compat(component_compat::check);
         }
         _ => {
             eprintln!(
-                "usage:\n  cargo xtask provenance check\n  cargo xtask registry build\n  cargo xtask registry validate [--source <registry-directory-or-manifest>]\n  cargo xtask upstream dioxus-components\n  cargo xtask upstream dioxus-components --source <local-clone> --refreshed-at <YYYY-MM-DD> [--write]\n  cargo xtask baseui-compat sync|check|diff\n  cargo xtask shadcn-compat sync|check"
+                "usage:\n  cargo xtask provenance check\n  cargo xtask registry build\n  cargo xtask registry validate [--source <registry-directory-or-manifest>]\n  cargo xtask upstream dioxus-components\n  cargo xtask upstream dioxus-components --source <local-clone> --refreshed-at <YYYY-MM-DD> [--write]\n  cargo xtask primitive-compat sync|check|diff\n  cargo xtask component-compat sync|check"
             );
             std::process::exit(2);
         }
