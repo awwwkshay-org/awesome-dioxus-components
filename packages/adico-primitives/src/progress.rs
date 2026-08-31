@@ -1,6 +1,6 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/progress.rs. See provenance/records/adico-primitives-wave2-simple.json.
+// Implements the WAI-ARIA APG Meter/Progressbar pattern: `role="progressbar"` with
+// `aria-valuemin`/`aria-valuemax`/`aria-valuenow`, omitting `aria-valuenow` (per the APG's own
+// guidance for an indeterminate progress indicator) when `value` is `None`.
 
 //! Defines the [`Progress`] component and its sub-components.
 

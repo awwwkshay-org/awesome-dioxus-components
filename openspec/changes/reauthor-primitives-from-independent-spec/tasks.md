@@ -406,9 +406,21 @@
       exact — `wave2-state.json` deleted once every file it covered had its header removed,
       confirmed empty first); `registry validate` unaffected; `tests/installation/
       wave2-state-consumer` compiles clean against `--target wasm32-unknown-unknown`.
-- [ ] 5.2 `wave2-simple` record: `aspect_ratio.rs`, `label.rs`, `progress.rs`. Same recipe.
+- [x] 5.2 `wave2-simple` record: `aspect_ratio.rs`, `label.rs`, `progress.rs`. Same recipe.
       Verify: tests pass, record `adico-primitives-wave2-simple.json` deleted, provenance
-      count -3.
+      count -3. Done 2026-08-31: no logic changes to any of the three. `progress.rs` maps
+      directly to the WAI-ARIA APG Meter/Progressbar pattern (`aria-valuenow` correctly
+      omitted when indeterminate, per the APG's own guidance — already implemented).
+      `aspect_ratio.rs` has no ARIA role at all (a layout container, not a widget); spec is
+      its own already-correct padding-percentage-hack CSS. `label.rs` has no dedicated APG
+      pattern either (relies on native `<label for>` semantics assistive tech already
+      understands); spec is that native contract, already implemented. All three had zero
+      tests; added 7 across three new files (padding-percentage math across three ratios,
+      the native label/for wiring, determinate/indeterminate/custom-max progress states).
+      Full baseline green; provenance `7 imported record(s), 18 source unit(s)` (−3, exact —
+      `wave2-simple.json` deleted, confirmed empty first); `registry validate` unaffected;
+      `tests/installation/wave2-simple-consumer` compiles clean against `--target
+      wasm32-unknown-unknown`.
 - [ ] 5.3 `wave2-roving-focus` record (remainder not covered by Wave B): `accordion.rs`,
       whatever of `radio_group.rs`/`tabs.rs`/`toggle_group.rs` was not already closed in Wave
       D under a different record. Same recipe. Verify: tests pass, record

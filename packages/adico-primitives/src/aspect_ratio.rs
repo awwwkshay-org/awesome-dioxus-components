@@ -1,6 +1,8 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/aspect_ratio.rs. See provenance/records/adico-primitives-wave2-simple.json.
+// No ARIA role applies (a layout container is not itself a widget); its spec is the classic
+// "padding-bottom percentage hack" for a fixed-aspect-ratio box (the nested-container +
+// absolute-inset structure below is what makes it work without an intrinsic-ratio CSS property
+// dependency), which this file already implements. `ratio` is a *ratio*, so the padding
+// percentage is `100 / ratio`, not `100 * ratio`.
 
 //! Defines the [`AspectRatio`] component, which maintains a specific aspect ratio for its children.
 

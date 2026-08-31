@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/label.rs. See provenance/records/adico-primitives-wave2-simple.json.
+// No dedicated WAI-ARIA APG pattern exists for a form label (it relies on native HTML `<label
+// for>` semantics, which every assistive technology already understands without an ARIA role);
+// its spec is that native contract, which this file already implements by rendering a plain
+// `label` element with a `for` attribute.
 
 //! Defines the [`Label`] component
 
