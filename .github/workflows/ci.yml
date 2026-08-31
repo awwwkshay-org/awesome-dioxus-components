@@ -66,3 +66,9 @@ jobs:
 
       - name: Test core Rust crates
         run: cargo test --locked --workspace
+
+      - name: Check registry behavior-ownership classification
+        run: cargo run -p adico-xtask -- primitive-usage check
+
+      - name: Check registry styling classification
+        run: cargo run -p adico-xtask -- styling-usage check
