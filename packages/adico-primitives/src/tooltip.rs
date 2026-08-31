@@ -14,7 +14,8 @@
 use dioxus::prelude::*;
 
 use crate::{
-    ContentAlign, ContentSide, use_animated_open, use_controlled, use_id_or, use_unique_id,
+    ContentAlign, ContentSide, positioner::Positioner, use_animated_open, use_controlled,
+    use_id_or, use_unique_id,
 };
 
 #[derive(Clone, Copy)]
@@ -26,6 +27,7 @@ struct TooltipCtx {
 
     // ARIA attributes
     tooltip_id: Signal<String>,
+    trigger_id: Signal<String>,
 }
 
 /// The props for the [`Tooltip`] component
@@ -93,12 +95,14 @@ pub struct TooltipProps {
 pub fn Tooltip(props: TooltipProps) -> Element {
     let (open, set_open) = use_controlled(props.open, props.default_open, props.on_open_change);
     let tooltip_id = use_unique_id();
+    let trigger_id = use_unique_id();
 
     let _ctx = use_context_provider(|| TooltipCtx {
         open,
         set_open,
         disabled: props.disabled,
         tooltip_id,
+        trigger_id,
     });
 
     rsx! {
@@ -116,7 +120,7 @@ pub fn Tooltip(props: TooltipProps) -> Element {
 pub struct TooltipTriggerProps {
     /// Optional ID for the trigger element
     #[props(default)]
-    pub id: Option<String>,
+    pub id: ReadSignal<Option<String>>,
 
     /// Additional attributes for the trigger element
     #[props(extends = GlobalAttributes)]
@@ -158,6 +162,7 @@ pub struct TooltipTriggerProps {
 #[component]
 pub fn TooltipTrigger(props: TooltipTriggerProps) -> Element {
     let ctx: TooltipCtx = use_context();
+    let id = use_id_or(ctx.trigger_id, props.id);
 
     // Handle mouse events
     let handle_mouse_enter = move |_: Event<MouseData>| {
@@ -195,7 +200,7 @@ pub fn TooltipTrigger(props: TooltipTriggerProps) -> Element {
 
     rsx! {
         div {
-            id: props.id.clone(),
+            id,
             tabindex: "0",
             "aria-describedby": ctx.tooltip_id.cloned(),
             onmouseenter: handle_mouse_enter,
@@ -282,17 +287,31 @@ pub fn TooltipContent(props: TooltipContentProps) -> Element {
 
     // Only render if the tooltip is open
     let render = use_animated_open(id, ctx.open);
+    let is_open = ctx.open.cloned();
+
+    // `"data-state"` is a custom (non-`GlobalAttributes`-identifier) key,
+    // which can't mix with a `..spread` on a *component* call the way it can
+    // on a plain html element — build it into the merged attribute list by
+    // hand instead (matching `popover.rs`'s identical fix).
+    let mut merged_attributes = vec![dioxus_core::Attribute::new(
+        "data-state",
+        if is_open { "open" } else { "closed" },
+        None,
+        false,
+    )];
+    merged_attributes.extend(props.attributes);
 
     // Create the tooltip content
     rsx! {
         if render() {
-            div {
-                id,
+            Positioner {
+                id: Some(id()),
+                anchor_id: ctx.trigger_id,
+                side: props.side,
+                align: props.align,
+                offset: 4.0,
                 role: "tooltip",
-                "data-state": if ctx.open.cloned() { "open" } else { "closed" },
-                "data-side": props.side.as_str(),
-                "data-align": props.align.as_str(),
-                ..props.attributes,
+                attributes: merged_attributes,
                 {props.children}
             }
         }

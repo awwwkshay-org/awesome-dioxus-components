@@ -7,7 +7,8 @@
 use dioxus::prelude::*;
 
 use crate::{
-    ContentAlign, ContentSide, use_animated_open, use_controlled, use_id_or, use_unique_id,
+    ContentAlign, ContentSide, positioner::Positioner, use_animated_open, use_controlled,
+    use_id_or, use_unique_id,
 };
 
 #[derive(Clone)]
@@ -19,6 +20,7 @@ struct HoverCardCtx {
 
     // ARIA attributes
     content_id: Signal<String>,
+    trigger_id: Signal<String>,
 }
 
 /// The props for the [`HoverCard`] component
@@ -90,12 +92,14 @@ pub fn HoverCard(props: HoverCardProps) -> Element {
     let (open, set_open) = use_controlled(props.open, props.default_open, props.on_open_change);
     // Generate a unique ID for the hover card content
     let content_id = use_unique_id();
+    let trigger_id = use_unique_id();
 
     use_context_provider(|| HoverCardCtx {
         open,
         set_open,
         disabled: props.disabled,
         content_id,
+        trigger_id,
     });
 
     rsx! {
@@ -133,11 +137,9 @@ pub struct HoverCardTriggerProps {
 pub fn HoverCardTrigger(props: HoverCardTriggerProps) -> Element {
     let ctx: HoverCardCtx = use_context();
 
-    // Generate a unique ID for the trigger
-    let trigger_id = use_unique_id();
-
-    // Use use_id_or to handle the ID
-    let id = use_id_or(trigger_id, props.id);
+    // Use use_id_or to handle the ID, defaulting to the shared trigger id
+    // `HoverCardContent` uses as its `Positioner` anchor.
+    let id = use_id_or(ctx.trigger_id, props.id);
 
     // Handle mouse events
     let open_event = move || {
@@ -242,20 +244,33 @@ pub fn HoverCardContent(props: HoverCardContentProps) -> Element {
 
     let render = use_animated_open(id, ctx.open);
 
+    // `"data-state"` is a custom (non-`GlobalAttributes`-identifier) key,
+    // which can't mix with a `..spread` on a *component* call the way it can
+    // on a plain html element — build it into the merged attribute list by
+    // hand instead (matching `popover.rs`'s identical fix).
+    let mut merged_attributes = vec![dioxus_core::Attribute::new(
+        "data-state",
+        if is_open { "open" } else { "closed" },
+        None,
+        false,
+    )];
+    merged_attributes.extend(props.attributes);
+
     rsx! {
         if render() {
-            div {
-                id,
+            Positioner {
+                id: Some(id()),
+                anchor_id: ctx.trigger_id,
+                side: props.side,
+                align: props.align,
+                offset: 4.0,
                 role: "tooltip",
-                "data-state": if is_open { "open" } else { "closed" },
-                "data-side": props.side.as_str(),
-                "data-align": props.align.as_str(),
+                attributes: merged_attributes,
 
                 // Mouse events to keep the hover card open when hovered
-                onmouseenter: handle_mouse_enter,
-                onmouseleave: handle_mouse_leave,
+                on_mouse_enter: handle_mouse_enter,
+                on_mouse_leave: handle_mouse_leave,
 
-                ..props.attributes,
                 {props.children}
             }
         }

@@ -13,8 +13,8 @@
 use dioxus::prelude::*;
 
 use crate::{
-    ContentAlign, ContentSide, FocusTrapScript, use_animated_open, use_controlled, use_escape_key,
-    use_focus_trap, use_id_or, use_outside_dismiss, use_unique_id,
+    ContentAlign, ContentSide, FocusTrapScript, positioner::Positioner, use_animated_open,
+    use_controlled, use_escape_key, use_focus_trap, use_id_or, use_outside_dismiss, use_unique_id,
 };
 
 #[derive(Clone, Copy)]
@@ -218,18 +218,31 @@ pub fn PopoverContentRendered(
     // document-level listener does not work on `web`.
     use_outside_dismiss(ctx.root_id, move || set_open.call(false));
 
+    // `"data-state"` is a custom (non-`GlobalAttributes`-identifier) key,
+    // which Dioxus's rsx macro can't mix with a `..spread` on a *component*
+    // call (unlike a plain html element) — build it into the merged
+    // attribute list by hand instead.
+    let mut merged_attributes = vec![dioxus_core::Attribute::new(
+        "data-state",
+        if is_open { "open" } else { "closed" },
+        None,
+        false,
+    )];
+    merged_attributes.extend(attributes);
+
     rsx! {
-        div {
+        Positioner {
             id,
+            anchor_id: ctx.labelledby,
+            side,
+            align,
+            offset: 4.0,
             role: "dialog",
             aria_modal: (ctx.is_modal)().then_some("true"),
             aria_labelledby: ctx.labelledby,
             aria_hidden: (!is_open).then_some("true"),
             class: class.unwrap_or_else(|| "dx-popover-content".to_string()),
-            "data-state": if is_open { "open" } else { "closed" },
-            "data-side": side.as_str(),
-            "data-align": align.as_str(),
-            ..attributes,
+            attributes: merged_attributes,
             {children}
         }
     }

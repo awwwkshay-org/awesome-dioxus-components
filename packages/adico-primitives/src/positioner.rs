@@ -251,6 +251,12 @@ async fn measure_anchor_and_viewport(_anchor_id: &str) -> Option<(Rect<f64, Pixe
 /// The props for the [`Positioner`] component.
 #[derive(Props, Clone, PartialEq)]
 pub struct PositionerProps {
+    /// The `id` of this positioner's own rendered element (not the anchor).
+    /// Lets a caller compose `Positioner` as the floating content's own root
+    /// element — e.g. so `use_animated_open`/`use_outside_dismiss` can target
+    /// it — instead of nesting another element inside for that purpose.
+    #[props(default)]
+    pub id: Option<String>,
     /// The `id` of the anchor element to position relative to.
     pub anchor_id: ReadSignal<String>,
     /// The preferred side; may flip to its opposite if there's no room.
@@ -266,6 +272,19 @@ pub struct PositionerProps {
     /// viewport edge when the cross axis is clamped.
     #[props(default = 8.0)]
     pub collision_padding: f64,
+    /// Called when the pointer enters the positioned element — for
+    /// hover-triggered content (hover-card, tooltip) that should stay open
+    /// while the pointer is over the floating box itself, not just the
+    /// anchor. `#[props(extends = GlobalAttributes)]` does not cover event
+    /// listeners on a *component* call the way it does on a plain html
+    /// element, so this needs to be a dedicated prop rather than passed
+    /// through `attributes`.
+    #[props(default)]
+    pub on_mouse_enter: Callback<Event<MouseData>>,
+    /// Called when the pointer leaves the positioned element. See
+    /// `on_mouse_enter`.
+    #[props(default)]
+    pub on_mouse_leave: Callback<Event<MouseData>>,
     /// Additional attributes for the positioned element.
     #[props(extends = GlobalAttributes)]
     pub attributes: Vec<Attribute>,
@@ -352,6 +371,7 @@ pub fn Positioner(props: PositionerProps) -> Element {
 
     rsx! {
         div {
+            id: props.id.clone(),
             style,
             "data-side": position().map(|p| p.side.as_str()),
             "data-align": position().map(|p| p.align.as_str()),
@@ -359,6 +379,8 @@ pub fn Positioner(props: PositionerProps) -> Element {
                 floating_ref.set(Some(evt.data()));
                 recompute();
             },
+            onmouseenter: move |event| props.on_mouse_enter.call(event),
+            onmouseleave: move |event| props.on_mouse_leave.call(event),
             ..props.attributes,
             {props.children}
         }

@@ -1842,7 +1842,7 @@
             "HoverCardTrigger and HoverCardContent both present with side/align matching shadcn's side/align",
             "force_mount deliberately hardcoded false to match Popover/Tooltip mount behavior — documented intentional deviation"
           ],
-          "note": "Missing openDelay/closeDelay props on the HoverCard root (shadcn exposes both, defaulting 700ms/300ms), and no sideOffset on HoverCardContent (shadcn defaults 4). No avoidCollisions/collisionPadding/sticky passthrough either, though those are lower-priority Radix positioning knobs. (task 5.2 audit, batch pass 2026-08-30)"
+          "note": "Missing openDelay/closeDelay props on the HoverCard root (shadcn exposes both, defaulting 700ms/300ms), and no sideOffset on HoverCardContent (shadcn defaults 4). No avoidCollisions/collisionPadding/sticky passthrough either, though those are lower-priority Radix positioning knobs. (task 5.2 audit, batch pass 2026-08-30) Task 7.8c (2026-08-31): HoverCardContent now composes `positioner::Positioner`, replacing the previous CSS-only (`data-side`/`data-align` attributes, no real measurement) placement with real collision-aware anchored positioning (side-flip on no room, cross-axis clamp) — the underlying engine is no longer a stub, but the specific gaps this note already names (openDelay/closeDelay, sideOffset as a caller-facing prop, avoidCollisions/collisionPadding passthrough, and composing `positioner::Arrow`) remain unclosed; still `passed: false`."
         },
         "visual": {
           "applicable": true,
@@ -2680,7 +2680,7 @@
           "evidence": [
             "registry/ui/popover.rs + adico_primitives::popover: Popover has open/default_open/on_open_change/is_modal; PopoverContent has side/align"
           ],
-          "note": "Missing PopoverAnchor, PopoverHeader, PopoverTitle, PopoverDescription sub-components present upstream. PopoverContent is missing a `sideOffset` prop (shadcn defaults to 4). (task 5.2 audit, batch pass 2026-08-30)"
+          "note": "Missing PopoverAnchor, PopoverHeader, PopoverTitle, PopoverDescription sub-components present upstream. PopoverContent is missing a `sideOffset` prop (shadcn defaults to 4). (task 5.2 audit, batch pass 2026-08-30) Task 7.8c (2026-08-31): PopoverContentRendered now composes `positioner::Positioner` (offset hardcoded to 4, matching shadcn's default, but still not exposed as a caller-facing `sideOffset` prop), replacing the previous CSS-only placement with real collision-aware anchored positioning. The sub-component and `sideOffset`-prop gaps this note already names remain unclosed; still `passed: false`."
         },
         "visual": {
           "applicable": true,
@@ -4484,7 +4484,7 @@
           "evidence": [
             "TooltipTrigger/TooltipContent side+align match Radix's positioning API shape"
           ],
-          "note": "Missing TooltipProvider entirely (shadcn's app-level wrapper controlling shared delayDuration, default 0ms) — adico has no equivalent, so per-app open-delay tuning isn't exposed. Missing sideOffset prop on TooltipContent. Missing the Arrow sub-component (shadcn renders a rotated pointer arrow inside TooltipContent; adico's has none). (task 5.2 audit, batch pass 2026-08-30)"
+          "note": "Missing TooltipProvider entirely (shadcn's app-level wrapper controlling shared delayDuration, default 0ms) — adico has no equivalent, so per-app open-delay tuning isn't exposed. Missing sideOffset prop on TooltipContent. Missing the Arrow sub-component (shadcn renders a rotated pointer arrow inside TooltipContent; adico's has none). (task 5.2 audit, batch pass 2026-08-30) Task 7.8c (2026-08-31): TooltipContent now composes `positioner::Positioner`, replacing the previous CSS-only placement with real collision-aware anchored positioning; `positioner::Arrow` exists as a composable primitive now but TooltipContent does not render one by default. `TooltipTrigger`'s own `id` prop is also now `ReadSignal<Option<String>>` (was a plain `Option<String>` with no generated fallback) so it always has a stable id for `Positioner` to anchor to. TooltipProvider, sideOffset-as-a-prop, and Arrow-composition gaps this note already names remain unclosed; still `passed: false`."
         },
         "visual": {
           "applicable": true,
