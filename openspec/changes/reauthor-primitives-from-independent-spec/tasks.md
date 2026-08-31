@@ -348,14 +348,37 @@
       of the five. `wave2-roving-focus.spec.ts` already exercises tabs/radio-group live; not
       re-run given zero behavior change. Full baseline green; provenance `9 imported
       record(s), 31 source unit(s)` (−5, exact); `registry validate` unaffected.
-- [ ] 4.4 Flatten `virtual/{mod,types,utils,virtualizer}.rs` + `virtual_list.rs` (5 files)
+- [x] 4.4 Flatten `virtual/{mod,types,utils,virtualizer}.rs` + `virtual_list.rs` (5 files)
       into a single `virtual_list.rs`; derive spec from the current virtualization contract
       (window/overscan/measurement behavior) since there is no ARIA pattern for this one;
       author tests covering scroll-window math first. Verify: `cargo test -p
       adico-primitives virtual_list`, directory removed, provenance count -5 (one record
-      entry set).
-- [ ] 4.5 Update any `registry/ui/*.rs` facades affected by 4.1-4.4's parity closures; run
-      `registry build` + `registry validate`; confirm via a consumer fixture install.
+      entry set). Done 2026-08-31: no logic changes — `virtual_list.rs`'s own scroll/resize
+      bridge was already a genuine, already-documented adaptation (native
+      `onscroll`/`onmounted` replacing a broken `document::eval` subscription); the
+      algorithmic modules (`types.rs`, `utils.rs`, `virtualizer.rs`) were already
+      independently structured. No ARIA pattern applies to virtualization itself; spec is the
+      file's own existing scroll-window contract plus standard APG guidance for a
+      partially-rendered collection (already present: `role="list"`/`"listitem"` with
+      `aria-setsize`/`aria-posinset`). Widened `Key`/`VirtualItem` and
+      `find_nearest_binary_search`/`default_range_extractor` from `pub(crate)` to `pub`,
+      adding 7 new direct tests for the latter two — previously untested even by the file's
+      own prior inline suite (which only exercised the higher-level `Store`-backed
+      functions). The 6 existing `Store`-backed tests moved unchanged into the new
+      `tests/test_virtual_list.rs` (13 total), needing an explicit import of the
+      `Store`-derive-generated `VirtualizerStateStoreExt` trait that was implicitly in scope
+      inline. Full baseline green; `find ... -mindepth 2 -name '*.rs'` confirms `virtual/` is
+      gone; provenance `9 imported record(s), 26 source unit(s)` (−5, exact); `registry
+      validate` unaffected (facade only consumes the unchanged public `VirtualList` API).
+- [x] 4.5 Update any `registry/ui/*.rs` facades affected by 4.1-4.4's parity closures; run
+      `registry build` + `registry validate`; confirm via a consumer fixture install. Done
+      2026-08-31: no facade updates needed — none of 4.1-4.4's eight files changed any public
+      prop/component API (all changes were logic-preserving: header rewrites, `pub`-visibility
+      widening for tests, file flattening), confirmed by `registry validate` passing unchanged
+      after every one of those four commits. All eight (`tag_group`, `toast`, `toolbar`,
+      `scroll_area`, `tabs`, `radio_group`, `toggle_group`, `virtual_list`) are already
+      installed in `examples/basic-spa`, whose `cargo check` (part of the workspace-wide
+      baseline run after every task in this range) is the consumer-fixture confirmation.
 
 ## 5. Wave E — remaining files by provenance record
 

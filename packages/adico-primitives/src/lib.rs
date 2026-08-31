@@ -84,7 +84,6 @@ pub mod scroll_lock;
 pub mod selectable;
 pub mod selection;
 mod time;
-mod r#virtual;
 
 #[cfg(any(feature = "web", feature = "native"))]
 const FOCUS_TRAP_JS: Asset = asset!("/src/js/focus-trap.js");
