@@ -611,10 +611,25 @@
       unaffected (46 items); `tests/installation/dialog-consumer` compiles clean against
       `--target wasm32-unknown-unknown`; `tests/playwright/dialog.spec.ts` exists and exercises
       this file's live-browser behavior — not re-run given zero behavior change.
-- [ ] 5.9 Update all affected `registry/ui/*.rs` facades, `registry/registry.json`, and
+- [x] 5.9 Update all affected `registry/ui/*.rs` facades, `registry/registry.json`, and
       regenerated output for every parity closure across 5.1-5.8; run `registry build` +
       `registry validate`; confirm via consumer fixture installs (`examples/basic-spa`,
-      relevant `tests/installation/*`).
+      relevant `tests/installation/*`). Done 2026-08-31: no `registry/ui/*.rs` facade edits
+      needed — every task in 5.1-5.8 was confirmed "no logic changes" (pure re-authoring plus
+      new tests), so no public component API changed. `cargo run -p adico-xtask -- registry
+      build` produced a byte-identical `registry/generated/` tree (confirmed via `git status`
+      showing no diff after running it) and `registry validate` passed (46 items) — both
+      already re-confirmed after every individual 5.x task, this is the final consolidated
+      check. Compiled `examples/basic-spa` and all 16 `tests/installation/*` fixtures
+      (`awwwkshay-consumer`, `button-consumer`, `dialog-consumer`, `select-consumer`,
+      `theme-consumer`, `wave1-consumer`, `wave2-risk-consumer`,
+      `wave2-roving-focus-consumer`, `wave2-simple-consumer`, `wave2-state-consumer`,
+      `wave3-consumer` — the actual registry-facade fixture exercising the installed
+      Popover/Tooltip/HoverCard components covered in task 5.5, not literally named
+      "wave3-overlays-consumer" as that task's evidence entry put it — `wave4-consumer`,
+      `wave5-color-picker-consumer`, `wave5-drag-and-drop-list-consumer`,
+      `wave5-extras-consumer`, `wave5-tag-group-consumer`) against `--target
+      wasm32-unknown-unknown`: all clean. Full baseline green.
 
 ## 6. Wave F — `lib.rs` and crate-wide cleanup
 
