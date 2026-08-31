@@ -64,24 +64,22 @@ makes the platform useful while parity is progressively delivered.
 
 ## Capabilities
 
+**Note (2026-08-31):** `adico-workspace-and-provenance`, `adico-registry`,
+`adico-project-configuration`, `adico-cli-installation`, and
+`adico-component-validation` were extracted into their own change
+(`adico-foundation-and-vertical-slice`), synced into `openspec/specs/`, and
+archived, since their requirements were fully established by the now-complete
+M0–M3 milestones (see `openspec/changes/archive/2026-08-31-adico-foundation-and-vertical-slice/`).
+This change's remaining scope (M4–M10) only still produces/modifies the two
+capabilities below.
+
 ### New Capabilities
 
-- `adico-workspace-and-provenance`: Defines the `adico` monorepo boundaries,
-  package responsibilities, independent primitive ownership, and mandatory
-  licensing/provenance records for reused upstream code.
-- `adico-registry`: Defines the local registry source/build schema, item
-  dependency graph, installation plan, compatibility validation, and extensible
-  item categories.
-- `adico-project-configuration`: Defines the shadcn-style `components.json`
-  configuration, Dioxus-project detection, destinations, styles/themes, and
-  managed Rust-module conventions.
-- `adico-cli-installation`: Defines `adico init`, `adico add`, `add --all`,
-  `list`, `view`, `css build`/`--check`,
-  structured Cargo.toml updates, idempotency, conflict handling, and the
-  source-ownership guarantee.
-- `adico-component-validation`: Defines consumer-style examples and the
-  compile, installation, browser, accessibility, interaction, SSR/hydration,
-  desktop, and visual validation expectations for registry components.
+- `adico-primitives`: Defines `adico-primitives` as a documented, public,
+  shared behavior layer (positioning, menu anatomy, layering, roving focus,
+  direction/RTL, controllable state, independent primitive-level testing)
+  that registry components compose, per the M6 shared-primitive-expansion
+  work (design.md §8a).
 
 ### Modified Capabilities
 

@@ -1,9 +1,10 @@
-## Purpose
+# adico-workspace-and-provenance Specification
 
+## Purpose
 Define the independently maintainable adico workspace and the provenance rules
 that make reused Dioxus Components code legally and operationally sustainable.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: Adico has explicit product boundaries
 The workspace SHALL separate maintained applications, reusable packages,
@@ -49,4 +50,3 @@ isolated behind the runtime or documented as an explicit compatibility limit.
 #### Scenario: A component is built for SSR
 - **WHEN** a consumer builds an installed component in an SSR-enabled Dioxus app
 - **THEN** browser-only behavior does not execute during server rendering
-
