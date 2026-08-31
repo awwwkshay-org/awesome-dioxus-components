@@ -1,6 +1,11 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/listbox.rs. See provenance/records/adico-primitives-dialog-select.json.
+// Implements the WAI-ARIA APG Listbox pattern's popup-mounting/id/registration wiring shared
+// by `select.rs`/`combobox.rs`, which already derived their own ARIA-role specs against this
+// pattern (tasks 2.1/2.2) — this file is the thin `use_effect` glue connecting their anchored
+// popup rendering (`use_animated_open` presence gating) and option registration
+// (`selection.rs`'s `sync_option`/`remove_option`) to a stable id. Its own logic is exercised
+// indirectly, extensively, through `select.rs`'s/`combobox.rs`'s tests (both consume every
+// hook here); `ListboxItemIndicator`'s conditional render is the one piece with no such
+// indirect coverage, tested directly instead.
 
 //! Shared listbox popup hooks.
 

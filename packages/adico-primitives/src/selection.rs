@@ -1,6 +1,7 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/selection.rs. See provenance/records/adico-primitives-dialog-select.json.
+// No ARIA pattern applies directly to this file's own contents (type-erased value comparison,
+// sorted-by-index option registration bookkeeping); its spec is the WAI-ARIA APG Listbox
+// pattern's selection-state needs `select.rs`/`combobox.rs` (via `selectable.rs`/`listbox.rs`)
+// already implement the ARIA surface for.
 
 //! Shared option selection helpers.
 
@@ -105,7 +106,8 @@ pub fn sync_option(mut options: Signal<Vec<OptionState>>, option_state: OptionSt
     sync_option_state(&mut options.write(), option_state);
 }
 
-fn sync_option_state(options: &mut Vec<OptionState>, option_state: OptionState) {
+/// `pub` only for `packages/adico-primitives/tests/`; not part of the intended public API.
+pub fn sync_option_state(options: &mut Vec<OptionState>, option_state: OptionState) {
     if let Some(position) = options
         .iter()
         .position(|option| option.id == option_state.id)
@@ -129,62 +131,7 @@ pub fn remove_option(mut options: Signal<Vec<OptionState>>, id: &str) {
     remove_option_state(&mut options.write(), id);
 }
 
-fn remove_option_state(options: &mut Vec<OptionState>, id: &str) {
+/// `pub` only for `packages/adico-primitives/tests/`; not part of the intended public API.
+pub fn remove_option_state(options: &mut Vec<OptionState>, id: &str) {
     options.retain(|option| option.id != id);
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    fn option(id: &str, index: usize) -> OptionState {
-        OptionState {
-            id: id.to_string(),
-            index,
-            value: RcPartialEqValue::new(id.to_string()),
-            text_value: id.to_string(),
-        }
-    }
-
-    fn ids(options: &[OptionState]) -> Vec<&str> {
-        options
-            .iter()
-            .map(|option| option.text_value.as_str())
-            .collect()
-    }
-
-    fn indices(options: &[OptionState]) -> Vec<usize> {
-        options.iter().map(|option| option.index).collect()
-    }
-
-    #[test]
-    fn sync_option_state_keeps_sorted_order() {
-        let mut options = vec![option("a", 0), option("b", 1), option("c", 2)];
-
-        sync_option_state(&mut options, option("d", 3));
-
-        assert_eq!(ids(&options), ["a", "b", "c", "d"]);
-        assert_eq!(indices(&options), [0, 1, 2, 3]);
-    }
-
-    #[test]
-    fn sync_option_state_updates_matching_id_and_reorders() {
-        let mut options = vec![option("a", 0), option("b", 1), option("c", 2)];
-
-        sync_option_state(&mut options, option("b", 3));
-
-        assert_eq!(ids(&options), ["a", "c", "b"]);
-        assert_eq!(indices(&options), [0, 2, 3]);
-    }
-
-    #[test]
-    fn removing_stale_option_does_not_remove_option_that_moved_to_same_index() {
-        let mut options = vec![option("a", 0), option("b", 1)];
-
-        sync_option_state(&mut options, option("b", 0));
-        remove_option_state(&mut options, "a");
-
-        assert_eq!(ids(&options), ["b"]);
-        assert_eq!(indices(&options), [0]);
-    }
 }

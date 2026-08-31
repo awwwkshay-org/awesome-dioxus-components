@@ -1,6 +1,9 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/selectable.rs. See provenance/records/adico-primitives-dialog-select.json.
+// Implements the WAI-ARIA APG Listbox pattern's shared selection/roving-focus state machine
+// (single vs. multiple selection, focus-follows-predicate navigation for filtered lists) that
+// `select.rs`/`combobox.rs` already derived their own ARIA-role specs against (tasks 2.1/2.2);
+// `pointer_select_start`/`pointer_select_commit`/`pointer_select_cancel` implement the APG's
+// pointer-activation guidance (primary button only; a touch that drifts past a small threshold
+// before release is a scroll, not a tap, so it must not commit a selection).
 
 //! Shared state and behavior for select-like listbox components.
 

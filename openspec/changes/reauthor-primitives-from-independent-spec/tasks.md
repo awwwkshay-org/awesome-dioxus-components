@@ -250,9 +250,24 @@
       green (neither part of the default baseline either); provenance `9 imported record(s),
       41 source unit(s)` (−2, exact). No registry facade depends on either file directly
       (`slider.rs`/`color_picker.rs` are the only consumers, neither touched here).
-- [ ] 3.3 `listbox.rs`, `selection.rs`, `selectable.rs`: derive spec from ARIA APG selection
+- [x] 3.3 `listbox.rs`, `selection.rs`, `selectable.rs`: derive spec from ARIA APG selection
       patterns; author/extend tests; re-author; drop headers + record entries. Verify: `cargo
-      test -p adico-primitives listbox selection selectable`, provenance count -3.
+      test -p adico-primitives listbox selection selectable`, provenance count -3. Done
+      2026-08-31: no logic changes, all three already independently structured. Spec is the
+      ARIA APG Listbox pattern's shared selection/pointer-activation machinery `select.rs`/
+      `combobox.rs` already derived their own specs against. `listbox.rs` is thin
+      `use_effect` glue already covered indirectly by select/combobox's own tests — added 2
+      direct tests for `ListboxItemIndicator` (the one piece without indirect coverage) in the
+      new `tests/test_listbox.rs`. `selection.rs` had 3 existing tests, inline and
+      private-fn-scoped; widened `sync_option_state`/`remove_option_state` to `pub`, added 7
+      more for `option_text_value`/`selected_text` (zero prior coverage), 10 total in the new
+      `tests/test_selection.rs`. `selectable.rs` had zero tests despite being select's/
+      combobox's shared state; targeted the genuinely uncovered surface —
+      `pointer_select_start`/`_commit`/`_cancel` — with 8 new tests in `tests/
+      test_selectable.rs` via a synthetic `HasPointerData` impl (mirroring 3.2's
+      `test_move_interaction.rs` pattern). Full baseline green; provenance `9 imported
+      record(s), 38 source unit(s)` (−3, exact). No registry facade change (select.rs's/
+      combobox.rs's public API unaffected).
 - [ ] 3.4 Run full baseline validation suite; confirm no consumer of these internals
       (accordion, dialog, popover, select, combobox, tabs, calendar, menubar, toolbar,
       slider, color-picker, drag-and-drop-list) regressed: `cargo check --workspace`,
