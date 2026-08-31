@@ -1,0 +1,7 @@
+{
+  "classification": "delegated",
+  "primitiveModules": [
+    "combobox",
+    "icons"
+  ]
+}

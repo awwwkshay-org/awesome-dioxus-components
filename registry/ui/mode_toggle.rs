@@ -33,12 +33,9 @@ fn mode_label(mode: ThemeMode) -> &'static str {
 #[component]
 pub fn ModeToggle(class: Option<String>) -> Element {
     let (mode, set_mode) = use_persisted_theme_mode();
-    let mut open = use_signal(|| false);
 
     rsx! {
         DropdownMenu {
-            open: Some(open()),
-            on_open_change: move |value| open.set(value),
             class: class.unwrap_or_default(),
             DropdownMenuTrigger {
                 class: cn(&["h-9 w-9 justify-center px-0"]),

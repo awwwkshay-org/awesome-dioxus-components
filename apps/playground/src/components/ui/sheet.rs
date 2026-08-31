@@ -75,13 +75,10 @@ pub fn SheetOverlay(class: Option<String>) -> Element {
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        // Mounted only while the sheet is visible, mirroring the Dialog overlay.
-        style { "html {{ overflow: hidden; }}" }
         div {
             class,
             "aria-hidden": "true",
             "data-adico-sheet-overlay": "true",
-            style: "position: fixed; inset: 0; z-index: 50;",
             onclick: move |_| context.set_open(false),
         }
     }
@@ -93,14 +90,13 @@ pub fn SheetOverlay(class: Option<String>) -> Element {
 pub fn SheetContent(children: Element, class: Option<String>, side: Option<SheetSide>) -> Element {
     let side = side.unwrap_or_default();
     let class = cn(&[
-        "fixed z-50 gap-4 bg-background p-6 text-foreground shadow-lg transition ease-in-out",
+        "fixed z-[51] gap-4 bg-background p-6 text-foreground shadow-lg transition ease-in-out",
         side.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
         DialogPrimitiveContent {
             class,
-            style: "position: fixed; z-index: 51;",
             {children}
         }
     }

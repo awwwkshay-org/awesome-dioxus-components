@@ -8,10 +8,10 @@
 //! by becoming inactive or unmounting), so the first overlay to close never
 //! prematurely re-enables scrolling while a second one is still open.
 //!
-//! This is the Radix/shadcn-style full-page `overflow: hidden` lock intended
-//! for modal surfaces (dialog, alert dialog) — a real gap today, since
-//! neither currently locks scroll at all. It is a deliberately different
-//! technique from [`crate::context_menu`]'s own wheel/touchmove suppression:
+//! This is the Radix/shadcn-style full-page `overflow: hidden` lock used by
+//! modal surfaces (dialog, alert dialog: both call [`use_scroll_lock`] from
+//! their own `open` state). It is a deliberately different technique from
+//! [`crate::context_menu`]'s own wheel/touchmove suppression:
 //! that menu is `position: fixed` and pinned to a click point, so hiding the
 //! scrollbar via `overflow: hidden` would shift the page layout right under
 //! the open menu; suppressing scroll input directly avoids that shift. Do

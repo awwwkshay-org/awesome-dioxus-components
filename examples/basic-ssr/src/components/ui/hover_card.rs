@@ -47,7 +47,6 @@ pub fn HoverCardContent(
             // styled facade instead mounts content only while open, matching
             // Tooltip/Popover's behavior.
             force_mount: false,
-            style: "position: absolute; z-index: 50;",
             {children}
         }
     }

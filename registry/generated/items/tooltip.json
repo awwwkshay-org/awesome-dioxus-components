@@ -7,7 +7,7 @@
       "source": "ui/tooltip.rs",
       "targetRoot": "ui",
       "target": "tooltip.rs",
-      "checksum": "b0d7df68692a610924c35589f017022569e42985f0198a238ec1a09835ba21dc"
+      "checksum": "4ad2cc1d2fcfa2d398bc2be456fb062117511380f0d7f7d0413691d2ad69ed64"
     }
   ],
   "registryDependencies": [

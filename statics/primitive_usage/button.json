@@ -1,0 +1,5 @@
+{
+  "classification": "presentational",
+  "primitiveModules": [],
+  "reason": "Static styled markup with variant classes; no interactive state, keyboard handling, or primitive import."
+}

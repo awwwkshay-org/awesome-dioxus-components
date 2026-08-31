@@ -1,0 +1,8 @@
+{
+  "classification": "exception",
+  "primitiveModules": [
+    "separator"
+  ],
+  "reason": "Mobile/responsive viewport-driven collapse (a Sheet overlay swap) is deferred: upstream's approach relies on a long-lived document::eval loop already found non-functional in this Dioxus runtime (docs/adico/m3-wave3-migration.md), so this initial pass renders one CSS-driven collapsible layout instead. Open/collapsed state itself is delegated to adico_primitives::use_controlled.",
+  "followUp": "Author a real viewport-driven mobile sidebar mode once a working document::eval (or equivalent) pattern exists, then remove this exception."
+}

@@ -42,7 +42,6 @@ pub fn PopoverContent(
             class,
             side,
             align,
-            style: "position: fixed; z-index: 50;",
             {children}
         }
     }

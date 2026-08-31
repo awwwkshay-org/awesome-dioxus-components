@@ -7,7 +7,7 @@
       "source": "ui/mode_toggle.rs",
       "targetRoot": "ui",
       "target": "mode_toggle.rs",
-      "checksum": "5e2a9ecf6f8513206df6476239caecc966cad1fe341c9d0258d1d67c249bde7f"
+      "checksum": "d30499d3137ccb834d048e0e39287355f970d024ec0470d697ca46ee55e1a153"
     }
   ],
   "registryDependencies": [

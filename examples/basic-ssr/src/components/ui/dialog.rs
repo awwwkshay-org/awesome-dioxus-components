@@ -44,15 +44,10 @@ pub fn DialogOverlay(class: Option<String>) -> Element {
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        // This style is mounted only while a modal overlay is visible. Keeping
-        // it with the source-owned overlay makes the behavior transparent to
-        // consumers and naturally handles nested dialogs.
-        style { "html {{ overflow: hidden; }}" }
         div {
             class,
             "aria-hidden": "true",
             "data-adico-dialog-overlay": "true",
-            style: "position: fixed; inset: 0; z-index: 50;",
             onclick: move |_| context.set_open(false),
         }
     }
@@ -62,13 +57,12 @@ pub fn DialogOverlay(class: Option<String>) -> Element {
 #[component]
 pub fn DialogContent(children: Element, class: Option<String>) -> Element {
     let class = cn(&[
-        "fixed left-1/2 top-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg border bg-background p-6 text-foreground shadow-lg",
+        "fixed left-1/2 top-1/2 z-[51] grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg border bg-background p-6 text-foreground shadow-lg",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
         DialogPrimitiveContent {
             class,
-            style: "position: fixed; z-index: 51;",
             {children}
         }
     }

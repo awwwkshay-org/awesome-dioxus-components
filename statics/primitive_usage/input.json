@@ -1,0 +1,5 @@
+{
+  "classification": "presentational",
+  "primitiveModules": [],
+  "reason": "Native <input> styling only; no controlled state or primitive import beyond what the consumer wires up."
+}

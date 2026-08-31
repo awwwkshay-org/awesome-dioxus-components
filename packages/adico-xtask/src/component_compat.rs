@@ -25,15 +25,11 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use adico_registry_core::{RegistryItemType, RegistryManifest};
 use serde::Serialize;
 
 use crate::catalog::{self, AxisKind, CatalogSnapshot};
+use crate::registry_introspect::{find_primitive_modules, load_registry_items, registry_root};
 use crate::rust_introspect::{self, FileIntrospection};
-
-fn registry_root(root: &Path) -> PathBuf {
-    root.join("registry")
-}
 
 fn output_path(root: &Path) -> PathBuf {
     root.join("statics/component_compatibility.json")
@@ -62,31 +58,6 @@ struct ComponentOutput {
     adico_primitive: Option<PrimitiveOutput>,
 }
 
-fn find_primitive_modules(root: &Path, item: &adico_registry_core::RegistryItem) -> Vec<String> {
-    let mut modules: std::collections::BTreeSet<String> = item
-        .module_exports
-        .iter()
-        .map(|export| export.module.clone())
-        .collect();
-    for file in &item.files {
-        let path = registry_root(root).join(&file.source);
-        if let Ok(source) = fs::read_to_string(&path) {
-            for line in source.lines() {
-                if let Some(rest) = line.trim().strip_prefix("use adico_primitives::") {
-                    let module = rest
-                        .split(|c: char| !(c.is_alphanumeric() || c == '_'))
-                        .next()
-                        .unwrap_or("");
-                    if !module.is_empty() {
-                        modules.insert(module.to_string());
-                    }
-                }
-            }
-        }
-    }
-    modules.into_iter().collect()
-}
-
 fn introspect_primitive_modules(root: &Path, modules: &[String]) -> FileIntrospection {
     let src = root.join("packages/adico-primitives/src");
     let mut merged = FileIntrospection {
@@ -113,27 +84,6 @@ fn introspect_primitive_modules(root: &Path, modules: &[String]) -> FileIntrospe
     merged.hooks_used.sort();
     merged.hooks_used.dedup();
     merged
-}
-
-fn load_registry_items(root: &Path) -> Result<Vec<adico_registry_core::RegistryItem>, String> {
-    let manifest_path = registry_root(root).join("registry.json");
-    let manifest_contents = fs::read(&manifest_path)
-        .map_err(|error| format!("cannot read {}: {error}", manifest_path.display()))?;
-    let manifest: RegistryManifest = serde_json::from_slice(&manifest_contents)
-        .map_err(|error| format!("registry manifest is invalid: {error}"))?;
-
-    let mut items: Vec<_> = manifest
-        .items
-        .into_iter()
-        .filter(|item| {
-            matches!(
-                item.item_type,
-                RegistryItemType::Ui | RegistryItemType::Component
-            )
-        })
-        .collect();
-    items.sort_by(|left, right| left.name.cmp(&right.name));
-    Ok(items)
 }
 
 fn build_registry_components(

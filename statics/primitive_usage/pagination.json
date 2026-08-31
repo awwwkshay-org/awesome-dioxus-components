@@ -1,0 +1,5 @@
+{
+  "classification": "presentational",
+  "primitiveModules": [],
+  "reason": "Static link/button markup; no roving focus or controlled state -- authoring a Pagination primitive is out of scope for this change (see design.md's Non-Goals)."
+}

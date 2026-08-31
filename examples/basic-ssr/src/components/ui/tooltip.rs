@@ -42,7 +42,6 @@ pub fn TooltipContent(
             class,
             side,
             align,
-            style: "position: absolute; z-index: 50;",
             {children}
         }
     }

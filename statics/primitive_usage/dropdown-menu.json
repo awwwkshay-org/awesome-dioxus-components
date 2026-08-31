@@ -1,0 +1,6 @@
+{
+  "classification": "delegated",
+  "primitiveModules": [
+    "dropdown_menu"
+  ]
+}

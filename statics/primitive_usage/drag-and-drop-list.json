@@ -1,0 +1,6 @@
+{
+  "classification": "delegated",
+  "primitiveModules": [
+    "drag_and_drop_list"
+  ]
+}

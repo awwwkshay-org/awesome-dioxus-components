@@ -1,0 +1,6 @@
+{
+  "classification": "delegated",
+  "primitiveModules": [
+    "theme_mode"
+  ]
+}

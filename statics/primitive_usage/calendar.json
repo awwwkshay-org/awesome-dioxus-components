@@ -1,0 +1,7 @@
+{
+  "classification": "delegated",
+  "primitiveModules": [
+    "calendar",
+    "icons"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "classification": "delegated",
+  "primitiveModules": [
+    "calendar",
+    "date_picker",
+    "icons",
+    "popover"
+  ]
+}

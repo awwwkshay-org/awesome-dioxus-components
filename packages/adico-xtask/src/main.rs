@@ -3,7 +3,10 @@
 mod catalog;
 mod component_compat;
 mod primitive_compat;
+mod primitive_usage;
+mod registry_introspect;
 mod rust_introspect;
+mod styling_usage;
 
 pub(crate) fn today() -> String {
     let output = Command::new("date").arg("+%Y-%m-%d").output();
@@ -104,6 +107,32 @@ fn main() {
         [command, subcommand] if command == "component-compat" && subcommand == "check" => {
             run_compat(component_compat::check);
         }
+        [command, subcommand] if command == "primitive-usage" && subcommand == "sync" => {
+            run_compat(primitive_usage::sync);
+        }
+        [command, subcommand] if command == "primitive-usage" && subcommand == "check" => {
+            run_compat(primitive_usage::check);
+        }
+        [command, subcommand] if command == "primitive-usage" && subcommand == "diff" => {
+            run_compat(primitive_usage::diff);
+        }
+        [command] if command == "primitive-usage" => {
+            eprintln!("usage: cargo xtask primitive-usage sync|check|diff");
+            std::process::exit(2);
+        }
+        [command, subcommand] if command == "styling-usage" && subcommand == "sync" => {
+            run_compat(styling_usage::sync);
+        }
+        [command, subcommand] if command == "styling-usage" && subcommand == "check" => {
+            run_compat(styling_usage::check);
+        }
+        [command, subcommand] if command == "styling-usage" && subcommand == "diff" => {
+            run_compat(styling_usage::diff);
+        }
+        [command] if command == "styling-usage" => {
+            eprintln!("usage: cargo xtask styling-usage sync|check|diff");
+            std::process::exit(2);
+        }
         [command, subcommand, axis] if command == "catalog" && subcommand == "fetch" => {
             if let Err(error) = catalog_fetch(axis, None) {
                 eprintln!("catalog fetch failed: {error}");
@@ -127,7 +156,7 @@ fn main() {
         }
         _ => {
             eprintln!(
-                "usage:\n  cargo xtask provenance check\n  cargo xtask registry build\n  cargo xtask registry validate [--source <registry-directory-or-manifest>]\n  cargo xtask catalog fetch <axis|all> [--revision <sha>]\n  cargo xtask primitive-compat sync|check|diff\n  cargo xtask component-compat sync|check"
+                "usage:\n  cargo xtask provenance check\n  cargo xtask registry build\n  cargo xtask registry validate [--source <registry-directory-or-manifest>]\n  cargo xtask catalog fetch <axis|all> [--revision <sha>]\n  cargo xtask primitive-compat sync|check|diff\n  cargo xtask component-compat sync|check\n  cargo xtask primitive-usage sync|check|diff\n  cargo xtask styling-usage sync|check|diff"
             );
             std::process::exit(2);
         }

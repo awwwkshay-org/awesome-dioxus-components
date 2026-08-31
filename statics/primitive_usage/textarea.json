@@ -1,0 +1,5 @@
+{
+  "classification": "presentational",
+  "primitiveModules": [],
+  "reason": "Native <textarea> styling only; no controlled state beyond what the consumer wires up."
+}
