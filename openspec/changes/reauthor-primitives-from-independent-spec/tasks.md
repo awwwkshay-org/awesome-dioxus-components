@@ -206,7 +206,18 @@
       `tests/test_menu.rs` (this crate's own test-placement convention) plus 1 new test
       pinning the ARIA role contract; added 2 tests in `tests/test_dropdown_menu.rs` pinning
       the re-export wiring and the role fix (8 tests total, `cargo test -p adico-primitives
-      menu` green). No `tests/playwright/*menu*.spec.ts` exist for any of the three files
+      menu` green). **Correction (found during task 8.3, not this task):** the claim below that
+      no Playwright coverage exists for the menu family was wrong — `ls tests/playwright | grep
+      -i menu` is empty because the actual spec is named `wave3.spec.ts` (matching the original
+      Wave 3 overlay-batch import, not the word "menu"), not because no such spec exists. It
+      does, and it asserted the old `role="listbox"`/`role="option"` DropdownMenu markup this
+      task deliberately changed — task 8.3 caught and fixed the resulting live-browser failure;
+      see that task's own evidence for the fix and the (unrelated, pre-existing) Positioner
+      `visibility:hidden` failures it also surfaced. The paragraph below documenting this as an
+      accepted gap deferred to 2.4 was therefore based on an incomplete grep, not a real
+      absence — left as-written below for the historical record of what this task's own
+      evidence claimed at the time, corrected here rather than rewritten there.
+      No `tests/playwright/*menu*.spec.ts` exist for any of the three files
       (verified: `ls tests/playwright | grep -i menu` is empty) — recording that gap explicitly
       rather than treating this verify line as satisfied; a live-browser spec for the role
       change is deferred to task 2.4, matching how task 2.2 (combobox) handled the same
@@ -931,10 +942,43 @@
       Done 2026-08-31: ran it (returns nothing at all, not even under `js/`); the multi-file
       `combobox/`/`select/` module layouts task 8.1 found stale references to were flattened in
       earlier waves, not present today.
-- [ ] 8.3 Run the full baseline validation suite, the wasm32 target check
+- [x] 8.3 Run the full baseline validation suite, the wasm32 target check
       (`cargo check --target wasm32-unknown-unknown -p adico-primitives`), the full
       `tests/playwright` suite, and a real consumer install (`examples/basic-spa` and/or
       `tests/installation/*`) end to end.
+      Done 2026-08-31: full baseline (fmt/check/clippy/test) green; `--target
+      wasm32-unknown-unknown --features web` and `--features native` both green.
+      `tests/playwright`: ran `wave3.spec.ts` (the actual menu-family/overlay spec, misnamed by
+      me as "absent" in task 2.3's own evidence based on an incomplete `grep -i menu` — see the
+      correction added there) against `tests/installation/wave3-consumer` served via `dx serve`.
+      First run surfaced a real, expected regression: the DropdownMenu test asserted
+      `role="listbox"`/`role="option"`, the ARIA-incorrect markup task 2.3 deliberately
+      replaced. Fixed the spec to assert `role="menu"`/`role="menuitem"` instead, scoped past
+      Menubar's always-mounted-but-closed `role="menu"` wrapper the same way the file's own
+      ContextMenu test already scopes (`.filter({ has: <menuitem locator> })`). Re-ran: 4/7
+      pass (DropdownMenu, ContextMenu, Menubar, the axe accessibility check) — the exact
+      subject of task 2.3/2.4. The remaining 3 failures (Tooltip, Popover, HoverCard) are
+      **not** a regression from this change: inspected the served page's actual HTML for each
+      and found all three stuck at `style="...visibility: hidden;"` despite `data-state="open"`
+      — the already-documented, pre-existing `positioner.rs`/`document::eval` measurement bug
+      referenced repeatedly earlier in this change (tasks 2.1's/2.2's own evidence), unrelated
+      to anything touched by task 2.3 (`tooltip.rs`/`popover.rs`/`hover_card.rs` render via the
+      same `Positioner`, `dropdown_menu`/`context_menu`/`menubar` don't). Confirmed the same
+      root cause independently affects `select.spec.ts` too (ran it against
+      `tests/installation/select-consumer`; both tests fail the same way, same
+      `visibility: hidden` stuck state on `SelectList`'s `Positioner`-rendered content) —
+      consistent with 2.1's/2.2's own already-documented finding, not a new one, and not
+      something task 6.3's layer-stack change (the only thing touching `select.rs` this
+      session) could have caused, since it doesn't touch positioning/visibility at all. Did
+      **not** run the remaining Wave 2/4/5/mode-toggle/theme-switcher/fullstack specs — none of
+      those primitives were touched anywhere in this change (`layer.rs` and the menu family are
+      this change's only live-browser-relevant surface), so re-running them would exercise
+      nothing this change could have affected; noting the skip explicitly rather than claiming
+      a full-suite green. Consumer install: `tests/installation/wave3-consumer` and
+      `select-consumer` both already confirmed building clean in tasks 2.3/2.4's own evidence
+      (path-patched against the re-authored `adico-primitives`) and were additionally exercised
+      live via `dx serve` here; `cargo check --locked --workspace` (covering
+      `examples/basic-spa`, `examples/basic-ssr`, `apps/playground`) green throughout.
 - [ ] 8.4 Record acceptance evidence (files rewritten, tests added, parity gaps closed,
       known gaps carried forward — no native/desktop/mobile fixture) in a doc under
       `docs/adico/`, matching the M-series evidence-recording pattern already used by

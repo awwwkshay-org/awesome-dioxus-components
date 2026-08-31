@@ -49,13 +49,13 @@ test("installed DropdownMenu opens with roving-focus keyboard navigation and clo
 
   await trigger.click();
   await expect(trigger).toHaveAttribute("aria-expanded", "true");
-  const listbox = page.getByRole("listbox");
-  await expect(listbox).toBeVisible();
-
-  const item = page.getByRole("option", { name: "Edit" });
+  const item = page.getByRole("menuitem", { name: "Edit" });
+  // Scoped past Menubar's always-mounted (but closed) role="menu" wrapper.
+  const menu = page.getByRole("menu").filter({ has: item });
+  await expect(menu).toBeVisible();
   await expect(item).toBeVisible();
   await item.click();
-  await expect(listbox).toBeHidden();
+  await expect(menu).toBeHidden();
   await expect(trigger).toHaveAttribute("aria-expanded", "false");
 });
 
