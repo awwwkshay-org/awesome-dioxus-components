@@ -284,10 +284,27 @@
 
 ## 4. Wave D — large zero-churn leaves
 
-- [ ] 4.1 `tag_group.rs` (1052 lines, zero unit tests): derive spec from ARIA APG (tag/chip
+- [x] 4.1 `tag_group.rs` (1052 lines, zero unit tests): derive spec from ARIA APG (tag/chip
       list pattern) + compatibility row; author tests first; re-author; close parity gaps;
       drop header + record entry. Verify: `cargo test -p adico-primitives tag_group`,
-      relevant Playwright spec if one exists or is added, provenance count -1.
+      relevant Playwright spec if one exists or is added, provenance count -1. Done
+      2026-08-31: no logic changes (already independently structured). Spec is the WAI-ARIA
+      APG Grid pattern (`role="grid"`/`"row"`/`"gridcell"`, not a listbox — each row carries
+      its own removable affordance); escape-clears-selection and keyboard-remove have no
+      dedicated APG pattern and are recorded as this file's own design. This record's own
+      notice confirms it's excluded from parity tracking (a Dioxus-only extra, no shadcn/Base
+      UI equivalent) — no compat-diff gap to close. `primitive-compat check` currently reports
+      the tracking file itself stale from this change's own earlier consolidations
+      (select/combobox flattening); out of this task's scope, reserved for the closing sweep
+      (8.1). Had zero tests despite 1052 lines; widened `TagItem` + the four pure free
+      functions carrying this file's most error-prone index math to `pub`, added 15 tests in
+      the new `tests/test_tag_group.rs` (9 direct free-function, 6 render-level). Two
+      effect-driven-state limitations already found in this change recurred here (label
+      `aria-labelledby` wiring, item-registration-dependent remove-button state) and are
+      handled the same way — documented, not forced. Full baseline green; provenance `9
+      imported record(s), 37 source unit(s)` (−1, exact). `registry/ui/tag_group.rs`'s facade
+      only consumes the public component API, none of which changed — confirmed via
+      `registry validate` (unaffected).
 - [ ] 4.2 `toast.rs` (761 lines, zero unit tests, timer-driven): derive spec from ARIA APG
       alert/status pattern; author tests covering auto-dismiss timing first; re-author; drop
       header + record entry. Verify: `cargo test -p adico-primitives toast`, provenance

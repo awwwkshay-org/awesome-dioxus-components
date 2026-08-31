@@ -1,6 +1,11 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/tag_group.rs. See provenance/records/adico-primitives-wave5-extras.json.
+// Implements the WAI-ARIA APG Grid pattern (a single-row-per-item, cell-per-row grid rather
+// than a `listbox`): TagList is `role="grid"`, each TagOption is `role="row"`/`role="gridcell"`,
+// matching the APG's guidance for a composite widget whose items carry their own removable
+// affordance (TagRemoveButton) rather than a plain selectable-list item. Escape-clears-selection
+// and roving `aria-rowindex`/keyboard-remove semantics have no dedicated APG pattern of their
+// own; those are this file's own design, informed by shadcn/Base UI's Tag/Chip-group
+// conventions per statics/primitive_compatibility.json (no ARIA-authored precedent to diverge
+// from).
 
 //! Defines the [`TagGroup`] and [`TagGroupMulti`] components and their sub-components.
 
@@ -51,15 +56,16 @@ struct TagOptionCtx {
     remove_button_count: Signal<usize>,
 }
 
+/// `pub` only for `packages/adico-primitives/tests/`; not part of the intended public API.
 #[derive(Clone, PartialEq)]
-struct TagItem {
-    id: String,
-    index: usize,
-    value: RcPartialEqValue,
-    text_value: String,
-    disabled: bool,
-    removable: bool,
-    removed: bool,
+pub struct TagItem {
+    pub id: String,
+    pub index: usize,
+    pub value: RcPartialEqValue,
+    pub text_value: String,
+    pub disabled: bool,
+    pub removable: bool,
+    pub removed: bool,
 }
 
 struct TagGroupSharedProps {
@@ -313,7 +319,8 @@ impl TagGroupState {
     }
 }
 
-fn sync_tag_item(items: &mut Vec<TagItem>, mut item: TagItem) {
+/// `pub` only for `packages/adico-primitives/tests/`; not part of the intended public API.
+pub fn sync_tag_item(items: &mut Vec<TagItem>, mut item: TagItem) {
     if let Some(position) = items.iter().position(|existing| existing.id == item.id) {
         item.removed = items[position].removed && items[position].value == item.value;
         items.remove(position);
@@ -321,12 +328,14 @@ fn sync_tag_item(items: &mut Vec<TagItem>, mut item: TagItem) {
     insert_tag_item(items, item);
 }
 
-fn insert_tag_item(items: &mut Vec<TagItem>, item: TagItem) {
+/// `pub` only for `packages/adico-primitives/tests/`; not part of the intended public API.
+pub fn insert_tag_item(items: &mut Vec<TagItem>, item: TagItem) {
     let insert_at = items.partition_point(|existing| existing.index <= item.index);
     items.insert(insert_at, item);
 }
 
-fn selected_values_after_removal(
+/// `pub` only for `packages/adico-primitives/tests/`; not part of the intended public API.
+pub fn selected_values_after_removal(
     selected_values: &[RcPartialEqValue],
     removed_selected_values: &[RcPartialEqValue],
 ) -> Vec<RcPartialEqValue> {
@@ -341,7 +350,8 @@ fn selected_values_after_removal(
         .collect()
 }
 
-fn next_focus_after_removal(
+/// `pub` only for `packages/adico-primitives/tests/`; not part of the intended public API.
+pub fn next_focus_after_removal(
     items: &[TagItem],
     focused_index: usize,
     removal_ids: &[String],
