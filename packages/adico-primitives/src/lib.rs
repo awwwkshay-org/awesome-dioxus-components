@@ -77,6 +77,7 @@ pub mod listbox;
 pub mod move_interaction;
 pub mod pointer;
 pub mod portal;
+pub mod scroll_lock;
 pub mod selectable;
 pub mod selection;
 mod time;
