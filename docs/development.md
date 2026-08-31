@@ -24,3 +24,13 @@ For registry generation, upstream catalog refresh, provenance checks, and
 parity reporting, use the future `adico-xtask` commands defined by the active
 OpenSpec change. Normal CI must use checked-in snapshots and not require live
 network access.
+
+Every `registry:ui`/`registry:component` item also carries two offline,
+CI-gated classification records: `cargo run -p adico-xtask -- primitive-usage
+sync|check|diff` verifies its declared behavior-ownership classification
+(`statics/primitive_usage/<item>.json`) against `registry/ui/*.rs` and
+`registry.json`, and `cargo run -p adico-xtask -- styling-usage
+sync|check|diff` verifies its Tailwind-only and semantic-token classification
+(`statics/styling_usage/<item>.json`) the same way. Run `sync` after adding or
+changing a registry item's source, hand-review any new/changed record, and run
+`check` before committing.

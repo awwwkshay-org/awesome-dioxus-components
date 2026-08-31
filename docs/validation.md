@@ -23,6 +23,7 @@ until its retirement is explicitly approved.
 | Surface | Required check when changed | Status after M2 |
 | --- | --- | --- |
 | Registry schema/resolution | Registry-core unit tests and deterministic build validation | Harness added in M2; see [`adico/m2-vertical-slice.md`](adico/m2-vertical-slice.md) |
+| Registry facade classification | `cargo xtask primitive-usage check` and `cargo xtask styling-usage check` for any `registry/ui/*.rs` change | Both offline, CI-gated since `enforce-registry-facade-standards`; one committed record and one dedicated regression test per item under `statics/primitive_usage/` and `statics/styling_usage/` |
 | CLI installation | Installation fixtures plus conflict/idempotency tests | Harness added in M2 (`packages/adico-cli/tests/cli_integration.rs`, `tests/installation/`) |
 | Web/wasm | `cargo check --target wasm32-unknown-unknown` for affected Dioxus apps | Proven for Button/Dialog/Select in M2 |
 | SSR/hydration | Server-feature build and hydration fixture | Proven for Button/Dialog/Select in M2 (`tests/playwright/fullstack.spec.ts`); required for later components |

@@ -33,6 +33,8 @@ cargo run -p adico-xtask -- provenance check      # verify provenance/records/* 
 cargo run -p adico-xtask -- catalog fetch <axis|all> [--revision <sha>]      # only network-touching command; refreshes statics/catalogs/<axis>.json (shadcn, base-ui, dioxus-components, dioxus-primitives)
 cargo run -p adico-xtask -- primitive-compat sync|check|diff   # regenerate/verify statics/primitive_compatibility.json (vs Base UI + dioxus-primitives)
 cargo run -p adico-xtask -- component-compat sync|check        # regenerate/verify statics/component_compatibility.json (vs shadcn + dioxus-components)
+cargo run -p adico-xtask -- primitive-usage sync|check|diff    # regenerate/verify statics/primitive_usage/<item>.json (one record per registry:ui/component item, offline, CI-gated)
+cargo run -p adico-xtask -- styling-usage sync|check|diff      # regenerate/verify statics/styling_usage/<item>.json (Tailwind-only + semantic-token classification, offline, CI-gated)
 ```
 
 Surface-specific checks (only run when the change actually touches that surface — see `docs/validation.md` for the full matrix and current per-surface status):

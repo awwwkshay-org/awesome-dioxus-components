@@ -76,9 +76,9 @@ permanent judgment call.
 
 ## 7. Documentation
 
-- [ ] 7.1 Add `primitive-usage sync|check|diff` and `styling-usage sync|check|diff` to the `adico-xtask` command list in `CLAUDE.md` and `docs/development.md`.
-- [ ] 7.2 Add `primitive-usage check` and `styling-usage check` to the validation matrix in `docs/validation.md`.
-- [ ] 7.3 Add a short note to `docs/architecture.md` recording why `registry/` remains at the repository root instead of moving under `packages/` (summarize the Decisions section of `design.md`), and a short note on the Tailwind-only/semantic-token styling rule alongside the existing per-project Tailwind pipeline description.
+- [x] 7.1 Add `primitive-usage sync|check|diff` and `styling-usage sync|check|diff` to the `adico-xtask` command list in `CLAUDE.md` and `docs/development.md`.
+- [x] 7.2 Add `primitive-usage check` and `styling-usage check` to the validation matrix in `docs/validation.md`.
+- [x] 7.3 Add a short note to `docs/architecture.md` recording why `registry/` remains at the repository root instead of moving under `packages/` (summarize the Decisions section of `design.md`), and a short note on the Tailwind-only/semantic-token styling rule alongside the existing per-project Tailwind pipeline description.
 
 ## 8. Final validation
 

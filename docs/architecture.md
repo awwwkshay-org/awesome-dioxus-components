@@ -44,3 +44,26 @@ named local or static-HTTPS organization registry in `components.json` and make
 it the default. Explicit item references such as `@adico/button` select the
 official registry when an organization default is active. See the active
 [registry design](../openspec/changes/build-adico-component-ecosystem/design.md).
+
+`registry/` stays at the repository root rather than moving under `packages/`.
+`packages/` is this workspace's Cargo-member namespace — every directory in it
+is a crate with a `Cargo.toml` — while `registry/` is deliberately not a crate:
+`adico` distributes registry source the way shadcn does (consumer-owned copies
+via CLI install), not as a compiled dependency, and filing it under `packages/`
+would put a non-crate, non-member directory directly beside a real crate like
+`packages/adico-registry-core`, inviting exactly the failure mode this doc
+already warns against — something importing registry source via a workspace
+path instead of the CLI installer. See
+[`enforce-registry-facade-standards`'s design](../openspec/changes/enforce-registry-facade-standards/design.md)
+for the full analysis.
+
+Every `registry/ui`/`registry/component` file styles exclusively through
+Tailwind utility classes and semantic design tokens (`bg-background`,
+`text-foreground`, `bg-primary`, `border-input`, `ring-ring`, `bg-sidebar*`,
+etc.), never raw CSS (`style { ... }` blocks or a `style:` attribute) and
+never a hardcoded color where a token applies. A genuinely runtime-computed
+value (a progress bar's computed width, a generated CSS custom property) or a
+legitimate non-token color (an exact match to upstream shadcn, an inherently
+theme-independent affordance) is a recorded, reasoned exception, not silently
+allowed — see `cargo xtask styling-usage check` in
+[`docs/development.md`](../docs/development.md).
