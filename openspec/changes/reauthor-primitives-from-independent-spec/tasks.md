@@ -862,13 +862,55 @@
 
 ## 8. Closing — parity sweep and acceptance
 
-- [ ] 8.1 Run `cargo run -p adico-xtask -- primitive-compat diff` across all axes
+- [x] 8.1 Run `cargo run -p adico-xtask -- primitive-compat diff` across all axes
       (Base UI, dioxus-primitives) for every rewritten primitive; implement any remaining gap
       not already closed per-wave (this is task `7.9`'s scope in
       `build-adico-component-ecosystem` — reference it, do not re-plan it here). Verify:
       `primitive-compat check` reports no unintentional diff.
-- [ ] 8.2 Confirm the one-file rule holds crate-wide: `find packages/adico-primitives/src
+      Done 2026-08-31: `primitive-compat check` had been reporting stale for the whole session
+      (expected — deferred by design until source stabilized, per every prior wave's evidence).
+      First `sync` attempt produced a 747-line diff dominated by wholesale data loss on the
+      `Combobox`/`Select` entries (props/hooks/components all emptied) — root-caused to two
+      stale hand-maintained `adico_file` paths in `UPSTREAM_COMPONENTS`
+      (`packages/adico-xtask/src/primitive_compat.rs`): `"combobox/"` and `"select/"`, both
+      pre-dating this session (from before either module was flattened to a single file;
+      neither task 2.1/2.2 nor any earlier wave re-synced after flattening them). Fixed both to
+      `"combobox.rs"`/`"select.rs"`, clearing their now-stale "Multi-file module" notes. Re-sync
+      surfaced a second, unrelated pre-existing gap: `VirtualList` (adico's own extra, no Base
+      UI counterpart, so tracked only on the `dioxus_primitives` axis) reported `not_started`/
+      `adico_primitive_file: null` because that axis's module-to-file lookup
+      (`dioxus_module_file_ref`) only ever tries `{module}.rs`/`{module}/` by exact name match
+      against the *upstream* dioxus-primitives module name (`virtual`), with no override
+      mechanism — adico's own file is `virtual_list.rs` (renamed during task 4.4's flattening),
+      so the naming-convention match has been silently failing since that rename, previously
+      masked by the same never-re-synced staleness. Added a new, minimal
+      `DIOXUS_MODULE_FILE_OVERRIDES` table (one entry: `("virtual", "virtual_list.rs")`) and
+      wired it into `dioxus_module_file_ref` ahead of the naming-convention fallback, documented
+      as existing for exactly this rename case. With both fixes, `dioxus_primitives` axis
+      returned to `built: 41, not_started: 1` (matching its pre-drift baseline) and the
+      `Combobox`/`Select` diffs became legitimate, accurate introspection updates (newly
+      detected `use_effect`/`use_escape_key`/`use_outside_dismiss` hooks, correct component
+      ordering) rather than data loss. Separately updated three `UPSTREAM_COMPONENTS` entries'
+      hand-maintained `status`/`notes` to reflect this session's actual task 2.3 outcome rather
+      than its pre-2.3 "not yet migrated" framing: `Context Menu` and `Menubar` moved
+      `partial` → `built` (both re-authored, both deliberately and evidence-backed kept
+      independent of `menu.rs` rather than "not yet" migrated — see task 2.3's own entries for
+      the Base UI research behind each decision); `Menu`'s notes corrected to say it *is* now
+      consumed indirectly via the `dropdown-menu` registry item (through `dropdown_menu.rs`'s
+      re-export), while still correctly flagging its own remaining gaps (`Positioner`
+      composition, `use_typeahead` wiring) as real and unaddressed. No component/prop/hook
+      classification for any *other* primitive changed — this was solely fallout from task
+      2.3/2.4 and the pre-existing flattening-staleness it happened to surface, not a general
+      compat sweep of every primitive's Base UI feature parity (that remains `7.9`'s own scope,
+      as this task's own text already says). `primitive-compat check`/`diff` both clean;
+      `base_ui: components_built 24→26, components_partial 3→1`; `dioxus_primitives: built
+      40→41, not_started 2→1`. Full baseline (fmt/check/clippy/test) green; `registry validate`
+      and `provenance check` (`1 imported record(s), 1 source unit(s)`) both unaffected.
+- [x] 8.2 Confirm the one-file rule holds crate-wide: `find packages/adico-primitives/src
       -mindepth 2 -name '*.rs'` returns nothing outside `js/`.
+      Done 2026-08-31: ran it (returns nothing at all, not even under `js/`); the multi-file
+      `combobox/`/`select/` module layouts task 8.1 found stale references to were flattened in
+      earlier waves, not present today.
 - [ ] 8.3 Run the full baseline validation suite, the wasm32 target check
       (`cargo check --target wasm32-unknown-unknown -p adico-primitives`), the full
       `tests/playwright` suite, and a real consumer install (`examples/basic-spa` and/or

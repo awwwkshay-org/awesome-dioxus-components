@@ -595,24 +595,27 @@
         "adico_components": [
           "Combobox",
           "ComboboxMulti",
-          "ComboboxEmpty",
           "ComboboxInput",
           "ComboboxList",
           "ComboboxOption",
-          "ComboboxItemIndicator"
+          "ComboboxItemIndicator",
+          "ComboboxEmpty"
         ],
         "adico_hooks_defined": [],
         "adico_hooks_used": [
           "use_controlled",
+          "use_effect",
+          "use_escape_key",
           "use_id_or",
           "use_item",
           "use_listbox_container",
+          "use_outside_dismiss",
           "use_selectable_option",
           "use_selectable_root",
           "use_single_selectable_value",
           "use_unique_id"
         ],
-        "adico_primitive_file": "packages/adico-primitives/src/combobox/",
+        "adico_primitive_file": "packages/adico-primitives/src/combobox.rs",
         "adico_props": {
           "ComboboxEmptyProps": [
             {
@@ -847,7 +850,7 @@
         },
         "adico_registry_item": "combobox",
         "name": "Combobox",
-        "notes": "Multi-file module (combobox/components/*).",
+        "notes": "",
         "status": "built"
       },
       {
@@ -959,8 +962,8 @@
         },
         "adico_registry_item": "context-menu",
         "name": "Context Menu",
-        "notes": "Flat, independently-implemented menu; not yet migrated onto the unified menu.rs primitive (task 7.8e).",
-        "status": "partial"
+        "notes": "Deliberately kept independent of menu.rs (task 2.3): Base UI's own ContextMenuRoot delegates to Menu.Root only because Menu.Popup is Positioner-anchored from the start, and menu::MenuContent isn't -- ContextMenuContent's click-point position:fixed placement, viewport correction, scroll-lock, outside-dismiss, and focus management have no home there without new, untested props. Already implements the ARIA APG generic Menu pattern correctly.",
+        "status": "built"
       },
       {
         "adico_components": [
@@ -1373,7 +1376,7 @@
         },
         "adico_registry_item": null,
         "name": "Menu",
-        "notes": "Unified anatomy built (task 7.6a), but not yet composed on positioner::Positioner, not wired to use_typeahead, and not yet consumed by any registry item (task 7.8e).",
+        "notes": "Unified anatomy built (task 7.6a); dropdown_menu.rs re-exports its components directly (task 2.3), so it is now consumed indirectly via the 'dropdown-menu' registry item, but there is no standalone 'menu' registry item and it is still not composed on positioner::Positioner nor wired to use_typeahead.",
         "status": "partial"
       },
       {
@@ -1489,8 +1492,8 @@
         },
         "adico_registry_item": "menubar",
         "name": "Menubar",
-        "notes": "Flat, independently-implemented; not yet migrated onto menu.rs (task 7.8e).",
-        "status": "partial"
+        "notes": "Deliberately kept independent of menu.rs (task 2.3): Base UI's own Menubar shares nothing with Menu beyond a roving-focus composite container, which menubar.rs already gets from crate::collection; its per-menu is_open/set_open-across-siblings coordination has no menu::MenuContext counterpart to adapt onto.",
+        "status": "built"
       },
       {
         "adico_primitive_file": null,
@@ -1835,30 +1838,32 @@
       },
       {
         "adico_components": [
-          "SelectGroup",
-          "SelectGroupLabel",
-          "SelectList",
-          "SelectOption",
-          "SelectItemIndicator",
           "Select",
           "SelectMulti",
           "SelectTrigger",
+          "SelectList",
+          "SelectGroup",
+          "SelectGroupLabel",
+          "SelectOption",
+          "SelectItemIndicator",
           "SelectValue"
         ],
         "adico_hooks_defined": [],
         "adico_hooks_used": [
           "use_controlled",
           "use_effect",
+          "use_escape_key",
           "use_id_or",
           "use_item",
           "use_listbox_container",
+          "use_outside_dismiss",
           "use_selectable_option",
           "use_selectable_root",
           "use_single_selectable_value",
           "use_typeahead",
           "use_unique_id"
         ],
-        "adico_primitive_file": "packages/adico-primitives/src/select/",
+        "adico_primitive_file": "packages/adico-primitives/src/select.rs",
         "adico_props": {
           "SelectGroupLabelProps": [
             {
@@ -2102,7 +2107,7 @@
         },
         "adico_registry_item": "select",
         "name": "Select",
-        "notes": "Multi-file module (select/components/*, select/context.rs, select/mod.rs).",
+        "notes": "",
         "status": "built"
       },
       {
@@ -2998,9 +3003,9 @@
     },
     "summary": {
       "adico_only_extras": 10,
-      "components_built": 24,
+      "components_built": 26,
       "components_not_started": 10,
-      "components_partial": 3,
+      "components_partial": 1,
       "total_upstream_components": 37,
       "total_upstream_utils": 4
     },
@@ -4145,24 +4150,27 @@
         "adico_components": [
           "Combobox",
           "ComboboxMulti",
-          "ComboboxEmpty",
           "ComboboxInput",
           "ComboboxList",
           "ComboboxOption",
-          "ComboboxItemIndicator"
+          "ComboboxItemIndicator",
+          "ComboboxEmpty"
         ],
         "adico_hooks_defined": [],
         "adico_hooks_used": [
           "use_controlled",
+          "use_effect",
+          "use_escape_key",
           "use_id_or",
           "use_item",
           "use_listbox_container",
+          "use_outside_dismiss",
           "use_selectable_option",
           "use_selectable_root",
           "use_single_selectable_value",
           "use_unique_id"
         ],
-        "adico_primitive_file": "packages/adico-primitives/src/combobox/",
+        "adico_primitive_file": "packages/adico-primitives/src/combobox.rs",
         "adico_props": {
           "ComboboxEmptyProps": [
             {
@@ -5057,110 +5065,11 @@
         "status": "built"
       },
       {
-        "adico_components": [
-          "DropdownMenu",
-          "DropdownMenuTrigger",
-          "DropdownMenuContent",
-          "DropdownMenuItem"
-        ],
+        "adico_components": [],
         "adico_hooks_defined": [],
-        "adico_hooks_used": [
-          "use_animated_open",
-          "use_collection_provider",
-          "use_controlled",
-          "use_id_or",
-          "use_item",
-          "use_unique_id"
-        ],
+        "adico_hooks_used": [],
         "adico_primitive_file": "packages/adico-primitives/src/dropdown_menu.rs",
-        "adico_props": {
-          "DropdownMenuContentProps": [
-            {
-              "name": "id",
-              "type": "ReadSignal<Option<String>>"
-            },
-            {
-              "name": "attributes",
-              "type": "Vec<Attribute>"
-            },
-            {
-              "name": "children",
-              "type": "Element"
-            }
-          ],
-          "DropdownMenuItemProps": [
-            {
-              "name": "value",
-              "type": "ReadSignal<T>"
-            },
-            {
-              "name": "index",
-              "type": "ReadSignal<usize>"
-            },
-            {
-              "default": "default()",
-              "name": "disabled",
-              "type": "ReadSignal<bool>"
-            },
-            {
-              "default": "default()",
-              "name": "on_select",
-              "type": "Callback<T>"
-            },
-            {
-              "name": "attributes",
-              "type": "Vec<Attribute>"
-            },
-            {
-              "name": "children",
-              "type": "Element"
-            }
-          ],
-          "DropdownMenuProps": [
-            {
-              "name": "open",
-              "type": "ReadSignal<Option<bool>>"
-            },
-            {
-              "default": "default()",
-              "name": "default_open",
-              "type": "bool"
-            },
-            {
-              "default": "default()",
-              "name": "on_open_change",
-              "type": "Callback<bool>"
-            },
-            {
-              "default": "default()",
-              "name": "disabled",
-              "type": "ReadSignal<bool>"
-            },
-            {
-              "default": "ReadSignal::new(Signal::new(true))",
-              "name": "roving_loop",
-              "type": "ReadSignal<bool>"
-            },
-            {
-              "name": "attributes",
-              "type": "Vec<Attribute>"
-            },
-            {
-              "name": "children",
-              "type": "Element"
-            }
-          ],
-          "DropdownMenuTriggerProps": [
-            {
-              "name": "attributes",
-              "type": "Vec<Attribute>"
-            },
-            {
-              "name": "children",
-              "type": "Element"
-            }
-          ]
-        },
+        "adico_props": {},
         "module": "dropdown_menu",
         "status": "built"
       },
@@ -5785,30 +5694,32 @@
       },
       {
         "adico_components": [
-          "SelectGroup",
-          "SelectGroupLabel",
-          "SelectList",
-          "SelectOption",
-          "SelectItemIndicator",
           "Select",
           "SelectMulti",
           "SelectTrigger",
+          "SelectList",
+          "SelectGroup",
+          "SelectGroupLabel",
+          "SelectOption",
+          "SelectItemIndicator",
           "SelectValue"
         ],
         "adico_hooks_defined": [],
         "adico_hooks_used": [
           "use_controlled",
           "use_effect",
+          "use_escape_key",
           "use_id_or",
           "use_item",
           "use_listbox_container",
+          "use_outside_dismiss",
           "use_selectable_option",
           "use_selectable_root",
           "use_single_selectable_value",
           "use_typeahead",
           "use_unique_id"
         ],
-        "adico_primitive_file": "packages/adico-primitives/src/select/",
+        "adico_primitive_file": "packages/adico-primitives/src/select.rs",
         "adico_props": {
           "SelectGroupLabelProps": [
             {
@@ -7148,11 +7059,37 @@
         "status": "built"
       },
       {
-        "adico_components": [],
+        "adico_components": [
+          "VirtualList"
+        ],
         "adico_hooks_defined": [],
         "adico_hooks_used": [],
-        "adico_primitive_file": "packages/adico-primitives/src/virtual/",
-        "adico_props": {},
+        "adico_primitive_file": "packages/adico-primitives/src/virtual_list.rs",
+        "adico_props": {
+          "VirtualListProps": [
+            {
+              "name": "count",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "default": "ReadSignal::new(Signal::new(8))",
+              "name": "buffer",
+              "type": "ReadSignal<usize>"
+            },
+            {
+              "name": "estimate_size",
+              "type": "Option<Callback<usize, u32>>"
+            },
+            {
+              "name": "render_item",
+              "type": "Callback<usize, Element>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ]
+        },
         "module": "virtual",
         "status": "built"
       },

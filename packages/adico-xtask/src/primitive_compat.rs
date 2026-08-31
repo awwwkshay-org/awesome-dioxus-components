@@ -138,16 +138,16 @@ const UPSTREAM_COMPONENTS: &[ComponentEntry] = &[
     ComponentEntry {
         name: "Combobox",
         status: Status::Built,
-        adico_file: Some("combobox/"),
+        adico_file: Some("combobox.rs"),
         adico_registry_item: Some("combobox"),
-        notes: "Multi-file module (combobox/components/*).",
+        notes: "",
     },
     ComponentEntry {
         name: "Context Menu",
-        status: Status::Partial,
+        status: Status::Built,
         adico_file: Some("context_menu.rs"),
         adico_registry_item: Some("context-menu"),
-        notes: "Flat, independently-implemented menu; not yet migrated onto the unified menu.rs primitive (task 7.8e).",
+        notes: "Deliberately kept independent of menu.rs (task 2.3): Base UI's own ContextMenuRoot delegates to Menu.Root only because Menu.Popup is Positioner-anchored from the start, and menu::MenuContent isn't -- ContextMenuContent's click-point position:fixed placement, viewport correction, scroll-lock, outside-dismiss, and focus management have no home there without new, untested props. Already implements the ARIA APG generic Menu pattern correctly.",
     },
     ComponentEntry {
         name: "Dialog",
@@ -196,14 +196,14 @@ const UPSTREAM_COMPONENTS: &[ComponentEntry] = &[
         status: Status::Partial,
         adico_file: Some("menu.rs"),
         adico_registry_item: None,
-        notes: "Unified anatomy built (task 7.6a), but not yet composed on positioner::Positioner, not wired to use_typeahead, and not yet consumed by any registry item (task 7.8e).",
+        notes: "Unified anatomy built (task 7.6a); dropdown_menu.rs re-exports its components directly (task 2.3), so it is now consumed indirectly via the 'dropdown-menu' registry item, but there is no standalone 'menu' registry item and it is still not composed on positioner::Positioner nor wired to use_typeahead.",
     },
     ComponentEntry {
         name: "Menubar",
-        status: Status::Partial,
+        status: Status::Built,
         adico_file: Some("menubar.rs"),
         adico_registry_item: Some("menubar"),
-        notes: "Flat, independently-implemented; not yet migrated onto menu.rs (task 7.8e).",
+        notes: "Deliberately kept independent of menu.rs (task 2.3): Base UI's own Menubar shares nothing with Menu beyond a roving-focus composite container, which menubar.rs already gets from crate::collection; its per-menu is_open/set_open-across-siblings coordination has no menu::MenuContext counterpart to adapt onto.",
     },
     ComponentEntry {
         name: "Meter",
@@ -271,9 +271,9 @@ const UPSTREAM_COMPONENTS: &[ComponentEntry] = &[
     ComponentEntry {
         name: "Select",
         status: Status::Built,
-        adico_file: Some("select/"),
+        adico_file: Some("select.rs"),
         adico_registry_item: Some("select"),
-        notes: "Multi-file module (select/components/*, select/context.rs, select/mod.rs).",
+        notes: "",
     },
     ComponentEntry {
         name: "Separator",
@@ -376,6 +376,14 @@ const DIOXUS_MODULE_NOTES: &[(&str, &str)] = &[(
     "navbar",
     "Out of M3 scope by its own classification (NEEDS_PARITY_UPDATES, not \"suitable for current reuse\"); see docs/adico/m3-acceptance.md.",
 )];
+
+/// Hand-maintained overrides for dioxus-primitives modules whose upstream
+/// (raw, snake_case) name no longer matches an adico file/directory of the
+/// same name by [`dioxus_module_file_ref`]'s naming-convention lookup --
+/// e.g. because adico renamed the module during re-authoring. Without an
+/// entry here, such a module silently reports `not_started` even though the
+/// adico file exists under a different name.
+const DIOXUS_MODULE_FILE_OVERRIDES: &[(&str, &str)] = &[("virtual", "virtual_list.rs")];
 
 /// Primitives/registry items adico has that Base UI has no equivalent for.
 const ADICO_ONLY_EXTRAS: &[(&str, &str)] = &[
@@ -486,6 +494,12 @@ fn adico_primitive_modules(root: &Path) -> BTreeSet<String> {
 }
 
 fn dioxus_module_file_ref(root: &Path, module: &str) -> Option<String> {
+    if let Some((_, file)) = DIOXUS_MODULE_FILE_OVERRIDES
+        .iter()
+        .find(|(name, _)| *name == module)
+    {
+        return Some((*file).to_string());
+    }
     let src = primitives_src(root);
     if src.join(format!("{module}.rs")).is_file() {
         Some(format!("{module}.rs"))
