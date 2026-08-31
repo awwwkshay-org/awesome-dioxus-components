@@ -30,8 +30,9 @@ cargo test -p adico-registry-core -- --exact <test_name>
 cargo run -p adico-xtask -- registry build       # regenerate registry/generated/* from registry/ui|hooks|lib source
 cargo run -p adico-xtask -- registry validate     # check registry/generated/* isn't stale
 cargo run -p adico-xtask -- provenance check      # verify provenance/records/* against UPSTREAMS.md obligations
-cargo run -p adico-xtask -- parity                # verify parity.json covers every EXISTING_SHADCN_EQUIVALENT item
 cargo run -p adico-xtask -- upstream dioxus-components [--source <clone>] [--refreshed-at YYYY-MM-DD] [--write]
+cargo run -p adico-xtask -- baseui-compat sync|check|diff   # regenerate/verify packages/adico-primitives/baseui_compatibility.json
+cargo run -p adico-xtask -- shadcn-compat sync|check        # regenerate/verify registry/shadcn_compatibility.json
 ```
 
 Surface-specific checks (only run when the change actually touches that surface — see `docs/validation.md` for the full matrix and current per-surface status):

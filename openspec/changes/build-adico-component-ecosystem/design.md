@@ -711,6 +711,26 @@ snapshot. `cargo xtask parity` operates offline on those checked-in inputs and
 fails CI on malformed or incomplete records, reporting counts and gaps. It
 does not hard-code catalog totals.
 
+**Removed 2026-08-31:** `parity.json`, `parity.schema.json`,
+`docs/adico/parity.md`, the `adico-component-parity` capability spec, and
+`cargo xtask parity` (and its `DIOXUS_ONLY_EXTRAS` classification list) are all
+deleted — per an explicit user instruction that this repo only needs to track
+what is actually built, right now, not maintain a separate 17-dimension
+completion-tracking manifest. `upstreams/dioxus-components/inventory.md` is
+also removed for the same reason. Every remaining mention of `parity.json`/
+`cargo xtask parity`/the inventory table elsewhere in this document (and in
+`tasks.md`'s completed-task notes) describes a system that existed and was
+used at the time, not a current command — left as an honest historical record
+rather than rewritten. In its place, `packages/adico-xtask` gained
+`baseui-compat` and `shadcn-compat` subcommands (Rust, using `syn` for source
+introspection and `reqwest::blocking` for the Base UI live-drift check,
+matching this crate's existing `reqwest::blocking` usage in `adico-cli`/
+`adico-registry-core`) that regenerate `packages/adico-primitives/
+baseui_compatibility.json` and `registry/shadcn_compatibility.json` — a
+current-state snapshot of what's built vs. Base UI's/shadcn's own component
+inventories, with prop/hook detail introspected from the live source, rather
+than a hand-maintained, multi-dimension completion ledger.
+
 ### 10. Examples, testing, and rollout
 
 Examples are product fixtures, not workspace-source shortcuts. `examples/`

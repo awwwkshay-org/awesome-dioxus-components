@@ -100,8 +100,11 @@ name = "adico-xtask"
 version = "0.1.0"
 dependencies = [
  "adico-registry-core",
+ "quote",
+ "reqwest",
  "serde",
  "serde_json",
+ "syn 2.0.119",
 ]
 
 [[package]]

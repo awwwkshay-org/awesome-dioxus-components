@@ -13,3 +13,6 @@ path = "src/main.rs"
 adico-registry-core = { path = "../adico-registry-core" }
 serde = { workspace = true }
 serde_json = { workspace = true }
+reqwest = { workspace = true }
+syn = { version = "2", features = ["full", "extra-traits"] }
+quote = "1"

@@ -79,16 +79,16 @@ makes the platform useful while parity is progressively delivered.
   `list`, `view`, `css build`/`--check`,
   structured Cargo.toml updates, idempotency, conflict handling, and the
   source-ownership guarantee.
-- `adico-component-parity`: Defines upstream inventories, catalog snapshots,
-  the parity manifest/completion criteria, refresh tooling, and the staged
-  existing-first migration-to-parity sequence.
 - `adico-component-validation`: Defines consumer-style examples and the
   compile, installation, browser, accessibility, interaction, SSR/hydration,
   desktop, and visual validation expectations for registry components.
 
 ### Modified Capabilities
 
-- None.
+- `adico-example-fixtures`: Removes the "Removed platform coverage is
+  recorded as a named gap" requirement's dependency on the now-removed
+  `parity.json` tracking system (task 7.x), replacing it with a
+  change-notes-based record of the same intent.
 
 ## Impact
 

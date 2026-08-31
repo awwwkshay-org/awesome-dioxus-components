@@ -1,5 +1,9 @@
 //! Repository automation for Awesome Dioxus Components.
 
+mod baseui_compat;
+mod rust_introspect;
+mod shadcn_compat;
+
 use std::collections::{BTreeMap, BTreeSet};
 use std::env;
 use std::fs;
@@ -9,29 +13,9 @@ use std::process::Command;
 use serde::{Deserialize, Serialize};
 
 use adico_registry_core::{
-    EmbeddedRegistry, RegistryCompatibility, RegistryItemType, RegistryManifest, RegistryNamespace,
-    RegistrySource, RegistrySourceLoader,
+    EmbeddedRegistry, RegistryCompatibility, RegistryManifest, RegistryNamespace, RegistrySource,
+    RegistrySourceLoader,
 };
-
-/// Registry items with no shadcn-catalog mapping, so they deliberately have
-/// no `parity.json` entry: parity only tracks items explicitly mapped to the
-/// upstream shadcn catalog (see `docs/adico/parity.md`). Most of these are
-/// classified `EXISTING_DIOXUS_EXTRA` in
-/// `upstreams/dioxus-components/inventory.md` (the M3 Wave 5 batch, task
-/// 4.6); `theme-switcher` is an adico-original component with no upstream
-/// source at all (task 4.8g, see design.md §7b) but is classified the same
-/// way for the same reason -- ui.shadcn.com's theme customizer is a docs-site
-/// feature, not a shipped component. Keep this list, the inventory table,
-/// and design.md in sync if a future item needs the same treatment.
-const DIOXUS_ONLY_EXTRAS: &[&str] = &[
-    "color-picker",
-    "drag-and-drop-list",
-    "tag-group",
-    "theme-builder",
-    "theme-switcher",
-    "toolbar",
-    "virtual-list",
-];
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -131,18 +115,38 @@ fn main() {
                 std::process::exit(1);
             }
         }
-        [command] if command == "parity" => {
-            if let Err(error) = check_parity() {
-                eprintln!("parity check failed: {error}");
+        [command, subcommand] if command == "baseui-compat" && subcommand == "sync" => {
+            run_compat(baseui_compat::sync);
+        }
+        [command, subcommand] if command == "baseui-compat" && subcommand == "check" => {
+            run_compat(baseui_compat::check);
+        }
+        [command, subcommand] if command == "baseui-compat" && subcommand == "diff" => {
+            if let Err(error) = baseui_compat::diff() {
+                eprintln!("baseui-compat diff failed: {error}");
                 std::process::exit(1);
             }
         }
+        [command, subcommand] if command == "shadcn-compat" && subcommand == "sync" => {
+            run_compat(shadcn_compat::sync);
+        }
+        [command, subcommand] if command == "shadcn-compat" && subcommand == "check" => {
+            run_compat(shadcn_compat::check);
+        }
         _ => {
             eprintln!(
-                "usage:\n  cargo xtask provenance check\n  cargo xtask registry build\n  cargo xtask registry validate [--source <registry-directory-or-manifest>]\n  cargo xtask upstream dioxus-components\n  cargo xtask upstream dioxus-components --source <local-clone> --refreshed-at <YYYY-MM-DD> [--write]\n  cargo xtask parity"
+                "usage:\n  cargo xtask provenance check\n  cargo xtask registry build\n  cargo xtask registry validate [--source <registry-directory-or-manifest>]\n  cargo xtask upstream dioxus-components\n  cargo xtask upstream dioxus-components --source <local-clone> --refreshed-at <YYYY-MM-DD> [--write]\n  cargo xtask baseui-compat sync|check|diff\n  cargo xtask shadcn-compat sync|check"
             );
             std::process::exit(2);
         }
+    }
+}
+
+fn run_compat(action: impl FnOnce(&Path) -> Result<(), String>) {
+    let result = repository_root().and_then(|root| action(&root));
+    if let Err(error) = result {
+        eprintln!("{error}");
+        std::process::exit(1);
     }
 }
 
@@ -578,222 +582,6 @@ fn check_provenance() -> Result<(), String> {
     Ok(())
 }
 
-/// Mirrors `parity.schema.json`. Hand-rolled validation (rather than a JSON
-/// Schema crate) matches this repository's existing `registry validate`/
-/// `provenance check` style: serde enforces shape, and the functions below
-/// enforce the business rules the schema expresses as conditionals.
-#[derive(Debug, Deserialize)]
-struct ParityManifest {
-    #[serde(rename = "schemaVersion")]
-    #[allow(dead_code)]
-    schema_version: u32,
-    catalog: ParityCatalog,
-    components: BTreeMap<String, ParityComponent>,
-}
-
-#[derive(Debug, Deserialize)]
-struct ParityCatalog {
-    status: String,
-    source: Option<String>,
-    revision: Option<String>,
-    #[serde(rename = "refreshedAt")]
-    refreshed_at: Option<String>,
-}
-
-#[derive(Debug, Deserialize)]
-struct ParityComponent {
-    status: String,
-    #[serde(rename = "registryItem")]
-    registry_item: Option<String>,
-    dimensions: ParityDimensions,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-struct ParityDimensions {
-    source: ParityDimension,
-    api: ParityDimension,
-    visual: ParityDimension,
-    variants: ParityDimension,
-    states: ParityDimension,
-    keyboard: ParityDimension,
-    accessibility: ParityDimension,
-    dark_mode: ParityDimension,
-    rtl: ParityDimension,
-    responsive: ParityDimension,
-    examples: ParityDimension,
-    cli: ParityDimension,
-    cargo: ParityDimension,
-    web: ParityDimension,
-    desktop: ParityDimension,
-    ssr_hydration: ParityDimension,
-    docs: ParityDimension,
-}
-
-impl ParityDimensions {
-    fn named(&self) -> [(&'static str, &ParityDimension); 17] {
-        [
-            ("source", &self.source),
-            ("api", &self.api),
-            ("visual", &self.visual),
-            ("variants", &self.variants),
-            ("states", &self.states),
-            ("keyboard", &self.keyboard),
-            ("accessibility", &self.accessibility),
-            ("darkMode", &self.dark_mode),
-            ("rtl", &self.rtl),
-            ("responsive", &self.responsive),
-            ("examples", &self.examples),
-            ("cli", &self.cli),
-            ("cargo", &self.cargo),
-            ("web", &self.web),
-            ("desktop", &self.desktop),
-            ("ssrHydration", &self.ssr_hydration),
-            ("docs", &self.docs),
-        ]
-    }
-}
-
-#[derive(Debug, Deserialize)]
-struct ParityDimension {
-    applicable: bool,
-    passed: bool,
-    #[serde(default)]
-    evidence: Vec<String>,
-    note: Option<String>,
-}
-
-fn check_parity() -> Result<(), String> {
-    let root = repository_root()?;
-    check_parity_at(
-        &root.join("registry/registry.json"),
-        &root.join("parity.json"),
-    )
-}
-
-fn check_parity_at(registry_path: &Path, parity_path: &Path) -> Result<(), String> {
-    let registry_contents = fs::read(registry_path)
-        .map_err(|error| format!("cannot read {}: {error}", registry_path.display()))?;
-    let manifest: RegistryManifest = serde_json::from_slice(&registry_contents)
-        .map_err(|error| format!("registry manifest is invalid: {error}"))?;
-
-    let parity_contents = fs::read_to_string(parity_path)
-        .map_err(|error| format!("cannot read {}: {error}", parity_path.display()))?;
-    let parity: ParityManifest = serde_json::from_str(&parity_contents)
-        .map_err(|error| format!("parity manifest is invalid: {error}"))?;
-
-    validate_parity_manifest(&parity)?;
-
-    let required = classify_registry_items(&manifest);
-    let unclassified = find_unclassified(&required, &parity);
-    if !unclassified.is_empty() {
-        return Err(format!(
-            "unclassified migrated entry(ies) with no parity.json record: {}",
-            unclassified.join(", ")
-        ));
-    }
-
-    let extras_present = manifest
-        .items
-        .iter()
-        .filter(|item| DIOXUS_ONLY_EXTRAS.contains(&item.name.as_str()))
-        .count();
-
-    println!(
-        "parity check passed: {}/{} registry items classified ({extras_present} extras excluded)",
-        required.len(),
-        required.len()
-    );
-    Ok(())
-}
-
-/// Returns the name of every registry item that is required to carry a
-/// `parity.json` entry: `registry:ui`/`registry:component` items, excluding
-/// [`DIOXUS_ONLY_EXTRAS`] (which are intentionally unmapped to shadcn).
-fn classify_registry_items(manifest: &RegistryManifest) -> Vec<String> {
-    manifest
-        .items
-        .iter()
-        .filter(|item| {
-            matches!(
-                item.item_type,
-                RegistryItemType::Ui | RegistryItemType::Component
-            )
-        })
-        .map(|item| item.name.clone())
-        .filter(|name| !DIOXUS_ONLY_EXTRAS.contains(&name.as_str()))
-        .collect()
-}
-
-/// Returns every required item name with no corresponding `parity.json`
-/// component entry.
-fn find_unclassified<'a>(required: &'a [String], parity: &ParityManifest) -> Vec<&'a str> {
-    required
-        .iter()
-        .filter(|name| !parity.components.contains_key(name.as_str()))
-        .map(String::as_str)
-        .collect()
-}
-
-/// Enforces the conditional rules `parity.schema.json` expresses via
-/// `if`/`then` (which plain serde deserialization cannot check on its own).
-fn validate_parity_manifest(parity: &ParityManifest) -> Result<(), String> {
-    if parity.catalog.status == "tracked"
-        && (parity.catalog.source.is_none()
-            || parity.catalog.revision.is_none()
-            || parity.catalog.refreshed_at.is_none())
-    {
-        return Err(
-            "catalog.status is \"tracked\" but source/revision/refreshedAt is missing".into(),
-        );
-    }
-
-    for (name, component) in &parity.components {
-        for (dimension_name, dimension) in component.dimensions.named() {
-            if !dimension.applicable {
-                if dimension.passed {
-                    return Err(format!(
-                        "{name}.{dimension_name} is not applicable but marked passed"
-                    ));
-                }
-                if dimension
-                    .note
-                    .as_ref()
-                    .is_none_or(|note| note.trim().is_empty())
-                {
-                    return Err(format!(
-                        "{name}.{dimension_name} is not applicable and has no note"
-                    ));
-                }
-            }
-            if dimension.passed && dimension.evidence.is_empty() {
-                return Err(format!(
-                    "{name}.{dimension_name} is marked passed with no evidence"
-                ));
-            }
-        }
-
-        if component.status == "complete" {
-            if component
-                .registry_item
-                .as_ref()
-                .is_none_or(|value| value.trim().is_empty())
-            {
-                return Err(format!("{name} is marked complete but has no registryItem"));
-            }
-            for (dimension_name, dimension) in component.dimensions.named() {
-                if !dimension.applicable || !dimension.passed {
-                    return Err(format!(
-                        "{name} is marked complete but {dimension_name} is not applicable+passed"
-                    ));
-                }
-            }
-        }
-    }
-
-    Ok(())
-}
-
 fn repository_root() -> Result<PathBuf, String> {
     let mut directory = env::current_dir().map_err(|error| error.to_string())?;
     loop {
@@ -830,76 +618,4 @@ fn collect_imported_paths(
         }
     }
     Ok(())
-}
-
-#[cfg(test)]
-mod parity_tests {
-    use super::*;
-
-    fn fixture_path(name: &str) -> PathBuf {
-        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join("../../tests/compile/parity")
-            .join(name)
-    }
-
-    fn schema_fixture_path(name: &str) -> PathBuf {
-        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join("../../tests/compile")
-            .join(name)
-    }
-
-    fn load_parity(path: &Path) -> ParityManifest {
-        let contents = fs::read_to_string(path).expect("fixture should be readable");
-        serde_json::from_str(&contents).expect("fixture should be valid JSON")
-    }
-
-    #[test]
-    fn schema_valid_fixture_passes_business_rule_validation() {
-        let parity = load_parity(&schema_fixture_path("parity-valid.json"));
-        validate_parity_manifest(&parity).expect("fixture is a valid parity manifest");
-    }
-
-    #[test]
-    fn schema_invalid_complete_fixture_fails_business_rule_validation() {
-        let parity = load_parity(&schema_fixture_path("parity-invalid-complete.json"));
-        let error = validate_parity_manifest(&parity)
-            .expect_err("complete status requires all dimensions passed");
-        assert!(error.contains("complete"), "unexpected error: {error}");
-    }
-
-    #[test]
-    fn parity_check_reports_unclassified_registry_item() {
-        let error = check_parity_at(
-            &fixture_path("registry-with-unclassified-item.json"),
-            &fixture_path("parity-with-missing-entry.json"),
-        )
-        .expect_err("gadget has no parity.json entry and is not a Dioxus-only extra");
-        assert!(
-            error.contains("gadget"),
-            "expected the unclassified 'gadget' item to be named: {error}"
-        );
-        assert!(
-            !error.contains("widget"),
-            "widget has a parity.json entry and must not be reported: {error}"
-        );
-        assert!(
-            !error.contains("toolbar") && !error.contains("cn"),
-            "toolbar (extra) and cn (lib) must not be required to have entries: {error}"
-        );
-    }
-
-    #[test]
-    fn classify_registry_items_excludes_extras_and_lib_items() {
-        let manifest: RegistryManifest = serde_json::from_slice(
-            &fs::read(fixture_path("registry-with-unclassified-item.json"))
-                .expect("fixture should be readable"),
-        )
-        .expect("fixture should be a valid registry manifest");
-        let required = classify_registry_items(&manifest);
-        assert_eq!(
-            required,
-            vec!["widget".to_string(), "gadget".to_string()],
-            "only registry:ui/registry:component items outside DIOXUS_ONLY_EXTRAS are required"
-        );
-    }
 }
