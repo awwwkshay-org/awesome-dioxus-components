@@ -52,6 +52,7 @@ pub mod drag_and_drop_list;
 pub mod dropdown_menu;
 pub mod hover_card;
 pub mod label;
+pub mod menu;
 pub mod menubar;
 pub mod popover;
 pub mod progress;
