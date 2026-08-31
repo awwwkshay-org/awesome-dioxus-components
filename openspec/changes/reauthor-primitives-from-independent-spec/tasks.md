@@ -421,11 +421,41 @@
       `wave2-simple.json` deleted, confirmed empty first); `registry validate` unaffected;
       `tests/installation/wave2-simple-consumer` compiles clean against `--target
       wasm32-unknown-unknown`.
-- [ ] 5.3 `wave2-roving-focus` record (remainder not covered by Wave B): `accordion.rs`,
+- [x] 5.3 `wave2-roving-focus` record (remainder not covered by Wave B): `accordion.rs`,
       whatever of `radio_group.rs`/`tabs.rs`/`toggle_group.rs` was not already closed in Wave
       D under a different record. Same recipe. Verify: tests pass, record
       `adico-primitives-wave2-roving-focus.json` deleted, provenance count reduced
-      accordingly.
+      accordingly. Done 2026-08-31: `radio_group.rs`/`tabs.rs`/`toggle_group.rs` were already
+      closed in Wave D (task 4.3), leaving `accordion.rs` as this record's sole remaining
+      file. No logic changes. Derived spec: the WAI-ARIA APG Accordion pattern — each
+      `AccordionTrigger` is a button with `aria-expanded`/`aria-controls` pointing at its
+      `AccordionContent`, single-tab-stop roving tabindex among triggers (arrow keys along the
+      accordion's own orientation, Home/End to the ends) — with `Accordion`/`AccordionMulti`
+      implementing the pattern's single- vs. multiple-open-panel variants per shadcn/Radix's
+      own `AccordionPrimitive.Root` convention, already correctly implemented. Preserved the
+      file's existing "Adapted from upstream"/"Adapted further (task 7.8b)" prose documenting
+      real prior adaptations (dropped `crate::dioxus_elements::Key` import, `Accordion`/
+      `AccordionMulti` split with real controlled `String` value/values state, and the
+      `data-state` render bug fix) under the new spec-framing header, since those changes
+      remain real and relevant. Had zero tests; added 7 in new `tests/test_accordion.rs`
+      (default-open/collapsed `data-open`/`aria-expanded`/`data-state` mirrors, disabled-item
+      propagation, trigger `aria-controls` matching its content's `id`, `AccordionMulti`
+      multi-open state, root-level `disabled` propagating to every trigger). No pub-widening
+      needed — fully testable through the existing public component API, matching
+      `tabs.rs`/`radio_group.rs`/`toggle_group.rs`'s precedent. `AccordionContent`'s markup
+      gates on `use_animated_open`, whose real (`web`/`native`) implementation only flips its
+      content-mounted signal from inside a `use_effect` a bare `rebuild_in_place()` doesn't
+      drive to completion — documented in the test file and gated to the SSR-fallback
+      (non-`web`/`native`) build, the same effect-driven-state limitation this change has
+      documented elsewhere. Full baseline green; provenance `6 imported record(s), 17 source
+      unit(s)` (−1 record, exact — `wave2-roving-focus.json` deleted, confirmed
+      `accordion.rs` was its only remaining file first); `registry validate`/`registry build`
+      unaffected (46 items; the already-accepted pattern from 5.1/5.2 — generated items' static
+      `provenance.record` pointer is not re-derived from record existence); `tests/playwright/
+      wave2-roving-focus.spec.ts` already exercises the installed Accordion (open-with-click,
+      roving ArrowDown, Enter-activation) and was not re-run given zero behavior change;
+      `tests/installation/wave2-roving-focus-consumer` compiles clean against `--target
+      wasm32-unknown-unknown`.
 - [ ] 5.4 `wave2-risk` record: `scroll_area.rs` (if not already closed in Wave D),
       `alert_dialog.rs`, `slider.rs`. Same recipe — `alert_dialog.rs` migrates onto
       `scroll_lock` per the existing 7.8a precedent if not already done. Verify: tests pass,

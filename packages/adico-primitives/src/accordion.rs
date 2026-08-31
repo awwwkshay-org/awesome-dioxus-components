@@ -1,6 +1,9 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Forked from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/accordion.rs. See provenance/records/adico-primitives-wave2-roving-focus.json.
+// Implements the WAI-ARIA APG Accordion pattern: each AccordionTrigger is a button with
+// aria-expanded/aria-controls pointing at its AccordionContent, with a single-tab-stop roving
+// tabindex among triggers (arrow keys along the accordion's own orientation, Home/End to the
+// ends) -- Accordion/AccordionMulti implement the pattern's single- vs. multiple-open-panel
+// variants per shadcn/Radix's own AccordionPrimitive.Root convention. This file was already a
+// genuine adaptation, not ported-unmodified, and that adaptation is unchanged here:
 //
 // Adapted from upstream: dropped the `crate::dioxus_elements::Key` import
 // (upstream-internal re-export path that does not exist in this crate);
