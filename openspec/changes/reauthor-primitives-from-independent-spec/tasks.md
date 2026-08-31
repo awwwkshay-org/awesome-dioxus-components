@@ -633,17 +633,103 @@
 
 ## 6. Wave F — `lib.rs` and crate-wide cleanup
 
-- [ ] 6.1 Confirm every module `lib.rs` declares has been rewritten/flattened in Waves A-E;
+- [x] 6.1 Confirm every module `lib.rs` declares has been rewritten/flattened in Waves A-E;
       re-author `lib.rs` itself (crate facade, module declarations, doc comments); drop its
       `// Derived from` header and remove it from `adico-primitives-dialog-select.json`'s
       `localPaths`, deleting the record if it empties. Verify: `cargo run -p adico-xtask --
       provenance check` reports `0 imported record(s), 0 source unit(s)` (only the all-zero
-      `example-dioxus-components.json` fixture remains).
-- [ ] 6.2 Remove `lib.rs`'s `#![allow(dead_code)]` / `#![allow(clippy::collapsible_if)]`
+      `example-dioxus-components.json` fixture remains). Done 2026-08-31: confirmed every
+      `pub mod` `lib.rs` declares was rewritten/flattened in Waves A-E except
+      `dropdown_menu`/`context_menu`/`menubar` (task 2.3, addressed below in this same
+      session). Dropped the fork header entirely (no replacement provenance-framed header
+      needed — `lib.rs` is the crate root, not itself a ported file); rewrote the module doc
+      comment, which previously claimed "the initial Dialog and Select implementation is a
+      provenance-tracked fork... inherited support modules remain private until their behavior
+      is covered" — all three clauses were false by this point (not a fork, no modules are
+      thin facades over hidden support code, every support module has its own test coverage) —
+      to state the actual current shape: every module is independently re-authored against its
+      own spec, shared machinery lives in its own public module alongside its consumers, with
+      an explicit note that the menu family remains pending. Moved `dialog`/`select`'s module
+      declarations out of their special pinned-first position (a relic of them being the
+      "initial fork" subset) into the same alphabetized list as every other module. Removed the
+      unused `pub use ::dioxus_core;` re-export — grepped `registry/`, `tests/`, `examples/`,
+      `apps/` and confirmed nothing outside the crate uses `adico_primitives::dioxus_core`; the
+      two internal call sites that went through it (`pointer.rs`, `portal.rs`) already had
+      `dioxus-core` as a direct dependency and now import it directly instead of via
+      `crate::dioxus_core`. Provenance `2 imported record(s), 4 source unit(s)` — NOT the
+      task's stated `0/0` target, since two records remain that this task cannot close:
+      `wave3-overlays.json` (3 units: `dropdown_menu`/`context_menu`/`menubar`, task 2.3 — now
+      being addressed in this same session per the resolved layer-active design decision, see
+      2.3's own evidence) and `adico-cli-theme-animation-utilities.json` (1 unit,
+      `packages/adico-cli/src/css.rs` — Wave G, a different crate, out of this task's scope
+      entirely). The all-zero `example-dioxus-components.json` schema fixture is excluded from
+      both counts by the checker itself (its `revision` is the all-zero placeholder). `registry
+      build`/`validate` unaffected (46 items, no public API change).
+- [x] 6.2 Remove `lib.rs`'s `#![allow(dead_code)]` / `#![allow(clippy::collapsible_if)]`
       blocks whose `reason` strings cite the initial fork; resolve every warning that
       surfaces under `-D warnings` (delete genuinely-unused code or justify a narrower,
       non-fork-related allow per item). Verify: `cargo clippy --locked -p adico-primitives
-      --all-targets -- -D warnings` passes with no fork-related allows remaining.
+      --all-targets -- -D warnings` passes with no fork-related allows remaining. Done
+      2026-08-31: removed both blocks, then probed with `cargo clippy -p adico-primitives
+      --all-targets -- -D warnings` (default features), `--features web --target
+      wasm32-unknown-unknown`, and `--features native` to find every warning the crate-wide
+      allows had been suppressing across all three build configurations, not just the default
+      one. Findings, each resolved individually rather than with a blanket allow: (1) 16
+      `collapsible_if` sites across `select.rs`/`avatar.rs`/`calendar.rs`/`color_picker.rs`
+      (×2)/`date_picker.rs` (×2)/`virtual_list.rs`/`collection.rs` (×2)/`listbox.rs`/
+      `portal.rs`/`drag_and_drop_list.rs` (the last one only visible under `--features web`) —
+      applied `cargo clippy --fix`'s own suggested `if cond && let Some(x) = ...` let-chain
+      collapse at every site (mechanical, behavior-preserving); (2) `theme_mode.rs`'s
+      `STORAGE_KEY`/`mode_token`/`mode_from_token` and `scroll_lock.rs`'s `ScrollLockCount`/
+      `next_count`/`acquire_or_release`/`lock_body_overflow`/`unlock_body_overflow` were
+      reachable only from `web`/`native`-gated code paths (or, for `next_count`, also this
+      file's own `#[cfg(test)]` tests) with no reachability at all under the plain default-
+      feature `lib` build — narrowed each to the `#[cfg(...)]` matching its true reachability
+      (`STORAGE_KEY` to `feature = "web"` only, since the `native` branch uses a preferences
+      file rather than a keyed storage entry; the others to `any(web, native)`, deleting
+      `scroll_lock.rs`'s now-genuinely-pointless SSR no-op stub variants of
+      `lock_body_overflow`/`unlock_body_overflow`, whose only caller no longer compiles on that
+      target either); (3) `menu.rs`'s inline `#[cfg(test)] mod tests` had a `render` helper used
+      only by test functions themselves gated `not(any(web, native))` — a narrow, test-only,
+      one-line `#[cfg]` fix, not a re-authoring of `menu.rs`'s production logic, so it does not
+      touch the file's blocked status. All three feature combinations (`default`, `--features
+      web --target wasm32-unknown-unknown`, `--features native`) pass `-D warnings` with no
+      fork-related allows remaining and no other allow added anywhere. Full baseline green
+      (fmt, workspace check, clippy, tests on all five packages); `registry validate` and every
+      `tests/installation/*` fixture unaffected (no public API change — all fixes were either
+      internal `#[cfg]` narrowing or the mechanical `collapsible_if` collapse).
+- [x] 6.3 (unplanned, added this session) Resolve task 2.3's blocking layer-active design
+      question — the user chose to match Base UI/Floating UI's model (per direct web research:
+      `useDismiss` scopes its dismiss listeners to the floating element's own `open` boolean,
+      not a separate mounted-registry check) rather than adding a new "active" flag to the
+      existing mount-based stack. Re-authored `crate::layer::use_layer` to take an
+      `open: impl Readable<Target = bool> + Copy + 'static` parameter: a layer now joins the
+      shared stack synchronously on first render if already open (so `is_topmost()` is correct
+      immediately, even under a bare `rebuild_in_place()` that never drives an effect to
+      completion) and reactively joins/leaves via `use_effect` as `open` changes thereafter,
+      mirroring `scroll_lock::use_scroll_lock`'s established reactive-registration convention —
+      rather than joining unconditionally on mount and leaving only on unmount. `use_layer_member`
+      is unchanged in shape (it just joins whatever the ancestor's `use_layer` call already
+      tracks) except its no-ancestor-owner fallback, which now passes an always-open signal
+      instead of the old bare `use_layer()` call (this fallback is not hypothetical —
+      `context_menu.rs` has no `use_layer`-registering ancestor of its own and exercises it
+      today). Threaded `open` through `use_escape_key`'s signature (its own `use_layer` call)
+      and updated every call site: `alert_dialog.rs`, `dialog.rs`, `popover.rs`, `combobox.rs`,
+      `select.rs` (all pass their already-available root `open`/`Memo<bool>`), and `menu.rs`'s
+      `MenuSubmenuRoot` (its own direct `use_layer()` call). `use_outside_dismiss`/
+      `use_layer_member` needed no signature change. Added 3 new tests to
+      `tests/test_layer.rs` (9 total, up from 6) directly exercising the fix: a closed layer
+      occupies no stack slot at all; the concrete regression scenario (two sibling, not nested,
+      roots — one closed, one open — the closed one must never be topmost regardless of mount
+      order); and `use_layer_member`'s no-owner fallback still registers correctly. Verified
+      live in a browser, not just unit tests: ran `tests/playwright/dialog.spec.ts` against a
+      `dx serve`-built `tests/installation/dialog-consumer` — 3 of 4 pass, including "nested
+      Dialog closes only the active layer with Escape" (the exact scenario this fix targets);
+      the one failure ("traps Tab focus... wraps at both ends") is the pre-existing,
+      already-documented focus-trap-doesn't-move-initial-focus gap this record's own task 1.2
+      entry names, unrelated to and not touched by this fix. Full baseline green across
+      default/`web`/`native` features. This unblocks task 2.3, now in progress in this same
+      session.
 
 ## 7. Wave G — `adico-cli` animation utilities (parallel, independent)
 

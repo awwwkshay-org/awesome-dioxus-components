@@ -29,8 +29,8 @@
 //! re-render it. This module's real consumer ([`crate::toast`]) already
 //! follows the required order.
 
-use crate::dioxus_core::provide_root_context;
 use dioxus::prelude::*;
+use dioxus_core::provide_root_context;
 use std::collections::HashMap;
 
 use crate::use_effect_cleanup;
@@ -91,12 +91,12 @@ pub fn PortalIn(portal: PortalId, children: Element) -> Element {
 
 #[component]
 pub fn PortalOut(portal: PortalId) -> Element {
-    if let Some(ctx) = try_use_context::<PortalCtx>() {
-        if let Some(children) = ctx.portals.peek().get(&portal.0) {
-            return rsx! {
-                {*children}
-            };
-        }
+    if let Some(ctx) = try_use_context::<PortalCtx>()
+        && let Some(children) = ctx.portals.peek().get(&portal.0)
+    {
+        return rsx! {
+            {*children}
+        };
     }
 
     rsx! {}

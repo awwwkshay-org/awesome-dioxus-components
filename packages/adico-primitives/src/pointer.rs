@@ -24,11 +24,11 @@
 //! each install their own. Target-gated with an SSR-safe no-op on targets
 //! without a DOM (SSR/native).
 
-#[cfg(any(feature = "web", feature = "native"))]
-use crate::dioxus_core::{Runtime, queue_effect};
 use dioxus::html::geometry::ClientPoint;
 #[cfg(any(feature = "web", feature = "native"))]
 use dioxus::prelude::*;
+#[cfg(any(feature = "web", feature = "native"))]
+use dioxus_core::{Runtime, queue_effect};
 #[cfg(any(feature = "web", feature = "native"))]
 use dioxus_document as document;
 

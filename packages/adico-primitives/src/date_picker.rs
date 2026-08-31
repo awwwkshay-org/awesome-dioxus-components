@@ -739,12 +739,12 @@ fn DateSegment<T: Clone + Copy + Integer + FromStr + Display + 'static>(
     };
     use_effect(move || {
         // If this item is not focused, always keep the value clamped
-        if !ctx.focus.is_focused(props.index.cloned()) {
-            if let Some(value) = (props.value)() {
-                let clamped_value = value.clamp(props.min.cloned(), props.max.cloned());
-                if clamped_value != value {
-                    props.on_value_change.call(Some(clamped_value));
-                }
+        if !ctx.focus.is_focused(props.index.cloned())
+            && let Some(value) = (props.value)()
+        {
+            let clamped_value = value.clamp(props.min.cloned(), props.max.cloned());
+            if clamped_value != value {
+                props.on_value_change.call(Some(clamped_value));
             }
         }
     });
@@ -1171,14 +1171,12 @@ fn DateElement(props: DateElementProps) -> Element {
             year_value(),
             month_value().and_then(|m| Month::try_from(m).ok()),
             day_value(),
-        ) {
-            if let Some(date) = Date::from_calendar_date(year, month, day)
-                .ok()
-                .filter(|date| ctx.enabled_date_range.contains(*date))
-                .filter(|date| ctx.available_ranges.read().valid_interval(*date))
-            {
-                props.on_date_change.call(Some(date));
-            }
+        ) && let Some(date) = Date::from_calendar_date(year, month, day)
+            .ok()
+            .filter(|date| ctx.enabled_date_range.contains(*date))
+            .filter(|date| ctx.available_ranges.read().valid_interval(*date))
+        {
+            props.on_date_change.call(Some(date));
         }
     });
 

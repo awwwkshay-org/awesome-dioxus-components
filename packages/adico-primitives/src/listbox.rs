@@ -98,10 +98,10 @@ pub fn use_listbox_option<T: Clone + PartialEq + 'static>(
         let option_id = id();
         let option_index = index();
         let stale_id = previous_id.peek().clone();
-        if let Some(stale_id) = stale_id {
-            if stale_id != option_id {
-                remove_option(options, &stale_id);
-            }
+        if let Some(stale_id) = stale_id
+            && stale_id != option_id
+        {
+            remove_option(options, &stale_id);
         }
         sync_option(
             options,

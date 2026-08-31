@@ -135,7 +135,7 @@ pub fn DialogRoot(props: DialogRootProps) -> Element {
     });
 
     let _render = use_animated_open(id, open);
-    let onkeydown = use_escape_key(move || set_open.call(false));
+    let onkeydown = use_escape_key(open, move || set_open.call(false));
 
     rsx! {
         FocusTrapScript {}

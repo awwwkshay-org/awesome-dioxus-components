@@ -120,7 +120,7 @@ pub fn PopoverRoot(props: PopoverRootProps) -> Element {
         root_id,
     });
 
-    let onkeydown = use_escape_key(move || set_open.call(false));
+    let onkeydown = use_escape_key(open, move || set_open.call(false));
 
     rsx! {
         div {

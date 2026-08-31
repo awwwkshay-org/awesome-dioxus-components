@@ -331,10 +331,10 @@ pub fn get_virtual_items(
 /// During active scrolling returns a frozen value to prevent scrollbar drift.
 pub fn get_total_size(state: &Store<VirtualizerState>, measurements: &[VirtualItem]) -> u32 {
     let stable_measurement_count = *state.stable_measurement_count().peek();
-    if stable_measurement_count == Some(measurements.len()) {
-        if let Some(stable) = *state.stable_total_size().peek() {
-            return stable;
-        }
+    if stable_measurement_count == Some(measurements.len())
+        && let Some(stable) = *state.stable_total_size().peek()
+    {
+        return stable;
     }
     calculate_total_size(measurements)
 }

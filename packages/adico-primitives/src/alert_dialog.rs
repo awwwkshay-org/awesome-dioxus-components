@@ -159,7 +159,7 @@ pub fn AlertDialogRoot(props: AlertDialogRootProps) -> Element {
     // `use_escape_key`) reliably receives keyboard events wherever focus is,
     // unlike a listener scoped only to a conditionally-mounted Content.
     // Verified live via `dx serve`.
-    let onkeydown = use_escape_key(move || set_open.call(false));
+    let onkeydown = use_escape_key(open, move || set_open.call(false));
 
     rsx! {
         FocusTrapScript {}

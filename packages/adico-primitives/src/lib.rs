@@ -1,22 +1,23 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-// Derived from DioxusLabs/dioxus-components at bf007c15d0cf4d04d3181cc46cf12325aa773955.
-// Upstream path: primitives/src/lib.rs. See provenance/records/adico-primitives-dialog-select.json.
 
 //! Owned headless runtime behavior for source-installed adico components.
 //!
-//! The initial Dialog and Select implementation is a provenance-tracked fork
-//! of Dioxus Components. Public modules are intentionally small facades; the
-//! inherited support modules remain private until their behavior is covered.
+//! Each module here is a self-contained primitive, independently re-authored
+//! against its own spec -- the relevant WAI-ARIA Authoring Practices Guide
+//! pattern where one exists, or the closest applicable APG guidance plus its
+//! consumers' actual needs otherwise (see `openspec/changes/
+//! reauthor-primitives-from-independent-spec/design.md` for the full
+//! decision). Every public module is a complete, tested surface, not a
+//! facade over hidden support code: shared machinery (roving-tabindex
+//! collection state, pointer/move-interaction tracking, scroll locking, the
+//! floating-content positioner, the shared open/close layer stack, listbox
+//! selection state, typeahead search) lives in its own public module
+//! alongside the primitives that consume it. The `dropdown_menu`/
+//! `context_menu`/`menubar` modules remain pending re-authoring onto `menu`,
+//! blocked on a design decision about a new active-vs-merely-mounted layer
+//! primitive.
 
 #![forbid(unsafe_code)]
-#![allow(
-    dead_code,
-    reason = "the source-preserving initial fork retains private upstream support APIs until focused coverage is added"
-)]
-#![allow(
-    clippy::collapsible_if,
-    reason = "the initial fork preserves upstream control flow until focused behavior coverage permits refactoring"
-)]
 
 use std::sync::atomic::{AtomicUsize, Ordering};
 
@@ -26,15 +27,10 @@ use dioxus::prelude::{Asset, asset, manganis};
 #[cfg(any(feature = "web", feature = "native"))]
 use dioxus_document as document;
 
-pub use ::dioxus_core;
-
 /// Lucide icon components, re-exported so copied registry source and
 /// consumer applications depend on `adico-primitives` for icons rather than
 /// adding `dioxus-icons` as a second, directly-installed crate.
 pub use dioxus_icons::lucide as icons;
-
-pub mod dialog;
-pub mod select;
 
 pub mod accordion;
 pub mod alert_dialog;
@@ -47,6 +43,7 @@ pub mod color_picker;
 pub mod combobox;
 pub mod context_menu;
 pub mod date_picker;
+pub mod dialog;
 pub mod direction;
 pub mod drag_and_drop_list;
 pub mod dropdown_menu;
@@ -59,6 +56,7 @@ pub mod popover;
 pub mod progress;
 pub mod radio_group;
 pub mod scroll_area;
+pub mod select;
 pub mod separator;
 pub mod slider;
 pub mod switch;
@@ -172,8 +170,8 @@ fn use_effect_with_cleanup<F: FnMut() -> C + 'static, C: FnOnce() + 'static>(mut
 
 /// Returns a keydown handler for the caller to wire onto their own root
 /// element's `onkeydown`, calling `on_escape` when Escape is pressed and this
-/// layer is the topmost registrant on the shared [`layer`] stack (also used
-/// by [`use_outside_dismiss`]).
+/// layer is the topmost *open* registrant on the shared [`layer`] stack (also
+/// used by [`use_outside_dismiss`]).
 ///
 /// This is a returned handler rather than a bare "global" listener because a
 /// hook cannot attach a native event listener to the caller's own JSX
@@ -193,10 +191,18 @@ fn use_effect_with_cleanup<F: FnMut() -> C + 'static, C: FnOnce() + 'static>(mut
 /// compositions where two overlays are DOM siblings rather than
 /// ancestor/descendant (for example if a future real DOM portal, see
 /// `portal.rs`, moves overlay content out of its logical nesting).
+///
+/// `open` should be the *same* signal the caller uses to decide whether it is
+/// currently showing its own content — typically an always-mounted overlay
+/// root's own `open`/`is_open` state — so a closed-but-still-mounted overlay
+/// (kept mounted for a close animation, or simply never conditionally
+/// rendered by its consumer) never occupies a stack slot it isn't actually
+/// using; see [`layer`]'s module doc comment for why this matters.
 pub fn use_escape_key(
+    open: impl Readable<Target = bool> + Copy + 'static,
     mut on_escape: impl FnMut() + Clone + 'static,
 ) -> impl FnMut(Event<KeyboardData>) + Clone {
-    let layer = layer::use_layer();
+    let layer = layer::use_layer(open);
     move |event: Event<KeyboardData>| {
         if event.key() == Key::Escape && layer.is_topmost() {
             on_escape();

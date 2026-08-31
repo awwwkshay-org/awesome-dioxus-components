@@ -294,7 +294,7 @@ fn use_combobox_root(
     // rather than a document-level listener. `ComboboxList`'s own
     // outside-dismiss (below) joins this same layer via `use_layer_member`,
     // so both agree on which of them is topmost.
-    let onkeydown = use_escape_key(move || ctx.set_open(false));
+    let onkeydown = use_escape_key(open, move || ctx.set_open(false));
 
     (open, root_id, onkeydown)
 }

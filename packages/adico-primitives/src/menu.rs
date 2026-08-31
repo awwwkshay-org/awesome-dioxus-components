@@ -632,7 +632,7 @@ pub fn MenuSubmenuRoot(props: MenuSubmenuRootProps) -> Element {
     let disabled = move || (parent_ctx.disabled)() || (props.disabled)();
     let trigger_id = use_unique_id();
     let focus = use_collection_provider(ReadSignal::new(Signal::new(true)));
-    let layer = use_layer();
+    let layer = use_layer(open);
 
     use_context_provider(|| MenuContext {
         open,
@@ -721,6 +721,7 @@ pub fn MenuSubmenuTrigger(
 mod tests {
     use super::*;
 
+    #[cfg(not(any(feature = "web", feature = "native")))]
     fn render(root: fn() -> Element) -> String {
         let mut dom = VirtualDom::new(root);
         dom.rebuild_in_place();

@@ -18,13 +18,19 @@
 //! not migrate `context_menu` onto this primitive — the two exist for
 //! different reasons and neither is a strict improvement on the other.
 
+#[cfg(any(feature = "web", feature = "native"))]
 use std::cell::Cell;
+#[cfg(any(feature = "web", feature = "native"))]
 use std::rc::Rc;
 
 use dioxus::prelude::*;
 #[cfg(any(feature = "web", feature = "native"))]
 use dioxus_document as document;
 
+// Only reachable through `use_scroll_lock`'s real (`web`/`native`) implementation below; the
+// SSR/server-default `use_scroll_lock` stub is a hardcoded no-op that never touches this type,
+// so it would otherwise be reported dead on that target.
+#[cfg(any(feature = "web", feature = "native"))]
 #[derive(Clone, Default)]
 struct ScrollLockCount(Rc<Cell<usize>>);
 
@@ -67,6 +73,10 @@ pub fn use_scroll_lock(_active: impl Readable<Target = bool> + Copy + 'static) {
 /// The pure refcount arithmetic, kept free of any DOM call so it is directly
 /// unit-testable outside a Dioxus runtime (unlike [`acquire_or_release`],
 /// which calls `document::eval` and therefore requires one).
+///
+/// Reachable both through `acquire_or_release` (`web`/`native` only) and directly from this
+/// file's own `#[cfg(test)]` tests (every target), hence `test` in the gate below.
+#[cfg(any(feature = "web", feature = "native", test))]
 fn next_count(previous: usize, acquire: bool) -> usize {
     if acquire {
         previous + 1
@@ -77,6 +87,7 @@ fn next_count(previous: usize, acquire: bool) -> usize {
 
 /// Only the `previous == 0`/`next == 0` transition edges actually touch
 /// `document.body`'s style.
+#[cfg(any(feature = "web", feature = "native"))]
 fn acquire_or_release(count: &ScrollLockCount, acquire: bool) {
     let previous = count.0.get();
     let next = next_count(previous, acquire);
@@ -89,6 +100,11 @@ fn acquire_or_release(count: &ScrollLockCount, acquire: bool) {
     }
 }
 
+// `acquire_or_release` (their only caller) only compiles under `web`/`native`, so unlike
+// `lock_body_overflow`/`unlock_body_overflow` elsewhere in this crate's other target-gated
+// helpers, these have no SSR/server no-op counterpart to define -- `use_scroll_lock`'s own
+// no-op stub above already short-circuits before reaching this file's refcounting machinery
+// at all on that target.
 #[cfg(any(feature = "web", feature = "native"))]
 fn lock_body_overflow() {
     let _ = document::eval(
@@ -97,9 +113,6 @@ fn lock_body_overflow() {
     );
 }
 
-#[cfg(not(any(feature = "web", feature = "native")))]
-fn lock_body_overflow() {}
-
 #[cfg(any(feature = "web", feature = "native"))]
 fn unlock_body_overflow() {
     let _ = document::eval(
@@ -107,9 +120,6 @@ fn unlock_body_overflow() {
         delete document.body.dataset.adicoScrollLockOverflow;",
     );
 }
-
-#[cfg(not(any(feature = "web", feature = "native")))]
-fn unlock_body_overflow() {}
 
 #[cfg(test)]
 mod tests {

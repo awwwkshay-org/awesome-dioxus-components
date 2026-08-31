@@ -314,7 +314,7 @@ fn use_select_root(
     // than a document-level listener. `SelectList`'s own outside-dismiss
     // (below) joins this same layer via `use_layer_member`, so both agree on
     // which of them is topmost.
-    let onkeydown = use_escape_key(move || ctx.set_open(false));
+    let onkeydown = use_escape_key(open, move || ctx.set_open(false));
 
     (open, onkeydown)
 }
@@ -547,10 +547,10 @@ pub fn SelectList(props: SelectListProps) -> Element {
         let code = event.code();
 
         // Learn from keyboard events for adaptive matching
-        if let Key::Character(actual_char) = &key {
-            if let Some(actual_char) = actual_char.chars().next() {
-                ctx.learn_from_keyboard_event(&code.to_string(), actual_char);
-            }
+        if let Key::Character(actual_char) = &key
+            && let Some(actual_char) = actual_char.chars().next()
+        {
+            ctx.learn_from_keyboard_event(&code.to_string(), actual_char);
         }
 
         let mut arrow_key_navigation = |event: KeyboardEvent| {

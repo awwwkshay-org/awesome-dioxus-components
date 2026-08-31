@@ -57,18 +57,18 @@ fn set_avatar_state(mut ctx: AvatarCtx, state: AvatarState) -> bool {
 }
 
 fn mark_avatar_loaded(ctx: AvatarCtx) {
-    if set_avatar_state(ctx.clone(), AvatarState::Loaded) {
-        if let Some(handler) = &ctx.on_load {
-            handler.call(());
-        }
+    if set_avatar_state(ctx.clone(), AvatarState::Loaded)
+        && let Some(handler) = &ctx.on_load
+    {
+        handler.call(());
     }
 }
 
 fn mark_avatar_error(ctx: AvatarCtx) {
-    if set_avatar_state(ctx.clone(), AvatarState::Error) {
-        if let Some(handler) = &ctx.on_error {
-            handler.call(());
-        }
+    if set_avatar_state(ctx.clone(), AvatarState::Error)
+        && let Some(handler) = &ctx.on_error
+    {
+        handler.call(());
     }
 }
 

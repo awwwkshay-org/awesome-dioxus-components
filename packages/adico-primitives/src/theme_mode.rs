@@ -81,8 +81,13 @@ pub fn use_theme_mode(
     crate::use_controlled(mode, default_mode, on_change)
 }
 
+// Only referenced from `load_persisted_mode`/`persist_mode`'s `web` branches below -- the
+// `native` branches key off a preferences file, not a named storage entry, so this is `web`-only
+// unlike `mode_token`/`mode_from_token` below, which both branches share.
+#[cfg(feature = "web")]
 const STORAGE_KEY: &str = "adico-theme-mode";
 
+#[cfg(any(feature = "web", feature = "native"))]
 fn mode_token(mode: ThemeMode) -> &'static str {
     match mode {
         ThemeMode::Light => "light",
@@ -91,6 +96,7 @@ fn mode_token(mode: ThemeMode) -> &'static str {
     }
 }
 
+#[cfg(any(feature = "web", feature = "native"))]
 fn mode_from_token(token: &str) -> Option<ThemeMode> {
     match token {
         "light" => Some(ThemeMode::Light),

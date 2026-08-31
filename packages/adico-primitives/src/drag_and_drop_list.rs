@@ -629,10 +629,10 @@ fn watch_document_drop(mut ctx: DragAndDropContext) {
         "#,
     );
     spawn(async move {
-        if let Ok(action) = document_drop.recv::<String>().await {
-            if action == "drop" {
-                ctx.drop();
-            }
+        if let Ok(action) = document_drop.recv::<String>().await
+            && action == "drop"
+        {
+            ctx.drop();
         }
         let _ = document_drop.send(true);
     });

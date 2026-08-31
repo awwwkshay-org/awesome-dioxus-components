@@ -2393,12 +2393,12 @@ fn use_day_mounted_ref(
 ) -> impl FnMut(MountedEvent) + 'static {
     let mut day_ref: Signal<Option<Rc<MountedData>>> = use_signal(|| None);
     use_effect(move || {
-        if let Some(day) = day_ref() {
-            if is_focused() {
-                spawn(async move {
-                    _ = day.set_focus(true).await;
-                });
-            }
+        if let Some(day) = day_ref()
+            && is_focused()
+        {
+            spawn(async move {
+                _ = day.set_focus(true).await;
+            });
         }
     });
     move |e| day_ref.set(Some(e.data()))

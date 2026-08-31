@@ -643,11 +643,10 @@ pub fn AreaThumbSaturationInput(props: AreaThumbSaturationInputProps) -> Element
                     (area_ctx.value)() + Size2D::new(move_event.delta_x, move_event.delta_y);
                 set_area_value(picker_ctx, clamp_area_value(new_value, (area_ctx.step)()));
 
-                if move_event.delta_y != 0.0 {
-                    if let Some(target) = (thumb_ctx.value_input_ref)() {
+                if move_event.delta_y != 0.0
+                    && let Some(target) = (thumb_ctx.value_input_ref)() {
                         _ = target.set_focus(true).await;
                     }
-                }
             },
             // Voice-control / direct-manipulation: a programmatic value
             // change on the input feeds the new saturation through.
@@ -704,11 +703,10 @@ pub fn AreaThumbValueInput(props: AreaThumbValueInputProps) -> Element {
                     (area_ctx.value)() + Size2D::new(move_event.delta_x, move_event.delta_y);
                 set_area_value(picker_ctx, clamp_area_value(new_value, (area_ctx.step)()));
 
-                if move_event.delta_x != 0.0 {
-                    if let Some(target) = (thumb_ctx.saturation_input_ref)() {
+                if move_event.delta_x != 0.0
+                    && let Some(target) = (thumb_ctx.saturation_input_ref)() {
                         _ = target.set_focus(true).await;
                     }
-                }
             },
             oninput: move |evt: Event<FormData>| {
                 if let Ok(v) = evt.value().parse::<f64>() {

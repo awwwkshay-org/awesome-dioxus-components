@@ -430,12 +430,13 @@ impl CollectionState {
 
     fn control_mount_focus(&self, index: usize, controlled_ref: Signal<Option<Rc<MountedData>>>) {
         let controlled_ref = controlled_ref();
-        if self.is_focused(index) && self.is_available(index) {
-            if let Some(md) = controlled_ref {
-                spawn(async move {
-                    let _ = md.set_focus(true).await;
-                });
-            }
+        if self.is_focused(index)
+            && self.is_available(index)
+            && let Some(md) = controlled_ref
+        {
+            spawn(async move {
+                let _ = md.set_focus(true).await;
+            });
         }
     }
 
@@ -661,10 +662,10 @@ pub fn use_item(builder: CollectionItemBuilder) -> CollectionItem {
                 selected: selected(),
             };
             let stale_item = previous_item.peek().clone();
-            if let Some(stale_item) = stale_item {
-                if !stale_item.same_identity(&item) {
-                    collection.unregister_item(&stale_item);
-                }
+            if let Some(stale_item) = stale_item
+                && !stale_item.same_identity(&item)
+            {
+                collection.unregister_item(&stale_item);
             }
             collection.register_item(item.clone());
             previous_item.set(Some(item));
