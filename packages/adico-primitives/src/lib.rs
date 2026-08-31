@@ -168,19 +168,40 @@ fn use_effect_with_cleanup<F: FnMut() -> C + 'static, C: FnOnce() + 'static>(mut
     });
 }
 
-/// Call `on_escape` when Escape is pressed, but only for the topmost caller.
+/// Returns a keydown handler for the caller to wire onto their own root
+/// element's `onkeydown`, calling `on_escape` when Escape is pressed and this
+/// layer is the topmost registrant on the shared [`layer`] stack (also used
+/// by [`use_outside_dismiss`]).
 ///
-/// Callers are ordered on a LIFO stack keyed by their component scope (the
-/// shared [`layer`] stack, also used by [`use_outside_dismiss`]), so when
-/// several overlays are nested only the most-recently-mounted one reacts to a
-/// given Escape press.
-pub fn use_global_escape_listener(mut on_escape: impl FnMut() + Clone + 'static) {
+/// This is a returned handler rather than a bare "global" listener because a
+/// hook cannot attach a native event listener to the caller's own JSX
+/// element, and the alternative — a document-level `document::eval` listener
+/// registered once and left running — does not work on this crate's primary
+/// target: real browser and Playwright testing confirmed that pattern's
+/// long-lived, repeatedly-firing `document.addEventListener` call never
+/// actually registers in this Dioxus 0.7.9/0.7.10 web runtime (see
+/// `provenance/records/adico-primitives-wave3-overlays.json`). Every current
+/// consumer (`dialog`, `popover`, `alert_dialog`) already worked around this
+/// by hand-rolling the exact check this hook now centralizes.
+///
+/// Wiring this on each overlay's own (focusable) root gets nesting
+/// correctness from ordinary DOM event bubbling: an inner overlay's
+/// `stop_propagation` prevents an outer one from also reacting. The shared
+/// layer stack's `is_topmost()` check is an additional guard for
+/// compositions where two overlays are DOM siblings rather than
+/// ancestor/descendant (for example if a future real DOM portal, see
+/// `portal.rs`, moves overlay content out of its logical nesting).
+pub fn use_escape_key(
+    mut on_escape: impl FnMut() + Clone + 'static,
+) -> impl FnMut(Event<KeyboardData>) + Clone {
     let layer = layer::use_layer();
-    use_global_keydown_listener("Escape", move || {
-        if layer.is_topmost() {
+    move |event: Event<KeyboardData>| {
+        if event.key() == Key::Escape && layer.is_topmost() {
             on_escape();
+            event.prevent_default();
+            event.stop_propagation();
         }
-    });
+    }
 }
 
 #[cfg(any(feature = "web", feature = "native"))]
@@ -216,8 +237,22 @@ fn use_global_keydown_listener(_key: &'static str, _on_keydown: impl FnMut() + C
 
 /// Call `on_dismiss` when a pointerdown or focus event lands outside the
 /// element identified by `id`, but only for the topmost caller on the shared
-/// [`layer`] stack (also used by [`use_global_escape_listener`]). A no-op on
-/// targets without a DOM (SSR/native).
+/// [`layer`] stack (also used by [`use_escape_key`]). A no-op on targets
+/// without a DOM (SSR/native).
+///
+/// **Known defect on `web`:** this hook uses the same long-lived,
+/// repeatedly-firing `document::eval` listener pattern documented as
+/// non-functional in this Dioxus 0.7.9/0.7.10 web runtime (see
+/// `provenance/records/adico-primitives-wave3-overlays.json`) — unlike
+/// [`use_escape_key`], there is no equivalent fix available as a bare hook,
+/// since there is no native Dioxus document-level pointer event to return a
+/// handler for. `context_menu` and `popover`, the two current real
+/// consumers, do not currently have a working outside-dismiss on `web`. A
+/// real fix needs a composition-level change: an invisible full-viewport
+/// backdrop element behind the popup content, with a native `onclick`/
+/// `onpointerdown` handler instead of this hook — the same technique
+/// `dialog`'s registry facade already uses for its own outside-dismiss. That
+/// is 7.8 migration scope, not a primitive-only fix.
 #[cfg(any(feature = "web", feature = "native"))]
 pub fn use_outside_dismiss(
     id: impl Readable<Target = String> + Copy + 'static,

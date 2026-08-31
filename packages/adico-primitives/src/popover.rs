@@ -13,8 +13,8 @@
 use dioxus::prelude::*;
 
 use crate::{
-    ContentAlign, ContentSide, FocusTrapScript, use_animated_open, use_controlled, use_focus_trap,
-    use_global_escape_listener, use_id_or, use_outside_dismiss, use_unique_id,
+    ContentAlign, ContentSide, FocusTrapScript, use_animated_open, use_controlled, use_escape_key,
+    use_focus_trap, use_id_or, use_outside_dismiss, use_unique_id,
 };
 
 #[derive(Clone, Copy)]
@@ -117,23 +117,13 @@ pub fn PopoverRoot(props: PopoverRootProps) -> Element {
         root_id,
     });
 
+    let onkeydown = use_escape_key(move || set_open.call(false));
+
     rsx! {
         div {
             id: root_id,
             "data-state": if open() { "open" } else { "closed" },
-            // Verified in the browser: the document-level eval listener
-            // `use_global_escape_listener` (used by `PopoverContentRendered`)
-            // never actually registers in this runtime, so it never fires.
-            // This local, natively-dispatched handler is the same reliable
-            // mechanism `dialog`'s root already uses, and only requires focus
-            // to be somewhere inside the popover (trigger or content).
-            onkeydown: move |event| {
-                if event.key() == Key::Escape {
-                    set_open.call(false);
-                    event.prevent_default();
-                    event.stop_propagation();
-                }
-            },
+            onkeydown,
             ..props.attributes,
             {props.children}
         }
@@ -223,11 +213,9 @@ pub fn PopoverContentRendered(
     let is_open = open();
     let set_open = ctx.set_open;
 
-    // Add a escape key listener to the document when the popover is open. We can't
-    // just add this to the popover itself because it might not be focused if the user
-    // is highlighting text or interacting with another element.
-    use_global_escape_listener(move || set_open.call(false));
-
+    // Escape is handled by `PopoverRoot`'s own `onkeydown` (via
+    // `use_escape_key`), not here: see that hook's doc comment for why a
+    // document-level listener does not work on `web`.
     use_outside_dismiss(ctx.root_id, move || set_open.call(false));
 
     rsx! {

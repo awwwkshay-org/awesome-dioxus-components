@@ -36,9 +36,7 @@
 
 //! Defines the [`AlertDialogRoot`] component and its sub-components.
 
-use crate::{
-    FocusTrapScript, use_focus_trap, use_global_escape_listener, use_id_or, use_unique_id,
-};
+use crate::{FocusTrapScript, use_escape_key, use_focus_trap, use_id_or, use_unique_id};
 use dioxus::prelude::*;
 
 /// Context for the [`AlertDialogRoot`] component.
@@ -146,30 +144,23 @@ pub fn AlertDialogRoot(props: AlertDialogRootProps) -> Element {
     let id = use_unique_id();
     let id = use_id_or(id, props.id);
 
+    // Unlike upstream, this div (and its children, including any
+    // `AlertDialogTrigger`) is always mounted rather than gated behind
+    // `use_animated_open` -- matching `dialog::DialogRoot`'s actual pattern,
+    // where the root always renders and only `DialogContent` gates itself on
+    // the open state. `Content` below does the equivalent gating. This also
+    // fixes Escape: an always-mounted root-level `onkeydown` (via
+    // `use_escape_key`) reliably receives keyboard events wherever focus is,
+    // unlike a listener scoped only to a conditionally-mounted Content.
+    // Verified live via `dx serve`.
+    let onkeydown = use_escape_key(move || set_open.call(false));
+
     rsx! {
         FocusTrapScript {}
         div {
             id,
             "data-state": if open() { "open" } else { "closed" },
-            // Unlike upstream, this div (and its children, including any
-            // `AlertDialogTrigger`) is always mounted rather than gated
-            // behind `use_animated_open` -- matching `dialog::DialogRoot`'s
-            // actual pattern, where the root always renders and only
-            // `DialogContent` gates itself on the open state. `Content`
-            // below does the equivalent gating. This also fixes Escape: an
-            // always-mounted root-level `onkeydown` reliably receives
-            // keyboard events wherever focus is, rather than the broken
-            // long-lived `use_global_escape_listener` (see
-            // provenance/records/adico-primitives-wave3-overlays.json) or a
-            // listener scoped only to a conditionally-mounted Content.
-            // Verified live via `dx serve`.
-            onkeydown: move |event| {
-                if event.key() == Key::Escape {
-                    set_open.call(false);
-                    event.prevent_default();
-                    event.stop_propagation();
-                }
-            },
+            onkeydown,
             ..props.attributes,
             {props.children}
         }
@@ -245,13 +236,10 @@ pub fn AlertDialogContent(props: AlertDialogContentProps) -> Element {
     }
 
     let open = ctx.open;
-    let set_open = ctx.set_open;
 
-    // Add a escape key listener to the document when the dialog is open. We can't
-    // just add this to the dialog itself because it might not be focused if the user
-    // is highlighting text or interacting with another element.
-    use_global_escape_listener(move || set_open.call(false));
-
+    // Escape is handled by `AlertDialogRoot`'s own `onkeydown` (via
+    // `use_escape_key`), not here: see that hook's doc comment for why a
+    // document-level listener does not work on `web`.
     let gen_id = use_unique_id();
     let id = use_id_or(gen_id, props.id);
 

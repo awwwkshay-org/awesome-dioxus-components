@@ -32,7 +32,7 @@
     "packages/adico-primitives/src/selection.rs",
     "packages/adico-primitives/src/select/mod.rs",
     "packages/adico-primitives/src/select/context.rs",
-    "packages/adico-primitives/src/select/text_search.rs",
+    "packages/adico-primitives/src/typeahead.rs",
     "packages/adico-primitives/src/select/components/mod.rs",
     "packages/adico-primitives/src/select/components/group.rs",
     "packages/adico-primitives/src/select/components/list.rs",

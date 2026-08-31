@@ -4,7 +4,7 @@
 //! currently-mounted overlay (dialog, popover, context menu, etc.), used both
 //! to decide which layer dismiss events (Escape, outside pointer/focus)
 //! target and to derive a stable stacking `z_index` for CSS so nested
-//! overlays paint in mount order. [`crate::use_global_escape_listener`] and
+//! overlays paint in mount order. [`crate::use_escape_key`] and
 //! [`crate::use_outside_dismiss`] both register through [`use_layer`].
 
 use std::cell::RefCell;
@@ -25,9 +25,8 @@ struct LayerStack(Rc<RefCell<Vec<ScopeId>>>);
 /// Callers are ordered on a LIFO stack keyed by their component scope, so
 /// when several overlays are nested the most-recently-mounted one is
 /// topmost. An overlay that registers more than once (e.g. a component
-/// calling both [`crate::use_global_escape_listener`] and
-/// [`crate::use_outside_dismiss`]) occupies exactly one position, not one
-/// per call.
+/// calling both [`crate::use_escape_key`] and [`crate::use_outside_dismiss`])
+/// occupies exactly one position, not one per call.
 #[derive(Clone)]
 pub struct Layer {
     scope_id: ScopeId,

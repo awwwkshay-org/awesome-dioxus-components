@@ -7,8 +7,8 @@
 use dioxus::prelude::*;
 
 use crate::{
-    FocusTrapScript, use_animated_open, use_controlled, use_focus_trap, use_global_escape_listener,
-    use_id_or, use_outside_dismiss, use_unique_id,
+    FocusTrapScript, use_animated_open, use_controlled, use_escape_key, use_focus_trap, use_id_or,
+    use_outside_dismiss, use_unique_id,
 };
 
 /// Context for the [`DialogRoot`] component
@@ -133,19 +133,14 @@ pub fn DialogRoot(props: DialogRootProps) -> Element {
     });
 
     let _render = use_animated_open(id, open);
+    let onkeydown = use_escape_key(move || set_open.call(false));
 
     rsx! {
         FocusTrapScript {}
         div {
             id,
             "data-state": if open() { "open" } else { "closed" },
-            onkeydown: move |event| {
-                if event.key() == Key::Escape {
-                    set_open.call(false);
-                    event.prevent_default();
-                    event.stop_propagation();
-                }
-            },
+            onkeydown,
             ..props.attributes,
             {props.children}
         }
@@ -228,11 +223,12 @@ pub fn DialogContent(props: DialogContentProps) -> Element {
         return rsx! {};
     }
 
-    // Add a escape key listener to the document when the dialog is open. We can't
-    // just add this to the dialog itself because it might not be focused if the user
-    // is highlighting text or interacting with another element.
-    use_global_escape_listener(move || set_open.call(false));
-
+    // Escape is handled by `DialogRoot`'s own `onkeydown` (via `use_escape_key`),
+    // not here: a document-level listener would need the long-lived
+    // `document::eval` pattern confirmed non-functional on `web` (see
+    // `use_escape_key`'s doc comment), and `DialogRoot`'s always-mounted root
+    // reliably receives the keydown via ordinary DOM bubbling regardless of
+    // where focus is inside it.
     let gen_id = use_unique_id();
     let id = use_id_or(gen_id, props.id);
 
