@@ -86,7 +86,7 @@ fn next_count(previous: usize, acquire: bool) -> usize {
 }
 
 /// Only the `previous == 0`/`next == 0` transition edges actually touch
-/// `document.body`'s style.
+/// `document.documentElement`'s style.
 #[cfg(any(feature = "web", feature = "native"))]
 fn acquire_or_release(count: &ScrollLockCount, acquire: bool) {
     let previous = count.0.get();
@@ -94,30 +94,35 @@ fn acquire_or_release(count: &ScrollLockCount, acquire: bool) {
     count.0.set(next);
 
     if previous == 0 && next == 1 {
-        lock_body_overflow();
+        lock_html_overflow();
     } else if previous == 1 && next == 0 {
-        unlock_body_overflow();
+        unlock_html_overflow();
     }
 }
 
 // `acquire_or_release` (their only caller) only compiles under `web`/`native`, so unlike
-// `lock_body_overflow`/`unlock_body_overflow` elsewhere in this crate's other target-gated
+// `lock_html_overflow`/`unlock_html_overflow` elsewhere in this crate's other target-gated
 // helpers, these have no SSR/server no-op counterpart to define -- `use_scroll_lock`'s own
 // no-op stub above already short-circuits before reaching this file's refcounting machinery
 // at all on that target.
 #[cfg(any(feature = "web", feature = "native"))]
-fn lock_body_overflow() {
+fn lock_html_overflow() {
+    // Locks `<html>` (`document.documentElement`), not `<body>`:
+    // `document.scrollingElement` is `<html>` in standards mode, so an
+    // `overflow: hidden` on `<body>` alone does not stop the page from
+    // scrolling -- verified live via Playwright, where a `body`-only lock
+    // left `<html>`'s computed `overflow` at `visible` with the dialog open.
     let _ = document::eval(
-        "document.body.dataset.adicoScrollLockOverflow = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';",
+        "document.documentElement.dataset.adicoScrollLockOverflow = document.documentElement.style.overflow;
+        document.documentElement.style.overflow = 'hidden';",
     );
 }
 
 #[cfg(any(feature = "web", feature = "native"))]
-fn unlock_body_overflow() {
+fn unlock_html_overflow() {
     let _ = document::eval(
-        "document.body.style.overflow = document.body.dataset.adicoScrollLockOverflow || '';
-        delete document.body.dataset.adicoScrollLockOverflow;",
+        "document.documentElement.style.overflow = document.documentElement.dataset.adicoScrollLockOverflow || '';
+        delete document.documentElement.dataset.adicoScrollLockOverflow;",
     );
 }
 
