@@ -45,9 +45,9 @@ platform-specific validation.
 
 ## Licensing and upstream provenance
 
-The project is dual-licensed under [MIT](LICENSE-MIT) or
-[Apache-2.0](LICENSE-APACHE). Forked or ported upstream source is tracked by
-[`UPSTREAMS.md`](UPSTREAMS.md) and the records under `provenance/`.
+The project is licensed under [MIT](LICENSE.txt). Forked or ported upstream
+source is tracked by [`UPSTREAMS.md`](UPSTREAMS.md) and the records under
+`provenance/`.
 
 ## AI coding agents
 
