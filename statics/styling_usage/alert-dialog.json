@@ -4,8 +4,8 @@
   "tokenCompliant": false,
   "colorException": [
     {
-      "value": "bg-black/80 (overlay backdrop)",
-      "reason": "Matches shadcn's own current new-york-v4 Dialog source exactly, which uses bg-black/80 (not a semantic token) for its overlay backdrop."
+      "value": "bg-black/50 (overlay backdrop)",
+      "reason": "Matches shadcn's own current new-york-v4 Dialog source exactly, which uses bg-black/50 (not a semantic token) for its overlay backdrop."
     }
   ],
   "inspiredBy": [
