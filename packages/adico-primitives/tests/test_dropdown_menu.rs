@@ -12,6 +12,17 @@ use adico_primitives::dropdown_menu::{
 };
 use dioxus::prelude::*;
 
+// Every test in this file that calls `render` is itself gated
+// `cfg(not(any(feature = "web", feature = "native")))` (SSR-only: web-target
+// menu behavior can't be verified without a browser, a known gap -- see
+// primitives-reauthoring-acceptance.md). Cargo's workspace-wide feature
+// unification enables `web` here whenever another workspace member (e.g.
+// `apps/playground`) depends on `adico-primitives` with that feature, which
+// strips every caller under `cargo clippy/test --workspace` and leaves this
+// function itself flagged dead code -- gate it the same way its only callers
+// are gated, rather than `#[allow(dead_code)]` papering over a real
+// build-configuration fact.
+#[cfg(not(any(feature = "web", feature = "native")))]
 fn render(root: fn() -> Element) -> String {
     let mut dom = VirtualDom::new(root);
     dom.rebuild_in_place();

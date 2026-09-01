@@ -8,6 +8,13 @@ use adico_primitives::menu::{
 };
 use dioxus::prelude::*;
 
+// See test_dropdown_menu.rs's identical comment: every test here that calls
+// `render` is gated `cfg(not(any(feature = "web", feature = "native")))`
+// (SSR-only), so under Cargo's workspace-wide feature unification (which
+// enables `web` whenever another workspace member depends on
+// `adico-primitives` with it) this function itself must carry the same gate
+// or it's flagged dead code once every caller is compiled out.
+#[cfg(not(any(feature = "web", feature = "native")))]
 fn render(root: fn() -> Element) -> String {
     let mut dom = VirtualDom::new(root);
     dom.rebuild_in_place();

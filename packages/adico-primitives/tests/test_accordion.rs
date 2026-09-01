@@ -51,6 +51,17 @@ fn the_disabled_item_s_trigger_is_disabled_and_marked() {
     assert!(html.contains("data-disabled=true"), "{html}");
 }
 
+// Same reasoning as `the_default_value_s_content_renders_its_children` below:
+// this asserts against the *content* element's rendered `id`, which only
+// exists on the SSR-fallback path — under a feature-unified `web`/`native`
+// build (e.g. `cargo test --workspace`, where another workspace member like
+// `apps/playground` pulls in the `web` feature), `use_animated_open`'s real
+// effect-based implementation never flips its content-mounted signal inside
+// a bare `rebuild_in_place()`, so the content (and its `id`) never renders at
+// all. Missing this gate (unlike the test right below it, which already had
+// it) is why this one test failed under `--workspace` while its five
+// siblings in this file passed.
+#[cfg(not(any(feature = "web", feature = "native")))]
 #[test]
 fn the_trigger_s_aria_controls_matches_its_content_s_id() {
     let html = render(TwoItemAccordion);
