@@ -630,9 +630,7 @@
         "adico_primitive": {
           "components": [],
           "hooks_used": [],
-          "modules": [
-            "badge"
-          ],
+          "modules": [],
           "props": {}
         },
         "name": "badge",
@@ -672,9 +670,7 @@
         "adico_primitive": {
           "components": [],
           "hooks_used": [],
-          "modules": [
-            "button"
-          ],
+          "modules": [],
           "props": {}
         },
         "name": "button",
@@ -1313,9 +1309,7 @@
         "adico_primitive": {
           "components": [],
           "hooks_used": [],
-          "modules": [
-            "card"
-          ],
+          "modules": [],
           "props": {}
         },
         "name": "card",
@@ -1803,17 +1797,20 @@
           "components": [
             "Combobox",
             "ComboboxMulti",
-            "ComboboxEmpty",
             "ComboboxInput",
             "ComboboxList",
             "ComboboxOption",
-            "ComboboxItemIndicator"
+            "ComboboxItemIndicator",
+            "ComboboxEmpty"
           ],
           "hooks_used": [
             "use_controlled",
+            "use_effect",
+            "use_escape_key",
             "use_id_or",
             "use_item",
             "use_listbox_container",
+            "use_outside_dismiss",
             "use_selectable_option",
             "use_selectable_root",
             "use_single_selectable_value",
@@ -3912,111 +3909,12 @@
       },
       {
         "adico_primitive": {
-          "components": [
-            "DropdownMenu",
-            "DropdownMenuTrigger",
-            "DropdownMenuContent",
-            "DropdownMenuItem"
-          ],
-          "hooks_used": [
-            "use_animated_open",
-            "use_collection_provider",
-            "use_controlled",
-            "use_id_or",
-            "use_item",
-            "use_unique_id"
-          ],
+          "components": [],
+          "hooks_used": [],
           "modules": [
             "dropdown_menu"
           ],
-          "props": {
-            "DropdownMenuContentProps": [
-              {
-                "name": "id",
-                "type": "ReadSignal<Option<String>>"
-              },
-              {
-                "name": "attributes",
-                "type": "Vec<Attribute>"
-              },
-              {
-                "name": "children",
-                "type": "Element"
-              }
-            ],
-            "DropdownMenuItemProps": [
-              {
-                "name": "value",
-                "type": "ReadSignal<T>"
-              },
-              {
-                "name": "index",
-                "type": "ReadSignal<usize>"
-              },
-              {
-                "default": "default()",
-                "name": "disabled",
-                "type": "ReadSignal<bool>"
-              },
-              {
-                "default": "default()",
-                "name": "on_select",
-                "type": "Callback<T>"
-              },
-              {
-                "name": "attributes",
-                "type": "Vec<Attribute>"
-              },
-              {
-                "name": "children",
-                "type": "Element"
-              }
-            ],
-            "DropdownMenuProps": [
-              {
-                "name": "open",
-                "type": "ReadSignal<Option<bool>>"
-              },
-              {
-                "default": "default()",
-                "name": "default_open",
-                "type": "bool"
-              },
-              {
-                "default": "default()",
-                "name": "on_open_change",
-                "type": "Callback<bool>"
-              },
-              {
-                "default": "default()",
-                "name": "disabled",
-                "type": "ReadSignal<bool>"
-              },
-              {
-                "default": "ReadSignal::new(Signal::new(true))",
-                "name": "roving_loop",
-                "type": "ReadSignal<bool>"
-              },
-              {
-                "name": "attributes",
-                "type": "Vec<Attribute>"
-              },
-              {
-                "name": "children",
-                "type": "Element"
-              }
-            ],
-            "DropdownMenuTriggerProps": [
-              {
-                "name": "attributes",
-                "type": "Vec<Attribute>"
-              },
-              {
-                "name": "children",
-                "type": "Element"
-              }
-            ]
-          }
+          "props": {}
         },
         "name": "dropdown-menu",
         "registry_facade": {
@@ -4253,9 +4151,7 @@
         "adico_primitive": {
           "components": [],
           "hooks_used": [],
-          "modules": [
-            "input"
-          ],
+          "modules": [],
           "props": {}
         },
         "name": "input",
@@ -4326,9 +4222,7 @@
         "adico_primitive": {
           "components": [],
           "hooks_used": [],
-          "modules": [
-            "item"
-          ],
+          "modules": [],
           "props": {}
         },
         "name": "item",
@@ -4767,7 +4661,6 @@
           ],
           "modules": [
             "icons",
-            "mode_toggle",
             "theme_mode"
           ],
           "props": {}
@@ -4795,9 +4688,7 @@
         "adico_primitive": {
           "components": [],
           "hooks_used": [],
-          "modules": [
-            "pagination"
-          ],
+          "modules": [],
           "props": {}
         },
         "name": "pagination",
@@ -5360,22 +5251,24 @@
       {
         "adico_primitive": {
           "components": [
-            "SelectGroup",
-            "SelectGroupLabel",
-            "SelectList",
-            "SelectOption",
-            "SelectItemIndicator",
             "Select",
             "SelectMulti",
             "SelectTrigger",
+            "SelectList",
+            "SelectGroup",
+            "SelectGroupLabel",
+            "SelectOption",
+            "SelectItemIndicator",
             "SelectValue"
           ],
           "hooks_used": [
             "use_controlled",
             "use_effect",
+            "use_escape_key",
             "use_id_or",
             "use_item",
             "use_listbox_container",
+            "use_outside_dismiss",
             "use_selectable_option",
             "use_selectable_root",
             "use_single_selectable_value",
@@ -5849,8 +5742,7 @@
             "use_unique_id"
           ],
           "modules": [
-            "dialog",
-            "sheet"
+            "dialog"
           ],
           "props": {
             "DialogContentProps": [
@@ -6012,12 +5904,35 @@
       },
       {
         "adico_primitive": {
-          "components": [],
+          "components": [
+            "Separator"
+          ],
           "hooks_used": [],
           "modules": [
-            "sidebar"
+            "separator"
           ],
-          "props": {}
+          "props": {
+            "SeparatorProps": [
+              {
+                "default": "true",
+                "name": "horizontal",
+                "type": "bool"
+              },
+              {
+                "default": "false",
+                "name": "decorative",
+                "type": "bool"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
         },
         "name": "sidebar",
         "registry_facade": {
@@ -6233,9 +6148,7 @@
         "adico_primitive": {
           "components": [],
           "hooks_used": [],
-          "modules": [
-            "skeleton"
-          ],
+          "modules": [],
           "props": {}
         },
         "name": "skeleton",
@@ -7173,9 +7086,7 @@
         "adico_primitive": {
           "components": [],
           "hooks_used": [],
-          "modules": [
-            "textarea"
-          ],
+          "modules": [],
           "props": {}
         },
         "name": "textarea",
@@ -7250,7 +7161,6 @@
             "use_theme_mode"
           ],
           "modules": [
-            "theme_builder",
             "theme_mode"
           ],
           "props": {}
@@ -7286,8 +7196,7 @@
             "use_theme_mode"
           ],
           "modules": [
-            "theme_mode",
-            "theme_switcher"
+            "theme_mode"
           ],
           "props": {}
         },
@@ -8561,5 +8470,5 @@
       "total_upstream_components": 61
     }
   },
-  "synced_at": "2026-08-31"
+  "synced_at": "2026-09-01"
 }
