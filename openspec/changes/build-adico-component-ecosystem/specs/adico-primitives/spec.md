@@ -43,6 +43,28 @@ placement math.
 - **THEN** the fix lands once in the shared `Positioner` and both components
   gain the behavior without component-specific changes
 
+**Correction (2026-09-01):** originally required all eight listed components,
+with no exception, to compose `Positioner`. Implementation found two
+deliberate, permanent exceptions, for two distinct reasons — popover,
+hover-card, tooltip, select, combobox, and dropdown-menu all migrated cleanly
+(task 7.8c/7.8d/7.8e) and this requirement stands unmodified for them.
+context-menu anchors to an arbitrary click point, not a DOM element —
+`Positioner` has no anchor-element to key off in that model, and adding
+virtual-point anchoring would be a primitive feature addition serving no
+other consumer, not a context-menu-sized migration. menubar's exception is
+different in kind: `Positioner` computes its position once, from a rect
+measured at mount, and by its own module doc "deliberately does **not**
+continuously reposition on scroll/resize" because the observer-bridge
+capability that would need (a separate, still-blocked capability) is
+unimplemented. menubar's current plain CSS `absolute` placement was verified
+live (open a menu, force scroll on its containing region, re-measure both
+the trigger's and the content's `getBoundingClientRect()`) to stay glued to
+its trigger through a scroll the one-shot `Positioner` would not track.
+Migrating would trade that working scroll-follow for collision-awareness a
+top-of-chrome dropdown rarely needs. Both exceptions are re-evaluated only if
+a future change lands the observer-bridge capability this requirement's
+"No component SHALL implement its own placement math" line assumes exists.
+
 ### Requirement: The menu primitive supports arbitrarily nested submenus
 `adico-primitives` SHALL provide a single `Menu` primitive supporting
 `SubmenuRoot`/`SubmenuTrigger` nesting to arbitrary depth, `CheckboxItem`,
