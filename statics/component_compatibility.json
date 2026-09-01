@@ -737,6 +737,110 @@
         "adico_primitive": {
           "components": [],
           "hooks_used": [],
+          "modules": [
+            "icons"
+          ],
+          "props": {}
+        },
+        "name": "breadcrumb",
+        "registry_facade": {
+          "components": [
+            "Breadcrumb",
+            "BreadcrumbList",
+            "BreadcrumbItem",
+            "BreadcrumbLink",
+            "BreadcrumbPage",
+            "BreadcrumbSeparator",
+            "BreadcrumbEllipsis"
+          ],
+          "files": [
+            "ui/breadcrumb.rs"
+          ],
+          "props": {
+            "Breadcrumb": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "BreadcrumbEllipsis": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "BreadcrumbItem": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "BreadcrumbLinkProps": [
+              {
+                "default": "default()",
+                "name": "href",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "BreadcrumbList": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "BreadcrumbPage": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "BreadcrumbSeparator": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Option<Element>"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
+          "components": [],
+          "hooks_used": [],
           "modules": [],
           "props": {}
         },
@@ -8237,7 +8341,7 @@
       }
     ],
     "summary": {
-      "total_components": 49
+      "total_components": 50
     }
   },
   "dioxus_components": {
@@ -8523,7 +8627,8 @@
       },
       {
         "name": "breadcrumb",
-        "status": "not_started"
+        "registry_item": "breadcrumb",
+        "status": "built"
       },
       {
         "name": "bubble",
@@ -8776,9 +8881,9 @@
     "revision": "b4a618b97e35f5dadf3a00d51f410c84a2567d4d",
     "source": "https://github.com/shadcn-ui/ui/tree/b4a618b97e35f5dadf3a00d51f410c84a2567d4d/apps/v4/registry/new-york-v4/ui",
     "summary": {
-      "built": 39,
+      "built": 40,
       "not_applicable": 1,
-      "not_started": 21,
+      "not_started": 20,
       "total_upstream_components": 61
     }
   },

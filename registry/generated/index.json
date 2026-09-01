@@ -14,6 +14,7 @@
     "aspect-ratio": "items/aspect-ratio.json",
     "avatar": "items/avatar.json",
     "badge": "items/badge.json",
+    "breadcrumb": "items/breadcrumb.json",
     "button": "items/button.json",
     "calendar": "items/calendar.json",
     "card": "items/card.json",

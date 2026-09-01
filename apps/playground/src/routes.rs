@@ -8,14 +8,14 @@ use dioxus::prelude::*;
 use crate::components;
 use crate::components::theme_builder_launcher::ThemeBuilderLauncher;
 use crate::pages::{
-    AccordionPage, AlertDialogPage, AlertPage, AspectRatioPage, AvatarPage, BadgePage, ButtonPage,
-    CalendarPage, CardPage, CheckboxPage, CollapsiblePage, ColorPickerPage, ComboboxPage,
-    ContextMenuPage, DatePickerPage, DialogPage, DragAndDropListPage, DropdownMenuPage, EmptyPage,
-    Home, HoverCardPage, InputPage, ItemPage, KbdPage, LabelPage, MenubarPage, ModeTogglePage,
-    PaginationPage, PopoverPage, ProgressPage, RadioGroupPage, ScrollAreaPage, SelectPage,
-    SheetPage, SidebarPage, SkeletonPage, SliderPage, SpinnerPage, SwitchPage, TabsPage,
-    TagGroupPage, TextareaPage, ThemeSwitcherPage, ToastPage, ToggleGroupPage, TogglePage,
-    ToolbarPage, TooltipPage, VirtualListPage,
+    AccordionPage, AlertDialogPage, AlertPage, AspectRatioPage, AvatarPage, BadgePage,
+    BreadcrumbPage, ButtonPage, CalendarPage, CardPage, CheckboxPage, CollapsiblePage,
+    ColorPickerPage, ComboboxPage, ContextMenuPage, DatePickerPage, DialogPage,
+    DragAndDropListPage, DropdownMenuPage, EmptyPage, Home, HoverCardPage, InputPage, ItemPage,
+    KbdPage, LabelPage, MenubarPage, ModeTogglePage, PaginationPage, PopoverPage, ProgressPage,
+    RadioGroupPage, ScrollAreaPage, SelectPage, SheetPage, SidebarPage, SkeletonPage, SliderPage,
+    SpinnerPage, SwitchPage, TabsPage, TagGroupPage, TextareaPage, ThemeSwitcherPage, ToastPage,
+    ToggleGroupPage, TogglePage, ToolbarPage, TooltipPage, VirtualListPage,
 };
 
 const PLAYGROUND_LOGO: Asset = asset!("/assets/web/android-chrome-192x192.png");
@@ -121,6 +121,8 @@ pub enum Route {
     KbdPage {},
     #[route("/spinner")]
     SpinnerPage {},
+    #[route("/breadcrumb")]
+    BreadcrumbPage {},
 }
 
 pub fn nav_items() -> Vec<(&'static str, Route)> {
@@ -173,6 +175,7 @@ pub fn nav_items() -> Vec<(&'static str, Route)> {
         ("Empty", Route::EmptyPage {}),
         ("Kbd", Route::KbdPage {}),
         ("Spinner", Route::SpinnerPage {}),
+        ("Breadcrumb", Route::BreadcrumbPage {}),
     ]
 }
 

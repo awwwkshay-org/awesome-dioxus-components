@@ -1,0 +1,8 @@
+{
+  "tailwindOnly": true,
+  "styleException": [],
+  "tokenCompliant": true,
+  "colorException": [],
+  "inspiredBy": ["shadcn"],
+  "inspirationNote": "Class-for-class match with upstream's Breadcrumb/BreadcrumbList/BreadcrumbItem/BreadcrumbLink/BreadcrumbPage/BreadcrumbSeparator/BreadcrumbEllipsis, all semantic tokens (text-muted-foreground, text-foreground). Renders the owned Lucide Ellipsis re-export in place of upstream's MoreHorizontalIcon (renamed upstream in this Lucide icon set). No dioxus-components equivalent exists."
+}

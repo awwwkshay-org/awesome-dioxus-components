@@ -1,0 +1,54 @@
+{
+  "name": "breadcrumb",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Breadcrumb navigation trail for Dioxus.",
+  "files": [
+    {
+      "source": "ui/breadcrumb.rs",
+      "targetRoot": "ui",
+      "target": "breadcrumb.rs",
+      "checksum": "181803399507531f8ebd8a4137c162a8fcae7a454f61589f71d0af432df4e9e9"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "breadcrumb",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "breadcrumb",
+    "compositionNote": "Purely presentational nav trail (Breadcrumb/BreadcrumbList/BreadcrumbItem/BreadcrumbLink/BreadcrumbPage/BreadcrumbSeparator/BreadcrumbEllipsis), matching upstream's own non-interactive implementation. BreadcrumbSeparator defaults to a ChevronRight icon; BreadcrumbEllipsis renders the owned Lucide Ellipsis re-export (this icon set's current name for upstream's MoreHorizontalIcon, which Lucide itself renamed)."
+  },
+  "compatibility": null,
+  "provenance": null
+}

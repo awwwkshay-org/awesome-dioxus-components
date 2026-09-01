@@ -62,6 +62,16 @@
       ]
     },
     {
+      "address": "@adico/breadcrumb",
+      "manifestDigest": "4192d6f980baa9f09cbba5acd230447f943256421621f682f1bc3d54ae38174d",
+      "files": [
+        {
+          "path": "src/components/ui/breadcrumb.rs",
+          "checksum": "181803399507531f8ebd8a4137c162a8fcae7a454f61589f71d0af432df4e9e9"
+        }
+      ]
+    },
+    {
       "address": "@adico/button",
       "manifestDigest": "d360609157c3bfbfb04af82af76c43d3af9d02b58949ecb79b8d4fab3ce76363",
       "files": [
@@ -103,7 +113,7 @@
     },
     {
       "address": "@adico/cn",
-      "manifestDigest": "aa7936cd618c829ed03f03615490c2f9c7cb6bb3aff157b724bd69b7b90b6d65",
+      "manifestDigest": "4192d6f980baa9f09cbba5acd230447f943256421621f682f1bc3d54ae38174d",
       "files": [
         {
           "path": "src/adico_lib/cn.rs",

@@ -658,6 +658,9 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/spinner.rs") => {
                 Ok(include_bytes!("../../../registry/ui/spinner.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/breadcrumb.rs") => {
+                Ok(include_bytes!("../../../registry/ui/breadcrumb.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"
@@ -901,6 +904,7 @@ mod tests {
                 "@adico/aspect-ratio".to_string(),
                 "@adico/avatar".to_string(),
                 "@adico/badge".to_string(),
+                "@adico/breadcrumb".to_string(),
                 "@adico/button".to_string(),
                 "@adico/calendar".to_string(),
                 "@adico/card".to_string(),
