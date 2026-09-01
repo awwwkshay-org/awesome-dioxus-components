@@ -1317,6 +1317,7 @@
           "components": [
             "Card",
             "CardHeader",
+            "CardAction",
             "CardTitle",
             "CardDescription",
             "CardContent",
@@ -1326,6 +1327,21 @@
             "ui/card.rs"
           ],
           "props": {
+            "CardActionProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
             "CardContentProps": [
               {
                 "default": "default()",
@@ -3581,7 +3597,8 @@
             "use_unique_id"
           ],
           "modules": [
-            "dialog"
+            "dialog",
+            "icons"
           ],
           "props": {
             "DialogContentProps": [
@@ -3672,13 +3689,39 @@
             "DialogTrigger",
             "DialogOverlay",
             "DialogContent",
-            "DialogHeader"
+            "DialogHeader",
+            "DialogFooter",
+            "DialogClose"
           ],
           "files": [
             "ui/dialog.rs"
           ],
           "props": {
+            "DialogClose": [
+              {
+                "name": "children",
+                "type": "Option<Element>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
             "DialogContent": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "show_close_button",
+                "type": "bool"
+              }
+            ],
+            "DialogFooter": [
               {
                 "name": "children",
                 "type": "Element"
@@ -5742,7 +5785,8 @@
             "use_unique_id"
           ],
           "modules": [
-            "dialog"
+            "dialog",
+            "icons"
           ],
           "props": {
             "DialogContentProps": [
@@ -5833,6 +5877,7 @@
             "SheetTrigger",
             "SheetOverlay",
             "SheetContent",
+            "SheetClose",
             "SheetHeader",
             "SheetFooter"
           ],
@@ -5840,6 +5885,16 @@
             "ui/sheet.rs"
           ],
           "props": {
+            "SheetClose": [
+              {
+                "name": "children",
+                "type": "Option<Element>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
             "SheetContent": [
               {
                 "name": "children",
@@ -5852,6 +5907,10 @@
               {
                 "name": "side",
                 "type": "Option<SheetSide>"
+              },
+              {
+                "name": "show_close_button",
+                "type": "bool"
               }
             ],
             "SheetFooter": [
@@ -6503,6 +6562,11 @@
                 "default": "default()",
                 "name": "name",
                 "type": "ReadSignal<String>"
+              },
+              {
+                "default": "default()",
+                "name": "size",
+                "type": "SwitchSize"
               },
               {
                 "default": "default()",
@@ -7492,6 +7556,11 @@
               },
               {
                 "default": "default()",
+                "name": "variant",
+                "type": "ToggleVariant"
+              },
+              {
+                "default": "default()",
                 "name": "on_pressed_change",
                 "type": "Callback<bool>"
               },
@@ -7606,6 +7675,14 @@
               {
                 "name": "disabled",
                 "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "size",
+                "type": "ToggleItemSize"
+              },
+              {
+                "name": "variant",
+                "type": "ToggleItemVariant"
               },
               {
                 "name": "class",

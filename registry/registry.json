@@ -62,7 +62,7 @@
           "source": "ui/dialog.rs",
           "targetRoot": "ui",
           "target": "dialog.rs",
-          "checksum": "5ee5f115fc542151b8618c75ba6c4a57976cbc856c69d80a144e9378158d9aad"
+          "checksum": "854367f085b8de1c110ada86cdc83e11947c736b3634dd7c852f7678f1ef60e9"
         }
       ],
       "registryDependencies": ["cn", "button"],
@@ -123,7 +123,7 @@
           "source": "ui/badge.rs",
           "targetRoot": "ui",
           "target": "badge.rs",
-          "checksum": "6ad416b1a39e9bd9e1f669d99c2f460a768144d5d503901791e27ad20866bd8a"
+          "checksum": "b346ba40209a2dfd3796df4feb017d6ee3ea098b1292eeaa11bde414b55f85b8"
         }
       ],
       "registryDependencies": ["cn"],
@@ -149,7 +149,7 @@
           "source": "ui/card.rs",
           "targetRoot": "ui",
           "target": "card.rs",
-          "checksum": "a4acd825a37efde81320c7ccf3e5b18697c28e35d90158472f67b7f432a8c968"
+          "checksum": "16c77d9d9464259a4242a01c716a73f9c513dd855a635129da1311e8adbb84c0"
         }
       ],
       "registryDependencies": ["cn"],
@@ -303,7 +303,7 @@
           "source": "ui/sheet.rs",
           "targetRoot": "ui",
           "target": "sheet.rs",
-          "checksum": "c4ecaa78b78b518bfbcb15206b589684252e167937dfc24ac08127b005f7844f"
+          "checksum": "f2ec0ae048921d5325f62856dd9d66590bd4a24c1b09f24c0f05783edab41474"
         }
       ],
       "registryDependencies": ["cn", "button"],
@@ -825,7 +825,7 @@
           "source": "ui/switch.rs",
           "targetRoot": "ui",
           "target": "switch.rs",
-          "checksum": "b07d8edd799c36266a2297081f73c52f5c0cb352aae335a6869551fb49bd188d"
+          "checksum": "9464d12369ce868c4b0e297ec890076e5ff606830e9266f1491ed74f53dc499b"
         }
       ],
       "registryDependencies": ["cn"],
@@ -856,7 +856,7 @@
           "source": "ui/toggle.rs",
           "targetRoot": "ui",
           "target": "toggle.rs",
-          "checksum": "47895f52c67eaa790ffde588b6b1607ff781b7e931d7a83d8ae139d1c7958871"
+          "checksum": "090bef39dd550114f49d5484279afd34d945d06ceeb6a963d9277deef68d93c0"
         }
       ],
       "registryDependencies": ["cn"],
@@ -980,7 +980,7 @@
           "source": "ui/toggle_group.rs",
           "targetRoot": "ui",
           "target": "toggle_group.rs",
-          "checksum": "29b4a8ecc54d7774d17d0155e1a0efd12f77abfa28ca03181d5aafda9003af5f"
+          "checksum": "3155fcbaed0a5adeb3d42587221462f495a93a954b4abd514ec209296022c390"
         }
       ],
       "registryDependencies": ["cn"],

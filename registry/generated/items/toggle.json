@@ -7,7 +7,7 @@
       "source": "ui/toggle.rs",
       "targetRoot": "ui",
       "target": "toggle.rs",
-      "checksum": "47895f52c67eaa790ffde588b6b1607ff781b7e931d7a83d8ae139d1c7958871"
+      "checksum": "090bef39dd550114f49d5484279afd34d945d06ceeb6a963d9277deef68d93c0"
     }
   ],
   "registryDependencies": [

@@ -7,7 +7,7 @@
       "source": "ui/card.rs",
       "targetRoot": "ui",
       "target": "card.rs",
-      "checksum": "a4acd825a37efde81320c7ccf3e5b18697c28e35d90158472f67b7f432a8c968"
+      "checksum": "16c77d9d9464259a4242a01c716a73f9c513dd855a635129da1311e8adbb84c0"
     }
   ],
   "registryDependencies": [

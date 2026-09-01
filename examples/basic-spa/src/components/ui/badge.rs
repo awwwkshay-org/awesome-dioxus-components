@@ -16,6 +16,10 @@ pub enum BadgeVariant {
     Destructive,
     /// A neutral outlined label.
     Outline,
+    /// Low-emphasis transparent styling, no border or fill.
+    Ghost,
+    /// Inline semantic-link styling, while remaining a native `<span>`.
+    Link,
     /// A positive verified status, matching the Dioxus Components catalog.
     Verified,
 }
@@ -35,6 +39,8 @@ impl BadgeVariant {
             Self::Outline => {
                 "border-border bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground"
             }
+            Self::Ghost => "border-transparent hover:bg-accent hover:text-accent-foreground",
+            Self::Link => "border-transparent text-primary underline-offset-4 hover:underline",
             Self::Verified => {
                 "border-transparent bg-emerald-600 text-white hover:bg-emerald-600/80 dark:bg-emerald-500 dark:hover:bg-emerald-500/80"
             }

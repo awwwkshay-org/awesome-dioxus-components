@@ -9,6 +9,7 @@ use adico_primitives::dialog::{DialogContent as DialogPrimitiveContent, DialogCt
 pub use adico_primitives::dialog::{
     DialogDescription as SheetDescription, DialogRoot as Sheet, DialogTitle as SheetTitle,
 };
+use adico_primitives::icons::X;
 
 /// The viewport edge a [`Sheet`] slides in from.
 #[derive(Clone, Copy, PartialEq, Eq, Default)]
@@ -86,8 +87,18 @@ pub fn SheetOverlay(class: Option<String>) -> Element {
 
 /// Styled content backed by the owned Dialog focus, dismissal, and ARIA primitive,
 /// positioned along the chosen [`SheetSide`].
+///
+/// Renders a corner close button by default (`show_close_button`, matching
+/// upstream shadcn's own `showCloseButton = true` default) -- previously
+/// entirely absent here, the same real, missing capability found in
+/// `dialog.rs`.
 #[component]
-pub fn SheetContent(children: Element, class: Option<String>, side: Option<SheetSide>) -> Element {
+pub fn SheetContent(
+    children: Element,
+    class: Option<String>,
+    side: Option<SheetSide>,
+    #[props(default = true)] show_close_button: bool,
+) -> Element {
     let side = side.unwrap_or_default();
     let class = cn(&[
         "fixed z-[51] gap-4 bg-background p-6 text-foreground shadow-lg transition ease-in-out",
@@ -98,6 +109,37 @@ pub fn SheetContent(children: Element, class: Option<String>, side: Option<Sheet
         DialogPrimitiveContent {
             class,
             {children}
+            if show_close_button {
+                SheetClose { class: "absolute right-4 top-4" }
+            }
+        }
+    }
+}
+
+/// A dismissible close control for a [`Sheet`]. Composable anywhere inside
+/// [`SheetContent`], not just the default corner close button
+/// [`SheetContent`] renders -- the same rationale as `dialog.rs`'s
+/// `DialogClose`: previously, closing a sheet from inside its own content
+/// required reaching into `adico_primitives::dialog::DialogCtx` directly.
+#[component]
+pub fn SheetClose(children: Option<Element>, class: Option<String>) -> Element {
+    let context: DialogCtx = use_context();
+    let class = cn(&[
+        "rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none",
+        class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        button {
+            r#type: "button",
+            class,
+            onclick: move |_| context.set_open(false),
+            match children {
+                Some(children) => rsx! { {children} },
+                None => rsx! {
+                    X { class: "size-4" }
+                    span { class: "sr-only", "Close" }
+                },
+            }
         }
     }
 }

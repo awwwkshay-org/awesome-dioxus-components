@@ -7,7 +7,7 @@
       "source": "ui/badge.rs",
       "targetRoot": "ui",
       "target": "badge.rs",
-      "checksum": "6ad416b1a39e9bd9e1f669d99c2f460a768144d5d503901791e27ad20866bd8a"
+      "checksum": "b346ba40209a2dfd3796df4feb017d6ee3ea098b1292eeaa11bde414b55f85b8"
     }
   ],
   "registryDependencies": [

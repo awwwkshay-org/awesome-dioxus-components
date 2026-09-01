@@ -29,6 +29,30 @@ impl ToggleSize {
     }
 }
 
+/// The visual treatment of a [`Toggle`]. Upstream shadcn's `toggleVariants`
+/// has always had this axis; adico's `Toggle` was missing it entirely until
+/// now (task 5.2) -- a real lost capability, not a styling nuance, since
+/// there was previously no way to render an outlined toggle at all.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum ToggleVariant {
+    /// Transparent background, the existing default look.
+    #[default]
+    Default,
+    /// Bordered neutral styling, matching `Button`'s own `Outline` variant.
+    Outline,
+}
+
+impl ToggleVariant {
+    fn class(self) -> &'static str {
+        match self {
+            Self::Default => "bg-transparent",
+            Self::Outline => {
+                "border border-input bg-transparent shadow-xs hover:bg-accent hover:text-accent-foreground"
+            }
+        }
+    }
+}
+
 /// Props for [`Toggle`].
 #[derive(Props, Clone, PartialEq)]
 pub struct ToggleProps {
@@ -44,6 +68,9 @@ pub struct ToggleProps {
     /// The visual size.
     #[props(default)]
     pub size: ToggleSize,
+    /// The visual treatment.
+    #[props(default)]
+    pub variant: ToggleVariant,
     /// Callback fired when the pressed state changes.
     #[props(default)]
     pub on_pressed_change: Callback<bool>,
@@ -64,6 +91,7 @@ pub fn Toggle(props: ToggleProps) -> Element {
          focus-visible:ring-2 focus-visible:ring-ring/50 \
          disabled:pointer-events-none disabled:opacity-50 \
          data-[state=on]:bg-accent data-[state=on]:text-accent-foreground",
+        props.variant.class(),
         props.size.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);

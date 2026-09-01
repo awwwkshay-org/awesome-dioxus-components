@@ -1,7 +1,8 @@
 {
   "classification": "exception",
   "primitiveModules": [
-    "dialog"
+    "dialog",
+    "icons"
   ],
   "reason": "Backdrop onclick -> set_open(false) is the documented workaround for use_outside_dismiss's non-functional web behavior (packages/adico-primitives/src/lib.rs:250-263 prescribes this exact technique).",
   "followUp": "Remove the manual backdrop-dismiss handler once use_outside_dismiss is fixed for web."

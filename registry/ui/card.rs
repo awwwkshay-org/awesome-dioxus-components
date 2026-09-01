@@ -43,11 +43,40 @@ pub struct CardHeaderProps {
 #[component]
 pub fn CardHeader(props: CardHeaderProps) -> Element {
     let class = cn(&[
-        "flex flex-col gap-1.5 p-6",
+        "flex flex-col gap-1.5 p-6 has-[[data-slot=card-action]]:grid has-[[data-slot=card-action]]:grid-cols-[1fr_auto] has-[[data-slot=card-action]]:items-start",
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
         header { class, ..props.attributes, {props.children} }
+    }
+}
+
+/// An action (for example a button or menu trigger) placed at the end of a
+/// [`CardHeader`], alongside its title/description. Upstream shadcn's
+/// `CardAction` was missing here entirely -- a real composition gap, not a
+/// styling one: without it, a header action has nowhere to attach without
+/// the caller inventing their own layout. `CardHeader` only switches to a
+/// two-column grid (via the `has-[[data-slot=card-action]]:*` classes above)
+/// when a `CardAction` is actually present, so every existing `CardHeader`
+/// with no action renders exactly as before.
+#[derive(Props, Clone, PartialEq)]
+pub struct CardActionProps {
+    #[props(default)]
+    pub class: Option<String>,
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = div)]
+    pub attributes: Vec<Attribute>,
+    pub children: Element,
+}
+
+#[component]
+pub fn CardAction(props: CardActionProps) -> Element {
+    let class = cn(&[
+        "col-start-2 row-span-2 row-start-1 self-start justify-self-end",
+        props.class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        div { class, "data-slot": "card-action", ..props.attributes, {props.children} }
     }
 }
 
