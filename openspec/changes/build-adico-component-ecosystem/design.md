@@ -641,8 +641,19 @@ it applies equally to every *new* registry component built for the rest of
 this change, most immediately the task 7.9 Base-UI-parity tier —
 `Autocomplete` and `Navigation Menu` are anchored-overlay components and
 SHALL compose `Positioner`/`Arrow` rather than inventing their own placement
-math, `Autocomplete` SHALL compose `typeahead` for type-to-select, and
-`Preview Card` SHALL compose `Positioner` for its hover-anchored popup. A
+math, and `Preview Card` SHALL compose `Positioner` for its hover-anchored
+popup. **Correction (2026-09-02):** this paragraph originally also said
+`Autocomplete` SHALL compose `typeahead` for type-to-select. Task 7.9's own
+build of `Autocomplete` found this doesn't hold: `typeahead.rs`'s
+`best_match` returns a single `Option<usize>` via `min_by` over distance — a
+jump-focus-to-one-item engine, not the multi-item relevance filter an
+autocomplete popup needs — so composing it would mean inventing an untuned
+distance threshold on a path where a wrong threshold silently hides
+matching results. `Autocomplete` was built (and, per `statics/catalogs/
+base-ui.json`'s own part list being exactly Combobox's minus chips, mostly
+just *re-exported*) composing `combobox::default_combobox_filter` instead —
+the same substring filter `Combobox` itself ships and this crate has
+tested. See `tasks.md`'s 7.9 note for the full evidence. A
 component proposed after this point that reimplements behavior an existing
 public primitive already provides is a design defect, not a style
 preference, and should be caught at review the same way a duplicate
