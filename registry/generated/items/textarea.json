@@ -39,7 +39,7 @@
   ],
   "documentation": {
     "slug": "textarea",
-    "compositionNote": null,
+    "compositionNote": "A styled native <textarea>, forwarding native attributes/events; the semantic-invalid presentation is driven by the `invalid` prop alongside native `aria-invalid`.",
     "usage": "Textarea { placeholder: \"Message\", rows: 4, oninput: move |event| value.set(event.value()) }",
     "accessibility": "A native `<textarea>` with `aria-invalid` reflecting the `invalid` prop (`registry/ui/textarea.rs`); accessible naming is the caller's responsibility via an associated `Label` or `aria-label`.",
     "keyboard": "No component-specific keyboard handling beyond native multi-line text-input behavior."

@@ -35,7 +35,7 @@
   ],
   "documentation": {
     "slug": "kbd",
-    "compositionNote": null,
+    "compositionNote": "Purely presentational (Kbd/KbdGroup), rendering the native `<kbd>` element shadcn itself uses -- no ARIA role needed since assistive technology already recognizes `<kbd>` as keyboard input.",
     "usage": "KbdGroup {\n    Kbd { \"Ctrl\" }\n    Kbd { \"K\" }\n}",
     "accessibility": "Renders the native `<kbd>` element, which assistive technology already recognizes as denoting keyboard input without any ARIA role needed (`registry/ui/kbd.rs`).",
     "keyboard": "No component-specific keyboard handling; purely presentational (it labels a shortcut, it does not implement one)."

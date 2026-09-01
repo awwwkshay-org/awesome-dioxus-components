@@ -39,7 +39,7 @@
   ],
   "documentation": {
     "slug": "item",
-    "compositionNote": null,
+    "compositionNote": "Purely presentational composition (ItemGroup/Item/ItemMedia/ItemContent/ItemTitle/ItemDescription/ItemActions/ItemSeparator/ItemHeader/ItemFooter). ItemVariant::Interactive is the only variant that changes semantics (adds a roving tabindex hook via `tabindex`), matching upstream's own interactive-vs-static Item distinction.",
     "usage": "ItemGroup {\n    Item { variant: ItemVariant::Interactive, ItemContent { \"Row label\" } }\n}",
     "accessibility": "`ItemGroup` renders `role=\"list\"`; each `Item` is `role=\"listitem\"` with `aria-disabled` reflecting its `disabled` prop; `ItemSeparator` renders `role=\"separator\"` (`registry/ui/item.rs`).",
     "keyboard": "An `Interactive`-variant `Item` gets `tabindex=\"0\"` (others get `-1`); it carries no built-in activation handler of its own -- the caller wires `onclick`/`onkeydown` as needed."

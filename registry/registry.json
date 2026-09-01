@@ -149,6 +149,7 @@
       ],
       "documentation": {
         "slug": "badge",
+        "compositionNote": "Purely presentational status/category label. BadgeVariant covers upstream's Default/Secondary/Destructive/Outline plus two adico-only additions: Ghost/Link (closed as a real 5.2b gap) and Verified (a positive-status variant matching the Dioxus Components catalog, with no shadcn equivalent).",
         "usage": "Badge { variant: BadgeVariant::Secondary, \"New\" }",
         "accessibility": "Renders as inline content with no assigned role (`registry/ui/badge.rs`); its text is read as ordinary content by assistive technology. Use a visually-hidden prefix (e.g. \"Status:\") if the badge conveys state that isn't obvious from surrounding context.",
         "keyboard": "No component-specific keyboard handling; not an interactive control."
@@ -180,6 +181,7 @@
       ],
       "documentation": {
         "slug": "card",
+        "compositionNote": "Purely presentational composition (Card/CardHeader/CardTitle/CardDescription/CardAction/CardContent/CardFooter), matching upstream's own non-interactive implementation.",
         "usage": "Card {\n    CardHeader { CardTitle { \"Title\" } CardDescription { \"Description\" } }\n    CardContent { \"Body content\" }\n    CardFooter { \"Footer\" }\n}",
         "accessibility": "A plain styled `<div>` composition with no assigned ARIA role (`registry/ui/card.rs`); heading semantics for `CardTitle` are the caller's responsibility if the card content needs a document-outline heading.",
         "keyboard": "No component-specific keyboard handling; not an interactive control on its own."
@@ -211,6 +213,7 @@
       ],
       "documentation": {
         "slug": "input",
+        "compositionNote": "A styled native <input>, forwarding native attributes/events; the semantic-invalid presentation is driven by the `invalid` prop alongside native `aria-invalid`.",
         "usage": "Input { placeholder: \"Email\", oninput: move |event| value.set(event.value()) }",
         "accessibility": "A native `<input>` with `aria-invalid` reflecting the `invalid` prop (`registry/ui/input.rs`); accessible naming is the caller's responsibility via an associated `Label` or `aria-label`.",
         "keyboard": "No component-specific keyboard handling beyond native text-input behavior."
@@ -242,6 +245,7 @@
       ],
       "documentation": {
         "slug": "item",
+        "compositionNote": "Purely presentational composition (ItemGroup/Item/ItemMedia/ItemContent/ItemTitle/ItemDescription/ItemActions/ItemSeparator/ItemHeader/ItemFooter). ItemVariant::Interactive is the only variant that changes semantics (adds a roving tabindex hook via `tabindex`), matching upstream's own interactive-vs-static Item distinction.",
         "usage": "ItemGroup {\n    Item { variant: ItemVariant::Interactive, ItemContent { \"Row label\" } }\n}",
         "accessibility": "`ItemGroup` renders `role=\"list\"`; each `Item` is `role=\"listitem\"` with `aria-disabled` reflecting its `disabled` prop; `ItemSeparator` renders `role=\"separator\"` (`registry/ui/item.rs`).",
         "keyboard": "An `Interactive`-variant `Item` gets `tabindex=\"0\"` (others get `-1`); it carries no built-in activation handler of its own -- the caller wires `onclick`/`onkeydown` as needed."
@@ -273,6 +277,7 @@
       ],
       "documentation": {
         "slug": "pagination",
+        "compositionNote": "Purely presentational nav (Pagination/PaginationContent/PaginationItem/PaginationLink/PaginationPrevious/PaginationNext/PaginationEllipsis), matching upstream's own non-interactive implementation -- links are plain anchors/buttons, page-change wiring is caller-composed.",
         "usage": "Pagination {\n    PaginationContent {\n        PaginationItem { PaginationPrevious {} }\n        PaginationItem { PaginationLink { is_active: true, \"1\" } }\n        PaginationItem { PaginationNext {} }\n    }\n}",
         "accessibility": "The root is `<nav role=\"navigation\" aria-label=\"pagination\">`; the active `PaginationLink` carries `aria-current=\"page\"`; decorative previous/next glyphs are `aria-hidden` (`registry/ui/pagination.rs`).",
         "keyboard": "Links render as native anchors/buttons; Tab moves between them and Enter activates the focused one, with no additional roving-focus behavior of its own."
@@ -302,6 +307,7 @@
       ],
       "documentation": {
         "slug": "skeleton",
+        "compositionNote": "Purely presentational loading placeholder. SkeletonVariant covers upstream's rectangular (Default) and circular (Circle) shapes; `decorative` (default true) sets `aria-hidden` so a loading placeholder is not announced as content.",
         "usage": "Skeleton { class: \"h-4 w-32\" }",
         "accessibility": "Sets `aria-hidden` when `decorative` (the default), so a loading placeholder is not announced as content by assistive technology (`registry/ui/skeleton.rs`).",
         "keyboard": "No component-specific keyboard handling; not an interactive control."
@@ -333,6 +339,7 @@
       ],
       "documentation": {
         "slug": "textarea",
+        "compositionNote": "A styled native <textarea>, forwarding native attributes/events; the semantic-invalid presentation is driven by the `invalid` prop alongside native `aria-invalid`.",
         "usage": "Textarea { placeholder: \"Message\", rows: 4, oninput: move |event| value.set(event.value()) }",
         "accessibility": "A native `<textarea>` with `aria-invalid` reflecting the `invalid` prop (`registry/ui/textarea.rs`); accessible naming is the caller's responsibility via an associated `Label` or `aria-label`.",
         "keyboard": "No component-specific keyboard handling beyond native multi-line text-input behavior."
@@ -1601,6 +1608,7 @@
       ],
       "documentation": {
         "slug": "kbd",
+        "compositionNote": "Purely presentational (Kbd/KbdGroup), rendering the native `<kbd>` element shadcn itself uses -- no ARIA role needed since assistive technology already recognizes `<kbd>` as keyboard input.",
         "usage": "KbdGroup {\n    Kbd { \"Ctrl\" }\n    Kbd { \"K\" }\n}",
         "accessibility": "Renders the native `<kbd>` element, which assistive technology already recognizes as denoting keyboard input without any ARIA role needed (`registry/ui/kbd.rs`).",
         "keyboard": "No component-specific keyboard handling; purely presentational (it labels a shortcut, it does not implement one)."

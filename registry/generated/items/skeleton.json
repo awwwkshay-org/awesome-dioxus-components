@@ -35,7 +35,7 @@
   ],
   "documentation": {
     "slug": "skeleton",
-    "compositionNote": null,
+    "compositionNote": "Purely presentational loading placeholder. SkeletonVariant covers upstream's rectangular (Default) and circular (Circle) shapes; `decorative` (default true) sets `aria-hidden` so a loading placeholder is not announced as content.",
     "usage": "Skeleton { class: \"h-4 w-32\" }",
     "accessibility": "Sets `aria-hidden` when `decorative` (the default), so a loading placeholder is not announced as content by assistive technology (`registry/ui/skeleton.rs`).",
     "keyboard": "No component-specific keyboard handling; not an interactive control."

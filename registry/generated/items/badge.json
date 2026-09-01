@@ -39,7 +39,7 @@
   ],
   "documentation": {
     "slug": "badge",
-    "compositionNote": null,
+    "compositionNote": "Purely presentational status/category label. BadgeVariant covers upstream's Default/Secondary/Destructive/Outline plus two adico-only additions: Ghost/Link (closed as a real 5.2b gap) and Verified (a positive-status variant matching the Dioxus Components catalog, with no shadcn equivalent).",
     "usage": "Badge { variant: BadgeVariant::Secondary, \"New\" }",
     "accessibility": "Renders as inline content with no assigned role (`registry/ui/badge.rs`); its text is read as ordinary content by assistive technology. Use a visually-hidden prefix (e.g. \"Status:\") if the badge conveys state that isn't obvious from surrounding context.",
     "keyboard": "No component-specific keyboard handling; not an interactive control."

@@ -39,7 +39,7 @@
   ],
   "documentation": {
     "slug": "card",
-    "compositionNote": null,
+    "compositionNote": "Purely presentational composition (Card/CardHeader/CardTitle/CardDescription/CardAction/CardContent/CardFooter), matching upstream's own non-interactive implementation.",
     "usage": "Card {\n    CardHeader { CardTitle { \"Title\" } CardDescription { \"Description\" } }\n    CardContent { \"Body content\" }\n    CardFooter { \"Footer\" }\n}",
     "accessibility": "A plain styled `<div>` composition with no assigned ARIA role (`registry/ui/card.rs`); heading semantics for `CardTitle` are the caller's responsibility if the card content needs a document-outline heading.",
     "keyboard": "No component-specific keyboard handling; not an interactive control on its own."

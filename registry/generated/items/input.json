@@ -39,7 +39,7 @@
   ],
   "documentation": {
     "slug": "input",
-    "compositionNote": null,
+    "compositionNote": "A styled native <input>, forwarding native attributes/events; the semantic-invalid presentation is driven by the `invalid` prop alongside native `aria-invalid`.",
     "usage": "Input { placeholder: \"Email\", oninput: move |event| value.set(event.value()) }",
     "accessibility": "A native `<input>` with `aria-invalid` reflecting the `invalid` prop (`registry/ui/input.rs`); accessible naming is the caller's responsibility via an associated `Label` or `aria-label`.",
     "keyboard": "No component-specific keyboard handling beyond native text-input behavior."
