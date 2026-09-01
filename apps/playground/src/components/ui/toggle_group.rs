@@ -1,12 +1,52 @@
 //! Source-owned shadcn-style Toggle Group for Dioxus, backed by the owned
 //! adico primitive layer.
 
+use std::collections::HashSet;
+
 use dioxus::prelude::*;
 
-pub use adico_primitives::toggle_group::ToggleGroup;
+use adico_primitives::toggle_group::ToggleGroup as ToggleGroupPrimitive;
 use adico_primitives::toggle_group::ToggleItem as ToggleItemPrimitive;
 
 use crate::adico_lib::cn::cn;
+
+/// The row of [`ToggleItem`]s. A styled facade over the primitive's own
+/// `ToggleGroup`, which has no default layout class at all (a bare
+/// `pub use` re-export previously): each `ToggleItem` is independently
+/// `rounded-md` (this crate doesn't replicate upstream's connected/flush
+/// `spacing=0` segmented look), so with nothing spacing them apart the
+/// items rendered flush against each other with no visual gap at all --
+/// found live (reported directly by the user: "no space in toggle group").
+#[component]
+pub fn ToggleGroup(
+    #[props(default)] default_pressed: HashSet<usize>,
+    pressed: ReadSignal<Option<HashSet<usize>>>,
+    #[props(default)] on_pressed_change: Callback<HashSet<usize>>,
+    #[props(default)] disabled: ReadSignal<bool>,
+    #[props(default)] allow_multiple_pressed: ReadSignal<bool>,
+    #[props(default)] horizontal: ReadSignal<bool>,
+    #[props(default = ReadSignal::new(Signal::new(true)))] roving_loop: ReadSignal<bool>,
+    #[props(default)] class: Option<String>,
+    children: Element,
+) -> Element {
+    let class = cn(&[
+        "flex items-center gap-1",
+        class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        ToggleGroupPrimitive {
+            default_pressed,
+            pressed,
+            on_pressed_change,
+            disabled,
+            allow_multiple_pressed,
+            horizontal,
+            roving_loop,
+            class,
+            {children}
+        }
+    }
+}
 
 /// The visual size of a [`ToggleItem`], matching `Toggle`'s own `ToggleSize`
 /// values (a small, deliberate duplication -- each registry item stays an

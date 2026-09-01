@@ -7,7 +7,7 @@
       "source": "ui/switch.rs",
       "targetRoot": "ui",
       "target": "switch.rs",
-      "checksum": "9464d12369ce868c4b0e297ec890076e5ff606830e9266f1491ed74f53dc499b"
+      "checksum": "0d39047640abc494d87b35d874879cbcb21715c4908468fa1adf1cce3cfee171"
     }
   ],
   "registryDependencies": [

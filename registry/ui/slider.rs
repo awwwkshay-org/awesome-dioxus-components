@@ -3,13 +3,84 @@
 
 use dioxus::prelude::*;
 
-pub use adico_primitives::slider::{RangeSlider, Slider};
+use adico_primitives::slider::RangeSlider as RangeSliderPrimitive;
+pub use adico_primitives::slider::{RangeSliderProps, SliderProps};
 use adico_primitives::slider::{
-    SliderRange as SliderRangePrimitive, SliderThumb as SliderThumbPrimitive,
-    SliderTrack as SliderTrackPrimitive,
+    Slider as SliderPrimitive, SliderRange as SliderRangePrimitive,
+    SliderThumb as SliderThumbPrimitive, SliderTrack as SliderTrackPrimitive,
 };
 
 use crate::adico_lib::cn::cn;
+
+/// Root shadcn class every `Slider`/`RangeSlider` needs, previously supplied
+/// by neither the (bare re-exported) primitive nor this facade: without an
+/// explicit `w-full`, the root has no intrinsic width of its own inside a
+/// flex-centered demo container, `SliderTrack`'s own `w-full` then resolves
+/// against that undetermined width, and the whole control collapses to a
+/// zero-width, undraggable point (found live: reported directly by the user
+/// as "Slider is non functional" -- confirmed via `getBoundingClientRect()`
+/// showing the root at literally `width: 0`).
+const SLIDER_ROOT_CLASS: &str = "relative flex w-full touch-none select-none items-center data-[orientation=vertical]:h-full data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col";
+
+/// `SliderProps`/`RangeSliderProps` have no dedicated `class` field (only
+/// `attributes: Vec<Attribute>`, extending `GlobalAttributes`), and a
+/// `class` keyword can't be mixed with a `..props` struct spread at a
+/// *component* call site (unlike a plain HTML tag) -- build the merged
+/// attribute list by hand, matching the primitive crate's own precedent in
+/// `popover.rs`/`hover_card.rs`/`tooltip.rs` for this exact limitation.
+fn with_class(class: &str, attributes: Vec<Attribute>) -> Vec<Attribute> {
+    let mut merged = vec![Attribute::new("class", class, None, false)];
+    merged.extend(attributes);
+    merged
+}
+
+/// A single-thumb slider with the default adico/shadcn root layout. See
+/// [`adico_primitives::slider::Slider`] for the full behavior/prop
+/// reference; this facade only adds the root's default class.
+#[component]
+pub fn Slider(props: SliderProps) -> Element {
+    let attributes = with_class(SLIDER_ROOT_CLASS, props.attributes);
+    rsx! {
+        SliderPrimitive {
+            value: props.value,
+            default_value: props.default_value,
+            min: props.min,
+            max: props.max,
+            step: props.step,
+            disabled: props.disabled,
+            horizontal: props.horizontal,
+            inverted: props.inverted,
+            on_value_change: props.on_value_change,
+            label: props.label,
+            attributes,
+            {props.children}
+        }
+    }
+}
+
+/// A two-thumb range slider with the default adico/shadcn root layout. See
+/// [`adico_primitives::slider::RangeSlider`] for the full behavior/prop
+/// reference; this facade only adds the root's default class.
+#[component]
+pub fn RangeSlider(props: RangeSliderProps) -> Element {
+    let attributes = with_class(SLIDER_ROOT_CLASS, props.attributes);
+    rsx! {
+        RangeSliderPrimitive {
+            value: props.value,
+            default_value: props.default_value,
+            min: props.min,
+            max: props.max,
+            step: props.step,
+            disabled: props.disabled,
+            horizontal: props.horizontal,
+            inverted: props.inverted,
+            on_value_change: props.on_value_change,
+            label: props.label,
+            attributes,
+            {props.children}
+        }
+    }
+}
 
 /// The track a [`Slider`]/[`RangeSlider`]'s thumb(s) move along.
 ///
@@ -67,5 +138,17 @@ mod tests {
         let class = cn(&["-translate-x-1/2 -translate-y-1/2", ""]);
         assert!(class.contains("-translate-x-1/2"));
         assert!(class.contains("-translate-y-1/2"));
+    }
+
+    #[test]
+    fn root_has_a_real_width_instead_of_collapsing_to_zero() {
+        assert!(SLIDER_ROOT_CLASS.contains("w-full"));
+    }
+
+    #[test]
+    fn with_class_prepends_class_ahead_of_caller_supplied_attributes() {
+        let merged = with_class("w-full", Vec::new());
+        assert_eq!(merged.len(), 1);
+        assert_eq!(merged[0].name, "class");
     }
 }

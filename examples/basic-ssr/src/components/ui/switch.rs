@@ -69,16 +69,22 @@ pub struct SwitchProps {
 #[component]
 pub fn Switch(props: SwitchProps) -> Element {
     let class = cn(&[
-        "peer inline-flex shrink-0 items-center rounded-full border border-transparent shadow-xs outline-none transition-colors \
+        "peer group inline-flex shrink-0 items-center rounded-full border border-transparent shadow-xs outline-none transition-colors \
          focus-visible:ring-2 focus-visible:ring-ring/50 \
          disabled:cursor-not-allowed disabled:opacity-50 \
          data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
         props.size.track_class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
+    // `group-data-[state=...]`, not a plain `data-[state=...]`: `data-state`
+    // lives on the track (`Switch`, above), not on this thumb `span` itself
+    // -- a bare `data-[state=checked]:translate-x-...` here matches this
+    // element's own (nonexistent) attribute, so the thumb never translates
+    // regardless of checked state (found live: the track colors correctly
+    // but the thumb sits frozen at the unchecked position).
     let thumb_class = cn(&[
         "pointer-events-none block rounded-full bg-background shadow-lg ring-0 transition-transform \
-         data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0",
+         group-data-[state=checked]:translate-x-[calc(100%-2px)] group-data-[state=unchecked]:translate-x-0",
         props.size.thumb_class(),
     ]);
     rsx! {
@@ -110,5 +116,15 @@ mod tests {
         ]);
         assert!(class.contains("data-[state=checked]:bg-primary"));
         assert!(class.contains("data-[state=unchecked]:bg-input"));
+    }
+
+    #[test]
+    fn thumb_translates_off_the_track_s_own_state_not_its_own() {
+        let class = cn(&[
+            "group-data-[state=checked]:translate-x-[calc(100%-2px)] group-data-[state=unchecked]:translate-x-0",
+            "",
+        ]);
+        assert!(class.contains("group-data-[state=checked]:translate-x"));
+        assert!(!class.contains(" data-[state=checked]:translate-x"));
     }
 }

@@ -116,7 +116,18 @@ pub fn PaginationPrevious(
     compact: bool,
     class: Option<String>,
 ) -> Element {
-    let class = cn(&["gap-1 pl-2.5", class.as_deref().unwrap_or_default()]);
+    // `PaginationLink`'s base `w-9` fits a single-character page number, but
+    // this preset's label ("Previous" by default) needs real width -- left
+    // as a fixed square, the label overflowed the box and visually collided
+    // with the next `PaginationItem` (found live: rendered as "Previous1").
+    // `compact` legitimately wants the square (icon only), so only override
+    // width when the label is showing.
+    let width_class = if compact { "" } else { "w-auto" };
+    let class = cn(&[
+        "gap-1 pl-2.5 pr-3",
+        width_class,
+        class.as_deref().unwrap_or_default(),
+    ]);
     let text = text.unwrap_or_else(|| "Previous".to_string());
     rsx! {
         PaginationLink {
@@ -143,7 +154,13 @@ pub fn PaginationNext(
     compact: bool,
     class: Option<String>,
 ) -> Element {
-    let class = cn(&["gap-1 pr-2.5", class.as_deref().unwrap_or_default()]);
+    // See `PaginationPrevious`'s own comment for why this overrides width.
+    let width_class = if compact { "" } else { "w-auto" };
+    let class = cn(&[
+        "gap-1 pl-3 pr-2.5",
+        width_class,
+        class.as_deref().unwrap_or_default(),
+    ]);
     let text = text.unwrap_or_else(|| "Next".to_string());
     rsx! {
         PaginationLink {

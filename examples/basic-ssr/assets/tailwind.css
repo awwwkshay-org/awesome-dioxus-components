@@ -213,6 +213,9 @@
   }
 }
 @layer utilities {
+  .pointer-events-auto {
+    pointer-events: auto;
+  }
   .pointer-events-none {
     pointer-events: none;
   }
@@ -260,6 +263,9 @@
   .top-1\/2 {
     top: calc(1/2 * 100%);
   }
+  .top-2 {
+    top: calc(var(--spacing) * 2);
+  }
   .top-4 {
     top: calc(var(--spacing) * 4);
   }
@@ -268,6 +274,9 @@
   }
   .right-0 {
     right: calc(var(--spacing) * 0);
+  }
+  .right-2 {
+    right: calc(var(--spacing) * 2);
   }
   .right-3 {
     right: calc(var(--spacing) * 3);
@@ -376,9 +385,6 @@
   }
   .hidden {
     display: none;
-  }
-  .inline {
-    display: inline;
   }
   .inline-block {
     display: inline-block;
@@ -958,6 +964,9 @@
   .pr-2\.5 {
     padding-right: calc(var(--spacing) * 2.5);
   }
+  .pr-3 {
+    padding-right: calc(var(--spacing) * 3);
+  }
   .pr-8 {
     padding-right: calc(var(--spacing) * 8);
   }
@@ -966,6 +975,9 @@
   }
   .pl-2\.5 {
     padding-left: calc(var(--spacing) * 2.5);
+  }
+  .pl-3 {
+    padding-left: calc(var(--spacing) * 3);
   }
   .pl-8 {
     padding-left: calc(var(--spacing) * 8);
@@ -1018,6 +1030,12 @@
   }
   .text-foreground {
     color: var(--color-foreground);
+  }
+  .text-foreground\/50 {
+    color: color-mix(in srgb, hsl(var(--foreground)) 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-foreground) 50%, transparent);
+    }
   }
   .text-muted-foreground {
     color: var(--color-muted-foreground);
@@ -1183,6 +1201,13 @@
     --tw-enter-scale: calc(95 * 1%);
     --tw-enter-scale: 0.95;
   }
+  .group-hover\:opacity-100 {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        opacity: 100%;
+      }
+    }
+  }
   .group-aria-expanded\:block {
     &:is(:where(.group)[aria-expanded="true"] *) {
       display: block;
@@ -1191,6 +1216,12 @@
   .group-aria-expanded\:hidden {
     &:is(:where(.group)[aria-expanded="true"] *) {
       display: none;
+    }
+  }
+  .group-data-\[state\=checked\]\:translate-x-\[calc\(100\%-2px\)\] {
+    &:is(:where(.group)[data-state="checked"] *) {
+      --tw-translate-x: calc(100% - 2px);
+      translate: var(--tw-translate-x) var(--tw-translate-y);
     }
   }
   .group-data-\[state\=open\]\:block {
@@ -1206,6 +1237,12 @@
   .group-data-\[state\=open\]\/date-picker\:rotate-180 {
     &:is(:where(.group\/date-picker)[data-state="open"] *) {
       rotate: 180deg;
+    }
+  }
+  .group-data-\[state\=unchecked\]\:translate-x-0 {
+    &:is(:where(.group)[data-state="unchecked"] *) {
+      --tw-translate-x: calc(var(--spacing) * 0);
+      translate: var(--tw-translate-x) var(--tw-translate-y);
     }
   }
   .peer-disabled\:cursor-not-allowed {
@@ -1430,6 +1467,13 @@
       }
     }
   }
+  .hover\:text-foreground {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-foreground);
+      }
+    }
+  }
   .hover\:text-muted-foreground {
     &:hover {
       @media (hover: hover) {
@@ -1522,6 +1566,11 @@
   .focus-visible\:border-ring {
     &:focus-visible {
       border-color: var(--color-ring);
+    }
+  }
+  .focus-visible\:opacity-100 {
+    &:focus-visible {
+      opacity: 100%;
     }
   }
   .focus-visible\:ring-1 {
@@ -1751,6 +1800,11 @@
       width: calc(var(--spacing) * 1.5);
     }
   }
+  .data-\[orientation\=vertical\]\:w-auto {
+    &[data-orientation="vertical"] {
+      width: auto;
+    }
+  }
   .data-\[orientation\=vertical\]\:w-full {
     &[data-orientation="vertical"] {
       width: 100%;
@@ -1759,6 +1813,11 @@
   .data-\[orientation\=vertical\]\:w-px {
     &[data-orientation="vertical"] {
       width: 1px;
+    }
+  }
+  .data-\[orientation\=vertical\]\:flex-col {
+    &[data-orientation="vertical"] {
+      flex-direction: column;
     }
   }
   .data-\[placeholder\=true\]\:text-muted-foreground {
@@ -1826,12 +1885,6 @@
     &[data-state="active"] {
       --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-    }
-  }
-  .data-\[state\=checked\]\:translate-x-\[calc\(100\%-2px\)\] {
-    &[data-state="checked"] {
-      --tw-translate-x: calc(100% - 2px);
-      translate: var(--tw-translate-x) var(--tw-translate-y);
     }
   }
   .data-\[state\=checked\]\:border-primary {
@@ -1970,15 +2023,33 @@
       --tw-enter-translate-y: -100%;
     }
   }
-  .data-\[state\=unchecked\]\:translate-x-0 {
-    &[data-state="unchecked"] {
-      --tw-translate-x: calc(var(--spacing) * 0);
-      translate: var(--tw-translate-x) var(--tw-translate-y);
-    }
-  }
   .data-\[state\=unchecked\]\:bg-input {
     &[data-state="unchecked"] {
       background-color: var(--color-input);
+    }
+  }
+  .data-\[type\=error\]\:border-destructive\/50 {
+    &[data-type="error"] {
+      border-color: color-mix(in srgb, hsl(var(--destructive)) 50%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        border-color: color-mix(in oklab, var(--color-destructive) 50%, transparent);
+      }
+    }
+  }
+  .data-\[type\=success\]\:border-emerald-500\/50 {
+    &[data-type="success"] {
+      border-color: color-mix(in srgb, oklch(69.6% 0.17 162.48) 50%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        border-color: color-mix(in oklab, var(--color-emerald-500) 50%, transparent);
+      }
+    }
+  }
+  .data-\[type\=warning\]\:border-amber-500\/50 {
+    &[data-type="warning"] {
+      border-color: color-mix(in srgb, oklch(76.9% 0.188 70.08) 50%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        border-color: color-mix(in oklab, var(--color-amber-500) 50%, transparent);
+      }
     }
   }
   .motion-reduce\:animate-none {
@@ -2283,6 +2354,21 @@
   .\[\&_tr\]\:h-9 {
     & tr {
       height: calc(var(--spacing) * 9);
+    }
+  }
+  .\[\&\>ol\]\:flex {
+    &>ol {
+      display: flex;
+    }
+  }
+  .\[\&\>ol\]\:flex-col {
+    &>ol {
+      flex-direction: column;
+    }
+  }
+  .\[\&\>ol\]\:gap-2 {
+    &>ol {
+      gap: calc(var(--spacing) * 2);
     }
   }
   .\[\&\[data-state\=open\]\>svg\]\:rotate-180 {
