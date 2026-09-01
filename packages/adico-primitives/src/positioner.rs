@@ -391,7 +391,21 @@ pub fn Positioner(props: PositionerProps) -> Element {
 
     let position = ctx.position;
     let style = match position() {
-        Some(p) => format!("position: fixed; left: {}px; top: {}px;", p.x, p.y),
+        // `visibility: visible` is explicit, not the default omitted, on
+        // purpose: found live (task 5.4) that once the `None` branch below
+        // has rendered `visibility: hidden` at least once, Dioxus's `web`
+        // style-attribute patching only sets/updates properties present in
+        // the *new* style string -- it does not clear a property that
+        // existed in the previous string but is absent from the new one.
+        // Omitting `visibility` here left it permanently stuck at `hidden`
+        // even once `position` genuinely became `Some` with a real,
+        // correctly-computed offset -- every `Positioner`-anchored surface
+        // (popover, hover-card, tooltip, select, combobox) opened logically
+        // (correct ARIA, correct computed left/top) but stayed invisible.
+        Some(p) => format!(
+            "position: fixed; left: {}px; top: {}px; visibility: visible;",
+            p.x, p.y
+        ),
         None => "position: fixed; visibility: hidden;".to_string(),
     };
 
