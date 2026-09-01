@@ -8696,7 +8696,7 @@
   "shadcn": {
     "axis": "shadcn",
     "catalog_path": "statics/catalogs/shadcn.json",
-    "catalog_refreshed_at": "2026-08-31",
+    "catalog_refreshed_at": "2026-09-01",
     "components": [
       {
         "name": "accordion",
@@ -8986,8 +8986,8 @@
       }
     ],
     "refresh_command": "cargo xtask catalog fetch shadcn",
-    "revision": "b4a618b97e35f5dadf3a00d51f410c84a2567d4d",
-    "source": "https://github.com/shadcn-ui/ui/tree/b4a618b97e35f5dadf3a00d51f410c84a2567d4d/apps/v4/registry/new-york-v4/ui",
+    "revision": "63c1308d112b6b1205d86244a156cca1abef5087",
+    "source": "https://github.com/shadcn-ui/ui/tree/63c1308d112b6b1205d86244a156cca1abef5087/apps/v4/registry/new-york-v4/ui",
     "summary": {
       "built": 41,
       "not_applicable": 1,
