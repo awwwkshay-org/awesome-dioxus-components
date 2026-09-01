@@ -47,15 +47,39 @@ placement math.
 `adico-primitives` SHALL provide a single `Menu` primitive supporting
 `SubmenuRoot`/`SubmenuTrigger` nesting to arbitrary depth, `CheckboxItem`,
 `RadioGroup`/`RadioItem`, `Group`/`GroupLabel`, and `Separator`. The
-context-menu, dropdown-menu, and menubar registry items SHALL compose this
-primitive rather than each maintaining an independent, flat menu
-implementation.
+dropdown-menu registry item SHALL compose this primitive directly, rather than
+maintaining an independent, flat menu implementation. context-menu and
+menubar SHALL each implement the same `role="menu"`/`role="menuitem"` contract
+this primitive establishes, but MAY remain independent primitives rather than
+composing `Menu` directly, when their anchoring/placement or multi-sibling
+coordination model differs enough that adding the equivalent capability to
+`Menu` would serve no other consumer — matching Base UI's own architecture,
+where `Menubar`/`ContextMenu` share only role and keyboard conventions with
+`Menu`, not its `Content`/`Item` implementation.
 
-#### Scenario: A menu needs a submenu
-- **WHEN** a registry menu component needs a nested submenu, checkbox item, or
-  radio item
-- **THEN** it is available directly from the shared `Menu` primitive without
-  new menu-specific behavior being written in the registry component
+**Correction (2026-09-01):** originally required all three (context-menu,
+dropdown-menu, menubar) to compose `Menu`. Implementation found this doesn't
+hold for two of the three: context-menu owns click-point placement, Safari
+viewport correction, and scroll suppression with no home in `MenuContent`
+without new props serving no other consumer; menubar's per-sibling
+open-state coordination has no `MenuContext` counterpart, mirroring Base
+UI's own decision not to build `Menubar` on `Menu`. Only dropdown-menu — a
+straight re-export, per Base UI's own "`Menu` *is* the dropdown menu" — was a
+genuine unification. The requirement now describes that as the actual target
+shape, not a temporary gap.
+
+#### Scenario: A menu composes the shared Menu primitive
+- **WHEN** dropdown-menu needs a nested submenu, checkbox item, or radio item
+- **THEN** it is available directly, since dropdown-menu is a re-export of the
+  shared `Menu` primitive
+
+#### Scenario: A menu's placement or coordination model has no home on Menu
+- **WHEN** context-menu's click-point placement or menubar's per-sibling
+  open-state coordination has no equivalent on `Menu`, and adding one would
+  serve no other consumer
+- **THEN** the registry item implements the same `role="menu"`/
+  `role="menuitem"` contract independently rather than being force-fit onto
+  `Menu`, and this is not tracked as a parity gap
 
 ### Requirement: Controlled and uncontrolled state follow one uniform pattern
 Every primitive that exposes stateful behavior a consumer may want to control

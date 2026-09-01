@@ -51,7 +51,7 @@ registry/    authored distributable source and metadata
 examples/    externally realistic Dioxus applications
 tests/       playwright, visual, compile, installation fixtures
 scripts/     non-Cargo helper entry points
-parity.json  checked-in first-party shadcn component parity state
+statics/     generated compat/catalog/classification snapshots (§9)
 ```
 
 Runtime dependency direction is `Dioxus -> adico-primitives -> installed
@@ -695,7 +695,8 @@ stable public capabilities, not private modules.
 
 ### 9. Parity manifest, upstream snapshots, and synchronization
 
-`parity.json` keys canonical shadcn component identifiers and contains catalog
+**Originally specified as follows; see "Removed 2026-08-31" below — none of
+this describes a current command.** `parity.json` keys canonical shadcn component identifiers and contains catalog
 snapshot reference, adico item mapping, status (`missing`, `in_progress`,
 `complete`, `not_applicable`), intentional deviations, evidence links, and the
 following dimensions: source, api, visual, variants, states, keyboard,
@@ -855,13 +856,34 @@ Rollback is by ordinary package/version rollback and by retaining prior
 registry build artifacts/snapshots. Consumer projects are never rolled back
 automatically; failed CLI applies preserve files and report recovery actions.
 
+This section predates the M4+ scope split recorded in `proposal.md`'s
+2026-08-31 note and stops at M5; M6–M10 phase descriptions are not
+duplicated here — see `tasks.md` sections 6–11 for the current milestone
+breakdown of the remaining work.
+
 ## Open Questions
 
-- The exact Dioxus-compatible Tailwind integration, Lucide crate, and browser
-  test runner versions are intentionally deferred to M0 research because they
-  are version-sensitive, but that research is a gating task before M2 choices
-  are implemented.
-- The upstream audit will select the third vertical-slice component from the
-  actually reusable rich components (prefer Select, then Combobox, then
-  Calendar based on implementation and test coverage). This does not change
-  the vertical-slice contract.
+Both items below were open at proposal time and have since been resolved by
+completed, archived milestones; kept for the historical record rather than
+deleted.
+
+- ~~The exact Dioxus-compatible Tailwind integration, Lucide crate, and
+  browser test runner versions are intentionally deferred to M0 research~~ —
+  resolved: Tailwind is compiled via its standalone native CLI, not an npm
+  package (§7c); the icon crate and browser test runner were pinned during
+  M0/M2 (`docs/adico/m0-toolchain-decisions.md`, `docs/adico/m2-vertical-slice.md`).
+- ~~The upstream audit will select the third vertical-slice component~~ —
+  resolved: Select was chosen (`docs/adico/m2-vertical-slice.md`: "Button,
+  Dialog, and Select").
+
+**Note (2026-09-01):** two changes proposed, implemented, and archived since
+this design was last touched are relevant completed dependencies for the
+still-open M6 primitive work below:
+`reauthor-primitives-from-independent-spec` re-authored essentially every
+file in `packages/adico-primitives/src/` against independent WAI-ARIA
+APG/Base-UI specs rather than the original DioxusLabs port (several file
+paths named in §8a and in `tasks.md`'s M6 tasks have since changed
+substance, not just location); `enforce-registry-facade-standards` added
+mechanically-verified behavior-ownership and styling classification rules
+for `registry/ui/*.rs`, relevant to any future registry-facade migration
+work under M6/M7.
