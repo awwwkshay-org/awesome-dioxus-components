@@ -890,6 +890,87 @@
       {
         "adico_primitive": {
           "components": [
+            "Separator"
+          ],
+          "hooks_used": [],
+          "modules": [
+            "separator"
+          ],
+          "props": {
+            "SeparatorProps": [
+              {
+                "default": "true",
+                "name": "horizontal",
+                "type": "bool"
+              },
+              {
+                "default": "false",
+                "name": "decorative",
+                "type": "bool"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        "name": "button-group",
+        "registry_facade": {
+          "components": [
+            "ButtonGroup",
+            "ButtonGroupText",
+            "ButtonGroupSeparator"
+          ],
+          "files": [
+            "ui/button_group.rs"
+          ],
+          "props": {
+            "ButtonGroup": [
+              {
+                "name": "orientation",
+                "type": "ButtonGroupOrientation"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ButtonGroupSeparator": [
+              {
+                "name": "horizontal",
+                "type": "bool"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ButtonGroupText": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
+          "components": [
             "Calendar",
             "RangeCalendar",
             "CalendarView",
@@ -4534,6 +4615,155 @@
           "modules": [],
           "props": {}
         },
+        "name": "input-group",
+        "registry_facade": {
+          "components": [
+            "InputGroup",
+            "InputGroupAddon",
+            "InputGroupButton",
+            "InputGroupText",
+            "InputGroupInput",
+            "InputGroupTextarea"
+          ],
+          "files": [
+            "ui/input_group.rs"
+          ],
+          "props": {
+            "InputGroup": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "InputGroupAddon": [
+              {
+                "name": "align",
+                "type": "InputGroupAlign"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "InputGroupButton": [
+              {
+                "name": "variant",
+                "type": "ButtonVariant"
+              },
+              {
+                "name": "size",
+                "type": "ButtonSize"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "onclick",
+                "type": "EventHandler<MouseEvent>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "InputGroupInput": [
+              {
+                "name": "r#type",
+                "type": "String"
+              },
+              {
+                "name": "value",
+                "type": "Option<String>"
+              },
+              {
+                "name": "placeholder",
+                "type": "Option<String>"
+              },
+              {
+                "name": "disabled",
+                "type": "Option<bool>"
+              },
+              {
+                "name": "invalid",
+                "type": "bool"
+              },
+              {
+                "name": "oninput",
+                "type": "EventHandler<FormEvent>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ],
+            "InputGroupText": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "InputGroupTextarea": [
+              {
+                "name": "value",
+                "type": "Option<String>"
+              },
+              {
+                "name": "placeholder",
+                "type": "Option<String>"
+              },
+              {
+                "name": "disabled",
+                "type": "Option<bool>"
+              },
+              {
+                "name": "invalid",
+                "type": "bool"
+              },
+              {
+                "name": "rows",
+                "type": "Option<u32>"
+              },
+              {
+                "name": "oninput",
+                "type": "EventHandler<FormEvent>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
+          "components": [],
+          "hooks_used": [],
+          "modules": [],
+          "props": {}
+        },
         "name": "item",
         "registry_facade": {
           "components": [
@@ -5028,6 +5258,107 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
+          "components": [],
+          "hooks_used": [],
+          "modules": [
+            "icons"
+          ],
+          "props": {}
+        },
+        "name": "native-select",
+        "registry_facade": {
+          "components": [
+            "NativeSelect",
+            "NativeSelectOption",
+            "NativeSelectOptGroup"
+          ],
+          "files": [
+            "ui/native_select.rs"
+          ],
+          "props": {
+            "NativeSelectOptGroup": [
+              {
+                "name": "label",
+                "type": "String"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "NativeSelectOption": [
+              {
+                "name": "value",
+                "type": "Option<String>"
+              },
+              {
+                "name": "disabled",
+                "type": "Option<bool>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "NativeSelectProps": [
+              {
+                "default": "default()",
+                "name": "size",
+                "type": "NativeSelectSize"
+              },
+              {
+                "default": "default()",
+                "name": "value",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "Option<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "required",
+                "type": "Option<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "invalid",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "oninput",
+                "type": "EventHandler<FormEvent>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
               }
             ]
           }
@@ -8448,7 +8779,7 @@
       }
     ],
     "summary": {
-      "total_components": 51
+      "total_components": 54
     }
   },
   "dioxus_components": {
@@ -8748,7 +9079,8 @@
       },
       {
         "name": "button-group",
-        "status": "not_started"
+        "registry_item": "button-group",
+        "status": "built"
       },
       {
         "name": "calendar",
@@ -8835,7 +9167,8 @@
       },
       {
         "name": "input-group",
-        "status": "not_started"
+        "registry_item": "input-group",
+        "status": "built"
       },
       {
         "name": "input-otp",
@@ -8875,7 +9208,8 @@
       },
       {
         "name": "native-select",
-        "status": "not_started"
+        "registry_item": "native-select",
+        "status": "built"
       },
       {
         "name": "navigation-menu",
@@ -8989,9 +9323,9 @@
     "revision": "63c1308d112b6b1205d86244a156cca1abef5087",
     "source": "https://github.com/shadcn-ui/ui/tree/63c1308d112b6b1205d86244a156cca1abef5087/apps/v4/registry/new-york-v4/ui",
     "summary": {
-      "built": 41,
+      "built": 44,
       "not_applicable": 1,
-      "not_started": 19,
+      "not_started": 16,
       "total_upstream_components": 61
     }
   },

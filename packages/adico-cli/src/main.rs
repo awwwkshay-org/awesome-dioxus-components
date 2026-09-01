@@ -664,6 +664,15 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/table.rs") => {
                 Ok(include_bytes!("../../../registry/ui/table.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/button_group.rs") => {
+                Ok(include_bytes!("../../../registry/ui/button_group.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/input_group.rs") => {
+                Ok(include_bytes!("../../../registry/ui/input_group.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/native_select.rs") => {
+                Ok(include_bytes!("../../../registry/ui/native_select.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"
@@ -909,6 +918,7 @@ mod tests {
                 "@adico/badge".to_string(),
                 "@adico/breadcrumb".to_string(),
                 "@adico/button".to_string(),
+                "@adico/button-group".to_string(),
                 "@adico/calendar".to_string(),
                 "@adico/card".to_string(),
                 "@adico/checkbox".to_string(),
@@ -924,11 +934,13 @@ mod tests {
                 "@adico/empty".to_string(),
                 "@adico/hover-card".to_string(),
                 "@adico/input".to_string(),
+                "@adico/input-group".to_string(),
                 "@adico/item".to_string(),
                 "@adico/kbd".to_string(),
                 "@adico/label".to_string(),
                 "@adico/menubar".to_string(),
                 "@adico/mode-toggle".to_string(),
+                "@adico/native-select".to_string(),
                 "@adico/pagination".to_string(),
                 "@adico/popover".to_string(),
                 "@adico/progress".to_string(),

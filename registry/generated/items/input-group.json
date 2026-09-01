@@ -1,0 +1,47 @@
+{
+  "name": "input-group",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style InputGroup for Dioxus.",
+  "files": [
+    {
+      "source": "ui/input_group.rs",
+      "targetRoot": "ui",
+      "target": "input_group.rs",
+      "checksum": "2061880b2840e033d596a9328b060e1c3ca4c30c3353d41a1dbc86d07c905c0a"
+    }
+  ],
+  "registryDependencies": [
+    "cn",
+    "button"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "input_group",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "input-group",
+    "compositionNote": "InputGroup/InputGroupAddon/InputGroupButton/InputGroupText/InputGroupInput/InputGroupTextarea replicate upstream's bordered-field-with-addons composition. InputGroupButton reuses the installed Button's own ButtonVariant/ButtonSize enums directly (Ghost/Xs default) instead of a duplicate parallel size scale. InputGroupInput/InputGroupTextarea author their own flush classes rather than composing Input/Textarea, since adico_lib::cn has no Tailwind-merge equivalent to reliably override those components' fixed classes. InputGroupAddon omits upstream's click-to-focus-sibling-input JavaScript (a non-essential UX nicety); see the module doc comment."
+  },
+  "compatibility": null,
+  "provenance": null
+}

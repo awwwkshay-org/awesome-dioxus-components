@@ -1,0 +1,10 @@
+{
+  "tailwindOnly": true,
+  "styleException": [],
+  "tokenCompliant": true,
+  "colorException": [],
+  "inspiredBy": [
+    "shadcn"
+  ],
+  "inspirationNote": "Class-for-class match with upstream's ButtonGroup/ButtonGroupText/ButtonGroupSeparator, all semantic tokens (bg-muted, bg-input). Upstream's cva orientation variant is reimplemented as a plain Rust enum with the identical class strings. No dioxus-components equivalent exists."
+}

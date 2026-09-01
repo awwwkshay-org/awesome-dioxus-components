@@ -1532,6 +1532,93 @@
         "slug": "table",
         "compositionNote": "Purely presentational (Table/TableHeader/TableBody/TableFooter/TableRow/TableHead/TableCell/TableCaption), matching upstream's own non-interactive implementation. Table wraps the real <table> in a relative/overflow-x-auto scroll container, matching upstream's horizontal-scroll behavior for wide tables."
       }
+    },
+    {
+      "name": "button-group",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style ButtonGroup for Dioxus.",
+      "files": [
+        {
+          "source": "ui/button_group.rs",
+          "targetRoot": "ui",
+          "target": "button_group.rs",
+          "checksum": "4bbead080920838c354e75e7d2f4c6a76a30bba905e91463d98dd02f7bc105b6"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "button_group", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "button-group",
+        "compositionNote": "Visually joins related buttons/form controls (ButtonGroup/ButtonGroupText/ButtonGroupSeparator) via adjoining borders/radii, matching upstream's cva-driven orientation variant with a plain Rust enum instead. ButtonGroupSeparator composes the owned adico_primitives::separator::Separator primitive, matching how ToolbarSeparator composes its own primitive counterpart."
+      }
+    },
+    {
+      "name": "input-group",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style InputGroup for Dioxus.",
+      "files": [
+        {
+          "source": "ui/input_group.rs",
+          "targetRoot": "ui",
+          "target": "input_group.rs",
+          "checksum": "2061880b2840e033d596a9328b060e1c3ca4c30c3353d41a1dbc86d07c905c0a"
+        }
+      ],
+      "registryDependencies": ["cn", "button"],
+      "cargoDependencies": [{ "crate": "dioxus", "version": "=0.7.9" }],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "input_group", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "input-group",
+        "compositionNote": "InputGroup/InputGroupAddon/InputGroupButton/InputGroupText/InputGroupInput/InputGroupTextarea replicate upstream's bordered-field-with-addons composition. InputGroupButton reuses the installed Button's own ButtonVariant/ButtonSize enums directly (Ghost/Xs default) instead of a duplicate parallel size scale. InputGroupInput/InputGroupTextarea author their own flush classes rather than composing Input/Textarea, since adico_lib::cn has no Tailwind-merge equivalent to reliably override those components' fixed classes. InputGroupAddon omits upstream's click-to-focus-sibling-input JavaScript (a non-essential UX nicety); see the module doc comment."
+      }
+    },
+    {
+      "name": "native-select",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style NativeSelect for Dioxus.",
+      "files": [
+        {
+          "source": "ui/native_select.rs",
+          "targetRoot": "ui",
+          "target": "native_select.rs",
+          "checksum": "6cf7cc4893164a0bd07f1dafba4e9ec69e57507264a6daba9a8e792d310b4876"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "native_select", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "native-select",
+        "compositionNote": "Wraps a native <select> for OS-native picker behavior, distinct from the owned custom-listbox Select component. NativeSelectOption/NativeSelectOptGroup use the Canvas/CanvasText CSS system-color keywords (matching upstream exactly) rather than adico's background/foreground semantic tokens, since a native <option> popup is painted by the OS outside the page's own CSS custom properties -- not a token-compliance gap."
+      }
     }
   ]
 }

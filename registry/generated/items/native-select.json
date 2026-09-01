@@ -1,0 +1,54 @@
+{
+  "name": "native-select",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style NativeSelect for Dioxus.",
+  "files": [
+    {
+      "source": "ui/native_select.rs",
+      "targetRoot": "ui",
+      "target": "native_select.rs",
+      "checksum": "6cf7cc4893164a0bd07f1dafba4e9ec69e57507264a6daba9a8e792d310b4876"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "native_select",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "native-select",
+    "compositionNote": "Wraps a native <select> for OS-native picker behavior, distinct from the owned custom-listbox Select component. NativeSelectOption/NativeSelectOptGroup use the Canvas/CanvasText CSS system-color keywords (matching upstream exactly) rather than adico's background/foreground semantic tokens, since a native <option> popup is painted by the OS outside the page's own CSS custom properties -- not a token-compliance gap."
+  },
+  "compatibility": null,
+  "provenance": null
+}

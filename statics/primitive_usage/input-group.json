@@ -1,0 +1,5 @@
+{
+  "classification": "presentational",
+  "primitiveModules": [],
+  "reason": "Static styled markup composing the installed Button UI component and authoring its own flush-control classes; no adico_primitives import, no interactive state of its own."
+}

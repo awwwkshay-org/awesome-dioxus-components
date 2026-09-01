@@ -73,11 +73,21 @@
     },
     {
       "address": "@adico/button",
-      "manifestDigest": "d360609157c3bfbfb04af82af76c43d3af9d02b58949ecb79b8d4fab3ce76363",
+      "manifestDigest": "f4f6757b85fb71da3bc50eaabb7872dc80bd94c745557f6320303dea07b9a469",
       "files": [
         {
           "path": "src/components/ui/button.rs",
           "checksum": "0f498536390cf5ee008340c199f0d412e346a4ee7477390cda9c93edb4f75ceb"
+        }
+      ]
+    },
+    {
+      "address": "@adico/button-group",
+      "manifestDigest": "31f0a0c0f5947af2822725f8a9edfafbfdef1e70a69e0118f0a3f345e64e67a6",
+      "files": [
+        {
+          "path": "src/components/ui/button_group.rs",
+          "checksum": "4bbead080920838c354e75e7d2f4c6a76a30bba905e91463d98dd02f7bc105b6"
         }
       ]
     },
@@ -113,7 +123,7 @@
     },
     {
       "address": "@adico/cn",
-      "manifestDigest": "e9c01b4900f11b720c387f1226a1b86ae34142cc95c5db5200bfc015c6303617",
+      "manifestDigest": "f4f6757b85fb71da3bc50eaabb7872dc80bd94c745557f6320303dea07b9a469",
       "files": [
         {
           "path": "src/adico_lib/cn.rs",
@@ -232,6 +242,16 @@
       ]
     },
     {
+      "address": "@adico/input-group",
+      "manifestDigest": "f4f6757b85fb71da3bc50eaabb7872dc80bd94c745557f6320303dea07b9a469",
+      "files": [
+        {
+          "path": "src/components/ui/input_group.rs",
+          "checksum": "2061880b2840e033d596a9328b060e1c3ca4c30c3353d41a1dbc86d07c905c0a"
+        }
+      ]
+    },
+    {
       "address": "@adico/item",
       "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
       "files": [
@@ -278,6 +298,16 @@
         {
           "path": "src/components/ui/mode_toggle.rs",
           "checksum": "d30499d3137ccb834d048e0e39287355f970d024ec0470d697ca46ee55e1a153"
+        }
+      ]
+    },
+    {
+      "address": "@adico/native-select",
+      "manifestDigest": "31f0a0c0f5947af2822725f8a9edfafbfdef1e70a69e0118f0a3f345e64e67a6",
+      "files": [
+        {
+          "path": "src/components/ui/native_select.rs",
+          "checksum": "6cf7cc4893164a0bd07f1dafba4e9ec69e57507264a6daba9a8e792d310b4876"
         }
       ]
     },

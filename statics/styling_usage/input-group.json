@@ -1,0 +1,10 @@
+{
+  "tailwindOnly": true,
+  "styleException": [],
+  "tokenCompliant": true,
+  "colorException": [],
+  "inspiredBy": [
+    "shadcn"
+  ],
+  "inspirationNote": "Class-for-class match with upstream's InputGroup/InputGroupAddon/InputGroupButton/InputGroupText/InputGroupInput/InputGroupTextarea, all semantic tokens (text-muted-foreground, border-destructive, ring-destructive). InputGroupInput/InputGroupTextarea author their own flush classes rather than composing the installed Input/Textarea and overriding their fixed classes, since adico_lib::cn has no Tailwind-merge equivalent to make class-attribute override order reliable. No dioxus-components equivalent exists."
+}

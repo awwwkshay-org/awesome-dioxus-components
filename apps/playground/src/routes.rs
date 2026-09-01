@@ -9,13 +9,14 @@ use crate::components;
 use crate::components::theme_builder_launcher::ThemeBuilderLauncher;
 use crate::pages::{
     AccordionPage, AlertDialogPage, AlertPage, AspectRatioPage, AvatarPage, BadgePage,
-    BreadcrumbPage, ButtonPage, CalendarPage, CardPage, CheckboxPage, CollapsiblePage,
-    ColorPickerPage, ComboboxPage, ContextMenuPage, DatePickerPage, DialogPage,
-    DragAndDropListPage, DropdownMenuPage, EmptyPage, Home, HoverCardPage, InputPage, ItemPage,
-    KbdPage, LabelPage, MenubarPage, ModeTogglePage, PaginationPage, PopoverPage, ProgressPage,
-    RadioGroupPage, ScrollAreaPage, SelectPage, SheetPage, SidebarPage, SkeletonPage, SliderPage,
-    SpinnerPage, SwitchPage, TablePage, TabsPage, TagGroupPage, TextareaPage, ThemeSwitcherPage,
-    ToastPage, ToggleGroupPage, TogglePage, ToolbarPage, TooltipPage, VirtualListPage,
+    BreadcrumbPage, ButtonGroupPage, ButtonPage, CalendarPage, CardPage, CheckboxPage,
+    CollapsiblePage, ColorPickerPage, ComboboxPage, ContextMenuPage, DatePickerPage, DialogPage,
+    DragAndDropListPage, DropdownMenuPage, EmptyPage, Home, HoverCardPage, InputGroupPage,
+    InputPage, ItemPage, KbdPage, LabelPage, MenubarPage, ModeTogglePage, NativeSelectPage,
+    PaginationPage, PopoverPage, ProgressPage, RadioGroupPage, ScrollAreaPage, SelectPage,
+    SheetPage, SidebarPage, SkeletonPage, SliderPage, SpinnerPage, SwitchPage, TablePage, TabsPage,
+    TagGroupPage, TextareaPage, ThemeSwitcherPage, ToastPage, ToggleGroupPage, TogglePage,
+    ToolbarPage, TooltipPage, VirtualListPage,
 };
 
 const PLAYGROUND_LOGO: Asset = asset!("/assets/web/android-chrome-192x192.png");
@@ -125,6 +126,12 @@ pub enum Route {
     BreadcrumbPage {},
     #[route("/table")]
     TablePage {},
+    #[route("/button-group")]
+    ButtonGroupPage {},
+    #[route("/input-group")]
+    InputGroupPage {},
+    #[route("/native-select")]
+    NativeSelectPage {},
 }
 
 pub fn nav_items() -> Vec<(&'static str, Route)> {
@@ -179,6 +186,9 @@ pub fn nav_items() -> Vec<(&'static str, Route)> {
         ("Spinner", Route::SpinnerPage {}),
         ("Breadcrumb", Route::BreadcrumbPage {}),
         ("Table", Route::TablePage {}),
+        ("ButtonGroup", Route::ButtonGroupPage {}),
+        ("InputGroup", Route::InputGroupPage {}),
+        ("NativeSelect", Route::NativeSelectPage {}),
     ]
 }
 

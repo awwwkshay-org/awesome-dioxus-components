@@ -1,0 +1,15 @@
+{
+  "tailwindOnly": true,
+  "styleException": [],
+  "tokenCompliant": false,
+  "colorException": [
+    {
+      "value": "bg-[Canvas]/text-[CanvasText] on NativeSelectOption/NativeSelectOptGroup (native_select.rs)",
+      "reason": "Matches upstream exactly: a native <option> popup is painted by the OS outside the page's own CSS custom properties, so only the CSS Canvas/CanvasText system-color keywords (resolved by the OS per its own theme) keep option text legible there -- adico's background/foreground tokens would not apply."
+    }
+  ],
+  "inspiredBy": [
+    "shadcn"
+  ],
+  "inspirationNote": "Class-for-class match with upstream's NativeSelect/NativeSelectOption/NativeSelectOptGroup, including the deliberate Canvas/CanvasText system-color exception recorded above. No dioxus-components equivalent exists."
+}

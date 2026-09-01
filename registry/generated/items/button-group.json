@@ -1,0 +1,54 @@
+{
+  "name": "button-group",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style ButtonGroup for Dioxus.",
+  "files": [
+    {
+      "source": "ui/button_group.rs",
+      "targetRoot": "ui",
+      "target": "button_group.rs",
+      "checksum": "4bbead080920838c354e75e7d2f4c6a76a30bba905e91463d98dd02f7bc105b6"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "button_group",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "button-group",
+    "compositionNote": "Visually joins related buttons/form controls (ButtonGroup/ButtonGroupText/ButtonGroupSeparator) via adjoining borders/radii, matching upstream's cva-driven orientation variant with a plain Rust enum instead. ButtonGroupSeparator composes the owned adico_primitives::separator::Separator primitive, matching how ToolbarSeparator composes its own primitive counterpart."
+  },
+  "compatibility": null,
+  "provenance": null
+}
