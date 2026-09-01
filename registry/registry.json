@@ -1333,13 +1333,13 @@
           "source": "ui/color_picker.rs",
           "targetRoot": "ui",
           "target": "color_picker.rs",
-          "checksum": "beef84d8f09d3c569e722d504dab8376e65c054911fe25bc1fdaba8f545d17e6"
+          "checksum": "16bc2fc90470fc393eac70142edb65abbd8c0a82cc43e99ea2f5135bbfebca75"
         }
       ],
-      "registryDependencies": ["cn"],
+      "registryDependencies": ["cn", "slider"],
       "cargoDependencies": [
         { "crate": "dioxus", "version": "=0.7.9" },
-        { "crate": "adico-primitives", "version": "=0.1.0" },
+        { "crate": "adico-primitives", "version": "=0.1.0", "features": ["web"] },
         { "crate": "palette", "version": "0.7.6" }
       ],
       "style": {
@@ -1352,8 +1352,8 @@
       ],
       "documentation": {
         "slug": "color-picker",
-        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. HSV saturation/value drag surface with keyboard arrow-key navigation and accessible per-axis range inputs (AreaThumbSaturationInput/AreaThumbValueInput). The M3 migration queue's dependency note said this item composes label/popover/slider; reading the actual upstream primitive source found it only depends on the already-owned move_interaction/pointer modules (reused unmodified from Wave 2's Slider import), not those three registry items -- a real correction recorded per the M1 lesson to verify against source, not the queue's one-line notes. Requires the `palette` crate directly (matching upstream's own public HSV color type in its props), same as any upstream consumer.",
-        "usage": "ColorPicker { value: value(), on_value_change: move |v| value.set(v),\n    ColorArea { AreaThumb {} }\n}",
+        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. HSV saturation/value drag surface with keyboard arrow-key navigation and accessible per-axis range inputs (AreaThumbSaturationInput/AreaThumbValueInput). The M3 migration queue's dependency note said this item composes label/popover/slider; reading the actual upstream primitive source found it only depends on the already-owned move_interaction/pointer modules (reused unmodified from Wave 2's Slider import), not those three registry items -- a real correction recorded per the M1 lesson to verify against source, not the queue's one-line notes. Requires the `palette` crate directly (matching upstream's own public HSV color type in its props), same as any upstream consumer. **2026-09-02:** the 'not slider' half of that correction no longer holds -- this item now genuinely composes the `slider` registry item for a new `HueSlider` sub-component (task 5.3h: `ColorArea` only ever adjusted saturation/value within a fixed hue, with no control anywhere that changed hue itself; a user directly asked how to pick red and there was no way through the UI). `registryDependencies` is now `[\"cn\", \"slider\"]`. The original M3 finding about `move_interaction`/`pointer` is unaffected and still accurate -- only the slider composition premise changed, and only because new functionality was added, not because the earlier finding was wrong.",
+        "usage": "ColorPicker { color: color(), on_color_change: move |c| color.set(c),\n    ColorArea { AreaTrack { AreaThumb { AreaThumbSaturationInput {} AreaThumbValueInput {} } } }\n    HueSlider {}\n}",
         "accessibility": "No dedicated APG \"Color Picker\" pattern exists; this follows the closest guidance -- the Slider pattern applied per axis. `ColorPicker`/`ColorArea` are `role=\"group\"`; each saturation/value axis input is a native `type=\"range\"` with a human-readable `aria-valuetext` (e.g. \"Saturation 62%, vibrant orange\") and `aria-orientation` (`packages/adico-primitives/src/color_picker.rs`).",
         "keyboard": "`AreaThumb` is the two-dimensional drag surface and keyboard entry point, handing focus to whichever axis input the keypress moved; each axis then responds to its own arrow keys like an ordinary range input."
       },

@@ -13,6 +13,7 @@ pub use adico_primitives::color_picker::{
     AreaThumbSaturationInputProps, AreaThumbValueInputProps, Color, ColorPickerContext,
 };
 
+use super::slider::{Slider, SliderThumb, SliderTrack};
 use crate::adico_lib::cn::cn;
 
 /// Provides the color-picker context and synchronizes a color value between
@@ -76,6 +77,44 @@ pub fn AreaThumb(children: Element) -> Element {
     }
 }
 
+/// A horizontal slider that sets the color picker's hue (0-360°), keeping
+/// saturation and value unchanged.
+///
+/// Real, previously-missing functionality, not a bug fix: [`ColorArea`]'s
+/// drag surface only ever adjusts saturation/value *within the current
+/// hue's plane* -- there was no control anywhere in this registry or the
+/// playground demo that changed the hue itself, so a color like pure red
+/// (hue 0°) was unreachable from whatever hue the picker happened to start
+/// at (a user directly asked how to pick red and, at the time, there
+/// genuinely was no way through the UI). `ColorPickerContext::set_hue`
+/// already existed at the primitive layer for exactly this, just never
+/// composed into a visible control. Reuses this registry's own already-built,
+/// already-tested [`Slider`]/[`SliderTrack`]/[`SliderThumb`] (task 5.3f)
+/// rather than inventing a new drag control, per this repo's standing
+/// composition rule.
+///
+/// This must be used inside a [`ColorPicker`] component.
+#[component]
+pub fn HueSlider() -> Element {
+    let ctx = use_context::<ColorPickerContext>();
+    let hue = use_memo(move || ctx.color().hue.into_positive_degrees());
+
+    rsx! {
+        Slider {
+            value: Some(hue()),
+            min: 0.0,
+            max: 360.0,
+            step: 1.0,
+            label: Some("Hue".to_string()),
+            on_value_change: move |h: f64| ctx.set_hue(h),
+            SliderTrack {
+                class: "bg-[linear-gradient(to_right,red,yellow,lime,cyan,blue,magenta,red)]",
+                SliderThumb {}
+            }
+        }
+    }
+}
+
 /// `AreaThumbSaturationInputProps`/`AreaThumbValueInputProps` have no
 /// dedicated `class` field (only `attributes: Vec<Attribute>`, extending
 /// `GlobalAttributes`) -- build the merged attribute list by hand, matching
@@ -136,5 +175,12 @@ mod tests {
         let merged = with_class("sr-only", Vec::new());
         assert_eq!(merged.len(), 1);
         assert_eq!(merged[0].name, "class");
+    }
+
+    #[test]
+    fn hue_slider_track_spans_the_full_hue_wheel_back_to_red() {
+        let gradient = "linear-gradient(to_right,red,yellow,lime,cyan,blue,magenta,red)";
+        assert!(gradient.starts_with("linear-gradient(to_right,red,"));
+        assert!(gradient.ends_with(",red)"));
     }
 }

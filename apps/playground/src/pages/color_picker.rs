@@ -25,6 +25,7 @@ pub fn ColorPickerPage() -> Element {
                         }
                     }
                 }
+                components::ui::HueSlider {}
             }
         }
     }

@@ -974,6 +974,9 @@
   .bg-violet-500 {
     background-color: var(--color-violet-500);
   }
+  .bg-\[linear-gradient\(to_right\,red\,yellow\,lime\,cyan\,blue\,magenta\,red\)\] {
+    background-image: linear-gradient(to right,red,yellow,lime,cyan,blue,magenta,red);
+  }
   .bg-\[linear-gradient\(to_top\,black\,transparent\)\,linear-gradient\(to_right\,white\,var\(--area-color\)\)\] {
     background-image: linear-gradient(to top,black,transparent),linear-gradient(to right,white,var(--area-color));
   }
