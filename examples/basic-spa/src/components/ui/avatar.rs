@@ -10,12 +10,41 @@ use adico_primitives::avatar::{
 
 use crate::adico_lib::cn::cn;
 
+/// The visual size of an [`Avatar`]. Was entirely absent before task 5.2 --
+/// upstream shadcn added a `size` axis; adico only ever rendered one fixed
+/// size (`size-10`). `Default` is kept at that existing value rather than
+/// upstream's own new, smaller default (`size-8`), so this addition is
+/// purely additive -- no existing `Avatar` usage changes size silently.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum AvatarSize {
+    /// Compact size.
+    Sm,
+    /// Default size (unchanged from before this prop existed).
+    #[default]
+    Default,
+    /// Larger size.
+    Lg,
+}
+
+impl AvatarSize {
+    fn class(self) -> &'static str {
+        match self {
+            Self::Sm => "size-8",
+            Self::Default => "size-10",
+            Self::Lg => "size-12",
+        }
+    }
+}
+
 /// Props for [`Avatar`].
 #[derive(Props, Clone, PartialEq)]
 pub struct AvatarProps {
     /// Extra classes appended to the semantic default.
     #[props(default)]
     pub class: Option<String>,
+    /// The visual size.
+    #[props(default)]
+    pub size: AvatarSize,
     /// Accessible label for the avatar image role.
     #[props(default)]
     pub aria_label: Option<String>,
@@ -28,7 +57,8 @@ pub struct AvatarProps {
 #[component]
 pub fn Avatar(props: AvatarProps) -> Element {
     let class = cn(&[
-        "relative flex size-10 shrink-0 overflow-hidden rounded-full",
+        "relative flex shrink-0 overflow-hidden rounded-full",
+        props.size.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

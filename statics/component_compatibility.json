@@ -614,6 +614,11 @@
               },
               {
                 "default": "default()",
+                "name": "size",
+                "type": "AvatarSize"
+              },
+              {
+                "default": "default()",
                 "name": "aria_label",
                 "type": "Option<String>"
               },

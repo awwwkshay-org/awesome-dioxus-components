@@ -733,7 +733,7 @@
           "source": "ui/avatar.rs",
           "targetRoot": "ui",
           "target": "avatar.rs",
-          "checksum": "3e085e4e7531ec91d5c1744c4df6cca9d0cddfd8606e5ca12b3ce3b3cf93f1d6"
+          "checksum": "38c0f39a51dbe0a7629aad4a6b479d005c53f6c46e6a3c06c1461dcc5a0e974c"
         }
       ],
       "registryDependencies": ["cn"],
