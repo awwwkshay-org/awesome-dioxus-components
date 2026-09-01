@@ -31,6 +31,9 @@ pub enum ItemVariant {
     Default,
     /// A quiet row with no outer border.
     Muted,
+    /// A bordered row with no background fill, matching upstream shadcn's
+    /// `outline` item variant (missing here until this audit found the gap).
+    Outline,
     /// A row that advertises pointer and keyboard focus affordances.
     Interactive,
 }
@@ -40,6 +43,7 @@ impl ItemVariant {
         match self {
             Self::Default => "border bg-card",
             Self::Muted => "border-transparent bg-muted/50",
+            Self::Outline => "border border-border",
             Self::Interactive => {
                 "border bg-card cursor-pointer hover:bg-accent hover:text-accent-foreground"
             }
@@ -269,6 +273,7 @@ mod tests {
     fn item_variants_have_distinct_states() {
         assert!(ItemVariant::Default.class().contains("border"));
         assert!(ItemVariant::Muted.class().contains("bg-muted"));
+        assert!(ItemVariant::Outline.class().contains("border-border"));
         assert!(ItemVariant::Interactive.class().contains("cursor-pointer"));
     }
 }

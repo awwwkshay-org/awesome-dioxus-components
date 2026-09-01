@@ -8,6 +8,7 @@ use crate::components::demo::Demo;
 pub fn SidebarPage() -> Element {
     let mut collapsible = use_signal(|| components::ui::SidebarCollapsible::Offcanvas);
     let mut side = use_signal(|| components::ui::SidebarSide::Left);
+    let mut variant = use_signal(|| components::ui::SidebarVariant::Sidebar);
     let mut open = use_signal(|| Some(true));
     let active_settings = use_signal(|| true);
     let settings_disabled = use_signal(|| false);
@@ -35,6 +36,16 @@ pub fn SidebarPage() -> Element {
                     on_change: move |value| side.set(value),
                 }
                 SelectControl {
+                    label: "Variant",
+                    value: variant(),
+                    options: vec![
+                        ("Sidebar", components::ui::SidebarVariant::Sidebar),
+                        ("Floating", components::ui::SidebarVariant::Floating),
+                        ("Inset", components::ui::SidebarVariant::Inset),
+                    ],
+                    on_change: move |value| variant.set(value),
+                }
+                SelectControl {
                     label: "Open state",
                     value: open(),
                     options: vec![("Uncontrolled", None), ("Open", Some(true)), ("Closed", Some(false))],
@@ -48,6 +59,7 @@ pub fn SidebarPage() -> Element {
                 components::ui::Sidebar {
                     collapsible: collapsible(),
                     side: side(),
+                    variant: variant(),
                     components::ui::SidebarHeader { "My App" }
                     components::ui::SidebarContent {
                         components::ui::SidebarGroup {
@@ -68,7 +80,7 @@ pub fn SidebarPage() -> Element {
                     components::ui::SidebarFooter { "v1.0" }
                     components::ui::SidebarRail {}
                 }
-                components::ui::SidebarInset {
+                components::ui::SidebarInset { variant: variant(),
                     components::ui::SidebarTrigger { "☰" }
                     " Main content"
                 }

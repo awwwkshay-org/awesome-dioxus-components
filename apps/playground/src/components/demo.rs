@@ -10,7 +10,7 @@ pub fn Demo(name: &'static str, controls: Option<Element>, children: Element) ->
             h1 { class: "shrink-0 text-2xl font-bold", "{name}" }
             div { class: "mt-3 grid min-h-0 flex-1 gap-3", style: "grid-template-rows: minmax(0, 3fr) minmax(0, 1fr);",
                 div {
-                    class: "relative z-20 grid min-h-0 place-items-center overflow-visible rounded-lg border border-border bg-muted/20 p-6",
+                    class: "relative z-20 grid min-h-0 place-items-center overflow-auto rounded-lg border border-border bg-muted/20 p-6",
                     style: "background-image: linear-gradient(hsl(var(--border) / 0.08) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border) / 0.08) 1px, transparent 1px); background-size: 2rem 2rem;",
                     div {
                         class: "text-card-foreground",

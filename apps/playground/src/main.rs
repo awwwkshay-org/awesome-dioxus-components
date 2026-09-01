@@ -33,7 +33,7 @@ fn App() -> Element {
         document::Link { rel: "icon", r#type: "image/png", sizes: "16x16", href: FAVICON_16 }
         document::Link { rel: "icon", r#type: "image/png", sizes: "32x32", href: FAVICON_32 }
         document::Link { rel: "apple-touch-icon", href: APPLE_TOUCH_ICON }
-        div { class: "min-h-screen bg-background text-foreground", Router::<Route> {} }
+        div { class: "h-screen w-screen overflow-hidden bg-background text-foreground", Router::<Route> {} }
     }
 }
 

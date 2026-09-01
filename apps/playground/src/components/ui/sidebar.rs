@@ -62,6 +62,22 @@ impl SidebarCollapsible {
     }
 }
 
+/// The overall visual treatment of a [`Sidebar`] and its [`SidebarInset`].
+/// Found missing entirely by this session's variants audit: upstream shadcn
+/// supports all three, this registry item previously only ever rendered the
+/// plain `sidebar` look.
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
+pub enum SidebarVariant {
+    /// Docked flush to the viewport edge with a single border.
+    #[default]
+    Sidebar,
+    /// Inset from the edge with its own border, rounded corners, and shadow.
+    Floating,
+    /// Flush and borderless; [`SidebarInset`] instead gets the rounded,
+    /// shadowed treatment, so the two panels read as one recessed surface.
+    Inset,
+}
+
 #[derive(Clone, Copy)]
 struct SidebarCtx {
     open: Memo<bool>,
@@ -90,6 +106,15 @@ pub struct SidebarProviderProps {
     /// Callback fired when the open state changes.
     #[props(default)]
     pub on_open_change: Callback<bool>,
+    /// Extra classes appended to the semantic default. Kept as its own field
+    /// (not folded into `attributes` below) so it's merged via `cn`, not
+    /// silently overwritten -- `attributes` also extends `GlobalAttributes`
+    /// (which includes `class`), and a caller-supplied `class` routed through
+    /// that catch-all instead replaced the wrapper's own `flex` class
+    /// entirely, collapsing the layout (found live, breaking this app's own
+    /// dogfooded navigation shell).
+    #[props(default)]
+    pub class: Option<String>,
     /// Additional attributes for the wrapper element.
     #[props(extends = GlobalAttributes)]
     pub attributes: Vec<Attribute>,
@@ -103,7 +128,10 @@ pub fn SidebarProvider(props: SidebarProviderProps) -> Element {
     let (open, set_open) = use_controlled(props.open, props.default_open, props.on_open_change);
     use_context_provider(|| SidebarCtx { open, set_open });
 
-    let class = cn(&["flex min-h-svh w-full"]);
+    let class = cn(&[
+        "flex min-h-svh w-full",
+        props.class.as_deref().unwrap_or_default(),
+    ]);
     rsx! {
         div {
             class,
@@ -124,6 +152,9 @@ pub struct SidebarProps {
     /// How the sidebar behaves when collapsed.
     #[props(default)]
     pub collapsible: SidebarCollapsible,
+    /// The overall visual treatment; see [`SidebarVariant`].
+    #[props(default)]
+    pub variant: SidebarVariant,
     /// Additional CSS classes to append.
     #[props(default)]
     pub class: Option<String>,
@@ -151,14 +182,21 @@ pub fn Sidebar(props: SidebarProps) -> Element {
         (false, SidebarCollapsible::Offcanvas) => "w-0 overflow-hidden border-transparent",
     };
     let side_class = match props.side {
-        SidebarSide::Left => "left-0 border-r",
-        SidebarSide::Right => "right-0 border-l",
+        SidebarSide::Left => "left-0",
+        SidebarSide::Right => "right-0",
+    };
+    let variant_class = match (props.variant, props.side) {
+        (SidebarVariant::Sidebar, SidebarSide::Left) => "border-r",
+        (SidebarVariant::Sidebar, SidebarSide::Right) => "border-l",
+        (SidebarVariant::Floating, _) => "m-2 rounded-lg border border-sidebar-border shadow-sm",
+        (SidebarVariant::Inset, _) => "",
     };
 
     let class = cn(&[
         "flex h-svh flex-col bg-sidebar text-sidebar-foreground shrink-0 transition-[width] duration-200 ease-linear",
         width_class,
         side_class,
+        variant_class,
         props.class.as_deref().unwrap_or_default(),
     ]);
 
@@ -216,11 +254,34 @@ pub fn SidebarRail(class: Option<String>) -> Element {
     }
 }
 
-/// The main content area beside the [`Sidebar`].
+/// The main content area beside the [`Sidebar`]. Pass the same `variant` as
+/// the sibling [`Sidebar`] to pick up matching rounded, shadowed styling for
+/// [`SidebarVariant::Inset`].
+///
+/// Deliberately a caller-supplied prop, not read from the shared
+/// [`SidebarCtx`]: an earlier attempt had `Sidebar` write its `variant` into
+/// a context `Signal` for this component to read as a sibling, matching this
+/// file's existing `open`/`set_open` context-sharing pattern -- but found
+/// live (three different `Signal` construction strategies, all reproducing
+/// the same result) that a **write from one sibling's render body is not
+/// reliably observed by another sibling's signal read** in this Dioxus
+/// version, unlike `open`, which only ever changes via `use_controlled`'s
+/// own effect running inside `SidebarProvider`'s own scope. Explicit
+/// prop-passing sidesteps the issue entirely and is what upstream
+/// shadcn/Radix does too (via a CSS peer-selector, not shared JS state).
 #[component]
-pub fn SidebarInset(children: Element, class: Option<String>) -> Element {
+pub fn SidebarInset(
+    #[props(default)] variant: SidebarVariant,
+    children: Element,
+    class: Option<String>,
+) -> Element {
+    let variant_class = match variant {
+        SidebarVariant::Inset => "m-2 rounded-xl shadow-sm",
+        SidebarVariant::Sidebar | SidebarVariant::Floating => "",
+    };
     let class = cn(&[
         "relative flex w-full flex-1 flex-col bg-background",
+        variant_class,
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -375,5 +436,28 @@ pub fn SidebarMenuButton(props: SidebarMenuButtonProps) -> Element {
             ..props.attributes,
             {props.children}
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn floating_and_inset_variants_drop_the_plain_side_border() {
+        let sidebar_default = cn(&["border-r"]);
+        let floating = cn(&["m-2 rounded-lg border border-sidebar-border shadow-sm"]);
+        let inset = cn(&[""]);
+        assert!(sidebar_default.contains("border-r"));
+        assert!(floating.contains("shadow-sm"));
+        assert!(!floating.contains("border-r"));
+        assert!(inset.is_empty());
+    }
+
+    #[test]
+    fn inset_variant_gives_the_content_panel_its_own_rounded_surface() {
+        let class = cn(&["m-2 rounded-xl shadow-sm"]);
+        assert!(class.contains("rounded-xl"));
+        assert!(class.contains("shadow-sm"));
     }
 }

@@ -198,7 +198,7 @@ pub fn Layout() -> Element {
     let current_route = use_route::<Route>();
 
     rsx! {
-        components::ui::SidebarProvider {
+        components::ui::SidebarProvider { class: "h-full",
             components::ui::Sidebar {
                 components::ui::SidebarHeader {
                     Link { class: "flex shrink-0 items-center gap-2 text-lg font-bold", to: Route::Home {},

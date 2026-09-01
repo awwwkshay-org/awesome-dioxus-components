@@ -345,8 +345,14 @@ fn RovingFocusRow() -> Element {
         components::ui::RadioGroup {
             value: Some(radio_value()),
             on_value_change: move |value| radio_value.set(value),
-            components::ui::RadioItem { value: "blue".to_string(), index: 0usize, "Blue" }
-            components::ui::RadioItem { value: "red".to_string(), index: 1usize, "Red" }
+            div { class: "flex items-center gap-2",
+                components::ui::RadioItem { value: "blue".to_string(), index: 0usize, id: "radio-blue".to_string() }
+                components::ui::Label { html_for: "radio-blue".to_string(), "Blue" }
+            }
+            div { class: "flex items-center gap-2",
+                components::ui::RadioItem { value: "red".to_string(), index: 1usize, id: "radio-red".to_string() }
+                components::ui::Label { html_for: "radio-red".to_string(), "Red" }
+            }
         }
         components::ui::Tabs {
             value: Some(tab_value()),

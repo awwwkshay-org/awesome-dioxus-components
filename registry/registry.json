@@ -228,7 +228,7 @@
           "source": "ui/item.rs",
           "targetRoot": "ui",
           "target": "item.rs",
-          "checksum": "ef7822bed025bf5edc2d726ce1d89f71545766e7953537ff8883d805d1911ce7"
+          "checksum": "cfeb9e10f8272a4c94201209aa3498990a555a047d684019601e43beac6fc0c0"
         }
       ],
       "registryDependencies": ["cn"],
@@ -692,7 +692,7 @@
           "source": "ui/sidebar.rs",
           "targetRoot": "ui",
           "target": "sidebar.rs",
-          "checksum": "d024977c20130df659e07ad8a90bd264f48c5abaa228611448ceb7d038116a80"
+          "checksum": "90977a77839e64554609b19d8dad356f6a2edbabf8b33b6303a9cb41de5478d0"
         }
       ],
       "registryDependencies": ["cn"],
@@ -1063,7 +1063,7 @@
           "source": "ui/tabs.rs",
           "targetRoot": "ui",
           "target": "tabs.rs",
-          "checksum": "0f12e2871ee10aeb7654e4db367d9bd813d2150e152fd57f510201b1bf0d8540"
+          "checksum": "3f880caf77e5d7eabc644a74b7f9a7ebe44c94bf49dd5a74ac2929cc42a83178"
         }
       ],
       "registryDependencies": ["cn"],
