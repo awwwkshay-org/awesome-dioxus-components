@@ -7,6 +7,8 @@ description = "Documentation and component gallery for adico"
 
 [dependencies]
 dioxus.workspace = true
+serde.workspace = true
+serde_json.workspace = true
 
 [features]
 default = ["web"]
