@@ -279,15 +279,28 @@ pub enum ModuleError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::atomic::{AtomicU64, Ordering};
     use std::time::{SystemTime, UNIX_EPOCH};
 
     fn temporary_module_path() -> PathBuf {
+        // A nanosecond timestamp alone can collide: these tests run with
+        // multiple threads, and two calls close together can land in the
+        // same clock tick on platforms with coarser-than-nanosecond
+        // resolution, so two tests race on the same directory (found via a
+        // real, if rare, flaky failure -- see the identical fix and comment
+        // in css.rs's `temporary_project_root`). The counter guarantees
+        // every call gets a distinct path regardless of timing.
+        static NEXT: AtomicU64 = AtomicU64::new(0);
         let nonce = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .expect("system time is after epoch")
             .as_nanos();
+        let unique = NEXT.fetch_add(1, Ordering::Relaxed);
         std::env::temp_dir()
-            .join(format!("adico-modules-test-{}-{nonce}", std::process::id()))
+            .join(format!(
+                "adico-modules-test-{}-{nonce}-{unique}",
+                std::process::id()
+            ))
             .join("src/components/ui/mod.rs")
     }
 

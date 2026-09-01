@@ -53,7 +53,7 @@
     },
     {
       "address": "@adico/button",
-      "manifestDigest": "48d06613a6d0c678c6eda3f2440cddcffb260af43c3e74cd91d23e1488036045",
+      "manifestDigest": "3861816c8cda09ec72f63e4e0301429451653bff31d2b2ba42c2f2baa058375f",
       "files": [
         {
           "path": "src/components/ui/button.rs",
@@ -93,7 +93,7 @@
     },
     {
       "address": "@adico/cn",
-      "manifestDigest": "2056420f7a6703d4efbbae8d7900c140ee94bbf7b389c35c5808b21bf6e6d7dc",
+      "manifestDigest": "3861816c8cda09ec72f63e4e0301429451653bff31d2b2ba42c2f2baa058375f",
       "files": [
         {
           "path": "src/adico_lib/cn.rs",

@@ -30,6 +30,14 @@
 //! for the rest of the session. A `use_drop` cleanup below removes every
 //! property this component applies as soon as it unmounts, handing control
 //! back to `mode-toggle`/`theme-switcher`'s class-based mechanism.
+//!
+//! **Deliberately excluded (task 5.3d, 2026-09-01):** `--chart-1`..
+//! `--chart-5`, added to the installed CSS contract's token set alongside
+//! this component's original 28. Chart colors are a data-visualization
+//! palette, not a UI-surface color in the same sense as the 28 tokens this
+//! editor covers, and shadcn's own reference theme customizer does not
+//! expose them for interactive editing either -- recorded as a deliberate
+//! scope decision, not an oversight.
 
 use dioxus::prelude::*;
 
@@ -258,7 +266,7 @@ impl ThemeToken {
             Self::Input => "--input",
             Self::Ring => "--ring",
             Self::Radius => "--radius",
-            Self::SidebarBackground => "--sidebar-background",
+            Self::SidebarBackground => "--sidebar",
             Self::SidebarForeground => "--sidebar-foreground",
             Self::SidebarPrimary => "--sidebar-primary",
             Self::SidebarPrimaryForeground => "--sidebar-primary-foreground",
@@ -533,7 +541,7 @@ impl ThemeVariables {
             ("--input", self.input.clone()),
             ("--ring", self.ring.clone()),
             ("--radius", self.radius.clone()),
-            ("--sidebar-background", self.sidebar_background.clone()),
+            ("--sidebar", self.sidebar_background.clone()),
             ("--sidebar-foreground", self.sidebar_foreground.clone()),
             ("--sidebar-primary", self.sidebar_primary.clone()),
             (
@@ -647,7 +655,7 @@ impl ThemeVariables {
             ("--input", self.input.as_str()),
             ("--ring", self.ring.as_str()),
             ("--radius", self.radius.as_str()),
-            ("--sidebar-background", self.sidebar_background.as_str()),
+            ("--sidebar", self.sidebar_background.as_str()),
             ("--sidebar-foreground", self.sidebar_foreground.as_str()),
             ("--sidebar-primary", self.sidebar_primary.as_str()),
             (
@@ -1123,7 +1131,7 @@ mod tests {
                             "--input",
                             "--ring",
                             "--radius",
-                            "--sidebar-background",
+                            "--sidebar",
                             "--sidebar-primary",
                             "--sidebar-accent",
                         ] {

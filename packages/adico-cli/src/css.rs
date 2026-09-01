@@ -410,6 +410,23 @@ fn positions(contents: &str, marker: &str) -> Vec<usize> {
 /// narrower set left those classes resolving to nothing under Tailwind v4
 /// (no `@theme` token registered), so components using them rendered
 /// unstyled even with the CSS pipeline otherwise wired up correctly.
+///
+/// **Token contract refresh (task 5.3d, 2026-09-01):** brought current with
+/// upstream shadcn's token *names* and radius *scale* — `--chart-1`..
+/// `--chart-5` (a neutral, mode-invariant 5-step grayscale ramp, matching
+/// the achromatic choice upstream's own "neutral" base theme makes),
+/// `--sidebar-background` renamed to `--sidebar`, and the radius scale
+/// expanded from `sm`/`md`/`lg` to `sm`/`md`/`lg`/`xl`/`2xl`/`3xl`/`4xl`
+/// using upstream's own multiplier formula (`calc(var(--radius) * N)`).
+/// **Deliberately not migrated:** upstream's current default themes
+/// (`neutral`, `stone`, etc., fetched from `apps/v4/registry/themes.ts` at
+/// this repo's pinned catalog revision) express every color as
+/// `oklch(L C H)`, not `hsl(H S% L%)` — a full color-space migration would
+/// touch every literal color value in every theme here and visibly change
+/// every installed component's rendered color, which is a materially
+/// bigger and riskier change than a token-name/scale refresh. Recorded as a
+/// known, deliberate divergence, not silently matched or silently dropped —
+/// `adico`'s HSL model is retained.
 fn theme_region() -> String {
     format!(
         "{THEME_REGION_START}\n\
@@ -433,7 +450,12 @@ fn theme_region() -> String {
 \x20 --color-border: hsl(var(--border));\n\
 \x20 --color-input: hsl(var(--input));\n\
 \x20 --color-ring: hsl(var(--ring));\n\
-\x20 --color-sidebar: hsl(var(--sidebar-background));\n\
+\x20 --color-chart-1: hsl(var(--chart-1));\n\
+\x20 --color-chart-2: hsl(var(--chart-2));\n\
+\x20 --color-chart-3: hsl(var(--chart-3));\n\
+\x20 --color-chart-4: hsl(var(--chart-4));\n\
+\x20 --color-chart-5: hsl(var(--chart-5));\n\
+\x20 --color-sidebar: hsl(var(--sidebar));\n\
 \x20 --color-sidebar-foreground: hsl(var(--sidebar-foreground));\n\
 \x20 --color-sidebar-primary: hsl(var(--sidebar-primary));\n\
 \x20 --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));\n\
@@ -441,9 +463,13 @@ fn theme_region() -> String {
 \x20 --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));\n\
 \x20 --color-sidebar-border: hsl(var(--sidebar-border));\n\
 \x20 --color-sidebar-ring: hsl(var(--sidebar-ring));\n\
-\x20 --radius-sm: calc(var(--radius) - 4px);\n\
-\x20 --radius-md: calc(var(--radius) - 2px);\n\
+\x20 --radius-sm: calc(var(--radius) * 0.6);\n\
+\x20 --radius-md: calc(var(--radius) * 0.8);\n\
 \x20 --radius-lg: var(--radius);\n\
+\x20 --radius-xl: calc(var(--radius) * 1.4);\n\
+\x20 --radius-2xl: calc(var(--radius) * 1.8);\n\
+\x20 --radius-3xl: calc(var(--radius) * 2.2);\n\
+\x20 --radius-4xl: calc(var(--radius) * 2.6);\n\
 }}\n\
 \n\
 :root {{\n\
@@ -467,7 +493,12 @@ fn theme_region() -> String {
 \x20 --input: 214.3 31.8% 91.4%;\n\
 \x20 --ring: 222.2 84% 4.9%;\n\
 \x20 --radius: 0.5rem;\n\
-\x20 --sidebar-background: 0 0% 98%;\n\
+\x20 --chart-1: 0 0% 87%;\n\
+\x20 --chart-2: 0 0% 55.6%;\n\
+\x20 --chart-3: 0 0% 43.9%;\n\
+\x20 --chart-4: 0 0% 37.1%;\n\
+\x20 --chart-5: 0 0% 26.9%;\n\
+\x20 --sidebar: 0 0% 98%;\n\
 \x20 --sidebar-foreground: 240 5.3% 26.1%;\n\
 \x20 --sidebar-primary: 240 5.9% 10%;\n\
 \x20 --sidebar-primary-foreground: 0 0% 98%;\n\
@@ -497,7 +528,12 @@ fn theme_region() -> String {
 \x20 --border: 217.2 32.6% 17.5%;\n\
 \x20 --input: 217.2 32.6% 17.5%;\n\
 \x20 --ring: 212.7 26.8% 83.9%;\n\
-\x20 --sidebar-background: 240 5.9% 10%;\n\
+\x20 --chart-1: 0 0% 87%;\n\
+\x20 --chart-2: 0 0% 55.6%;\n\
+\x20 --chart-3: 0 0% 43.9%;\n\
+\x20 --chart-4: 0 0% 37.1%;\n\
+\x20 --chart-5: 0 0% 26.9%;\n\
+\x20 --sidebar: 240 5.9% 10%;\n\
 \x20 --sidebar-foreground: 240 4.8% 95.9%;\n\
 \x20 --sidebar-primary: 224.3 76.3% 48%;\n\
 \x20 --sidebar-primary-foreground: 0 0% 100%;\n\
@@ -595,6 +631,31 @@ mod tests {
         assert!(updated.contains(".consumer { color: red; }"));
         assert!(updated.contains("--radius: 0.5rem;"));
         assert!(updated.contains(".dark"));
+        // task 5.3d: token-contract refresh -- chart tokens, the
+        // --sidebar-background -> --sidebar rename, and the expanded radius
+        // scale must all be present, and the old name must not linger.
+        for chart_token in [
+            "--chart-1",
+            "--chart-2",
+            "--chart-3",
+            "--chart-4",
+            "--chart-5",
+        ] {
+            assert!(updated.contains(chart_token), "missing {chart_token}");
+        }
+        assert!(updated.contains("--sidebar: "));
+        assert!(!updated.contains("--sidebar-background"));
+        for radius_alias in [
+            "--radius-sm",
+            "--radius-md",
+            "--radius-lg",
+            "--radius-xl",
+            "--radius-2xl",
+            "--radius-3xl",
+            "--radius-4xl",
+        ] {
+            assert!(updated.contains(radius_alias), "missing {radius_alias}");
+        }
         assert!(
             !plan_theme_install(&path, &project_root)
                 .expect("repeated install should plan")
