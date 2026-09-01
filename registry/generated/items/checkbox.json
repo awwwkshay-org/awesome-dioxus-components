@@ -49,7 +49,10 @@
   ],
   "documentation": {
     "slug": "checkbox",
-    "compositionNote": "Styled facade over the owned keyboard/ARIA checkbox primitive (checked/indeterminate/unchecked), with a Lucide Check indicator. Requires the web feature since the primitive's hidden bubble input needs the browser DOM to sync indeterminate state."
+    "compositionNote": "Styled facade over the owned keyboard/ARIA checkbox primitive (checked/indeterminate/unchecked), with a Lucide Check indicator. Requires the web feature since the primitive's hidden bubble input needs the browser DOM to sync indeterminate state.",
+    "usage": "Checkbox { checked: checked(), on_checked_change: move |v| checked.set(v) }",
+    "accessibility": "`role=\"checkbox\"` with `aria-checked` of `true`/`false`/`mixed` (tri-state support), per the WAI-ARIA APG Checkbox pattern (`packages/adico-primitives/src/checkbox.rs`). A hidden native `<input type=\"checkbox\">` mirrors state for plain HTML form submission.",
+    "keyboard": "Toggles only on Space, not Enter -- the APG reserves Enter for a form's default-submit button, not checkbox activation."
   },
   "compatibility": null,
   "provenance": {

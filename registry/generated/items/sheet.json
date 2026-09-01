@@ -50,7 +50,10 @@
   ],
   "documentation": {
     "slug": "sheet",
-    "compositionNote": "Composes the owned dialog primitive directly (SheetTitle/SheetDescription/Sheet re-export the Dialog primitive's parts); the styled wrapper only adds the slide-in side variant and positioning."
+    "compositionNote": "Composes the owned dialog primitive directly (SheetTitle/SheetDescription/Sheet re-export the Dialog primitive's parts); the styled wrapper only adds the slide-in side variant and positioning.",
+    "usage": "Sheet { open: open(), on_open_change: move |v| open.set(v),\n    SheetTrigger { \"Open sheet\" }\n    SheetOverlay {}\n    SheetContent {\n        SheetHeader { SheetTitle { \"Title\" } }\n        SheetFooter { SheetClose { \"Close\" } }\n    }\n}",
+    "accessibility": "Composes `packages/adico-primitives/src/dialog.rs` directly (the same `role=\"dialog\"`/`aria-modal=\"true\"`/focus-trap behavior as `Dialog`), styled as an edge-anchored panel instead of a centered modal.",
+    "keyboard": "Same as `Dialog`: Escape closes it, plus the registry facade's manual backdrop `onclick` workaround for the same `use_outside_dismiss` web defect."
   },
   "compatibility": null,
   "provenance": {

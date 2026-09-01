@@ -49,7 +49,10 @@
   ],
   "documentation": {
     "slug": "menubar",
-    "compositionNote": "The public copied API remains compositional; coordinated multi-menu roving-focus keyboard navigation and ARIA wiring remain inside adico-primitives."
+    "compositionNote": "The public copied API remains compositional; coordinated multi-menu roving-focus keyboard navigation and ARIA wiring remain inside adico-primitives.",
+    "usage": "Menubar {\n    MenubarMenu { index: 0usize,\n        MenubarTrigger { \"File\" }\n        MenubarContent {\n            MenubarItem { index: 0usize, value: \"new\".to_string(), on_select: move |_| {}, \"New\" }\n        }\n    }\n}",
+    "accessibility": "`role=\"menubar\"` roving-focus container of `role=\"menu\"` menus, each opened by a `role=\"menuitem\"` trigger, per the WAI-ARIA APG Menubar pattern (`packages/adico-primitives/src/menubar.rs`). Deliberately independent of the shared `menu` primitive -- Base UI's own `Menubar` shares only a roving-focus container with `Menu`, not `Content`/`Item`.",
+    "keyboard": "Only one menu is open at a time; `ArrowLeft`/`ArrowRight` move focus between menu triggers (open or not); Enter/Space/ArrowDown open the focused menu."
   },
   "compatibility": null,
   "provenance": {

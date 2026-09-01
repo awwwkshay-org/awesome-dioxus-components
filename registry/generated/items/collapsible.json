@@ -43,7 +43,10 @@
   ],
   "documentation": {
     "slug": "collapsible",
-    "compositionNote": "A pure re-export of the owned Collapsible/CollapsibleContent/CollapsibleTrigger primitive: upstream ships it unstyled, matching shadcn's own unstyled Collapsible -- layout is left to consumer composition."
+    "compositionNote": "A pure re-export of the owned Collapsible/CollapsibleContent/CollapsibleTrigger primitive: upstream ships it unstyled, matching shadcn's own unstyled Collapsible -- layout is left to consumer composition.",
+    "usage": "Collapsible { open: open(), on_open_change: move |v| open.set(v),\n    CollapsibleTrigger { \"Toggle\" }\n    CollapsibleContent { \"Content\" }\n}",
+    "accessibility": "`CollapsibleTrigger`/`CollapsibleContent` implement the APG disclosure-widget guidance: a trigger with `aria-expanded`/`aria-controls` pointing at the content it reveals (`packages/adico-primitives/src/collapsible.rs`). `keep_mounted` keeps content in the DOM with no ARIA/visibility guarantee of its own -- visibility when set is the caller's own CSS/`hidden` attribute.",
+    "keyboard": "`CollapsibleTrigger` is a native button; Enter/Space toggle it via ordinary button activation, with no additional roving-focus or arrow-key behavior."
   },
   "compatibility": null,
   "provenance": {

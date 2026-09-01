@@ -49,7 +49,10 @@
   ],
   "documentation": {
     "slug": "theme-switcher",
-    "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA`-style per design.md §7b (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). A distilled palette picker (Slate/Blue/Violet/Emerald/Rose/Amber presets recoloring --primary/--primary-foreground and their Tailwind aliases) productizing the concept prototyped in apps/playground's advanced customization tray, which keeps its own full 28-token editor unchanged."
+    "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA`-style per design.md §7b (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). A distilled palette picker (Slate/Blue/Violet/Emerald/Rose/Amber presets recoloring --primary/--primary-foreground and their Tailwind aliases) productizing the concept prototyped in apps/playground's advanced customization tray, which keeps its own full 28-token editor unchanged.",
+    "usage": "ThemeSwitcher {}",
+    "accessibility": "Composes `theme_mode`'s `ThemeMode`/`ResolvedTheme` resolution (`packages/adico-primitives/src/theme_mode.rs`) behind a styled `Button`-like trigger; its accessibility surface is a native button's.",
+    "keyboard": "Native button activation (Enter/Space); no custom keyboard layer."
   },
   "compatibility": null,
   "provenance": null

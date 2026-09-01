@@ -47,7 +47,10 @@
   ],
   "documentation": {
     "slug": "combobox",
-    "compositionNote": "The copied façade re-exports the owned Combobox parts unstyled, matching select's approach: ComboboxOption is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains filtering, roving-focus keyboard, and ARIA behavior."
+    "compositionNote": "The copied façade re-exports the owned Combobox parts unstyled, matching select's approach: ComboboxOption is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains filtering, roving-focus keyboard, and ARIA behavior.",
+    "usage": "Combobox::<String> {\n    ComboboxInput { placeholder: \"Search...\" }\n    ComboboxList {\n        ComboboxOption::<String> { value: \"a\".to_string(), index: 0usize, \"Option A\" }\n    }\n}",
+    "accessibility": "Implements the WAI-ARIA APG Combobox (listbox popup) pattern: a text input that filters an anchored `role=\"listbox\"` popup while real DOM focus stays on the input -- navigation moves `aria-activedescendant`, not focus itself (`packages/adico-primitives/src/combobox.rs`). The popup is anchored via `Positioner` and dismissed via the shared layer/Escape/outside-dismiss stack.",
+    "keyboard": "Arrow keys move the active descendant through filtered options while focus remains on the input; Enter commits the active option; Escape dismisses the popup (outside-click dismissal on `web` shares the known, unfixed `document::eval` listener defect recorded for this crate's other overlays)."
   },
   "compatibility": null,
   "provenance": {

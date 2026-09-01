@@ -47,7 +47,10 @@
   ],
   "documentation": {
     "slug": "tag-group",
-    "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Grouped multi-select tag input reusing the roving-focus collection infrastructure already imported for Select; no document::eval, portal, or DOM measurement API, so it is SSR-safe by construction."
+    "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Grouped multi-select tag input reusing the roving-focus collection infrastructure already imported for Select; no document::eval, portal, or DOM measurement API, so it is SSR-safe by construction.",
+    "usage": "TagGroup { values: values(), on_values_change: move |v| values.set(v),\n    TagOption { value: \"a\".to_string(), \"Tag A\" TagRemoveButton {} }\n}",
+    "accessibility": "Implements the WAI-ARIA APG Grid pattern (a single-row-per-item grid, not a listbox): `TagList` is `role=\"grid\"`, each `TagOption` is `role=\"row\"`/`role=\"gridcell\"` (`packages/adico-primitives/src/tag_group.rs`). Escape-clears-selection and roving `aria-rowindex` are this file's own design, informed by shadcn/Base UI conventions rather than an ARIA-authored precedent.",
+    "keyboard": "Arrow keys move roving focus among tags; Escape clears the current selection; each tag's own `TagRemoveButton` is independently focusable/activatable for keyboard removal."
   },
   "compatibility": null,
   "provenance": {

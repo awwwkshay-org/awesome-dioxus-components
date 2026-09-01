@@ -39,7 +39,10 @@
   ],
   "documentation": {
     "slug": "empty",
-    "compositionNote": "Purely presentational: Empty/EmptyHeader/EmptyMedia/EmptyTitle/EmptyDescription/EmptyContent are static content-box slots for zero-data states, matching upstream's own non-interactive implementation."
+    "compositionNote": "Purely presentational: Empty/EmptyHeader/EmptyMedia/EmptyTitle/EmptyDescription/EmptyContent are static content-box slots for zero-data states, matching upstream's own non-interactive implementation.",
+    "usage": "Empty {\n    EmptyHeader {\n        EmptyTitle { \"No results\" }\n        EmptyDescription { \"Try a different search.\" }\n    }\n}",
+    "accessibility": "A plain styled composition with no assigned ARIA role (`registry/ui/empty.rs`); if the empty state replaces a live list/table, consider announcing the change via a live region at the call site.",
+    "keyboard": "No component-specific keyboard handling; purely presentational."
   },
   "compatibility": null,
   "provenance": null

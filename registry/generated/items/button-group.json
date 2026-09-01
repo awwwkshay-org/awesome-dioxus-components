@@ -47,7 +47,10 @@
   ],
   "documentation": {
     "slug": "button-group",
-    "compositionNote": "Visually joins related buttons/form controls (ButtonGroup/ButtonGroupText/ButtonGroupSeparator) via adjoining borders/radii, matching upstream's cva-driven orientation variant with a plain Rust enum instead. ButtonGroupSeparator composes the owned adico_primitives::separator::Separator primitive, matching how ToolbarSeparator composes its own primitive counterpart."
+    "compositionNote": "Visually joins related buttons/form controls (ButtonGroup/ButtonGroupText/ButtonGroupSeparator) via adjoining borders/radii, matching upstream's cva-driven orientation variant with a plain Rust enum instead. ButtonGroupSeparator composes the owned adico_primitives::separator::Separator primitive, matching how ToolbarSeparator composes its own primitive counterpart.",
+    "usage": "ButtonGroup {\n    Button { variant: ButtonVariant::Outline, \"Left\" }\n    ButtonGroupSeparator {}\n    Button { variant: ButtonVariant::Outline, \"Right\" }\n}",
+    "accessibility": "`ButtonGroup` renders `role=\"group\"` with `data-orientation` (`registry/ui/button_group.rs`). `ButtonGroupSeparator` composes `adico_primitives::separator::Separator`, which renders `role=\"separator\"`/`aria-orientation` (or `role=\"none\"` when decorative) per `packages/adico-primitives/src/separator.rs`.",
+    "keyboard": "No component-specific keyboard handling of its own; keyboard behavior belongs entirely to the composed children (typically `Button`s), each focusable and activated independently."
   },
   "compatibility": null,
   "provenance": null

@@ -49,7 +49,10 @@
   ],
   "documentation": {
     "slug": "slider",
-    "compositionNote": "Styled facade over the owned pointer-drag/keyboard value primitive. Pointer-drag interaction depends on the web feature (pointer tracking is a no-op on the native default); keyboard arrow-key interaction works on every target. Desktop pointer-capture behavior is compiled but not independently verified against a real desktop WebView, a named and recorded gap."
+    "compositionNote": "Styled facade over the owned pointer-drag/keyboard value primitive. Pointer-drag interaction depends on the web feature (pointer tracking is a no-op on the native default); keyboard arrow-key interaction works on every target. Desktop pointer-capture behavior is compiled but not independently verified against a real desktop WebView, a named and recorded gap.",
+    "usage": "Slider { label: \"Volume\", default_value: 50.0,\n    SliderTrack { SliderRange {} SliderThumb {} }\n}",
+    "accessibility": "Each `SliderThumb` is `role=\"slider\"` with `aria-valuemin`/`aria-valuemax`/`aria-valuenow`, per the WAI-ARIA APG Slider pattern (`packages/adico-primitives/src/slider.rs`). `RangeSlider` composes two independently-clamped thumbs for the pattern's two-thumb range-selection variant.",
+    "keyboard": "Arrow keys move the focused thumb by `step`, or 10x `step` with Shift held; pointer-dragging along the track is also supported (desktop pointer-capture is compiled but not independently browser-verified)."
   },
   "compatibility": null,
   "provenance": {

@@ -39,7 +39,10 @@
   ],
   "documentation": {
     "slug": "pagination",
-    "compositionNote": null
+    "compositionNote": null,
+    "usage": "Pagination {\n    PaginationContent {\n        PaginationItem { PaginationPrevious {} }\n        PaginationItem { PaginationLink { is_active: true, \"1\" } }\n        PaginationItem { PaginationNext {} }\n    }\n}",
+    "accessibility": "The root is `<nav role=\"navigation\" aria-label=\"pagination\">`; the active `PaginationLink` carries `aria-current=\"page\"`; decorative previous/next glyphs are `aria-hidden` (`registry/ui/pagination.rs`).",
+    "keyboard": "Links render as native anchors/buttons; Tab moves between them and Enter activates the focused one, with no additional roving-focus behavior of its own."
   },
   "compatibility": null,
   "provenance": null

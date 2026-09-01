@@ -55,7 +55,10 @@
   ],
   "documentation": {
     "slug": "calendar",
-    "compositionNote": "The copied façade styles the month view, navigation, title, and generated date grid with semantic shadcn tokens while the owned primitive retains single/range selection, constraints, keyboard navigation, focus, and ARIA behavior. Less common month/year selector parts remain composable exports."
+    "compositionNote": "The copied façade styles the month view, navigation, title, and generated date grid with semantic shadcn tokens while the owned primitive retains single/range selection, constraints, keyboard navigation, focus, and ARIA behavior. Less common month/year selector parts remain composable exports.",
+    "usage": "Calendar { value: value(), on_value_change: move |v| value.set(v) }",
+    "accessibility": "`CalendarGridRoot` is `role=\"grid\"`, each week is `role=\"row\"`, and each day is a focusable button whose label states its full weekday/month/day/year; the weekday header row is `aria-hidden` since each day's own label already carries the weekday; the month/year heading is `role=\"heading\" aria-level=\"2\"` (`packages/adico-primitives/src/calendar.rs`, WAI-ARIA APG Grid pattern).",
+    "keyboard": "Days share a single-tab-stop roving tabindex with arrow-key navigation across the grid; `RangeCalendar` additionally exposes `data-selection-start`/`data-selection-between`/`data-selection-end` per day for a two-endpoint range."
   },
   "compatibility": null,
   "provenance": {

@@ -47,7 +47,10 @@
   ],
   "documentation": {
     "slug": "switch",
-    "compositionNote": "Styled facade over the owned keyboard/ARIA switch primitive, composing SwitchThumb with a translate-x thumb animation driven by data-state."
+    "compositionNote": "Styled facade over the owned keyboard/ARIA switch primitive, composing SwitchThumb with a translate-x thumb animation driven by data-state.",
+    "usage": "Switch { checked: checked(), on_checked_change: move |v| checked.set(v) }",
+    "accessibility": "`role=\"switch\"` with `aria-checked`, per the WAI-ARIA APG Switch pattern (`packages/adico-primitives/src/switch.rs`). A hidden native `<input type=\"checkbox\">` mirrors state for plain HTML form submission.",
+    "keyboard": "Toggles only on Space, not Enter -- matching the APG's guidance that a switch behaves like a checkbox for activation, not a button."
   },
   "compatibility": null,
   "provenance": {

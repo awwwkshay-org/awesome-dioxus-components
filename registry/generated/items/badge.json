@@ -39,7 +39,10 @@
   ],
   "documentation": {
     "slug": "badge",
-    "compositionNote": null
+    "compositionNote": null,
+    "usage": "Badge { variant: BadgeVariant::Secondary, \"New\" }",
+    "accessibility": "Renders as inline content with no assigned role (`registry/ui/badge.rs`); its text is read as ordinary content by assistive technology. Use a visually-hidden prefix (e.g. \"Status:\") if the badge conveys state that isn't obvious from surrounding context.",
+    "keyboard": "No component-specific keyboard handling; not an interactive control."
   },
   "compatibility": null,
   "provenance": null

@@ -50,7 +50,10 @@
   ],
   "documentation": {
     "slug": "dialog",
-    "compositionNote": "The public copied API remains compositional; focus management, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives."
+    "compositionNote": "The public copied API remains compositional; focus management, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives.",
+    "usage": "Dialog { open: open(), on_open_change: move |v| open.set(v),\n    DialogTrigger { \"Open dialog\" }\n    DialogOverlay {}\n    DialogContent {\n        DialogHeader { DialogTitle { \"Title\" } DialogDescription { \"Description\" } }\n        DialogFooter { DialogClose { \"Close\" } }\n    }\n}",
+    "accessibility": "`DialogContent` is `role=\"dialog\"` with `aria-modal=\"true\"`, labelled by its title and described by its description, and traps focus while open (`packages/adico-primitives/src/dialog.rs`). Unlike `alert-dialog`, it is dismissible by an outside click as well as Escape.",
+    "keyboard": "Escape closes the dialog; the registry facade also wires a manual backdrop `onclick` handler as a documented workaround for `use_outside_dismiss`'s non-functional web listener registration."
   },
   "compatibility": null,
   "provenance": {

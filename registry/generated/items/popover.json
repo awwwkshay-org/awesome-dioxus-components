@@ -49,7 +49,10 @@
   ],
   "documentation": {
     "slug": "popover",
-    "compositionNote": "The public copied API remains compositional; focus trapping, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives (reusing the same use_focus_trap/FocusTrapScript internals as dialog)."
+    "compositionNote": "The public copied API remains compositional; focus trapping, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives (reusing the same use_focus_trap/FocusTrapScript internals as dialog).",
+    "usage": "Popover { open: open(), on_open_change: move |v| open.set(v),\n    PopoverTrigger { \"Open popover\" }\n    PopoverContent { \"Popover content\" }\n}",
+    "accessibility": "Follows the closest APG guidance -- the Dialog pattern -- applied conditionally: `PopoverContent` renders `role=\"dialog\"` with `aria-modal=\"true\"` and focus-trapping only when `is_modal` is set (the default); otherwise it is a non-modal disclosure (`packages/adico-primitives/src/popover.rs`).",
+    "keyboard": "Escape closes it and (when modal) focus is trapped inside; outside-click dismissal shares the confirmed, unfixed `document::eval` persistent-listener defect this session directly reproduced (see tasks.md 7.4f) -- verified working via `use_scroll_lock`-style fire-and-forget evals only, not this pattern."
   },
   "compatibility": null,
   "provenance": {

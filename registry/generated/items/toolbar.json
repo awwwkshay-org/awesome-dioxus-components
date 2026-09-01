@@ -47,7 +47,10 @@
   ],
   "documentation": {
     "slug": "toolbar",
-    "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Roving-focus button/separator container, similar shape to Menubar without layered popups. No document::eval or DOM measurement, SSR-safe by construction."
+    "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Roving-focus button/separator container, similar shape to Menubar without layered popups. No document::eval or DOM measurement, SSR-safe by construction.",
+    "usage": "Toolbar { aria_label: \"Text formatting\",\n    ToolbarButton { index: 0usize, on_click: move |_| {}, \"Bold\" }\n    ToolbarSeparator {}\n    ToolbarButton { index: 1usize, on_click: move |_| {}, \"Italic\" }\n}",
+    "accessibility": "`data-orientation`/`data-disabled` on the root, per the WAI-ARIA APG Toolbar pattern (`packages/adico-primitives/src/toolbar.rs`); `ToolbarSeparator` renders `role=\"separator\"`/`aria-orientation` (or `role=\"none\"` when decorative).",
+    "keyboard": "Single-tab-stop roving tabindex among `ToolbarButton`s: arrow keys move focus along the toolbar's orientation."
   },
   "compatibility": null,
   "provenance": {

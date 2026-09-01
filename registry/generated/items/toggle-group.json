@@ -47,7 +47,10 @@
   ],
   "documentation": {
     "slug": "toggle-group",
-    "compositionNote": "Styled facade over the owned roving-focus toggle-group primitive (reuses the collection infrastructure already imported for Select and composes the owned Toggle primitive directly), matching shadcn's Toggle Group."
+    "compositionNote": "Styled facade over the owned roving-focus toggle-group primitive (reuses the collection infrastructure already imported for Select and composes the owned Toggle primitive directly), matching shadcn's Toggle Group.",
+    "usage": "ToggleGroup { pressed: pressed(), on_pressed_change: move |v| pressed.set(v),\n    ToggleItem { index: 0usize, \"Bold\" }\n}",
+    "accessibility": "Each `ToggleItem` composes `toggle.rs`'s own `Toggle` (an APG \"Button\" with `aria-pressed`); the group itself adds WAI-ARIA APG Toolbar-shaped roving-tabindex semantics plus single-/multiple-pressed selection state (`packages/adico-primitives/src/toggle_group.rs`).",
+    "keyboard": "Single-tab-stop roving tabindex: arrow keys move focus along the group's orientation; Enter/Space (native button activation) toggles the focused item."
   },
   "compatibility": null,
   "provenance": {

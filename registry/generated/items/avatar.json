@@ -49,7 +49,10 @@
   ],
   "documentation": {
     "slug": "avatar",
-    "compositionNote": "Styled facade over the owned image-load-state primitive: Avatar/AvatarImage/AvatarFallback. AvatarImage stops rendering on error so an installed AvatarFallback (bg-muted) takes over automatically."
+    "compositionNote": "Styled facade over the owned image-load-state primitive: Avatar/AvatarImage/AvatarFallback. AvatarImage stops rendering on error so an installed AvatarFallback (bg-muted) takes over automatically.",
+    "usage": "Avatar {\n    AvatarImage { src: \"user.png\", alt: \"Jane Doe\" }\n    AvatarFallback { \"JD\" }\n}",
+    "accessibility": "No dedicated WAI-ARIA APG pattern exists for an avatar; `AvatarImage` renders `role=\"img\"`, the closest APG guidance for a single meaningful graphic with a fallback (`packages/adico-primitives/src/avatar.rs`).",
+    "keyboard": "No component-specific keyboard handling; the avatar itself is not an interactive control."
   },
   "compatibility": null,
   "provenance": {

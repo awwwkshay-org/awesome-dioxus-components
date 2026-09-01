@@ -50,7 +50,10 @@
       ],
       "documentation": {
         "slug": "button",
-        "compositionNote": "Use caller-composed children for text, icons, and icon-plus-text content. `ButtonVariant` and `ButtonSize` mirror the current shadcn visual contract; native Dioxus button/global attributes and events are forwarded."
+        "compositionNote": "Use caller-composed children for text, icons, and icon-plus-text content. `ButtonVariant` and `ButtonSize` mirror the current shadcn visual contract; native Dioxus button/global attributes and events are forwarded.",
+        "usage": "Button { variant: ButtonVariant::Default, onclick: move |_| {}, \"Save\" }",
+        "accessibility": "A native `<button>`; visible content is caller-composed through `children`, so text-only, icon-only, and icon-plus-text buttons all use the same accessible native control (`registry/ui/button.rs`). Icon-only usage should include an explicit `aria-label`.",
+        "keyboard": "No component-specific keyboard handling beyond native button activation (Enter/Space)."
       }
     },
     {
@@ -80,7 +83,10 @@
       ],
       "documentation": {
         "slug": "dialog",
-        "compositionNote": "The public copied API remains compositional; focus management, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives."
+        "compositionNote": "The public copied API remains compositional; focus management, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives.",
+        "usage": "Dialog { open: open(), on_open_change: move |v| open.set(v),\n    DialogTrigger { \"Open dialog\" }\n    DialogOverlay {}\n    DialogContent {\n        DialogHeader { DialogTitle { \"Title\" } DialogDescription { \"Description\" } }\n        DialogFooter { DialogClose { \"Close\" } }\n    }\n}",
+        "accessibility": "`DialogContent` is `role=\"dialog\"` with `aria-modal=\"true\"`, labelled by its title and described by its description, and traps focus while open (`packages/adico-primitives/src/dialog.rs`). Unlike `alert-dialog`, it is dismissible by an outside click as well as Escape.",
+        "keyboard": "Escape closes the dialog; the registry facade also wires a manual backdrop `onclick` handler as a documented workaround for `use_outside_dismiss`'s non-functional web listener registration."
       },
       "provenance": { "record": "provenance/records/adico-primitives-dialog-select.json" }
     },
@@ -110,7 +116,10 @@
       ],
       "documentation": {
         "slug": "select",
-        "compositionNote": "The copied façade re-exports the owned Select parts; applications can style each primitive part directly with Dioxus class attributes while the runtime retains keyboard, typeahead, and ARIA behavior."
+        "compositionNote": "The copied façade re-exports the owned Select parts; applications can style each primitive part directly with Dioxus class attributes while the runtime retains keyboard, typeahead, and ARIA behavior.",
+        "usage": "Select::<String> {\n    SelectTrigger { aria_label: \"Choose a fruit\", SelectValue { placeholder: \"Choose a fruit\" } }\n    SelectList { aria_label: \"Fruit options\",\n        SelectOption::<String> { index: 0usize, value: \"apple\".to_string(), text_value: \"Apple\".to_string(), \"Apple\" }\n    }\n}",
+        "accessibility": "Implements the WAI-ARIA APG Listbox pattern: `SelectTrigger` is the APG's combobox-like button and `SelectList` is `role=\"listbox\"`, anchored to the trigger via `Positioner` (`packages/adico-primitives/src/select.rs`).",
+        "keyboard": "Full keyboard support: arrow keys navigate options, Home/End jump to the ends, Enter selects, Escape closes; typeahead lets typing jump to a matching option."
       },
       "provenance": { "record": "provenance/records/adico-primitives-dialog-select.json" }
     },
@@ -138,7 +147,12 @@
       "moduleExports": [
         { "targetRoot": "ui", "module": "badge", "reexport": true }
       ],
-      "documentation": { "slug": "badge" }
+      "documentation": {
+        "slug": "badge",
+        "usage": "Badge { variant: BadgeVariant::Secondary, \"New\" }",
+        "accessibility": "Renders as inline content with no assigned role (`registry/ui/badge.rs`); its text is read as ordinary content by assistive technology. Use a visually-hidden prefix (e.g. \"Status:\") if the badge conveys state that isn't obvious from surrounding context.",
+        "keyboard": "No component-specific keyboard handling; not an interactive control."
+      }
     },
     {
       "name": "card",
@@ -164,7 +178,12 @@
       "moduleExports": [
         { "targetRoot": "ui", "module": "card", "reexport": true }
       ],
-      "documentation": { "slug": "card" }
+      "documentation": {
+        "slug": "card",
+        "usage": "Card {\n    CardHeader { CardTitle { \"Title\" } CardDescription { \"Description\" } }\n    CardContent { \"Body content\" }\n    CardFooter { \"Footer\" }\n}",
+        "accessibility": "A plain styled `<div>` composition with no assigned ARIA role (`registry/ui/card.rs`); heading semantics for `CardTitle` are the caller's responsibility if the card content needs a document-outline heading.",
+        "keyboard": "No component-specific keyboard handling; not an interactive control on its own."
+      }
     },
     {
       "name": "input",
@@ -190,7 +209,12 @@
       "moduleExports": [
         { "targetRoot": "ui", "module": "input", "reexport": true }
       ],
-      "documentation": { "slug": "input" }
+      "documentation": {
+        "slug": "input",
+        "usage": "Input { placeholder: \"Email\", oninput: move |event| value.set(event.value()) }",
+        "accessibility": "A native `<input>` with `aria-invalid` reflecting the `invalid` prop (`registry/ui/input.rs`); accessible naming is the caller's responsibility via an associated `Label` or `aria-label`.",
+        "keyboard": "No component-specific keyboard handling beyond native text-input behavior."
+      }
     },
     {
       "name": "item",
@@ -216,7 +240,12 @@
       "moduleExports": [
         { "targetRoot": "ui", "module": "item", "reexport": true }
       ],
-      "documentation": { "slug": "item" }
+      "documentation": {
+        "slug": "item",
+        "usage": "ItemGroup {\n    Item { variant: ItemVariant::Interactive, ItemContent { \"Row label\" } }\n}",
+        "accessibility": "`ItemGroup` renders `role=\"list\"`; each `Item` is `role=\"listitem\"` with `aria-disabled` reflecting its `disabled` prop; `ItemSeparator` renders `role=\"separator\"` (`registry/ui/item.rs`).",
+        "keyboard": "An `Interactive`-variant `Item` gets `tabindex=\"0\"` (others get `-1`); it carries no built-in activation handler of its own -- the caller wires `onclick`/`onkeydown` as needed."
+      }
     },
     {
       "name": "pagination",
@@ -242,7 +271,12 @@
       "moduleExports": [
         { "targetRoot": "ui", "module": "pagination", "reexport": true }
       ],
-      "documentation": { "slug": "pagination" }
+      "documentation": {
+        "slug": "pagination",
+        "usage": "Pagination {\n    PaginationContent {\n        PaginationItem { PaginationPrevious {} }\n        PaginationItem { PaginationLink { is_active: true, \"1\" } }\n        PaginationItem { PaginationNext {} }\n    }\n}",
+        "accessibility": "The root is `<nav role=\"navigation\" aria-label=\"pagination\">`; the active `PaginationLink` carries `aria-current=\"page\"`; decorative previous/next glyphs are `aria-hidden` (`registry/ui/pagination.rs`).",
+        "keyboard": "Links render as native anchors/buttons; Tab moves between them and Enter activates the focused one, with no additional roving-focus behavior of its own."
+      }
     },
     {
       "name": "skeleton",
@@ -266,7 +300,12 @@
       "moduleExports": [
         { "targetRoot": "ui", "module": "skeleton", "reexport": true }
       ],
-      "documentation": { "slug": "skeleton" }
+      "documentation": {
+        "slug": "skeleton",
+        "usage": "Skeleton { class: \"h-4 w-32\" }",
+        "accessibility": "Sets `aria-hidden` when `decorative` (the default), so a loading placeholder is not announced as content by assistive technology (`registry/ui/skeleton.rs`).",
+        "keyboard": "No component-specific keyboard handling; not an interactive control."
+      }
     },
     {
       "name": "textarea",
@@ -292,7 +331,12 @@
       "moduleExports": [
         { "targetRoot": "ui", "module": "textarea", "reexport": true }
       ],
-      "documentation": { "slug": "textarea" }
+      "documentation": {
+        "slug": "textarea",
+        "usage": "Textarea { placeholder: \"Message\", rows: 4, oninput: move |event| value.set(event.value()) }",
+        "accessibility": "A native `<textarea>` with `aria-invalid` reflecting the `invalid` prop (`registry/ui/textarea.rs`); accessible naming is the caller's responsibility via an associated `Label` or `aria-label`.",
+        "keyboard": "No component-specific keyboard handling beyond native multi-line text-input behavior."
+      }
     },
     {
       "name": "sheet",
@@ -321,7 +365,10 @@
       ],
       "documentation": {
         "slug": "sheet",
-        "compositionNote": "Composes the owned dialog primitive directly (SheetTitle/SheetDescription/Sheet re-export the Dialog primitive's parts); the styled wrapper only adds the slide-in side variant and positioning."
+        "compositionNote": "Composes the owned dialog primitive directly (SheetTitle/SheetDescription/Sheet re-export the Dialog primitive's parts); the styled wrapper only adds the slide-in side variant and positioning.",
+        "usage": "Sheet { open: open(), on_open_change: move |v| open.set(v),\n    SheetTrigger { \"Open sheet\" }\n    SheetOverlay {}\n    SheetContent {\n        SheetHeader { SheetTitle { \"Title\" } }\n        SheetFooter { SheetClose { \"Close\" } }\n    }\n}",
+        "accessibility": "Composes `packages/adico-primitives/src/dialog.rs` directly (the same `role=\"dialog\"`/`aria-modal=\"true\"`/focus-trap behavior as `Dialog`), styled as an edge-anchored panel instead of a centered modal.",
+        "keyboard": "Same as `Dialog`: Escape closes it, plus the registry facade's manual backdrop `onclick` workaround for the same `use_outside_dismiss` web defect."
       },
       "provenance": { "record": "provenance/records/adico-primitives-dialog-select.json" }
     },
@@ -352,7 +399,10 @@
       ],
       "documentation": {
         "slug": "tooltip",
-        "compositionNote": "The public copied API remains compositional; hover/focus/Escape handling and ARIA wiring remain inside adico-primitives. Positioning is CSS-only via data-side/data-align attributes, matching the real upstream implementation (no portal or JS positioning engine)."
+        "compositionNote": "The public copied API remains compositional; hover/focus/Escape handling and ARIA wiring remain inside adico-primitives. Positioning is CSS-only via data-side/data-align attributes, matching the real upstream implementation (no portal or JS positioning engine).",
+        "usage": "Tooltip { open: open(), on_open_change: move |v| open.set(v),\n    TooltipTrigger { \"Hover me\" }\n    TooltipContent { \"Helpful text\" }\n}",
+        "accessibility": "`TooltipTrigger` is described by a `role=\"tooltip\"` `TooltipContent` via `aria-describedby`, per the WAI-ARIA APG Tooltip pattern (`packages/adico-primitives/src/tooltip.rs`); positioned relative to the trigger by the shared `Positioner`.",
+        "keyboard": "Shown on hover or focus of the trigger, dismissed on Escape or on blur/mouse-leave."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave3-overlays.json" }
     },
@@ -383,7 +433,10 @@
       ],
       "documentation": {
         "slug": "popover",
-        "compositionNote": "The public copied API remains compositional; focus trapping, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives (reusing the same use_focus_trap/FocusTrapScript internals as dialog)."
+        "compositionNote": "The public copied API remains compositional; focus trapping, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives (reusing the same use_focus_trap/FocusTrapScript internals as dialog).",
+        "usage": "Popover { open: open(), on_open_change: move |v| open.set(v),\n    PopoverTrigger { \"Open popover\" }\n    PopoverContent { \"Popover content\" }\n}",
+        "accessibility": "Follows the closest APG guidance -- the Dialog pattern -- applied conditionally: `PopoverContent` renders `role=\"dialog\"` with `aria-modal=\"true\"` and focus-trapping only when `is_modal` is set (the default); otherwise it is a non-modal disclosure (`packages/adico-primitives/src/popover.rs`).",
+        "keyboard": "Escape closes it and (when modal) focus is trapped inside; outside-click dismissal shares the confirmed, unfixed `document::eval` persistent-listener defect this session directly reproduced (see tasks.md 7.4f) -- verified working via `use_scroll_lock`-style fire-and-forget evals only, not this pattern."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave3-overlays.json" }
     },
@@ -414,7 +467,10 @@
       ],
       "documentation": {
         "slug": "hover-card",
-        "compositionNote": "The public copied API remains compositional; hover/focus handling and ARIA wiring remain inside adico-primitives."
+        "compositionNote": "The public copied API remains compositional; hover/focus handling and ARIA wiring remain inside adico-primitives.",
+        "usage": "HoverCard { open: open(), on_open_change: move |v| open.set(v),\n    HoverCardTrigger { \"@username\" }\n    HoverCardContent { \"Profile preview\" }\n}",
+        "accessibility": "Follows the closest APG guidance -- the Tooltip pattern's hover/focus-triggered, `aria-describedby`-linked disclosure -- while deliberately diverging where a card needs richer behavior a plain tooltip does not: `HoverCardContent` accepts focusable interactive children and stays open while the pointer is over the content itself (`packages/adico-primitives/src/hover_card.rs`).",
+        "keyboard": "Opens on hover or focus of the trigger, closes on Escape or moving away from both trigger and content. Note: `force_mount` does not actually keep closed content mounted on any target -- a known, documented primitive defect, not something a consumer should rely on."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave3-overlays.json" }
     },
@@ -444,7 +500,10 @@
       ],
       "documentation": {
         "slug": "dropdown-menu",
-        "compositionNote": "The copied façade re-exports the owned DropdownMenu parts unstyled, matching select's approach: DropdownMenuItem is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains roving-focus keyboard and ARIA behavior."
+        "compositionNote": "The copied façade re-exports the owned DropdownMenu parts unstyled, matching select's approach: DropdownMenuItem is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains roving-focus keyboard and ARIA behavior.",
+        "usage": "DropdownMenu {\n    DropdownMenuTrigger { \"Open menu\" }\n    DropdownMenuContent {\n        DropdownMenuItem { index: 0usize, value: \"edit\".to_string(), on_select: move |_| {}, \"Edit\" }\n    }\n}",
+        "accessibility": "`DropdownMenu`/`DropdownMenuTrigger`/`DropdownMenuContent`/`DropdownMenuItem` are direct re-exports of the shared `menu::Menu`/`MenuTrigger`/`MenuContent`/`MenuItem` primitive (`packages/adico-primitives/src/menu.rs`), matching Base UI's own anatomy where `Menu` *is* the dropdown menu -- `role=\"menu\"`/`role=\"menuitem\"` content on a roving-focus/dismissable-layer stack shared with `dialog`/`popover`.",
+        "keyboard": "Arrow keys navigate items, Enter/Space activates the focused item, `ArrowRight`/`ArrowLeft` open/close submenus (`MenuSubmenuTrigger`); submenu hover-intent delay is not implemented, only click and arrow-key open/close."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave3-overlays.json" }
     },
@@ -475,7 +534,10 @@
       ],
       "documentation": {
         "slug": "context-menu",
-        "compositionNote": "The public copied API remains compositional; right-click/long-press detection, positioning, roving-focus keyboard navigation, and ARIA wiring remain inside adico-primitives."
+        "compositionNote": "The public copied API remains compositional; right-click/long-press detection, positioning, roving-focus keyboard navigation, and ARIA wiring remain inside adico-primitives.",
+        "usage": "ContextMenu {\n    ContextMenuTrigger { \"Right click here\" }\n    ContextMenuContent {\n        ContextMenuItem { index: 0usize, value: \"edit\".to_string(), on_select: move |_| {}, \"Edit\" }\n    }\n}",
+        "accessibility": "No dedicated APG \"Context Menu\" pattern exists; `ContextMenuContent` implements the generic Menu pattern (`role=\"menu\"`/`role=\"menuitem\"`) opened by right-click or (touch/pen) long-press, with click-point `position: fixed` placement and Safari viewport correction (`packages/adico-primitives/src/context_menu.rs`). Deliberately independent of the shared `menu` primitive -- it owns placement/scroll-suppression/outside-dismiss concerns `menu::MenuContent` has no props for.",
+        "keyboard": "Standard menu keyboard navigation (arrow keys move among items, Enter/Space activates); outside-click dismissal shares the same unfixed `document::eval` persistent-listener defect as this crate's other overlays -- confirmed via live instrumentation, see this change's tasks.md 7.4f note."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave3-overlays.json" }
     },
@@ -506,7 +568,10 @@
       ],
       "documentation": {
         "slug": "menubar",
-        "compositionNote": "The public copied API remains compositional; coordinated multi-menu roving-focus keyboard navigation and ARIA wiring remain inside adico-primitives."
+        "compositionNote": "The public copied API remains compositional; coordinated multi-menu roving-focus keyboard navigation and ARIA wiring remain inside adico-primitives.",
+        "usage": "Menubar {\n    MenubarMenu { index: 0usize,\n        MenubarTrigger { \"File\" }\n        MenubarContent {\n            MenubarItem { index: 0usize, value: \"new\".to_string(), on_select: move |_| {}, \"New\" }\n        }\n    }\n}",
+        "accessibility": "`role=\"menubar\"` roving-focus container of `role=\"menu\"` menus, each opened by a `role=\"menuitem\"` trigger, per the WAI-ARIA APG Menubar pattern (`packages/adico-primitives/src/menubar.rs`). Deliberately independent of the shared `menu` primitive -- Base UI's own `Menubar` shares only a roving-focus container with `Menu`, not `Content`/`Item`.",
+        "keyboard": "Only one menu is open at a time; `ArrowLeft`/`ArrowRight` move focus between menu triggers (open or not); Enter/Space/ArrowDown open the focused menu."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave3-overlays.json" }
     },
@@ -536,7 +601,10 @@
       ],
       "documentation": {
         "slug": "combobox",
-        "compositionNote": "The copied façade re-exports the owned Combobox parts unstyled, matching select's approach: ComboboxOption is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains filtering, roving-focus keyboard, and ARIA behavior."
+        "compositionNote": "The copied façade re-exports the owned Combobox parts unstyled, matching select's approach: ComboboxOption is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains filtering, roving-focus keyboard, and ARIA behavior.",
+        "usage": "Combobox::<String> {\n    ComboboxInput { placeholder: \"Search...\" }\n    ComboboxList {\n        ComboboxOption::<String> { value: \"a\".to_string(), index: 0usize, \"Option A\" }\n    }\n}",
+        "accessibility": "Implements the WAI-ARIA APG Combobox (listbox popup) pattern: a text input that filters an anchored `role=\"listbox\"` popup while real DOM focus stays on the input -- navigation moves `aria-activedescendant`, not focus itself (`packages/adico-primitives/src/combobox.rs`). The popup is anchored via `Positioner` and dismissed via the shared layer/Escape/outside-dismiss stack.",
+        "keyboard": "Arrow keys move the active descendant through filtered options while focus remains on the input; Enter commits the active option; Escape dismisses the popup (outside-click dismissal on `web` shares the known, unfixed `document::eval` listener defect recorded for this crate's other overlays)."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave4-collection.json" }
     },
@@ -567,7 +635,10 @@
       ],
       "documentation": {
         "slug": "calendar",
-        "compositionNote": "The copied façade styles the month view, navigation, title, and generated date grid with semantic shadcn tokens while the owned primitive retains single/range selection, constraints, keyboard navigation, focus, and ARIA behavior. Less common month/year selector parts remain composable exports."
+        "compositionNote": "The copied façade styles the month view, navigation, title, and generated date grid with semantic shadcn tokens while the owned primitive retains single/range selection, constraints, keyboard navigation, focus, and ARIA behavior. Less common month/year selector parts remain composable exports.",
+        "usage": "Calendar { value: value(), on_value_change: move |v| value.set(v) }",
+        "accessibility": "`CalendarGridRoot` is `role=\"grid\"`, each week is `role=\"row\"`, and each day is a focusable button whose label states its full weekday/month/day/year; the weekday header row is `aria-hidden` since each day's own label already carries the weekday; the month/year heading is `role=\"heading\" aria-level=\"2\"` (`packages/adico-primitives/src/calendar.rs`, WAI-ARIA APG Grid pattern).",
+        "keyboard": "Days share a single-tab-stop roving tabindex with arrow-key navigation across the grid; `RangeCalendar` additionally exposes `data-selection-start`/`data-selection-between`/`data-selection-end` per day for a two-endpoint range."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave4-collection.json" }
     },
@@ -598,7 +669,10 @@
       ],
       "documentation": {
         "slug": "date-picker",
-        "compositionNote": "The copied façade composes the installed semantic Calendar and Popover façades over the owned DatePicker primitive. The primitive retains typed date/range state, constraints, keyboard focus, dismissal, and ARIA behavior."
+        "compositionNote": "The copied façade composes the installed semantic Calendar and Popover façades over the owned DatePicker primitive. The primitive retains typed date/range state, constraints, keyboard focus, dismissal, and ARIA behavior.",
+        "usage": "DatePicker { value: value(), on_value_change: move |v| value.set(v),\n    DatePickerInput {}\n    DatePickerPopover { DatePickerCalendar {} }\n}",
+        "accessibility": "No dedicated APG \"Date Picker\" pattern exists; `DatePicker`/`DateRangePicker` render a composite `role=\"group\"` field containing one `role=\"spinbutton\"` segment per year/month/day, each with `aria-valuemin`/`aria-valuemax`/`aria-valuenow` (the APG Spin Button pattern applied per segment). `DatePickerSeparator` is `aria-hidden` (`packages/adico-primitives/src/date_picker.rs`). The popup composes this crate's `calendar` (Grid pattern) and `popover` primitives.",
+        "keyboard": "Arrow keys increment/decrement the focused segment; the popover calendar shares `calendar`'s own roving-tabindex day navigation once opened."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave4-collection.json" }
     },
@@ -629,7 +703,10 @@
       ],
       "documentation": {
         "slug": "sidebar",
-        "compositionNote": "Unlike most registry items, upstream ships Sidebar as a styled preview component rather than an adico-primitives module; its only shared state is a plain open/closed signal from adico_primitives::use_controlled, and it composes the owned separator primitive directly. This initial pass renders one CSS-driven collapsible layout rather than upstream's document::eval-detected mobile sheet mode (that eval pattern was found non-functional while testing the Wave 3 overlay batch); a real viewport-driven mobile mode is deferred to M4/M5."
+        "compositionNote": "Unlike most registry items, upstream ships Sidebar as a styled preview component rather than an adico-primitives module; its only shared state is a plain open/closed signal from adico_primitives::use_controlled, and it composes the owned separator primitive directly. This initial pass renders one CSS-driven collapsible layout rather than upstream's document::eval-detected mobile sheet mode (that eval pattern was found non-functional while testing the Wave 3 overlay batch); a real viewport-driven mobile mode is deferred to M4/M5.",
+        "usage": "SidebarProvider {\n    Sidebar {\n        SidebarHeader { \"Logo\" }\n        SidebarContent { SidebarMenu { SidebarMenuItem { SidebarMenuButton { \"Home\" } } } }\n    }\n}",
+        "accessibility": "`SidebarSeparator` composes `adico_primitives::separator::Separator` (`role=\"separator\"`/`aria-orientation`, or `role=\"none\"` when decorative); the rest of the composition is plain styled markup (`registry/ui/sidebar.rs`). No mobile/responsive viewport-driven collapse mode exists yet -- a named, deferred gap (see this file's own module doc).",
+        "keyboard": "No dedicated keyboard-navigation layer of its own beyond native focus order through its composed buttons/links."
       }
     },
     {
@@ -658,7 +735,10 @@
       ],
       "documentation": {
         "slug": "aspect-ratio",
-        "compositionNote": "A pure re-export of the owned AspectRatio primitive: a CSS padding-bottom ratio wrapper with no visual styling to compose, matching upstream's own unstyled behavior."
+        "compositionNote": "A pure re-export of the owned AspectRatio primitive: a CSS padding-bottom ratio wrapper with no visual styling to compose, matching upstream's own unstyled behavior.",
+        "usage": "AspectRatio { ratio: 16.0 / 9.0,\n    img { src: \"image.png\", alt: \"Description\" }\n}",
+        "accessibility": "No ARIA role applies -- a layout container is not itself a widget (`packages/adico-primitives/src/aspect_ratio.rs`). Accessibility of the ratio-constrained content (e.g. an `<img>`'s `alt` text) remains the caller's responsibility.",
+        "keyboard": "No component-specific keyboard handling; purely layout."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-simple.json" }
     },
@@ -689,7 +769,10 @@
       ],
       "documentation": {
         "slug": "label",
-        "compositionNote": "Styled facade over the owned `for`/`id` association primitive. Composes with any installed form control via matching `html_for`/`id` values."
+        "compositionNote": "Styled facade over the owned `for`/`id` association primitive. Composes with any installed form control via matching `html_for`/`id` values.",
+        "usage": "Label { html_for: \"email\", \"Email address\" }",
+        "accessibility": "Renders a native `<label for>`, which every assistive technology already understands without an ARIA role (`packages/adico-primitives/src/label.rs`). Must be associated with a form control via `html_for`.",
+        "keyboard": "No component-specific keyboard handling; clicking a label natively focuses/activates its associated control."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-simple.json" }
     },
@@ -720,7 +803,10 @@
       ],
       "documentation": {
         "slug": "progress",
-        "compositionNote": "Styled facade over the owned ARIA progressbar primitive. The indicator's fill width is CSS-transform-driven from the primitive's --progress-value custom property; a `None` value renders a zero-filled indeterminate bar rather than upstream's unstyled indeterminate state, since animated indeterminate styling is M4's job."
+        "compositionNote": "Styled facade over the owned ARIA progressbar primitive. The indicator's fill width is CSS-transform-driven from the primitive's --progress-value custom property; a `None` value renders a zero-filled indeterminate bar rather than upstream's unstyled indeterminate state, since animated indeterminate styling is M4's job.",
+        "usage": "Progress { value: Some(60.0),\n    ProgressIndicator {}\n}",
+        "accessibility": "`role=\"progressbar\"` with `aria-valuemin`/`aria-valuemax`/`aria-valuenow`, omitting `aria-valuenow` for an indeterminate progress indicator when `value` is `None`, per the WAI-ARIA APG Meter/Progressbar pattern (`packages/adico-primitives/src/progress.rs`).",
+        "keyboard": "No component-specific keyboard handling; a progress indicator is not an interactive control."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-simple.json" }
     },
@@ -751,7 +837,10 @@
       ],
       "documentation": {
         "slug": "avatar",
-        "compositionNote": "Styled facade over the owned image-load-state primitive: Avatar/AvatarImage/AvatarFallback. AvatarImage stops rendering on error so an installed AvatarFallback (bg-muted) takes over automatically."
+        "compositionNote": "Styled facade over the owned image-load-state primitive: Avatar/AvatarImage/AvatarFallback. AvatarImage stops rendering on error so an installed AvatarFallback (bg-muted) takes over automatically.",
+        "usage": "Avatar {\n    AvatarImage { src: \"user.png\", alt: \"Jane Doe\" }\n    AvatarFallback { \"JD\" }\n}",
+        "accessibility": "No dedicated WAI-ARIA APG pattern exists for an avatar; `AvatarImage` renders `role=\"img\"`, the closest APG guidance for a single meaningful graphic with a fallback (`packages/adico-primitives/src/avatar.rs`).",
+        "keyboard": "No component-specific keyboard handling; the avatar itself is not an interactive control."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-state.json" }
     },
@@ -782,7 +871,10 @@
       ],
       "documentation": {
         "slug": "checkbox",
-        "compositionNote": "Styled facade over the owned keyboard/ARIA checkbox primitive (checked/indeterminate/unchecked), with a Lucide Check indicator. Requires the web feature since the primitive's hidden bubble input needs the browser DOM to sync indeterminate state."
+        "compositionNote": "Styled facade over the owned keyboard/ARIA checkbox primitive (checked/indeterminate/unchecked), with a Lucide Check indicator. Requires the web feature since the primitive's hidden bubble input needs the browser DOM to sync indeterminate state.",
+        "usage": "Checkbox { checked: checked(), on_checked_change: move |v| checked.set(v) }",
+        "accessibility": "`role=\"checkbox\"` with `aria-checked` of `true`/`false`/`mixed` (tri-state support), per the WAI-ARIA APG Checkbox pattern (`packages/adico-primitives/src/checkbox.rs`). A hidden native `<input type=\"checkbox\">` mirrors state for plain HTML form submission.",
+        "keyboard": "Toggles only on Space, not Enter -- the APG reserves Enter for a form's default-submit button, not checkbox activation."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-state.json" }
     },
@@ -812,7 +904,10 @@
       ],
       "documentation": {
         "slug": "collapsible",
-        "compositionNote": "A pure re-export of the owned Collapsible/CollapsibleContent/CollapsibleTrigger primitive: upstream ships it unstyled, matching shadcn's own unstyled Collapsible -- layout is left to consumer composition."
+        "compositionNote": "A pure re-export of the owned Collapsible/CollapsibleContent/CollapsibleTrigger primitive: upstream ships it unstyled, matching shadcn's own unstyled Collapsible -- layout is left to consumer composition.",
+        "usage": "Collapsible { open: open(), on_open_change: move |v| open.set(v),\n    CollapsibleTrigger { \"Toggle\" }\n    CollapsibleContent { \"Content\" }\n}",
+        "accessibility": "`CollapsibleTrigger`/`CollapsibleContent` implement the APG disclosure-widget guidance: a trigger with `aria-expanded`/`aria-controls` pointing at the content it reveals (`packages/adico-primitives/src/collapsible.rs`). `keep_mounted` keeps content in the DOM with no ARIA/visibility guarantee of its own -- visibility when set is the caller's own CSS/`hidden` attribute.",
+        "keyboard": "`CollapsibleTrigger` is a native button; Enter/Space toggle it via ordinary button activation, with no additional roving-focus or arrow-key behavior."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-state.json" }
     },
@@ -843,7 +938,10 @@
       ],
       "documentation": {
         "slug": "switch",
-        "compositionNote": "Styled facade over the owned keyboard/ARIA switch primitive, composing SwitchThumb with a translate-x thumb animation driven by data-state."
+        "compositionNote": "Styled facade over the owned keyboard/ARIA switch primitive, composing SwitchThumb with a translate-x thumb animation driven by data-state.",
+        "usage": "Switch { checked: checked(), on_checked_change: move |v| checked.set(v) }",
+        "accessibility": "`role=\"switch\"` with `aria-checked`, per the WAI-ARIA APG Switch pattern (`packages/adico-primitives/src/switch.rs`). A hidden native `<input type=\"checkbox\">` mirrors state for plain HTML form submission.",
+        "keyboard": "Toggles only on Space, not Enter -- matching the APG's guidance that a switch behaves like a checkbox for activation, not a button."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-state.json" }
     },
@@ -874,7 +972,10 @@
       ],
       "documentation": {
         "slug": "toggle",
-        "compositionNote": "Styled facade over the owned pressed-state ARIA button primitive, with sm/default/lg size variants matching shadcn's Toggle."
+        "compositionNote": "Styled facade over the owned pressed-state ARIA button primitive, with sm/default/lg size variants matching shadcn's Toggle.",
+        "usage": "Toggle { pressed: pressed(), on_pressed_change: move |v| pressed.set(v), \"Bold\" }",
+        "accessibility": "A native `<button>` with `aria-pressed`, per the WAI-ARIA APG Button pattern's pressed-state variant (`packages/adico-primitives/src/toggle.rs`).",
+        "keyboard": "Toggles on click/Enter/Space (native button activation); includes an explicit-focus-after-click workaround for Safari/Firefox on macOS not focusing `<button>` on click by default."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-state.json" }
     },
@@ -905,7 +1006,10 @@
       ],
       "documentation": {
         "slug": "accordion",
-        "compositionNote": "Styled facade over the owned roving-focus collapsible-group primitive (reuses the collection infrastructure already imported for Select). Composes a Lucide ChevronDown indicator into the trigger, matching shadcn's Accordion."
+        "compositionNote": "Styled facade over the owned roving-focus collapsible-group primitive (reuses the collection infrastructure already imported for Select). Composes a Lucide ChevronDown indicator into the trigger, matching shadcn's Accordion.",
+        "usage": "Accordion { value: value(), on_value_change: move |v| value.set(v),\n    AccordionItem { value: \"item-1\",\n        AccordionTrigger { \"Section title\" }\n        AccordionContent { \"Section content\" }\n    }\n}",
+        "accessibility": "Each `AccordionTrigger` is a native `<button>` with `aria-expanded`/`aria-controls` pointing at its `AccordionContent` (`packages/adico-primitives/src/accordion.rs`). `Accordion`/`AccordionMulti` implement the WAI-ARIA APG Accordion pattern's single- vs. multiple-open-panel variants.",
+        "keyboard": "Triggers share a single-tab-stop roving tabindex: arrow keys move focus along the accordion, Home/End jump to the first/last trigger, Enter/Space (native button activation) toggles the focused panel."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-roving-focus.json" }
     },
@@ -936,7 +1040,10 @@
       ],
       "documentation": {
         "slug": "radio-group",
-        "compositionNote": "Styled facade over the owned roving-focus radio primitive (reuses the collection infrastructure already imported for Select), with a CSS-only checked indicator dot."
+        "compositionNote": "Styled facade over the owned roving-focus radio primitive (reuses the collection infrastructure already imported for Select), with a CSS-only checked indicator dot.",
+        "usage": "RadioGroup { value: value(), on_value_change: move |v| value.set(v),\n    RadioItem { value: \"a\", \"Option A\" }\n    RadioItem { value: \"b\", \"Option B\" }\n}",
+        "accessibility": "`role=\"radiogroup\"` containing `role=\"radio\"` items, per the WAI-ARIA APG Radio Group pattern (`packages/adico-primitives/src/radio_group.rs`). With nothing yet selected, every radio stays in the tab order until one is focused or checked, matching native radio-group semantics rather than a plain listbox's default-first-item focus.",
+        "keyboard": "Single-tab-stop roving tabindex: arrow keys move focus *and* select, along the group's orientation; Home/End jump to the ends and select."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-roving-focus.json" }
     },
@@ -967,7 +1074,10 @@
       ],
       "documentation": {
         "slug": "tabs",
-        "compositionNote": "Styled facade over the owned roving-focus tab-list primitive (reuses the collection infrastructure already imported for Select), matching shadcn's Tabs."
+        "compositionNote": "Styled facade over the owned roving-focus tab-list primitive (reuses the collection infrastructure already imported for Select), matching shadcn's Tabs.",
+        "usage": "Tabs { value: value(), on_value_change: move |v| value.set(v),\n    TabList {\n        TabTrigger { value: \"one\", \"Tab 1\" }\n    }\n    TabContent { value: \"one\", \"Panel 1\" }\n}",
+        "accessibility": "`TabList` is `role=\"tablist\"`, each `TabTrigger` is `role=\"tab\"`, and each `TabContent` is `role=\"tabpanel\"`, rendered (not just hidden) only while its trigger is selected -- automatic activation, per the WAI-ARIA APG Tabs pattern (`packages/adico-primitives/src/tabs.rs`).",
+        "keyboard": "Single-tab-stop roving tabindex among triggers: arrow keys move along the tab list's orientation, Home/End jump to the ends; moving focus also activates the panel (automatic activation)."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-roving-focus.json" }
     },
@@ -998,7 +1108,10 @@
       ],
       "documentation": {
         "slug": "toggle-group",
-        "compositionNote": "Styled facade over the owned roving-focus toggle-group primitive (reuses the collection infrastructure already imported for Select and composes the owned Toggle primitive directly), matching shadcn's Toggle Group."
+        "compositionNote": "Styled facade over the owned roving-focus toggle-group primitive (reuses the collection infrastructure already imported for Select and composes the owned Toggle primitive directly), matching shadcn's Toggle Group.",
+        "usage": "ToggleGroup { pressed: pressed(), on_pressed_change: move |v| pressed.set(v),\n    ToggleItem { index: 0usize, \"Bold\" }\n}",
+        "accessibility": "Each `ToggleItem` composes `toggle.rs`'s own `Toggle` (an APG \"Button\" with `aria-pressed`); the group itself adds WAI-ARIA APG Toolbar-shaped roving-tabindex semantics plus single-/multiple-pressed selection state (`packages/adico-primitives/src/toggle_group.rs`).",
+        "keyboard": "Single-tab-stop roving tabindex: arrow keys move focus along the group's orientation; Enter/Space (native button activation) toggles the focused item."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-roving-focus.json" }
     },
@@ -1028,7 +1141,10 @@
       ],
       "documentation": {
         "slug": "scroll-area",
-        "compositionNote": "A pure re-export of the owned ScrollArea primitive: pure CSS overflow/scrollbar-width styling with no visual language to compose, matching upstream's own unstyled behavior."
+        "compositionNote": "A pure re-export of the owned ScrollArea primitive: pure CSS overflow/scrollbar-width styling with no visual language to compose, matching upstream's own unstyled behavior.",
+        "usage": "ScrollArea { style: \"height: 12em;\",\n    div { \"Long scrollable content...\" }\n}",
+        "accessibility": "No ARIA role applies -- a scrollable container is not itself a widget (`packages/adico-primitives/src/scroll_area.rs`); its spec is pure CSS overflow/scrollbar-width composition.",
+        "keyboard": "No component-specific keyboard handling; native scroll keys (arrow keys, Page Up/Down, Space) work once the scrollable region has focus, same as any native overflow container."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-risk.json" }
     },
@@ -1059,7 +1175,10 @@
       ],
       "documentation": {
         "slug": "alert-dialog",
-        "compositionNote": "The public copied API remains compositional; focus-trap handling is delegated to the same shared internals the installed Dialog uses. AlertDialogTrigger (composing the installed Button, matching DialogTrigger) is nested inside AlertDialog so the root-level Escape handler reliably receives keyboard events; Escape is handled on AlertDialogRoot itself, the same working position DialogRoot uses. Unlike Dialog, no outside-dismiss listener is installed, matching the WAI-ARIA alertdialog pattern's requirement that only an explicit action can close it."
+        "compositionNote": "The public copied API remains compositional; focus-trap handling is delegated to the same shared internals the installed Dialog uses. AlertDialogTrigger (composing the installed Button, matching DialogTrigger) is nested inside AlertDialog so the root-level Escape handler reliably receives keyboard events; Escape is handled on AlertDialogRoot itself, the same working position DialogRoot uses. Unlike Dialog, no outside-dismiss listener is installed, matching the WAI-ARIA alertdialog pattern's requirement that only an explicit action can close it.",
+        "usage": "AlertDialog { open: open(), on_open_change: move |v| open.set(v),\n    AlertDialogTrigger { \"Delete item\" }\n    AlertDialogContent {\n        AlertDialogTitle { \"Are you sure?\" }\n        AlertDialogDescription { \"This cannot be undone.\" }\n        AlertDialogActions {\n            AlertDialogCancel { \"Cancel\" }\n            AlertDialogAction { \"Delete\" }\n        }\n    }\n}",
+        "accessibility": "`AlertDialogContent` is `role=\"alertdialog\"` with `aria-modal=\"true\"`, labelled by its title and described by its description, and traps focus while open (`packages/adico-primitives/src/alert_dialog.rs`). Unlike `dialog`, it is deliberately not dismissible by an outside click, matching the WAI-ARIA APG Alert Dialog pattern's requirement for an explicit response.",
+        "keyboard": "Escape closes it via a native `onkeydown` handler on `AlertDialogRoot` itself (moved there after live testing found a content-scoped listener never received the keydown while focus stayed on the trigger)."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-risk.json" }
     },
@@ -1090,7 +1209,10 @@
       ],
       "documentation": {
         "slug": "toast",
-        "compositionNote": "Only the toast region's fixed viewport placement is styled by default (structural, not cosmetic); individual toast cards keep the primitive's own unstyled composition, matching this registry's existing many-parts-unstyled precedent for Select/Combobox. A full default visual style for Toast itself is M4's job."
+        "compositionNote": "Only the toast region's fixed viewport placement is styled by default (structural, not cosmetic); individual toast cards keep the primitive's own unstyled composition, matching this registry's existing many-parts-unstyled precedent for Select/Combobox. A full default visual style for Toast itself is M4's job.",
+        "usage": "ToastProvider {\n    // elsewhere: use_toast().show(ToastType::Success, \"Saved\")\n}",
+        "accessibility": "Each `Toast` is `role=\"alertdialog\"` wrapping a `role=\"alert\"` live region, per the WAI-ARIA APG \"alert\" pattern (`packages/adico-primitives/src/toast.rs`); `ToastProvider` manages a shared notification queue with no APG pattern of its own.",
+        "keyboard": "No component-specific keyboard handling beyond a global keydown listener used for dismissal; individual toast dismissal is otherwise pointer/timer-driven (auto-dismiss timer per toast)."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-risk.json" }
     },
@@ -1121,7 +1243,10 @@
       ],
       "documentation": {
         "slug": "slider",
-        "compositionNote": "Styled facade over the owned pointer-drag/keyboard value primitive. Pointer-drag interaction depends on the web feature (pointer tracking is a no-op on the native default); keyboard arrow-key interaction works on every target. Desktop pointer-capture behavior is compiled but not independently verified against a real desktop WebView, a named and recorded gap."
+        "compositionNote": "Styled facade over the owned pointer-drag/keyboard value primitive. Pointer-drag interaction depends on the web feature (pointer tracking is a no-op on the native default); keyboard arrow-key interaction works on every target. Desktop pointer-capture behavior is compiled but not independently verified against a real desktop WebView, a named and recorded gap.",
+        "usage": "Slider { label: \"Volume\", default_value: 50.0,\n    SliderTrack { SliderRange {} SliderThumb {} }\n}",
+        "accessibility": "Each `SliderThumb` is `role=\"slider\"` with `aria-valuemin`/`aria-valuemax`/`aria-valuenow`, per the WAI-ARIA APG Slider pattern (`packages/adico-primitives/src/slider.rs`). `RangeSlider` composes two independently-clamped thumbs for the pattern's two-thumb range-selection variant.",
+        "keyboard": "Arrow keys move the focused thumb by `step`, or 10x `step` with Shift held; pointer-dragging along the track is also supported (desktop pointer-capture is compiled but not independently browser-verified)."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave2-risk.json" }
     },
@@ -1152,7 +1277,10 @@
       ],
       "documentation": {
         "slug": "toolbar",
-        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Roving-focus button/separator container, similar shape to Menubar without layered popups. No document::eval or DOM measurement, SSR-safe by construction."
+        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Roving-focus button/separator container, similar shape to Menubar without layered popups. No document::eval or DOM measurement, SSR-safe by construction.",
+        "usage": "Toolbar { aria_label: \"Text formatting\",\n    ToolbarButton { index: 0usize, on_click: move |_| {}, \"Bold\" }\n    ToolbarSeparator {}\n    ToolbarButton { index: 1usize, on_click: move |_| {}, \"Italic\" }\n}",
+        "accessibility": "`data-orientation`/`data-disabled` on the root, per the WAI-ARIA APG Toolbar pattern (`packages/adico-primitives/src/toolbar.rs`); `ToolbarSeparator` renders `role=\"separator\"`/`aria-orientation` (or `role=\"none\"` when decorative).",
+        "keyboard": "Single-tab-stop roving tabindex among `ToolbarButton`s: arrow keys move focus along the toolbar's orientation."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave5-extras.json" }
     },
@@ -1182,7 +1310,10 @@
       ],
       "documentation": {
         "slug": "virtual-list",
-        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Pure re-export: upstream ships it unstyled, list-item content is entirely caller-composed, and the caller must give the container a bounded height (for example `style: \"height: 300px; overflow-y: auto;\"`) or the viewport measurement equals the full content height and nothing is virtualized. Its scroll/resize bridge uses native `onscroll`/`onmounted` element queries (no `web`/`desktop` feature gate needed, unlike other overlay primitives) after live browser testing found upstream's own `document::eval`-based bridge never registers in this Dioxus 0.7.9/0.7.10 web runtime -- see provenance. On a renderer without `onscroll`/`onmounted` support (native/server) it renders zero items rather than failing to build -- a documented, explicit target-support skip, not silent, until a proper observer-bridge primitive exists (M6 territory)."
+        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Pure re-export: upstream ships it unstyled, list-item content is entirely caller-composed, and the caller must give the container a bounded height (for example `style: \"height: 300px; overflow-y: auto;\"`) or the viewport measurement equals the full content height and nothing is virtualized. Its scroll/resize bridge uses native `onscroll`/`onmounted` element queries (no `web`/`desktop` feature gate needed, unlike other overlay primitives) after live browser testing found upstream's own `document::eval`-based bridge never registers in this Dioxus 0.7.9/0.7.10 web runtime -- see provenance. On a renderer without `onscroll`/`onmounted` support (native/server) it renders zero items rather than failing to build -- a documented, explicit target-support skip, not silent, until a proper observer-bridge primitive exists (M6 territory).",
+        "usage": "VirtualList {\n    count: 1000usize,\n    estimate_size: |_idx| 32,\n    render_item: move |idx: usize| rsx! { div { \"Row {idx}\" } },\n}",
+        "accessibility": "Renders `role=\"list\"`/`role=\"listitem\"` with `aria-setsize`/`aria-posinset` so a screen reader announces the true list size despite only a slice being rendered in the DOM (`packages/adico-primitives/src/virtual_list.rs`).",
+        "keyboard": "No component-specific keyboard handling; native scroll keys work once the scrollable region has focus, same as `scroll-area`."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave5-extras.json" }
     },
@@ -1214,7 +1345,10 @@
       ],
       "documentation": {
         "slug": "color-picker",
-        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. HSV saturation/value drag surface with keyboard arrow-key navigation and accessible per-axis range inputs (AreaThumbSaturationInput/AreaThumbValueInput). The M3 migration queue's dependency note said this item composes label/popover/slider; reading the actual upstream primitive source found it only depends on the already-owned move_interaction/pointer modules (reused unmodified from Wave 2's Slider import), not those three registry items -- a real correction recorded per the M1 lesson to verify against source, not the queue's one-line notes. Requires the `palette` crate directly (matching upstream's own public HSV color type in its props), same as any upstream consumer."
+        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. HSV saturation/value drag surface with keyboard arrow-key navigation and accessible per-axis range inputs (AreaThumbSaturationInput/AreaThumbValueInput). The M3 migration queue's dependency note said this item composes label/popover/slider; reading the actual upstream primitive source found it only depends on the already-owned move_interaction/pointer modules (reused unmodified from Wave 2's Slider import), not those three registry items -- a real correction recorded per the M1 lesson to verify against source, not the queue's one-line notes. Requires the `palette` crate directly (matching upstream's own public HSV color type in its props), same as any upstream consumer.",
+        "usage": "ColorPicker { value: value(), on_value_change: move |v| value.set(v),\n    ColorArea { AreaThumb {} }\n}",
+        "accessibility": "No dedicated APG \"Color Picker\" pattern exists; this follows the closest guidance -- the Slider pattern applied per axis. `ColorPicker`/`ColorArea` are `role=\"group\"`; each saturation/value axis input is a native `type=\"range\"` with a human-readable `aria-valuetext` (e.g. \"Saturation 62%, vibrant orange\") and `aria-orientation` (`packages/adico-primitives/src/color_picker.rs`).",
+        "keyboard": "`AreaThumb` is the two-dimensional drag surface and keyboard entry point, handing focus to whichever axis input the keypress moved; each axis then responds to its own arrow keys like an ordinary range input."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave5-extras.json" }
     },
@@ -1245,7 +1379,10 @@
       ],
       "documentation": {
         "slug": "drag-and-drop-list",
-        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Pointer-drag list reordering that reuses the roving-focus collection infrastructure already imported for Select. Keyboard reordering (Enter to lift/drop, Arrow keys to move, Escape to cancel, Delete/Backspace to remove) is the always-tested accessible path. Native pointer/mouse drag-and-drop is compiled and wired but not independently browser-verified -- a named risk carried since the M3 migration queue, the same open question as Slider's unverified desktop pointer-capture behavior."
+        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Pointer-drag list reordering that reuses the roving-focus collection infrastructure already imported for Select. Keyboard reordering (Enter to lift/drop, Arrow keys to move, Escape to cancel, Delete/Backspace to remove) is the always-tested accessible path. Native pointer/mouse drag-and-drop is compiled and wired but not independently browser-verified -- a named risk carried since the M3 migration queue, the same open question as Slider's unverified desktop pointer-capture behavior.",
+        "usage": "DragAndDropList { items: items(), on_reorder: move |reordered| items.set(reordered),\n    for item in items() {\n        DragAndDropListItem { key: \"{item}\", \"{item}\" }\n    }\n}",
+        "accessibility": "No dedicated APG \"Drag and Drop\" pattern exists; each item is a keyboard-operable (single-tab-stop roving tabindex) `<li aria-roledescription=\"sortable item\" aria-grabbed>`, the list is `<ul aria-roledescription=\"sortable list\" aria-describedby>` pointing at visually-hidden instructions, and every lift/move/drop/cancel is announced through a `role=\"status\" aria-live=\"assertive\"` live region (`packages/adico-primitives/src/drag_and_drop_list.rs`).",
+        "keyboard": "Enter lifts/drops an item, Arrow keys move it, Escape cancels, Delete/Backspace removes it -- the always-tested primary interaction path. Native pointer/mouse HTML5 drag-and-drop is also implemented but not independently browser-verified."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave5-extras.json" }
     },
@@ -1276,7 +1413,10 @@
       ],
       "documentation": {
         "slug": "tag-group",
-        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Grouped multi-select tag input reusing the roving-focus collection infrastructure already imported for Select; no document::eval, portal, or DOM measurement API, so it is SSR-safe by construction."
+        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Grouped multi-select tag input reusing the roving-focus collection infrastructure already imported for Select; no document::eval, portal, or DOM measurement API, so it is SSR-safe by construction.",
+        "usage": "TagGroup { values: values(), on_values_change: move |v| values.set(v),\n    TagOption { value: \"a\".to_string(), \"Tag A\" TagRemoveButton {} }\n}",
+        "accessibility": "Implements the WAI-ARIA APG Grid pattern (a single-row-per-item grid, not a listbox): `TagList` is `role=\"grid\"`, each `TagOption` is `role=\"row\"`/`role=\"gridcell\"` (`packages/adico-primitives/src/tag_group.rs`). Escape-clears-selection and roving `aria-rowindex` are this file's own design, informed by shadcn/Base UI conventions rather than an ARIA-authored precedent.",
+        "keyboard": "Arrow keys move roving focus among tags; Escape clears the current selection; each tag's own `TagRemoveButton` is independently focusable/activatable for keyboard removal."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave5-extras.json" }
     },
@@ -1307,7 +1447,10 @@
       ],
       "documentation": {
         "slug": "mode-toggle",
-        "compositionNote": "Composes the installed dropdown-menu registry item with adico_primitives::theme_mode for Light/Dark/System selection. Persists the selection (localStorage on web, a preferences file on desktop) and applies the resolved appearance's class to the document root automatically. Classified `EXISTING_SHADCN_EQUIVALENT`-adjacent -- shadcn's theming docs ship an equivalent Light/Dark/System dropdown pattern; see statics/component_compatibility.json and design.md §7b."
+        "compositionNote": "Composes the installed dropdown-menu registry item with adico_primitives::theme_mode for Light/Dark/System selection. Persists the selection (localStorage on web, a preferences file on desktop) and applies the resolved appearance's class to the document root automatically. Classified `EXISTING_SHADCN_EQUIVALENT`-adjacent -- shadcn's theming docs ship an equivalent Light/Dark/System dropdown pattern; see statics/component_compatibility.json and design.md §7b.",
+        "usage": "ModeToggle {}",
+        "accessibility": "Composes the installed `DropdownMenuTrigger` (a `Button`) and `theme_mode`'s `ThemeMode`/`ResolvedTheme` resolution (`packages/adico-primitives/src/theme_mode.rs`); its own accessibility surface is entirely the composed `DropdownMenu`'s (`role=\"menu\"`/`role=\"menuitem\"`).",
+        "keyboard": "Same as `DropdownMenu`: arrow keys navigate the light/dark/system options, Enter/Space selects one."
       }
     },
     {
@@ -1337,7 +1480,10 @@
       ],
       "documentation": {
         "slug": "theme-switcher",
-        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA`-style per design.md §7b (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). A distilled palette picker (Slate/Blue/Violet/Emerald/Rose/Amber presets recoloring --primary/--primary-foreground and their Tailwind aliases) productizing the concept prototyped in apps/playground's advanced customization tray, which keeps its own full 28-token editor unchanged."
+        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA`-style per design.md §7b (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). A distilled palette picker (Slate/Blue/Violet/Emerald/Rose/Amber presets recoloring --primary/--primary-foreground and their Tailwind aliases) productizing the concept prototyped in apps/playground's advanced customization tray, which keeps its own full 28-token editor unchanged.",
+        "usage": "ThemeSwitcher {}",
+        "accessibility": "Composes `theme_mode`'s `ThemeMode`/`ResolvedTheme` resolution (`packages/adico-primitives/src/theme_mode.rs`) behind a styled `Button`-like trigger; its accessibility surface is a native button's.",
+        "keyboard": "Native button activation (Enter/Space); no custom keyboard layer."
       }
     },
     {
@@ -1367,7 +1513,10 @@
       ],
       "documentation": {
         "slug": "theme-builder",
-        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per design.md §7d (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). Promotes apps/playground's advanced customization tray -- the full 28-semantic-token editor with independent light/dark values, a deterministic 'generate theme' action, and CSS export -- into a real, generic, installable component, since none of it is actually playground-specific in nature. Applies its edited tokens live through adico_primitives::theme_mode::apply_root_properties, the same document-root mechanism theme-switcher already uses for its 4 properties, so theme-builder composes with mode-toggle/theme-switcher on one mechanism. Renders its CSS export into a read-only, selectable textarea rather than calling the browser clipboard API directly, so it stays free of browser-interop details and needs no new cargo dependencies."
+        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per design.md §7d (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). Promotes apps/playground's advanced customization tray -- the full 28-semantic-token editor with independent light/dark values, a deterministic 'generate theme' action, and CSS export -- into a real, generic, installable component, since none of it is actually playground-specific in nature. Applies its edited tokens live through adico_primitives::theme_mode::apply_root_properties, the same document-root mechanism theme-switcher already uses for its 4 properties, so theme-builder composes with mode-toggle/theme-switcher on one mechanism. Renders its CSS export into a read-only, selectable textarea rather than calling the browser clipboard API directly, so it stays free of browser-interop details and needs no new cargo dependencies.",
+        "usage": "ThemeBuilderLauncher {}",
+        "accessibility": "A styled composition around `theme_mode`'s `ThemeMode` primitive (`packages/adico-primitives/src/theme_mode.rs`); its editable token controls and CSS-export text area are plain form controls with native semantics, no custom ARIA widget roles.",
+        "keyboard": "No custom keyboard layer; native form-control and button keyboard behavior throughout."
       }
     },
     {
@@ -1394,7 +1543,10 @@
       ],
       "documentation": {
         "slug": "alert",
-        "compositionNote": "Purely presentational, no shared behavior to delegate: Alert/AlertTitle/AlertDescription are static content-box slots, matching upstream's own non-interactive implementation. Alert sets role=\"alert\" directly."
+        "compositionNote": "Purely presentational, no shared behavior to delegate: Alert/AlertTitle/AlertDescription are static content-box slots, matching upstream's own non-interactive implementation. Alert sets role=\"alert\" directly.",
+        "usage": "Alert {\n    AlertTitle { \"Heads up\" }\n    AlertDescription { \"This is an important message.\" }\n}",
+        "accessibility": "Renders a native `role=\"alert\"` live region (`registry/ui/alert.rs`), so assistive technology announces its content when it appears without requiring focus to move.",
+        "keyboard": "No component-specific keyboard handling; purely presentational."
       }
     },
     {
@@ -1421,7 +1573,10 @@
       ],
       "documentation": {
         "slug": "empty",
-        "compositionNote": "Purely presentational: Empty/EmptyHeader/EmptyMedia/EmptyTitle/EmptyDescription/EmptyContent are static content-box slots for zero-data states, matching upstream's own non-interactive implementation."
+        "compositionNote": "Purely presentational: Empty/EmptyHeader/EmptyMedia/EmptyTitle/EmptyDescription/EmptyContent are static content-box slots for zero-data states, matching upstream's own non-interactive implementation.",
+        "usage": "Empty {\n    EmptyHeader {\n        EmptyTitle { \"No results\" }\n        EmptyDescription { \"Try a different search.\" }\n    }\n}",
+        "accessibility": "A plain styled composition with no assigned ARIA role (`registry/ui/empty.rs`); if the empty state replaces a live list/table, consider announcing the change via a live region at the call site.",
+        "keyboard": "No component-specific keyboard handling; purely presentational."
       }
     },
     {
@@ -1445,7 +1600,10 @@
         { "targetRoot": "ui", "module": "kbd", "reexport": true }
       ],
       "documentation": {
-        "slug": "kbd"
+        "slug": "kbd",
+        "usage": "KbdGroup {\n    Kbd { \"Ctrl\" }\n    Kbd { \"K\" }\n}",
+        "accessibility": "Renders the native `<kbd>` element, which assistive technology already recognizes as denoting keyboard input without any ARIA role needed (`registry/ui/kbd.rs`).",
+        "keyboard": "No component-specific keyboard handling; purely presentational (it labels a shortcut, it does not implement one)."
       }
     },
     {
@@ -1473,7 +1631,10 @@
       ],
       "documentation": {
         "slug": "spinner",
-        "compositionNote": "Renders the owned Lucide LoaderCircle icon re-export directly (matching upstream's Loader2Icon usage) with role=\"status\"; no interactive behavior of its own."
+        "compositionNote": "Renders the owned Lucide LoaderCircle icon re-export directly (matching upstream's Loader2Icon usage) with role=\"status\"; no interactive behavior of its own.",
+        "usage": "Spinner {}",
+        "accessibility": "Renders a native `role=\"status\"` live region with `aria-label=\"Loading\"` (`registry/ui/spinner.rs`), so assistive technology announces the loading state without requiring focus.",
+        "keyboard": "No component-specific keyboard handling; not an interactive control."
       }
     },
     {
@@ -1503,7 +1664,10 @@
       ],
       "documentation": {
         "slug": "breadcrumb",
-        "compositionNote": "Purely presentational nav trail (Breadcrumb/BreadcrumbList/BreadcrumbItem/BreadcrumbLink/BreadcrumbPage/BreadcrumbSeparator/BreadcrumbEllipsis), matching upstream's own non-interactive implementation. BreadcrumbSeparator defaults to a ChevronRight icon; BreadcrumbEllipsis renders the owned Lucide Ellipsis re-export (this icon set's current name for upstream's MoreHorizontalIcon, which Lucide itself renamed)."
+        "compositionNote": "Purely presentational nav trail (Breadcrumb/BreadcrumbList/BreadcrumbItem/BreadcrumbLink/BreadcrumbPage/BreadcrumbSeparator/BreadcrumbEllipsis), matching upstream's own non-interactive implementation. BreadcrumbSeparator defaults to a ChevronRight icon; BreadcrumbEllipsis renders the owned Lucide Ellipsis re-export (this icon set's current name for upstream's MoreHorizontalIcon, which Lucide itself renamed).",
+        "usage": "Breadcrumb {\n    BreadcrumbList {\n        BreadcrumbItem { BreadcrumbLink { href: \"/\", \"Home\" } }\n        BreadcrumbSeparator {}\n        BreadcrumbItem { BreadcrumbPage { \"Current\" } }\n    }\n}",
+        "accessibility": "The root is `<nav aria-label=\"breadcrumb\">`; the current page carries `aria-current=\"page\"` and `role=\"link\"`/`aria-disabled=\"true\"` (it is not a real link); separators and the ellipsis are `aria-hidden`/`role=\"presentation\"` (`registry/ui/breadcrumb.rs`).",
+        "keyboard": "`BreadcrumbLink` renders a native `<a>`, so Tab/Enter follow ordinary link semantics; there is no component-specific keyboard handling beyond that."
       }
     },
     {
@@ -1530,7 +1694,10 @@
       ],
       "documentation": {
         "slug": "table",
-        "compositionNote": "Purely presentational (Table/TableHeader/TableBody/TableFooter/TableRow/TableHead/TableCell/TableCaption), matching upstream's own non-interactive implementation. Table wraps the real <table> in a relative/overflow-x-auto scroll container, matching upstream's horizontal-scroll behavior for wide tables."
+        "compositionNote": "Purely presentational (Table/TableHeader/TableBody/TableFooter/TableRow/TableHead/TableCell/TableCaption), matching upstream's own non-interactive implementation. Table wraps the real <table> in a relative/overflow-x-auto scroll container, matching upstream's horizontal-scroll behavior for wide tables.",
+        "usage": "Table {\n    TableHeader { TableRow { TableHead { \"Name\" } } }\n    TableBody { TableRow { TableCell { \"adico\" } } }\n}",
+        "accessibility": "Plain native `<table>` markup with semantic `<thead>`/`<tbody>`/`<tfoot>`/`<th>`/`<td>` (`registry/ui/table.rs`); `TableRow`'s classes include a `[role=checkbox]` hook for a selection-column pattern, but selection state itself is caller-composed.",
+        "keyboard": "No component-specific keyboard handling; native table semantics only (no roving-focus cell navigation)."
       }
     },
     {
@@ -1560,7 +1727,10 @@
       ],
       "documentation": {
         "slug": "button-group",
-        "compositionNote": "Visually joins related buttons/form controls (ButtonGroup/ButtonGroupText/ButtonGroupSeparator) via adjoining borders/radii, matching upstream's cva-driven orientation variant with a plain Rust enum instead. ButtonGroupSeparator composes the owned adico_primitives::separator::Separator primitive, matching how ToolbarSeparator composes its own primitive counterpart."
+        "compositionNote": "Visually joins related buttons/form controls (ButtonGroup/ButtonGroupText/ButtonGroupSeparator) via adjoining borders/radii, matching upstream's cva-driven orientation variant with a plain Rust enum instead. ButtonGroupSeparator composes the owned adico_primitives::separator::Separator primitive, matching how ToolbarSeparator composes its own primitive counterpart.",
+        "usage": "ButtonGroup {\n    Button { variant: ButtonVariant::Outline, \"Left\" }\n    ButtonGroupSeparator {}\n    Button { variant: ButtonVariant::Outline, \"Right\" }\n}",
+        "accessibility": "`ButtonGroup` renders `role=\"group\"` with `data-orientation` (`registry/ui/button_group.rs`). `ButtonGroupSeparator` composes `adico_primitives::separator::Separator`, which renders `role=\"separator\"`/`aria-orientation` (or `role=\"none\"` when decorative) per `packages/adico-primitives/src/separator.rs`.",
+        "keyboard": "No component-specific keyboard handling of its own; keyboard behavior belongs entirely to the composed children (typically `Button`s), each focusable and activated independently."
       }
     },
     {
@@ -1587,7 +1757,10 @@
       ],
       "documentation": {
         "slug": "input-group",
-        "compositionNote": "InputGroup/InputGroupAddon/InputGroupButton/InputGroupText/InputGroupInput/InputGroupTextarea replicate upstream's bordered-field-with-addons composition, including the has-[>[data-align=block-start/end]]:flex-col rule that switches the container to a column layout around a stacked textarea + addon (an initial pass dropped this, which visually broke into a one-character-wide textarea column -- caught by a live dx-serve check, not by compile-clean checks, and fixed). InputGroupButton reuses the installed Button's own ButtonVariant/ButtonSize enums directly (Ghost/Xs default) instead of a duplicate parallel size scale. InputGroupInput/InputGroupTextarea author their own flush classes rather than composing Input/Textarea, since adico_lib::cn has no Tailwind-merge equivalent to reliably override those components' fixed classes. InputGroupAddon omits upstream's click-to-focus-sibling-input JavaScript (a non-essential UX nicety); see the module doc comment."
+        "compositionNote": "InputGroup/InputGroupAddon/InputGroupButton/InputGroupText/InputGroupInput/InputGroupTextarea replicate upstream's bordered-field-with-addons composition, including the has-[>[data-align=block-start/end]]:flex-col rule that switches the container to a column layout around a stacked textarea + addon (an initial pass dropped this, which visually broke into a one-character-wide textarea column -- caught by a live dx-serve check, not by compile-clean checks, and fixed). InputGroupButton reuses the installed Button's own ButtonVariant/ButtonSize enums directly (Ghost/Xs default) instead of a duplicate parallel size scale. InputGroupInput/InputGroupTextarea author their own flush classes rather than composing Input/Textarea, since adico_lib::cn has no Tailwind-merge equivalent to reliably override those components' fixed classes. InputGroupAddon omits upstream's click-to-focus-sibling-input JavaScript (a non-essential UX nicety); see the module doc comment.",
+        "usage": "InputGroup {\n    InputGroupAddon { InputGroupText { \"$\" } }\n    InputGroupInput { placeholder: \"0.00\" }\n}",
+        "accessibility": "`InputGroup` renders `role=\"group\"`; focus-visible and `aria-invalid` states on the contained control (identified via `data-slot=\"input-group-control\"`) are reflected onto the group's own border/ring (`registry/ui/input_group.rs`).",
+        "keyboard": "No component-specific keyboard handling; keyboard behavior belongs to the contained `InputGroupInput`/`InputGroupTextarea`/`InputGroupButton`, each a native form control or `Button`."
       }
     },
     {
@@ -1617,7 +1790,10 @@
       ],
       "documentation": {
         "slug": "native-select",
-        "compositionNote": "Wraps a native <select> for OS-native picker behavior, distinct from the owned custom-listbox Select component. NativeSelectOption/NativeSelectOptGroup use the Canvas/CanvasText CSS system-color keywords (matching upstream exactly) rather than adico's background/foreground semantic tokens, since a native <option> popup is painted by the OS outside the page's own CSS custom properties -- not a token-compliance gap."
+        "compositionNote": "Wraps a native <select> for OS-native picker behavior, distinct from the owned custom-listbox Select component. NativeSelectOption/NativeSelectOptGroup use the Canvas/CanvasText CSS system-color keywords (matching upstream exactly) rather than adico's background/foreground semantic tokens, since a native <option> popup is painted by the OS outside the page's own CSS custom properties -- not a token-compliance gap.",
+        "usage": "NativeSelect { value: value(), oninput: move |event| value.set(event.value()),\n    NativeSelectOption { value: \"apple\", \"Apple\" }\n    NativeSelectOption { value: \"banana\", \"Banana\" }\n}",
+        "accessibility": "Wraps a native `<select>` for OS-native picker behavior (`registry/ui/native_select.rs`); native `<select>` semantics (role, `aria-invalid` reflection) are provided by the browser itself, not reimplemented.",
+        "keyboard": "No component-specific keyboard handling; relies entirely on the native `<select>`'s own keyboard behavior (arrow keys change the value, typing jumps to a matching option)."
       }
     }
   ]

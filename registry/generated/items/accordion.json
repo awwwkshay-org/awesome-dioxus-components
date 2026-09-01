@@ -47,7 +47,10 @@
   ],
   "documentation": {
     "slug": "accordion",
-    "compositionNote": "Styled facade over the owned roving-focus collapsible-group primitive (reuses the collection infrastructure already imported for Select). Composes a Lucide ChevronDown indicator into the trigger, matching shadcn's Accordion."
+    "compositionNote": "Styled facade over the owned roving-focus collapsible-group primitive (reuses the collection infrastructure already imported for Select). Composes a Lucide ChevronDown indicator into the trigger, matching shadcn's Accordion.",
+    "usage": "Accordion { value: value(), on_value_change: move |v| value.set(v),\n    AccordionItem { value: \"item-1\",\n        AccordionTrigger { \"Section title\" }\n        AccordionContent { \"Section content\" }\n    }\n}",
+    "accessibility": "Each `AccordionTrigger` is a native `<button>` with `aria-expanded`/`aria-controls` pointing at its `AccordionContent` (`packages/adico-primitives/src/accordion.rs`). `Accordion`/`AccordionMulti` implement the WAI-ARIA APG Accordion pattern's single- vs. multiple-open-panel variants.",
+    "keyboard": "Triggers share a single-tab-stop roving tabindex: arrow keys move focus along the accordion, Home/End jump to the first/last trigger, Enter/Space (native button activation) toggles the focused panel."
   },
   "compatibility": null,
   "provenance": {

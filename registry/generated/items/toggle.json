@@ -47,7 +47,10 @@
   ],
   "documentation": {
     "slug": "toggle",
-    "compositionNote": "Styled facade over the owned pressed-state ARIA button primitive, with sm/default/lg size variants matching shadcn's Toggle."
+    "compositionNote": "Styled facade over the owned pressed-state ARIA button primitive, with sm/default/lg size variants matching shadcn's Toggle.",
+    "usage": "Toggle { pressed: pressed(), on_pressed_change: move |v| pressed.set(v), \"Bold\" }",
+    "accessibility": "A native `<button>` with `aria-pressed`, per the WAI-ARIA APG Button pattern's pressed-state variant (`packages/adico-primitives/src/toggle.rs`).",
+    "keyboard": "Toggles on click/Enter/Space (native button activation); includes an explicit-focus-after-click workaround for Safari/Firefox on macOS not focusing `<button>` on click by default."
   },
   "compatibility": null,
   "provenance": {

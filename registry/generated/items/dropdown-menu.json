@@ -47,7 +47,10 @@
   ],
   "documentation": {
     "slug": "dropdown-menu",
-    "compositionNote": "The copied façade re-exports the owned DropdownMenu parts unstyled, matching select's approach: DropdownMenuItem is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains roving-focus keyboard and ARIA behavior."
+    "compositionNote": "The copied façade re-exports the owned DropdownMenu parts unstyled, matching select's approach: DropdownMenuItem is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains roving-focus keyboard and ARIA behavior.",
+    "usage": "DropdownMenu {\n    DropdownMenuTrigger { \"Open menu\" }\n    DropdownMenuContent {\n        DropdownMenuItem { index: 0usize, value: \"edit\".to_string(), on_select: move |_| {}, \"Edit\" }\n    }\n}",
+    "accessibility": "`DropdownMenu`/`DropdownMenuTrigger`/`DropdownMenuContent`/`DropdownMenuItem` are direct re-exports of the shared `menu::Menu`/`MenuTrigger`/`MenuContent`/`MenuItem` primitive (`packages/adico-primitives/src/menu.rs`), matching Base UI's own anatomy where `Menu` *is* the dropdown menu -- `role=\"menu\"`/`role=\"menuitem\"` content on a roving-focus/dismissable-layer stack shared with `dialog`/`popover`.",
+    "keyboard": "Arrow keys navigate items, Enter/Space activates the focused item, `ArrowRight`/`ArrowLeft` open/close submenus (`MenuSubmenuTrigger`); submenu hover-intent delay is not implemented, only click and arrow-key open/close."
   },
   "compatibility": null,
   "provenance": {

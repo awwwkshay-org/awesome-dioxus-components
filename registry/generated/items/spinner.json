@@ -43,7 +43,10 @@
   ],
   "documentation": {
     "slug": "spinner",
-    "compositionNote": "Renders the owned Lucide LoaderCircle icon re-export directly (matching upstream's Loader2Icon usage) with role=\"status\"; no interactive behavior of its own."
+    "compositionNote": "Renders the owned Lucide LoaderCircle icon re-export directly (matching upstream's Loader2Icon usage) with role=\"status\"; no interactive behavior of its own.",
+    "usage": "Spinner {}",
+    "accessibility": "Renders a native `role=\"status\"` live region with `aria-label=\"Loading\"` (`registry/ui/spinner.rs`), so assistive technology announces the loading state without requiring focus.",
+    "keyboard": "No component-specific keyboard handling; not an interactive control."
   },
   "compatibility": null,
   "provenance": null

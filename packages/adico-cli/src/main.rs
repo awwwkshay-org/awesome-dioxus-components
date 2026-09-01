@@ -234,6 +234,20 @@ fn render_registry_item(resolved: &ResolvedRegistryItem) -> String {
     } else {
         output.push_str("Provenance: none declared\n");
     }
+    if let Some(documentation) = &item.documentation {
+        if let Some(note) = &documentation.composition_note {
+            output.push_str(&format!("Composition note: {note}\n"));
+        }
+        if let Some(usage) = &documentation.usage {
+            output.push_str(&format!("Usage:\n{usage}\n"));
+        }
+        if let Some(accessibility) = &documentation.accessibility {
+            output.push_str(&format!("Accessibility: {accessibility}\n"));
+        }
+        if let Some(keyboard) = &documentation.keyboard {
+            output.push_str(&format!("Keyboard: {keyboard}\n"));
+        }
+    }
     output
 }
 

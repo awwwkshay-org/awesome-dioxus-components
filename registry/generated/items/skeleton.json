@@ -35,7 +35,10 @@
   ],
   "documentation": {
     "slug": "skeleton",
-    "compositionNote": null
+    "compositionNote": null,
+    "usage": "Skeleton { class: \"h-4 w-32\" }",
+    "accessibility": "Sets `aria-hidden` when `decorative` (the default), so a loading placeholder is not announced as content by assistive technology (`registry/ui/skeleton.rs`).",
+    "keyboard": "No component-specific keyboard handling; not an interactive control."
   },
   "compatibility": null,
   "provenance": null

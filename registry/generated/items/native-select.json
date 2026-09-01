@@ -47,7 +47,10 @@
   ],
   "documentation": {
     "slug": "native-select",
-    "compositionNote": "Wraps a native <select> for OS-native picker behavior, distinct from the owned custom-listbox Select component. NativeSelectOption/NativeSelectOptGroup use the Canvas/CanvasText CSS system-color keywords (matching upstream exactly) rather than adico's background/foreground semantic tokens, since a native <option> popup is painted by the OS outside the page's own CSS custom properties -- not a token-compliance gap."
+    "compositionNote": "Wraps a native <select> for OS-native picker behavior, distinct from the owned custom-listbox Select component. NativeSelectOption/NativeSelectOptGroup use the Canvas/CanvasText CSS system-color keywords (matching upstream exactly) rather than adico's background/foreground semantic tokens, since a native <option> popup is painted by the OS outside the page's own CSS custom properties -- not a token-compliance gap.",
+    "usage": "NativeSelect { value: value(), oninput: move |event| value.set(event.value()),\n    NativeSelectOption { value: \"apple\", \"Apple\" }\n    NativeSelectOption { value: \"banana\", \"Banana\" }\n}",
+    "accessibility": "Wraps a native `<select>` for OS-native picker behavior (`registry/ui/native_select.rs`); native `<select>` semantics (role, `aria-invalid` reflection) are provided by the browser itself, not reimplemented.",
+    "keyboard": "No component-specific keyboard handling; relies entirely on the native `<select>`'s own keyboard behavior (arrow keys change the value, typing jumps to a matching option)."
   },
   "compatibility": null,
   "provenance": null

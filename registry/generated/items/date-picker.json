@@ -57,7 +57,10 @@
   ],
   "documentation": {
     "slug": "date-picker",
-    "compositionNote": "The copied façade composes the installed semantic Calendar and Popover façades over the owned DatePicker primitive. The primitive retains typed date/range state, constraints, keyboard focus, dismissal, and ARIA behavior."
+    "compositionNote": "The copied façade composes the installed semantic Calendar and Popover façades over the owned DatePicker primitive. The primitive retains typed date/range state, constraints, keyboard focus, dismissal, and ARIA behavior.",
+    "usage": "DatePicker { value: value(), on_value_change: move |v| value.set(v),\n    DatePickerInput {}\n    DatePickerPopover { DatePickerCalendar {} }\n}",
+    "accessibility": "No dedicated APG \"Date Picker\" pattern exists; `DatePicker`/`DateRangePicker` render a composite `role=\"group\"` field containing one `role=\"spinbutton\"` segment per year/month/day, each with `aria-valuemin`/`aria-valuemax`/`aria-valuenow` (the APG Spin Button pattern applied per segment). `DatePickerSeparator` is `aria-hidden` (`packages/adico-primitives/src/date_picker.rs`). The popup composes this crate's `calendar` (Grid pattern) and `popover` primitives.",
+    "keyboard": "Arrow keys increment/decrement the focused segment; the popover calendar shares `calendar`'s own roving-tabindex day navigation once opened."
   },
   "compatibility": null,
   "provenance": {

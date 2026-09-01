@@ -26,7 +26,10 @@
   ],
   "documentation": {
     "slug": "cn",
-    "compositionNote": null
+    "compositionNote": null,
+    "usage": null,
+    "accessibility": null,
+    "keyboard": null
   },
   "compatibility": null,
   "provenance": null

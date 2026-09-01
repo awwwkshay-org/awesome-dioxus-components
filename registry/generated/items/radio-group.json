@@ -47,7 +47,10 @@
   ],
   "documentation": {
     "slug": "radio-group",
-    "compositionNote": "Styled facade over the owned roving-focus radio primitive (reuses the collection infrastructure already imported for Select), with a CSS-only checked indicator dot."
+    "compositionNote": "Styled facade over the owned roving-focus radio primitive (reuses the collection infrastructure already imported for Select), with a CSS-only checked indicator dot.",
+    "usage": "RadioGroup { value: value(), on_value_change: move |v| value.set(v),\n    RadioItem { value: \"a\", \"Option A\" }\n    RadioItem { value: \"b\", \"Option B\" }\n}",
+    "accessibility": "`role=\"radiogroup\"` containing `role=\"radio\"` items, per the WAI-ARIA APG Radio Group pattern (`packages/adico-primitives/src/radio_group.rs`). With nothing yet selected, every radio stays in the tab order until one is focused or checked, matching native radio-group semantics rather than a plain listbox's default-first-item focus.",
+    "keyboard": "Single-tab-stop roving tabindex: arrow keys move focus *and* select, along the group's orientation; Home/End jump to the ends and select."
   },
   "compatibility": null,
   "provenance": {

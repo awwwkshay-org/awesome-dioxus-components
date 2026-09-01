@@ -49,7 +49,10 @@
   ],
   "documentation": {
     "slug": "tooltip",
-    "compositionNote": "The public copied API remains compositional; hover/focus/Escape handling and ARIA wiring remain inside adico-primitives. Positioning is CSS-only via data-side/data-align attributes, matching the real upstream implementation (no portal or JS positioning engine)."
+    "compositionNote": "The public copied API remains compositional; hover/focus/Escape handling and ARIA wiring remain inside adico-primitives. Positioning is CSS-only via data-side/data-align attributes, matching the real upstream implementation (no portal or JS positioning engine).",
+    "usage": "Tooltip { open: open(), on_open_change: move |v| open.set(v),\n    TooltipTrigger { \"Hover me\" }\n    TooltipContent { \"Helpful text\" }\n}",
+    "accessibility": "`TooltipTrigger` is described by a `role=\"tooltip\"` `TooltipContent` via `aria-describedby`, per the WAI-ARIA APG Tooltip pattern (`packages/adico-primitives/src/tooltip.rs`); positioned relative to the trigger by the shared `Positioner`.",
+    "keyboard": "Shown on hover or focus of the trigger, dismissed on Escape or on blur/mouse-leave."
   },
   "compatibility": null,
   "provenance": {

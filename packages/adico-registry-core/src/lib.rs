@@ -338,6 +338,22 @@ pub struct DocumentationMetadata {
     /// Optional composition/API note.
     #[serde(default)]
     pub composition_note: Option<String>,
+    /// Optional short composition example (an `rsx!` snippet, as text) showing
+    /// typical usage of this item's exported components together.
+    #[serde(default)]
+    pub usage: Option<String>,
+    /// Optional accessibility note: ARIA roles/attributes this item's own
+    /// source (or the primitive it composes) actually implements. Must be
+    /// derived from that source, not general pattern knowledge, so it stays
+    /// true for items with only partial or no accessibility treatment.
+    #[serde(default)]
+    pub accessibility: Option<String>,
+    /// Optional keyboard-interaction note: keys this item's own source (or
+    /// the primitive it composes) actually handles. Same sourcing rule as
+    /// `accessibility` -- state "no component-specific keyboard handling"
+    /// plainly where that is the true, verified state, rather than omit it.
+    #[serde(default)]
+    pub keyboard: Option<String>,
 }
 
 /// Compatibility requirements declared by a registry or individual item.

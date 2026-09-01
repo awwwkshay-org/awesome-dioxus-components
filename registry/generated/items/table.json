@@ -39,7 +39,10 @@
   ],
   "documentation": {
     "slug": "table",
-    "compositionNote": "Purely presentational (Table/TableHeader/TableBody/TableFooter/TableRow/TableHead/TableCell/TableCaption), matching upstream's own non-interactive implementation. Table wraps the real <table> in a relative/overflow-x-auto scroll container, matching upstream's horizontal-scroll behavior for wide tables."
+    "compositionNote": "Purely presentational (Table/TableHeader/TableBody/TableFooter/TableRow/TableHead/TableCell/TableCaption), matching upstream's own non-interactive implementation. Table wraps the real <table> in a relative/overflow-x-auto scroll container, matching upstream's horizontal-scroll behavior for wide tables.",
+    "usage": "Table {\n    TableHeader { TableRow { TableHead { \"Name\" } } }\n    TableBody { TableRow { TableCell { \"adico\" } } }\n}",
+    "accessibility": "Plain native `<table>` markup with semantic `<thead>`/`<tbody>`/`<tfoot>`/`<th>`/`<td>` (`registry/ui/table.rs`); `TableRow`'s classes include a `[role=checkbox]` hook for a selection-column pattern, but selection state itself is caller-composed.",
+    "keyboard": "No component-specific keyboard handling; native table semantics only (no roving-focus cell navigation)."
   },
   "compatibility": null,
   "provenance": null

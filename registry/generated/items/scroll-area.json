@@ -43,7 +43,10 @@
   ],
   "documentation": {
     "slug": "scroll-area",
-    "compositionNote": "A pure re-export of the owned ScrollArea primitive: pure CSS overflow/scrollbar-width styling with no visual language to compose, matching upstream's own unstyled behavior."
+    "compositionNote": "A pure re-export of the owned ScrollArea primitive: pure CSS overflow/scrollbar-width styling with no visual language to compose, matching upstream's own unstyled behavior.",
+    "usage": "ScrollArea { style: \"height: 12em;\",\n    div { \"Long scrollable content...\" }\n}",
+    "accessibility": "No ARIA role applies -- a scrollable container is not itself a widget (`packages/adico-primitives/src/scroll_area.rs`); its spec is pure CSS overflow/scrollbar-width composition.",
+    "keyboard": "No component-specific keyboard handling; native scroll keys (arrow keys, Page Up/Down, Space) work once the scrollable region has focus, same as any native overflow container."
   },
   "compatibility": null,
   "provenance": {

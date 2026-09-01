@@ -49,7 +49,10 @@
   ],
   "documentation": {
     "slug": "toast",
-    "compositionNote": "Only the toast region's fixed viewport placement is styled by default (structural, not cosmetic); individual toast cards keep the primitive's own unstyled composition, matching this registry's existing many-parts-unstyled precedent for Select/Combobox. A full default visual style for Toast itself is M4's job."
+    "compositionNote": "Only the toast region's fixed viewport placement is styled by default (structural, not cosmetic); individual toast cards keep the primitive's own unstyled composition, matching this registry's existing many-parts-unstyled precedent for Select/Combobox. A full default visual style for Toast itself is M4's job.",
+    "usage": "ToastProvider {\n    // elsewhere: use_toast().show(ToastType::Success, \"Saved\")\n}",
+    "accessibility": "Each `Toast` is `role=\"alertdialog\"` wrapping a `role=\"alert\"` live region, per the WAI-ARIA APG \"alert\" pattern (`packages/adico-primitives/src/toast.rs`); `ToastProvider` manages a shared notification queue with no APG pattern of its own.",
+    "keyboard": "No component-specific keyboard handling beyond a global keydown listener used for dismissal; individual toast dismissal is otherwise pointer/timer-driven (auto-dismiss timer per toast)."
   },
   "compatibility": null,
   "provenance": {

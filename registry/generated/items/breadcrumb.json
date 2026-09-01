@@ -47,7 +47,10 @@
   ],
   "documentation": {
     "slug": "breadcrumb",
-    "compositionNote": "Purely presentational nav trail (Breadcrumb/BreadcrumbList/BreadcrumbItem/BreadcrumbLink/BreadcrumbPage/BreadcrumbSeparator/BreadcrumbEllipsis), matching upstream's own non-interactive implementation. BreadcrumbSeparator defaults to a ChevronRight icon; BreadcrumbEllipsis renders the owned Lucide Ellipsis re-export (this icon set's current name for upstream's MoreHorizontalIcon, which Lucide itself renamed)."
+    "compositionNote": "Purely presentational nav trail (Breadcrumb/BreadcrumbList/BreadcrumbItem/BreadcrumbLink/BreadcrumbPage/BreadcrumbSeparator/BreadcrumbEllipsis), matching upstream's own non-interactive implementation. BreadcrumbSeparator defaults to a ChevronRight icon; BreadcrumbEllipsis renders the owned Lucide Ellipsis re-export (this icon set's current name for upstream's MoreHorizontalIcon, which Lucide itself renamed).",
+    "usage": "Breadcrumb {\n    BreadcrumbList {\n        BreadcrumbItem { BreadcrumbLink { href: \"/\", \"Home\" } }\n        BreadcrumbSeparator {}\n        BreadcrumbItem { BreadcrumbPage { \"Current\" } }\n    }\n}",
+    "accessibility": "The root is `<nav aria-label=\"breadcrumb\">`; the current page carries `aria-current=\"page\"` and `role=\"link\"`/`aria-disabled=\"true\"` (it is not a real link); separators and the ellipsis are `aria-hidden`/`role=\"presentation\"` (`registry/ui/breadcrumb.rs`).",
+    "keyboard": "`BreadcrumbLink` renders a native `<a>`, so Tab/Enter follow ordinary link semantics; there is no component-specific keyboard handling beyond that."
   },
   "compatibility": null,
   "provenance": null

@@ -39,7 +39,10 @@
   ],
   "documentation": {
     "slug": "alert",
-    "compositionNote": "Purely presentational, no shared behavior to delegate: Alert/AlertTitle/AlertDescription are static content-box slots, matching upstream's own non-interactive implementation. Alert sets role=\"alert\" directly."
+    "compositionNote": "Purely presentational, no shared behavior to delegate: Alert/AlertTitle/AlertDescription are static content-box slots, matching upstream's own non-interactive implementation. Alert sets role=\"alert\" directly.",
+    "usage": "Alert {\n    AlertTitle { \"Heads up\" }\n    AlertDescription { \"This is an important message.\" }\n}",
+    "accessibility": "Renders a native `role=\"alert\"` live region (`registry/ui/alert.rs`), so assistive technology announces its content when it appears without requiring focus to move.",
+    "keyboard": "No component-specific keyboard handling; purely presentational."
   },
   "compatibility": null,
   "provenance": null

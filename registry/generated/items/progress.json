@@ -47,7 +47,10 @@
   ],
   "documentation": {
     "slug": "progress",
-    "compositionNote": "Styled facade over the owned ARIA progressbar primitive. The indicator's fill width is CSS-transform-driven from the primitive's --progress-value custom property; a `None` value renders a zero-filled indeterminate bar rather than upstream's unstyled indeterminate state, since animated indeterminate styling is M4's job."
+    "compositionNote": "Styled facade over the owned ARIA progressbar primitive. The indicator's fill width is CSS-transform-driven from the primitive's --progress-value custom property; a `None` value renders a zero-filled indeterminate bar rather than upstream's unstyled indeterminate state, since animated indeterminate styling is M4's job.",
+    "usage": "Progress { value: Some(60.0),\n    ProgressIndicator {}\n}",
+    "accessibility": "`role=\"progressbar\"` with `aria-valuemin`/`aria-valuemax`/`aria-valuenow`, omitting `aria-valuenow` for an indeterminate progress indicator when `value` is `None`, per the WAI-ARIA APG Meter/Progressbar pattern (`packages/adico-primitives/src/progress.rs`).",
+    "keyboard": "No component-specific keyboard handling; a progress indicator is not an interactive control."
   },
   "compatibility": null,
   "provenance": {

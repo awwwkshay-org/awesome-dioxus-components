@@ -47,7 +47,10 @@
   ],
   "documentation": {
     "slug": "tabs",
-    "compositionNote": "Styled facade over the owned roving-focus tab-list primitive (reuses the collection infrastructure already imported for Select), matching shadcn's Tabs."
+    "compositionNote": "Styled facade over the owned roving-focus tab-list primitive (reuses the collection infrastructure already imported for Select), matching shadcn's Tabs.",
+    "usage": "Tabs { value: value(), on_value_change: move |v| value.set(v),\n    TabList {\n        TabTrigger { value: \"one\", \"Tab 1\" }\n    }\n    TabContent { value: \"one\", \"Panel 1\" }\n}",
+    "accessibility": "`TabList` is `role=\"tablist\"`, each `TabTrigger` is `role=\"tab\"`, and each `TabContent` is `role=\"tabpanel\"`, rendered (not just hidden) only while its trigger is selected -- automatic activation, per the WAI-ARIA APG Tabs pattern (`packages/adico-primitives/src/tabs.rs`).",
+    "keyboard": "Single-tab-stop roving tabindex among triggers: arrow keys move along the tab list's orientation, Home/End jump to the ends; moving focus also activates the panel (automatic activation)."
   },
   "compatibility": null,
   "provenance": {

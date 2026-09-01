@@ -47,7 +47,10 @@
   ],
   "documentation": {
     "slug": "label",
-    "compositionNote": "Styled facade over the owned `for`/`id` association primitive. Composes with any installed form control via matching `html_for`/`id` values."
+    "compositionNote": "Styled facade over the owned `for`/`id` association primitive. Composes with any installed form control via matching `html_for`/`id` values.",
+    "usage": "Label { html_for: \"email\", \"Email address\" }",
+    "accessibility": "Renders a native `<label for>`, which every assistive technology already understands without an ARIA role (`packages/adico-primitives/src/label.rs`). Must be associated with a form control via `html_for`.",
+    "keyboard": "No component-specific keyboard handling; clicking a label natively focuses/activates its associated control."
   },
   "compatibility": null,
   "provenance": {

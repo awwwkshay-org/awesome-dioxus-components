@@ -43,7 +43,10 @@
   ],
   "documentation": {
     "slug": "aspect-ratio",
-    "compositionNote": "A pure re-export of the owned AspectRatio primitive: a CSS padding-bottom ratio wrapper with no visual styling to compose, matching upstream's own unstyled behavior."
+    "compositionNote": "A pure re-export of the owned AspectRatio primitive: a CSS padding-bottom ratio wrapper with no visual styling to compose, matching upstream's own unstyled behavior.",
+    "usage": "AspectRatio { ratio: 16.0 / 9.0,\n    img { src: \"image.png\", alt: \"Description\" }\n}",
+    "accessibility": "No ARIA role applies -- a layout container is not itself a widget (`packages/adico-primitives/src/aspect_ratio.rs`). Accessibility of the ratio-constrained content (e.g. an `<img>`'s `alt` text) remains the caller's responsibility.",
+    "keyboard": "No component-specific keyboard handling; purely layout."
   },
   "compatibility": null,
   "provenance": {

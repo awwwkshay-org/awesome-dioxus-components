@@ -47,7 +47,10 @@
   ],
   "documentation": {
     "slug": "select",
-    "compositionNote": "The copied façade re-exports the owned Select parts; applications can style each primitive part directly with Dioxus class attributes while the runtime retains keyboard, typeahead, and ARIA behavior."
+    "compositionNote": "The copied façade re-exports the owned Select parts; applications can style each primitive part directly with Dioxus class attributes while the runtime retains keyboard, typeahead, and ARIA behavior.",
+    "usage": "Select::<String> {\n    SelectTrigger { aria_label: \"Choose a fruit\", SelectValue { placeholder: \"Choose a fruit\" } }\n    SelectList { aria_label: \"Fruit options\",\n        SelectOption::<String> { index: 0usize, value: \"apple\".to_string(), text_value: \"Apple\".to_string(), \"Apple\" }\n    }\n}",
+    "accessibility": "Implements the WAI-ARIA APG Listbox pattern: `SelectTrigger` is the APG's combobox-like button and `SelectList` is `role=\"listbox\"`, anchored to the trigger via `Positioner` (`packages/adico-primitives/src/select.rs`).",
+    "keyboard": "Full keyboard support: arrow keys navigate options, Home/End jump to the ends, Enter selects, Escape closes; typeahead lets typing jump to a matching option."
   },
   "compatibility": null,
   "provenance": {

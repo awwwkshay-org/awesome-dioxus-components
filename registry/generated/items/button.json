@@ -39,7 +39,10 @@
   ],
   "documentation": {
     "slug": "button",
-    "compositionNote": "Use caller-composed children for text, icons, and icon-plus-text content. `ButtonVariant` and `ButtonSize` mirror the current shadcn visual contract; native Dioxus button/global attributes and events are forwarded."
+    "compositionNote": "Use caller-composed children for text, icons, and icon-plus-text content. `ButtonVariant` and `ButtonSize` mirror the current shadcn visual contract; native Dioxus button/global attributes and events are forwarded.",
+    "usage": "Button { variant: ButtonVariant::Default, onclick: move |_| {}, \"Save\" }",
+    "accessibility": "A native `<button>`; visible content is caller-composed through `children`, so text-only, icon-only, and icon-plus-text buttons all use the same accessible native control (`registry/ui/button.rs`). Icon-only usage should include an explicit `aria-label`.",
+    "keyboard": "No component-specific keyboard handling beyond native button activation (Enter/Space)."
   },
   "compatibility": null,
   "provenance": null

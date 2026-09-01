@@ -35,7 +35,10 @@
   ],
   "documentation": {
     "slug": "kbd",
-    "compositionNote": null
+    "compositionNote": null,
+    "usage": "KbdGroup {\n    Kbd { \"Ctrl\" }\n    Kbd { \"K\" }\n}",
+    "accessibility": "Renders the native `<kbd>` element, which assistive technology already recognizes as denoting keyboard input without any ARIA role needed (`registry/ui/kbd.rs`).",
+    "keyboard": "No component-specific keyboard handling; purely presentational (it labels a shortcut, it does not implement one)."
   },
   "compatibility": null,
   "provenance": null

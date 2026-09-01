@@ -47,7 +47,10 @@
   ],
   "documentation": {
     "slug": "sidebar",
-    "compositionNote": "Unlike most registry items, upstream ships Sidebar as a styled preview component rather than an adico-primitives module; its only shared state is a plain open/closed signal from adico_primitives::use_controlled, and it composes the owned separator primitive directly. This initial pass renders one CSS-driven collapsible layout rather than upstream's document::eval-detected mobile sheet mode (that eval pattern was found non-functional while testing the Wave 3 overlay batch); a real viewport-driven mobile mode is deferred to M4/M5."
+    "compositionNote": "Unlike most registry items, upstream ships Sidebar as a styled preview component rather than an adico-primitives module; its only shared state is a plain open/closed signal from adico_primitives::use_controlled, and it composes the owned separator primitive directly. This initial pass renders one CSS-driven collapsible layout rather than upstream's document::eval-detected mobile sheet mode (that eval pattern was found non-functional while testing the Wave 3 overlay batch); a real viewport-driven mobile mode is deferred to M4/M5.",
+    "usage": "SidebarProvider {\n    Sidebar {\n        SidebarHeader { \"Logo\" }\n        SidebarContent { SidebarMenu { SidebarMenuItem { SidebarMenuButton { \"Home\" } } } }\n    }\n}",
+    "accessibility": "`SidebarSeparator` composes `adico_primitives::separator::Separator` (`role=\"separator\"`/`aria-orientation`, or `role=\"none\"` when decorative); the rest of the composition is plain styled markup (`registry/ui/sidebar.rs`). No mobile/responsive viewport-driven collapse mode exists yet -- a named, deferred gap (see this file's own module doc).",
+    "keyboard": "No dedicated keyboard-navigation layer of its own beyond native focus order through its composed buttons/links."
   },
   "compatibility": null,
   "provenance": null
