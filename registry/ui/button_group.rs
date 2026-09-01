@@ -76,10 +76,17 @@ pub fn ButtonGroupText(class: Option<String>, children: Element) -> Element {
 /// A divider between clusters within a [`ButtonGroup`], composing the owned
 /// `adico_primitives::separator::Separator` primitive. Vertical by default,
 /// matching a horizontal `ButtonGroup`'s own default orientation.
+///
+/// Includes the same `data-[orientation]` width/height base classes as
+/// `ToolbarSeparator`: unlike upstream shadcn (which composes its own
+/// already-styled `separator.tsx`, so its `ButtonGroupSeparator` only needs
+/// to add overrides), this composes the bare primitive directly and so must
+/// supply that sizing itself, or a vertical separator renders as a
+/// zero-width line.
 #[component]
 pub fn ButtonGroupSeparator(#[props(default)] horizontal: bool, class: Option<String>) -> Element {
     let class = cn(&[
-        "relative m-0! self-stretch bg-input data-[orientation=vertical]:h-auto",
+        "shrink-0 bg-input data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px relative m-0! self-stretch",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

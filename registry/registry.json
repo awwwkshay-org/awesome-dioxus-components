@@ -1542,7 +1542,7 @@
           "source": "ui/button_group.rs",
           "targetRoot": "ui",
           "target": "button_group.rs",
-          "checksum": "4bbead080920838c354e75e7d2f4c6a76a30bba905e91463d98dd02f7bc105b6"
+          "checksum": "176b08483332bb26b76ee64cfe63bbcc5fb1f666a8bbd93c4e3ca8a0ff6a1204"
         }
       ],
       "registryDependencies": ["cn"],
@@ -1572,7 +1572,7 @@
           "source": "ui/input_group.rs",
           "targetRoot": "ui",
           "target": "input_group.rs",
-          "checksum": "2061880b2840e033d596a9328b060e1c3ca4c30c3353d41a1dbc86d07c905c0a"
+          "checksum": "502e4a59ed44ba4c794bdadff12151680fbf248e6dc1508784ffa6109956cdd0"
         }
       ],
       "registryDependencies": ["cn", "button"],
@@ -1587,7 +1587,7 @@
       ],
       "documentation": {
         "slug": "input-group",
-        "compositionNote": "InputGroup/InputGroupAddon/InputGroupButton/InputGroupText/InputGroupInput/InputGroupTextarea replicate upstream's bordered-field-with-addons composition. InputGroupButton reuses the installed Button's own ButtonVariant/ButtonSize enums directly (Ghost/Xs default) instead of a duplicate parallel size scale. InputGroupInput/InputGroupTextarea author their own flush classes rather than composing Input/Textarea, since adico_lib::cn has no Tailwind-merge equivalent to reliably override those components' fixed classes. InputGroupAddon omits upstream's click-to-focus-sibling-input JavaScript (a non-essential UX nicety); see the module doc comment."
+        "compositionNote": "InputGroup/InputGroupAddon/InputGroupButton/InputGroupText/InputGroupInput/InputGroupTextarea replicate upstream's bordered-field-with-addons composition, including the has-[>[data-align=block-start/end]]:flex-col rule that switches the container to a column layout around a stacked textarea + addon (an initial pass dropped this, which visually broke into a one-character-wide textarea column -- caught by a live dx-serve check, not by compile-clean checks, and fixed). InputGroupButton reuses the installed Button's own ButtonVariant/ButtonSize enums directly (Ghost/Xs default) instead of a duplicate parallel size scale. InputGroupInput/InputGroupTextarea author their own flush classes rather than composing Input/Textarea, since adico_lib::cn has no Tailwind-merge equivalent to reliably override those components' fixed classes. InputGroupAddon omits upstream's click-to-focus-sibling-input JavaScript (a non-essential UX nicety); see the module doc comment."
       }
     },
     {
