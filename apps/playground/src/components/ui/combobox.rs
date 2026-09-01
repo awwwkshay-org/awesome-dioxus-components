@@ -37,6 +37,10 @@ pub fn Combobox<T: Clone + PartialEq + 'static>(
     class: Option<String>,
     children: Element,
 ) -> Element {
+    // `relative` is load-bearing here, unlike `select.rs`'s equivalent root: `ComboboxChevron`
+    // below is `position: absolute`, positioned against this wrapper specifically (it renders
+    // as this root's own child, not scoped inside `ComboboxInput`) -- without it the chevron
+    // escapes to the nearest positioned ancestor up the page instead of sitting over the input.
     let class = cn(&[
         "group relative inline-block",
         class.as_deref().unwrap_or_default(),
@@ -146,6 +150,8 @@ pub fn ComboboxMulti<T: Clone + PartialEq + 'static>(
     class: Option<String>,
     children: Element,
 ) -> Element {
+    // See `Combobox`'s own comment: `relative` here anchors `ComboboxChevron`'s
+    // `position: absolute`, not the listbox (that's `Positioner`'s job).
     let class = cn(&[
         "group relative inline-block",
         class.as_deref().unwrap_or_default(),
@@ -191,11 +197,17 @@ pub fn ComboboxInput(
     }
 }
 
-/// An absolutely positioned listbox so opening it does not shift layout.
+/// A listbox anchored to the input via the primitive's `Positioner`, so
+/// opening it does not shift layout.
 #[component]
 pub fn ComboboxList(children: Element, id: Option<String>, class: Option<String>) -> Element {
+    // `w-full` would now mean 100% of the viewport (`Positioner`'s
+    // `position: fixed` has no positioned ancestor to size against, unlike
+    // the `absolute`-positioned listbox this replaced) — `min-w-48` is the
+    // width baseline instead, matching `popover.rs`'s own fixed-width
+    // precedent rather than trying to exactly match the input's width.
     let class = cn(&[
-        "absolute left-0 top-full z-50 max-h-72 w-full min-w-48 overflow-y-auto rounded-md bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        "z-50 max-h-72 min-w-48 overflow-y-auto rounded-md bg-popover p-1 text-popover-foreground shadow-md outline-none",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

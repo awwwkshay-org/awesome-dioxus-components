@@ -38,10 +38,7 @@ pub fn Select<T: Clone + PartialEq + 'static>(
     class: Option<String>,
     children: Element,
 ) -> Element {
-    let class = cn(&[
-        "relative inline-block",
-        class.as_deref().unwrap_or_default(),
-    ]);
+    let class = cn(&["inline-block", class.as_deref().unwrap_or_default()]);
     rsx! {
         PrimitiveSelect::<T> {
             value,
@@ -78,10 +75,7 @@ pub fn SelectMulti<T: Clone + PartialEq + 'static>(
     class: Option<String>,
     children: Element,
 ) -> Element {
-    let class = cn(&[
-        "relative inline-block",
-        class.as_deref().unwrap_or_default(),
-    ]);
+    let class = cn(&["inline-block", class.as_deref().unwrap_or_default()]);
     rsx! {
         PrimitiveSelectMulti::<T> {
             values,
@@ -187,7 +181,7 @@ pub fn SelectList(
     aria_label: Option<String>,
 ) -> Element {
     let class = cn(&[
-        "absolute left-0 top-full z-50 max-h-72 min-w-32 overflow-y-auto rounded-md bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        "z-50 max-h-72 min-w-32 overflow-y-auto rounded-md bg-popover p-1 text-popover-foreground shadow-md outline-none",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
