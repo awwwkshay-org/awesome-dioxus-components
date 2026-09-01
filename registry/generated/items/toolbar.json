@@ -47,7 +47,7 @@
   ],
   "documentation": {
     "slug": "toolbar",
-    "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` in upstreams/dioxus-components/inventory.md and excluded from shadcn parity tracking. Roving-focus button/separator container, similar shape to Menubar without layered popups. No document::eval or DOM measurement, SSR-safe by construction."
+    "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Roving-focus button/separator container, similar shape to Menubar without layered popups. No document::eval or DOM measurement, SSR-safe by construction."
   },
   "compatibility": null,
   "provenance": {

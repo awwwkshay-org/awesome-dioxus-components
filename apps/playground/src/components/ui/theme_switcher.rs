@@ -6,7 +6,8 @@
 //! `--primary-foreground` and their Tailwind color aliases) rather than that
 //! tray's full 28-token editor, which stays playground-only "parity
 //! inspection" tooling per design.md §7a. Classified `EXISTING_DIOXUS_EXTRA`
-//! per design.md §7b — this component has no `parity.json` entry.
+//! per design.md §7b — this component has no shadcn/dioxus-components
+//! catalog counterpart in `statics/component_compatibility.json`.
 
 use dioxus::prelude::*;
 

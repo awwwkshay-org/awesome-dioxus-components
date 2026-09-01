@@ -7,7 +7,7 @@
       "source": "ui/theme_switcher.rs",
       "targetRoot": "ui",
       "target": "theme_switcher.rs",
-      "checksum": "37457f12ce326a8b4da2a833347e6943cea4f049ccd52554939d65de05608b61"
+      "checksum": "2014419589197764b0f0bea16c2f0f10cc8c1bc7800a1bf5d422fc62a9facc74"
     }
   ],
   "registryDependencies": [
@@ -49,7 +49,7 @@
   ],
   "documentation": {
     "slug": "theme-switcher",
-    "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA`-style per design.md §7b and excluded from shadcn parity tracking (no parity.json entry). A distilled palette picker (Slate/Blue/Violet/Emerald/Rose/Amber presets recoloring --primary/--primary-foreground and their Tailwind aliases) productizing the concept prototyped in apps/playground's advanced customization tray, which keeps its own full 28-token editor unchanged."
+    "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA`-style per design.md §7b (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). A distilled palette picker (Slate/Blue/Violet/Emerald/Rose/Amber presets recoloring --primary/--primary-foreground and their Tailwind aliases) productizing the concept prototyped in apps/playground's advanced customization tray, which keeps its own full 28-token editor unchanged."
   },
   "compatibility": null,
   "provenance": null

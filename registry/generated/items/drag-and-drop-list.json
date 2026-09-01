@@ -47,7 +47,7 @@
   ],
   "documentation": {
     "slug": "drag-and-drop-list",
-    "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` in upstreams/dioxus-components/inventory.md and excluded from shadcn parity tracking. Pointer-drag list reordering that reuses the roving-focus collection infrastructure already imported for Select. Keyboard reordering (Enter to lift/drop, Arrow keys to move, Escape to cancel, Delete/Backspace to remove) is the always-tested accessible path. Native pointer/mouse drag-and-drop is compiled and wired but not independently browser-verified -- a named risk carried since the M3 migration queue, the same open question as Slider's unverified desktop pointer-capture behavior."
+    "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Pointer-drag list reordering that reuses the roving-focus collection infrastructure already imported for Select. Keyboard reordering (Enter to lift/drop, Arrow keys to move, Escape to cancel, Delete/Backspace to remove) is the always-tested accessible path. Native pointer/mouse drag-and-drop is compiled and wired but not independently browser-verified -- a named risk carried since the M3 migration queue, the same open question as Slider's unverified desktop pointer-capture behavior."
   },
   "compatibility": null,
   "provenance": {

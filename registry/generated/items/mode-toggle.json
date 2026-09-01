@@ -50,7 +50,7 @@
   ],
   "documentation": {
     "slug": "mode-toggle",
-    "compositionNote": "Composes the installed dropdown-menu registry item with adico_primitives::theme_mode for Light/Dark/System selection. Persists the selection (localStorage on web, a preferences file on desktop) and applies the resolved appearance's class to the document root automatically. Classified `EXISTING_SHADCN_EQUIVALENT`-adjacent -- shadcn's theming docs ship an equivalent Light/Dark/System dropdown pattern; see parity.json and design.md §7b."
+    "compositionNote": "Composes the installed dropdown-menu registry item with adico_primitives::theme_mode for Light/Dark/System selection. Persists the selection (localStorage on web, a preferences file on desktop) and applies the resolved appearance's class to the document root automatically. Classified `EXISTING_SHADCN_EQUIVALENT`-adjacent -- shadcn's theming docs ship an equivalent Light/Dark/System dropdown pattern; see statics/component_compatibility.json and design.md §7b."
   },
   "compatibility": null,
   "provenance": null

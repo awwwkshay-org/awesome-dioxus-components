@@ -1152,7 +1152,7 @@
       ],
       "documentation": {
         "slug": "toolbar",
-        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` in upstreams/dioxus-components/inventory.md and excluded from shadcn parity tracking. Roving-focus button/separator container, similar shape to Menubar without layered popups. No document::eval or DOM measurement, SSR-safe by construction."
+        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Roving-focus button/separator container, similar shape to Menubar without layered popups. No document::eval or DOM measurement, SSR-safe by construction."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave5-extras.json" }
     },
@@ -1182,7 +1182,7 @@
       ],
       "documentation": {
         "slug": "virtual-list",
-        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` in upstreams/dioxus-components/inventory.md and excluded from shadcn parity tracking. Pure re-export: upstream ships it unstyled, list-item content is entirely caller-composed, and the caller must give the container a bounded height (for example `style: \"height: 300px; overflow-y: auto;\"`) or the viewport measurement equals the full content height and nothing is virtualized. Its scroll/resize bridge uses native `onscroll`/`onmounted` element queries (no `web`/`desktop` feature gate needed, unlike other overlay primitives) after live browser testing found upstream's own `document::eval`-based bridge never registers in this Dioxus 0.7.9/0.7.10 web runtime -- see provenance. On a renderer without `onscroll`/`onmounted` support (native/server) it renders zero items rather than failing to build -- a documented, explicit target-support skip, not silent, until a proper observer-bridge primitive exists (M6 territory)."
+        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Pure re-export: upstream ships it unstyled, list-item content is entirely caller-composed, and the caller must give the container a bounded height (for example `style: \"height: 300px; overflow-y: auto;\"`) or the viewport measurement equals the full content height and nothing is virtualized. Its scroll/resize bridge uses native `onscroll`/`onmounted` element queries (no `web`/`desktop` feature gate needed, unlike other overlay primitives) after live browser testing found upstream's own `document::eval`-based bridge never registers in this Dioxus 0.7.9/0.7.10 web runtime -- see provenance. On a renderer without `onscroll`/`onmounted` support (native/server) it renders zero items rather than failing to build -- a documented, explicit target-support skip, not silent, until a proper observer-bridge primitive exists (M6 territory)."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave5-extras.json" }
     },
@@ -1214,7 +1214,7 @@
       ],
       "documentation": {
         "slug": "color-picker",
-        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` in upstreams/dioxus-components/inventory.md and excluded from shadcn parity tracking. HSV saturation/value drag surface with keyboard arrow-key navigation and accessible per-axis range inputs (AreaThumbSaturationInput/AreaThumbValueInput). The M3 migration queue's dependency note said this item composes label/popover/slider; reading the actual upstream primitive source found it only depends on the already-owned move_interaction/pointer modules (reused unmodified from Wave 2's Slider import), not those three registry items -- a real correction recorded per the M1 lesson to verify against source, not the queue's one-line notes. Requires the `palette` crate directly (matching upstream's own public HSV color type in its props), same as any upstream consumer."
+        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. HSV saturation/value drag surface with keyboard arrow-key navigation and accessible per-axis range inputs (AreaThumbSaturationInput/AreaThumbValueInput). The M3 migration queue's dependency note said this item composes label/popover/slider; reading the actual upstream primitive source found it only depends on the already-owned move_interaction/pointer modules (reused unmodified from Wave 2's Slider import), not those three registry items -- a real correction recorded per the M1 lesson to verify against source, not the queue's one-line notes. Requires the `palette` crate directly (matching upstream's own public HSV color type in its props), same as any upstream consumer."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave5-extras.json" }
     },
@@ -1245,7 +1245,7 @@
       ],
       "documentation": {
         "slug": "drag-and-drop-list",
-        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` in upstreams/dioxus-components/inventory.md and excluded from shadcn parity tracking. Pointer-drag list reordering that reuses the roving-focus collection infrastructure already imported for Select. Keyboard reordering (Enter to lift/drop, Arrow keys to move, Escape to cancel, Delete/Backspace to remove) is the always-tested accessible path. Native pointer/mouse drag-and-drop is compiled and wired but not independently browser-verified -- a named risk carried since the M3 migration queue, the same open question as Slider's unverified desktop pointer-capture behavior."
+        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Pointer-drag list reordering that reuses the roving-focus collection infrastructure already imported for Select. Keyboard reordering (Enter to lift/drop, Arrow keys to move, Escape to cancel, Delete/Backspace to remove) is the always-tested accessible path. Native pointer/mouse drag-and-drop is compiled and wired but not independently browser-verified -- a named risk carried since the M3 migration queue, the same open question as Slider's unverified desktop pointer-capture behavior."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave5-extras.json" }
     },
@@ -1276,7 +1276,7 @@
       ],
       "documentation": {
         "slug": "tag-group",
-        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` in upstreams/dioxus-components/inventory.md and excluded from shadcn parity tracking. Grouped multi-select tag input reusing the roving-focus collection infrastructure already imported for Select; no document::eval, portal, or DOM measurement API, so it is SSR-safe by construction."
+        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Grouped multi-select tag input reusing the roving-focus collection infrastructure already imported for Select; no document::eval, portal, or DOM measurement API, so it is SSR-safe by construction."
       },
       "provenance": { "record": "provenance/records/adico-primitives-wave5-extras.json" }
     },
@@ -1307,7 +1307,7 @@
       ],
       "documentation": {
         "slug": "mode-toggle",
-        "compositionNote": "Composes the installed dropdown-menu registry item with adico_primitives::theme_mode for Light/Dark/System selection. Persists the selection (localStorage on web, a preferences file on desktop) and applies the resolved appearance's class to the document root automatically. Classified `EXISTING_SHADCN_EQUIVALENT`-adjacent -- shadcn's theming docs ship an equivalent Light/Dark/System dropdown pattern; see parity.json and design.md §7b."
+        "compositionNote": "Composes the installed dropdown-menu registry item with adico_primitives::theme_mode for Light/Dark/System selection. Persists the selection (localStorage on web, a preferences file on desktop) and applies the resolved appearance's class to the document root automatically. Classified `EXISTING_SHADCN_EQUIVALENT`-adjacent -- shadcn's theming docs ship an equivalent Light/Dark/System dropdown pattern; see statics/component_compatibility.json and design.md §7b."
       }
     },
     {
@@ -1319,7 +1319,7 @@
           "source": "ui/theme_switcher.rs",
           "targetRoot": "ui",
           "target": "theme_switcher.rs",
-          "checksum": "37457f12ce326a8b4da2a833347e6943cea4f049ccd52554939d65de05608b61"
+          "checksum": "2014419589197764b0f0bea16c2f0f10cc8c1bc7800a1bf5d422fc62a9facc74"
         }
       ],
       "registryDependencies": ["cn"],
@@ -1337,7 +1337,7 @@
       ],
       "documentation": {
         "slug": "theme-switcher",
-        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA`-style per design.md §7b and excluded from shadcn parity tracking (no parity.json entry). A distilled palette picker (Slate/Blue/Violet/Emerald/Rose/Amber presets recoloring --primary/--primary-foreground and their Tailwind aliases) productizing the concept prototyped in apps/playground's advanced customization tray, which keeps its own full 28-token editor unchanged."
+        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA`-style per design.md §7b (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). A distilled palette picker (Slate/Blue/Violet/Emerald/Rose/Amber presets recoloring --primary/--primary-foreground and their Tailwind aliases) productizing the concept prototyped in apps/playground's advanced customization tray, which keeps its own full 28-token editor unchanged."
       }
     },
     {
@@ -1367,7 +1367,7 @@
       ],
       "documentation": {
         "slug": "theme-builder",
-        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per design.md §7d and excluded from shadcn parity tracking (no parity.json entry). Promotes apps/playground's advanced customization tray -- the full 28-semantic-token editor with independent light/dark values, a deterministic 'generate theme' action, and CSS export -- into a real, generic, installable component, since none of it is actually playground-specific in nature. Applies its edited tokens live through adico_primitives::theme_mode::apply_root_properties, the same document-root mechanism theme-switcher already uses for its 4 properties, so theme-builder composes with mode-toggle/theme-switcher on one mechanism. Renders its CSS export into a read-only, selectable textarea rather than calling the browser clipboard API directly, so it stays free of browser-interop details and needs no new cargo dependencies."
+        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per design.md §7d (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). Promotes apps/playground's advanced customization tray -- the full 28-semantic-token editor with independent light/dark values, a deterministic 'generate theme' action, and CSS export -- into a real, generic, installable component, since none of it is actually playground-specific in nature. Applies its edited tokens live through adico_primitives::theme_mode::apply_root_properties, the same document-root mechanism theme-switcher already uses for its 4 properties, so theme-builder composes with mode-toggle/theme-switcher on one mechanism. Renders its CSS export into a read-only, selectable textarea rather than calling the browser clipboard API directly, so it stays free of browser-interop details and needs no new cargo dependencies."
       }
     }
   ]

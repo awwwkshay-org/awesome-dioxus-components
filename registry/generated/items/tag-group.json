@@ -47,7 +47,7 @@
   ],
   "documentation": {
     "slug": "tag-group",
-    "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` in upstreams/dioxus-components/inventory.md and excluded from shadcn parity tracking. Grouped multi-select tag input reusing the roving-focus collection infrastructure already imported for Select; no document::eval, portal, or DOM measurement API, so it is SSR-safe by construction."
+    "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. Grouped multi-select tag input reusing the roving-focus collection infrastructure already imported for Select; no document::eval, portal, or DOM measurement API, so it is SSR-safe by construction."
   },
   "compatibility": null,
   "provenance": {
