@@ -35,6 +35,7 @@ pub use dioxus_icons::lucide as icons;
 pub mod accordion;
 pub mod alert_dialog;
 pub mod aspect_ratio;
+pub mod autocomplete;
 pub mod avatar;
 pub mod calendar;
 pub mod checkbox;

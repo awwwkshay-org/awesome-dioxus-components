@@ -347,11 +347,35 @@
         "status": "built"
       },
       {
-        "adico_primitive_file": null,
+        "adico_components": [
+          "AutocompleteStatus",
+          "AutocompleteClear"
+        ],
+        "adico_hooks_defined": [],
+        "adico_hooks_used": [],
+        "adico_primitive_file": "packages/adico-primitives/src/autocomplete.rs",
+        "adico_props": {
+          "AutocompleteClearProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "AutocompleteStatusProps": [
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            }
+          ]
+        },
         "adico_registry_item": null,
         "name": "Autocomplete",
-        "notes": "Base-UI-parity tier target, task 7.9.",
-        "status": "not_started"
+        "notes": "Task 7.9, second of ten. Base UI's Autocomplete parts are exactly Combobox's minus chip/chip-remove/chips/item-indicator/label, so this is a thin re-export of combobox.rs's single-value Combobox parts under Autocomplete names (matching the dropdown_menu.rs-re-exports-menu precedent, task 2.3), plus the two genuinely-missing small parts (AutocompleteStatus, AutocompleteClear) built fresh. Correction to design.md/this task's own text: 'Autocomplete SHALL compose typeahead for type-to-select' does not survive contact with typeahead.rs's actual best_match signature (single-index jump-to-match via min_by, not a multi-item relevance filter) -- filtering here composes combobox::default_combobox_filter instead, the same substring filter Combobox itself ships and this crate has tested. AutocompleteClear only clears query text, not an already-selected value -- neither combobox.rs nor selectable::use_single_selectable_value expose a clear-selection callback (a real, separate gap, not fixed here). No registry item yet -- M7/M8 scope.",
+        "status": "built"
       },
       {
         "adico_components": [
@@ -3130,8 +3154,8 @@
     },
     "summary": {
       "adico_only_extras": 10,
-      "components_built": 26,
-      "components_not_started": 7,
+      "components_built": 27,
+      "components_not_started": 6,
       "components_partial": 4,
       "total_upstream_components": 37,
       "total_upstream_utils": 4
@@ -3172,6 +3196,7 @@
   },
   "dioxus_primitives": {
     "adico_only_extras": [
+      "autocomplete",
       "direction",
       "field",
       "fieldset",
@@ -7241,7 +7266,7 @@
       "source": "https://github.com/DioxusLabs/dioxus-components/tree/bf007c15d0cf4d04d3181cc46cf12325aa773955/primitives/src"
     },
     "summary": {
-      "adico_only_extras": 12,
+      "adico_only_extras": 13,
       "built": 40,
       "not_started": 2,
       "total_modules": 42

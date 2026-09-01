@@ -95,10 +95,10 @@ const UPSTREAM_COMPONENTS: &[ComponentEntry] = &[
     },
     ComponentEntry {
         name: "Autocomplete",
-        status: Status::NotStarted,
-        adico_file: None,
+        status: Status::Built,
+        adico_file: Some("autocomplete.rs"),
         adico_registry_item: None,
-        notes: "Base-UI-parity tier target, task 7.9.",
+        notes: "Task 7.9, second of ten. Base UI's Autocomplete parts are exactly Combobox's minus chip/chip-remove/chips/item-indicator/label, so this is a thin re-export of combobox.rs's single-value Combobox parts under Autocomplete names (matching the dropdown_menu.rs-re-exports-menu precedent, task 2.3), plus the two genuinely-missing small parts (AutocompleteStatus, AutocompleteClear) built fresh. Correction to design.md/this task's own text: 'Autocomplete SHALL compose typeahead for type-to-select' does not survive contact with typeahead.rs's actual best_match signature (single-index jump-to-match via min_by, not a multi-item relevance filter) -- filtering here composes combobox::default_combobox_filter instead, the same substring filter Combobox itself ships and this crate has tested. AutocompleteClear only clears query text, not an already-selected value -- neither combobox.rs nor selectable::use_single_selectable_value expose a clear-selection callback (a real, separate gap, not fixed here). No registry item yet -- M7/M8 scope.",
     },
     ComponentEntry {
         name: "Avatar",

@@ -78,7 +78,13 @@ impl ComboboxContext {
         move |option| filter.call((query.clone(), option.text_value.clone()))
     }
 
-    fn predicate(&self) -> impl Fn(&OptionState) -> bool + use<> {
+    /// The filter predicate the current query resolves to. `pub` so a
+    /// caller (e.g. `autocomplete.rs`'s `AutocompleteStatus`) can filter a
+    /// whole options list in one pass instead of calling [`Self::is_visible`]
+    /// once per option, which would independently rebuild this predicate
+    /// and re-scan `options` for each one -- quadratic for what should be
+    /// a single linear filter.
+    pub fn predicate(&self) -> impl Fn(&OptionState) -> bool + use<> {
         self.predicate_for(self.query.cloned())
     }
 
