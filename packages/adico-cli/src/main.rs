@@ -646,6 +646,18 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/theme_builder.rs") => {
                 Ok(include_bytes!("../../../registry/ui/theme_builder.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/alert.rs") => {
+                Ok(include_bytes!("../../../registry/ui/alert.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/empty.rs") => {
+                Ok(include_bytes!("../../../registry/ui/empty.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/kbd.rs") => {
+                Ok(include_bytes!("../../../registry/ui/kbd.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/spinner.rs") => {
+                Ok(include_bytes!("../../../registry/ui/spinner.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"
@@ -884,6 +896,7 @@ mod tests {
                 .collect::<Vec<_>>(),
             vec![
                 "@adico/accordion".to_string(),
+                "@adico/alert".to_string(),
                 "@adico/alert-dialog".to_string(),
                 "@adico/aspect-ratio".to_string(),
                 "@adico/avatar".to_string(),
@@ -901,9 +914,11 @@ mod tests {
                 "@adico/dialog".to_string(),
                 "@adico/drag-and-drop-list".to_string(),
                 "@adico/dropdown-menu".to_string(),
+                "@adico/empty".to_string(),
                 "@adico/hover-card".to_string(),
                 "@adico/input".to_string(),
                 "@adico/item".to_string(),
+                "@adico/kbd".to_string(),
                 "@adico/label".to_string(),
                 "@adico/menubar".to_string(),
                 "@adico/mode-toggle".to_string(),
@@ -917,6 +932,7 @@ mod tests {
                 "@adico/sidebar".to_string(),
                 "@adico/skeleton".to_string(),
                 "@adico/slider".to_string(),
+                "@adico/spinner".to_string(),
                 "@adico/switch".to_string(),
                 "@adico/tabs".to_string(),
                 "@adico/tag-group".to_string(),

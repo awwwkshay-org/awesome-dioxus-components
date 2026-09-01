@@ -12,6 +12,16 @@
       ]
     },
     {
+      "address": "@adico/alert",
+      "manifestDigest": "aa7936cd618c829ed03f03615490c2f9c7cb6bb3aff157b724bd69b7b90b6d65",
+      "files": [
+        {
+          "path": "src/components/ui/alert.rs",
+          "checksum": "3ac89f4d2a09bf414a32ca80683c971f7e1f65bfe38d28d466ece8c3c7d52b75"
+        }
+      ]
+    },
+    {
       "address": "@adico/alert-dialog",
       "manifestDigest": "48d06613a6d0c678c6eda3f2440cddcffb260af43c3e74cd91d23e1488036045",
       "files": [
@@ -93,7 +103,7 @@
     },
     {
       "address": "@adico/cn",
-      "manifestDigest": "6120bc3a4aa8655bda36e619df98580b772dca8ad20ee83d51e069d7bfe9772f",
+      "manifestDigest": "aa7936cd618c829ed03f03615490c2f9c7cb6bb3aff157b724bd69b7b90b6d65",
       "files": [
         {
           "path": "src/adico_lib/cn.rs",
@@ -182,6 +192,16 @@
       ]
     },
     {
+      "address": "@adico/empty",
+      "manifestDigest": "aa7936cd618c829ed03f03615490c2f9c7cb6bb3aff157b724bd69b7b90b6d65",
+      "files": [
+        {
+          "path": "src/components/ui/empty.rs",
+          "checksum": "d0c24fb61c768f96700eac0a7803efc0b492efd196501053a38779e6f451e964"
+        }
+      ]
+    },
+    {
       "address": "@adico/hover-card",
       "manifestDigest": "082e324f0ad11a331ae8766be7e3e752bb908dcae030d4c25b1c16dc990cdf72",
       "files": [
@@ -208,6 +228,16 @@
         {
           "path": "src/components/ui/item.rs",
           "checksum": "ef7822bed025bf5edc2d726ce1d89f71545766e7953537ff8883d805d1911ce7"
+        }
+      ]
+    },
+    {
+      "address": "@adico/kbd",
+      "manifestDigest": "aa7936cd618c829ed03f03615490c2f9c7cb6bb3aff157b724bd69b7b90b6d65",
+      "files": [
+        {
+          "path": "src/components/ui/kbd.rs",
+          "checksum": "56bcf5ca15f414cf4fb9e30654475e592985f7599b0306bdf6fa7c0ca5d24dc0"
         }
       ]
     },
@@ -338,6 +368,16 @@
         {
           "path": "src/components/ui/slider.rs",
           "checksum": "a12e3c1caac369143784bd9dc0b8c56bfcb220ed67bfefcad9e561208c16c213"
+        }
+      ]
+    },
+    {
+      "address": "@adico/spinner",
+      "manifestDigest": "aa7936cd618c829ed03f03615490c2f9c7cb6bb3aff157b724bd69b7b90b6d65",
+      "files": [
+        {
+          "path": "src/components/ui/spinner.rs",
+          "checksum": "12d4f07f260d3f7505fad533c7fc739a946292f36d1b6eb23210fa8af3eeac37"
         }
       ]
     },

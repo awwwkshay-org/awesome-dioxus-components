@@ -228,6 +228,68 @@
       },
       {
         "adico_primitive": {
+          "components": [],
+          "hooks_used": [],
+          "modules": [],
+          "props": {}
+        },
+        "name": "alert",
+        "registry_facade": {
+          "components": [
+            "Alert",
+            "AlertTitle",
+            "AlertDescription"
+          ],
+          "files": [
+            "ui/alert.rs"
+          ],
+          "props": {
+            "AlertDescription": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "AlertProps": [
+              {
+                "default": "default()",
+                "name": "variant",
+                "type": "AlertVariant"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "AlertTitle": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
           "components": [
             "AlertDialogRoot",
             "AlertDialogContent",
@@ -4062,6 +4124,101 @@
       },
       {
         "adico_primitive": {
+          "components": [],
+          "hooks_used": [],
+          "modules": [],
+          "props": {}
+        },
+        "name": "empty",
+        "registry_facade": {
+          "components": [
+            "Empty",
+            "EmptyHeader",
+            "EmptyMedia",
+            "EmptyTitle",
+            "EmptyDescription",
+            "EmptyContent"
+          ],
+          "files": [
+            "ui/empty.rs"
+          ],
+          "props": {
+            "Empty": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "EmptyContent": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "EmptyDescription": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "EmptyHeader": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "EmptyMediaProps": [
+              {
+                "default": "default()",
+                "name": "variant",
+                "type": "EmptyMediaVariant"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "EmptyTitle": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
           "components": [
             "HoverCard",
             "HoverCardTrigger",
@@ -4446,6 +4603,47 @@
               {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
+          "components": [],
+          "hooks_used": [],
+          "modules": [],
+          "props": {}
+        },
+        "name": "kbd",
+        "registry_facade": {
+          "components": [
+            "Kbd",
+            "KbdGroup"
+          ],
+          "files": [
+            "ui/kbd.rs"
+          ],
+          "props": {
+            "Kbd": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "KbdGroup": [
+              {
+                "name": "class",
+                "type": "Option<String>"
               },
               {
                 "name": "children",
@@ -6471,6 +6669,34 @@
       },
       {
         "adico_primitive": {
+          "components": [],
+          "hooks_used": [],
+          "modules": [
+            "icons"
+          ],
+          "props": {}
+        },
+        "name": "spinner",
+        "registry_facade": {
+          "components": [
+            "Spinner"
+          ],
+          "files": [
+            "ui/spinner.rs"
+          ],
+          "props": {
+            "Spinner": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
           "components": [
             "Switch",
             "SwitchThumb"
@@ -8011,7 +8237,7 @@
       }
     ],
     "summary": {
-      "total_components": 45
+      "total_components": 49
     }
   },
   "dioxus_components": {
@@ -8268,7 +8494,8 @@
       },
       {
         "name": "alert",
-        "status": "not_started"
+        "registry_item": "alert",
+        "status": "built"
       },
       {
         "name": "alert-dialog",
@@ -8373,7 +8600,8 @@
       },
       {
         "name": "empty",
-        "status": "not_started"
+        "registry_item": "empty",
+        "status": "built"
       },
       {
         "name": "field",
@@ -8408,7 +8636,8 @@
       },
       {
         "name": "kbd",
-        "status": "not_started"
+        "registry_item": "kbd",
+        "status": "built"
       },
       {
         "name": "label",
@@ -8505,7 +8734,8 @@
       },
       {
         "name": "spinner",
-        "status": "not_started"
+        "registry_item": "spinner",
+        "status": "built"
       },
       {
         "name": "switch",
@@ -8546,9 +8776,9 @@
     "revision": "b4a618b97e35f5dadf3a00d51f410c84a2567d4d",
     "source": "https://github.com/shadcn-ui/ui/tree/b4a618b97e35f5dadf3a00d51f410c84a2567d4d/apps/v4/registry/new-york-v4/ui",
     "summary": {
-      "built": 35,
+      "built": 39,
       "not_applicable": 1,
-      "not_started": 25,
+      "not_started": 21,
       "total_upstream_components": 61
     }
   },

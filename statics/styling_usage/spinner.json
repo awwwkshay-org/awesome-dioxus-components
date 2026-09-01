@@ -1,0 +1,8 @@
+{
+  "tailwindOnly": true,
+  "styleException": [],
+  "tokenCompliant": true,
+  "colorException": [],
+  "inspiredBy": ["shadcn"],
+  "inspirationNote": "Class-for-class match with upstream's Spinner (size-4 animate-spin); renders the owned Lucide LoaderCircle re-export instead of a second Loader2Icon dependency. No dioxus-components equivalent exists."
+}

@@ -1,0 +1,50 @@
+{
+  "name": "spinner",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Spinner loading indicator for Dioxus.",
+  "files": [
+    {
+      "source": "ui/spinner.rs",
+      "targetRoot": "ui",
+      "target": "spinner.rs",
+      "checksum": "12d4f07f260d3f7505fad533c7fc739a946292f36d1b6eb23210fa8af3eeac37"
+    }
+  ],
+  "registryDependencies": [],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": []
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "spinner",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "spinner",
+    "compositionNote": "Renders the owned Lucide LoaderCircle icon re-export directly (matching upstream's Loader2Icon usage) with role=\"status\"; no interactive behavior of its own."
+  },
+  "compatibility": null,
+  "provenance": null
+}

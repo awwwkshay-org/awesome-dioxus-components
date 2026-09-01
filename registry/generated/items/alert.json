@@ -1,0 +1,46 @@
+{
+  "name": "alert",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Alert for Dioxus.",
+  "files": [
+    {
+      "source": "ui/alert.rs",
+      "targetRoot": "ui",
+      "target": "alert.rs",
+      "checksum": "3ac89f4d2a09bf414a32ca80683c971f7e1f65bfe38d28d466ece8c3c7d52b75"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "alert",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "alert",
+    "compositionNote": "Purely presentational, no shared behavior to delegate: Alert/AlertTitle/AlertDescription are static content-box slots, matching upstream's own non-interactive implementation. Alert sets role=\"alert\" directly."
+  },
+  "compatibility": null,
+  "provenance": null
+}

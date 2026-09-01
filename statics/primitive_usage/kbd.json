@@ -1,0 +1,5 @@
+{
+  "classification": "presentational",
+  "primitiveModules": [],
+  "reason": "Static keyboard-key markup; no interactive behavior."
+}

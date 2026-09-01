@@ -1369,6 +1369,112 @@
         "slug": "theme-builder",
         "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per design.md §7d (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). Promotes apps/playground's advanced customization tray -- the full 28-semantic-token editor with independent light/dark values, a deterministic 'generate theme' action, and CSS export -- into a real, generic, installable component, since none of it is actually playground-specific in nature. Applies its edited tokens live through adico_primitives::theme_mode::apply_root_properties, the same document-root mechanism theme-switcher already uses for its 4 properties, so theme-builder composes with mode-toggle/theme-switcher on one mechanism. Renders its CSS export into a read-only, selectable textarea rather than calling the browser clipboard API directly, so it stays free of browser-interop details and needs no new cargo dependencies."
       }
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Alert for Dioxus.",
+      "files": [
+        {
+          "source": "ui/alert.rs",
+          "targetRoot": "ui",
+          "target": "alert.rs",
+          "checksum": "3ac89f4d2a09bf414a32ca80683c971f7e1f65bfe38d28d466ece8c3c7d52b75"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [{ "crate": "dioxus", "version": "=0.7.9" }],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "alert", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "alert",
+        "compositionNote": "Purely presentational, no shared behavior to delegate: Alert/AlertTitle/AlertDescription are static content-box slots, matching upstream's own non-interactive implementation. Alert sets role=\"alert\" directly."
+      }
+    },
+    {
+      "name": "empty",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Empty state placeholder for Dioxus.",
+      "files": [
+        {
+          "source": "ui/empty.rs",
+          "targetRoot": "ui",
+          "target": "empty.rs",
+          "checksum": "d0c24fb61c768f96700eac0a7803efc0b492efd196501053a38779e6f451e964"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "cargoDependencies": [{ "crate": "dioxus", "version": "=0.7.9" }],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": ["cn"]
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "empty", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "empty",
+        "compositionNote": "Purely presentational: Empty/EmptyHeader/EmptyMedia/EmptyTitle/EmptyDescription/EmptyContent are static content-box slots for zero-data states, matching upstream's own non-interactive implementation."
+      }
+    },
+    {
+      "name": "kbd",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Kbd (keyboard key) for Dioxus.",
+      "files": [
+        {
+          "source": "ui/kbd.rs",
+          "targetRoot": "ui",
+          "target": "kbd.rs",
+          "checksum": "56bcf5ca15f414cf4fb9e30654475e592985f7599b0306bdf6fa7c0ca5d24dc0"
+        }
+      ],
+      "cargoDependencies": [{ "crate": "dioxus", "version": "=0.7.9" }],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "kbd", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "kbd"
+      }
+    },
+    {
+      "name": "spinner",
+      "type": "registry:ui",
+      "description": "A source-owned shadcn-style Spinner loading indicator for Dioxus.",
+      "files": [
+        {
+          "source": "ui/spinner.rs",
+          "targetRoot": "ui",
+          "target": "spinner.rs",
+          "checksum": "12d4f07f260d3f7505fad533c7fc739a946292f36d1b6eb23210fa8af3eeac37"
+        }
+      ],
+      "cargoDependencies": [
+        { "crate": "dioxus", "version": "=0.7.9" },
+        { "crate": "adico-primitives", "version": "=0.1.0" }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true
+      },
+      "moduleExports": [
+        { "targetRoot": "ui", "module": "spinner", "reexport": true }
+      ],
+      "documentation": {
+        "slug": "spinner",
+        "compositionNote": "Renders the owned Lucide LoaderCircle icon re-export directly (matching upstream's Loader2Icon usage) with role=\"status\"; no interactive behavior of its own."
+      }
     }
   ]
 }

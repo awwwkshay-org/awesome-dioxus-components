@@ -1,0 +1,5 @@
+{
+  "classification": "presentational",
+  "primitiveModules": [],
+  "reason": "Static content-box slots for zero-data states; no interactive behavior."
+}

@@ -1,0 +1,8 @@
+{
+  "tailwindOnly": true,
+  "styleException": [],
+  "tokenCompliant": true,
+  "colorException": [],
+  "inspiredBy": ["shadcn"],
+  "inspirationNote": "Class-for-class match with upstream's cva variants (bg-card text-card-foreground default, bg-card text-destructive destructive), both semantic tokens. No dioxus-components equivalent exists."
+}

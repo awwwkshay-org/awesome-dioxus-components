@@ -1,0 +1,46 @@
+{
+  "name": "empty",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Empty state placeholder for Dioxus.",
+  "files": [
+    {
+      "source": "ui/empty.rs",
+      "targetRoot": "ui",
+      "target": "empty.rs",
+      "checksum": "d0c24fb61c768f96700eac0a7803efc0b492efd196501053a38779e6f451e964"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "empty",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "empty",
+    "compositionNote": "Purely presentational: Empty/EmptyHeader/EmptyMedia/EmptyTitle/EmptyDescription/EmptyContent are static content-box slots for zero-data states, matching upstream's own non-interactive implementation."
+  },
+  "compatibility": null,
+  "provenance": null
+}

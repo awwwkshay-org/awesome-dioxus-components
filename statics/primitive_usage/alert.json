@@ -1,0 +1,5 @@
+{
+  "classification": "presentational",
+  "primitiveModules": [],
+  "reason": "Static content-box markup with a variant class and role=\"alert\"; no interactive behavior."
+}

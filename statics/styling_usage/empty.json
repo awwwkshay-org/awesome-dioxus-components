@@ -1,0 +1,8 @@
+{
+  "tailwindOnly": true,
+  "styleException": [],
+  "tokenCompliant": true,
+  "colorException": [],
+  "inspiredBy": ["shadcn"],
+  "inspirationNote": "Class-for-class match with upstream's Empty/EmptyHeader/EmptyMedia/EmptyTitle/EmptyDescription/EmptyContent, all semantic tokens (bg-muted, text-foreground, text-muted-foreground). No dioxus-components equivalent exists."
+}

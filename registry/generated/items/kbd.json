@@ -1,0 +1,42 @@
+{
+  "name": "kbd",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Kbd (keyboard key) for Dioxus.",
+  "files": [
+    {
+      "source": "ui/kbd.rs",
+      "targetRoot": "ui",
+      "target": "kbd.rs",
+      "checksum": "56bcf5ca15f414cf4fb9e30654475e592985f7599b0306bdf6fa7c0ca5d24dc0"
+    }
+  ],
+  "registryDependencies": [],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": []
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "kbd",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "kbd",
+    "compositionNote": null
+  },
+  "compatibility": null,
+  "provenance": null
+}
