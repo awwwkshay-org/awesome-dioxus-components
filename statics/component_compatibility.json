@@ -6925,6 +6925,113 @@
       },
       {
         "adico_primitive": {
+          "components": [],
+          "hooks_used": [],
+          "modules": [],
+          "props": {}
+        },
+        "name": "table",
+        "registry_facade": {
+          "components": [
+            "Table",
+            "TableHeader",
+            "TableBody",
+            "TableFooter",
+            "TableRow",
+            "TableHead",
+            "TableCell",
+            "TableCaption"
+          ],
+          "files": [
+            "ui/table.rs"
+          ],
+          "props": {
+            "Table": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "TableBody": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "TableCaption": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "TableCell": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "TableFooter": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "TableHead": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "TableHeader": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "TableRow": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
           "components": [
             "Tabs",
             "TabList",
@@ -8341,7 +8448,7 @@
       }
     ],
     "summary": {
-      "total_components": 50
+      "total_components": 51
     }
   },
   "dioxus_components": {
@@ -8849,7 +8956,8 @@
       },
       {
         "name": "table",
-        "status": "not_started"
+        "registry_item": "table",
+        "status": "built"
       },
       {
         "name": "tabs",
@@ -8881,9 +8989,9 @@
     "revision": "b4a618b97e35f5dadf3a00d51f410c84a2567d4d",
     "source": "https://github.com/shadcn-ui/ui/tree/b4a618b97e35f5dadf3a00d51f410c84a2567d4d/apps/v4/registry/new-york-v4/ui",
     "summary": {
-      "built": 40,
+      "built": 41,
       "not_applicable": 1,
-      "not_started": 20,
+      "not_started": 19,
       "total_upstream_components": 61
     }
   },

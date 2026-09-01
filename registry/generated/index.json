@@ -48,6 +48,7 @@
     "slider": "items/slider.json",
     "spinner": "items/spinner.json",
     "switch": "items/switch.json",
+    "table": "items/table.json",
     "tabs": "items/tabs.json",
     "tag-group": "items/tag-group.json",
     "textarea": "items/textarea.json",

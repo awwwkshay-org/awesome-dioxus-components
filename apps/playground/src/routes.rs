@@ -14,8 +14,8 @@ use crate::pages::{
     DragAndDropListPage, DropdownMenuPage, EmptyPage, Home, HoverCardPage, InputPage, ItemPage,
     KbdPage, LabelPage, MenubarPage, ModeTogglePage, PaginationPage, PopoverPage, ProgressPage,
     RadioGroupPage, ScrollAreaPage, SelectPage, SheetPage, SidebarPage, SkeletonPage, SliderPage,
-    SpinnerPage, SwitchPage, TabsPage, TagGroupPage, TextareaPage, ThemeSwitcherPage, ToastPage,
-    ToggleGroupPage, TogglePage, ToolbarPage, TooltipPage, VirtualListPage,
+    SpinnerPage, SwitchPage, TablePage, TabsPage, TagGroupPage, TextareaPage, ThemeSwitcherPage,
+    ToastPage, ToggleGroupPage, TogglePage, ToolbarPage, TooltipPage, VirtualListPage,
 };
 
 const PLAYGROUND_LOGO: Asset = asset!("/assets/web/android-chrome-192x192.png");
@@ -123,6 +123,8 @@ pub enum Route {
     SpinnerPage {},
     #[route("/breadcrumb")]
     BreadcrumbPage {},
+    #[route("/table")]
+    TablePage {},
 }
 
 pub fn nav_items() -> Vec<(&'static str, Route)> {
@@ -176,6 +178,7 @@ pub fn nav_items() -> Vec<(&'static str, Route)> {
         ("Kbd", Route::KbdPage {}),
         ("Spinner", Route::SpinnerPage {}),
         ("Breadcrumb", Route::BreadcrumbPage {}),
+        ("Table", Route::TablePage {}),
     ]
 }
 

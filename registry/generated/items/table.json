@@ -1,0 +1,46 @@
+{
+  "name": "table",
+  "type": "registry:ui",
+  "description": "A source-owned shadcn-style Table for Dioxus.",
+  "files": [
+    {
+      "source": "ui/table.rs",
+      "targetRoot": "ui",
+      "target": "table.rs",
+      "checksum": "da3a902f2dd95349ae434df62821d427bd4c326874baa863053a91894f7312ae"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "table",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "table",
+    "compositionNote": "Purely presentational (Table/TableHeader/TableBody/TableFooter/TableRow/TableHead/TableCell/TableCaption), matching upstream's own non-interactive implementation. Table wraps the real <table> in a relative/overflow-x-auto scroll container, matching upstream's horizontal-scroll behavior for wide tables."
+  },
+  "compatibility": null,
+  "provenance": null
+}

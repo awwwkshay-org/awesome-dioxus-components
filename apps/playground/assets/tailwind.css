@@ -400,6 +400,9 @@
   .inline-flex {
     display: inline-flex;
   }
+  .table {
+    display: table;
+  }
   .aspect-square {
     aspect-ratio: 1 / 1;
   }
@@ -645,6 +648,9 @@
   .table-fixed {
     table-layout: fixed;
   }
+  .caption-bottom {
+    caption-side: bottom;
+  }
   .border-collapse {
     border-collapse: collapse;
   }
@@ -795,6 +801,9 @@
   }
   .overflow-visible {
     overflow: visible;
+  }
+  .overflow-x-auto {
+    overflow-x: auto;
   }
   .overflow-y-auto {
     overflow-y: auto;
@@ -1061,6 +1070,9 @@
   }
   .text-left {
     text-align: left;
+  }
+  .align-middle {
+    vertical-align: middle;
   }
   .font-mono {
     font-family: var(--font-mono);
@@ -1512,6 +1524,16 @@
       }
     }
   }
+  .hover\:bg-muted\/50 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: color-mix(in srgb, hsl(var(--muted)) 50%, transparent);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--color-muted) 50%, transparent);
+        }
+      }
+    }
+  }
   .hover\:bg-primary\/80 {
     &:hover {
       @media (hover: hover) {
@@ -1769,6 +1791,14 @@
         @media (hover: hover) {
           background-color: transparent;
         }
+      }
+    }
+  }
+  .has-aria-expanded\:bg-muted\/50 {
+    &:has(*[aria-expanded="true"]) {
+      background-color: color-mix(in srgb, hsl(var(--muted)) 50%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-muted) 50%, transparent);
       }
     }
   }
@@ -2106,6 +2136,11 @@
   .data-\[state\=open\]\:slide-in-from-top {
     &[data-state="open"] {
       --tw-enter-translate-y: -100%;
+    }
+  }
+  .data-\[state\=selected\]\:bg-muted {
+    &[data-state="selected"] {
+      background-color: var(--color-muted);
     }
   }
   .data-\[state\=unchecked\]\:translate-x-0 {
@@ -2454,6 +2489,29 @@
       height: calc(var(--spacing) * 9);
     }
   }
+  .\[\&_tr\]\:border-b {
+    & tr {
+      border-bottom-style: var(--tw-border-style);
+      border-bottom-width: 1px;
+    }
+  }
+  .\[\&_tr\:last-child\]\:border-0 {
+    & tr:last-child {
+      border-style: var(--tw-border-style);
+      border-width: 0px;
+    }
+  }
+  .\[\&\:has\(\[role\=checkbox\]\)\]\:pr-0 {
+    &:has([role=checkbox]) {
+      padding-right: calc(var(--spacing) * 0);
+    }
+  }
+  .\[\&\>\[role\=checkbox\]\]\:translate-y-\[2px\] {
+    &>[role=checkbox] {
+      --tw-translate-y: 2px;
+      translate: var(--tw-translate-x) var(--tw-translate-y);
+    }
+  }
   .\[\&\>a\]\:underline {
     &>a {
       text-decoration-line: underline;
@@ -2490,6 +2548,14 @@
   .\[\&\>svg\]\:text-current {
     &>svg {
       color: currentcolor;
+    }
+  }
+  .\[\&\>tr\]\:last\:border-b-0 {
+    &>tr {
+      &:last-child {
+        border-bottom-style: var(--tw-border-style);
+        border-bottom-width: 0px;
+      }
     }
   }
   .\[\&\[data-state\=open\]\>svg\]\:rotate-180 {

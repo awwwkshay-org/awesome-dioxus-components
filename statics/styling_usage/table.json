@@ -1,0 +1,10 @@
+{
+  "tailwindOnly": true,
+  "styleException": [],
+  "tokenCompliant": true,
+  "colorException": [],
+  "inspiredBy": [
+    "shadcn"
+  ],
+  "inspirationNote": "Class-for-class match with upstream's Table/TableHeader/TableBody/TableFooter/TableRow/TableHead/TableCell/TableCaption, all semantic tokens (bg-muted/50, text-foreground, text-muted-foreground). No dioxus-components equivalent exists."
+}
