@@ -650,6 +650,21 @@ preference, and should be caught at review the same way a duplicate
 `menubar` remain the one deliberate, temporary exception until 7.8 migrates
 them onto `menu`, `positioner`, and `layer` — not a precedent for new work.
 
+**Correction (2026-09-01):** 7.8e (closed) found this only held for
+`dropdown_menu`, which is now a straight re-export of `menu`'s components.
+`context_menu` and `menubar` turned out to be **permanent**, not temporary,
+exceptions, for two distinct, verified reasons: `context_menu` anchors to an
+arbitrary click point, which `positioner::Positioner` has no anchor-element
+to key off; `menubar`'s current plain-CSS placement was live-verified to
+stay glued to its trigger through a scroll of their shared containing block,
+which `Positioner`'s one-shot, non-repositioning measurement (blocked on
+7.5c's still-unimplemented observer bridges) would regress. Both still
+compose `use_escape_key` for dismissal (added in the same 7.8e pass). See
+`tasks.md`'s 7.8e note and this change's `specs/adico-primitives/spec.md`
+delta for the full evidence. This is not a precedent against future work
+composing `positioner`/`menu` — it is a recorded architectural boundary for
+these two specific anchoring/placement models.
+
 Target-gating for these primitives follows two real interop tiers, not four:
 **web** (wasm/browser DOM) and **native** (desktop and mobile together) —
 plus SSR/server as the no-interop fallback every gated hook already has.
