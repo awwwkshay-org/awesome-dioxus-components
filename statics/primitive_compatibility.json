@@ -865,6 +865,7 @@
           "use_animated_open",
           "use_collection_provider",
           "use_controlled",
+          "use_escape_key",
           "use_id_or",
           "use_item",
           "use_long_press",
@@ -1392,6 +1393,7 @@
           "use_animated_open",
           "use_collection_provider",
           "use_deferred_collection_focus",
+          "use_escape_key",
           "use_id_or",
           "use_item",
           "use_unique_id"
@@ -4418,6 +4420,7 @@
           "use_animated_open",
           "use_collection_provider",
           "use_controlled",
+          "use_escape_key",
           "use_id_or",
           "use_item",
           "use_long_press",
@@ -5234,6 +5237,7 @@
           "use_animated_open",
           "use_collection_provider",
           "use_deferred_collection_focus",
+          "use_escape_key",
           "use_id_or",
           "use_item",
           "use_unique_id"
@@ -7116,5 +7120,5 @@
     }
   },
   "generator": "cargo xtask primitive-compat sync",
-  "synced_at": "2026-08-31"
+  "synced_at": "2026-09-01"
 }

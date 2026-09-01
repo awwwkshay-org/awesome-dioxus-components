@@ -2543,6 +2543,7 @@
             "use_animated_open",
             "use_collection_provider",
             "use_controlled",
+            "use_escape_key",
             "use_id_or",
             "use_item",
             "use_long_press",
@@ -5055,6 +5056,7 @@
             "use_animated_open",
             "use_collection_provider",
             "use_deferred_collection_focus",
+            "use_escape_key",
             "use_id_or",
             "use_item",
             "use_unique_id"
@@ -6716,6 +6718,10 @@
             ],
             "SidebarInset": [
               {
+                "name": "variant",
+                "type": "SidebarVariant"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               },
@@ -6782,6 +6788,11 @@
               },
               {
                 "default": "default()",
+                "name": "variant",
+                "type": "SidebarVariant"
+              },
+              {
+                "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -6805,6 +6816,11 @@
                 "default": "default()",
                 "name": "on_open_change",
                 "type": "Callback<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
               },
               {
                 "name": "attributes",
@@ -7056,6 +7072,8 @@
         "name": "slider",
         "registry_facade": {
           "components": [
+            "Slider",
+            "RangeSlider",
             "SliderTrack",
             "SliderRange",
             "SliderThumb"
@@ -7518,6 +7536,10 @@
               }
             ],
             "TabList": [
+              {
+                "name": "variant",
+                "type": "TabsVariant"
+              },
               {
                 "name": "class",
                 "type": "Option<String>"
@@ -8215,6 +8237,7 @@
         "name": "toast",
         "registry_facade": {
           "components": [
+            "Toast",
             "ToastProvider"
           ],
           "files": [
@@ -8229,6 +8252,10 @@
               {
                 "name": "max_toasts",
                 "type": "usize"
+              },
+              {
+                "name": "render_toast",
+                "type": "Callback<ToastPropsWithOwner, Element>"
               },
               {
                 "name": "children",
@@ -8434,12 +8461,51 @@
         "name": "toggle-group",
         "registry_facade": {
           "components": [
+            "ToggleGroup",
             "ToggleItem"
           ],
           "files": [
             "ui/toggle_group.rs"
           ],
           "props": {
+            "ToggleGroup": [
+              {
+                "name": "default_pressed",
+                "type": "HashSet<usize>"
+              },
+              {
+                "name": "pressed",
+                "type": "ReadSignal<Option<HashSet<usize>>>"
+              },
+              {
+                "name": "on_pressed_change",
+                "type": "Callback<HashSet<usize>>"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "allow_multiple_pressed",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "horizontal",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
             "ToggleItem": [
               {
                 "name": "index",

@@ -42,7 +42,8 @@ use crate::{
     gesture::use_long_press,
     selectable::{pointer_select_cancel, pointer_select_commit, pointer_select_start},
     time::sleep,
-    use_animated_open, use_controlled, use_id_or, use_outside_dismiss, use_unique_id,
+    use_animated_open, use_controlled, use_escape_key, use_id_or, use_outside_dismiss,
+    use_unique_id,
 };
 
 /// How long a touch must be held before the context menu opens.
@@ -221,14 +222,16 @@ pub fn ContextMenu(props: ContextMenuProps) -> Element {
         }
     });
 
-    // Handle escape key to close the menu
-    let handle_keydown = move |event: Event<KeyboardData>| {
-        if open() && event.key() == Key::Escape {
-            event.prevent_default();
-            set_open.call(false);
-            ctx.focus.clear_focus();
-        }
-    };
+    // `use_escape_key` (rather than the previous bare `event.key() ==
+    // Key::Escape` check) gates this on the shared layer stack's topmost:
+    // without it, this menu closed itself on Escape even while a different,
+    // later-opened overlay (a dialog opened from a menu item, say) was the
+    // one the user actually meant to dismiss -- the same fix applied to
+    // `menubar.rs`'s analogous hand-rolled check (task 7.8e).
+    let handle_keydown = use_escape_key(open, move || {
+        set_open.call(false);
+        ctx.focus.clear_focus();
+    });
 
     rsx! {
         div {

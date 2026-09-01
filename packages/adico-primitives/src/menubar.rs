@@ -27,7 +27,7 @@ use crate::{
         CollectionPlacement, CollectionState, collection_item, use_collection_provider,
         use_deferred_collection_focus, use_item,
     },
-    use_animated_open, use_id_or, use_unique_id,
+    use_animated_open, use_escape_key, use_id_or, use_unique_id,
 };
 
 #[derive(Clone, Copy)]
@@ -195,6 +195,18 @@ pub fn MenubarMenu(props: MenubarMenuProps) -> Element {
         initial_focus,
     });
 
+    // `use_escape_key` (rather than the previous bare
+    // `ctx.set_open_menu.call(None)`) gates Escape on this menu's own
+    // `is_open` being the shared layer stack's topmost -- without it, this
+    // menu closed itself on Escape even while a *different*, later-opened
+    // overlay (a dialog opened from a menu item, say) was the one the user
+    // actually meant to dismiss. Composed as a closure call inside the
+    // existing match, not as this element's whole `onkeydown`, because that
+    // handler also owns Enter/Arrow*/Home/End on the same element and this
+    // module has no separate root/content split (unlike `select.rs`/
+    // `popover.rs`) to hang Escape off of on its own.
+    let mut on_escape_key = use_escape_key(is_open, move || ctx.set_open_menu.call(None));
+
     use_effect(move || {
         if !is_open() {
             menu_ctx.focus.clear_focus();
@@ -213,7 +225,7 @@ pub fn MenubarMenu(props: MenubarMenuProps) -> Element {
                     Key::Enter if !disabled() => {
                         ctx.set_open_menu.call((!is_open()).then(&*props.index));
                     }
-                    Key::Escape => ctx.set_open_menu.call(None),
+                    Key::Escape => on_escape_key(event.clone()),
                     Key::ArrowLeft => ctx.focus.focus_prev(),
                     Key::ArrowRight => ctx.focus.focus_next(),
                     Key::ArrowDown if !disabled() => {
