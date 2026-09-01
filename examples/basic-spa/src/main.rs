@@ -226,6 +226,59 @@ fn App() -> Element {
             }
             DragAndDropDemo {}
             ColorPickerDemo {}
+
+            h2 { "M5 low-complexity batch" }
+            components::ui::Alert {
+                components::ui::AlertTitle { "Heads up" }
+                components::ui::AlertDescription { "Alert is a source-owned registry item." }
+            }
+            components::ui::Breadcrumb {
+                components::ui::BreadcrumbList {
+                    components::ui::BreadcrumbItem {
+                        components::ui::BreadcrumbLink { href: "/", "Home" }
+                    }
+                    components::ui::BreadcrumbSeparator {}
+                    components::ui::BreadcrumbItem {
+                        components::ui::BreadcrumbPage { "Example" }
+                    }
+                }
+            }
+            components::ui::ButtonGroup {
+                components::ui::Button { variant: components::ui::ButtonVariant::Outline, "Left" }
+                components::ui::ButtonGroupSeparator {}
+                components::ui::Button { variant: components::ui::ButtonVariant::Outline, "Right" }
+            }
+            components::ui::Empty {
+                components::ui::EmptyHeader {
+                    components::ui::EmptyTitle { "No results" }
+                    components::ui::EmptyDescription { "Nothing to show yet." }
+                }
+            }
+            components::ui::InputGroup {
+                components::ui::InputGroupAddon { components::ui::InputGroupText { "$" } }
+                components::ui::InputGroupInput { placeholder: "0.00" }
+            }
+            components::ui::KbdGroup {
+                components::ui::Kbd { "Ctrl" }
+                components::ui::Kbd { "K" }
+            }
+            components::ui::NativeSelect {
+                components::ui::NativeSelectOption { value: "apple", "Apple" }
+                components::ui::NativeSelectOption { value: "banana", "Banana" }
+            }
+            components::ui::Spinner {}
+            components::ui::Table {
+                components::ui::TableHeader {
+                    components::ui::TableRow {
+                        components::ui::TableHead { "Name" }
+                    }
+                }
+                components::ui::TableBody {
+                    components::ui::TableRow {
+                        components::ui::TableCell { "adico" }
+                    }
+                }
+            }
         }
     }
 }

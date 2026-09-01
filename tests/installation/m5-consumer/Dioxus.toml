@@ -1,0 +1,6 @@
+[application]
+name = "adico-m5-consumer"
+default_platform = "web"
+
+[web.app]
+title = "adico M5 low-complexity batch fixture"
