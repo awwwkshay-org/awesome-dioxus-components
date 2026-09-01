@@ -5,12 +5,12 @@
 use dioxus::prelude::*;
 
 use adico_primitives::color_picker::{
-    AreaThumb as AreaThumbPrimitive, AreaTrack as AreaTrackPrimitive,
+    AreaThumb as AreaThumbPrimitive, AreaThumbSaturationInput as AreaThumbSaturationInputPrimitive,
+    AreaThumbValueInput as AreaThumbValueInputPrimitive, AreaTrack as AreaTrackPrimitive,
     ColorArea as ColorAreaPrimitive, ColorPicker as ColorPickerPrimitive,
 };
 pub use adico_primitives::color_picker::{
-    AreaThumbSaturationInput, AreaThumbSaturationInputProps, AreaThumbValueInput,
-    AreaThumbValueInputProps, Color, ColorPickerContext,
+    AreaThumbSaturationInputProps, AreaThumbValueInputProps, Color, ColorPickerContext,
 };
 
 use crate::adico_lib::cn::cn;
@@ -76,6 +76,51 @@ pub fn AreaThumb(children: Element) -> Element {
     }
 }
 
+/// `AreaThumbSaturationInputProps`/`AreaThumbValueInputProps` have no
+/// dedicated `class` field (only `attributes: Vec<Attribute>`, extending
+/// `GlobalAttributes`) -- build the merged attribute list by hand, matching
+/// this repo's own established precedent for this exact limitation (e.g.
+/// `slider.rs`'s `with_class`).
+fn with_class(class: &str, attributes: Vec<Attribute>) -> Vec<Attribute> {
+    let mut merged = vec![Attribute::new("class", class, None, false)];
+    merged.extend(attributes);
+    merged
+}
+
+/// A hidden-but-accessible native `<input type="range">` shadowing
+/// [`ColorArea`]'s saturation axis, for screen readers and voice control.
+///
+/// Previously had no default class at all (a bare `pub use` re-export of
+/// the primitive): with no visual hiding, the browser rendered its own
+/// native range-slider UI -- a ~130px track-and-thumb sitting in normal
+/// document flow next to the actual color area -- reported directly by the
+/// user as the color picker "not working" (confirmed live: `elementFromPoint`
+/// at the visible bars found no element there because the *drawn* area is
+/// the browser's own unstyled `<input>` rendering, not a positioned overlay;
+/// `getComputedStyle` on the input showed `className: ""`, `opacity: 1`,
+/// `position: static`). Fixed with the same `sr-only` convention already
+/// used elsewhere in this registry (see `dialog.rs`'s "Close" label, etc.)
+/// -- visually hidden via clipping, not `display:none`, so it stays
+/// focusable and keyboard/voice-operable.
+#[component]
+pub fn AreaThumbSaturationInput(props: AreaThumbSaturationInputProps) -> Element {
+    let attributes = with_class("sr-only", props.attributes);
+    rsx! {
+        AreaThumbSaturationInputPrimitive { attributes }
+    }
+}
+
+/// A hidden-but-accessible native `<input type="range">` shadowing
+/// [`ColorArea`]'s value axis, for screen readers and voice control. See
+/// [`AreaThumbSaturationInput`]'s doc comment for the bug this fixes.
+#[component]
+pub fn AreaThumbValueInput(props: AreaThumbValueInputProps) -> Element {
+    let attributes = with_class("sr-only", props.attributes);
+    rsx! {
+        AreaThumbValueInputPrimitive { attributes }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -84,5 +129,12 @@ mod tests {
     fn dragging_thumb_uses_the_grabbing_cursor_state() {
         let class = cn(&["data-[dragging=true]:cursor-grabbing", ""]);
         assert!(class.contains("data-[dragging=true]:cursor-grabbing"));
+    }
+
+    #[test]
+    fn the_accessibility_shadow_inputs_default_to_visually_hidden() {
+        let merged = with_class("sr-only", Vec::new());
+        assert_eq!(merged.len(), 1);
+        assert_eq!(merged[0].name, "class");
     }
 }
