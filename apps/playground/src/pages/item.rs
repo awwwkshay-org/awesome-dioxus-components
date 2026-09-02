@@ -15,11 +15,7 @@ pub fn ItemPage() -> Element {
                 SelectControl {
                     label: "Variant",
                     value: variant(),
-                    options: vec![
-                        ("Default", components::ui::ItemVariant::Default),
-                        ("Muted", components::ui::ItemVariant::Muted),
-                        ("Interactive", components::ui::ItemVariant::Interactive),
-                    ],
+                    options: crate::generated::controls::ITEM_VARIANT_OPTIONS.to_vec(),
                     on_change: move |value| variant.set(value),
                 }
                 BoolControl { label: "Disabled", value: disabled }

@@ -15,10 +15,7 @@ pub fn TabsPage() -> Element {
                 SelectControl {
                     label: "Variant",
                     value: variant(),
-                    options: vec![
-                        ("Default", components::ui::TabsVariant::Default),
-                        ("Line", components::ui::TabsVariant::Line),
-                    ],
+                    options: crate::generated::controls::TABS_VARIANT_OPTIONS.to_vec(),
                     on_change: move |value| variant.set(value),
                 }
             },

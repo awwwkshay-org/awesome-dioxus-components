@@ -1,5 +1,6 @@
 use dioxus::prelude::*;
 
+mod generated;
 mod pages;
 mod routes;
 

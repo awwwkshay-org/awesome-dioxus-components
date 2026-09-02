@@ -14,10 +14,7 @@ pub fn AlertPage() -> Element {
                 SelectControl {
                     label: "Variant",
                     value: variant(),
-                    options: vec![
-                        ("Default", components::ui::AlertVariant::Default),
-                        ("Destructive", components::ui::AlertVariant::Destructive),
-                    ],
+                    options: crate::generated::controls::ALERT_VARIANT_OPTIONS.to_vec(),
                     on_change: move |value| variant.set(value),
                 }
             },

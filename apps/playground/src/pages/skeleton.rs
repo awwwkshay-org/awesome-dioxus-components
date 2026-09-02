@@ -15,10 +15,7 @@ pub fn SkeletonPage() -> Element {
                 SelectControl {
                     label: "Shape",
                     value: variant(),
-                    options: vec![
-                        ("Rectangle", components::ui::SkeletonVariant::Default),
-                        ("Circle", components::ui::SkeletonVariant::Circle),
-                    ],
+                    options: crate::generated::controls::SKELETON_VARIANT_OPTIONS.to_vec(),
                     on_change: move |value| variant.set(value),
                 }
                 BoolControl { label: "Decorative", value: decorative }

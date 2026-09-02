@@ -15,13 +15,7 @@ pub fn BadgePage() -> Element {
                 SelectControl {
                     label: "Variant",
                     value: variant(),
-                    options: vec![
-                        ("Default", components::ui::BadgeVariant::Default),
-                        ("Secondary", components::ui::BadgeVariant::Secondary),
-                        ("Destructive", components::ui::BadgeVariant::Destructive),
-                        ("Outline", components::ui::BadgeVariant::Outline),
-                        ("Verified", components::ui::BadgeVariant::Verified),
-                    ],
+                    options: crate::generated::controls::BADGE_VARIANT_OPTIONS.to_vec(),
                     on_change: move |value| variant.set(value),
                 }
                 TextControl { label: "Content", value: label }

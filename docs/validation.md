@@ -24,6 +24,7 @@ until its retirement is explicitly approved.
 | --- | --- | --- |
 | Registry schema/resolution | Registry-core unit tests and deterministic build validation | Harness added in M2; see [`adico/m2-vertical-slice.md`](adico/m2-vertical-slice.md) |
 | Registry facade classification | `cargo xtask primitive-usage check` and `cargo xtask styling-usage check` for any `registry/ui/*.rs` change | Both offline, CI-gated since `enforce-registry-facade-standards`; one committed record and one dedicated regression test per item under `statics/primitive_usage/` and `statics/styling_usage/` |
+| Playground demo controls | `cargo xtask playground-controls check` for any `apps/playground/src/components/ui/*.rs` change; `cargo check --locked --workspace` also fails independently on variant drift via each generated file's compile-time exhaustiveness guard | Offline, added by `generate-playground-controls-from-props`; one generated, committed Rust file per component with an enum-typed prop under `apps/playground/src/generated/controls/` |
 | CLI installation | Installation fixtures plus conflict/idempotency tests | Harness added in M2 (`packages/adico-cli/tests/cli_integration.rs`, `tests/installation/`) |
 | Web/wasm | `cargo check --target wasm32-unknown-unknown` for affected Dioxus apps | Proven for Button/Dialog/Select in M2 |
 | SSR/hydration | Server-feature build and hydration fixture | Proven for Button/Dialog/Select in M2 (`tests/playwright/fullstack.spec.ts`); required for later components |

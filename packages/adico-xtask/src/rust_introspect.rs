@@ -20,6 +20,22 @@ pub struct FileIntrospection {
     pub props: BTreeMap<String, Vec<PropField>>,
     pub hooks_defined: Vec<String>,
     pub hooks_used: Vec<String>,
+    pub enums: BTreeMap<String, EnumIntrospection>,
+}
+
+/// A public enum's variants, for callers that need to know an enum-typed
+/// prop's real, current set of values (e.g. generating a control's option
+/// list). Deliberately does not carry doc comments: registry source doc
+/// comments are descriptive prose ("Extra-small text button."), not short
+/// labels, so callers that need a label derive one from the variant
+/// identifier instead.
+#[derive(Debug, Default, Serialize)]
+pub struct EnumIntrospection {
+    /// Variant identifiers, in declaration order.
+    pub variants: Vec<String>,
+    /// The variant identifier carrying `#[default]`, if any.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub default_variant: Option<String>,
 }
 
 #[derive(Debug, Serialize)]
@@ -77,6 +93,7 @@ pub fn introspect_directory(dir: &Path) -> FileIntrospection {
         merged.props.extend(single.props);
         merged.hooks_defined.extend(single.hooks_defined);
         merged.hooks_used.extend(single.hooks_used);
+        merged.enums.extend(single.enums);
     }
     merged.hooks_defined.sort();
     merged.hooks_defined.dedup();
@@ -139,6 +156,30 @@ fn walk_items(items: &[Item], result: &mut FileIntrospection) {
                         .collect();
                     result.props.insert(item_struct.ident.to_string(), fields);
                 }
+            }
+            Item::Enum(item_enum) if is_public(&item_enum.vis) => {
+                let variants: Vec<String> = item_enum
+                    .variants
+                    .iter()
+                    .map(|variant| variant.ident.to_string())
+                    .collect();
+                let default_variant = item_enum
+                    .variants
+                    .iter()
+                    .find(|variant| {
+                        variant
+                            .attrs
+                            .iter()
+                            .any(|attr| attr.path().is_ident("default"))
+                    })
+                    .map(|variant| variant.ident.to_string());
+                result.enums.insert(
+                    item_enum.ident.to_string(),
+                    EnumIntrospection {
+                        variants,
+                        default_variant,
+                    },
+                );
             }
             Item::Use(item_use) => {
                 let mut names = Vec::new();
@@ -327,5 +368,47 @@ mod tests {
 
         let label = fields.iter().find(|f| f.name == "label").unwrap();
         assert_eq!(label.default.as_deref(), Some("default()"));
+    }
+
+    #[test]
+    fn extracts_enum_variants_and_default() {
+        let source = r#"
+            #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+            pub enum WidgetVariant {
+                /// Primary treatment.
+                #[default]
+                Default,
+                Destructive,
+                Outline,
+            }
+
+            #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+            pub enum WidgetAlignment {
+                Start,
+                Center,
+                End,
+            }
+        "#;
+        let mut file = tempfile::NamedTempFile::new().expect("tempfile");
+        file.write_all(source.as_bytes()).expect("write fixture");
+        let introspection = introspect_file(file.path());
+        assert!(introspection.exists);
+
+        let variant_enum = introspection
+            .enums
+            .get("WidgetVariant")
+            .expect("WidgetVariant enum introspected");
+        assert_eq!(
+            variant_enum.variants,
+            vec!["Default", "Destructive", "Outline"]
+        );
+        assert_eq!(variant_enum.default_variant.as_deref(), Some("Default"));
+
+        let alignment_enum = introspection
+            .enums
+            .get("WidgetAlignment")
+            .expect("WidgetAlignment enum introspected");
+        assert_eq!(alignment_enum.variants, vec!["Start", "Center", "End"]);
+        assert_eq!(alignment_enum.default_variant, None);
     }
 }

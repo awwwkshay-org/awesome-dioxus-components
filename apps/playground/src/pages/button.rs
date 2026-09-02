@@ -26,29 +26,13 @@ pub fn ButtonPage() -> Element {
                 SelectControl {
                     label: "Variant",
                     value: variant(),
-                    options: vec![
-                        ("Default", components::ui::ButtonVariant::Default),
-                        ("Destructive", components::ui::ButtonVariant::Destructive),
-                        ("Outline", components::ui::ButtonVariant::Outline),
-                        ("Secondary", components::ui::ButtonVariant::Secondary),
-                        ("Ghost", components::ui::ButtonVariant::Ghost),
-                        ("Link", components::ui::ButtonVariant::Link),
-                    ],
+                    options: crate::generated::controls::BUTTON_VARIANT_OPTIONS.to_vec(),
                     on_change: move |value| variant.set(value),
                 }
                 SelectControl {
                     label: "Size",
                     value: size(),
-                    options: vec![
-                        ("Default", components::ui::ButtonSize::Default),
-                        ("Extra small", components::ui::ButtonSize::Xs),
-                        ("Small", components::ui::ButtonSize::Sm),
-                        ("Large", components::ui::ButtonSize::Lg),
-                        ("Icon", components::ui::ButtonSize::Icon),
-                        ("Icon extra small", components::ui::ButtonSize::IconXs),
-                        ("Icon small", components::ui::ButtonSize::IconSm),
-                        ("Icon large", components::ui::ButtonSize::IconLg),
-                    ],
+                    options: crate::generated::controls::BUTTON_SIZE_OPTIONS.to_vec(),
                     on_change: move |value| size.set(value),
                 }
                 BoolControl { label: "Disabled", value: disabled }

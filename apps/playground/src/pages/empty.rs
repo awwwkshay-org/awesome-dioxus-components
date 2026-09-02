@@ -14,10 +14,7 @@ pub fn EmptyPage() -> Element {
                 SelectControl {
                     label: "Media",
                     value: variant(),
-                    options: vec![
-                        ("Icon surface", components::ui::EmptyMediaVariant::Icon),
-                        ("Bare", components::ui::EmptyMediaVariant::Default),
-                    ],
+                    options: crate::generated::controls::EMPTY_MEDIA_VARIANT_OPTIONS.to_vec(),
                     on_change: move |value| variant.set(value),
                 }
             },

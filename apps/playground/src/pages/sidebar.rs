@@ -19,30 +19,19 @@ pub fn SidebarPage() -> Element {
                 SelectControl {
                     label: "Collapsible",
                     value: collapsible(),
-                    options: vec![
-                        ("Offcanvas", components::ui::SidebarCollapsible::Offcanvas),
-                        ("Icon", components::ui::SidebarCollapsible::Icon),
-                        ("None", components::ui::SidebarCollapsible::None),
-                    ],
+                    options: crate::generated::controls::SIDEBAR_COLLAPSIBLE_OPTIONS.to_vec(),
                     on_change: move |value| collapsible.set(value),
                 }
                 SelectControl {
                     label: "Side",
                     value: side(),
-                    options: vec![
-                        ("Left", components::ui::SidebarSide::Left),
-                        ("Right", components::ui::SidebarSide::Right),
-                    ],
+                    options: crate::generated::controls::SIDEBAR_SIDE_OPTIONS.to_vec(),
                     on_change: move |value| side.set(value),
                 }
                 SelectControl {
                     label: "Variant",
                     value: variant(),
-                    options: vec![
-                        ("Sidebar", components::ui::SidebarVariant::Sidebar),
-                        ("Floating", components::ui::SidebarVariant::Floating),
-                        ("Inset", components::ui::SidebarVariant::Inset),
-                    ],
+                    options: crate::generated::controls::SIDEBAR_VARIANT_OPTIONS.to_vec(),
                     on_change: move |value| variant.set(value),
                 }
                 SelectControl {
