@@ -3,8 +3,20 @@ use dioxus::prelude::*;
 /// A fixed preview workspace: its title stays at the top, the live component
 /// occupies the upper three quarters, and its prop controls occupy the lower
 /// quarter. The controls pane alone scrolls when it contains more content.
+///
+/// `wide` opts a demoed component out of the default intrinsic-width
+/// centering: with `justify-content: center`, a block-layout component
+/// (e.g. Accordion) shrinks to its content width before any internal
+/// `justify-between` styling has room to act, silently defeating it. Pages
+/// for such components should pass `wide: true` so the component instead
+/// stretches to fill the preview's width budget.
 #[component]
-pub fn Demo(name: &'static str, controls: Option<Element>, children: Element) -> Element {
+pub fn Demo(
+    name: &'static str,
+    #[props(default)] wide: bool,
+    controls: Option<Element>,
+    children: Element,
+) -> Element {
     rsx! {
         section { class: "flex h-full min-h-0 w-full flex-col text-foreground",
             h1 { class: "shrink-0 text-2xl font-bold", "{name}" }
@@ -14,7 +26,11 @@ pub fn Demo(name: &'static str, controls: Option<Element>, children: Element) ->
                     style: "background-image: linear-gradient(hsl(var(--border) / 0.08) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border) / 0.08) 1px, transparent 1px); background-size: 2rem 2rem;",
                     div {
                         class: "text-card-foreground",
-                        style: "display: flex; width: min(100%, 36rem); height: 100%; align-items: center; justify-content: center; align-self: center; justify-self: center;",
+                        style: if wide {
+                            "width: min(100%, 36rem); height: 100%; align-self: center; justify-self: center;"
+                        } else {
+                            "display: flex; width: min(100%, 36rem); height: 100%; align-items: center; justify-content: center; align-self: center; justify-self: center;"
+                        },
                         {children}
                     }
                 }

@@ -995,7 +995,7 @@
           "source": "ui/accordion.rs",
           "targetRoot": "ui",
           "target": "accordion.rs",
-          "checksum": "598ef56bbdd321d21e0a7a565ecafc67ab899e8b50713df6ee748399baab5a0c"
+          "checksum": "a4ebf4a3d40ec0f5731bac5b4eb256bd73ce844253a1a25d7962d992da3fb8bb"
         }
       ],
       "registryDependencies": ["cn"],

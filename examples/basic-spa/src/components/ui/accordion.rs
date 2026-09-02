@@ -31,7 +31,7 @@ pub fn AccordionItem(
 #[component]
 pub fn AccordionTrigger(class: Option<String>, children: Element) -> Element {
     let class = cn(&[
-        "flex flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium outline-none transition-all hover:underline focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180",
+        "flex w-full flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium outline-none transition-all hover:underline focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

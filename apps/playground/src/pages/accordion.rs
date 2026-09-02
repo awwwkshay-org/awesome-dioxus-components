@@ -10,6 +10,7 @@ pub fn AccordionPage() -> Element {
     rsx! {
         Demo {
             name: "Accordion",
+            wide: true,
             controls: rsx! {
                 BoolControl { label: "Allow multiple open", value: allow_multiple_open }
             },
