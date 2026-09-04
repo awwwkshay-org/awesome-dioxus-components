@@ -1,0 +1,65 @@
+{
+  "name": "data-table",
+  "type": "registry:ui",
+  "description": "A source-owned, generic Data Table pattern with sorting, row selection, filtering, and pagination, composed over Table/Checkbox/DropdownMenu/Button/Input/Pagination.",
+  "files": [
+    {
+      "source": "ui/data_table.rs",
+      "targetRoot": "ui",
+      "target": "data_table.rs",
+      "checksum": "2d5c0400c036052001402f45c3adfcd88d3dd0a3039fd5c5c303c1f7f7966dae"
+    }
+  ],
+  "registryDependencies": [
+    "cn",
+    "table",
+    "checkbox",
+    "dropdown-menu",
+    "button",
+    "input",
+    "pagination"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "data_table",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "data-table",
+    "compositionNote": "A recipe, not a black-box widget, matching shadcn's own React pattern: consumer supplies Vec<DataTableColumn<T>> and Vec<T> per use. No headless table-state dependency exists in this ecosystem (task 9.1's audit), so sort/filter/select/paginate state is hand-rolled and source-owned rather than delegated to a primitive -- consistent with carousel.rs/resizable.rs. Composes the sibling registry items Table, Checkbox, Input, Pagination directly for its own chrome, and DropdownMenu via the optional DataTableRowActions helper for per-row actions.",
+    "usage": "DataTable {\n    columns: vec![\n        DataTableColumn::new(\"name\", \"Name\", Callback::new(|row: Person| rsx! { \"{row.name}\" })).sortable(Callback::new(|row: Person| row.name.clone())),\n    ],\n    rows: people,\n    row_id: Callback::new(|row: Person| row.id.clone()),\n    row_actions: Some(Callback::new(|row: Person| rsx! {\n        DataTableRowActions { row, actions: vec![DataTableRowAction::new(\"Edit\", edit_handler), DataTableRowAction::new(\"Delete\", delete_handler).destructive()] }\n    })),\n}",
+    "accessibility": "Reuses Table's semantic <table>/<thead>/<tbody> markup and Checkbox's own accessible state; sortable headers are real <button>s (keyboard-activatable); the row-actions trigger carries a screen-reader-only \"Open menu\" label (registry/ui/data_table.rs).",
+    "keyboard": "Sortable column headers and pagination controls are native/Button-backed and Tab/Enter-operable; row-selection checkboxes and the row-actions DropdownMenu inherit their own primitives' existing keyboard support (Space to toggle, arrow-key roving focus in the menu)."
+  },
+  "compatibility": null,
+  "provenance": null
+}

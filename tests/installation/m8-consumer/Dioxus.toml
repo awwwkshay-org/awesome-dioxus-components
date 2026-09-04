@@ -1,0 +1,6 @@
+[application]
+name = "adico-m8-consumer"
+default_platform = "web"
+
+[web.app]
+title = "adico M8 Data Table fixture"

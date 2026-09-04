@@ -14,6 +14,7 @@
           "hooks_used": [
             "use_animated_open",
             "use_collection_provider",
+            "use_direction",
             "use_id_or",
             "use_item",
             "use_unique_id"
@@ -999,6 +1000,7 @@
           ],
           "hooks_used": [
             "use_calendar_grid",
+            "use_direction",
             "use_effect_cleanup"
           ],
           "modules": [
@@ -3079,6 +3081,83 @@
       },
       {
         "adico_primitive": {
+          "components": [],
+          "hooks_used": [],
+          "modules": [
+            "icons"
+          ],
+          "props": {}
+        },
+        "name": "data-table",
+        "registry_facade": {
+          "components": [
+            "DataTable",
+            "DataTableRowActions"
+          ],
+          "files": [
+            "ui/data_table.rs"
+          ],
+          "props": {
+            "DataTableProps": [
+              {
+                "name": "columns",
+                "type": "Vec<DataTableColumn<T>>"
+              },
+              {
+                "name": "rows",
+                "type": "Vec<T>"
+              },
+              {
+                "name": "row_id",
+                "type": "Callback<T, String>"
+              },
+              {
+                "default": "default()",
+                "name": "on_selected_change",
+                "type": "Callback<HashSet<String>>"
+              },
+              {
+                "default": "default()",
+                "name": "row_actions",
+                "type": "Option<Callback<T, Element>>"
+              },
+              {
+                "default": "default()",
+                "name": "filter_key",
+                "type": "Option<Callback<T, String>>"
+              },
+              {
+                "default": "default()",
+                "name": "filter_placeholder",
+                "type": "Option<String>"
+              },
+              {
+                "default": "10",
+                "name": "page_size",
+                "type": "usize"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "DataTableRowActionsProps": [
+              {
+                "name": "row",
+                "type": "T"
+              },
+              {
+                "name": "actions",
+                "type": "Vec<DataTableRowAction<T>>"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
           "components": [
             "Calendar",
             "RangeCalendar",
@@ -3130,6 +3209,7 @@
             "use_calendar_grid",
             "use_collection_provider",
             "use_controlled",
+            "use_direction",
             "use_effect_cleanup",
             "use_escape_key",
             "use_focus_trap",
@@ -5786,6 +5866,7 @@
             "use_animated_open",
             "use_collection_provider",
             "use_deferred_collection_focus",
+            "use_direction",
             "use_escape_key",
             "use_id_or",
             "use_item",
@@ -8404,10 +8485,15 @@
                 "type": "Element"
               }
             ],
-            "TableRow": [
+            "TableRowProps": [
               {
+                "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",
@@ -9584,6 +9670,7 @@
           ],
           "hooks_used": [
             "use_collection_provider",
+            "use_direction",
             "use_item"
           ],
           "modules": [
@@ -9884,7 +9971,7 @@
       }
     ],
     "summary": {
-      "total_components": 60
+      "total_components": 61
     }
   },
   "dioxus_components": {

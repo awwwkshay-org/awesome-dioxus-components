@@ -42,8 +42,19 @@ pub fn DropdownMenu(
     }
 }
 
-/// A standard trigger. For button variants, compose the installed `Button`
-/// inside this trigger just as Dialog and Sheet do.
+/// A standard trigger, already styled as a default-variant button on its own
+/// real `<button>` element (unlike `DialogTrigger`/`SheetTrigger`, which
+/// have no independent DOM identity and *are* a `Button`). **Do not** nest
+/// the installed `Button` inside this trigger -- that produces an invalid
+/// `<button><button>` pair, since this trigger's underlying primitive
+/// (`crate::menu::MenuTrigger`) owns its own button semantics
+/// (`aria-haspopup`/`aria-expanded`/keyboard handling) and renders a real
+/// `<button>` of its own. Pass icon/text children directly, overriding
+/// `class` for a different visual treatment -- see `mode_toggle.rs`'s
+/// `DropdownMenuTrigger` (icon-only, `h-9 w-9 justify-center px-0`) for the
+/// established pattern. (Corrected 2026-09-04: this doc previously
+/// recommended nesting `Button` here, which does not match any real shipped
+/// consumer -- `mode_toggle.rs` was already the correct precedent.)
 #[component]
 pub fn DropdownMenuTrigger(children: Element, class: Option<String>) -> Element {
     let class = cn(&[

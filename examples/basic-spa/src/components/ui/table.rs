@@ -51,15 +51,34 @@ pub fn TableFooter(class: Option<String>, children: Element) -> Element {
     }
 }
 
+/// Props for [`TableRow`].
+#[derive(Props, Clone, PartialEq)]
+pub struct TableRowProps {
+    /// Extra semantic classes appended to the default treatment.
+    #[props(default)]
+    pub class: Option<String>,
+    /// Native `<tr>` and global attributes. In particular, set `"data-state":
+    /// "selected"` here to trigger this row's own `data-[state=selected]:bg-muted`
+    /// styling -- that class had no way to ever fire before this prop existed,
+    /// since a bare function-argument component (this one's original shape)
+    /// cannot accept arbitrary attributes the way every other styled
+    /// component in this registry does.
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = tr)]
+    pub attributes: Vec<Attribute>,
+    /// The row's cells.
+    pub children: Element,
+}
+
 /// A `<tr>` row.
 #[component]
-pub fn TableRow(class: Option<String>, children: Element) -> Element {
+pub fn TableRow(props: TableRowProps) -> Element {
     let class = cn(&[
         "border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted",
-        class.as_deref().unwrap_or_default(),
+        props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        tr { class, {children} }
+        tr { class, ..props.attributes, {props.children} }
     }
 }
 

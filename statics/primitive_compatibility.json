@@ -60,6 +60,7 @@
         "adico_hooks_used": [
           "use_animated_open",
           "use_collection_provider",
+          "use_direction",
           "use_id_or",
           "use_item",
           "use_unique_id"
@@ -1630,6 +1631,7 @@
           "use_animated_open",
           "use_collection_provider",
           "use_deferred_collection_focus",
+          "use_direction",
           "use_escape_key",
           "use_id_or",
           "use_item",
@@ -3558,6 +3560,7 @@
         "adico_hooks_defined": [],
         "adico_hooks_used": [
           "use_collection_provider",
+          "use_direction",
           "use_item"
         ],
         "adico_primitive_file": "packages/adico-primitives/src/toolbar.rs",
@@ -3810,6 +3813,7 @@
         "adico_hooks_used": [
           "use_animated_open",
           "use_collection_provider",
+          "use_direction",
           "use_id_or",
           "use_item",
           "use_unique_id"
@@ -4227,6 +4231,7 @@
           "use_calendar_grid"
         ],
         "adico_hooks_used": [
+          "use_direction",
           "use_effect_cleanup"
         ],
         "adico_primitive_file": "packages/adico-primitives/src/calendar.rs",
@@ -5977,6 +5982,7 @@
           "use_animated_open",
           "use_collection_provider",
           "use_deferred_collection_focus",
+          "use_direction",
           "use_escape_key",
           "use_id_or",
           "use_item",
@@ -7641,6 +7647,7 @@
         "adico_hooks_defined": [],
         "adico_hooks_used": [
           "use_collection_provider",
+          "use_direction",
           "use_item"
         ],
         "adico_primitive_file": "packages/adico-primitives/src/toolbar.rs",

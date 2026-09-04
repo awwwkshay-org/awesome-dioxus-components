@@ -170,6 +170,52 @@ fn App() -> Element {
                 InputOTPDemo {}
                 ResizableDemo {}
             }
+
+            h2 { class: "text-xl font-semibold", "M8 Data Table" }
+            DataTableDemo {}
+        }
+    }
+}
+
+#[component]
+fn DataTableDemo() -> Element {
+    #[derive(Clone, PartialEq)]
+    struct Person {
+        id: String,
+        name: String,
+        status: String,
+    }
+
+    let people = vec![
+        Person {
+            id: "1".to_string(),
+            name: "Ada Lovelace".to_string(),
+            status: "active".to_string(),
+        },
+        Person {
+            id: "2".to_string(),
+            name: "Grace Hopper".to_string(),
+            status: "active".to_string(),
+        },
+    ];
+
+    rsx! {
+        components::ui::DataTable {
+            columns: vec![
+                components::ui::DataTableColumn::new(
+                        "name",
+                        "Name",
+                        Callback::new(|row: Person| rsx! { "{row.name}" }),
+                    )
+                    .sortable(Callback::new(|row: Person| row.name.clone())),
+                components::ui::DataTableColumn::new(
+                    "status",
+                    "Status",
+                    Callback::new(|row: Person| rsx! { "{row.status}" }),
+                ),
+            ],
+            rows: people,
+            row_id: Callback::new(|row: Person| row.id.clone()),
         }
     }
 }

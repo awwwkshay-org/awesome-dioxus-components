@@ -27,6 +27,7 @@
     "combobox": "items/combobox.json",
     "command": "items/command.json",
     "context-menu": "items/context-menu.json",
+    "data-table": "items/data-table.json",
     "date-picker": "items/date-picker.json",
     "dialog": "items/dialog.json",
     "drag-and-drop-list": "items/drag-and-drop-list.json",

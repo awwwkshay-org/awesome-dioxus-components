@@ -1,0 +1,8 @@
+{
+  "classification": "exception",
+  "primitiveModules": [
+    "icons"
+  ],
+  "reason": "Its `icons` import is purely decorative (the sort-indicator and row-actions-trigger glyphs) -- the actual sort/filter/select/paginate state is hand-rolled `use_signal`/`use_memo` state at the registry layer, not delegated to any adico-primitives module. No headless table-state primitive exists in this ecosystem (task 9.1's own audit), and this state does not recur elsewhere in the catalog the way roving-focus or dialog semantics do, so it was kept source-owned rather than promoted into a new primitive -- matching carousel.json/resizable.json's identical rationale.",
+  "followUp": "If a second registry item needs sort/filter/select/paginate state over an arbitrary row type, promote this behavior into a real adico-primitives module instead of duplicating it at the registry layer again."
+}

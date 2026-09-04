@@ -597,6 +597,9 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/resizable.rs") => {
                 Ok(include_bytes!("../../../registry/ui/resizable.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/data_table.rs") => {
+                Ok(include_bytes!("../../../registry/ui/data_table.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, "ui/calendar.rs") => {
                 Ok(include_bytes!("../../../registry/ui/calendar.rs").to_vec())
             }
@@ -961,6 +964,7 @@ mod tests {
                 "@adico/combobox".to_string(),
                 "@adico/command".to_string(),
                 "@adico/context-menu".to_string(),
+                "@adico/data-table".to_string(),
                 "@adico/date-picker".to_string(),
                 "@adico/dialog".to_string(),
                 "@adico/drag-and-drop-list".to_string(),
