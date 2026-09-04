@@ -600,6 +600,21 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/data_table.rs") => {
                 Ok(include_bytes!("../../../registry/ui/data_table.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/attachment.rs") => {
+                Ok(include_bytes!("../../../registry/ui/attachment.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/bubble.rs") => {
+                Ok(include_bytes!("../../../registry/ui/bubble.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/marker.rs") => {
+                Ok(include_bytes!("../../../registry/ui/marker.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/message.rs") => {
+                Ok(include_bytes!("../../../registry/ui/message.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/message_scroller.rs") => {
+                Ok(include_bytes!("../../../registry/ui/message_scroller.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, "ui/calendar.rs") => {
                 Ok(include_bytes!("../../../registry/ui/calendar.rs").to_vec())
             }
@@ -949,9 +964,11 @@ mod tests {
                 "@adico/alert".to_string(),
                 "@adico/alert-dialog".to_string(),
                 "@adico/aspect-ratio".to_string(),
+                "@adico/attachment".to_string(),
                 "@adico/avatar".to_string(),
                 "@adico/badge".to_string(),
                 "@adico/breadcrumb".to_string(),
+                "@adico/bubble".to_string(),
                 "@adico/button".to_string(),
                 "@adico/button-group".to_string(),
                 "@adico/calendar".to_string(),
@@ -978,7 +995,10 @@ mod tests {
                 "@adico/item".to_string(),
                 "@adico/kbd".to_string(),
                 "@adico/label".to_string(),
+                "@adico/marker".to_string(),
                 "@adico/menubar".to_string(),
+                "@adico/message".to_string(),
+                "@adico/message-scroller".to_string(),
                 "@adico/mode-toggle".to_string(),
                 "@adico/native-select".to_string(),
                 "@adico/navigation-menu".to_string(),

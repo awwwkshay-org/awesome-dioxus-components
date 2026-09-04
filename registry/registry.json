@@ -2996,6 +2996,238 @@
         "accessibility": "Each ResizableHandle is role=\"separator\" with aria-orientation reflecting the group's ResizableDirection.",
         "keyboard": "Each ResizableHandle is independently focusable (tabindex=\"0\"); ArrowLeft/ArrowRight (Horizontal) or ArrowUp/ArrowDown (Vertical) step-resize the two panels it straddles by 5% per press, clamped to each panel's own min/max size."
       }
+    },
+    {
+      "name": "marker",
+      "type": "registry:ui",
+      "description": "A source-owned small inline annotation chip (step number, tool-call badge, citation marker) for chat/agent messages.",
+      "files": [
+        {
+          "source": "ui/marker.rs",
+          "targetRoot": "ui",
+          "target": "marker.rs",
+          "checksum": "4442be0498fdd91596cbffd2182bdcca08cffd286c82a55f05dd02bbf9f42dff"
+        }
+      ],
+      "registryDependencies": [
+        "cn"
+      ],
+      "cargoDependencies": [
+        {
+          "crate": "dioxus",
+          "version": "=0.7.9"
+        }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": [
+          "cn"
+        ]
+      },
+      "moduleExports": [
+        {
+          "targetRoot": "ui",
+          "module": "marker",
+          "reexport": true
+        }
+      ],
+      "documentation": {
+        "slug": "marker",
+        "compositionNote": "Purely presentational; no dedicated primitive dependency (task 10.1's own audit). Upstream's root part declares asChild; this ecosystem's existing caller-composition answer is used instead of replicating that polymorphism (see registry/ui/marker.rs's own header comment).",
+        "usage": "Marker {\n    MarkerIcon { CircleCheck {} }\n    MarkerContent { \"Step 3\" }\n}",
+        "accessibility": "Renders as inline content with no assigned role (registry/ui/marker.rs); its text is read as ordinary content by assistive technology.",
+        "keyboard": "No component-specific keyboard handling; not an interactive control."
+      }
+    },
+    {
+      "name": "bubble",
+      "type": "registry:ui",
+      "description": "A source-owned chat message bubble shape (Bubble/BubbleContent/BubbleReactions/BubbleGroup), aligned to the sent or received edge.",
+      "files": [
+        {
+          "source": "ui/bubble.rs",
+          "targetRoot": "ui",
+          "target": "bubble.rs",
+          "checksum": "48d11e39508453e312068340332d6881327b5db2cd6aa8870598796b1bcfdc80"
+        }
+      ],
+      "registryDependencies": [
+        "cn"
+      ],
+      "cargoDependencies": [
+        {
+          "crate": "dioxus",
+          "version": "=0.7.9"
+        }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": [
+          "cn"
+        ]
+      },
+      "moduleExports": [
+        {
+          "targetRoot": "ui",
+          "module": "bubble",
+          "reexport": true
+        }
+      ],
+      "documentation": {
+        "slug": "bubble",
+        "compositionNote": "Purely presentational; no dedicated primitive dependency (task 10.1's own audit). A level below the sibling message registry item -- Message owns the avatar/header/footer row, Bubble only the rounded content shape. Upstream's content part declares asChild; not replicated, per this ecosystem's caller-composition answer (registry/ui/bubble.rs's own header comment).",
+        "usage": "Bubble { align: BubbleAlign::End,\n    BubbleContent { \"Hey, how's it going?\" }\n}",
+        "accessibility": "Renders as inline/block content with no assigned role; conversational structure (who sent what) should come from surrounding Message/MessageHeader content, not from Bubble's own markup (registry/ui/bubble.rs).",
+        "keyboard": "No component-specific keyboard handling; not an interactive control."
+      }
+    },
+    {
+      "name": "message",
+      "type": "registry:ui",
+      "description": "A source-owned chat message row (Message/MessageAvatar/MessageHeader/MessageContent/MessageFooter/MessageGroup), aligned to the sent or received edge.",
+      "files": [
+        {
+          "source": "ui/message.rs",
+          "targetRoot": "ui",
+          "target": "message.rs",
+          "checksum": "6bc6000bb0f861b7e6d900e93343368bfdd4fcf2a822e2df7fb1e2378aba03f9"
+        }
+      ],
+      "registryDependencies": [
+        "cn"
+      ],
+      "cargoDependencies": [
+        {
+          "crate": "dioxus",
+          "version": "=0.7.9"
+        }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": [
+          "cn"
+        ]
+      },
+      "moduleExports": [
+        {
+          "targetRoot": "ui",
+          "module": "message",
+          "reexport": true
+        }
+      ],
+      "documentation": {
+        "slug": "message",
+        "compositionNote": "Purely presentational; no dedicated primitive dependency (task 10.1's own audit). Typically composes the sibling Avatar registry item for MessageAvatar and the sibling Bubble registry item for MessageContent.",
+        "usage": "Message { align: MessageAlign::Start,\n    MessageAvatar { Avatar { AvatarFallback { \"AB\" } } }\n    MessageHeader { \"Assistant\" }\n    MessageContent { Bubble { BubbleContent { \"Hello!\" } } }\n}",
+        "accessibility": "Renders as plain div content with no assigned role; conversational semantics come from the surrounding document structure, matching upstream's own lack of a dedicated ARIA pattern for chat messages (registry/ui/message.rs).",
+        "keyboard": "No component-specific keyboard handling; not an interactive control."
+      }
+    },
+    {
+      "name": "message-scroller",
+      "type": "registry:ui",
+      "description": "A source-owned auto-anchoring chat scroll container (MessageScroller/MessageScrollerViewport/MessageScrollerContent/MessageScrollerItem/MessageScrollerButton), backed by the owned adico-primitives scroll-anchoring primitive.",
+      "files": [
+        {
+          "source": "ui/message_scroller.rs",
+          "targetRoot": "ui",
+          "target": "message_scroller.rs",
+          "checksum": "3639bb9bb5776050e367318ac59189bc2bb57eeec1346e02024972e52cc36b60"
+        }
+      ],
+      "registryDependencies": [
+        "cn",
+        "button"
+      ],
+      "cargoDependencies": [
+        {
+          "crate": "dioxus",
+          "version": "=0.7.9"
+        },
+        {
+          "crate": "adico-primitives",
+          "version": "=0.1.0",
+          "features": [
+            "web"
+          ]
+        }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": [
+          "cn"
+        ]
+      },
+      "moduleExports": [
+        {
+          "targetRoot": "ui",
+          "module": "message_scroller",
+          "reexport": true
+        }
+      ],
+      "documentation": {
+        "slug": "message-scroller",
+        "compositionNote": "Styled facade over adico_primitives::message_scroller (task 10.2): native onscroll/onmounted/onresize track scroll position and auto-follow appended content while pinned to the bottom, without forcing a scroll once the user has scrolled away from it (see packages/adico-primitives/src/message_scroller.rs's own header comment for the full design, including why prepend anchoring relies on native CSS scroll-anchoring rather than hand-rolled offset math). MessageScrollerItem/MessageScrollerButton are pure composition over the primitive's two hooks -- no dedicated primitive component behind them, the same split this crate's carousel.rs already uses for CarouselPrevious/CarouselNext.",
+        "usage": "MessageScroller {\n    MessageScrollerViewport { class: \"h-96\",\n        MessageScrollerContent {\n            for m in messages {\n                MessageScrollerItem { Message { ... } }\n            }\n        }\n    }\n    MessageScrollerButton { \"Jump to latest\" }\n}",
+        "accessibility": "No dedicated WAI-ARIA pattern applies to a scrollable message viewport (packages/adico-primitives/src/message_scroller.rs); MessageScrollerButton is a real Button, so it is reachable and operable like any other button.",
+        "keyboard": "The viewport is natively scrollable (arrow keys/Page Up/Page Down/Home/End work once it has focus, same as any overflow:auto container); MessageScrollerButton is Tab/Enter-operable like any Button."
+      }
+    },
+    {
+      "name": "attachment",
+      "type": "registry:ui",
+      "description": "A source-owned file-attachment card (thumbnail, title/description, state-driven status indicator, actions) for chat/agent message composers.",
+      "files": [
+        {
+          "source": "ui/attachment.rs",
+          "targetRoot": "ui",
+          "target": "attachment.rs",
+          "checksum": "26ea7ebaa852f2e41d0d3b49c499e8fcdb6792facfa604d37136e46cb1edb3e6"
+        }
+      ],
+      "registryDependencies": [
+        "cn",
+        "button",
+        "spinner"
+      ],
+      "cargoDependencies": [
+        {
+          "crate": "dioxus",
+          "version": "=0.7.9"
+        },
+        {
+          "crate": "adico-primitives",
+          "version": "=0.1.0",
+          "features": [
+            "web"
+          ]
+        }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": [
+          "cn"
+        ]
+      },
+      "moduleExports": [
+        {
+          "targetRoot": "ui",
+          "module": "attachment",
+          "reexport": true
+        }
+      ],
+      "documentation": {
+        "slug": "attachment",
+        "compositionNote": "Purely presentational; state is a plain caller-supplied AttachmentState enum, not an owned state machine (task 10.1's own audit). Composes the sibling Button registry item for AttachmentAction (upstream's action part composes button.button.root) and the sibling Spinner registry item for the Uploading/Processing indicator. Upstream's trigger part declares asChild; AttachmentTrigger is instead its own real <button> (the same \"IS a button\" shape as DialogTrigger/SheetTrigger, not a wrapper around one -- see registry/ui/attachment.rs's own header comment).",
+        "usage": "Attachment { state: AttachmentState::Uploading,\n    AttachmentMedia {}\n    AttachmentContent {\n        AttachmentTitle { \"report.pdf\" }\n        AttachmentDescription { \"2.4 MB\" }\n    }\n    AttachmentActions {\n        AttachmentAction { aria_label: \"Remove\", X {} }\n    }\n}",
+        "accessibility": "AttachmentAction is a real Button (Tab/Enter-operable) with a required aria_label since it is icon-only; the state indicator carries its own aria-label (\"Failed\"/\"Complete\") for Error/Done (registry/ui/attachment.rs).",
+        "keyboard": "AttachmentTrigger and every AttachmentAction are native/Button-backed and Tab/Enter-operable."
+      }
     }
   ]
 }

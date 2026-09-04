@@ -1,0 +1,5 @@
+{
+  "classification": "presentational",
+  "primitiveModules": [],
+  "reason": "Static styled markup with no owned state; icon/content slots are caller-composed."
+}

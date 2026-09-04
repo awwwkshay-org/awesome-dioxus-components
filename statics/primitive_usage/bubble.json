@@ -1,0 +1,5 @@
+{
+  "classification": "presentational",
+  "primitiveModules": [],
+  "reason": "Static styled markup keyed off a caller-supplied BubbleAlign prop; no owned state. align is threaded explicitly to BubbleContent/BubbleReactions rather than through a Bubble-provided context, since there is no owned interactive/dynamic behavior here to justify one (see registry/ui/bubble.rs's own header comment)."
+}

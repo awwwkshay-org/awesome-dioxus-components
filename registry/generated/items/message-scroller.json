@@ -1,0 +1,60 @@
+{
+  "name": "message-scroller",
+  "type": "registry:ui",
+  "description": "A source-owned auto-anchoring chat scroll container (MessageScroller/MessageScrollerViewport/MessageScrollerContent/MessageScrollerItem/MessageScrollerButton), backed by the owned adico-primitives scroll-anchoring primitive.",
+  "files": [
+    {
+      "source": "ui/message_scroller.rs",
+      "targetRoot": "ui",
+      "target": "message_scroller.rs",
+      "checksum": "3639bb9bb5776050e367318ac59189bc2bb57eeec1346e02024972e52cc36b60"
+    }
+  ],
+  "registryDependencies": [
+    "cn",
+    "button"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "message_scroller",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "message-scroller",
+    "compositionNote": "Styled facade over adico_primitives::message_scroller (task 10.2): native onscroll/onmounted/onresize track scroll position and auto-follow appended content while pinned to the bottom, without forcing a scroll once the user has scrolled away from it (see packages/adico-primitives/src/message_scroller.rs's own header comment for the full design, including why prepend anchoring relies on native CSS scroll-anchoring rather than hand-rolled offset math). MessageScrollerItem/MessageScrollerButton are pure composition over the primitive's two hooks -- no dedicated primitive component behind them, the same split this crate's carousel.rs already uses for CarouselPrevious/CarouselNext.",
+    "usage": "MessageScroller {\n    MessageScrollerViewport { class: \"h-96\",\n        MessageScrollerContent {\n            for m in messages {\n                MessageScrollerItem { Message { ... } }\n            }\n        }\n    }\n    MessageScrollerButton { \"Jump to latest\" }\n}",
+    "accessibility": "No dedicated WAI-ARIA pattern applies to a scrollable message viewport (packages/adico-primitives/src/message_scroller.rs); MessageScrollerButton is a real Button, so it is reachable and operable like any other button.",
+    "keyboard": "The viewport is natively scrollable (arrow keys/Page Up/Page Down/Home/End work once it has focus, same as any overflow:auto container); MessageScrollerButton is Tab/Enter-operable like any Button."
+  },
+  "compatibility": null,
+  "provenance": null
+}

@@ -1,0 +1,49 @@
+{
+  "name": "message",
+  "type": "registry:ui",
+  "description": "A source-owned chat message row (Message/MessageAvatar/MessageHeader/MessageContent/MessageFooter/MessageGroup), aligned to the sent or received edge.",
+  "files": [
+    {
+      "source": "ui/message.rs",
+      "targetRoot": "ui",
+      "target": "message.rs",
+      "checksum": "6bc6000bb0f861b7e6d900e93343368bfdd4fcf2a822e2df7fb1e2378aba03f9"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "message",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "message",
+    "compositionNote": "Purely presentational; no dedicated primitive dependency (task 10.1's own audit). Typically composes the sibling Avatar registry item for MessageAvatar and the sibling Bubble registry item for MessageContent.",
+    "usage": "Message { align: MessageAlign::Start,\n    MessageAvatar { Avatar { AvatarFallback { \"AB\" } } }\n    MessageHeader { \"Assistant\" }\n    MessageContent { Bubble { BubbleContent { \"Hello!\" } } }\n}",
+    "accessibility": "Renders as plain div content with no assigned role; conversational semantics come from the surrounding document structure, matching upstream's own lack of a dedicated ARIA pattern for chat messages (registry/ui/message.rs).",
+    "keyboard": "No component-specific keyboard handling; not an interactive control."
+  },
+  "compatibility": null,
+  "provenance": null
+}

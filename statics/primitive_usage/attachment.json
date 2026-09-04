@@ -1,0 +1,8 @@
+{
+  "classification": "exception",
+  "primitiveModules": [
+    "icons"
+  ],
+  "reason": "Its `icons` import is purely decorative (the default paperclip media glyph, and any icon a caller passes into AttachmentAction) -- `state` is a plain caller-supplied AttachmentState enum, not behavior owned or delegated by any adico-primitives module, and AttachmentTrigger/AttachmentAction only forward onclick to caller-supplied handlers. No owned interactive state exists in this file at all, matching data-table.json/carousel.json/resizable.json's identical icons-only rationale.",
+  "followUp": "If a second registry item needs a shared upload/transfer state machine (not just a caller-supplied enum), promote it into a real adico-primitives module instead of duplicating it at the registry layer again."
+}

@@ -58,6 +58,7 @@ pub mod hover_card;
 pub mod label;
 pub mod menu;
 pub mod menubar;
+pub mod message_scroller;
 pub mod meter;
 pub mod navigation_menu;
 pub mod number_field;

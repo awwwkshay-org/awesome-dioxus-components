@@ -1,0 +1,61 @@
+{
+  "name": "attachment",
+  "type": "registry:ui",
+  "description": "A source-owned file-attachment card (thumbnail, title/description, state-driven status indicator, actions) for chat/agent message composers.",
+  "files": [
+    {
+      "source": "ui/attachment.rs",
+      "targetRoot": "ui",
+      "target": "attachment.rs",
+      "checksum": "26ea7ebaa852f2e41d0d3b49c499e8fcdb6792facfa604d37136e46cb1edb3e6"
+    }
+  ],
+  "registryDependencies": [
+    "cn",
+    "button",
+    "spinner"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "attachment",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "attachment",
+    "compositionNote": "Purely presentational; state is a plain caller-supplied AttachmentState enum, not an owned state machine (task 10.1's own audit). Composes the sibling Button registry item for AttachmentAction (upstream's action part composes button.button.root) and the sibling Spinner registry item for the Uploading/Processing indicator. Upstream's trigger part declares asChild; AttachmentTrigger is instead its own real <button> (the same \"IS a button\" shape as DialogTrigger/SheetTrigger, not a wrapper around one -- see registry/ui/attachment.rs's own header comment).",
+    "usage": "Attachment { state: AttachmentState::Uploading,\n    AttachmentMedia {}\n    AttachmentContent {\n        AttachmentTitle { \"report.pdf\" }\n        AttachmentDescription { \"2.4 MB\" }\n    }\n    AttachmentActions {\n        AttachmentAction { aria_label: \"Remove\", X {} }\n    }\n}",
+    "accessibility": "AttachmentAction is a real Button (Tab/Enter-operable) with a required aria_label since it is icon-only; the state indicator carries its own aria-label (\"Failed\"/\"Complete\") for Error/Done (registry/ui/attachment.rs).",
+    "keyboard": "AttachmentTrigger and every AttachmentAction are native/Button-backed and Tab/Enter-operable."
+  },
+  "compatibility": null,
+  "provenance": null
+}

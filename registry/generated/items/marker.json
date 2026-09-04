@@ -1,0 +1,49 @@
+{
+  "name": "marker",
+  "type": "registry:ui",
+  "description": "A source-owned small inline annotation chip (step number, tool-call badge, citation marker) for chat/agent messages.",
+  "files": [
+    {
+      "source": "ui/marker.rs",
+      "targetRoot": "ui",
+      "target": "marker.rs",
+      "checksum": "4442be0498fdd91596cbffd2182bdcca08cffd286c82a55f05dd02bbf9f42dff"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "marker",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "marker",
+    "compositionNote": "Purely presentational; no dedicated primitive dependency (task 10.1's own audit). Upstream's root part declares asChild; this ecosystem's existing caller-composition answer is used instead of replicating that polymorphism (see registry/ui/marker.rs's own header comment).",
+    "usage": "Marker {\n    MarkerIcon { CircleCheck {} }\n    MarkerContent { \"Step 3\" }\n}",
+    "accessibility": "Renders as inline content with no assigned role (registry/ui/marker.rs); its text is read as ordinary content by assistive technology.",
+    "keyboard": "No component-specific keyboard handling; not an interactive control."
+  },
+  "compatibility": null,
+  "provenance": null
+}

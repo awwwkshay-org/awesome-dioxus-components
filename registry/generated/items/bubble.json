@@ -1,0 +1,49 @@
+{
+  "name": "bubble",
+  "type": "registry:ui",
+  "description": "A source-owned chat message bubble shape (Bubble/BubbleContent/BubbleReactions/BubbleGroup), aligned to the sent or received edge.",
+  "files": [
+    {
+      "source": "ui/bubble.rs",
+      "targetRoot": "ui",
+      "target": "bubble.rs",
+      "checksum": "48d11e39508453e312068340332d6881327b5db2cd6aa8870598796b1bcfdc80"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "bubble",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "bubble",
+    "compositionNote": "Purely presentational; no dedicated primitive dependency (task 10.1's own audit). A level below the sibling message registry item -- Message owns the avatar/header/footer row, Bubble only the rounded content shape. Upstream's content part declares asChild; not replicated, per this ecosystem's caller-composition answer (registry/ui/bubble.rs's own header comment).",
+    "usage": "Bubble { align: BubbleAlign::End,\n    BubbleContent { \"Hey, how's it going?\" }\n}",
+    "accessibility": "Renders as inline/block content with no assigned role; conversational structure (who sent what) should come from surrounding Message/MessageHeader content, not from Bubble's own markup (registry/ui/bubble.rs).",
+    "keyboard": "No component-specific keyboard handling; not an interactive control."
+  },
+  "compatibility": null,
+  "provenance": null
+}

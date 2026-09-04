@@ -1,0 +1,5 @@
+{
+  "classification": "presentational",
+  "primitiveModules": [],
+  "reason": "Static styled row layout keyed off a caller-supplied MessageAlign prop; no owned state."
+}

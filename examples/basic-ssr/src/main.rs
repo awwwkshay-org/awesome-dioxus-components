@@ -173,6 +173,9 @@ fn App() -> Element {
 
             h2 { class: "text-xl font-semibold", "M8 Data Table" }
             DataTableDemo {}
+
+            h2 { class: "text-xl font-semibold", "M9 Chat/agent components" }
+            ChatDemo {}
         }
     }
 }
@@ -216,6 +219,99 @@ fn DataTableDemo() -> Element {
             ],
             rows: people,
             row_id: Callback::new(|row: Person| row.id.clone()),
+        }
+    }
+}
+
+#[component]
+fn ChatDemo() -> Element {
+    let mut messages = use_signal(|| {
+        vec![
+            (
+                "Assistant".to_string(),
+                "Hi, how can I help?".to_string(),
+                components::ui::MessageAlign::Start,
+            ),
+            (
+                "You".to_string(),
+                "Summarize this PDF.".to_string(),
+                components::ui::MessageAlign::End,
+            ),
+        ]
+    });
+    let mut attachment_state = use_signal(|| components::ui::AttachmentState::Uploading);
+
+    let add_message = move |_| {
+        messages.write().push((
+            "Assistant".to_string(),
+            "On it -- one moment.".to_string(),
+            components::ui::MessageAlign::Start,
+        ));
+    };
+
+    rsx! {
+        div { class: "flex flex-col gap-4",
+            components::ui::Button { onclick: add_message, "Add message" }
+            components::ui::MessageScroller { class: "rounded-md border",
+                components::ui::MessageScrollerViewport { class: "h-56",
+                    components::ui::MessageScrollerContent {
+                        for (index , (sender , text , align)) in messages.read().iter().enumerate() {
+                            components::ui::MessageScrollerItem { key: "{index}",
+                                components::ui::Message {
+                                    align: *align,
+                                    avatar: rsx! {
+                                        components::ui::MessageAvatar {
+                                            components::ui::Avatar {
+                                                components::ui::AvatarFallback { "{sender.chars().next().unwrap_or('?')}" }
+                                            }
+                                        }
+                                    },
+                                    components::ui::MessageHeader { "{sender}" }
+                                    components::ui::MessageContent {
+                                        components::ui::Bubble {
+                                            align: match align {
+                                                components::ui::MessageAlign::Start => components::ui::BubbleAlign::Start,
+                                                components::ui::MessageAlign::End => components::ui::BubbleAlign::End,
+                                            },
+                                            components::ui::BubbleContent {
+                                                align: match align {
+                                                    components::ui::MessageAlign::Start => components::ui::BubbleAlign::Start,
+                                                    components::ui::MessageAlign::End => components::ui::BubbleAlign::End,
+                                                },
+                                                "{text}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                components::ui::MessageScrollerButton { "Jump to latest" }
+            }
+            components::ui::Marker {
+                components::ui::MarkerIcon { adico_primitives::icons::CircleCheck {} }
+                components::ui::MarkerContent { "Step 1" }
+            }
+            components::ui::Attachment { state: attachment_state(),
+                components::ui::AttachmentMedia {}
+                components::ui::AttachmentContent {
+                    components::ui::AttachmentTitle { "report.pdf" }
+                    components::ui::AttachmentDescription { "2.4 MB" }
+                }
+                components::ui::AttachmentActions {
+                    components::ui::AttachmentAction {
+                        aria_label: "Mark done",
+                        onclick: move |_| attachment_state.set(components::ui::AttachmentState::Done),
+                        adico_primitives::icons::CircleCheck {}
+                    }
+                    components::ui::AttachmentAction {
+                        aria_label: "Remove",
+                        onclick: move |_| {},
+                        adico_primitives::icons::X {}
+                    }
+                }
+            }
         }
     }
 }
