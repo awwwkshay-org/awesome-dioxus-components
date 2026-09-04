@@ -561,6 +561,159 @@
       },
       {
         "adico_primitive": {
+          "components": [],
+          "hooks_used": [],
+          "modules": [
+            "icons"
+          ],
+          "props": {}
+        },
+        "name": "attachment",
+        "registry_facade": {
+          "components": [
+            "Attachment",
+            "AttachmentGroup",
+            "AttachmentTrigger",
+            "AttachmentMedia",
+            "AttachmentContent",
+            "AttachmentTitle",
+            "AttachmentDescription",
+            "AttachmentActions",
+            "AttachmentAction"
+          ],
+          "files": [
+            "ui/attachment.rs"
+          ],
+          "props": {
+            "AttachmentActionProps": [
+              {
+                "name": "aria_label",
+                "type": "String"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "onclick",
+                "type": "EventHandler<MouseEvent>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "AttachmentActionsProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "AttachmentContentProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "AttachmentDescriptionProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "AttachmentGroupProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "AttachmentMediaProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "children",
+                "type": "Option<Element>"
+              }
+            ],
+            "AttachmentProps": [
+              {
+                "default": "default()",
+                "name": "state",
+                "type": "AttachmentState"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "AttachmentTitleProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "AttachmentTriggerProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "onclick",
+                "type": "EventHandler<MouseEvent>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
           "components": [
             "Avatar",
             "AvatarFallback",
@@ -832,6 +985,97 @@
               {
                 "name": "children",
                 "type": "Option<Element>"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
+          "components": [],
+          "hooks_used": [],
+          "modules": [],
+          "props": {}
+        },
+        "name": "bubble",
+        "registry_facade": {
+          "components": [
+            "Bubble",
+            "BubbleGroup",
+            "BubbleContent",
+            "BubbleReactions"
+          ],
+          "files": [
+            "ui/bubble.rs"
+          ],
+          "props": {
+            "BubbleContentProps": [
+              {
+                "default": "default()",
+                "name": "align",
+                "type": "BubbleAlign"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "BubbleGroupProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "BubbleProps": [
+              {
+                "default": "default()",
+                "name": "align",
+                "type": "BubbleAlign"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "BubbleReactionsProps": [
+              {
+                "default": "default()",
+                "name": "align",
+                "type": "BubbleAlign"
+              },
+              {
+                "default": "default()",
+                "name": "side",
+                "type": "BubbleReactionsSide"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
               }
             ]
           }
@@ -5855,6 +6099,65 @@
       },
       {
         "adico_primitive": {
+          "components": [],
+          "hooks_used": [],
+          "modules": [],
+          "props": {}
+        },
+        "name": "marker",
+        "registry_facade": {
+          "components": [
+            "Marker",
+            "MarkerIcon",
+            "MarkerContent"
+          ],
+          "files": [
+            "ui/marker.rs"
+          ],
+          "props": {
+            "MarkerContentProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MarkerIconProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MarkerProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
           "components": [
             "Menubar",
             "MenubarMenu",
@@ -6039,6 +6342,260 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
+          "components": [],
+          "hooks_used": [],
+          "modules": [],
+          "props": {}
+        },
+        "name": "message",
+        "registry_facade": {
+          "components": [
+            "Message",
+            "MessageGroup",
+            "MessageAvatar",
+            "MessageHeader",
+            "MessageContent",
+            "MessageFooter"
+          ],
+          "files": [
+            "ui/message.rs"
+          ],
+          "props": {
+            "MessageAvatarProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MessageContentProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MessageFooterProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MessageGroupProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MessageHeaderProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MessageProps": [
+              {
+                "default": "default()",
+                "name": "align",
+                "type": "MessageAlign"
+              },
+              {
+                "default": "default()",
+                "name": "avatar",
+                "type": "Option<Element>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
+          "components": [
+            "MessageScroller",
+            "MessageScrollerViewport",
+            "MessageScrollerContent"
+          ],
+          "hooks_used": [
+            "use_message_scroller_pinned_to_bottom",
+            "use_message_scroller_scroll_to_bottom"
+          ],
+          "modules": [
+            "message_scroller"
+          ],
+          "props": {
+            "MessageScrollerContentProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MessageScrollerProps": [
+              {
+                "default": "DEFAULT_BOTTOM_THRESHOLD",
+                "name": "bottom_threshold",
+                "type": "f64"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MessageScrollerViewportProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        "name": "message-scroller",
+        "registry_facade": {
+          "components": [
+            "MessageScroller",
+            "MessageScrollerViewport",
+            "MessageScrollerContent",
+            "MessageScrollerItem",
+            "MessageScrollerButton"
+          ],
+          "files": [
+            "ui/message_scroller.rs"
+          ],
+          "props": {
+            "MessageScrollerButtonProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MessageScrollerContentProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MessageScrollerItemProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MessageScrollerProps": [
+              {
+                "default": "adico_primitives::message_scroller::DEFAULT_BOTTOM_THRESHOLD",
+                "name": "bottom_threshold",
+                "type": "f64"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MessageScrollerViewportProps": [
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
               }
             ]
           }
@@ -9971,7 +10528,7 @@
       }
     ],
     "summary": {
-      "total_components": 61
+      "total_components": 66
     }
   },
   "dioxus_components": {
@@ -10243,7 +10800,8 @@
       },
       {
         "name": "attachment",
-        "status": "not_started"
+        "registry_item": "attachment",
+        "status": "built"
       },
       {
         "name": "avatar",
@@ -10262,7 +10820,8 @@
       },
       {
         "name": "bubble",
-        "status": "not_started"
+        "registry_item": "bubble",
+        "status": "built"
       },
       {
         "name": "button",
@@ -10387,7 +10946,8 @@
       },
       {
         "name": "marker",
-        "status": "not_started"
+        "registry_item": "marker",
+        "status": "built"
       },
       {
         "name": "menubar",
@@ -10396,11 +10956,13 @@
       },
       {
         "name": "message",
-        "status": "not_started"
+        "registry_item": "message",
+        "status": "built"
       },
       {
         "name": "message-scroller",
-        "status": "not_started"
+        "registry_item": "message-scroller",
+        "status": "built"
       },
       {
         "name": "native-select",
@@ -10518,12 +11080,12 @@
       }
     ],
     "refresh_command": "cargo xtask catalog fetch shadcn",
-    "revision": "8720dec73f5aebed9f649ea58636f54599fdedf1",
-    "source": "https://github.com/shadcn-ui/ui/tree/8720dec73f5aebed9f649ea58636f54599fdedf1/apps/v4/registry/new-york-v4/ui",
+    "revision": "7c9eaba1c0a6404c990c144a654792e3313c650d",
+    "source": "https://github.com/shadcn-ui/ui/tree/7c9eaba1c0a6404c990c144a654792e3313c650d/apps/v4/registry/new-york-v4/ui",
     "summary": {
-      "built": 50,
+      "built": 55,
       "not_applicable": 1,
-      "not_started": 10,
+      "not_started": 5,
       "total_upstream_components": 61
     }
   },

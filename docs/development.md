@@ -20,10 +20,52 @@ Do not make consumer examples import `registry/` source using workspace paths.
 The installation fixtures must invoke the locally built `adico` executable once
 the CLI vertical slice is implemented.
 
-For registry generation, upstream catalog refresh, provenance checks, and
-parity reporting, use the future `adico-xtask` commands defined by the active
-OpenSpec change. Normal CI must use checked-in snapshots and not require live
-network access.
+## Maintainer workflows: registry, upstream catalogs, provenance, compat
+
+Normal CI runs entirely offline against the snapshots and generated files
+already checked into the repository (`registry/generated/`,
+`statics/catalogs/*.json`, `statics/primitive_compatibility.json`,
+`statics/component_compatibility.json`, `statics/primitive_usage/*.json`,
+`statics/styling_usage/*.json`) -- none of the commands below need network
+access except the one explicitly marked otherwise, and CI never runs that one.
+
+- **Registry generation** -- after adding or editing a `registry/ui/*.rs`
+  item or its `registry/registry.json` entry: `cargo run -p adico-xtask --
+  registry build` regenerates `registry/generated/*` from source; `cargo run
+  -p adico-xtask -- registry validate` (CI-gated) fails if it's stale.
+- **Upstream catalog refresh** (the only network-touching command in this
+  list; run only on explicit maintainer request, never in CI): `cargo run -p
+  adico-xtask -- catalog fetch <shadcn|base-ui|dioxus-components|dioxus-primitives|all>
+  [--revision <sha>]` writes a revision-pinned snapshot to
+  `statics/catalogs/<axis>.json`. This replaced the older, now-removed
+  `cargo xtask upstream dioxus-components`/`upstreams/` directory (see
+  `openspec/changes/build-adico-component-ecosystem/design.md` §9's own
+  "Replaced 2026-08-31 (catalog-fetch-tooling)" record) -- there is no
+  separate "inventory refresh" command any more, `catalog fetch
+  dioxus-components` is it.
+- **Compat/parity reporting against those snapshots** (offline, CI-gated):
+  `cargo run -p adico-xtask -- primitive-compat sync|check|diff` (Base UI +
+  dioxus-primitives axes) and `cargo run -p adico-xtask -- component-compat
+  sync|check` (shadcn + dioxus-components axes) regenerate/verify
+  `statics/primitive_compatibility.json`/`statics/component_compatibility.json`
+  from the checked-in catalog snapshots and live Rust source introspection.
+  There is no `cargo xtask parity` command and no `parity.json` file --
+  both were deliberately removed 2026-08-31 per explicit user instruction in
+  favor of these current-state snapshots rather than a hand-maintained,
+  multi-dimension completion ledger (design.md §9's own removal record).
+  Run `sync` after a registry/primitive change that could shift built/not-
+  started counts, hand-review the diff, and run `check` before committing.
+- **Provenance checks** (offline, CI-gated): `cargo run -p adico-xtask --
+  provenance check` verifies `provenance/records/*` against `UPSTREAMS.md`'s
+  obligations.
+- **Company/organization registry validation**: a configured organization
+  registry (a named local-path or static-HTTPS source registered in a
+  consumer's `components.json`) is validated the same way the official
+  registry's consumers are -- through a real `tests/installation/*`
+  fixture that runs `adico add` against it and then `cargo check`/`cargo
+  test`. `tests/installation/awwwkshay-consumer` is this repo's own such
+  fixture; add a new one the same way when testing a new organization
+  registry's source or its default-switching behavior.
 
 Every `registry:ui`/`registry:component` item also carries two offline,
 CI-gated classification records: `cargo run -p adico-xtask -- primitive-usage

@@ -67,8 +67,23 @@ jobs:
       - name: Test core Rust crates
         run: cargo test --locked --workspace
 
+      - name: Validate registry payloads aren't stale
+        run: cargo run -p adico-xtask -- registry validate
+
+      - name: Check provenance records
+        run: cargo run -p adico-xtask -- provenance check
+
+      - name: Check primitive compat snapshot isn't stale
+        run: cargo run -p adico-xtask -- primitive-compat check
+
+      - name: Check component compat snapshot isn't stale
+        run: cargo run -p adico-xtask -- component-compat check
+
       - name: Check registry behavior-ownership classification
         run: cargo run -p adico-xtask -- primitive-usage check
 
       - name: Check registry styling classification
         run: cargo run -p adico-xtask -- styling-usage check
+
+      - name: Check playground demo controls aren't stale
+        run: cargo run -p adico-xtask -- playground-controls check
