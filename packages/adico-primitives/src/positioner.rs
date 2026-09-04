@@ -16,16 +16,16 @@
 //! **Scope note:** this only computes a position once, from rects the caller
 //! measured (e.g. via `MountedData::get_client_rect()` in an `onmounted`
 //! callback — a one-shot, non-eval measurement already used elsewhere in
-//! this crate, such as `move_interaction.rs`). It deliberately does **not**
-//! continuously reposition on scroll/resize via ResizeObserver/
-//! IntersectionObserver/MutationObserver bridges: those need a long-lived,
-//! repeatedly-firing browser listener, the exact pattern
-//! `provenance/records/adico-primitives-wave3-overlays.json` documents as
-//! non-functional via `document::eval` in this Dioxus 0.7.9/0.7.10 web
-//! runtime, and no native Dioxus event exists for arbitrary-element resize
-//! or intersection the way `use_escape_key` (task 7.4d) found for keydown.
-//! That observer-bridge capability remains unimplemented and unverified,
-//! tracked as a follow-up rather than built unverifiable.
+//! this crate, such as `move_interaction.rs`). See [`crate::use_outside_dismiss`]'s
+//! doc comment for why the historical claim that a long-lived, repeatedly-
+//! firing `document::eval` listener "does not work" in this Dioxus web
+//! runtime was retracted (2026-09-03: live Chrome verification found the
+//! pattern works, and the provenance record originally cited for the claim
+//! does not exist in this repository's history). Continuous repositioning
+//! via ResizeObserver/IntersectionObserver/MutationObserver bridges was
+//! deferred pending that correction; see task 7.5c in
+//! `openspec/changes/build-adico-component-ecosystem/tasks.md` for current
+//! status.
 
 use std::rc::Rc;
 
@@ -33,7 +33,7 @@ use dioxus::html::geometry::Pixels;
 use dioxus::html::geometry::euclid::Rect;
 use dioxus::prelude::*;
 
-use crate::{ContentAlign, ContentSide};
+use crate::{ContentAlign, ContentSide, use_unique_id};
 
 /// A resolved placement: where to put the floating content, and which
 /// side/align it actually used (either may differ from what the caller
@@ -248,6 +248,130 @@ async fn measure_anchor_and_viewport(_anchor_id: &str) -> Option<(Rect<f64, Pixe
     None
 }
 
+/// Keep a mounted [`Positioner`] correctly placed as its anchor moves,
+/// resizes, or scrolls (partially) out of view: calls `on_change` (which
+/// `Positioner` wires to its own `recompute`) whenever a `ResizeObserver` or
+/// `IntersectionObserver` on the anchor element fires, a capture-phase
+/// `scroll` listener sees any scrollable ancestor move, the `window` resizes,
+/// or a `MutationObserver` on the document detects a layout-affecting
+/// change. Uses the same long-lived, repeatedly-firing `document::eval`
+/// pattern as [`crate::use_outside_dismiss`] — see that hook's doc comment
+/// for why this is verified to work on `web`, contrary to a retracted
+/// earlier claim.
+///
+/// The `scroll` listener is capture-phase and attached to `document` (not
+/// `window`) because `scroll` doesn't bubble — a capture-phase document
+/// listener is the standard way to observe scrolling on *any* scrollable
+/// ancestor, not just `window`, without knowing which ancestors are
+/// scrollable ahead of time. It is the primary continuous-follow mechanism;
+/// `IntersectionObserver` alone is not a substitute for it, despite
+/// initially looking like a fit — its threshold-crossing model only fires
+/// when the anchor's visible fraction crosses one of the given thresholds,
+/// not on every scroll delta, so an anchor that stays fully visible
+/// throughout a scroll (ratio pinned at `1.0`) would never re-trigger it.
+/// `IntersectionObserver` is kept alongside `scroll` for what it covers and
+/// `scroll` doesn't: the anchor crossing into/out of view (e.g. behind a
+/// fixed header) via a transform/clip change with no `scroll` event on any
+/// listened-to element.
+///
+/// The `MutationObserver` watches the whole document, not just the anchor,
+/// because a layout shift that moves the anchor (e.g. content inserted
+/// earlier in the page) need not touch the anchor element itself. That
+/// breadth creates a real feedback-loop risk: `Positioner` sets the floating
+/// element's own `style` (`left`/`top`) on every recompute, which is itself
+/// a mutation the observer would otherwise see and react to, forever. Guard
+/// against it by excluding any mutation whose `target` is inside the
+/// floating element (`floating_id`) — the floating box's own re-position is
+/// never itself a reason to reposition again.
+///
+/// Every source (`scroll`, `resize`, the three observers) funnels through
+/// one `notify` that coalesces onto a `setTimeout(…, 0)`, not
+/// `requestAnimationFrame`. This was deliberate, not a style choice: this
+/// task's own live-Chrome verification found `requestAnimationFrame`
+/// callbacks — along with `ResizeObserver`, `IntersectionObserver`, and
+/// `scroll` dispatch itself — do not fire at all while `document.hidden` is
+/// `true` (confirmed with bare, non-Dioxus observers/listeners, not just
+/// this hook's own, to rule out a Dioxus-specific cause), which is
+/// unavoidably the state of any automated/backgrounded browser tab and is
+/// also a real state for an ordinary user's inactive tab. `setTimeout` and
+/// `MutationObserver` are not gated on the rendering pipeline the same way
+/// and were confirmed, repeatedly and end-to-end (JS notify → Rust
+/// `recompute` → re-rendered `left`/`top`), to work regardless. Using
+/// `requestAnimationFrame` here would have silently stalled repositioning
+/// for any popover left open in a backgrounded tab — not building on a
+/// verified-broken assumption, matching this crate's standing rule after
+/// the 2026-09-03 correction to [`crate::use_outside_dismiss`]'s doc
+/// comment.
+///
+/// A no-op on targets without a DOM (SSR/native without the `web`/`native`
+/// feature).
+#[cfg(any(feature = "web", feature = "native"))]
+fn use_reposition_bridge(
+    anchor_id: ReadSignal<String>,
+    floating_id: String,
+    on_change: impl FnMut() + Clone + 'static,
+) {
+    crate::use_effect_with_cleanup(move || {
+        let mut eval = dioxus_document::eval(
+            "const [anchorId, floatingId] = await dioxus.recv();
+            const anchor = document.getElementById(anchorId);
+            const floatingEl = document.getElementById(floatingId);
+            let scheduled = false;
+            const notify = () => {
+                if (scheduled) return;
+                scheduled = true;
+                setTimeout(() => {
+                    scheduled = false;
+                    dioxus.send(true);
+                }, 0);
+            };
+            document.addEventListener('scroll', notify, true);
+            window.addEventListener('resize', notify);
+            const ro = new ResizeObserver(notify);
+            if (anchor) ro.observe(anchor);
+            const io = new IntersectionObserver(notify, { threshold: [0, 0.25, 0.5, 0.75, 1] });
+            if (anchor) io.observe(anchor);
+            const mo = new MutationObserver((records) => {
+                if (records.some((r) => !floatingEl || !floatingEl.contains(r.target))) {
+                    notify();
+                }
+            });
+            mo.observe(document.body, {
+                attributes: true,
+                childList: true,
+                subtree: true,
+                characterData: true,
+            });
+            await dioxus.recv();
+            document.removeEventListener('scroll', notify, true);
+            window.removeEventListener('resize', notify);
+            ro.disconnect();
+            io.disconnect();
+            mo.disconnect();",
+        );
+        let _ = eval.send((anchor_id.cloned(), floating_id.clone()));
+        let mut on_change = on_change.clone();
+        spawn(async move {
+            while let Ok(true) = eval.recv().await {
+                on_change();
+            }
+        });
+        move || {
+            let _ = eval.send(true);
+        }
+    });
+}
+
+/// A no-op on targets without a DOM (SSR/native without the `web`/`native`
+/// feature).
+#[cfg(not(any(feature = "web", feature = "native")))]
+fn use_reposition_bridge(
+    _anchor_id: ReadSignal<String>,
+    _floating_id: String,
+    _on_change: impl FnMut() + Clone + 'static,
+) {
+}
+
 /// The props for the [`Positioner`] component.
 #[derive(Props, Clone, PartialEq)]
 pub struct PositionerProps {
@@ -357,6 +481,16 @@ pub fn Positioner(props: PositionerProps) -> Element {
     let offset = props.offset;
     let collision_padding = props.collision_padding;
     let mut floating_ref: Signal<Option<Rc<MountedData>>> = use_signal(|| None);
+    // Always has a real id, even when the caller doesn't pass one, so
+    // `use_reposition_bridge` can look this element up from `document::eval`
+    // to exclude its own re-position mutations from the `MutationObserver`
+    // bridge below (every current consumer already passes `id`; this only
+    // matters for a future caller that doesn't).
+    let generated_id = use_unique_id();
+    let element_id = props
+        .id
+        .clone()
+        .unwrap_or_else(|| generated_id.peek().clone());
 
     let recompute = move || {
         spawn(async move {
@@ -389,6 +523,8 @@ pub fn Positioner(props: PositionerProps) -> Element {
         });
     };
 
+    use_reposition_bridge(anchor_id, element_id.clone(), recompute);
+
     let position = ctx.position;
     let style = match position() {
         // `visibility: visible` is explicit, not the default omitted, on
@@ -411,7 +547,7 @@ pub fn Positioner(props: PositionerProps) -> Element {
 
     rsx! {
         div {
-            id: props.id.clone(),
+            id: element_id.clone(),
             style,
             "data-side": position().map(|p| p.side.as_str()),
             "data-align": position().map(|p| p.align.as_str()),

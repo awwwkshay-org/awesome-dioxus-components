@@ -1,0 +1,15 @@
+{
+  "tailwindOnly": true,
+  "styleException": [],
+  "tokenCompliant": false,
+  "colorException": [
+    {
+      "value": "bg-black/50 (overlay backdrop)",
+      "reason": "Matches shadcn's own current new-york-v4 Dialog/Sheet source exactly, which uses bg-black/50 (not a semantic token) for its overlay backdrop -- same precedent already recorded for sheet.json."
+    }
+  ],
+  "inspiredBy": [
+    "shadcn"
+  ],
+  "inspirationNote": "Composes adico-primitives::dialog directly, the same foundation sheet.rs already uses (see registry/ui/drawer.rs's own module doc comment); side-anchored panel classes and grab handle mirror sheet.rs's own side-variant shape plus vaul's grab-handle convention. Deliberately does not implement drag-to-dismiss -- see this item's registry.json compositionNote and M7 task 8.3's completion note for why."
+}

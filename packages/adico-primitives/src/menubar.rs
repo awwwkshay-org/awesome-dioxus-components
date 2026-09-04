@@ -27,6 +27,7 @@ use crate::{
         CollectionPlacement, CollectionState, collection_item, use_collection_provider,
         use_deferred_collection_focus, use_item,
     },
+    direction::use_direction,
     use_animated_open, use_escape_key, use_id_or, use_unique_id,
 };
 
@@ -226,8 +227,20 @@ pub fn MenubarMenu(props: MenubarMenuProps) -> Element {
                         ctx.set_open_menu.call((!is_open()).then(&*props.index));
                     }
                     Key::Escape => on_escape_key(event.clone()),
-                    Key::ArrowLeft => ctx.focus.focus_prev(),
-                    Key::ArrowRight => ctx.focus.focus_next(),
+                    Key::ArrowLeft => {
+                        if use_direction().is_rtl() {
+                            ctx.focus.focus_next();
+                        } else {
+                            ctx.focus.focus_prev();
+                        }
+                    }
+                    Key::ArrowRight => {
+                        if use_direction().is_rtl() {
+                            ctx.focus.focus_prev();
+                        } else {
+                            ctx.focus.focus_next();
+                        }
+                    }
                     Key::ArrowDown if !disabled() => {
                         if !is_open() {
                             menu_ctx.initial_focus.set(Some(CollectionPlacement::First));

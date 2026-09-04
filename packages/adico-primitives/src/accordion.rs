@@ -35,7 +35,10 @@
 
 //! Defines the [`Accordion`]/[`AccordionMulti`] components and their sub-components.
 
-use crate::collection::{CollectionState, collection_item, use_collection_provider, use_item};
+use crate::collection::{
+    CollectionState, Orientation, collection_item, use_collection_provider, use_item,
+};
+use crate::direction::use_direction;
 use crate::{use_animated_open, use_id_or, use_unique_id};
 use dioxus::prelude::*;
 
@@ -483,21 +486,16 @@ pub fn AccordionTrigger(props: AccordionTriggerProps) -> Element {
                 ctx.focus.set_focus(Some(item.index));
             },
             onkeydown: move |event| {
-                let key = event.key();
-                let horizontal = ctx.is_horizontal();
-                let mut prevent_default = true;
-
-                match key {
-                    Key::ArrowUp if !horizontal => ctx.focus.focus_prev(),
-                    Key::ArrowDown if !horizontal => ctx.focus.focus_next(),
-                    Key::ArrowLeft if horizontal => ctx.focus.focus_prev(),
-                    Key::ArrowRight if horizontal => ctx.focus.focus_next(),
-                    Key::Home => ctx.focus.focus_first(),
-                    Key::End => ctx.focus.focus_last(),
-                    _ => prevent_default = false,
+                let orientation = if ctx.is_horizontal() {
+                    Orientation::Horizontal
+                } else {
+                    Orientation::Vertical
                 };
+                let handled = ctx
+                    .focus
+                    .navigate_key(event.key(), orientation, use_direction());
 
-                if prevent_default {
+                if handled {
                     event.prevent_default();
                 }
             },

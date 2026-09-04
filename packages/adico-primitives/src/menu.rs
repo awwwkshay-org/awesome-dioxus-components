@@ -17,19 +17,45 @@
 //! multi-menu roving coordination, respectively, neither of which this module
 //! has a counterpart for); evaluating how much of their content/item
 //! rendering can reuse this module's is separate, remaining task 2.3 scope.
-//! `MenuSubmenuTrigger`'s hover-intent-delay
-//! (opening a submenu after a brief hover, matching Base UI/Radix) is not
-//! implemented — only click and `ArrowRight`/`ArrowLeft` keyboard open/close
-//! are, which are the browser-independent-to-reason-about paths; hover
-//! timing is left as a named follow-up.
+//!
+//! `MenuContent` composes [`crate::positioner::Positioner`] (task 7.5b) for
+//! anchored placement rather than plain flow layout, matching every other
+//! floating-content primitive in this crate. `MenuItem` optionally composes
+//! [`crate::typeahead`] (7.3c, via an explicit `text_value` prop, since a
+//! generic `MenuItem<T>`'s value isn't necessarily stringifiable on its own)
+//! for type-to-select; `MenuCheckboxItem`/`MenuRadioItem` are not wired to
+//! typeahead (documented as deferred, not silently dropped — the base
+//! `MenuItem` case is overwhelmingly the common one, and wiring the other two
+//! is a small, separable follow-up, not additional design work).
+//! `MenuSubmenuTrigger` now opens on hover-intent after a configurable delay
+//! (`MenuSubmenuRootProps::open_delay_ms`/`close_delay_ms`), using the same
+//! generation-counter-debounced-timer technique `preview_card.rs`/
+//! `navigation_menu.rs` use for their own hover delays (not shared code
+//! between the three files — this crate's own "don't add abstractions beyond
+//! what's needed" convention doesn't call three call sites of ~15 lines each
+//! a pattern worth extracting yet). Click and `ArrowRight`/`ArrowLeft`
+//! keyboard open/close still work exactly as before. Not built: cross-sibling
+//! coordination (hovering a *different* top-level submenu trigger closing an
+//! already-open sibling) — each `MenuSubmenuRoot` only knows its own local
+//! open state, with no shared "currently open submenu" coordinator at the
+//! parent `Menu` level; a real, separate architectural addition, not
+//! attempted here.
 
+use std::collections::HashMap;
 use std::rc::Rc;
+use std::time::Duration;
 
 use dioxus::prelude::*;
 
 use crate::collection::{CollectionState, collection_item, use_collection_provider, use_item};
 use crate::layer::use_layer;
-use crate::{use_animated_open, use_controlled, use_id_or, use_unique_id};
+use crate::positioner::Positioner;
+use crate::selection::{OptionState, RcPartialEqValue};
+use crate::typeahead::{Typeahead, use_typeahead};
+use crate::{
+    ContentAlign, ContentSide, use_animated_open, use_controlled, use_effect_cleanup, use_id_or,
+    use_unique_id,
+};
 
 #[derive(Clone, Copy)]
 struct MenuContext {
@@ -38,6 +64,80 @@ struct MenuContext {
     disabled: ReadSignal<bool>,
     focus: CollectionState,
     trigger_id: Signal<String>,
+
+    /// Buffered, auto-clearing typeahead search over this scope's own
+    /// `text_values` (each `Menu`/`MenuSubmenuRoot` scope has its own,
+    /// independent typeahead session, matching how each already has its own
+    /// independent `focus` collection).
+    typeahead: Typeahead,
+    /// Index -> display text for every registered [`MenuItem`] in this
+    /// scope, kept in sync by each item's own mount/update/unmount.
+    text_values: Signal<HashMap<usize, String>>,
+
+    /// `true` for a [`MenuSubmenuRoot`]'s own context, `false` for the root
+    /// [`Menu`]'s. Gates hover-intent open/close (`hover_*` below and
+    /// [`MenuContent`]'s own mouse-enter/leave wiring) so a root `Menu`'s
+    /// content — which only closes on click-away/blur/Escape, matching
+    /// Base UI's own top-level trigger having no hover-open of its own —
+    /// doesn't also close the moment the pointer leaves it.
+    is_submenu: bool,
+    hover_open_delay_ms: ReadSignal<u64>,
+    hover_close_delay_ms: ReadSignal<u64>,
+    hover_generation: Signal<u64>,
+}
+
+impl MenuContext {
+    /// Feeds one typed character into this scope's typeahead buffer and
+    /// moves focus to the best-matching registered item, if any.
+    fn handle_typeahead_character(&self, text: &str, code: &str) {
+        let mut typeahead = self.typeahead;
+        if let Some(ch) = text.chars().next() {
+            typeahead.learn_from_keyboard_event(code, ch);
+        }
+
+        let options: Vec<OptionState> = self
+            .text_values
+            .read()
+            .iter()
+            .map(|(index, text_value)| OptionState {
+                id: index.to_string(),
+                index: *index,
+                value: RcPartialEqValue::new(()),
+                text_value: text_value.clone(),
+            })
+            .collect();
+
+        let focus = self.focus;
+        if let Some(best) = typeahead.on_input(text, &options, move |i| focus.is_available(i)) {
+            let mut focus = self.focus;
+            focus.set_focus(Some(best));
+        }
+    }
+
+    /// Requests opening (or closing) a submenu after this scope's configured
+    /// hover delay; a still-pending request is superseded (not applied) if a
+    /// newer request for the same scope arrives before it fires.
+    fn request_hover_open(&self, open: bool) {
+        let mut generation = self.hover_generation;
+        let this_generation = generation() + 1;
+        generation.set(this_generation);
+
+        let delay = if open {
+            (self.hover_open_delay_ms)()
+        } else {
+            (self.hover_close_delay_ms)()
+        };
+        let set_open = self.set_open;
+        let hover_generation = self.hover_generation;
+        spawn(async move {
+            if delay > 0 {
+                crate::time::sleep(Duration::from_millis(delay)).await;
+            }
+            if hover_generation() == this_generation {
+                set_open.call(open);
+            }
+        });
+    }
 }
 
 /// The props for the [`Menu`] component.
@@ -58,6 +158,10 @@ pub struct MenuProps {
     /// Whether focus should loop around when reaching the end.
     #[props(default = ReadSignal::new(Signal::new(true)))]
     pub roving_loop: ReadSignal<bool>,
+    /// How long to wait after the last keystroke before clearing the
+    /// typeahead search buffer.
+    #[props(default = ReadSignal::new(Signal::new(Duration::from_millis(500))))]
+    pub typeahead_timeout: ReadSignal<Duration>,
     /// Additional attributes for the menu root element.
     #[props(extends = GlobalAttributes)]
     pub attributes: Vec<Attribute>,
@@ -105,12 +209,22 @@ pub fn Menu(props: MenuProps) -> Element {
     let disabled = props.disabled;
     let trigger_id = use_unique_id();
     let focus = use_collection_provider(props.roving_loop);
+    let typeahead = use_typeahead(props.typeahead_timeout);
     let mut ctx = use_context_provider(|| MenuContext {
         open,
         set_open,
         disabled,
         focus,
         trigger_id,
+        typeahead,
+        text_values: Signal::new(HashMap::new()),
+        is_submenu: false,
+        // The root trigger never hover-opens (matching Base UI); these are
+        // only read by `MenuSubmenuTrigger`, which always resolves the
+        // nearest `MenuSubmenuRoot`'s own context instead.
+        hover_open_delay_ms: ReadSignal::new(Signal::new(0)),
+        hover_close_delay_ms: ReadSignal::new(Signal::new(0)),
+        hover_generation: Signal::new(0),
     });
 
     use_effect(move || {
@@ -135,6 +249,10 @@ pub fn Menu(props: MenuProps) -> Element {
             }
             Key::Home => ctx.focus.focus_first(),
             Key::End => ctx.focus.focus_last(),
+            Key::Character(text) if open() && text != " " => {
+                let code = event.code().to_string();
+                ctx.handle_typeahead_character(&text, &code);
+            }
             _ => return,
         }
         event.prevent_default();
@@ -211,6 +329,19 @@ pub struct MenuContentProps {
     /// The `id` of the content element. Generated if not provided.
     #[props(default)]
     pub id: ReadSignal<Option<String>>,
+    /// Side of the trigger to place the content. Defaults to `Bottom` (a
+    /// top-level dropdown opening below its trigger); a
+    /// [`MenuSubmenuRoot`]'s own nested `MenuContent` should pass
+    /// `ContentSide::Right` (or `Left`, for RTL) instead, matching a flyout
+    /// submenu's conventional placement — this component has no way to
+    /// distinguish "I'm a submenu's content" from "I'm a root menu's
+    /// content" structurally, so the caller composing a submenu is
+    /// responsible for passing the right side.
+    #[props(default = ContentSide::Bottom)]
+    pub side: ContentSide,
+    /// Alignment of the content relative to the trigger.
+    #[props(default = ContentAlign::Start)]
+    pub align: ContentAlign,
     /// Additional attributes for the content element.
     #[props(extends = GlobalAttributes)]
     pub attributes: Vec<Attribute>,
@@ -220,8 +351,9 @@ pub struct MenuContentProps {
 
 /// # MenuContent
 ///
-/// The popup content of a [`Menu`]. Only rendered while the menu is open.
-/// Must be used inside a [`Menu`].
+/// The popup content of a [`Menu`], anchored to its [`MenuTrigger`] (or, for
+/// a submenu, its [`MenuSubmenuTrigger`]) via [`crate::positioner::Positioner`].
+/// Only rendered while the menu is open. Must be used inside a [`Menu`].
 #[component]
 pub fn MenuContent(props: MenuContentProps) -> Element {
     let ctx: MenuContext = use_context();
@@ -229,18 +361,49 @@ pub fn MenuContent(props: MenuContentProps) -> Element {
     let id = use_id_or(unique_id, props.id);
     let render = use_animated_open(id, ctx.open);
 
+    let mut merged_attributes = vec![
+        dioxus_core::Attribute::new("role", "menu", None, false),
+        dioxus_core::Attribute::new("aria-labelledby", ctx.trigger_id.cloned(), None, false),
+        dioxus_core::Attribute::new(
+            "data-state",
+            if (ctx.open)() { "open" } else { "closed" },
+            None,
+            false,
+        ),
+    ];
+    merged_attributes.extend(props.attributes);
+
     rsx! {
         if render() {
-            div {
-                id,
-                role: "menu",
-                aria_labelledby: "{ctx.trigger_id}",
-                "data-state": if (ctx.open)() { "open" } else { "closed" },
-                onpointerdown: move |event| {
+            Positioner {
+                id: Some(id()),
+                anchor_id: ctx.trigger_id,
+                side: props.side,
+                align: props.align,
+                offset: 4.0,
+                on_pointer_down: move |event: Event<PointerData>| {
                     event.prevent_default();
                     event.stop_propagation();
                 },
-                ..props.attributes,
+                // Keeps a hover-opened submenu open while the pointer is
+                // over its own content, not just its trigger (mirrors
+                // `preview_card.rs`/`navigation_menu.rs`'s identical
+                // content-level hover handling). Gated on `is_submenu`: the
+                // root `Menu`'s own content only closes on click-away/blur/
+                // Escape, not on mouse-leave, matching Base UI's top-level
+                // trigger having no hover-open of its own.
+                on_mouse_enter: move |_| {
+                    if ctx.is_submenu {
+                        ctx.request_hover_open(true);
+                    }
+                },
+                on_mouse_leave: move |_| {
+                    if ctx.is_submenu {
+                        ctx.request_hover_open(false);
+                    }
+                },
+                attributes: merged_attributes,
+
                 {props.children}
             }
         }
@@ -257,6 +420,11 @@ pub struct MenuItemProps<T: Clone + PartialEq + 'static> {
     /// Whether this item is disabled.
     #[props(default)]
     pub disabled: ReadSignal<bool>,
+    /// This item's display text, registered with the enclosing menu scope's
+    /// typeahead search so typing can jump-focus to it. Omit (leave `None`)
+    /// to keep this item out of typeahead matching entirely.
+    #[props(default)]
+    pub text_value: ReadSignal<Option<String>>,
     /// Called when this item is selected (click, Enter, or Space).
     #[props(default)]
     pub on_select: Callback<T>,
@@ -277,6 +445,30 @@ pub fn MenuItem<T: Clone + PartialEq + 'static>(props: MenuItemProps<T>) -> Elem
     let disabled = move || (ctx.disabled)() || (props.disabled)();
     let item = use_item(collection_item(ctx.focus, props.index).disabled(disabled));
     let focused = move || item.focused();
+
+    let mut registered_text_value_index: Signal<Option<usize>> = use_signal(|| None);
+    use_effect(move || {
+        let index = props.index.cloned();
+        if let Some(previous) = registered_text_value_index.peek().as_ref()
+            && *previous != index
+        {
+            ctx.text_values.write().remove(previous);
+        }
+        match (props.text_value)() {
+            Some(text) => {
+                ctx.text_values.write().insert(index, text);
+            }
+            None => {
+                ctx.text_values.write().remove(&index);
+            }
+        }
+        registered_text_value_index.set(Some(index));
+    });
+    use_effect_cleanup(move || {
+        if let Some(index) = *registered_text_value_index.peek() {
+            ctx.text_values.write().remove(&index);
+        }
+    });
 
     rsx! {
         div {
@@ -604,6 +796,18 @@ pub struct MenuSubmenuRootProps {
     /// Whether this submenu is disabled.
     #[props(default)]
     pub disabled: ReadSignal<bool>,
+    /// Milliseconds to wait after the pointer enters the
+    /// [`MenuSubmenuTrigger`] before opening this submenu.
+    #[props(default = ReadSignal::new(Signal::new(200)))]
+    pub open_delay_ms: ReadSignal<u64>,
+    /// Milliseconds to wait after the pointer leaves the trigger (or the
+    /// submenu's own content) before closing it.
+    #[props(default = ReadSignal::new(Signal::new(200)))]
+    pub close_delay_ms: ReadSignal<u64>,
+    /// How long to wait after the last keystroke before clearing this
+    /// submenu's own typeahead search buffer.
+    #[props(default = ReadSignal::new(Signal::new(Duration::from_millis(500))))]
+    pub typeahead_timeout: ReadSignal<Duration>,
     /// Additional attributes for the submenu trigger element.
     #[props(extends = GlobalAttributes)]
     pub attributes: Vec<Attribute>,
@@ -627,8 +831,10 @@ pub struct MenuSubmenuRootProps {
 /// Escape closes only the innermost one). Must be used inside a [`Menu`] or
 /// another `MenuSubmenuRoot`'s [`MenuContent`].
 ///
-/// Hover-intent-delay opening (matching Base UI/Radix) is not implemented —
-/// see this module's own doc comment.
+/// Also opens on hover-intent, after [`MenuSubmenuRootProps::open_delay_ms`]
+/// (and closes after [`MenuSubmenuRootProps::close_delay_ms`]) — see this
+/// module's own doc comment for the technique and its one named limitation
+/// (no cross-sibling coordination between different open submenus yet).
 #[component]
 pub fn MenuSubmenuRoot(props: MenuSubmenuRootProps) -> Element {
     let parent_ctx: MenuContext = use_context();
@@ -637,13 +843,20 @@ pub fn MenuSubmenuRoot(props: MenuSubmenuRootProps) -> Element {
     let trigger_id = use_unique_id();
     let focus = use_collection_provider(ReadSignal::new(Signal::new(true)));
     let layer = use_layer(open);
+    let typeahead = use_typeahead(props.typeahead_timeout);
 
-    use_context_provider(|| MenuContext {
+    let ctx = use_context_provider(|| MenuContext {
         open,
         set_open,
         disabled: ReadSignal::new(Signal::new(disabled())),
         focus,
         trigger_id,
+        typeahead,
+        text_values: Signal::new(HashMap::new()),
+        is_submenu: true,
+        hover_open_delay_ms: props.open_delay_ms,
+        hover_close_delay_ms: props.close_delay_ms,
+        hover_generation: Signal::new(0),
     });
 
     let item = use_item(collection_item(parent_ctx.focus, props.index).disabled(disabled));
@@ -668,6 +881,11 @@ pub fn MenuSubmenuRoot(props: MenuSubmenuRootProps) -> Element {
                 set_open.call(false);
                 event.stop_propagation();
             }
+            Key::Character(text) if open() && text != " " => {
+                let code = event.code().to_string();
+                ctx.handle_typeahead_character(&text, &code);
+                event.stop_propagation();
+            }
             _ => {}
         }
     };
@@ -688,7 +906,10 @@ pub fn MenuSubmenuRoot(props: MenuSubmenuRootProps) -> Element {
 /// # MenuSubmenuTrigger
 ///
 /// The trigger for a [`MenuSubmenuRoot`]'s content. Click toggles the
-/// submenu open; must be used inside a [`MenuSubmenuRoot`].
+/// submenu open immediately; hovering opens it after
+/// [`MenuSubmenuRootProps::open_delay_ms`] (closes after
+/// `close_delay_ms`), matching Base UI/Radix hover-intent. Must be used
+/// inside a [`MenuSubmenuRoot`].
 #[component]
 pub fn MenuSubmenuTrigger(
     /// Additional attributes for the trigger element.
@@ -713,6 +934,16 @@ pub fn MenuSubmenuTrigger(
                 e.stop_propagation();
                 if !disabled() {
                     (ctx.set_open)(!open());
+                }
+            },
+            onmouseenter: move |_| {
+                if !disabled() {
+                    ctx.request_hover_open(true);
+                }
+            },
+            onmouseleave: move |_| {
+                if !disabled() {
+                    ctx.request_hover_open(false);
                 }
             },
             ..attributes,

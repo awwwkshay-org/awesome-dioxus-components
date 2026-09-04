@@ -1690,6 +1690,78 @@
       },
       {
         "adico_primitive": {
+          "components": [],
+          "hooks_used": [],
+          "modules": [
+            "icons"
+          ],
+          "props": {}
+        },
+        "name": "carousel",
+        "registry_facade": {
+          "components": [
+            "Carousel",
+            "CarouselContent",
+            "CarouselItem",
+            "CarouselPrevious",
+            "CarouselNext"
+          ],
+          "files": [
+            "ui/carousel.rs"
+          ],
+          "props": {
+            "Carousel": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "orientation",
+                "type": "Option<CarouselOrientation>"
+              }
+            ],
+            "CarouselContent": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "CarouselItem": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "CarouselNext": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "CarouselPrevious": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
           "components": [
             "Checkbox",
             "CheckboxIndicator"
@@ -2528,6 +2600,305 @@
               {
                 "name": "children",
                 "type": "Element"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
+          "components": [
+            "CommandRoot",
+            "CommandInput",
+            "CommandList",
+            "CommandGroup",
+            "CommandSeparator",
+            "CommandItem",
+            "CommandEmpty"
+          ],
+          "hooks_used": [
+            "use_collection_provider",
+            "use_controlled",
+            "use_effect_cleanup",
+            "use_id_or",
+            "use_item",
+            "use_unique_id"
+          ],
+          "modules": [
+            "command"
+          ],
+          "props": {
+            "CommandEmptyProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "CommandGroupProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "CommandInputProps": [
+              {
+                "default": "default()",
+                "name": "placeholder",
+                "type": "ReadSignal<String>"
+              },
+              {
+                "default": "default()",
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ],
+            "CommandItemProps": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "default": "default()",
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "value",
+                "type": "ReadSignal<T>"
+              },
+              {
+                "default": "default()",
+                "name": "text_value",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "on_select",
+                "type": "Callback<T>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "CommandListProps": [
+              {
+                "default": "default()",
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "CommandRootProps": [
+              {
+                "default": "default()",
+                "name": "query",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "default": "default()",
+                "name": "default_query",
+                "type": "ReadSignal<String>"
+              },
+              {
+                "default": "default()",
+                "name": "on_query_change",
+                "type": "Callback<String>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(true))",
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "Callback::new(|(q, t) :(String, String) | default_combobox_filter(& q, & t))",
+                "name": "filter",
+                "type": "Callback<(String, String), bool>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "CommandSeparatorProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        },
+        "name": "command",
+        "registry_facade": {
+          "components": [
+            "Command",
+            "CommandInput",
+            "CommandList",
+            "CommandEmpty",
+            "CommandGroup",
+            "CommandSeparator",
+            "CommandItem",
+            "CommandShortcut",
+            "CommandDialog"
+          ],
+          "files": [
+            "ui/command.rs"
+          ],
+          "props": {
+            "Command": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "CommandDialog": [
+              {
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "name": "on_open_change",
+                "type": "Callback<bool>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "CommandEmpty": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "CommandGroup": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "heading",
+                "type": "Option<String>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "CommandInput": [
+              {
+                "name": "placeholder",
+                "type": "Option<String>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "CommandItem": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "value",
+                "type": "ReadSignal<T>"
+              },
+              {
+                "name": "text_value",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "on_select",
+                "type": "Callback<T>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "CommandList": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "CommandSeparator": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "CommandShortcut": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
               }
             ]
           }
@@ -4208,6 +4579,201 @@
       },
       {
         "adico_primitive": {
+          "components": [
+            "DialogRoot",
+            "DialogContent",
+            "DialogTitle",
+            "DialogDescription"
+          ],
+          "hooks_used": [
+            "use_animated_open",
+            "use_controlled",
+            "use_escape_key",
+            "use_focus_trap",
+            "use_id_or",
+            "use_outside_dismiss",
+            "use_scroll_lock",
+            "use_unique_id"
+          ],
+          "modules": [
+            "dialog",
+            "icons"
+          ],
+          "props": {
+            "DialogContentProps": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "DialogDescriptionProps": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "DialogRootProps": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(true))",
+                "name": "is_modal",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "default": "default()",
+                "name": "default_open",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "on_open_change",
+                "type": "Callback<bool>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "DialogTitleProps": [
+              {
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        "name": "drawer",
+        "registry_facade": {
+          "components": [
+            "DrawerTrigger",
+            "DrawerOverlay",
+            "DrawerContent",
+            "DrawerClose",
+            "DrawerHeader",
+            "DrawerFooter"
+          ],
+          "files": [
+            "ui/drawer.rs"
+          ],
+          "props": {
+            "DrawerClose": [
+              {
+                "name": "children",
+                "type": "Option<Element>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "DrawerContent": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "direction",
+                "type": "Option<DrawerDirection>"
+              },
+              {
+                "name": "show_close_button",
+                "type": "bool"
+              }
+            ],
+            "DrawerFooter": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "DrawerHeader": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "DrawerOverlay": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "DrawerTrigger": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "variant",
+                "type": "Option<ButtonVariant>"
+              },
+              {
+                "name": "size",
+                "type": "Option<ButtonSize>"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
           "components": [],
           "hooks_used": [],
           "modules": [
@@ -4755,6 +5321,167 @@
               {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
+          "components": [
+            "OtpFieldRoot",
+            "OtpFieldInput",
+            "OtpFieldSeparator"
+          ],
+          "hooks_used": [],
+          "modules": [
+            "icons",
+            "otp_field"
+          ],
+          "props": {
+            "OtpFieldInputProps": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ],
+            "OtpFieldRootProps": [
+              {
+                "name": "value",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "default": "default()",
+                "name": "default_value",
+                "type": "String"
+              },
+              {
+                "default": "default()",
+                "name": "on_value_change",
+                "type": "Callback<String>"
+              },
+              {
+                "default": "default()",
+                "name": "on_value_complete",
+                "type": "Callback<String>"
+              },
+              {
+                "name": "length",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "read_only",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "name",
+                "type": "ReadSignal<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "OtpFieldSeparatorProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        "name": "input-otp",
+        "registry_facade": {
+          "components": [
+            "InputOTP",
+            "InputOTPGroup",
+            "InputOTPSlot",
+            "InputOTPSeparator"
+          ],
+          "files": [
+            "ui/input_otp.rs"
+          ],
+          "props": {
+            "InputOTP": [
+              {
+                "name": "value",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "default_value",
+                "type": "String"
+              },
+              {
+                "name": "on_value_change",
+                "type": "Callback<String>"
+              },
+              {
+                "name": "on_value_complete",
+                "type": "Callback<String>"
+              },
+              {
+                "name": "length",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "read_only",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "name",
+                "type": "ReadSignal<String>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "InputOTPGroup": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "InputOTPSlot": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
               }
             ]
           }
@@ -5372,6 +6099,239 @@
       },
       {
         "adico_primitive": {
+          "components": [
+            "NavigationMenuRoot",
+            "NavigationMenuList",
+            "NavigationMenuItem",
+            "NavigationMenuTrigger",
+            "NavigationMenuContent",
+            "NavigationMenuLink"
+          ],
+          "hooks_used": [
+            "use_animated_open",
+            "use_collection_provider",
+            "use_item"
+          ],
+          "modules": [
+            "icons",
+            "navigation_menu"
+          ],
+          "props": {
+            "NavigationMenuContentProps": [
+              {
+                "default": "ContentSide::Bottom",
+                "name": "side",
+                "type": "ContentSide"
+              },
+              {
+                "default": "ContentAlign::Start",
+                "name": "align",
+                "type": "ContentAlign"
+              },
+              {
+                "default": "true",
+                "name": "force_mount",
+                "type": "bool"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "NavigationMenuItemProps": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "NavigationMenuLinkProps": [
+              {
+                "default": "default()",
+                "name": "active",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "NavigationMenuListProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "NavigationMenuRootProps": [
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(true))",
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(200))",
+                "name": "delay_ms",
+                "type": "ReadSignal<u64>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(150))",
+                "name": "close_delay_ms",
+                "type": "ReadSignal<u64>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "NavigationMenuTriggerProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
+        },
+        "name": "navigation-menu",
+        "registry_facade": {
+          "components": [
+            "NavigationMenu",
+            "NavigationMenuList",
+            "NavigationMenuItem",
+            "NavigationMenuTrigger",
+            "NavigationMenuContent",
+            "NavigationMenuLink"
+          ],
+          "files": [
+            "ui/navigation_menu.rs"
+          ],
+          "props": {
+            "NavigationMenu": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "NavigationMenuContent": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "side",
+                "type": "Option<ContentSide>"
+              },
+              {
+                "name": "align",
+                "type": "Option<ContentAlign>"
+              }
+            ],
+            "NavigationMenuItem": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "NavigationMenuLink": [
+              {
+                "name": "active",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "href",
+                "type": "Option<String>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "NavigationMenuList": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "NavigationMenuTrigger": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
           "components": [],
           "hooks_used": [],
           "modules": [],
@@ -5881,6 +6841,82 @@
               {
                 "name": "children",
                 "type": "Element"
+              }
+            ]
+          }
+        },
+        "registry_manifest_found": true
+      },
+      {
+        "adico_primitive": {
+          "components": [],
+          "hooks_used": [],
+          "modules": [],
+          "props": {}
+        },
+        "name": "resizable",
+        "registry_facade": {
+          "components": [
+            "ResizablePanelGroup",
+            "ResizablePanel",
+            "ResizableHandle"
+          ],
+          "files": [
+            "ui/resizable.rs"
+          ],
+          "props": {
+            "ResizableHandle": [
+              {
+                "name": "handle_index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "with_handle",
+                "type": "bool"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ResizablePanel": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "default_size",
+                "type": "f64"
+              },
+              {
+                "name": "min_size",
+                "type": "f64"
+              },
+              {
+                "name": "max_size",
+                "type": "f64"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ResizablePanelGroup": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "direction",
+                "type": "Option<ResizableDirection>"
               }
             ]
           }
@@ -8848,7 +9884,7 @@
       }
     ],
     "summary": {
-      "total_components": 54
+      "total_components": 60
     }
   },
   "dioxus_components": {
@@ -9096,7 +10132,7 @@
   "shadcn": {
     "axis": "shadcn",
     "catalog_path": "statics/catalogs/shadcn.json",
-    "catalog_refreshed_at": "2026-09-01",
+    "catalog_refreshed_at": "2026-09-04",
     "components": [
       {
         "name": "accordion",
@@ -9163,7 +10199,8 @@
       },
       {
         "name": "carousel",
-        "status": "not_started"
+        "registry_item": "carousel",
+        "status": "built"
       },
       {
         "name": "chart",
@@ -9186,7 +10223,8 @@
       },
       {
         "name": "command",
-        "status": "not_started"
+        "registry_item": "command",
+        "status": "built"
       },
       {
         "name": "context-menu",
@@ -9204,7 +10242,8 @@
       },
       {
         "name": "drawer",
-        "status": "not_started"
+        "registry_item": "drawer",
+        "status": "built"
       },
       {
         "name": "dropdown-menu",
@@ -9241,7 +10280,8 @@
       },
       {
         "name": "input-otp",
-        "status": "not_started"
+        "registry_item": "input-otp",
+        "status": "built"
       },
       {
         "name": "item",
@@ -9282,7 +10322,8 @@
       },
       {
         "name": "navigation-menu",
-        "status": "not_started"
+        "registry_item": "navigation-menu",
+        "status": "built"
       },
       {
         "name": "pagination",
@@ -9306,7 +10347,8 @@
       },
       {
         "name": "resizable",
-        "status": "not_started"
+        "registry_item": "resizable",
+        "status": "built"
       },
       {
         "name": "scroll-area",
@@ -9389,14 +10431,14 @@
       }
     ],
     "refresh_command": "cargo xtask catalog fetch shadcn",
-    "revision": "63c1308d112b6b1205d86244a156cca1abef5087",
-    "source": "https://github.com/shadcn-ui/ui/tree/63c1308d112b6b1205d86244a156cca1abef5087/apps/v4/registry/new-york-v4/ui",
+    "revision": "8720dec73f5aebed9f649ea58636f54599fdedf1",
+    "source": "https://github.com/shadcn-ui/ui/tree/8720dec73f5aebed9f649ea58636f54599fdedf1/apps/v4/registry/new-york-v4/ui",
     "summary": {
-      "built": 44,
+      "built": 50,
       "not_applicable": 1,
-      "not_started": 16,
+      "not_started": 10,
       "total_upstream_components": 61
     }
   },
-  "synced_at": "2026-09-02"
+  "synced_at": "2026-09-04"
 }

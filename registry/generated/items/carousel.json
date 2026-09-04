@@ -1,0 +1,60 @@
+{
+  "name": "carousel",
+  "type": "registry:ui",
+  "description": "A source-owned scroll-snap Carousel for Dioxus with no dedicated primitive dependency.",
+  "files": [
+    {
+      "source": "ui/carousel.rs",
+      "targetRoot": "ui",
+      "target": "carousel.rs",
+      "checksum": "0b9c087709a54bf95979170c5b69562e8da510f24d5d2a480fa7d77633729d9e"
+    }
+  ],
+  "registryDependencies": [
+    "cn",
+    "button"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "carousel",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "carousel",
+    "compositionNote": "Built directly on native CSS scroll-snap plus Dioxus's own per-element MountedData::scroll/onscroll -- no drag/swipe gesture and no new adico-primitives module, matching this repo's own precedent for resizable's similarly reduced-primitive-need shape. Deliberately does not replicate embla-carousel-react's full API (CarouselApi/setApi, dot indicators, autoplay plugins, loop mode) -- see this file's own module doc comment and the M7 task audit (openspec/changes/build-adico-component-ecosystem/tasks.md, task 8.1) for why momentum drag was scoped out (adico-primitives' pointer.rs global pointer-position registry is a documented, unconfirmed-in-browser defect on web).",
+    "usage": "Carousel {\n    CarouselContent {\n        CarouselItem { \"Slide 1\" }\n        CarouselItem { \"Slide 2\" }\n    }\n    CarouselPrevious {}\n    CarouselNext {}\n}",
+    "accessibility": "Carousel is role=\"region\" aria-roledescription=\"carousel\"; each CarouselItem is role=\"group\" aria-roledescription=\"slide\". CarouselPrevious/CarouselNext are real disabled buttons (not just visually dimmed) once already at the corresponding scroll edge.",
+    "keyboard": "CarouselContent itself is focusable (tabindex=\"0\"); ArrowLeft/ArrowRight (or ArrowUp/ArrowDown when orientation is Vertical) page one viewport in that direction. CarouselPrevious/CarouselNext provide the same paging by click."
+  },
+  "compatibility": null,
+  "provenance": null
+}

@@ -1,0 +1,59 @@
+{
+  "name": "input-otp",
+  "type": "registry:ui",
+  "description": "A source-owned one-time-passcode input for Dioxus, backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/input_otp.rs",
+      "targetRoot": "ui",
+      "target": "input_otp.rs",
+      "checksum": "340844969905d19b3e7963162af66d633eaef4482f25eec5cfff34d6d8dc2b86"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "input_otp",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "input-otp",
+    "compositionNote": "Styles adico-primitives::otp_field directly. Upstream shadcn's input-otp wraps the input-otp npm package (one hidden real input plus length simulated 'fake caret' div slots); this crate's own otp_field primitive instead renders each slot as its own real, individually focusable <input maxlength=\"1\"> from the start (task 7.9) -- so InputOTPSlot styles that real input as a bordered box directly, with no fake-caret/data-[active=true] state to reproduce (a real input's own native caret already does that job). Pasting a full code is not redistributed slot-to-slot -- a named, documented primitive limitation (packages/adico-primitives/src/otp_field.rs's own module doc comment), not this facade's own gap.",
+    "usage": "InputOTP { length: 6usize, value: value(), on_value_change: move |v| value.set(v),\n    InputOTPGroup {\n        InputOTPSlot { index: 0usize }\n        InputOTPSlot { index: 1usize }\n        InputOTPSlot { index: 2usize }\n    }\n    InputOTPSeparator {}\n    InputOTPGroup {\n        InputOTPSlot { index: 3usize }\n        InputOTPSlot { index: 4usize }\n        InputOTPSlot { index: 5usize }\n    }\n}",
+    "accessibility": "InputOTP is role=\"group\"; each InputOTPSlot is a real <input inputmode=\"numeric\" maxlength=\"1\" autocomplete=\"one-time-code\"> (packages/adico-primitives/src/otp_field.rs).",
+    "keyboard": "Typing a character advances focus to the next slot; Backspace on an empty slot moves focus back and clears the previous slot; ArrowLeft/ArrowRight move focus between slots without editing."
+  },
+  "compatibility": null,
+  "provenance": null
+}

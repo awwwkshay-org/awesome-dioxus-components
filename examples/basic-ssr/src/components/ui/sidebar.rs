@@ -193,7 +193,7 @@ pub fn Sidebar(props: SidebarProps) -> Element {
     };
 
     let class = cn(&[
-        "flex h-svh flex-col bg-sidebar text-sidebar-foreground shrink-0 transition-[width] duration-200 ease-linear",
+        "relative flex h-svh flex-col bg-sidebar text-sidebar-foreground shrink-0 transition-[width] duration-200 ease-linear",
         width_class,
         side_class,
         variant_class,
@@ -234,6 +234,14 @@ pub fn SidebarTrigger(children: Element, class: Option<String>) -> Element {
 
 /// A thin edge rail that also toggles the [`Sidebar`], for pointer users
 /// who prefer dragging the boundary over pressing the explicit trigger.
+///
+/// Must be rendered as a child of [`Sidebar`]'s own `aside`, which carries
+/// `relative` specifically so this rail's `absolute` positioning resolves
+/// against the sidebar's own box. Without it (found live: the rail rendered
+/// at the page's own left edge, spanning nearly the full page height,
+/// instead of hugging the sidebar's boundary), `position: absolute` climbs
+/// to the nearest positioned ancestor -- which, with no other Sidebar part
+/// establishing one, could be arbitrarily far up the consumer's own page.
 #[component]
 pub fn SidebarRail(class: Option<String>) -> Element {
     let ctx = use_sidebar();

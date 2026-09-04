@@ -139,3 +139,91 @@ fn menu_content_and_items_use_aria_menu_roles_not_listbox() {
     assert!(!html.contains("role=\"listbox\""), "{html}");
     assert!(!html.contains("role=\"option\""), "{html}");
 }
+
+// task 7.6 (M6-closure batch, 2026-09-04): `MenuContent` now composes
+// `positioner::Positioner` for anchored placement instead of a plain flow `div`.
+// `aria-labelledby` referencing the trigger's own id is the one part of the old
+// plain-`div` implementation `Positioner`'s `attributes` merge has to carry
+// through unchanged -- pinned here so a regression in that merge (e.g. an
+// attribute silently dropped) is caught, not just role="menu" (already covered
+// above).
+#[cfg(not(any(feature = "web", feature = "native")))]
+#[test]
+fn menu_content_stays_labelled_by_its_trigger_after_the_positioner_move() {
+    let html = render(OpenMenuWithItem);
+    let trigger_id = html
+        .split("id=\"")
+        .nth(1)
+        .and_then(|rest| rest.split('"').next())
+        .expect("trigger renders an id");
+    assert!(
+        html.contains(&format!(r#"aria-labelledby="{trigger_id}""#)),
+        "content should be aria-labelledby its trigger's id ({trigger_id}): {html}"
+    );
+}
+
+// task 7.6 (M6-closure batch): an item's `text_value` (typeahead registration)
+// is purely additive -- rendering with or without it set must not change the
+// item's own markup.
+#[component]
+fn OpenMenuWithTextValueItem() -> Element {
+    rsx! {
+        Menu { default_open: true,
+            MenuTrigger { "Open" }
+            MenuContent {
+                MenuItem::<String> {
+                    value: "banana".to_string(),
+                    index: 0usize,
+                    text_value: "Banana".to_string(),
+                    "Banana",
+                }
+            }
+        }
+    }
+}
+
+#[cfg(not(any(feature = "web", feature = "native")))]
+#[test]
+fn menu_item_renders_the_same_whether_or_not_text_value_is_set() {
+    let with_text_value = render(OpenMenuWithTextValueItem);
+    let without_text_value = render(OpenMenuWithItem);
+    // Only the visible label text should differ ("Banana" vs "Edit"); the
+    // role/tabindex/data-disabled contract around it is unaffected by
+    // whether `text_value` was set.
+    assert!(
+        with_text_value.contains(r#"role="menuitem""#),
+        "{with_text_value}"
+    );
+    assert!(
+        without_text_value.contains(r#"role="menuitem""#),
+        "{without_text_value}"
+    );
+}
+
+// task 7.6 (M6-closure batch): `MenuSubmenuTrigger`'s new hover-intent props
+// (`open_delay_ms`/`close_delay_ms`) are additive defaults -- a submenu must
+// still render its normal closed-by-default contract untouched.
+#[component]
+fn ClosedSubmenuWithCustomHoverDelays() -> Element {
+    rsx! {
+        Menu { default_open: true,
+            MenuTrigger { "Open" }
+            MenuContent {
+                MenuSubmenuRoot { index: 0usize, open_delay_ms: 50u64, close_delay_ms: 50u64,
+                    MenuSubmenuTrigger { "More" }
+                    MenuContent {
+                        MenuItem::<String> { value: "x".to_string(), index: 0usize, "X" }
+                    }
+                }
+            }
+        }
+    }
+}
+
+#[cfg(not(any(feature = "web", feature = "native")))]
+#[test]
+fn submenu_with_custom_hover_delays_still_defaults_closed() {
+    let html = render(ClosedSubmenuWithCustomHoverDelays);
+    assert!(html.contains("data-state=\"closed\""), "{html}");
+    assert!(!html.contains("\">X<"), "{html}");
+}

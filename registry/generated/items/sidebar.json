@@ -7,7 +7,7 @@
       "source": "ui/sidebar.rs",
       "targetRoot": "ui",
       "target": "sidebar.rs",
-      "checksum": "90977a77839e64554609b19d8dad356f6a2edbabf8b33b6303a9cb41de5478d0"
+      "checksum": "79d8aa22efa1de4a1d4b52334f3b1976cf6748265f0b98fd6d312f21587e80b4"
     }
   ],
   "registryDependencies": [

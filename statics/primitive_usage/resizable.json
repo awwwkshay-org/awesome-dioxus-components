@@ -1,0 +1,6 @@
+{
+  "classification": "exception",
+  "primitiveModules": [],
+  "reason": "Deliberately implements its own drag (onpointerdown/onpointermove/onpointerup) and keyboard resize behavior at the registry layer instead of delegating to a primitive, to avoid adico-primitives::pointer's global pointer-position registry -- a documented, unconfirmed-in-browser defect on web (packages/adico-primitives/src/gesture.rs's own module doc comment; reusing adico-primitives::move_interaction, as originally suggested by the M7 task audit, would have routed through that same defect). See registry/ui/resizable.rs's own module doc comment.",
+  "followUp": "If a second registry item needs the same per-element pointer-drag shape, promote this behavior into a real adico-primitives module instead of duplicating it at the registry layer again."
+}

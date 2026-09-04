@@ -579,6 +579,24 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/combobox.rs") => {
                 Ok(include_bytes!("../../../registry/ui/combobox.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/command.rs") => {
+                Ok(include_bytes!("../../../registry/ui/command.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/navigation_menu.rs") => {
+                Ok(include_bytes!("../../../registry/ui/navigation_menu.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/drawer.rs") => {
+                Ok(include_bytes!("../../../registry/ui/drawer.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/carousel.rs") => {
+                Ok(include_bytes!("../../../registry/ui/carousel.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/input_otp.rs") => {
+                Ok(include_bytes!("../../../registry/ui/input_otp.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/resizable.rs") => {
+                Ok(include_bytes!("../../../registry/ui/resizable.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, "ui/calendar.rs") => {
                 Ok(include_bytes!("../../../registry/ui/calendar.rs").to_vec())
             }
@@ -935,30 +953,36 @@ mod tests {
                 "@adico/button-group".to_string(),
                 "@adico/calendar".to_string(),
                 "@adico/card".to_string(),
+                "@adico/carousel".to_string(),
                 "@adico/checkbox".to_string(),
                 "@adico/cn".to_string(),
                 "@adico/collapsible".to_string(),
                 "@adico/color-picker".to_string(),
                 "@adico/combobox".to_string(),
+                "@adico/command".to_string(),
                 "@adico/context-menu".to_string(),
                 "@adico/date-picker".to_string(),
                 "@adico/dialog".to_string(),
                 "@adico/drag-and-drop-list".to_string(),
+                "@adico/drawer".to_string(),
                 "@adico/dropdown-menu".to_string(),
                 "@adico/empty".to_string(),
                 "@adico/hover-card".to_string(),
                 "@adico/input".to_string(),
                 "@adico/input-group".to_string(),
+                "@adico/input-otp".to_string(),
                 "@adico/item".to_string(),
                 "@adico/kbd".to_string(),
                 "@adico/label".to_string(),
                 "@adico/menubar".to_string(),
                 "@adico/mode-toggle".to_string(),
                 "@adico/native-select".to_string(),
+                "@adico/navigation-menu".to_string(),
                 "@adico/pagination".to_string(),
                 "@adico/popover".to_string(),
                 "@adico/progress".to_string(),
                 "@adico/radio-group".to_string(),
+                "@adico/resizable".to_string(),
                 "@adico/scroll-area".to_string(),
                 "@adico/select".to_string(),
                 "@adico/sheet".to_string(),

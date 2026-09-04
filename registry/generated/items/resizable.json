@@ -1,0 +1,49 @@
+{
+  "name": "resizable",
+  "type": "registry:ui",
+  "description": "A source-owned draggable panel-group splitter for Dioxus with no dedicated primitive dependency.",
+  "files": [
+    {
+      "source": "ui/resizable.rs",
+      "targetRoot": "ui",
+      "target": "resizable.rs",
+      "checksum": "b3b1bc7edd0473fc23e3c8a608cf733c812cae828cd15e843ddcc58311501a7f"
+    }
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "resizable",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "resizable",
+    "compositionNote": "No backing adico-primitives module -- registry-layer composition only. 8.1's task audit originally suggested reusing adico-primitives::move_interaction's track-drag, but move_interaction.rs's own pointer tracking depends on adico-primitives::pointer's global pointer-position registry, the same documented, unconfirmed-in-browser defect drawer/carousel were built around -- reusing it here would have routed this component through the exact defect 8.1 was trying to avoid elsewhere. Instead this drags on native per-element onpointerdown/onpointermove/onpointerup, with a temporary fixed-inset-0 overlay (rendered only while dragging) catching move/up regardless of where the pointer travels, since there is no setPointerCapture precedent or public MountedData API to reach the raw DOM element for one. See this file's own module doc comment for the full correction to 8.1's suggestion.",
+    "usage": "ResizablePanelGroup {\n    ResizablePanel { index: 0usize, default_size: 50.0, \"Left\" }\n    ResizableHandle { handle_index: 0usize, with_handle: true }\n    ResizablePanel { index: 1usize, default_size: 50.0, \"Right\" }\n}",
+    "accessibility": "Each ResizableHandle is role=\"separator\" with aria-orientation reflecting the group's ResizableDirection.",
+    "keyboard": "Each ResizableHandle is independently focusable (tabindex=\"0\"); ArrowLeft/ArrowRight (Horizontal) or ArrowUp/ArrowDown (Vertical) step-resize the two panels it straddles by 5% per press, clamped to each panel's own min/max size."
+  },
+  "compatibility": null,
+  "provenance": null
+}

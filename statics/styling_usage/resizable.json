@@ -1,0 +1,15 @@
+{
+  "tailwindOnly": false,
+  "styleException": [
+    {
+      "description": "panel's computed flex-basis (style: \"flex: 0 0 {size}%;\" at resizable.rs's ResizablePanel) and the drag overlay's runtime cursor (style: \"cursor: {overlay_cursor};\")",
+      "reason": "A panel's size is a runtime percentage driven by drag/keyboard state; Tailwind has no static utility for an arbitrary runtime flex-basis percentage, matching progress.rs's identical precedent for its computed indicator width."
+    }
+  ],
+  "tokenCompliant": true,
+  "colorException": [],
+  "inspiredBy": [
+    "shadcn"
+  ],
+  "inspirationNote": "No dedicated adico-primitives module -- see registry/ui/resizable.rs's own module doc comment for why (M7 task 8.4). Layout/handle classes (bg-border separator, focus-visible ring) match shadcn's own resizable source shape; the drag/keyboard interaction itself is this crate's own implementation, not ported from react-resizable-panels."
+}

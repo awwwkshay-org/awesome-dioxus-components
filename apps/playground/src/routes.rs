@@ -9,12 +9,13 @@ use crate::components;
 use crate::components::theme_builder_launcher::ThemeBuilderLauncher;
 use crate::pages::{
     AccordionPage, AlertDialogPage, AlertPage, AspectRatioPage, AvatarPage, BadgePage,
-    BreadcrumbPage, ButtonGroupPage, ButtonPage, CalendarPage, CardPage, CheckboxPage,
-    CollapsiblePage, ColorPickerPage, ComboboxPage, ContextMenuPage, DatePickerPage, DialogPage,
-    DragAndDropListPage, DropdownMenuPage, EmptyPage, Home, HoverCardPage, InputGroupPage,
-    InputPage, ItemPage, KbdPage, LabelPage, MenubarPage, ModeTogglePage, NativeSelectPage,
-    PaginationPage, PopoverPage, ProgressPage, RadioGroupPage, ScrollAreaPage, SelectPage,
-    SheetPage, SidebarPage, SkeletonPage, SliderPage, SpinnerPage, SwitchPage, TablePage, TabsPage,
+    BreadcrumbPage, ButtonGroupPage, ButtonPage, CalendarPage, CardPage, CarouselPage,
+    CheckboxPage, CollapsiblePage, ColorPickerPage, ComboboxPage, CommandPage, ContextMenuPage,
+    DatePickerPage, DialogPage, DragAndDropListPage, DrawerPage, DropdownMenuPage, EmptyPage, Home,
+    HoverCardPage, InputGroupPage, InputOTPPage, InputPage, ItemPage, KbdPage, LabelPage,
+    MenubarPage, ModeTogglePage, NativeSelectPage, NavigationMenuPage, PaginationPage, PopoverPage,
+    ProgressPage, RadioGroupPage, ResizablePage, ScrollAreaPage, SelectPage, SheetPage,
+    SidebarPage, SkeletonPage, SliderPage, SpinnerPage, SwitchPage, TablePage, TabsPage,
     TagGroupPage, TextareaPage, ThemeSwitcherPage, ToastPage, ToggleGroupPage, TogglePage,
     ToolbarPage, TooltipPage, VirtualListPage,
 };
@@ -50,6 +51,8 @@ pub enum Route {
     SelectPage {},
     #[route("/combobox")]
     ComboboxPage {},
+    #[route("/command")]
+    CommandPage {},
     #[route("/tooltip")]
     TooltipPage {},
     #[route("/popover")]
@@ -132,6 +135,16 @@ pub enum Route {
     InputGroupPage {},
     #[route("/native-select")]
     NativeSelectPage {},
+    #[route("/navigation-menu")]
+    NavigationMenuPage {},
+    #[route("/drawer")]
+    DrawerPage {},
+    #[route("/carousel")]
+    CarouselPage {},
+    #[route("/input-otp")]
+    InputOTPPage {},
+    #[route("/resizable")]
+    ResizablePage {},
 }
 
 pub fn nav_items() -> Vec<(&'static str, Route)> {
@@ -148,6 +161,7 @@ pub fn nav_items() -> Vec<(&'static str, Route)> {
         ("Sheet", Route::SheetPage {}),
         ("Select", Route::SelectPage {}),
         ("Combobox", Route::ComboboxPage {}),
+        ("Command", Route::CommandPage {}),
         ("Tooltip", Route::TooltipPage {}),
         ("Popover", Route::PopoverPage {}),
         ("HoverCard", Route::HoverCardPage {}),
@@ -189,6 +203,11 @@ pub fn nav_items() -> Vec<(&'static str, Route)> {
         ("ButtonGroup", Route::ButtonGroupPage {}),
         ("InputGroup", Route::InputGroupPage {}),
         ("NativeSelect", Route::NativeSelectPage {}),
+        ("NavigationMenu", Route::NavigationMenuPage {}),
+        ("Drawer", Route::DrawerPage {}),
+        ("Carousel", Route::CarouselPage {}),
+        ("InputOTP", Route::InputOTPPage {}),
+        ("Resizable", Route::ResizablePage {}),
     ]
 }
 

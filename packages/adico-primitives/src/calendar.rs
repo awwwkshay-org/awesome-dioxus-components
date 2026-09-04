@@ -22,7 +22,10 @@ use std::{
 
 use time::{Date, Month, OffsetDateTime, Weekday, ext::NumericalDuration, macros::date};
 
-use crate::{LocalDateExt as _, date_picker::DefaultCalendarProps, use_effect_cleanup};
+use crate::{
+    LocalDateExt as _, date_picker::DefaultCalendarProps, direction::use_direction,
+    use_effect_cleanup,
+};
 
 // A collection of [`Weekday`]s stored as a single byte
 // Implemented as a bitmask where bits 1-7 correspond to Monday-Sunday
@@ -656,14 +659,25 @@ pub fn Calendar(props: CalendarProps) -> Element {
                         None => base_ctx.focused_date.set(None),
                     }
                 };
+                let rtl = use_direction().is_rtl();
                 match e.key() {
                     Key::ArrowLeft => {
                         e.prevent_default();
-                        set_focused_date(focused_date.previous_day());
+                        let next_focused = if rtl {
+                            focused_date.next_day()
+                        } else {
+                            focused_date.previous_day()
+                        };
+                        set_focused_date(next_focused);
                     }
                     Key::ArrowRight => {
                         e.prevent_default();
-                        set_focused_date(focused_date.next_day());
+                        let next_focused = if rtl {
+                            focused_date.previous_day()
+                        } else {
+                            focused_date.next_day()
+                        };
+                        set_focused_date(next_focused);
                     }
                     Key::ArrowUp => {
                         e.prevent_default();
@@ -935,14 +949,25 @@ pub fn RangeCalendar(props: RangeCalendarProps) -> Element {
                         None => base_ctx.focused_date.set(None),
                     }
                 };
+                let rtl = use_direction().is_rtl();
                 match e.key() {
                     Key::ArrowLeft => {
                         e.prevent_default();
-                        set_focused_date(focused_date.previous_day());
+                        let next_focused = if rtl {
+                            focused_date.next_day()
+                        } else {
+                            focused_date.previous_day()
+                        };
+                        set_focused_date(next_focused);
                     }
                     Key::ArrowRight => {
                         e.prevent_default();
-                        set_focused_date(focused_date.next_day());
+                        let next_focused = if rtl {
+                            focused_date.previous_day()
+                        } else {
+                            focused_date.next_day()
+                        };
+                        set_focused_date(next_focused);
                     }
                     Key::ArrowUp => {
                         e.prevent_default();

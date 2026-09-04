@@ -1,0 +1,8 @@
+{
+  "classification": "exception",
+  "primitiveModules": [
+    "icons"
+  ],
+  "reason": "Its `icons` import is purely decorative (the prev/next arrow glyphs) -- the actual paging behavior (native CSS scroll-snap plus MountedData::scroll/onscroll/onkeydown) is implemented entirely at the registry layer, not delegated to any adico-primitives module, to avoid adico-primitives::pointer's global pointer-position registry (see registry/ui/carousel.rs's own module doc comment, and resizable.json's identical rationale).",
+  "followUp": "If a second registry item needs the same scroll-snap-paging shape, promote this behavior into a real adico-primitives module instead of duplicating it at the registry layer again."
+}

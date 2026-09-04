@@ -6,7 +6,10 @@
 
 //! Defines the [`Toolbar`] component and its sub-components, which provide a container to group related buttons and controls with keyboard navigation.
 
-use crate::collection::{CollectionState, collection_item, use_collection_provider, use_item};
+use crate::collection::{
+    CollectionState, Orientation, collection_item, use_collection_provider, use_item,
+};
+use crate::direction::use_direction;
 use dioxus::prelude::*;
 
 #[derive(Clone, Copy)]
@@ -198,38 +201,14 @@ pub fn ToolbarButton(props: ToolbarButtonProps) -> Element {
             },
 
             onkeydown: move |event: Event<KeyboardData>| {
-                let key = event.key();
-                let horizontal = (ctx.horizontal)();
-                let mut prevent_default = true;
-                match key {
-                    Key::ArrowUp if !horizontal => {
-                        let index = (props.index)();
-                        if index > 0 {
-                            ctx.set_focus(Some(index - 1));
-                        }
-                    }
-                    Key::ArrowDown if !horizontal => {
-                        let index = (props.index)();
-                        ctx.set_focus(Some(index + 1));
-                    }
-                    Key::ArrowLeft if horizontal => {
-                        let index = (props.index)();
-                        if index > 0 {
-                            ctx.set_focus(Some(index - 1));
-                        }
-                    }
-                    Key::ArrowRight if horizontal => {
-                        let index = (props.index)();
-                        ctx.set_focus(Some(index + 1));
-                    }
-                    Key::Home => {
-                        ctx.set_focus(Some(0));
-                    }
-                    Key::End => {
-                        ctx.set_focus(Some(100));
-                    }
-                    _ => prevent_default = false,
+                let orientation = if (ctx.horizontal)() {
+                    Orientation::Horizontal
+                } else {
+                    Orientation::Vertical
                 };
+                let prevent_default =
+                    ctx.focus
+                        .navigate_key(event.key(), orientation, use_direction());
                 if prevent_default {
                     event.prevent_default();
                 }

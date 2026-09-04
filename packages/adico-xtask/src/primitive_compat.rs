@@ -123,10 +123,10 @@ const UPSTREAM_COMPONENTS: &[ComponentEntry] = &[
     },
     ComponentEntry {
         name: "Checkbox Group",
-        status: Status::NotStarted,
-        adico_file: None,
+        status: Status::Built,
+        adico_file: Some("checkbox_group.rs"),
         adico_registry_item: None,
-        notes: "Base-UI-parity tier target, task 7.9.",
+        notes: "Task 7.9, M6-closure batch. Base UI's CheckboxGroup has exactly one part (root) and works by each ordinary Checkbox reading ambient group context by its own name -- a mechanism checkbox.rs doesn't implement. Translated as an explicit hook, use_checkbox_group_item(name), that a real Checkbox composes (same 'hook, not a merge-props mechanism' translation field.rs's use_field_control() already established), plus use_checkbox_group_parent()/use_checkbox_group_disabled() for a 'select all' parent checkbox and group-level disablement -- all pure composition, no changes to checkbox.rs. No registry item yet -- M7/M8 scope.",
     },
     ComponentEntry {
         name: "Collapsible",
@@ -193,10 +193,10 @@ const UPSTREAM_COMPONENTS: &[ComponentEntry] = &[
     },
     ComponentEntry {
         name: "Menu",
-        status: Status::Partial,
+        status: Status::Built,
         adico_file: Some("menu.rs"),
         adico_registry_item: None,
-        notes: "Unified anatomy built (task 7.6a); dropdown_menu.rs re-exports its components directly (task 2.3), so it is now consumed indirectly via the 'dropdown-menu' registry item, but there is no standalone 'menu' registry item and it is still not composed on positioner::Positioner nor wired to use_typeahead.",
+        notes: "Unified anatomy built (task 7.6a); dropdown_menu.rs re-exports its components directly (task 2.3), so it is now consumed indirectly via the 'dropdown-menu' registry item, but there is no standalone 'menu' registry item. Task 7.6 (M6-closure batch, 2026-09-04) closed the umbrella's remaining scope: MenuContent now composes positioner::Positioner (anchored placement, matching every other floating-content primitive) instead of plain flow layout; MenuItem optionally composes typeahead::use_typeahead via an explicit text_value prop (type-to-select), with MenuCheckboxItem/MenuRadioItem deliberately left unwired (documented, the base MenuItem case being overwhelmingly common); MenuSubmenuTrigger now opens on hover-intent after a configurable delay (generation-counter-debounced, same technique preview_card.rs/navigation_menu.rs use), closing MenuSubmenuRootProps::open_delay_ms/close_delay_ms. One named, deferred gap: no cross-sibling coordination between different open top-level submenus (each MenuSubmenuRoot only knows its own local open state) -- a real, separate architectural addition, not attempted.",
     },
     ComponentEntry {
         name: "Menubar",
@@ -207,31 +207,31 @@ const UPSTREAM_COMPONENTS: &[ComponentEntry] = &[
     },
     ComponentEntry {
         name: "Meter",
-        status: Status::NotStarted,
-        adico_file: None,
+        status: Status::Built,
+        adico_file: Some("meter.rs"),
         adico_registry_item: None,
-        notes: "Base-UI-parity tier target, task 7.9.",
+        notes: "Task 7.9, M6-closure batch. role=\"meter\" with a required aria-valuenow (unlike progress.rs's role=\"progressbar\", a meter has no indeterminate state) plus MeterTrack/MeterIndicator/MeterLabel/MeterValue parts and a --meter-value CSS variable, structurally mirroring progress.rs. No registry item yet -- M7/M8 scope.",
     },
     ComponentEntry {
         name: "Navigation Menu",
-        status: Status::NotStarted,
-        adico_file: None,
+        status: Status::Built,
+        adico_file: Some("navigation_menu.rs"),
         adico_registry_item: None,
-        notes: "Base-UI-parity tier target, task 7.9.",
+        notes: "Task 7.9, M6-closure batch. Reuses menubar.rs's crate::collection roving-focus, single-open-at-a-time composite container pattern for the top-level item row, diverging where Navigation Menu genuinely differs: NavigationMenuContent composes positioner::Positioner (content is arbitrary rich content, not a role=menu listbox) instead of a second nested collection, and opening is primarily hover-driven with a configurable delay (immediate when switching between already-open siblings) rather than click-only. Deliberately NOT built: NavigationMenuViewport's real Base UI behavior (a single shared popup morphing width/height/position between items' content) -- each item's Content positions independently instead, a real simplification, not an oversight; NavigationMenuLink does not join the roving-focus collection when used as a plain top-level item (stays a normal Tab stop). No dedicated Arrow/Backdrop/Portal wrapper components -- consumers compose positioner::Arrow/crate::portal directly, matching every other primitive in this crate. No registry item yet -- M7/M8 scope.",
     },
     ComponentEntry {
         name: "Number Field",
-        status: Status::NotStarted,
-        adico_file: None,
+        status: Status::Built,
+        adico_file: Some("number_field.rs"),
         adico_registry_item: None,
-        notes: "Base-UI-parity tier target, task 7.9.",
+        notes: "Task 7.9, M6-closure batch. WAI-ARIA APG Spin Button pattern (role=\"spinbutton\") on NumberFieldInput, with NumberFieldGroup/NumberFieldIncrement/NumberFieldDecrement. The committed value is always a real f64, not Base UI's number|null (use_controlled is generic over T: Clone+PartialEq; a nullable controlled value would need T = Option<f64>, i.e. a ReadSignal<Option<Option<f64>>> prop -- not worth the ergonomics cost for this pass; slider.rs has the same always-a-number simplification). NumberFieldInput keeps its own local draft text signal so an in-progress edit isn't reformatted mid-type, committing on blur/Enter/step/arrow keys. Deliberately NOT built: ScrubArea/ScrubAreaCursor (needs document.requestPointerLock(), a genuinely separate browser-interop feature), smallStep (Alt-held fine adjustment), locale/format (Intl.NumberFormat-driven display), allowWheelScrub. No registry item yet -- M7/M8 scope.",
     },
     ComponentEntry {
         name: "OTP Field",
-        status: Status::NotStarted,
-        adico_file: None,
+        status: Status::Built,
+        adico_file: Some("otp_field.rs"),
         adico_registry_item: None,
-        notes: "Base-UI-parity tier target, task 7.9.",
+        notes: "Task 7.9, M6-closure batch. One real maxlength=1 <input> per slot (OtpFieldInput { index }), matching Base UI's own generated markup rather than a single input with CSS masking; the root owns the combined value and moves focus between slots as the user types, deletes (Backspace on an empty slot moves back and clears the previous slot), or presses arrow keys, and derives subsequent slot ids from its own id ({id}-2, {id}-3, ...) per the catalog's documented scheme. Clearing a slot mid-code compacts the value (documented simplification, not a hole at a fixed position). Deliberately NOT built: paste does not redistribute a full code across every remaining slot (native paste into a maxlength=1 input still works for the focused slot only -- no ClipboardData precedent exists elsewhere in this crate to build on); autoSubmit; validationType/normalizeValue (no validation-registry primitive exists yet, same gap field.rs's own notes name for Form); mask. No registry item yet -- M7/M8 scope.",
     },
     ComponentEntry {
         name: "Popover",
@@ -242,10 +242,10 @@ const UPSTREAM_COMPONENTS: &[ComponentEntry] = &[
     },
     ComponentEntry {
         name: "Preview Card",
-        status: Status::NotStarted,
-        adico_file: None,
+        status: Status::Built,
+        adico_file: Some("preview_card.rs"),
         adico_registry_item: None,
-        notes: "Base-UI-parity tier target, task 7.9 -- the original inspiration for this crate's shared-primitive redesign.",
+        notes: "Task 7.9, M6-closure batch -- the original inspiration for this crate's shared-primitive redesign. Same root/trigger/positioner/popup/arrow/backdrop/portal/viewport shape as hover_card.rs and composes positioner::Positioner the same way HoverCard does. The one genuine behavioral difference from HoverCard: delay_ms/close_delay_ms (defaults 600/300ms, matching Base UI) via a generation-counter-debounced timer using this crate's existing crate::time::sleep, instead of HoverCard's instant open/close -- appropriate for a card worth deliberately hovering into rather than a short tooltip label. No dedicated tooltip role (unlike HoverCardContent's role=\"tooltip\") since content is expected to be rich/interactive. No registry item yet -- M7/M8 scope.",
     },
     ComponentEntry {
         name: "Progress",
@@ -385,6 +385,7 @@ const DIOXUS_MODULE_NOTES: &[(&str, &str)] = &[
 
 /// Primitives/registry items adico has that Base UI has no equivalent for.
 const ADICO_ONLY_EXTRAS: &[(&str, &str)] = &[
+    ("Command", "command.rs"),
     ("DatePicker", "date_picker.rs"),
     ("ColorPicker", "color_picker.rs"),
     ("DragAndDropList", "drag_and_drop_list.rs"),

@@ -1,0 +1,60 @@
+{
+  "name": "drawer",
+  "type": "registry:ui",
+  "description": "A source-owned edge-anchored Drawer for Dioxus, composing the owned Dialog primitive.",
+  "files": [
+    {
+      "source": "ui/drawer.rs",
+      "targetRoot": "ui",
+      "target": "drawer.rs",
+      "checksum": "d8b0e29dabee7016be62e26944416d9bf5bd692925d47d3cb0be511fc85a80a6"
+    }
+  ],
+  "registryDependencies": [
+    "cn",
+    "button"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "drawer",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "drawer",
+    "compositionNote": "Composes the owned dialog primitive directly (DrawerTitle/DrawerDescription/Drawer re-export the Dialog primitive's parts), styled as an edge-anchored panel with a visual grab handle on Top/Bottom directions. Deliberately does not implement drag-to-dismiss (upstream shadcn's `drawer` wraps `vaul`, a real drag gesture library) -- see this file's own module doc comment and the M7 task audit (openspec/changes/build-adico-component-ecosystem/tasks.md, task 8.1) for why: a real drag gesture depends on adico-primitives' pointer.rs global pointer-position registry, a documented, unconfirmed-in-browser defect on web.",
+    "usage": "Drawer { open: open(), on_open_change: move |v| open.set(v),\n    DrawerTrigger { \"Open drawer\" }\n    DrawerOverlay {}\n    DrawerContent {\n        DrawerHeader { DrawerTitle { \"Title\" } }\n        DrawerFooter { DrawerClose { \"Close\" } }\n    }\n}",
+    "accessibility": "Composes `packages/adico-primitives/src/dialog.rs` directly (the same `role=\"dialog\"`/`aria-modal=\"true\"`/focus-trap behavior as `Dialog`), styled as an edge-anchored panel instead of a centered modal.",
+    "keyboard": "Same as `Dialog`: Escape closes it, plus the registry facade's manual backdrop `onclick` workaround for the same `use_outside_dismiss` web defect. No drag-to-dismiss gesture -- see compositionNote."
+  },
+  "compatibility": null,
+  "provenance": null
+}

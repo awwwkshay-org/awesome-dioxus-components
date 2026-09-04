@@ -39,9 +39,11 @@ pub mod autocomplete;
 pub mod avatar;
 pub mod calendar;
 pub mod checkbox;
+pub mod checkbox_group;
 pub mod collapsible;
 pub mod color_picker;
 pub mod combobox;
+pub mod command;
 pub mod context_menu;
 pub mod date_picker;
 pub mod dialog;
@@ -56,7 +58,12 @@ pub mod hover_card;
 pub mod label;
 pub mod menu;
 pub mod menubar;
+pub mod meter;
+pub mod navigation_menu;
+pub mod number_field;
+pub mod otp_field;
 pub mod popover;
+pub mod preview_card;
 pub mod progress;
 pub mod radio_group;
 pub mod scroll_area;
@@ -179,14 +186,18 @@ fn use_effect_with_cleanup<F: FnMut() -> C + 'static, C: FnOnce() + 'static>(mut
 ///
 /// This is a returned handler rather than a bare "global" listener because a
 /// hook cannot attach a native event listener to the caller's own JSX
-/// element, and the alternative — a document-level `document::eval` listener
-/// registered once and left running — does not work on this crate's primary
-/// target: real browser and Playwright testing confirmed that pattern's
-/// long-lived, repeatedly-firing `document.addEventListener` call never
-/// actually registers in this Dioxus 0.7.9/0.7.10 web runtime (see
-/// `provenance/records/adico-primitives-wave3-overlays.json`). Every current
-/// consumer (`dialog`, `popover`, `alert_dialog`) already worked around this
-/// by hand-rolling the exact check this hook now centralizes.
+/// element — wiring onto the caller's own root also gets nesting correctness
+/// from ordinary DOM event bubbling for free (see below), which a
+/// document-level listener would not. **Correction (2026-09-03):** this
+/// comment previously also claimed the document-level-listener alternative
+/// was chosen because that pattern "does not work" in this Dioxus web
+/// runtime, citing a provenance record that does not exist in this
+/// repository's history. See [`use_outside_dismiss`]'s doc comment for the
+/// live-verification evidence that claim doesn't hold; this hook's own
+/// design (a returned handler) stands on its own merits independent of that
+/// retracted claim. Every current consumer (`dialog`, `popover`,
+/// `alert_dialog`) already worked around the old (incorrectly diagnosed)
+/// concern by hand-rolling the exact check this hook now centralizes.
 ///
 /// Wiring this on each overlay's own (focusable) root gets nesting
 /// correctness from ordinary DOM event bubbling: an inner overlay's
@@ -252,19 +263,25 @@ fn use_global_keydown_listener(_key: &'static str, _on_keydown: impl FnMut() + C
 /// [`layer`] stack (also used by [`use_escape_key`]). A no-op on targets
 /// without a DOM (SSR/native).
 ///
-/// **Known defect on `web`:** this hook uses the same long-lived,
-/// repeatedly-firing `document::eval` listener pattern documented as
-/// non-functional in this Dioxus 0.7.9/0.7.10 web runtime (see
-/// `provenance/records/adico-primitives-wave3-overlays.json`) — unlike
-/// [`use_escape_key`], there is no equivalent fix available as a bare hook,
-/// since there is no native Dioxus document-level pointer event to return a
-/// handler for. `context_menu` and `popover`, the two current real
-/// consumers, do not currently have a working outside-dismiss on `web`. A
-/// real fix needs a composition-level change: an invisible full-viewport
-/// backdrop element behind the popup content, with a native `onclick`/
-/// `onpointerdown` handler instead of this hook — the same technique
-/// `dialog`'s registry facade already uses for its own outside-dismiss. That
-/// is 7.8 migration scope, not a primitive-only fix.
+/// **Correction (2026-09-03):** this doc comment previously claimed a
+/// "known defect on `web`" — that this hook's long-lived `document::eval`
+/// listener never registers, citing a provenance record
+/// (`provenance/records/adico-primitives-wave3-overlays.json`) as evidence.
+/// That record does not exist anywhere in this repository's git history —
+/// the citation was never backed by a real file. Live-verified this session
+/// via `dx serve` + real (non-synthetic) Chrome interaction, instrumenting
+/// `Document.prototype.addEventListener` as a spy: the listener registers on
+/// every mount (confirmed across repeated open/close cycles, i.e. the
+/// "reopen" case the original claim specifically named), and outside-click
+/// dismiss round-trips correctly for `popover`, `select`, `combobox`, and
+/// `context_menu` in `apps/playground`, and for `popover` opened
+/// sequentially after `dialog` in `examples/basic-spa` (the exact scenario
+/// the prior claim's own reproduction described). One caveat found along the
+/// way, not the original claim: a JS-dispatched *synthetic* `PointerEvent`
+/// (`el.dispatchEvent(new PointerEvent(...))`, as opposed to a real/CDP
+/// mouse click) did not reliably trigger dismissal in one trial — untested
+/// further, and irrelevant to real user interaction, but worth knowing if a
+/// future synthetic-event test reports a false negative here.
 #[cfg(any(feature = "web", feature = "native"))]
 pub fn use_outside_dismiss(
     id: impl Readable<Target = String> + Copy + 'static,

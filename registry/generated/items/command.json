@@ -1,0 +1,60 @@
+{
+  "name": "command",
+  "type": "registry:ui",
+  "description": "A source-owned Dioxus filterable command palette backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/command.rs",
+      "targetRoot": "ui",
+      "target": "command.rs",
+      "checksum": "3ab08a5a722a85b6eb3a48666564e5a40d940de7d9e450b1fee60520b37173c3"
+    }
+  ],
+  "registryDependencies": [
+    "cn",
+    "dialog"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "command",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "command",
+    "compositionNote": "The copied facade wires query-filtering, roving focus, and per-item on_select callbacks from adico-primitives::command; CommandDialog composes the installed dialog registry item directly for the 'command dialog' launcher pattern rather than reimplementing focus-trapping/Escape/outside-dismissal.",
+    "usage": "Command {\n    CommandInput { placeholder: \"Search...\".to_string() }\n    CommandList {\n        CommandEmpty { \"No results.\" }\n        CommandItem::<String> { index: 0usize, value: \"profile\".to_string(), on_select: move |_| {}, \"Profile\" }\n    }\n}",
+    "accessibility": "CommandInput is a text input with aria-autocomplete=\"list\"/aria-controls/aria-activedescendant pointing at the roving-focus-highlighted CommandItem; CommandList is role=\"listbox\", each CommandItem is role=\"option\" (packages/adico-primitives/src/command.rs).",
+    "keyboard": "ArrowUp/ArrowDown move the roving highlight across visible (unfiltered-out) items; Enter activates the highlighted item's own on_select. Note: CommandEmpty's visible/hidden state is populated by each item's own mount effect, so on non-hydrated server-rendered output specifically it can show even when items match, self-correcting once the client hydrates (packages/adico-primitives/src/command.rs's own doc comment)."
+  },
+  "compatibility": null,
+  "provenance": null
+}
