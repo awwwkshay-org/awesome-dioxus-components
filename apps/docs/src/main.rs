@@ -7,12 +7,41 @@
 //! actually shipped: editing a component's documentation means editing
 //! `registry.json`, not this file.
 
+use std::collections::BTreeMap;
 use std::sync::OnceLock;
 
 use dioxus::prelude::*;
 use serde::Deserialize;
 
 const REGISTRY_JSON: &str = include_str!("../../../registry/registry.json");
+
+/// The same introspected prop data `packages/adico-xtask/src/
+/// playground_controls.rs`/`prop_parity.rs` already extract from registry
+/// source, emitted once by `cargo xtask component-props sync` as one
+/// committed JSON file and consumed here as a second, generic consumer --
+/// proving the metadata isn't playground-coupled. See `design.md`'s D5
+/// decision. Not every component has an entry: a bare `pub use` re-export
+/// of a primitive (e.g. `AspectRatio`) has no props visible to
+/// introspection, a pre-existing, documented limitation of the underlying
+/// tool, not something specific to this table.
+const COMPONENT_PROPS_JSON: &str = include_str!("../../../statics/component_props.json");
+
+#[derive(Deserialize, Clone, PartialEq)]
+struct ComponentPropField {
+    name: String,
+    #[serde(rename = "type")]
+    type_name: String,
+    #[serde(default)]
+    default: Option<String>,
+}
+
+fn component_props() -> &'static BTreeMap<String, BTreeMap<String, Vec<ComponentPropField>>> {
+    static PROPS: OnceLock<BTreeMap<String, BTreeMap<String, Vec<ComponentPropField>>>> =
+        OnceLock::new();
+    PROPS.get_or_init(|| {
+        serde_json::from_str(COMPONENT_PROPS_JSON).expect("component_props.json is valid JSON")
+    })
+}
 
 #[derive(Deserialize, Clone, PartialEq)]
 struct DocumentationData {
@@ -82,6 +111,9 @@ section h2 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05e
 pre { background: #16161d; border: 1px solid #27272a; border-radius: 6px; padding: 1rem; overflow-x: auto; }
 code { font-family: ui-monospace, monospace; font-size: 0.85rem; }
 .back { display: inline-block; margin-bottom: 1rem; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+th, td { text-align: left; padding: 0.4rem 0.6rem; border-bottom: 1px solid #27272a; }
+th { color: #a1a1aa; font-weight: 500; }
 ";
 
 fn main() {
@@ -170,6 +202,46 @@ fn ComponentPage(name: String) -> Element {
                 section {
                     h2 { "Keyboard" }
                     p { "{keyboard}" }
+                }
+            }
+            {
+                let item_key = component.name.replace('-', "_");
+                match component_props().get(&item_key) {
+                    Some(components) if !components.is_empty() => rsx! {
+                        for (component_name , fields) in components {
+                            section {
+                                h2 { "{component_name} props" }
+                                table {
+                                    thead {
+                                        tr {
+                                            th { "Name" }
+                                            th { "Type" }
+                                            th { "Default" }
+                                        }
+                                    }
+                                    tbody {
+                                        for field in fields {
+                                            tr {
+                                                td { code { "{field.name}" } }
+                                                td { code { "{field.type_name}" } }
+                                                td {
+                                                    code {
+                                                        {field.default.as_deref().unwrap_or("—")}
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    _ => rsx! {
+                        section {
+                            h2 { "Props" }
+                            p { "No props are visible to introspection for this component -- its root is a bare re-export of a primitive with no local wrapper." }
+                        }
+                    },
                 }
             }
         }

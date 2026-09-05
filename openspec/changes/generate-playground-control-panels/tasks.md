@@ -302,11 +302,41 @@
 
 ## 4. Second consumer: `apps/docs` props table
 
-- [ ] 4.1 Emit the introspected prop data (`FileIntrospection`/
+- [x] 4.1 Emit the introspected prop data (`FileIntrospection`/
       `PropField`) consumable by `apps/docs` at build time, and render a
       per-component props table. Verify `apps/docs` builds and renders a
       table for at least `Button`, `Dialog`, and one of the 16
       single-root items, matching the real current props of each.
+
+      **Done.** New `cargo xtask component-props sync|check|diff`
+      (`packages/adico-xtask/src/component_props.rs`) introspects
+      `registry/ui/*.rs` directly — not `apps/playground`'s installed
+      copy, so this second consumer has no dependency on the playground
+      app existing at all, matching design.md's D5 framing precisely —
+      and emits one committed `statics/component_props.json`: every item
+      → every component → its real declared prop fields (name, type,
+      `#[props(default = ...)]` expression when present). `apps/docs`
+      `include_str!`s it (the same pattern it already uses for
+      `registry/registry.json`) and renders one props table per component
+      on each item's existing documentation page, falling back to an
+      explicit "no props are visible to introspection" message for a bare
+      re-export root — the same pre-existing, already-documented
+      limitation from Section 2, surfaced honestly here too rather than
+      silently rendering an empty table.
+
+      Verified live in `dx serve` + browser, not just compiled: `/button`
+      renders `BUTTON PROPS` with all 8 of `Button`'s real current fields
+      (`variant`, `size`, `radius`, `class`, `onclick`, `loading`,
+      `loading_text`, `attributes`) plus `children`; `/dialog` renders a
+      separate table per part (`DialogContent`/`DialogFooter`/
+      `DialogHeader`/`DialogOverlay`/`DialogTrigger`); `/switch` (one of
+      the 16) renders all 7 of `Switch`'s real fields including the exact
+      declared default expressions (`ReadSignal::new(Signal::new(String::
+      from("on")))` for `value`); `/aspect-ratio` (a bare re-export)
+      correctly shows the fallback message instead of an empty table.
+      `cargo test -p adico-xtask`: 183 passed. `cargo check --locked
+      --workspace`: zero errors. `cargo fmt --all --check` / narrow
+      clippy: clean.
 
 ## 5. Validate
 

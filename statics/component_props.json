@@ -1,0 +1,5215 @@
+{
+  "accordion": {
+    "AccordionContent": [
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "AccordionItem": [
+      {
+        "name": "value",
+        "type": "ReadSignal<String>"
+      },
+      {
+        "name": "index",
+        "type": "usize"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "on_change",
+        "type": "Callback<bool,()>"
+      },
+      {
+        "name": "on_trigger_click",
+        "type": "Callback"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "AccordionTrigger": [
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "alert": {
+    "Alert": [
+      {
+        "name": "variant",
+        "type": "AlertVariant",
+        "default": "default()"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "AlertDescription": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "AlertTitle": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "alert_dialog": {
+    "AlertDialogAction": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "on_confirm",
+        "type": "Option<EventHandler<MouseEvent>>"
+      },
+      {
+        "name": "loading",
+        "type": "bool"
+      },
+      {
+        "name": "loading_text",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "AlertDialogActions": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "AlertDialogCancel": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "on_dismiss",
+        "type": "Option<EventHandler<MouseEvent>>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "AlertDialogContent": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "size",
+        "type": "AlertDialogContentSize"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "AlertDialogHeader": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "AlertDialogOverlay": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "AlertDialogTrigger": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "variant",
+        "type": "Option<ButtonVariant>"
+      },
+      {
+        "name": "size",
+        "type": "Option<ButtonSize>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "aspect_ratio": {},
+  "attachment": {
+    "Attachment": [
+      {
+        "name": "state",
+        "type": "AttachmentState",
+        "default": "default()"
+      },
+      {
+        "name": "size",
+        "type": "AttachmentSize",
+        "default": "default()"
+      },
+      {
+        "name": "orientation",
+        "type": "AttachmentOrientation",
+        "default": "default()"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "AttachmentAction": [
+      {
+        "name": "aria_label",
+        "type": "String"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "onclick",
+        "type": "EventHandler<MouseEvent>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "AttachmentActions": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "AttachmentContent": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "AttachmentDescription": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "AttachmentGroup": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "AttachmentMedia": [
+      {
+        "name": "variant",
+        "type": "AttachmentMediaVariant",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Option<Element>",
+        "default": "default()"
+      }
+    ],
+    "AttachmentTitle": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "AttachmentTrigger": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "onclick",
+        "type": "EventHandler<MouseEvent>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "avatar": {
+    "Avatar": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "size",
+        "type": "AvatarSize",
+        "default": "default()"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Full"
+      },
+      {
+        "name": "aria_label",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "on_load",
+        "type": "Option<EventHandler<()>>",
+        "default": "default()"
+      },
+      {
+        "name": "on_error",
+        "type": "Option<EventHandler<()>>",
+        "default": "default()"
+      },
+      {
+        "name": "on_state_change",
+        "type": "Option<EventHandler<adico_primitives::avatar::AvatarState>>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "AvatarFallback": [
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Full"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "AvatarImage": [
+      {
+        "name": "id",
+        "type": "ReadSignal<Option<String>>",
+        "default": "default()"
+      },
+      {
+        "name": "src",
+        "type": "String"
+      },
+      {
+        "name": "alt",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "badge": {
+    "Badge": [
+      {
+        "name": "variant",
+        "type": "BadgeVariant",
+        "default": "default()"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Md"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "breadcrumb": {
+    "Breadcrumb": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "BreadcrumbEllipsis": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "BreadcrumbItem": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "BreadcrumbLink": [
+      {
+        "name": "href",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "BreadcrumbList": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "BreadcrumbPage": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "BreadcrumbSeparator": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Option<Element>"
+      }
+    ]
+  },
+  "bubble": {
+    "Bubble": [
+      {
+        "name": "align",
+        "type": "BubbleAlign",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "BubbleContent": [
+      {
+        "name": "align",
+        "type": "BubbleAlign",
+        "default": "default()"
+      },
+      {
+        "name": "variant",
+        "type": "BubbleVariant",
+        "default": "default()"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Xl"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "BubbleGroup": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "BubbleReactions": [
+      {
+        "name": "align",
+        "type": "BubbleAlign",
+        "default": "default()"
+      },
+      {
+        "name": "side",
+        "type": "BubbleReactionsSide",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "button": {
+    "Button": [
+      {
+        "name": "variant",
+        "type": "ButtonVariant",
+        "default": "default()"
+      },
+      {
+        "name": "size",
+        "type": "ButtonSize",
+        "default": "default()"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Md"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "onclick",
+        "type": "EventHandler<MouseEvent>",
+        "default": "default()"
+      },
+      {
+        "name": "loading",
+        "type": "bool",
+        "default": "default()"
+      },
+      {
+        "name": "loading_text",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "button_group": {
+    "ButtonGroup": [
+      {
+        "name": "orientation",
+        "type": "ButtonGroupOrientation"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "ButtonGroupSeparator": [
+      {
+        "name": "horizontal",
+        "type": "bool"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "ButtonGroupText": [
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "calendar": {
+    "CalendarGrid": [
+      {
+        "name": "id",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "CalendarHeader": [
+      {
+        "name": "id",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "CalendarMonthTitle": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "CalendarNavigation": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element",
+        "default": "default()"
+      }
+    ],
+    "CalendarView": [
+      {
+        "name": "offset",
+        "type": "Option<u8>",
+        "default": "default()"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Md"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "card": {
+    "Card": [
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Xl"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "CardAction": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "CardContent": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "CardDescription": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "CardFooter": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "CardHeader": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "CardTitle": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "carousel": {
+    "Carousel": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "orientation",
+        "type": "Option<CarouselOrientation>"
+      }
+    ],
+    "CarouselContent": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "CarouselItem": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "CarouselNext": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "CarouselPrevious": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ]
+  },
+  "checkbox": {
+    "Checkbox": [
+      {
+        "name": "checked",
+        "type": "ReadSignal<Option<CheckboxState>>",
+        "default": "default()"
+      },
+      {
+        "name": "default_checked",
+        "type": "CheckboxState",
+        "default": "CheckboxState::Unchecked"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "required",
+        "type": "ReadSignal<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "name",
+        "type": "ReadSignal<String>",
+        "default": "default()"
+      },
+      {
+        "name": "value",
+        "type": "ReadSignal<String>",
+        "default": "ReadSignal::new(Signal::new(String::from(\"on\")))"
+      },
+      {
+        "name": "on_checked_change",
+        "type": "Callback<CheckboxState>",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "aria_label",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "collapsible": {},
+  "color_picker": {
+    "AreaThumb": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "AreaTrack": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "ColorArea": [
+      {
+        "name": "step",
+        "type": "ReadSignal<f64>"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "ColorPicker": [
+      {
+        "name": "color",
+        "type": "ReadSignal<palette::Hsv<palette::encoding::Srgb, f64>>"
+      },
+      {
+        "name": "on_color_change",
+        "type": "Callback<palette::Hsv<palette::encoding::Srgb, f64>>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "HueSlider": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ]
+  },
+  "combobox": {
+    "Combobox": [
+      {
+        "name": "value",
+        "type": "ReadSignal<Option<T>>"
+      },
+      {
+        "name": "default_value",
+        "type": "Option<T>"
+      },
+      {
+        "name": "on_value_change",
+        "type": "Callback<Option<T>>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "open",
+        "type": "ReadSignal<Option<bool>>"
+      },
+      {
+        "name": "default_open",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "on_open_change",
+        "type": "Callback<bool>"
+      },
+      {
+        "name": "query",
+        "type": "ReadSignal<Option<String>>"
+      },
+      {
+        "name": "default_query",
+        "type": "ReadSignal<String>"
+      },
+      {
+        "name": "on_query_change",
+        "type": "Callback<String>"
+      },
+      {
+        "name": "roving_loop",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "filter",
+        "type": "Callback<(String, String), bool>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "ComboboxEmpty": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "ComboboxInput": [
+      {
+        "name": "placeholder",
+        "type": "Option<String>"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "aria_label",
+        "type": "Option<String>"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "ComboboxList": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "aria_label",
+        "type": "Option<String>"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "ComboboxMulti": [
+      {
+        "name": "values",
+        "type": "ReadSignal<Option<Vec<T>>>"
+      },
+      {
+        "name": "default_values",
+        "type": "Vec<T>"
+      },
+      {
+        "name": "on_values_change",
+        "type": "Callback<Vec<T>>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "open",
+        "type": "ReadSignal<Option<bool>>"
+      },
+      {
+        "name": "default_open",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "on_open_change",
+        "type": "Callback<bool>"
+      },
+      {
+        "name": "query",
+        "type": "ReadSignal<Option<String>>"
+      },
+      {
+        "name": "default_query",
+        "type": "ReadSignal<String>"
+      },
+      {
+        "name": "on_query_change",
+        "type": "Callback<String>"
+      },
+      {
+        "name": "roving_loop",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "filter",
+        "type": "Callback<(String, String), bool>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "ComboboxOption": [
+      {
+        "name": "value",
+        "type": "ReadSignal<T>"
+      },
+      {
+        "name": "text_value",
+        "type": "ReadSignal<Option<String>>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "id",
+        "type": "ReadSignal<Option<String>>"
+      },
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "aria_label",
+        "type": "Option<String>"
+      },
+      {
+        "name": "aria_roledescription",
+        "type": "Option<String>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "command": {
+    "Command": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "CommandDialog": [
+      {
+        "name": "open",
+        "type": "ReadSignal<Option<bool>>"
+      },
+      {
+        "name": "on_open_change",
+        "type": "Callback<bool>"
+      },
+      {
+        "name": "title",
+        "type": "String"
+      },
+      {
+        "name": "description",
+        "type": "String"
+      },
+      {
+        "name": "show_close_button",
+        "type": "bool"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "CommandEmpty": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "CommandGroup": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "heading",
+        "type": "Option<String>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "CommandInput": [
+      {
+        "name": "placeholder",
+        "type": "Option<String>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "CommandItem": [
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "value",
+        "type": "ReadSignal<T>"
+      },
+      {
+        "name": "text_value",
+        "type": "ReadSignal<Option<String>>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "on_select",
+        "type": "Callback<T>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "CommandList": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "CommandSeparator": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "CommandShortcut": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ]
+  },
+  "context_menu": {
+    "ContextMenuContent": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "ContextMenuItem": [
+      {
+        "name": "value",
+        "type": "ReadSignal<String>"
+      },
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "on_select",
+        "type": "Callback<String>"
+      },
+      {
+        "name": "inset",
+        "type": "bool"
+      },
+      {
+        "name": "variant",
+        "type": "ContextMenuItemVariant"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "ContextMenuTrigger": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "data_table": {
+    "DataTable": [
+      {
+        "name": "columns",
+        "type": "Vec<DataTableColumn<T>>"
+      },
+      {
+        "name": "rows",
+        "type": "Vec<T>"
+      },
+      {
+        "name": "row_id",
+        "type": "Callback<T, String>"
+      },
+      {
+        "name": "on_selected_change",
+        "type": "Callback<HashSet<String>>",
+        "default": "default()"
+      },
+      {
+        "name": "row_actions",
+        "type": "Option<Callback<T, Element>>",
+        "default": "default()"
+      },
+      {
+        "name": "filter_key",
+        "type": "Option<Callback<T, String>>",
+        "default": "default()"
+      },
+      {
+        "name": "filter_placeholder",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "page_size",
+        "type": "usize",
+        "default": "10"
+      },
+      {
+        "name": "loading",
+        "type": "bool",
+        "default": "default()"
+      },
+      {
+        "name": "loading_text",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      }
+    ],
+    "DataTableRowActions": [
+      {
+        "name": "row",
+        "type": "T"
+      },
+      {
+        "name": "actions",
+        "type": "Vec<DataTableRowAction<T>>"
+      }
+    ]
+  },
+  "date_picker": {
+    "DatePicker": [
+      {
+        "name": "on_value_change",
+        "type": "Callback<Option<Date>>",
+        "default": "default()"
+      },
+      {
+        "name": "selected_date",
+        "type": "ReadSignal<Option<Date>>",
+        "default": "default()"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "read_only",
+        "type": "ReadSignal<bool>",
+        "default": "ReadSignal::new(Signal::new(false))"
+      },
+      {
+        "name": "min_date",
+        "type": "Date",
+        "default": "date !(1925 - 01 - 01)"
+      },
+      {
+        "name": "max_date",
+        "type": "Date",
+        "default": "date !(2050 - 12 - 31)"
+      },
+      {
+        "name": "disabled_ranges",
+        "type": "ReadSignal<Vec<DateRange>>",
+        "default": "default()"
+      },
+      {
+        "name": "roving_loop",
+        "type": "ReadSignal<bool>",
+        "default": "ReadSignal::new(Signal::new(false))"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "DatePickerContent": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "DatePickerInput": [
+      {
+        "name": "on_format_day_placeholder",
+        "type": "Callback<(), String>",
+        "default": "Callback::new(| _ | \"D\" . to_string())"
+      },
+      {
+        "name": "on_format_month_placeholder",
+        "type": "Callback<(), String>",
+        "default": "Callback::new(| _ | \"M\" . to_string())"
+      },
+      {
+        "name": "on_format_year_placeholder",
+        "type": "Callback<(), String>",
+        "default": "Callback::new(| _ | \"Y\" . to_string())"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Md"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Option<Element>",
+        "default": "default()"
+      }
+    ],
+    "DatePickerInputValue": [
+      {
+        "name": "on_format_day_placeholder",
+        "type": "Callback<(), String>",
+        "default": "Callback::new(| _ | \"D\" . to_string())"
+      },
+      {
+        "name": "on_format_month_placeholder",
+        "type": "Callback<(), String>",
+        "default": "Callback::new(| _ | \"M\" . to_string())"
+      },
+      {
+        "name": "on_format_year_placeholder",
+        "type": "Callback<(), String>",
+        "default": "Callback::new(| _ | \"Y\" . to_string())"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Option<Element>",
+        "default": "default()"
+      }
+    ],
+    "DatePickerPopover": [
+      {
+        "name": "is_modal",
+        "type": "ReadSignal<bool>",
+        "default": "ReadSignal::new(Signal::new(true))"
+      },
+      {
+        "name": "open",
+        "type": "ReadSignal<Option<bool>>"
+      },
+      {
+        "name": "default_open",
+        "type": "bool",
+        "default": "default()"
+      },
+      {
+        "name": "on_open_change",
+        "type": "Callback<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "popover_root",
+        "type": "fn(PopoverRootProps) ->Element",
+        "default": "PopoverRoot"
+      }
+    ],
+    "DatePickerTrigger": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Option<Element>",
+        "default": "default()"
+      }
+    ],
+    "DateRangePicker": [
+      {
+        "name": "on_range_change",
+        "type": "Callback<Option<DateRange>>",
+        "default": "default()"
+      },
+      {
+        "name": "selected_range",
+        "type": "ReadSignal<Option<DateRange>>",
+        "default": "default()"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "read_only",
+        "type": "ReadSignal<bool>",
+        "default": "ReadSignal::new(Signal::new(false))"
+      },
+      {
+        "name": "min_date",
+        "type": "Date",
+        "default": "date !(1925 - 01 - 01)"
+      },
+      {
+        "name": "max_date",
+        "type": "Date",
+        "default": "date !(2050 - 12 - 31)"
+      },
+      {
+        "name": "disabled_ranges",
+        "type": "ReadSignal<Vec<DateRange>>",
+        "default": "default()"
+      },
+      {
+        "name": "roving_loop",
+        "type": "ReadSignal<bool>",
+        "default": "ReadSignal::new(Signal::new(false))"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "dialog": {
+    "DialogClose": [
+      {
+        "name": "children",
+        "type": "Option<Element>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "DialogContent": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "show_close_button",
+        "type": "bool"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "DialogFooter": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "DialogHeader": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "DialogOverlay": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "DialogTrigger": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "variant",
+        "type": "Option<ButtonVariant>"
+      },
+      {
+        "name": "size",
+        "type": "Option<ButtonSize>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "drag_and_drop_list": {
+    "DragAndDropDropIndicator": [
+      {
+        "name": "index",
+        "type": "usize"
+      },
+      {
+        "name": "position",
+        "type": "& 'static str"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "DragAndDropList": [
+      {
+        "name": "items",
+        "type": "Vec<Element>"
+      },
+      {
+        "name": "aria_label",
+        "type": "Option<String>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Option<Element>"
+      }
+    ],
+    "DragAndDropListItem": [
+      {
+        "name": "index",
+        "type": "usize"
+      },
+      {
+        "name": "item_key",
+        "type": "Option<String>"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "DragAndDropListItems": [
+      {
+        "name": "aria_label",
+        "type": "String"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Option<Element>"
+      }
+    ]
+  },
+  "drawer": {
+    "DrawerClose": [
+      {
+        "name": "children",
+        "type": "Option<Element>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "DrawerContent": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "direction",
+        "type": "Option<DrawerDirection>"
+      },
+      {
+        "name": "show_close_button",
+        "type": "bool"
+      }
+    ],
+    "DrawerFooter": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "DrawerHeader": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "DrawerOverlay": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "DrawerTrigger": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "variant",
+        "type": "Option<ButtonVariant>"
+      },
+      {
+        "name": "size",
+        "type": "Option<ButtonSize>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "dropdown_menu": {
+    "DropdownMenu": [
+      {
+        "name": "open",
+        "type": "ReadSignal<Option<bool>>"
+      },
+      {
+        "name": "default_open",
+        "type": "bool"
+      },
+      {
+        "name": "on_open_change",
+        "type": "Callback<bool>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "roving_loop",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "DropdownMenuContent": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "DropdownMenuItem": [
+      {
+        "name": "value",
+        "type": "ReadSignal<T>"
+      },
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "on_select",
+        "type": "Callback<T>"
+      },
+      {
+        "name": "text_value",
+        "type": "ReadSignal<Option<String>>"
+      },
+      {
+        "name": "inset",
+        "type": "bool"
+      },
+      {
+        "name": "variant",
+        "type": "DropdownMenuItemVariant"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "DropdownMenuTrigger": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "empty": {
+    "Empty": [
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "EmptyContent": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "EmptyDescription": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "EmptyHeader": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "EmptyMedia": [
+      {
+        "name": "variant",
+        "type": "EmptyMediaVariant",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "EmptyTitle": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "hover_card": {
+    "HoverCardContent": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "side",
+        "type": "Option<ContentSide>"
+      },
+      {
+        "name": "align",
+        "type": "Option<ContentAlign>"
+      },
+      {
+        "name": "force_mount",
+        "type": "bool"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "HoverCardTrigger": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "input": {
+    "Input": [
+      {
+        "name": "r#type",
+        "type": "String",
+        "default": "\"text\" . to_string()"
+      },
+      {
+        "name": "value",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "placeholder",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "disabled",
+        "type": "Option<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "readonly",
+        "type": "Option<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "required",
+        "type": "Option<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "invalid",
+        "type": "bool",
+        "default": "default()"
+      },
+      {
+        "name": "oninput",
+        "type": "EventHandler<FormEvent>",
+        "default": "default()"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Md"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "input_group": {
+    "InputGroup": [
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "InputGroupAddon": [
+      {
+        "name": "align",
+        "type": "InputGroupAlign"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "InputGroupButton": [
+      {
+        "name": "variant",
+        "type": "ButtonVariant"
+      },
+      {
+        "name": "size",
+        "type": "ButtonSize"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "onclick",
+        "type": "EventHandler<MouseEvent>"
+      },
+      {
+        "name": "loading",
+        "type": "bool"
+      },
+      {
+        "name": "loading_text",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "InputGroupInput": [
+      {
+        "name": "r#type",
+        "type": "String"
+      },
+      {
+        "name": "value",
+        "type": "Option<String>"
+      },
+      {
+        "name": "placeholder",
+        "type": "Option<String>"
+      },
+      {
+        "name": "disabled",
+        "type": "Option<bool>"
+      },
+      {
+        "name": "invalid",
+        "type": "bool"
+      },
+      {
+        "name": "oninput",
+        "type": "EventHandler<FormEvent>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "InputGroupText": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "InputGroupTextarea": [
+      {
+        "name": "value",
+        "type": "Option<String>"
+      },
+      {
+        "name": "placeholder",
+        "type": "Option<String>"
+      },
+      {
+        "name": "disabled",
+        "type": "Option<bool>"
+      },
+      {
+        "name": "invalid",
+        "type": "bool"
+      },
+      {
+        "name": "rows",
+        "type": "Option<u32>"
+      },
+      {
+        "name": "oninput",
+        "type": "EventHandler<FormEvent>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "input_otp": {
+    "InputOTP": [
+      {
+        "name": "value",
+        "type": "ReadSignal<Option<String>>"
+      },
+      {
+        "name": "default_value",
+        "type": "String"
+      },
+      {
+        "name": "on_value_change",
+        "type": "Callback<String>"
+      },
+      {
+        "name": "on_value_complete",
+        "type": "Callback<String>"
+      },
+      {
+        "name": "length",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "read_only",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "name",
+        "type": "ReadSignal<String>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "InputOTPGroup": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "InputOTPSlot": [
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ]
+  },
+  "item": {
+    "Item": [
+      {
+        "name": "variant",
+        "type": "ItemVariant",
+        "default": "default()"
+      },
+      {
+        "name": "size",
+        "type": "ItemSize",
+        "default": "default()"
+      },
+      {
+        "name": "disabled",
+        "type": "bool",
+        "default": "default()"
+      },
+      {
+        "name": "onclick",
+        "type": "EventHandler<MouseEvent>",
+        "default": "default()"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Md"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "ItemActions": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "ItemContent": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "ItemDescription": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "ItemFooter": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "ItemGroup": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "ItemHeader": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "ItemMedia": [
+      {
+        "name": "variant",
+        "type": "ItemMediaVariant",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "ItemSeparator": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "ItemTitle": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "kbd": {
+    "Kbd": [
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "KbdGroup": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "label": {
+    "Label": [
+      {
+        "name": "html_for",
+        "type": "ReadSignal<String>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "marker": {
+    "Marker": [
+      {
+        "name": "variant",
+        "type": "MarkerVariant",
+        "default": "default()"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Full"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "MarkerContent": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "MarkerIcon": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "menubar": {
+    "Menubar": [
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "roving_loop",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "MenubarContent": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "MenubarItem": [
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "value",
+        "type": "String"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "on_select",
+        "type": "Callback<String>"
+      },
+      {
+        "name": "inset",
+        "type": "bool"
+      },
+      {
+        "name": "variant",
+        "type": "MenubarItemVariant"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "MenubarTrigger": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "message": {
+    "Message": [
+      {
+        "name": "align",
+        "type": "MessageAlign",
+        "default": "default()"
+      },
+      {
+        "name": "avatar",
+        "type": "Option<Element>",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "MessageAvatar": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "MessageContent": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "MessageFooter": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "MessageGroup": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "MessageHeader": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "message_scroller": {
+    "MessageScroller": [
+      {
+        "name": "bottom_threshold",
+        "type": "f64",
+        "default": "adico_primitives::message_scroller::DEFAULT_BOTTOM_THRESHOLD"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "MessageScrollerButton": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "MessageScrollerContent": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "MessageScrollerItem": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "MessageScrollerViewport": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "mode_toggle": {
+    "ModeToggle": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ]
+  },
+  "native_select": {
+    "NativeSelect": [
+      {
+        "name": "size",
+        "type": "NativeSelectSize",
+        "default": "default()"
+      },
+      {
+        "name": "value",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "disabled",
+        "type": "Option<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "required",
+        "type": "Option<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "invalid",
+        "type": "bool",
+        "default": "default()"
+      },
+      {
+        "name": "oninput",
+        "type": "EventHandler<FormEvent>",
+        "default": "default()"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Md"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "NativeSelectOptGroup": [
+      {
+        "name": "label",
+        "type": "String"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "NativeSelectOption": [
+      {
+        "name": "value",
+        "type": "Option<String>"
+      },
+      {
+        "name": "disabled",
+        "type": "Option<bool>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "navigation_menu": {
+    "NavigationMenu": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "delay_ms",
+        "type": "ReadSignal<u64>"
+      },
+      {
+        "name": "close_delay_ms",
+        "type": "ReadSignal<u64>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "NavigationMenuContent": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "side",
+        "type": "Option<ContentSide>"
+      },
+      {
+        "name": "align",
+        "type": "Option<ContentAlign>"
+      },
+      {
+        "name": "force_mount",
+        "type": "bool"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "NavigationMenuItem": [
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "NavigationMenuLink": [
+      {
+        "name": "active",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "href",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "close_on_click",
+        "type": "bool"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "NavigationMenuList": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "NavigationMenuTrigger": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "pagination": {
+    "Pagination": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "PaginationContent": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "PaginationEllipsis": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "PaginationItem": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "PaginationLink": [
+      {
+        "name": "is_active",
+        "type": "bool",
+        "default": "default()"
+      },
+      {
+        "name": "href",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "onclick",
+        "type": "EventHandler<MouseEvent>",
+        "default": "default()"
+      },
+      {
+        "name": "aria_label",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Md"
+      },
+      {
+        "name": "loading",
+        "type": "bool",
+        "default": "default()"
+      },
+      {
+        "name": "loading_text",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "PaginationNext": [
+      {
+        "name": "onclick",
+        "type": "EventHandler<MouseEvent>"
+      },
+      {
+        "name": "href",
+        "type": "Option<String>"
+      },
+      {
+        "name": "text",
+        "type": "Option<String>"
+      },
+      {
+        "name": "compact",
+        "type": "bool"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "PaginationPrevious": [
+      {
+        "name": "onclick",
+        "type": "EventHandler<MouseEvent>"
+      },
+      {
+        "name": "href",
+        "type": "Option<String>"
+      },
+      {
+        "name": "text",
+        "type": "Option<String>"
+      },
+      {
+        "name": "compact",
+        "type": "bool"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "popover": {
+    "PopoverContent": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "side",
+        "type": "Option<ContentSide>"
+      },
+      {
+        "name": "align",
+        "type": "Option<ContentAlign>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "PopoverTrigger": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "progress": {
+    "Progress": [
+      {
+        "name": "value",
+        "type": "ReadSignal<Option<f64>>"
+      },
+      {
+        "name": "max",
+        "type": "ReadSignal<f64>",
+        "default": "ReadSignal::new(Signal::new(100.0))"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Full"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "aria_label",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "radio_group": {
+    "RadioItem": [
+      {
+        "name": "value",
+        "type": "ReadSignal<String>"
+      },
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "resizable": {
+    "ResizableHandle": [
+      {
+        "name": "handle_index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "with_handle",
+        "type": "bool"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "ResizablePanel": [
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "default_size",
+        "type": "f64"
+      },
+      {
+        "name": "min_size",
+        "type": "f64"
+      },
+      {
+        "name": "max_size",
+        "type": "f64"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "ResizablePanelGroup": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "direction",
+        "type": "Option<ResizableDirection>"
+      }
+    ]
+  },
+  "scroll_area": {},
+  "select": {
+    "Select": [
+      {
+        "name": "value",
+        "type": "ReadSignal<Option<T>>"
+      },
+      {
+        "name": "default_value",
+        "type": "Option<T>"
+      },
+      {
+        "name": "on_value_change",
+        "type": "Callback<Option<T>>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "open",
+        "type": "ReadSignal<Option<bool>>"
+      },
+      {
+        "name": "default_open",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "on_open_change",
+        "type": "Callback<bool>"
+      },
+      {
+        "name": "name",
+        "type": "ReadSignal<String>"
+      },
+      {
+        "name": "roving_loop",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "typeahead_timeout",
+        "type": "ReadSignal<std::time::Duration>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "SelectList": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "aria_label",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "SelectMulti": [
+      {
+        "name": "values",
+        "type": "ReadSignal<Option<Vec<T>>>"
+      },
+      {
+        "name": "default_values",
+        "type": "Vec<T>"
+      },
+      {
+        "name": "on_values_change",
+        "type": "Callback<Vec<T>>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "open",
+        "type": "ReadSignal<Option<bool>>"
+      },
+      {
+        "name": "default_open",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "on_open_change",
+        "type": "Callback<bool>"
+      },
+      {
+        "name": "name",
+        "type": "ReadSignal<String>"
+      },
+      {
+        "name": "roving_loop",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "typeahead_timeout",
+        "type": "ReadSignal<std::time::Duration>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "SelectOption": [
+      {
+        "name": "value",
+        "type": "ReadSignal<T>"
+      },
+      {
+        "name": "text_value",
+        "type": "ReadSignal<Option<String>>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "id",
+        "type": "ReadSignal<Option<String>>"
+      },
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "aria_label",
+        "type": "Option<String>"
+      },
+      {
+        "name": "aria_roledescription",
+        "type": "Option<String>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "SelectTrigger": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "size",
+        "type": "SelectTriggerSize"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "aria_label",
+        "type": "Option<String>"
+      },
+      {
+        "name": "aria_invalid",
+        "type": "Option<bool>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "SelectValue": [
+      {
+        "name": "placeholder",
+        "type": "Option<String>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "sheet": {
+    "SheetClose": [
+      {
+        "name": "children",
+        "type": "Option<Element>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "SheetContent": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "side",
+        "type": "Option<SheetSide>"
+      },
+      {
+        "name": "show_close_button",
+        "type": "bool"
+      }
+    ],
+    "SheetFooter": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "SheetHeader": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "SheetOverlay": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "SheetTrigger": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "variant",
+        "type": "Option<ButtonVariant>"
+      },
+      {
+        "name": "size",
+        "type": "Option<ButtonSize>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "sidebar": {
+    "Sidebar": [
+      {
+        "name": "side",
+        "type": "SidebarSide",
+        "default": "default()"
+      },
+      {
+        "name": "collapsible",
+        "type": "SidebarCollapsible",
+        "default": "default()"
+      },
+      {
+        "name": "variant",
+        "type": "SidebarVariant",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "SidebarContent": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "SidebarFooter": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "SidebarGroup": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "SidebarGroupContent": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "SidebarGroupLabel": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "SidebarHeader": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "SidebarInset": [
+      {
+        "name": "variant",
+        "type": "SidebarVariant"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "SidebarMenu": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "SidebarMenuButton": [
+      {
+        "name": "is_active",
+        "type": "bool",
+        "default": "default()"
+      },
+      {
+        "name": "disabled",
+        "type": "Option<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "variant",
+        "type": "SidebarMenuButtonVariant",
+        "default": "default()"
+      },
+      {
+        "name": "size",
+        "type": "SidebarMenuButtonSize",
+        "default": "default()"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Md"
+      },
+      {
+        "name": "loading",
+        "type": "bool",
+        "default": "default()"
+      },
+      {
+        "name": "loading_text",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "SidebarMenuItem": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "SidebarProvider": [
+      {
+        "name": "open",
+        "type": "ReadSignal<Option<bool>>",
+        "default": "default()"
+      },
+      {
+        "name": "default_open",
+        "type": "bool",
+        "default": "true"
+      },
+      {
+        "name": "on_open_change",
+        "type": "Callback<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "SidebarRail": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "SidebarSeparator": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "horizontal",
+        "type": "bool"
+      },
+      {
+        "name": "decorative",
+        "type": "bool"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "SidebarTrigger": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "skeleton": {
+    "Skeleton": [
+      {
+        "name": "variant",
+        "type": "SkeletonVariant",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "decorative",
+        "type": "bool",
+        "default": "true"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "slider": {
+    "SliderRange": [
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "SliderThumb": [
+      {
+        "name": "index",
+        "type": "Option<usize>"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "SliderTrack": [
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "spinner": {
+    "Spinner": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ]
+  },
+  "switch": {
+    "Switch": [
+      {
+        "name": "checked",
+        "type": "ReadSignal<Option<bool>>",
+        "default": "default()"
+      },
+      {
+        "name": "default_checked",
+        "type": "bool",
+        "default": "false"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "required",
+        "type": "ReadSignal<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "name",
+        "type": "ReadSignal<String>",
+        "default": "default()"
+      },
+      {
+        "name": "value",
+        "type": "ReadSignal<String>",
+        "default": "ReadSignal::new(Signal::new(String::from(\"on\")))"
+      },
+      {
+        "name": "size",
+        "type": "SwitchSize",
+        "default": "default()"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Full"
+      },
+      {
+        "name": "on_checked_change",
+        "type": "Callback<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "aria_label",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "table": {
+    "Table": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "TableBody": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "TableCaption": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "TableCell": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "TableFooter": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "TableHead": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "TableHeader": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "TableRow": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "tabs": {
+    "TabContent": [
+      {
+        "name": "value",
+        "type": "String"
+      },
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "TabList": [
+      {
+        "name": "variant",
+        "type": "TabsVariant"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "TabTrigger": [
+      {
+        "name": "value",
+        "type": "String"
+      },
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "tag_group": {
+    "TagGroup": [
+      {
+        "name": "value",
+        "type": "ReadSignal<Option<T>>"
+      },
+      {
+        "name": "default_value",
+        "type": "Option<T>"
+      },
+      {
+        "name": "on_value_change",
+        "type": "Callback<Option<T>>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "selectable",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "allow_empty_selection",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "escape_clears_selection",
+        "type": "ReadSignal<bool,>"
+      },
+      {
+        "name": "roving_loop",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "TagGroupLabel": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "TagGroupMulti": [
+      {
+        "name": "values",
+        "type": "ReadSignal<Option<Vec<T>>>"
+      },
+      {
+        "name": "default_values",
+        "type": "Vec<T>"
+      },
+      {
+        "name": "on_values_change",
+        "type": "Callback<Vec<T>>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "selectable",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "allow_empty_selection",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "escape_clears_selection",
+        "type": "ReadSignal<bool,>"
+      },
+      {
+        "name": "roving_loop",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "TagList": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "TagOption": [
+      {
+        "name": "value",
+        "type": "ReadSignal<T>"
+      },
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "text_value",
+        "type": "ReadSignal<Option<String>>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "TagRemoveButton": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "textarea": {
+    "Textarea": [
+      {
+        "name": "value",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "placeholder",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "disabled",
+        "type": "Option<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "readonly",
+        "type": "Option<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "required",
+        "type": "Option<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "invalid",
+        "type": "bool",
+        "default": "default()"
+      },
+      {
+        "name": "rows",
+        "type": "Option<u32>",
+        "default": "default()"
+      },
+      {
+        "name": "max_length",
+        "type": "Option<u32>",
+        "default": "default()"
+      },
+      {
+        "name": "oninput",
+        "type": "EventHandler<FormEvent>",
+        "default": "default()"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Md"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "theme_builder": {
+    "ThemeBuilder": [
+      {
+        "name": "on_theme_change",
+        "type": "Callback<ThemeVariables>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ]
+  },
+  "theme_switcher": {
+    "ThemeSwitcher": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ]
+  },
+  "toast": {
+    "ToastProvider": [
+      {
+        "name": "default_duration",
+        "type": "ReadSignal<Option<Duration>>"
+      },
+      {
+        "name": "max_toasts",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "render_toast",
+        "type": "Callback<ToastPropsWithOwner, Element>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "toggle": {
+    "Toggle": [
+      {
+        "name": "pressed",
+        "type": "ReadSignal<Option<bool>>",
+        "default": "default()"
+      },
+      {
+        "name": "default_pressed",
+        "type": "bool",
+        "default": "default()"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "size",
+        "type": "ToggleSize",
+        "default": "default()"
+      },
+      {
+        "name": "variant",
+        "type": "ToggleVariant",
+        "default": "default()"
+      },
+      {
+        "name": "on_pressed_change",
+        "type": "Callback<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "onmounted",
+        "type": "Callback<Event<MountedData>>",
+        "default": "default()"
+      },
+      {
+        "name": "onfocus",
+        "type": "Callback<Event<FocusData>>",
+        "default": "default()"
+      },
+      {
+        "name": "onkeydown",
+        "type": "Callback<Event<KeyboardData>>",
+        "default": "default()"
+      },
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Md"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "toggle_group": {
+    "ToggleGroup": [
+      {
+        "name": "default_pressed",
+        "type": "HashSet<usize>"
+      },
+      {
+        "name": "pressed",
+        "type": "ReadSignal<Option<HashSet<usize>>>"
+      },
+      {
+        "name": "on_pressed_change",
+        "type": "Callback<HashSet<usize>>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "allow_multiple_pressed",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "horizontal",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "roving_loop",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "ToggleItem": [
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "size",
+        "type": "ToggleItemSize"
+      },
+      {
+        "name": "variant",
+        "type": "ToggleItemVariant"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ]
+  },
+  "toolbar": {
+    "ToolbarButton": [
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "on_select",
+        "type": "Callback<()>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "loading",
+        "type": "bool"
+      },
+      {
+        "name": "loading_text",
+        "type": "Option<String>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "ToolbarSeparator": [
+      {
+        "name": "horizontal",
+        "type": "Option<bool>"
+      },
+      {
+        "name": "decorative",
+        "type": "bool"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "tooltip": {
+    "TooltipContent": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "side",
+        "type": "Option<ContentSide>"
+      },
+      {
+        "name": "align",
+        "type": "Option<ContentAlign>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "TooltipTrigger": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "id",
+        "type": "Option<String>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
+  "virtual_list": {}
+}
