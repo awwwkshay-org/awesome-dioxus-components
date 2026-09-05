@@ -62,16 +62,15 @@ hydrates without console errors.
   warnings
 
 ### Requirement: Removed platform coverage is recorded as a named gap
-When an example fixture that was the sole evidence source for a parity
-dimension is removed, the corresponding `parity.json` entries SHALL be
-updated to reflect the removal with an explicit note rather than left
-pointing at a nonexistent path or left silently claiming a passing
-validation.
+When an example fixture that was the sole evidence source for a piece of
+platform coverage is removed, that removal SHALL be recorded as an explicit,
+named gap in the relevant OpenSpec change's task notes rather than left
+silently unrecorded or claiming a passing validation that no longer has
+evidence behind it.
 
 #### Scenario: Desktop example fixture is removed
 - **WHEN** `examples/desktop` is deleted and no other fixture builds against
   a native desktop target
-- **THEN** every `parity.json` component entry whose `desktop` dimension
-  evidence named `examples/desktop` is updated to `passed: false` with a note
-  naming the fixture's removal, and no dimension evidence array continues to
-  reference a deleted path
+- **THEN** the change that removes it records, in its own tasks/design notes,
+  which validation claims previously relied on `examples/desktop` and that
+  they are now unverified, rather than continuing to claim passing coverage
