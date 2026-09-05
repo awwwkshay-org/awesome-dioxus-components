@@ -29,6 +29,9 @@ pub struct TextareaProps {
     /// Initial visible text rows.
     #[props(default)]
     pub rows: Option<u32>,
+    /// Maximum number of characters the native textarea accepts.
+    #[props(default)]
+    pub max_length: Option<u32>,
     /// Input event handler.
     #[props(default)]
     pub oninput: EventHandler<FormEvent>,
@@ -61,6 +64,7 @@ pub fn Textarea(props: TextareaProps) -> Element {
             readonly: props.readonly,
             required: props.required,
             rows: props.rows,
+            maxlength: props.max_length,
             aria_invalid: props.invalid,
             oninput: move |event| props.oninput.call(event),
             ..props.attributes,

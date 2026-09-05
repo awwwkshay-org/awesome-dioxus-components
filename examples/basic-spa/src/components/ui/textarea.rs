@@ -3,6 +3,7 @@
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// Props for [`Textarea`].
 #[derive(Props, Clone, PartialEq)]
@@ -28,9 +29,15 @@ pub struct TextareaProps {
     /// Initial visible text rows.
     #[props(default)]
     pub rows: Option<u32>,
+    /// Maximum number of characters the native textarea accepts.
+    #[props(default)]
+    pub max_length: Option<u32>,
     /// Input event handler.
     #[props(default)]
     pub oninput: EventHandler<FormEvent>,
+    /// Corner radius of the textarea surface.
+    #[props(default = Radius::Md)]
+    pub radius: Radius,
     /// Extra classes appended to the semantic default.
     #[props(default)]
     pub class: Option<String>,
@@ -44,7 +51,8 @@ pub struct TextareaProps {
 #[component]
 pub fn Textarea(props: TextareaProps) -> Element {
     let class = cn(&[
-        "flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 read-only:cursor-default read-only:bg-muted aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+        "flex min-h-[60px] w-full border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 read-only:cursor-default read-only:bg-muted aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+        props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -56,6 +64,7 @@ pub fn Textarea(props: TextareaProps) -> Element {
             readonly: props.readonly,
             required: props.required,
             rows: props.rows,
+            maxlength: props.max_length,
             aria_invalid: props.invalid,
             oninput: move |event| props.oninput.call(event),
             ..props.attributes,

@@ -7,7 +7,7 @@
       "source": "ui/textarea.rs",
       "targetRoot": "ui",
       "target": "textarea.rs",
-      "checksum": "a5a693882173096ccd38f4c89729a941e113ad98b5a42f2e9f447962f725fc42"
+      "checksum": "7883f26019d06844174bef0b65ab03a204a57026f504d9aacf820871de6397b8"
     }
   ],
   "registryDependencies": [
