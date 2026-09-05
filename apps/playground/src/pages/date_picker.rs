@@ -5,19 +5,21 @@ use time::Date;
 use crate::components;
 use crate::components::controls::BoolControl;
 use crate::components::demo::Demo;
+use crate::generated::controls::{DatePickerPopoverControls, DatePickerPopoverDemoState};
 
 #[component]
 pub fn DatePickerPage() -> Element {
     let mut picked_date = use_signal(|| None::<Date>);
     let disabled = use_signal(|| false);
     let read_only = use_signal(|| false);
-    let mut open = use_signal(|| false);
+    let popover_state = use_signal(DatePickerPopoverDemoState::default);
     rsx! {
         Demo {
             name: "DatePicker",
             controls: rsx! {
                 BoolControl { label: "Disabled", value: disabled }
                 BoolControl { label: "Read only", value: read_only }
+                DatePickerPopoverControls { state: popover_state }
             },
             components::ui::DatePicker {
                 selected_date: picked_date(),
@@ -26,8 +28,8 @@ pub fn DatePickerPage() -> Element {
                 read_only: read_only(),
                 components::ui::DatePickerPopover {
                     class: "playground-date-picker-popover-root",
-                    open: Some(open()),
-                    on_open_change: move |value| open.set(value),
+                    open: popover_state().open,
+                    default_open: popover_state().default_open,
                     components::ui::DatePickerInput {
                         components::ui::DatePickerInputValue {}
                         components::ui::DatePickerTrigger {}

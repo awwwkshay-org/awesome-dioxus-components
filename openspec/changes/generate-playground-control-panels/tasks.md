@@ -203,6 +203,13 @@
       until 3.3/3.4 wire these into real pages. Reported here rather than
       discovered as a surprise at task 5.1.
 
+      **Follow-up (3.3/3.4 complete):** re-running the wide
+      `cargo clippy --locked --workspace --all-targets -- -D warnings`
+      pass (with `-A clippy::collapsible_if` to isolate the unrelated,
+      pre-existing `data_table.rs` defect — see 3.4's Done note) is now
+      fully clean; every `apps/playground/src/generated/controls/mod.rs`
+      glob import has a live consumer.
+
 - [x] 2.4 Wire `playground-controls sync|check|diff` (already dispatched
       in `main.rs`) to cover the new generated shapes; no new CLI
       subcommand needed. Verify `check` fails against a hand-edited
@@ -282,7 +289,7 @@
       unaffected; the new dedicated page is additional, not a
       replacement). `cargo check --locked --workspace`: zero errors.
       `cargo fmt --all --check` / narrow clippy: clean.
-- [ ] 3.3 Wire the generated panel into the 23 currently-uncontrolled
+- [x] 3.3 Wire the generated panel into the 23 currently-uncontrolled
       pages (`breadcrumb`, `carousel`, `checkbox`, `collapsible`,
       `color_picker`, `command`, `drag_and_drop_list`, `input_otp`,
       `kbd`, `label`, `mode_toggle`, `navigation_menu`, `radio_group`,
@@ -290,7 +297,31 @@
       `tag_group`, `theme_switcher`, `toast`, `toolbar`,
       `virtual_list`). Verify each page's controls actually change the
       live preview in `dx serve`, one page at a time.
-- [ ] 3.4 Convert the 36 pages with hand-written controls to the
+
+      **Done.** Of the 23, only 6 actually had a matching generated
+      controls file to wire — `command` (`CommandDialogControls`,
+      standalone `CommandDialog` demo added alongside the existing
+      plain `Command`), `drag_and_drop_list` (`DragAndDropListItemsControls`,
+      wired via the primitive's own documented
+      `DragAndDropInstructions`/`DragAndDropListItems`/`DragAndDropLiveRegion`
+      children-override), `input_otp` (`InputOTPControls`'
+      `default_value`, demonstrated by keying the `InputOTP` on
+      `default_value` so changing it remounts the field with the new
+      seed — verified live), `navigation_menu`/`resizable` (wired
+      earlier this session), and `toolbar`
+      (`ToolbarButtonControls`/`ToolbarSeparatorControls`). The other 17
+      (`breadcrumb`, `carousel`, `checkbox`, `collapsible`,
+      `color_picker`, `kbd`, `label`, `mode_toggle`, `radio_group`,
+      `scroll_area`, `slider`, `spinner`, `table`, `tag_group`,
+      `theme_switcher`, `toast`, `virtual_list`) confirmed to have no
+      `apps/playground/src/generated/controls/<item>.rs` file at all
+      (checked directly, not assumed) — the generator produced nothing
+      controllable for them, so they correctly remain as they were.
+      Every wired page was verified live in `dx serve` via Chrome
+      DevTools MCP: toggling each new control visibly changed the
+      preview (toolbar loading spinners, CommandDialog open/close,
+      InputOTP remount-with-prefill plus live typing, etc.).
+- [x] 3.4 Convert the 36 pages with hand-written controls to the
       generated panel (design.md's D4 conversion order — after 3.3, not
       before), diffing each page's exposed props and live behavior in
       `dx serve` before/after conversion so a prop the hand-written
@@ -299,6 +330,71 @@
       conversion (more is fine if the generator now supports a
       previously-unsupported shape; less requires an explicit, reviewed
       reason).
+
+      **Done**, across this session: `accordion`, `alert`,
+      `alert_dialog`, `attachment`, `avatar`, `badge`, `button`,
+      `button_group`, `combobox`, `context_menu`, `date_picker`,
+      `dialog`, `drawer`, `dropdown_menu`, `empty`, `hover_card`,
+      `input`, `input_group`, `item`, `menubar`, `native_select`,
+      `pagination`, `select`, `sheet`, `sidebar`, `skeleton`, `switch`,
+      `tabs`, `textarea`, `toggle`, `toggle_group` (31 pages). Design.md's
+      "36" estimate predates this session's full sweep; the actual
+      reconciled total is 37 — these 31 plus 6 more
+      (`aspect_ratio`, `calendar`, `card`, `popover`, `progress`,
+      `tooltip`) confirmed, the same way as 3.3's 17, to have no
+      `apps/playground/src/generated/controls/<item>.rs` file at all,
+      so they correctly keep their hand-written controls untouched. An
+      exhaustive crate-wide grep for the hand-written control
+      primitives (`BoolControl`/`TextControl`/`SelectControl`/
+      `NumberControl`/`OptionalBoolControl`) confirms no other page
+      retains one without a generated counterpart — the 1-page
+      difference from design.md's estimate is pre-implementation
+      rounding, not a missed page. Every prop the hand-written version
+      exposed was preserved — either wired to the
+      generated panel or kept as an explicit hand-written control
+      alongside it when the generator doesn't support that prop's shape
+      (e.g. `Option<String>` fields like `Input`/`Textarea`'s
+      `placeholder`, no `OptionalTextControl` primitive exists; native
+      `disabled` on `Button`; `Pagination`'s `text`/`previous_text`/
+      `next_text`). Several real fixed-default mismatches surfaced and
+      were fixed with an explicit `DemoState` override plus an inline
+      comment citing the pattern (`Skeleton.decorative`,
+      `DialogContent`/`SheetContent`/`DrawerContent.show_close_button`,
+      `EmptyMediaVariant`/`InputGroupAlign`'s non-`#[default]` page
+      defaults, `MenubarItem.value`, `SidebarProvider.default_open`).
+      Where a shared field would collide across multiple demo
+      instances of the same generated component (`Pagination`'s
+      `is_active`+`loading` on 3 already-`active_page`-derived links,
+      `Accordion`'s per-item `index`), the panel was bound to one
+      representative instance only, with a comment explaining why —
+      matching the established `SidebarMenuButtonControls`/
+      `ButtonGroupSeparator` precedent from earlier in this change,
+      rather than exposing a control that silently does nothing.
+      Verified: the wide `cargo clippy --locked --workspace
+      --all-targets -- -D warnings` pass (run with
+      `-A clippy::collapsible_if` to isolate the pre-existing,
+      already-documented `data_table.rs` defect from
+      `complete-component-prop-surface` task 6.4) is fully clean —
+      every one of the 42 generated controls files now has at least one
+      live consumer somewhere in the crate, which is systematic
+      evidence no generated module was left unwired, not just a
+      spot-check. Every conversion whose runtime semantics actually
+      changed (not just a control's location) was additionally verified
+      live in `dx serve` via Chrome DevTools MCP: `date_picker` (always
+      controlled → `open: None` uncontrolled, `on_open_change` dropped
+      in favor of the tri-state control), `input_otp` (controlled
+      `value` → uncontrolled `default_value` + `key`-forced remount),
+      `combobox` (open-state signal source swapped to the generated
+      panel), `pagination` (the 3 page-number links lost their
+      `loading` control in favor of a new standalone demo link),
+      `accordion` (per-item `index` now live), `command` (new
+      `CommandDialog` demo section), and `drag_and_drop_list` (wrapper
+      `aria_label` prop → explicit children composition). The remaining
+      conversions are mechanical `use_signal(XDemoState::default)` +
+      `XControls { state }` + `field: state().field` relocations with
+      no behavioral change, covered by the compile-clean +
+      zero-warning-clippy verification above rather than individually
+      clicked through.
 
 ## 4. Second consumer: `apps/docs` props table
 

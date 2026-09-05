@@ -1,28 +1,24 @@
 use dioxus::prelude::*;
 
 use crate::components;
-use crate::components::controls::SelectControl;
 use crate::components::demo::Demo;
+use crate::generated::controls::{TabListControls, TabListDemoState};
 
 #[component]
 pub fn TabsPage() -> Element {
     let mut value = use_signal(|| "tab1".to_string());
-    let variant = use_signal(|| components::ui::TabsVariant::Default);
+    let state = use_signal(TabListDemoState::default);
     rsx! {
         Demo {
             name: "Tabs",
             controls: rsx! {
-                SelectControl {
-                    label: "Variant",
-                    value: variant,
-                    options: crate::generated::controls::TABS_VARIANT_OPTIONS,
-                }
+                TabListControls { state }
             },
             components::ui::Tabs {
                 value: Some(value()),
                 on_value_change: move |v| value.set(v),
                 components::ui::TabList {
-                    variant: variant(),
+                    variant: state().variant,
                     components::ui::TabTrigger { value: "tab1".to_string(), index: 0usize, "Tab 1" }
                     components::ui::TabTrigger { value: "tab2".to_string(), index: 1usize, "Tab 2" }
                 }

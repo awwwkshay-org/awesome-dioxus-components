@@ -1,24 +1,23 @@
 use dioxus::prelude::*;
 
 use crate::components;
-use crate::components::controls::SelectControl;
 use crate::components::demo::Demo;
+use crate::generated::controls::{NativeSelectControls, NativeSelectDemoState};
 
 #[component]
 pub fn NativeSelectPage() -> Element {
-    let size = use_signal(|| components::ui::NativeSelectSize::Default);
+    let state = use_signal(NativeSelectDemoState::default);
     rsx! {
         Demo { name: "NativeSelect",
             controls: rsx! {
-                SelectControl {
-                    label: "Size",
-                    value: size,
-                    options: crate::generated::controls::NATIVE_SELECT_SIZE_OPTIONS,
-                }
+                NativeSelectControls { state }
             },
             div { class: "flex flex-col gap-4",
                 components::ui::NativeSelect {
-                    size: size(),
+                    size: state().size,
+                    disabled: state().disabled,
+                    required: state().required,
+                    invalid: state().invalid,
                     components::ui::NativeSelectOption { value: "apple", "Apple" }
                     components::ui::NativeSelectOption { value: "banana", "Banana" }
                     components::ui::NativeSelectOption { value: "cherry", "Cherry" }

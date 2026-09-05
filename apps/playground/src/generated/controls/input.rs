@@ -33,7 +33,7 @@ pub fn InputControls(mut state: Signal<InputDemoState>) -> Element {
         });
     });
     rsx! {
-        TextControl { label: "R#type", value: r#type }
+        TextControl { label: "Type", value: r#type }
         BoolControl { label: "Disabled", value: disabled }
         BoolControl { label: "Readonly", value: readonly }
         BoolControl { label: "Required", value: required }

@@ -1,23 +1,19 @@
 use dioxus::prelude::*;
 
 use crate::components;
-use crate::components::controls::SelectControl;
 use crate::components::demo::Demo;
+use crate::generated::controls::{AvatarControls, AvatarDemoState};
 
 #[component]
 pub fn AvatarPage() -> Element {
-    let size = use_signal(|| components::ui::AvatarSize::Default);
+    let state = use_signal(AvatarDemoState::default);
     rsx! {
         Demo {
             name: "Avatar",
             controls: rsx! {
-                SelectControl {
-                    label: "Size",
-                    value: size,
-                    options: crate::generated::controls::AVATAR_SIZE_OPTIONS,
-                }
+                AvatarControls { state }
             },
-            components::ui::Avatar { size: size(),
+            components::ui::Avatar { size: state().size,
                 components::ui::AvatarFallback { "AB" }
             }
         }

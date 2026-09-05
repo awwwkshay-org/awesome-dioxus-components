@@ -3,6 +3,7 @@ use dioxus::prelude::*;
 use crate::components;
 use crate::components::controls::{BoolControl, OptionalBoolControl, SelectControl};
 use crate::components::demo::Demo;
+use crate::generated::controls::{SelectTriggerControls, SelectTriggerDemoState};
 
 #[component]
 pub fn SelectPage() -> Element {
@@ -12,14 +13,14 @@ pub fn SelectPage() -> Element {
     let value_string = use_memo(move || value().map(str::to_string));
     let mut values = use_signal(|| Some(Vec::<String>::new()));
     let open = use_signal(|| None::<bool>);
-    let invalid = use_signal(|| false);
+    let trigger_state = use_signal(SelectTriggerDemoState::default);
     rsx! {
         Demo {
             name: "Select",
             controls: rsx! {
                 BoolControl { label: "Disabled", value: disabled }
                 BoolControl { label: "Multi-select", value: multiple }
-                BoolControl { label: "Invalid presentation", value: invalid }
+                SelectTriggerControls { state: trigger_state }
                 if !multiple() {
                     SelectControl {
                         label: "Value",
@@ -40,7 +41,8 @@ pub fn SelectPage() -> Element {
                     components::ui::SelectTrigger {
                         class: "w-48",
                         aria_label: "Choose one or more fruits",
-                        aria_invalid: invalid(),
+                        aria_invalid: trigger_state().aria_invalid,
+                        size: trigger_state().size,
                         components::ui::SelectValue { placeholder: "Choose fruits" }
                     }
                     components::ui::SelectList { class: "w-48", aria_label: "Fruit options",
@@ -66,7 +68,8 @@ pub fn SelectPage() -> Element {
                     components::ui::SelectTrigger {
                         class: "w-48",
                         aria_label: "Choose a fruit",
-                        aria_invalid: invalid(),
+                        aria_invalid: trigger_state().aria_invalid,
+                        size: trigger_state().size,
                         components::ui::SelectValue { placeholder: "Choose a fruit" }
                     }
                     components::ui::SelectList { class: "w-48", aria_label: "Fruit options",

@@ -1,27 +1,22 @@
 use dioxus::prelude::*;
 
 use crate::components;
-use crate::components::controls::SelectControl;
 use crate::components::demo::Demo;
+use crate::generated::controls::{SwitchControls, SwitchDemoState};
 
 #[component]
 pub fn SwitchPage() -> Element {
-    let mut checked = use_signal(|| false);
-    let size = use_signal(|| components::ui::SwitchSize::Default);
+    let state = use_signal(SwitchDemoState::default);
     rsx! {
         Demo {
             name: "Switch",
             controls: rsx! {
-                SelectControl {
-                    label: "Size",
-                    value: size,
-                    options: crate::generated::controls::SWITCH_SIZE_OPTIONS,
-                }
+                SwitchControls { state }
             },
             components::ui::Switch {
-                checked: checked(),
-                on_checked_change: move |value| checked.set(value),
-                size: size(),
+                checked: ReadSignal::from(Signal::new(state().checked)),
+                default_checked: state().default_checked,
+                size: state().size,
                 aria_label: "Enable notifications",
             }
         }

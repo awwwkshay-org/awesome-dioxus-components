@@ -1,25 +1,28 @@
 use dioxus::prelude::*;
 
 use crate::components;
-use crate::components::controls::SelectControl;
 use crate::components::demo::Demo;
+use crate::generated::controls::{
+    InputGroupAddonControls, InputGroupAddonDemoState, InputGroupButtonControls,
+    InputGroupButtonDemoState,
+};
 
 #[component]
 pub fn InputGroupPage() -> Element {
-    let addon_align = use_signal(|| components::ui::InputGroupAlign::InlineEnd);
+    let addon_state = use_signal(|| InputGroupAddonDemoState {
+        align: components::ui::InputGroupAlign::InlineEnd,
+    });
+    let button_state = use_signal(InputGroupButtonDemoState::default);
     rsx! {
         Demo { name: "InputGroup",
             controls: rsx! {
-                SelectControl {
-                    label: "Addon align",
-                    value: addon_align,
-                    options: crate::generated::controls::INPUT_GROUP_ALIGN_OPTIONS,
-                }
+                InputGroupAddonControls { state: addon_state }
+                InputGroupButtonControls { state: button_state }
             },
             div { class: "flex max-w-sm flex-col gap-4",
                 components::ui::InputGroup {
                     components::ui::InputGroupInput { placeholder: "Label text" }
-                    components::ui::InputGroupAddon { align: addon_align(),
+                    components::ui::InputGroupAddon { align: addon_state().align,
                         components::ui::InputGroupText { "Label" }
                     }
                 }
@@ -35,14 +38,14 @@ pub fn InputGroupPage() -> Element {
                     components::ui::InputGroupInput { placeholder: "Search..." }
                     components::ui::InputGroupAddon {
                         align: components::ui::InputGroupAlign::InlineEnd,
-                        components::ui::InputGroupButton { "Go" }
+                        components::ui::InputGroupButton { loading: button_state().loading, "Go" }
                     }
                 }
                 components::ui::InputGroup {
                     components::ui::InputGroupTextarea { placeholder: "Leave a comment", rows: 3 }
                     components::ui::InputGroupAddon {
                         align: components::ui::InputGroupAlign::BlockEnd,
-                        components::ui::InputGroupButton { "Send" }
+                        components::ui::InputGroupButton { loading: button_state().loading, "Send" }
                     }
                 }
             }

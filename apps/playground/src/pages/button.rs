@@ -3,6 +3,7 @@ use dioxus::prelude::*;
 use crate::components;
 use crate::components::controls::{BoolControl, SelectControl, TextControl};
 use crate::components::demo::Demo;
+use crate::generated::controls::{ButtonControls, ButtonDemoState};
 
 #[derive(Clone, Copy, PartialEq)]
 enum ButtonContent {
@@ -13,9 +14,8 @@ enum ButtonContent {
 
 #[component]
 pub fn ButtonPage() -> Element {
+    let state = use_signal(ButtonDemoState::default);
     let disabled = use_signal(|| false);
-    let variant = use_signal(|| components::ui::ButtonVariant::Default);
-    let size = use_signal(|| components::ui::ButtonSize::Default);
     let button_type = use_signal(|| "button");
     let content = use_signal(|| ButtonContent::Text);
     let label = use_signal(|| "Save changes".to_string());
@@ -23,16 +23,7 @@ pub fn ButtonPage() -> Element {
         Demo {
             name: "Button",
             controls: rsx! {
-                SelectControl {
-                    label: "Variant",
-                    value: variant,
-                    options: crate::generated::controls::BUTTON_VARIANT_OPTIONS,
-                }
-                SelectControl {
-                    label: "Size",
-                    value: size,
-                    options: crate::generated::controls::BUTTON_SIZE_OPTIONS,
-                }
+                ButtonControls { state }
                 BoolControl { label: "Disabled", value: disabled }
                 SelectControl {
                     label: "Native type",
@@ -51,8 +42,9 @@ pub fn ButtonPage() -> Element {
                 TextControl { label: "Text", value: label }
             },
             components::ui::Button {
-                variant: variant(),
-                size: size(),
+                variant: state().variant,
+                size: state().size,
+                loading: state().loading,
                 disabled: disabled(),
                 r#type: button_type(),
                 aria_label: (content() == ButtonContent::Icon).then_some("Save changes"),

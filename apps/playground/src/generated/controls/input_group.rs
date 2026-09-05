@@ -80,7 +80,7 @@ pub fn InputGroupInputControls(mut state: Signal<InputGroupInputDemoState>) -> E
         });
     });
     rsx! {
-        TextControl { label: "R#type", value: r#type }
+        TextControl { label: "Type", value: r#type }
         BoolControl { label: "Disabled", value: disabled }
         BoolControl { label: "Invalid", value: invalid }
     }

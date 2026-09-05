@@ -134,6 +134,8 @@ fn is_numeric_type(type_name: &str) -> bool {
 /// control labels.
 pub fn humanize_field_label(field_name: &str) -> String {
     field_name
+        .strip_prefix("r#")
+        .unwrap_or(field_name)
         .split('_')
         .filter(|word| !word.is_empty())
         .map(|word| {
@@ -918,6 +920,15 @@ mod tests {
             humanize_field_label("allow_multiple_pressed"),
             "Allow Multiple Pressed"
         );
+    }
+
+    #[test]
+    fn strips_the_raw_identifier_prefix_before_humanizing() {
+        // A field literally named `type` (a reserved word) is a raw
+        // identifier, `r#type` -- found producing the label "R#type" on
+        // `Input`'s real `r#type` field, not anticipated when this
+        // function was written.
+        assert_eq!(humanize_field_label("r#type"), "Type");
     }
 
     #[test]

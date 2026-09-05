@@ -1,26 +1,29 @@
 use dioxus::prelude::*;
 
 use crate::components;
-use crate::components::controls::{BoolControl, SelectControl};
 use crate::components::demo::Demo;
+use crate::generated::controls::{
+    ItemControls, ItemDemoState, ItemMediaControls, ItemMediaDemoState,
+};
 
 #[component]
 pub fn ItemPage() -> Element {
-    let variant = use_signal(|| components::ui::ItemVariant::Default);
-    let disabled = use_signal(|| false);
+    let state = use_signal(ItemDemoState::default);
+    let media_state = use_signal(ItemMediaDemoState::default);
     rsx! {
         Demo {
             name: "Item",
             controls: rsx! {
-                SelectControl {
-                    label: "Variant",
-                    value: variant,
-                    options: crate::generated::controls::ITEM_VARIANT_OPTIONS,
-                }
-                BoolControl { label: "Disabled", value: disabled }
+                ItemControls { state }
+                ItemMediaControls { state: media_state }
             },
             components::ui::ItemGroup {
-                components::ui::Item { variant: variant(), disabled: disabled(), class: "w-full max-w-md",
+                components::ui::Item {
+                    variant: state().variant,
+                    size: state().size,
+                    disabled: state().disabled,
+                    class: "w-full max-w-md",
+                    components::ui::ItemMedia { variant: media_state().variant, "📄" }
                     components::ui::ItemContent {
                         components::ui::ItemTitle { "Row title" }
                         components::ui::ItemDescription { "Row description" }
