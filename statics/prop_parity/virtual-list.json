@@ -1,0 +1,21 @@
+{
+  "adicoItem": "virtual-list",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": "virtual-list",
+      "parts": []
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "virtual-list",
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": null,
+      "parts": []
+    }
+  }
+}

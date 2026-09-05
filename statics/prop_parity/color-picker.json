@@ -1,0 +1,112 @@
+{
+  "adicoItem": "color-picker",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": "color-picker",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "color",
+              "status": "present"
+            },
+            {
+              "name": "on_color_change",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "open",
+              "status": "missing"
+            },
+            {
+              "name": "default_open",
+              "status": "missing"
+            },
+            {
+              "name": "on_open_change",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "color-area",
+          "unresolved": "no matching `color-area` part on axis `dioxus-components`'s `color-picker` entry"
+        },
+        {
+          "id": "area-track",
+          "unresolved": "no matching `area-track` part on axis `dioxus-components`'s `color-picker` entry"
+        },
+        {
+          "id": "area-thumb",
+          "unresolved": "no matching `area-thumb` part on axis `dioxus-components`'s `color-picker` entry"
+        },
+        {
+          "id": "hue-slider",
+          "unresolved": "no matching `hue-slider` part on axis `dioxus-components`'s `color-picker` entry"
+        },
+        {
+          "id": "area-thumb-saturation-input",
+          "unresolved": "no matching `area-thumb-saturation-input` part on axis `dioxus-components`'s `color-picker` entry"
+        },
+        {
+          "id": "area-thumb-value-input",
+          "unresolved": "no matching `area-thumb-value-input` part on axis `dioxus-components`'s `color-picker` entry"
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "color-picker",
+      "parts": [
+        {
+          "id": "root",
+          "unresolved": "no matching `root` part on axis `dioxus-primitives`'s `color-picker` entry"
+        },
+        {
+          "id": "color-area",
+          "unresolved": "no matching `color-area` part on axis `dioxus-primitives`'s `color-picker` entry"
+        },
+        {
+          "id": "area-track",
+          "unresolved": "no matching `area-track` part on axis `dioxus-primitives`'s `color-picker` entry"
+        },
+        {
+          "id": "area-thumb",
+          "unresolved": "no matching `area-thumb` part on axis `dioxus-primitives`'s `color-picker` entry"
+        },
+        {
+          "id": "hue-slider",
+          "unresolved": "no matching `hue-slider` part on axis `dioxus-primitives`'s `color-picker` entry"
+        },
+        {
+          "id": "area-thumb-saturation-input",
+          "unresolved": "no matching `area-thumb-saturation-input` part on axis `dioxus-primitives`'s `color-picker` entry"
+        },
+        {
+          "id": "area-thumb-value-input",
+          "unresolved": "no matching `area-thumb-value-input` part on axis `dioxus-primitives`'s `color-picker` entry"
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": null,
+      "parts": []
+    }
+  }
+}

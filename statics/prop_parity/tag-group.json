@@ -1,0 +1,213 @@
+{
+  "adicoItem": "tag-group",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": "tag-group",
+      "parts": [
+        {
+          "id": "root",
+          "unresolved": "no resolvable Base UI equivalent for component `tag_group`"
+        },
+        {
+          "id": "multi",
+          "unresolved": "no resolvable Base UI equivalent for component `tag_group`"
+        },
+        {
+          "id": "label",
+          "unresolved": "no resolvable Base UI equivalent for component `tag_group`"
+        },
+        {
+          "id": "tag-list",
+          "unresolved": "no resolvable Base UI equivalent for component `tag_group`"
+        },
+        {
+          "id": "tag-option",
+          "unresolved": "no matching `tag-option` part on axis `dioxus-components`'s `tag-group` entry"
+        },
+        {
+          "id": "tag-remove-button",
+          "unresolved": "no matching `tag-remove-button` part on axis `dioxus-components`'s `tag-group` entry"
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "tag-group",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "default_value",
+              "status": "present"
+            },
+            {
+              "name": "on_value_change",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "selectable",
+              "status": "present"
+            },
+            {
+              "name": "allow_empty_selection",
+              "status": "present"
+            },
+            {
+              "name": "escape_clears_selection",
+              "status": "present"
+            },
+            {
+              "name": "roving_loop",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "multi",
+          "props": [
+            {
+              "name": "values",
+              "status": "present"
+            },
+            {
+              "name": "default_values",
+              "status": "present"
+            },
+            {
+              "name": "on_values_change",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "selectable",
+              "status": "present"
+            },
+            {
+              "name": "allow_empty_selection",
+              "status": "present"
+            },
+            {
+              "name": "escape_clears_selection",
+              "status": "present"
+            },
+            {
+              "name": "roving_loop",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "label",
+          "props": [
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "tag-list",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "tag-option",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "text_value",
+              "status": "present"
+            },
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "tag-remove-button",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": null,
+      "parts": []
+    }
+  }
+}

@@ -1,0 +1,253 @@
+{
+  "adicoItem": "context-menu",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": "context-menu",
+      "parts": [
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "content",
+          "unresolved": "no matching `content` part on axis `base-ui`'s `context-menu` entry"
+        },
+        {
+          "id": "item",
+          "props": [
+            {
+              "name": "label",
+              "status": "missing"
+            },
+            {
+              "name": "onClick",
+              "status": "missing"
+            },
+            {
+              "name": "closeOnClick",
+              "status": "missing"
+            },
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-components": {
+      "matchedComponent": "context-menu",
+      "parts": [
+        {
+          "id": "trigger",
+          "unresolved": "no resolvable Base UI equivalent for component `context_menu`"
+        },
+        {
+          "id": "content",
+          "unresolved": "no resolvable Base UI equivalent for component `context_menu`"
+        },
+        {
+          "id": "item",
+          "unresolved": "no resolvable Base UI equivalent for component `context_menu`"
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "context-menu",
+      "parts": [
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "content",
+          "props": [
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "item",
+          "props": [
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "on_select",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": "context-menu",
+      "parts": [
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "content",
+          "props": [
+            {
+              "name": "finalFocus",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "item",
+          "props": [
+            {
+              "name": "inset",
+              "status": "missing"
+            },
+            {
+              "name": "variant",
+              "status": "missing"
+            },
+            {
+              "name": "label",
+              "status": "missing"
+            },
+            {
+              "name": "onClick",
+              "status": "missing"
+            },
+            {
+              "name": "closeOnClick",
+              "status": "missing"
+            },
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "adicoItem": "label",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": "label",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "html_for",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "label",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "html_for",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": "label",
+      "parts": [
+        {
+          "id": "root",
+          "unresolved": "Base UI has no standalone label component"
+        }
+      ]
+    }
+  }
+}

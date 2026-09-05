@@ -1,0 +1,334 @@
+{
+  "adicoItem": "date-picker",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": "date-picker",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "on_value_change",
+              "status": "present"
+            },
+            {
+              "name": "selected_date",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "read_only",
+              "status": "present"
+            },
+            {
+              "name": "min_date",
+              "status": "present"
+            },
+            {
+              "name": "max_date",
+              "status": "present"
+            },
+            {
+              "name": "on_format_day_placeholder",
+              "status": "missing"
+            },
+            {
+              "name": "on_format_month_placeholder",
+              "status": "missing"
+            },
+            {
+              "name": "on_format_year_placeholder",
+              "status": "missing"
+            },
+            {
+              "name": "month_count",
+              "status": "missing"
+            },
+            {
+              "name": "disabled_ranges",
+              "status": "present"
+            },
+            {
+              "name": "roving_loop",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "popover",
+          "unresolved": "no matching `popover` part on axis `dioxus-components`'s `date-picker` entry"
+        },
+        {
+          "id": "input",
+          "unresolved": "no matching `input` part on axis `dioxus-components`'s `date-picker` entry"
+        },
+        {
+          "id": "input-value",
+          "unresolved": "no matching `input-value` part on axis `dioxus-components`'s `date-picker` entry"
+        },
+        {
+          "id": "trigger",
+          "unresolved": "no matching `trigger` part on axis `dioxus-components`'s `date-picker` entry"
+        },
+        {
+          "id": "content",
+          "unresolved": "no matching `content` part on axis `dioxus-components`'s `date-picker` entry"
+        },
+        {
+          "id": "date-range-picker",
+          "props": [
+            {
+              "name": "on_range_change",
+              "status": "present"
+            },
+            {
+              "name": "selected_range",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "read_only",
+              "status": "present"
+            },
+            {
+              "name": "min_date",
+              "status": "present"
+            },
+            {
+              "name": "max_date",
+              "status": "present"
+            },
+            {
+              "name": "on_format_day_placeholder",
+              "status": "missing"
+            },
+            {
+              "name": "on_format_month_placeholder",
+              "status": "missing"
+            },
+            {
+              "name": "on_format_year_placeholder",
+              "status": "missing"
+            },
+            {
+              "name": "month_count",
+              "status": "missing"
+            },
+            {
+              "name": "disabled_ranges",
+              "status": "present"
+            },
+            {
+              "name": "roving_loop",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "date-picker",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "on_value_change",
+              "status": "present"
+            },
+            {
+              "name": "selected_date",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "read_only",
+              "status": "present"
+            },
+            {
+              "name": "min_date",
+              "status": "present"
+            },
+            {
+              "name": "max_date",
+              "status": "present"
+            },
+            {
+              "name": "disabled_ranges",
+              "status": "present"
+            },
+            {
+              "name": "roving_loop",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "popover",
+          "props": [
+            {
+              "name": "is_modal",
+              "status": "present"
+            },
+            {
+              "name": "open",
+              "status": "present"
+            },
+            {
+              "name": "default_open",
+              "status": "present"
+            },
+            {
+              "name": "on_open_change",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            },
+            {
+              "name": "popover_root",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "input",
+          "props": [
+            {
+              "name": "on_format_day_placeholder",
+              "status": "present"
+            },
+            {
+              "name": "on_format_month_placeholder",
+              "status": "present"
+            },
+            {
+              "name": "on_format_year_placeholder",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "input-value",
+          "props": [
+            {
+              "name": "on_format_day_placeholder",
+              "status": "present"
+            },
+            {
+              "name": "on_format_month_placeholder",
+              "status": "present"
+            },
+            {
+              "name": "on_format_year_placeholder",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "trigger",
+          "unresolved": "no matching `trigger` part on axis `dioxus-primitives`'s `date-picker` entry"
+        },
+        {
+          "id": "content",
+          "unresolved": "no matching `content` part on axis `dioxus-primitives`'s `date-picker` entry"
+        },
+        {
+          "id": "date-range-picker",
+          "props": [
+            {
+              "name": "on_range_change",
+              "status": "present"
+            },
+            {
+              "name": "selected_range",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "read_only",
+              "status": "present"
+            },
+            {
+              "name": "min_date",
+              "status": "present"
+            },
+            {
+              "name": "max_date",
+              "status": "present"
+            },
+            {
+              "name": "disabled_ranges",
+              "status": "present"
+            },
+            {
+              "name": "roving_loop",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": null,
+      "parts": []
+    }
+  }
+}

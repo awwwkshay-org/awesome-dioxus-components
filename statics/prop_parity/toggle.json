@@ -1,0 +1,203 @@
+{
+  "adicoItem": "toggle",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": "toggle",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "value",
+              "status": "missing"
+            },
+            {
+              "name": "defaultPressed",
+              "status": "present"
+            },
+            {
+              "name": "pressed",
+              "status": "present"
+            },
+            {
+              "name": "onPressedChange",
+              "status": "present"
+            },
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-components": {
+      "matchedComponent": "toggle",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "pressed",
+              "status": "present"
+            },
+            {
+              "name": "default_pressed",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "on_pressed_change",
+              "status": "present"
+            },
+            {
+              "name": "onmounted",
+              "status": "missing"
+            },
+            {
+              "name": "onfocus",
+              "status": "missing"
+            },
+            {
+              "name": "onkeydown",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "toggle",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "pressed",
+              "status": "present"
+            },
+            {
+              "name": "default_pressed",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "on_pressed_change",
+              "status": "present"
+            },
+            {
+              "name": "onmounted",
+              "status": "missing"
+            },
+            {
+              "name": "onfocus",
+              "status": "missing"
+            },
+            {
+              "name": "onkeydown",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": "toggle",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "variant",
+              "status": "present"
+            },
+            {
+              "name": "size",
+              "status": "present"
+            },
+            {
+              "name": "value",
+              "status": "missing"
+            },
+            {
+              "name": "defaultPressed",
+              "status": "present"
+            },
+            {
+              "name": "pressed",
+              "status": "present"
+            },
+            {
+              "name": "onPressedChange",
+              "status": "present"
+            },
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

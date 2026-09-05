@@ -1,0 +1,54 @@
+{
+  "adicoItem": "badge",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": "badge",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "variant",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": "badge",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "variant",
+              "status": "present"
+            },
+            {
+              "name": "asChild",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no merge-props/slot mechanism to render a caller-supplied element in the component's place"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "adicoItem": "scroll-area",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": "scroll-area",
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": "scroll-area",
+      "parts": []
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "scroll-area",
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": "scroll-area",
+      "parts": []
+    }
+  }
+}

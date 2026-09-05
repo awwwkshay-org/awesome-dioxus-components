@@ -1,0 +1,21 @@
+{
+  "adicoItem": "collapsible",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": "collapsible",
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": "collapsible",
+      "parts": []
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "collapsible",
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": "collapsible",
+      "parts": []
+    }
+  }
+}

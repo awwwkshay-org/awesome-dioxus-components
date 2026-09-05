@@ -1,0 +1,293 @@
+{
+  "adicoItem": "dialog",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": "dialog",
+      "parts": [
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "handle",
+              "status": "missing"
+            },
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "payload",
+              "status": "missing"
+            },
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "overlay",
+          "unresolved": "no matching `overlay` part on axis `base-ui`'s `dialog` entry"
+        },
+        {
+          "id": "content",
+          "unresolved": "no matching `content` part on axis `base-ui`'s `dialog` entry"
+        },
+        {
+          "id": "header",
+          "unresolved": "no matching `header` part on axis `base-ui`'s `dialog` entry"
+        },
+        {
+          "id": "footer",
+          "unresolved": "no matching `footer` part on axis `base-ui`'s `dialog` entry"
+        },
+        {
+          "id": "close",
+          "props": [
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-components": {
+      "matchedComponent": "dialog",
+      "parts": [
+        {
+          "id": "trigger",
+          "unresolved": "no matching `trigger` part on axis `dioxus-components`'s `dialog` entry"
+        },
+        {
+          "id": "overlay",
+          "unresolved": "no matching `overlay` part on axis `dioxus-components`'s `dialog` entry"
+        },
+        {
+          "id": "content",
+          "unresolved": "no matching `content` part on axis `dioxus-components`'s `dialog` entry"
+        },
+        {
+          "id": "header",
+          "unresolved": "no matching `header` part on axis `dioxus-components`'s `dialog` entry"
+        },
+        {
+          "id": "footer",
+          "unresolved": "no matching `footer` part on axis `dioxus-components`'s `dialog` entry"
+        },
+        {
+          "id": "close",
+          "unresolved": "no matching `close` part on axis `dioxus-components`'s `dialog` entry"
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "dialog",
+      "parts": [
+        {
+          "id": "trigger",
+          "unresolved": "no matching `trigger` part on axis `dioxus-primitives`'s `dialog` entry"
+        },
+        {
+          "id": "overlay",
+          "unresolved": "no matching `overlay` part on axis `dioxus-primitives`'s `dialog` entry"
+        },
+        {
+          "id": "content",
+          "props": [
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "class",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "header",
+          "unresolved": "no matching `header` part on axis `dioxus-primitives`'s `dialog` entry"
+        },
+        {
+          "id": "footer",
+          "unresolved": "no matching `footer` part on axis `dioxus-primitives`'s `dialog` entry"
+        },
+        {
+          "id": "close",
+          "unresolved": "no matching `close` part on axis `dioxus-primitives`'s `dialog` entry"
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": "dialog",
+      "parts": [
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "handle",
+              "status": "missing"
+            },
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "payload",
+              "status": "missing"
+            },
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "overlay",
+          "props": [
+            {
+              "name": "forceRender",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "content",
+          "props": [
+            {
+              "name": "showCloseButton",
+              "status": "present"
+            },
+            {
+              "name": "initialFocus",
+              "status": "missing"
+            },
+            {
+              "name": "finalFocus",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "header",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "footer",
+          "props": [
+            {
+              "name": "showCloseButton",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "close",
+          "props": [
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

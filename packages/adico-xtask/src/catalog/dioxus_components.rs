@@ -71,6 +71,7 @@ fn build_entry(component_dir_name: &str, dir: &Path) -> CatalogEntry {
             let props_source = introspection
                 .props
                 .get(&format!("{component}Props"))
+                .or_else(|| introspection.props.get(component))
                 .map(|fields| PropsSource::Explicit {
                     props: fields
                         .iter()
@@ -209,6 +210,45 @@ fn collect_rust_files(dir: &Path, out: &mut Vec<std::path::PathBuf>) {
             collect_rust_files(&path, out);
         } else if path.extension().and_then(|ext| ext.to_str()) == Some("rs") {
             out.push(path);
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// An inline function-argument component (no separate `#[derive(Props)]`
+    /// struct) should be recorded `explicit` with its parameter list, not
+    /// `unavailable` -- the wiring gap this fix closes.
+    #[test]
+    fn inline_function_argument_component_is_explicit() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        std::fs::write(
+            dir.path().join("mod.rs"),
+            r#"
+use dioxus::prelude::*;
+
+#[component]
+pub fn Toggle(open: bool, label: String) -> Element {
+    rsx! { div {} }
+}
+"#,
+        )
+        .expect("write fixture");
+
+        let entry = build_entry("toggle", dir.path());
+        let root = entry
+            .parts
+            .iter()
+            .find(|part| part.id == "root")
+            .expect("root part");
+        match &root.props_source {
+            PropsSource::Explicit { props } => {
+                let names: Vec<&str> = props.iter().map(|prop| prop.name.as_str()).collect();
+                assert_eq!(names, vec!["open", "label"]);
+            }
+            other => panic!("expected explicit, got {other:?}"),
         }
     }
 }

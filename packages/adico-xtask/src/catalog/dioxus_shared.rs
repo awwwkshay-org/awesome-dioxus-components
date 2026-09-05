@@ -123,6 +123,15 @@ pub fn source_url() -> String {
 /// part `root`, sourced from struct `DialogRootProps`). Best-effort: a
 /// component name that doesn't start with the module's prefix still gets a
 /// part, just keyed by its own full kebab-cased name.
+///
+/// A component declared Dioxus-macro-style with plain fn parameters instead
+/// of a separate `#[derive(Props)] struct FooProps` (`rust_introspect.rs`'s
+/// `inline_component_props` shape, keyed under the component's own function
+/// name rather than `{component}Props`) still gets its parameters recorded
+/// explicit -- this is a wiring gap in the lookup, not a parsing
+/// limitation, and both Dioxus axes (`dioxus-primitives` and
+/// `dioxus-components`) share this helper, so fixing it once here covers
+/// both rather than only the caller that special-cased it.
 pub fn parts_from_introspection(
     module: &str,
     introspection: &crate::rust_introspect::FileIntrospection,
@@ -136,7 +145,11 @@ pub fn parts_from_introspection(
         .map(|component| {
             let part_id = part_id_for(module, component);
             let props_struct = format!("{component}Props");
-            let props_source = match introspection.props.get(&props_struct) {
+            let props_source = match introspection
+                .props
+                .get(&props_struct)
+                .or_else(|| introspection.props.get(component))
+            {
                 Some(fields) => PropsSource::Explicit {
                     props: fields
                         .iter()
@@ -185,5 +198,41 @@ mod tests {
             "expected preview/src/components/dialog under {}",
             extracted_root.display()
         );
+    }
+
+    /// The `dioxus-primitives` axis (fed by this shared helper) should get
+    /// the same inline-function-argument-component fix as
+    /// `dioxus_components.rs`'s own bespoke builder: a component with no
+    /// separate `#[derive(Props)]` struct should be `explicit` with its
+    /// parameter list, not `unavailable`.
+    #[test]
+    fn inline_function_argument_component_is_explicit() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        std::fs::write(
+            dir.path().join("toggle.rs"),
+            r#"
+use dioxus::prelude::*;
+
+#[component]
+pub fn Toggle(pressed: bool, label: String) -> Element {
+    rsx! { div {} }
+}
+"#,
+        )
+        .expect("write fixture");
+
+        let introspection = crate::rust_introspect::introspect_file(&dir.path().join("toggle.rs"));
+        let parts = parts_from_introspection("toggle", &introspection);
+        let root = parts
+            .iter()
+            .find(|part| part.id == "root")
+            .expect("root part");
+        match &root.props_source {
+            super::super::schema::PropsSource::Explicit { props } => {
+                let names: Vec<&str> = props.iter().map(|prop| prop.name.as_str()).collect();
+                assert_eq!(names, vec!["pressed", "label"]);
+            }
+            other => panic!("expected explicit, got {other:?}"),
+        }
     }
 }

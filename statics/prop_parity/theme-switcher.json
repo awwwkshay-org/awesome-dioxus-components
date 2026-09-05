@@ -1,0 +1,21 @@
+{
+  "adicoItem": "theme-switcher",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-primitives": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": null,
+      "parts": []
+    }
+  }
+}

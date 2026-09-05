@@ -1,0 +1,203 @@
+{
+  "adicoItem": "toast",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": "toast",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "swipeDirection",
+              "status": "missing"
+            },
+            {
+              "name": "toast*",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "missing"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "provider",
+          "props": [
+            {
+              "name": "limit",
+              "status": "missing"
+            },
+            {
+              "name": "toastManager",
+              "status": "missing"
+            },
+            {
+              "name": "timeout",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-components": {
+      "matchedComponent": "toast",
+      "parts": [
+        {
+          "id": "root",
+          "unresolved": "no matching `root` part on axis `dioxus-components`'s `toast` entry"
+        },
+        {
+          "id": "provider",
+          "props": [
+            {
+              "name": "default_duration",
+              "status": "present"
+            },
+            {
+              "name": "max_toasts",
+              "status": "present"
+            },
+            {
+              "name": "render_toast",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            },
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "index",
+              "status": "missing"
+            },
+            {
+              "name": "title",
+              "status": "missing"
+            },
+            {
+              "name": "description",
+              "status": "missing"
+            },
+            {
+              "name": "toast_type",
+              "status": "missing"
+            },
+            {
+              "name": "on_close",
+              "status": "missing"
+            },
+            {
+              "name": "permanent",
+              "status": "missing"
+            },
+            {
+              "name": "duration",
+              "status": "missing"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "toast",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "index",
+              "status": "missing"
+            },
+            {
+              "name": "title",
+              "status": "missing"
+            },
+            {
+              "name": "description",
+              "status": "missing"
+            },
+            {
+              "name": "toast_type",
+              "status": "missing"
+            },
+            {
+              "name": "on_close",
+              "status": "missing"
+            },
+            {
+              "name": "permanent",
+              "status": "missing"
+            },
+            {
+              "name": "duration",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "provider",
+          "props": [
+            {
+              "name": "default_duration",
+              "status": "present"
+            },
+            {
+              "name": "max_toasts",
+              "status": "present"
+            },
+            {
+              "name": "render_toast",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": null,
+      "parts": []
+    }
+  }
+}

@@ -1,0 +1,232 @@
+{
+  "adicoItem": "item",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": "item",
+      "parts": [
+        {
+          "id": "group",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "variant",
+              "status": "present"
+            },
+            {
+              "name": "size",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "onclick",
+              "status": "present"
+            },
+            {
+              "name": "onkeydown",
+              "status": "present"
+            },
+            {
+              "name": "r#as",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "media",
+          "props": [
+            {
+              "name": "variant",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "content",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "title",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "description",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "actions",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "header",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "footer",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "separator",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": "item",
+      "parts": [
+        {
+          "id": "group",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "variant",
+              "status": "present"
+            },
+            {
+              "name": "size",
+              "status": "missing"
+            },
+            {
+              "name": "asChild",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no merge-props/slot mechanism to render a caller-supplied element in the component's place"
+            }
+          ]
+        },
+        {
+          "id": "media",
+          "props": [
+            {
+              "name": "variant",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "content",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "title",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "description",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "actions",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "header",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "footer",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "separator",
+          "unresolved": "shadcn-internal self-reference to `@/registry/new-york-v4/ui/separator` -- resolving shadcn's own components against each other is out of scope for this change"
+        }
+      ]
+    }
+  }
+}

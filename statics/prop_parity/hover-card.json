@@ -1,0 +1,132 @@
+{
+  "adicoItem": "hover-card",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": "hover-card",
+      "parts": [
+        {
+          "id": "trigger",
+          "unresolved": "no resolvable Base UI equivalent for component `ContentSide`"
+        },
+        {
+          "id": "content",
+          "unresolved": "no resolvable Base UI equivalent for component `ContentSide`"
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "hover-card",
+      "parts": [
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "content",
+          "props": [
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "side",
+              "status": "present"
+            },
+            {
+              "name": "align",
+              "status": "present"
+            },
+            {
+              "name": "force_mount",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": "hover-card",
+      "parts": [
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "handle",
+              "status": "missing"
+            },
+            {
+              "name": "payload",
+              "status": "missing"
+            },
+            {
+              "name": "delay",
+              "status": "missing"
+            },
+            {
+              "name": "closeDelay",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "content",
+          "props": [
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

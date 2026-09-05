@@ -1,0 +1,107 @@
+{
+  "adicoItem": "button",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": "button",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "focusableWhenDisabled",
+              "status": "missing"
+            },
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-components": {
+      "matchedComponent": "button",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "variant",
+              "status": "present"
+            },
+            {
+              "name": "size",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "onclick",
+              "status": "present"
+            },
+            {
+              "name": "onmousedown",
+              "status": "present"
+            },
+            {
+              "name": "onmouseup",
+              "status": "present"
+            },
+            {
+              "name": "onkeydown",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": "button",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "variant",
+              "status": "present"
+            },
+            {
+              "name": "size",
+              "status": "present"
+            },
+            {
+              "name": "asChild",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no merge-props/slot mechanism to render a caller-supplied element in the component's place"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

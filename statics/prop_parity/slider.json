@@ -1,0 +1,569 @@
+{
+  "adicoItem": "slider",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": "slider",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "name",
+              "status": "missing"
+            },
+            {
+              "name": "defaultValue",
+              "status": "missing"
+            },
+            {
+              "name": "value",
+              "status": "missing"
+            },
+            {
+              "name": "onValueChange",
+              "status": "missing"
+            },
+            {
+              "name": "onValueCommitted",
+              "status": "missing"
+            },
+            {
+              "name": "form",
+              "status": "missing"
+            },
+            {
+              "name": "locale",
+              "status": "missing"
+            },
+            {
+              "name": "thumbAlignment",
+              "status": "missing"
+            },
+            {
+              "name": "thumbCollisionBehavior",
+              "status": "missing"
+            },
+            {
+              "name": "step",
+              "status": "missing"
+            },
+            {
+              "name": "largeStep",
+              "status": "missing"
+            },
+            {
+              "name": "minStepsBetweenValues",
+              "status": "missing"
+            },
+            {
+              "name": "min",
+              "status": "missing"
+            },
+            {
+              "name": "max",
+              "status": "missing"
+            },
+            {
+              "name": "format",
+              "status": "missing"
+            },
+            {
+              "name": "disabled",
+              "status": "missing"
+            },
+            {
+              "name": "orientation",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "missing"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "range-slider",
+          "unresolved": "no matching `range-slider` part on axis `base-ui`'s `slider` entry"
+        },
+        {
+          "id": "track",
+          "props": [
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "range",
+          "unresolved": "no matching `range` part on axis `base-ui`'s `slider` entry"
+        },
+        {
+          "id": "thumb",
+          "props": [
+            {
+              "name": "aria-valuetext",
+              "status": "missing"
+            },
+            {
+              "name": "getAriaLabel",
+              "status": "missing"
+            },
+            {
+              "name": "getAriaValueText",
+              "status": "missing"
+            },
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "onBlur",
+              "status": "missing"
+            },
+            {
+              "name": "onFocus",
+              "status": "missing"
+            },
+            {
+              "name": "onKeyDown",
+              "status": "missing"
+            },
+            {
+              "name": "tabIndex",
+              "status": "missing"
+            },
+            {
+              "name": "disabled",
+              "status": "missing"
+            },
+            {
+              "name": "inputRef",
+              "status": "intentional_difference",
+              "reason": "Dioxus uses component-local signals/mounted-node hooks for DOM access, not React ref forwarding"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-components": {
+      "matchedComponent": "slider",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "value",
+              "status": "missing"
+            },
+            {
+              "name": "default_value",
+              "status": "missing"
+            },
+            {
+              "name": "min",
+              "status": "missing"
+            },
+            {
+              "name": "max",
+              "status": "missing"
+            },
+            {
+              "name": "step",
+              "status": "missing"
+            },
+            {
+              "name": "disabled",
+              "status": "missing"
+            },
+            {
+              "name": "horizontal",
+              "status": "missing"
+            },
+            {
+              "name": "inverted",
+              "status": "missing"
+            },
+            {
+              "name": "on_value_change",
+              "status": "missing"
+            },
+            {
+              "name": "label",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "range-slider",
+          "props": [
+            {
+              "name": "value",
+              "status": "missing"
+            },
+            {
+              "name": "default_value",
+              "status": "missing"
+            },
+            {
+              "name": "min",
+              "status": "missing"
+            },
+            {
+              "name": "max",
+              "status": "missing"
+            },
+            {
+              "name": "step",
+              "status": "missing"
+            },
+            {
+              "name": "disabled",
+              "status": "missing"
+            },
+            {
+              "name": "horizontal",
+              "status": "missing"
+            },
+            {
+              "name": "inverted",
+              "status": "missing"
+            },
+            {
+              "name": "on_value_change",
+              "status": "missing"
+            },
+            {
+              "name": "label",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "track",
+          "unresolved": "no matching `track` part on axis `dioxus-components`'s `slider` entry"
+        },
+        {
+          "id": "range",
+          "unresolved": "no matching `range` part on axis `dioxus-components`'s `slider` entry"
+        },
+        {
+          "id": "thumb",
+          "unresolved": "no matching `thumb` part on axis `dioxus-components`'s `slider` entry"
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "slider",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "value",
+              "status": "missing"
+            },
+            {
+              "name": "default_value",
+              "status": "missing"
+            },
+            {
+              "name": "min",
+              "status": "missing"
+            },
+            {
+              "name": "max",
+              "status": "missing"
+            },
+            {
+              "name": "step",
+              "status": "missing"
+            },
+            {
+              "name": "disabled",
+              "status": "missing"
+            },
+            {
+              "name": "horizontal",
+              "status": "missing"
+            },
+            {
+              "name": "inverted",
+              "status": "missing"
+            },
+            {
+              "name": "on_value_change",
+              "status": "missing"
+            },
+            {
+              "name": "label",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "range-slider",
+          "props": [
+            {
+              "name": "value",
+              "status": "missing"
+            },
+            {
+              "name": "default_value",
+              "status": "missing"
+            },
+            {
+              "name": "min",
+              "status": "missing"
+            },
+            {
+              "name": "max",
+              "status": "missing"
+            },
+            {
+              "name": "step",
+              "status": "missing"
+            },
+            {
+              "name": "disabled",
+              "status": "missing"
+            },
+            {
+              "name": "horizontal",
+              "status": "missing"
+            },
+            {
+              "name": "inverted",
+              "status": "missing"
+            },
+            {
+              "name": "on_value_change",
+              "status": "missing"
+            },
+            {
+              "name": "label",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "track",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "range",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "thumb",
+          "props": [
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": "slider",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "name",
+              "status": "missing"
+            },
+            {
+              "name": "defaultValue",
+              "status": "missing"
+            },
+            {
+              "name": "value",
+              "status": "missing"
+            },
+            {
+              "name": "onValueChange",
+              "status": "missing"
+            },
+            {
+              "name": "onValueCommitted",
+              "status": "missing"
+            },
+            {
+              "name": "form",
+              "status": "missing"
+            },
+            {
+              "name": "locale",
+              "status": "missing"
+            },
+            {
+              "name": "thumbAlignment",
+              "status": "missing"
+            },
+            {
+              "name": "thumbCollisionBehavior",
+              "status": "missing"
+            },
+            {
+              "name": "step",
+              "status": "missing"
+            },
+            {
+              "name": "largeStep",
+              "status": "missing"
+            },
+            {
+              "name": "minStepsBetweenValues",
+              "status": "missing"
+            },
+            {
+              "name": "min",
+              "status": "missing"
+            },
+            {
+              "name": "max",
+              "status": "missing"
+            },
+            {
+              "name": "format",
+              "status": "missing"
+            },
+            {
+              "name": "disabled",
+              "status": "missing"
+            },
+            {
+              "name": "orientation",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "missing"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "range-slider",
+          "unresolved": "no matching `range-slider` part on axis `shadcn`'s `slider` entry"
+        },
+        {
+          "id": "track",
+          "unresolved": "no matching `track` part on axis `shadcn`'s `slider` entry"
+        },
+        {
+          "id": "range",
+          "unresolved": "no matching `range` part on axis `shadcn`'s `slider` entry"
+        },
+        {
+          "id": "thumb",
+          "unresolved": "no matching `thumb` part on axis `shadcn`'s `slider` entry"
+        }
+      ]
+    }
+  }
+}

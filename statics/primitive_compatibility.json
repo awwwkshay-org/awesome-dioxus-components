@@ -7855,7 +7855,7 @@
     "source": {
       "axis": "dioxus-primitives",
       "catalog_path": "statics/catalogs/dioxus-primitives.json",
-      "catalog_refreshed_at": "2026-08-31",
+      "catalog_refreshed_at": "2026-09-05",
       "refresh_command": "cargo xtask catalog fetch dioxus-primitives",
       "revision": "bf007c15d0cf4d04d3181cc46cf12325aa773955",
       "source": "https://github.com/DioxusLabs/dioxus-components/tree/bf007c15d0cf4d04d3181cc46cf12325aa773955/primitives/src"
@@ -7868,5 +7868,5 @@
     }
   },
   "generator": "cargo xtask primitive-compat sync",
-  "synced_at": "2026-09-04"
+  "synced_at": "2026-09-05"
 }

@@ -1,0 +1,39 @@
+{
+  "adicoItem": "alert",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-primitives": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": "alert",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "variant",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "title",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "description",
+          "unresolved": "no prop data available for this entry"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,328 @@
+{
+  "adicoItem": "dropdown-menu",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": "dropdown-menu",
+      "parts": [
+        {
+          "id": "root",
+          "unresolved": "no resolvable Base UI equivalent for component `dioxus_attributes`"
+        },
+        {
+          "id": "trigger",
+          "unresolved": "no resolvable Base UI equivalent for component `dioxus_attributes`"
+        },
+        {
+          "id": "content",
+          "unresolved": "no resolvable Base UI equivalent for component `dioxus_attributes`"
+        },
+        {
+          "id": "item",
+          "unresolved": "no resolvable Base UI equivalent for component `dioxus_attributes`"
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "dropdown-menu",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "open",
+              "status": "present"
+            },
+            {
+              "name": "default_open",
+              "status": "present"
+            },
+            {
+              "name": "on_open_change",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "roving_loop",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "r#as",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "content",
+          "props": [
+            {
+              "name": "id",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "item",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "on_select",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": "dropdown-menu",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "defaultOpen",
+              "status": "present"
+            },
+            {
+              "name": "open",
+              "status": "present"
+            },
+            {
+              "name": "onOpenChange",
+              "status": "present"
+            },
+            {
+              "name": "highlightItemOnHover",
+              "status": "missing"
+            },
+            {
+              "name": "actionsRef",
+              "status": "missing"
+            },
+            {
+              "name": "closeParentOnEsc",
+              "status": "missing"
+            },
+            {
+              "name": "defaultTriggerId",
+              "status": "missing"
+            },
+            {
+              "name": "handle",
+              "status": "missing"
+            },
+            {
+              "name": "loopFocus",
+              "status": "missing"
+            },
+            {
+              "name": "modal",
+              "status": "missing"
+            },
+            {
+              "name": "onOpenChangeComplete",
+              "status": "missing"
+            },
+            {
+              "name": "triggerId",
+              "status": "missing"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "orientation",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "handle",
+              "status": "missing"
+            },
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "payload",
+              "status": "missing"
+            },
+            {
+              "name": "disabled",
+              "status": "missing"
+            },
+            {
+              "name": "openOnHover",
+              "status": "missing"
+            },
+            {
+              "name": "delay",
+              "status": "missing"
+            },
+            {
+              "name": "closeDelay",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "content",
+          "props": [
+            {
+              "name": "finalFocus",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "item",
+          "props": [
+            {
+              "name": "inset",
+              "status": "missing"
+            },
+            {
+              "name": "variant",
+              "status": "missing"
+            },
+            {
+              "name": "label",
+              "status": "missing"
+            },
+            {
+              "name": "onClick",
+              "status": "missing"
+            },
+            {
+              "name": "closeOnClick",
+              "status": "missing"
+            },
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

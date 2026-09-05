@@ -1,0 +1,277 @@
+{
+  "adicoItem": "alert-dialog",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": "alert-dialog",
+      "parts": [
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "handle",
+              "status": "missing"
+            },
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "payload",
+              "status": "missing"
+            },
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "overlay",
+          "unresolved": "no matching `overlay` part on axis `base-ui`'s `alert-dialog` entry"
+        },
+        {
+          "id": "content",
+          "unresolved": "no matching `content` part on axis `base-ui`'s `alert-dialog` entry"
+        },
+        {
+          "id": "header",
+          "unresolved": "no matching `header` part on axis `base-ui`'s `alert-dialog` entry"
+        },
+        {
+          "id": "actions",
+          "unresolved": "no matching `actions` part on axis `base-ui`'s `alert-dialog` entry"
+        },
+        {
+          "id": "action",
+          "unresolved": "no matching `action` part on axis `base-ui`'s `alert-dialog` entry"
+        },
+        {
+          "id": "cancel",
+          "unresolved": "no matching `cancel` part on axis `base-ui`'s `alert-dialog` entry"
+        }
+      ]
+    },
+    "dioxus-components": {
+      "matchedComponent": "alert-dialog",
+      "parts": [
+        {
+          "id": "trigger",
+          "unresolved": "no matching `trigger` part on axis `dioxus-components`'s `alert-dialog` entry"
+        },
+        {
+          "id": "overlay",
+          "unresolved": "no matching `overlay` part on axis `dioxus-components`'s `alert-dialog` entry"
+        },
+        {
+          "id": "content",
+          "unresolved": "no matching `content` part on axis `dioxus-components`'s `alert-dialog` entry"
+        },
+        {
+          "id": "header",
+          "unresolved": "no matching `header` part on axis `dioxus-components`'s `alert-dialog` entry"
+        },
+        {
+          "id": "actions",
+          "unresolved": "no resolvable Base UI equivalent for component `alert_dialog`"
+        },
+        {
+          "id": "action",
+          "unresolved": "no resolvable Base UI equivalent for component `alert_dialog`"
+        },
+        {
+          "id": "cancel",
+          "unresolved": "no resolvable Base UI equivalent for component `alert_dialog`"
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "alert-dialog",
+      "parts": [
+        {
+          "id": "trigger",
+          "unresolved": "no matching `trigger` part on axis `dioxus-primitives`'s `alert-dialog` entry"
+        },
+        {
+          "id": "overlay",
+          "unresolved": "no matching `overlay` part on axis `dioxus-primitives`'s `alert-dialog` entry"
+        },
+        {
+          "id": "content",
+          "props": [
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "class",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "header",
+          "unresolved": "no matching `header` part on axis `dioxus-primitives`'s `alert-dialog` entry"
+        },
+        {
+          "id": "actions",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "action",
+          "props": [
+            {
+              "name": "on_click",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "cancel",
+          "props": [
+            {
+              "name": "on_click",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": "alert-dialog",
+      "parts": [
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "handle",
+              "status": "missing"
+            },
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "payload",
+              "status": "missing"
+            },
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "overlay",
+          "props": [
+            {
+              "name": "forceRender",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "content",
+          "props": [
+            {
+              "name": "size",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "header",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "actions",
+          "unresolved": "no matching `actions` part on axis `shadcn`'s `alert-dialog` entry"
+        },
+        {
+          "id": "action",
+          "unresolved": "Base UI's AlertDialog exposes only a single `close` part; it does not distinguish an affirmative `action` from a `cancel` the way Radix does"
+        },
+        {
+          "id": "cancel",
+          "unresolved": "Base UI's AlertDialog exposes only a single `close` part; it does not distinguish an affirmative `action` from a `cancel` the way Radix does"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "adicoItem": "textarea",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": "textarea",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "oninput",
+              "status": "present"
+            },
+            {
+              "name": "onchange",
+              "status": "present"
+            },
+            {
+              "name": "oninvalid",
+              "status": "present"
+            },
+            {
+              "name": "onselect",
+              "status": "present"
+            },
+            {
+              "name": "onselectionchange",
+              "status": "present"
+            },
+            {
+              "name": "onfocus",
+              "status": "present"
+            },
+            {
+              "name": "onblur",
+              "status": "present"
+            },
+            {
+              "name": "onfocusin",
+              "status": "present"
+            },
+            {
+              "name": "onfocusout",
+              "status": "present"
+            },
+            {
+              "name": "onkeydown",
+              "status": "present"
+            },
+            {
+              "name": "onkeypress",
+              "status": "present"
+            },
+            {
+              "name": "onkeyup",
+              "status": "present"
+            },
+            {
+              "name": "oncompositionstart",
+              "status": "present"
+            },
+            {
+              "name": "oncompositionupdate",
+              "status": "present"
+            },
+            {
+              "name": "oncompositionend",
+              "status": "present"
+            },
+            {
+              "name": "oncopy",
+              "status": "present"
+            },
+            {
+              "name": "oncut",
+              "status": "present"
+            },
+            {
+              "name": "onpaste",
+              "status": "present"
+            },
+            {
+              "name": "onmounted",
+              "status": "present"
+            },
+            {
+              "name": "variant",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "missing"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": "textarea",
+      "parts": [
+        {
+          "id": "root",
+          "unresolved": "no prop data available for this entry"
+        }
+      ]
+    }
+  }
+}

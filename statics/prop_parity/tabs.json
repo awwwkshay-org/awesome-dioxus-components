@@ -1,0 +1,199 @@
+{
+  "adicoItem": "tabs",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": "tabs",
+      "parts": [
+        {
+          "id": "tab-list",
+          "unresolved": "no matching `tab-list` part on axis `base-ui`'s `tabs` entry"
+        },
+        {
+          "id": "tab-trigger",
+          "unresolved": "no matching `tab-trigger` part on axis `base-ui`'s `tabs` entry"
+        },
+        {
+          "id": "tab-content",
+          "unresolved": "no matching `tab-content` part on axis `base-ui`'s `tabs` entry"
+        }
+      ]
+    },
+    "dioxus-components": {
+      "matchedComponent": "tabs",
+      "parts": [
+        {
+          "id": "tab-list",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "tab-trigger",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "id",
+              "status": "present"
+            },
+            {
+              "name": "class",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "tab-content",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "class",
+              "status": "present"
+            },
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "tabs",
+      "parts": [
+        {
+          "id": "tab-list",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "tab-trigger",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "id",
+              "status": "present"
+            },
+            {
+              "name": "class",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "tab-content",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "class",
+              "status": "present"
+            },
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": "tabs",
+      "parts": [
+        {
+          "id": "tab-list",
+          "unresolved": "no matching `tab-list` part on axis `shadcn`'s `tabs` entry"
+        },
+        {
+          "id": "tab-trigger",
+          "unresolved": "no matching `tab-trigger` part on axis `shadcn`'s `tabs` entry"
+        },
+        {
+          "id": "tab-content",
+          "unresolved": "no matching `tab-content` part on axis `shadcn`'s `tabs` entry"
+        }
+      ]
+    }
+  }
+}

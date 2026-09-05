@@ -77,6 +77,20 @@ sync|check|diff` verifies its Tailwind-only and semantic-token classification
 changing a registry item's source, hand-review any new/changed record, and run
 `check` before committing.
 
+Every `registry:ui`/`registry:component` item also carries an offline,
+CI-gated prop-parity record: `cargo run -p adico-xtask -- prop-parity
+sync|check|diff` joins the item's own declared props against each catalog
+axis's (`base-ui`, `dioxus-components`, `dioxus-primitives`, `shadcn`)
+resolved upstream props and classifies every upstream prop as `present`,
+`missing`, `intentional_difference`, or `adico_extension`
+(`statics/prop_parity/<item>.json`). Unlike `primitive-usage`/
+`styling-usage`, this record is 100% derived from source on every run --
+`intentional_difference`/`adico_extension` reasons live in fixed tables in
+`packages/adico-xtask/src/prop_parity.rs`, never hand-edited into the
+generated JSON, so `sync` never preserves stale prose and `check` is a
+plain regenerate-and-compare. Run `sync` after a registry/primitive prop
+change or a `catalog fetch` refresh, and run `check` before committing.
+
 The playground's demo-page enum controls are generated, not hand-typed:
 `cargo run -p adico-xtask -- playground-controls sync|check|diff` introspects
 `apps/playground/src/components/ui/*.rs` for enum-typed props with a

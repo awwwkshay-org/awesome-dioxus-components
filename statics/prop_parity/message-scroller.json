@@ -1,0 +1,42 @@
+{
+  "adicoItem": "message-scroller",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-primitives": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": "message-scroller",
+      "parts": [
+        {
+          "id": "root",
+          "unresolved": "`@shadcn/react/message-scroller` is a third-party dependency with no catalog axis in this project"
+        },
+        {
+          "id": "viewport",
+          "unresolved": "`@shadcn/react/message-scroller` is a third-party dependency with no catalog axis in this project"
+        },
+        {
+          "id": "content",
+          "unresolved": "`@shadcn/react/message-scroller` is a third-party dependency with no catalog axis in this project"
+        },
+        {
+          "id": "item",
+          "unresolved": "`@shadcn/react/message-scroller` is a third-party dependency with no catalog axis in this project"
+        },
+        {
+          "id": "button",
+          "unresolved": "`@shadcn/react/message-scroller` is a third-party dependency with no catalog axis in this project"
+        }
+      ]
+    }
+  }
+}

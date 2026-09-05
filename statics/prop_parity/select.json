@@ -1,0 +1,739 @@
+{
+  "adicoItem": "select",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": "select",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "name",
+              "status": "present"
+            },
+            {
+              "name": "defaultValue",
+              "status": "present"
+            },
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "onValueChange",
+              "status": "present"
+            },
+            {
+              "name": "defaultOpen",
+              "status": "present"
+            },
+            {
+              "name": "open",
+              "status": "present"
+            },
+            {
+              "name": "onOpenChange",
+              "status": "present"
+            },
+            {
+              "name": "highlightItemOnHover",
+              "status": "missing"
+            },
+            {
+              "name": "actionsRef",
+              "status": "missing"
+            },
+            {
+              "name": "autoComplete",
+              "status": "missing"
+            },
+            {
+              "name": "form",
+              "status": "missing"
+            },
+            {
+              "name": "isItemEqualToValue",
+              "status": "missing"
+            },
+            {
+              "name": "itemToStringLabel",
+              "status": "missing"
+            },
+            {
+              "name": "itemToStringValue",
+              "status": "missing"
+            },
+            {
+              "name": "items",
+              "status": "missing"
+            },
+            {
+              "name": "modal",
+              "status": "missing"
+            },
+            {
+              "name": "multiple",
+              "status": "missing"
+            },
+            {
+              "name": "onOpenChangeComplete",
+              "status": "missing"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "readOnly",
+              "status": "missing"
+            },
+            {
+              "name": "required",
+              "status": "missing"
+            },
+            {
+              "name": "inputRef",
+              "status": "intentional_difference",
+              "reason": "Dioxus uses component-local signals/mounted-node hooks for DOM access, not React ref forwarding"
+            },
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "multi",
+          "unresolved": "no matching `multi` part on axis `base-ui`'s `select` entry"
+        },
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "disabled",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "option",
+          "unresolved": "no matching `option` part on axis `base-ui`'s `select` entry"
+        },
+        {
+          "id": "value",
+          "props": [
+            {
+              "name": "placeholder",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "list",
+          "props": [
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-components": {
+      "matchedComponent": "select",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "default_value",
+              "status": "present"
+            },
+            {
+              "name": "on_value_change",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "open",
+              "status": "present"
+            },
+            {
+              "name": "default_open",
+              "status": "present"
+            },
+            {
+              "name": "on_open_change",
+              "status": "present"
+            },
+            {
+              "name": "name",
+              "status": "present"
+            },
+            {
+              "name": "roving_loop",
+              "status": "present"
+            },
+            {
+              "name": "typeahead_timeout",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "multi",
+          "props": [
+            {
+              "name": "values",
+              "status": "present"
+            },
+            {
+              "name": "default_values",
+              "status": "present"
+            },
+            {
+              "name": "on_values_change",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "open",
+              "status": "present"
+            },
+            {
+              "name": "default_open",
+              "status": "present"
+            },
+            {
+              "name": "on_open_change",
+              "status": "present"
+            },
+            {
+              "name": "name",
+              "status": "present"
+            },
+            {
+              "name": "roving_loop",
+              "status": "present"
+            },
+            {
+              "name": "typeahead_timeout",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "trigger",
+          "unresolved": "no matching `trigger` part on axis `dioxus-components`'s `select` entry"
+        },
+        {
+          "id": "option",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "text_value",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "id",
+              "status": "present"
+            },
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "aria_label",
+              "status": "present"
+            },
+            {
+              "name": "aria_roledescription",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "value",
+          "unresolved": "no matching `value` part on axis `dioxus-components`'s `select` entry"
+        },
+        {
+          "id": "list",
+          "unresolved": "no matching `list` part on axis `dioxus-components`'s `select` entry"
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "select",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "default_value",
+              "status": "present"
+            },
+            {
+              "name": "on_value_change",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "open",
+              "status": "present"
+            },
+            {
+              "name": "default_open",
+              "status": "present"
+            },
+            {
+              "name": "on_open_change",
+              "status": "present"
+            },
+            {
+              "name": "name",
+              "status": "present"
+            },
+            {
+              "name": "roving_loop",
+              "status": "present"
+            },
+            {
+              "name": "typeahead_timeout",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "multi",
+          "props": [
+            {
+              "name": "values",
+              "status": "present"
+            },
+            {
+              "name": "default_values",
+              "status": "present"
+            },
+            {
+              "name": "on_values_change",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "open",
+              "status": "present"
+            },
+            {
+              "name": "default_open",
+              "status": "present"
+            },
+            {
+              "name": "on_open_change",
+              "status": "present"
+            },
+            {
+              "name": "name",
+              "status": "present"
+            },
+            {
+              "name": "roving_loop",
+              "status": "present"
+            },
+            {
+              "name": "typeahead_timeout",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "option",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "text_value",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "id",
+              "status": "present"
+            },
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "aria_label",
+              "status": "present"
+            },
+            {
+              "name": "aria_roledescription",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "value",
+          "props": [
+            {
+              "name": "placeholder",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "list",
+          "props": [
+            {
+              "name": "id",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": "select",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "name",
+              "status": "present"
+            },
+            {
+              "name": "defaultValue",
+              "status": "present"
+            },
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "onValueChange",
+              "status": "present"
+            },
+            {
+              "name": "defaultOpen",
+              "status": "present"
+            },
+            {
+              "name": "open",
+              "status": "present"
+            },
+            {
+              "name": "onOpenChange",
+              "status": "present"
+            },
+            {
+              "name": "highlightItemOnHover",
+              "status": "missing"
+            },
+            {
+              "name": "actionsRef",
+              "status": "missing"
+            },
+            {
+              "name": "autoComplete",
+              "status": "missing"
+            },
+            {
+              "name": "form",
+              "status": "missing"
+            },
+            {
+              "name": "isItemEqualToValue",
+              "status": "missing"
+            },
+            {
+              "name": "itemToStringLabel",
+              "status": "missing"
+            },
+            {
+              "name": "itemToStringValue",
+              "status": "missing"
+            },
+            {
+              "name": "items",
+              "status": "missing"
+            },
+            {
+              "name": "modal",
+              "status": "missing"
+            },
+            {
+              "name": "multiple",
+              "status": "missing"
+            },
+            {
+              "name": "onOpenChangeComplete",
+              "status": "missing"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "readOnly",
+              "status": "missing"
+            },
+            {
+              "name": "required",
+              "status": "missing"
+            },
+            {
+              "name": "inputRef",
+              "status": "intentional_difference",
+              "reason": "Dioxus uses component-local signals/mounted-node hooks for DOM access, not React ref forwarding"
+            },
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "multi",
+          "unresolved": "no matching `multi` part on axis `shadcn`'s `select` entry"
+        },
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "size",
+              "status": "missing"
+            },
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "disabled",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "option",
+          "unresolved": "no matching `option` part on axis `shadcn`'s `select` entry"
+        },
+        {
+          "id": "value",
+          "props": [
+            {
+              "name": "placeholder",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "list",
+          "unresolved": "no matching `list` part on axis `shadcn`'s `select` entry"
+        }
+      ]
+    }
+  }
+}

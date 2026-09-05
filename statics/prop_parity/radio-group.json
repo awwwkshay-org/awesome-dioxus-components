@@ -1,0 +1,65 @@
+{
+  "adicoItem": "radio-group",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": "radio-group",
+      "parts": [
+        {
+          "id": "radio-item",
+          "unresolved": "no resolvable Base UI equivalent for component `radio_group`"
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "radio-group",
+      "parts": [
+        {
+          "id": "radio-item",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "id",
+              "status": "present"
+            },
+            {
+              "name": "class",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": "radio-group",
+      "parts": [
+        {
+          "id": "radio-item",
+          "unresolved": "no matching `radio-item` part on axis `shadcn`'s `radio-group` entry"
+        }
+      ]
+    }
+  }
+}

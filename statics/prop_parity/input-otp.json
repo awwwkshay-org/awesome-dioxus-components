@@ -1,0 +1,48 @@
+{
+  "adicoItem": "input-otp",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-primitives": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": "input-otp",
+      "parts": [
+        {
+          "id": "input-o-t-p",
+          "props": [
+            {
+              "name": "containerClassName",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "input-o-t-p-group",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "input-o-t-p-slot",
+          "props": [
+            {
+              "name": "index",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "input-o-t-p-separator",
+          "unresolved": "no prop data available for this entry"
+        }
+      ]
+    }
+  }
+}

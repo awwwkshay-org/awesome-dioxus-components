@@ -1,0 +1,75 @@
+{
+  "adicoItem": "command",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-primitives": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": "command",
+      "parts": [
+        {
+          "id": "root",
+          "unresolved": "`cmdk` is a third-party dependency with no catalog axis in this project"
+        },
+        {
+          "id": "input",
+          "unresolved": "`cmdk` is a third-party dependency with no catalog axis in this project"
+        },
+        {
+          "id": "list",
+          "unresolved": "`cmdk` is a third-party dependency with no catalog axis in this project"
+        },
+        {
+          "id": "empty",
+          "unresolved": "`cmdk` is a third-party dependency with no catalog axis in this project"
+        },
+        {
+          "id": "group",
+          "unresolved": "`cmdk` is a third-party dependency with no catalog axis in this project"
+        },
+        {
+          "id": "separator",
+          "unresolved": "`cmdk` is a third-party dependency with no catalog axis in this project"
+        },
+        {
+          "id": "item",
+          "unresolved": "`cmdk` is a third-party dependency with no catalog axis in this project"
+        },
+        {
+          "id": "shortcut",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "dialog",
+          "props": [
+            {
+              "name": "title",
+              "status": "missing"
+            },
+            {
+              "name": "description",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "showCloseButton",
+              "status": "missing"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

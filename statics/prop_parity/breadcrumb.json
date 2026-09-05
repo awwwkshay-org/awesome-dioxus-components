@@ -1,0 +1,56 @@
+{
+  "adicoItem": "breadcrumb",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-primitives": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": "breadcrumb",
+      "parts": [
+        {
+          "id": "root",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "list",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "item",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "link",
+          "props": [
+            {
+              "name": "asChild",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no merge-props/slot mechanism to render a caller-supplied element in the component's place"
+            }
+          ]
+        },
+        {
+          "id": "page",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "separator",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "ellipsis",
+          "unresolved": "no prop data available for this entry"
+        }
+      ]
+    }
+  }
+}

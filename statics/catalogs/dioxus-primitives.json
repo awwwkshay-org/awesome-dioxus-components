@@ -2,7 +2,7 @@
   "axis": "dioxus-primitives",
   "source": "https://github.com/DioxusLabs/dioxus-components/tree/bf007c15d0cf4d04d3181cc46cf12325aa773955/primitives/src",
   "revision": "bf007c15d0cf4d04d3181cc46cf12325aa773955",
-  "refreshedAt": "2026-08-31",
+  "refreshedAt": "2026-09-05",
   "entries": [
     {
       "id": "accordion",
@@ -1004,7 +1004,17 @@
         {
           "id": "indicator",
           "propsSource": {
-            "kind": "unavailable"
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
           }
         }
       ]
@@ -2807,7 +2817,33 @@
         {
           "id": "content-rendered",
           "propsSource": {
-            "kind": "unavailable"
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "id",
+                "type": "String"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "side",
+                "type": "ContentSide"
+              },
+              {
+                "name": "align",
+                "type": "ContentAlign"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
           }
         },
         {
@@ -2835,13 +2871,29 @@
         {
           "id": "in",
           "propsSource": {
-            "kind": "unavailable"
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "portal",
+                "type": "PortalId"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
           }
         },
         {
           "id": "out",
           "propsSource": {
-            "kind": "unavailable"
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "portal",
+                "type": "PortalId"
+              }
+            ]
           }
         }
       ]
@@ -3973,7 +4025,17 @@
         {
           "id": "tag-remove-button",
           "propsSource": {
-            "kind": "unavailable"
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
           }
         }
       ]

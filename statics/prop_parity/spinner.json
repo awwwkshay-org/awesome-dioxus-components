@@ -1,0 +1,26 @@
+{
+  "adicoItem": "spinner",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-primitives": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": "spinner",
+      "parts": [
+        {
+          "id": "root",
+          "unresolved": "no prop data available for this entry"
+        }
+      ]
+    }
+  }
+}

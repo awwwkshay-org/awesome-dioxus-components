@@ -1,0 +1,136 @@
+{
+  "adicoItem": "drag-and-drop-list",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": "drag-and-drop-list",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "items",
+              "status": "present"
+            },
+            {
+              "name": "is_removable",
+              "status": "missing"
+            },
+            {
+              "name": "aria_label",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "items",
+          "unresolved": "no resolvable Base UI equivalent for component `drag_and_drop_list`"
+        },
+        {
+          "id": "item",
+          "unresolved": "no resolvable Base UI equivalent for component `drag_and_drop_list`"
+        },
+        {
+          "id": "drag-and-drop-drop-indicator",
+          "unresolved": "no resolvable Base UI equivalent for component `drag_and_drop_list`"
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "drag-and-drop-list",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "items",
+              "status": "present"
+            },
+            {
+              "name": "aria_label",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "items",
+          "props": [
+            {
+              "name": "aria_label",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "item",
+          "props": [
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "item_key",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "drag-and-drop-drop-indicator",
+          "props": [
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "position",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": null,
+      "parts": []
+    }
+  }
+}

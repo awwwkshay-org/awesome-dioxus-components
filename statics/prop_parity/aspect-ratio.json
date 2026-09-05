@@ -1,0 +1,21 @@
+{
+  "adicoItem": "aspect-ratio",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": "aspect-ratio",
+      "parts": []
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "aspect-ratio",
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": "aspect-ratio",
+      "parts": []
+    }
+  }
+}

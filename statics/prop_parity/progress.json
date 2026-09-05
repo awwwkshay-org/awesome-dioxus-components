@@ -1,0 +1,161 @@
+{
+  "adicoItem": "progress",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": "progress",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "value*",
+              "status": "missing"
+            },
+            {
+              "name": "aria-valuetext",
+              "status": "missing"
+            },
+            {
+              "name": "getAriaValueText",
+              "status": "missing"
+            },
+            {
+              "name": "locale",
+              "status": "missing"
+            },
+            {
+              "name": "min",
+              "status": "missing"
+            },
+            {
+              "name": "max",
+              "status": "present"
+            },
+            {
+              "name": "format",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-components": {
+      "matchedComponent": "progress",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "max",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "missing"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "progress",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "max",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "missing"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": "progress",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "value*",
+              "status": "missing"
+            },
+            {
+              "name": "aria-valuetext",
+              "status": "missing"
+            },
+            {
+              "name": "getAriaValueText",
+              "status": "missing"
+            },
+            {
+              "name": "locale",
+              "status": "missing"
+            },
+            {
+              "name": "min",
+              "status": "missing"
+            },
+            {
+              "name": "max",
+              "status": "present"
+            },
+            {
+              "name": "format",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

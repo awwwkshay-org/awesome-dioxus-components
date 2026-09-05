@@ -1,0 +1,163 @@
+{
+  "adicoItem": "toolbar",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": "toolbar",
+      "parts": [
+        {
+          "id": "button",
+          "props": [
+            {
+              "name": "focusableWhenDisabled",
+              "status": "missing"
+            },
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "separator",
+          "props": [
+            {
+              "name": "orientation",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-components": {
+      "matchedComponent": "toolbar",
+      "parts": [
+        {
+          "id": "button",
+          "props": [
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "on_click",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "separator",
+          "props": [
+            {
+              "name": "horizontal",
+              "status": "present"
+            },
+            {
+              "name": "decorative",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "toolbar",
+      "parts": [
+        {
+          "id": "button",
+          "props": [
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "on_click",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "separator",
+          "props": [
+            {
+              "name": "horizontal",
+              "status": "present"
+            },
+            {
+              "name": "decorative",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": null,
+      "parts": []
+    }
+  }
+}

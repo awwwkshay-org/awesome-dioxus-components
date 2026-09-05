@@ -1,0 +1,572 @@
+{
+  "adicoItem": "combobox",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": "combobox",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "name",
+              "status": "missing"
+            },
+            {
+              "name": "defaultValue",
+              "status": "present"
+            },
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "onValueChange",
+              "status": "present"
+            },
+            {
+              "name": "defaultInputValue",
+              "status": "missing"
+            },
+            {
+              "name": "inputValue",
+              "status": "missing"
+            },
+            {
+              "name": "onInputValueChange",
+              "status": "missing"
+            },
+            {
+              "name": "defaultOpen",
+              "status": "present"
+            },
+            {
+              "name": "open",
+              "status": "present"
+            },
+            {
+              "name": "onOpenChange",
+              "status": "present"
+            },
+            {
+              "name": "autoHighlight",
+              "status": "missing"
+            },
+            {
+              "name": "highlightItemOnHover",
+              "status": "missing"
+            },
+            {
+              "name": "actionsRef",
+              "status": "missing"
+            },
+            {
+              "name": "autoComplete",
+              "status": "missing"
+            },
+            {
+              "name": "filter",
+              "status": "present"
+            },
+            {
+              "name": "filteredItems",
+              "status": "missing"
+            },
+            {
+              "name": "form",
+              "status": "missing"
+            },
+            {
+              "name": "grid",
+              "status": "missing"
+            },
+            {
+              "name": "inline",
+              "status": "missing"
+            },
+            {
+              "name": "isItemEqualToValue",
+              "status": "missing"
+            },
+            {
+              "name": "itemToStringLabel",
+              "status": "missing"
+            },
+            {
+              "name": "itemToStringValue",
+              "status": "missing"
+            },
+            {
+              "name": "items",
+              "status": "missing"
+            },
+            {
+              "name": "limit",
+              "status": "missing"
+            },
+            {
+              "name": "locale",
+              "status": "missing"
+            },
+            {
+              "name": "loopFocus",
+              "status": "missing"
+            },
+            {
+              "name": "modal",
+              "status": "missing"
+            },
+            {
+              "name": "multiple",
+              "status": "missing"
+            },
+            {
+              "name": "onItemHighlighted",
+              "status": "missing"
+            },
+            {
+              "name": "onOpenChangeComplete",
+              "status": "missing"
+            },
+            {
+              "name": "openOnInputClick",
+              "status": "missing"
+            },
+            {
+              "name": "virtualized",
+              "status": "missing"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "readOnly",
+              "status": "missing"
+            },
+            {
+              "name": "required",
+              "status": "missing"
+            },
+            {
+              "name": "inputRef",
+              "status": "intentional_difference",
+              "reason": "Dioxus uses component-local signals/mounted-node hooks for DOM access, not React ref forwarding"
+            },
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "option",
+          "unresolved": "no matching `option` part on axis `base-ui`'s `combobox` entry"
+        },
+        {
+          "id": "empty",
+          "props": [
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "multi",
+          "unresolved": "no matching `multi` part on axis `base-ui`'s `combobox` entry"
+        },
+        {
+          "id": "input",
+          "props": [
+            {
+              "name": "disabled",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "list",
+          "props": [
+            {
+              "name": "children",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        }
+      ]
+    },
+    "dioxus-components": {
+      "matchedComponent": "combobox",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "default_value",
+              "status": "present"
+            },
+            {
+              "name": "on_value_change",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "open",
+              "status": "present"
+            },
+            {
+              "name": "default_open",
+              "status": "present"
+            },
+            {
+              "name": "on_open_change",
+              "status": "present"
+            },
+            {
+              "name": "query",
+              "status": "present"
+            },
+            {
+              "name": "default_query",
+              "status": "present"
+            },
+            {
+              "name": "on_query_change",
+              "status": "present"
+            },
+            {
+              "name": "roving_loop",
+              "status": "present"
+            },
+            {
+              "name": "filter",
+              "status": "present"
+            },
+            {
+              "name": "placeholder",
+              "status": "missing"
+            },
+            {
+              "name": "aria_label",
+              "status": "missing"
+            },
+            {
+              "name": "list_aria_label",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "option",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "text_value",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "id",
+              "status": "present"
+            },
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "aria_label",
+              "status": "present"
+            },
+            {
+              "name": "aria_roledescription",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "empty",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "multi",
+          "unresolved": "no matching `multi` part on axis `dioxus-components`'s `combobox` entry"
+        },
+        {
+          "id": "input",
+          "unresolved": "no matching `input` part on axis `dioxus-components`'s `combobox` entry"
+        },
+        {
+          "id": "list",
+          "unresolved": "no matching `list` part on axis `dioxus-components`'s `combobox` entry"
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "combobox",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "default_value",
+              "status": "present"
+            },
+            {
+              "name": "on_value_change",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "open",
+              "status": "present"
+            },
+            {
+              "name": "default_open",
+              "status": "present"
+            },
+            {
+              "name": "on_open_change",
+              "status": "present"
+            },
+            {
+              "name": "query",
+              "status": "present"
+            },
+            {
+              "name": "default_query",
+              "status": "present"
+            },
+            {
+              "name": "on_query_change",
+              "status": "present"
+            },
+            {
+              "name": "roving_loop",
+              "status": "present"
+            },
+            {
+              "name": "filter",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "option",
+          "props": [
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "text_value",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "id",
+              "status": "present"
+            },
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "aria_label",
+              "status": "present"
+            },
+            {
+              "name": "aria_roledescription",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "empty",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "multi",
+          "unresolved": "no matching `multi` part on axis `dioxus-primitives`'s `combobox` entry"
+        },
+        {
+          "id": "input",
+          "props": [
+            {
+              "name": "placeholder",
+              "status": "present"
+            },
+            {
+              "name": "id",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "list",
+          "props": [
+            {
+              "name": "id",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": "combobox",
+      "parts": [
+        {
+          "id": "root",
+          "unresolved": "no matching `root` part on axis `shadcn`'s `combobox` entry"
+        },
+        {
+          "id": "option",
+          "unresolved": "no matching `option` part on axis `shadcn`'s `combobox` entry"
+        },
+        {
+          "id": "empty",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "multi",
+          "unresolved": "no matching `multi` part on axis `shadcn`'s `combobox` entry"
+        },
+        {
+          "id": "input",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "list",
+          "unresolved": "no prop data available for this entry"
+        }
+      ]
+    }
+  }
+}

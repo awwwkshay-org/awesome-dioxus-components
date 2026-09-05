@@ -1,0 +1,201 @@
+{
+  "adicoItem": "toggle-group",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": "toggle-group",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "defaultValue",
+              "status": "missing"
+            },
+            {
+              "name": "value",
+              "status": "missing"
+            },
+            {
+              "name": "onValueChange",
+              "status": "missing"
+            },
+            {
+              "name": "loopFocus",
+              "status": "missing"
+            },
+            {
+              "name": "multiple",
+              "status": "missing"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "orientation",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "toggle-item",
+          "unresolved": "no matching `toggle-item` part on axis `base-ui`'s `toggle-group` entry"
+        }
+      ]
+    },
+    "dioxus-components": {
+      "matchedComponent": "toggle-group",
+      "parts": [
+        {
+          "id": "root",
+          "unresolved": "no resolvable Base UI equivalent for component `toggle_group`"
+        },
+        {
+          "id": "toggle-item",
+          "unresolved": "no resolvable Base UI equivalent for component `toggle_group`"
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "toggle-group",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "default_pressed",
+              "status": "present"
+            },
+            {
+              "name": "pressed",
+              "status": "present"
+            },
+            {
+              "name": "on_pressed_change",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "allow_multiple_pressed",
+              "status": "present"
+            },
+            {
+              "name": "horizontal",
+              "status": "present"
+            },
+            {
+              "name": "roving_loop",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "toggle-item",
+          "props": [
+            {
+              "name": "index",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": "toggle-group",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "spacing",
+              "status": "missing"
+            },
+            {
+              "name": "defaultValue",
+              "status": "missing"
+            },
+            {
+              "name": "value",
+              "status": "missing"
+            },
+            {
+              "name": "onValueChange",
+              "status": "missing"
+            },
+            {
+              "name": "loopFocus",
+              "status": "missing"
+            },
+            {
+              "name": "multiple",
+              "status": "missing"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "orientation",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "toggle-item",
+          "unresolved": "no matching `toggle-item` part on axis `shadcn`'s `toggle-group` entry"
+        }
+      ]
+    }
+  }
+}

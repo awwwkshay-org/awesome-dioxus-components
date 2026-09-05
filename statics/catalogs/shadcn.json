@@ -2,7 +2,7 @@
   "axis": "shadcn",
   "source": "https://github.com/shadcn-ui/ui/tree/7c9eaba1c0a6404c990c144a654792e3313c650d/apps/v4/registry/new-york-v4/ui",
   "revision": "7c9eaba1c0a6404c990c144a654792e3313c650d",
-  "refreshedAt": "2026-09-04",
+  "refreshedAt": "2026-09-05",
   "entries": [
     {
       "id": "accordion",
@@ -79,7 +79,14 @@
         {
           "id": "root",
           "propsSource": {
-            "kind": "unavailable"
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "variant",
+                "type": "\"default\" | \"destructive\"",
+                "default": "default"
+              }
+            ]
           }
         },
         {
@@ -309,7 +316,14 @@
         {
           "id": "media",
           "propsSource": {
-            "kind": "unavailable"
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "variant",
+                "type": "\"icon\" | \"image\"",
+                "default": "icon"
+              }
+            ]
           }
         },
         {
@@ -317,6 +331,14 @@
           "propsSource": {
             "kind": "explicit",
             "props": [
+              {
+                "name": "size",
+                "type": "\"default\" | \"sm\" | \"xs\""
+              },
+              {
+                "name": "orientation",
+                "type": "\"horizontal\" | \"vertical\""
+              },
               {
                 "name": "state",
                 "type": "\"idle\" | \"uploading\" | \"processing\" | \"error\" | \"done\""
@@ -425,6 +447,11 @@
             "kind": "explicit",
             "props": [
               {
+                "name": "variant",
+                "type": "\"default\" | \"secondary\" | \"destructive\" | \"outline\" | \"ghost\" | \"link\"",
+                "default": "default"
+              },
+              {
                 "name": "asChild",
                 "type": "boolean"
               }
@@ -531,6 +558,11 @@
             "kind": "explicit",
             "props": [
               {
+                "name": "variant",
+                "type": "\"default\" | \"secondary\" | \"muted\" | \"tinted\" | \"outline\" | \"ghost\" | \"destructive\"",
+                "default": "default"
+              },
+              {
                 "name": "align",
                 "type": "\"start\" | \"end\""
               }
@@ -549,6 +581,16 @@
             "kind": "explicit",
             "props": [
               {
+                "name": "variant",
+                "type": "\"default\" | \"destructive\" | \"outline\" | \"secondary\" | \"ghost\" | \"link\"",
+                "default": "default"
+              },
+              {
+                "name": "size",
+                "type": "\"default\" | \"xs\" | \"sm\" | \"lg\" | \"icon\"",
+                "default": "default"
+              },
+              {
                 "name": "asChild",
                 "type": "boolean"
               }
@@ -564,7 +606,14 @@
         {
           "id": "root",
           "propsSource": {
-            "kind": "unavailable"
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "orientation",
+                "type": "\"horizontal\" | \"vertical\"",
+                "default": "horizontal"
+              }
+            ]
           }
         },
         {
@@ -1854,7 +1903,14 @@
         {
           "id": "media",
           "propsSource": {
-            "kind": "unavailable"
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "variant",
+                "type": "\"default\" | \"icon\"",
+                "default": "default"
+              }
+            ]
           }
         },
         {
@@ -1933,7 +1989,14 @@
         {
           "id": "root",
           "propsSource": {
-            "kind": "unavailable"
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "orientation",
+                "type": "\"vertical\" | \"horizontal\" | \"responsive\"",
+                "default": "vertical"
+              }
+            ]
           }
         },
         {
@@ -2073,7 +2136,14 @@
         {
           "id": "addon",
           "propsSource": {
-            "kind": "unavailable"
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "align",
+                "type": "",
+                "default": "inline-start"
+              }
+            ]
           }
         },
         {
@@ -2085,8 +2155,14 @@
             }
           ],
           "propsSource": {
-            "kind": "inherits_from",
-            "reference": "@/registry/new-york-v4/ui/button.button.root"
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "size",
+                "type": "\"xs\" | \"sm\"",
+                "default": "xs"
+              }
+            ]
           }
         },
         {
@@ -2206,7 +2282,14 @@
         {
           "id": "media",
           "propsSource": {
-            "kind": "unavailable"
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "variant",
+                "type": "\"default\" | \"icon\" | \"image\"",
+                "default": "default"
+              }
+            ]
           }
         },
         {
@@ -2214,6 +2297,16 @@
           "propsSource": {
             "kind": "explicit",
             "props": [
+              {
+                "name": "variant",
+                "type": "\"default\" | \"outline\" | \"muted\"",
+                "default": "default"
+              },
+              {
+                "name": "size",
+                "type": "\"default\" | \"sm\"",
+                "default": "default"
+              },
               {
                 "name": "asChild",
                 "type": "boolean"
@@ -2301,6 +2394,10 @@
           "propsSource": {
             "kind": "explicit",
             "props": [
+              {
+                "name": "variant",
+                "type": "\"default\" | \"separator\" | \"border\""
+              },
               {
                 "name": "asChild",
                 "type": "boolean"
@@ -3492,8 +3589,19 @@
             }
           ],
           "propsSource": {
-            "kind": "inherits_from",
-            "reference": "@/registry/new-york-v4/ui/tooltip.tooltip-content.root"
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "variant",
+                "type": "\"default\" | \"outline\"",
+                "default": "default"
+              },
+              {
+                "name": "size",
+                "type": "\"default\" | \"sm\" | \"lg\"",
+                "default": "default"
+              }
+            ]
           }
         },
         {
@@ -3761,8 +3869,14 @@
             }
           ],
           "propsSource": {
-            "kind": "inherits_from",
-            "reference": "radix.tabs.list"
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "variant",
+                "type": "\"default\" | \"line\"",
+                "default": "default"
+              }
+            ]
           }
         },
         {
@@ -3821,8 +3935,19 @@
             }
           ],
           "propsSource": {
-            "kind": "inherits_from",
-            "reference": "radix.toggle.root"
+            "kind": "explicit",
+            "props": [
+              {
+                "name": "variant",
+                "type": "\"default\" | \"outline\"",
+                "default": "default"
+              },
+              {
+                "name": "size",
+                "type": "\"default\" | \"sm\" | \"lg\"",
+                "default": "default"
+              }
+            ]
           }
         }
       ]

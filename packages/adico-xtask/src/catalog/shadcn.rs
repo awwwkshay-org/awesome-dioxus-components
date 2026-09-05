@@ -177,11 +177,15 @@ struct PassthroughMatch {
     /// `None` for `React.ComponentProps<"tag">` (no tracked primitive).
     wraps: Option<(String, Option<String>)>,
     augmentation: Vec<Prop>,
+    /// The local `cva()` alias referenced via `VariantProps<typeof Alias>`,
+    /// if this signature's type expression declares one.
+    variant_alias: Option<String>,
 }
 
 fn parse_type_expression(type_expr: &str) -> Option<PassthroughMatch> {
     let typeof_re = Regex::new(r"typeof\s+(\w+)(?:\.(\w+))?").ok()?;
     let augmentation_re = Regex::new(r"&\s*\{([\s\S]*)\}\s*$").ok()?;
+    let variant_props_re = Regex::new(r"VariantProps<typeof\s+(\w+)>").ok()?;
 
     let wraps = typeof_re.captures(type_expr).map(|capture| {
         (
@@ -190,7 +194,11 @@ fn parse_type_expression(type_expr: &str) -> Option<PassthroughMatch> {
         )
     });
 
-    if wraps.is_none() && !type_expr.contains("ComponentProps") {
+    let variant_alias = variant_props_re
+        .captures(type_expr)
+        .map(|capture| capture[1].to_string());
+
+    if wraps.is_none() && variant_alias.is_none() && !type_expr.contains("ComponentProps") {
         return None;
     }
 
@@ -202,7 +210,177 @@ fn parse_type_expression(type_expr: &str) -> Option<PassthroughMatch> {
     Some(PassthroughMatch {
         wraps,
         augmentation,
+        variant_alias,
     })
+}
+
+/// Finds the index of the byte matching `open` at `open_idx`, tracking
+/// string-literal boundaries (`"`, `'`, `` ` ``) so a brace/paren inside a
+/// CSS-class string (e.g. Tailwind's `hover:bg-primary/90`) never throws off
+/// the depth count.
+fn matching_close(bytes: &[u8], open_idx: usize, open: u8, close: u8) -> Option<usize> {
+    let mut depth = 0i32;
+    let mut in_string: Option<u8> = None;
+    let mut i = open_idx;
+    while i < bytes.len() {
+        let byte = bytes[i];
+        if let Some(quote) = in_string {
+            if byte == b'\\' {
+                i += 2;
+                continue;
+            }
+            if byte == quote {
+                in_string = None;
+            }
+        } else if byte == b'"' || byte == b'\'' || byte == b'`' {
+            in_string = Some(byte);
+        } else if byte == open {
+            depth += 1;
+        } else if byte == close {
+            depth -= 1;
+            if depth == 0 {
+                return Some(i);
+            }
+        }
+        i += 1;
+    }
+    None
+}
+
+/// Finds `<name>: {` in `body` and returns the balanced-brace content
+/// between (and excluding) the matching `{`/`}`.
+fn extract_named_object<'a>(body: &'a str, name: &str) -> Option<&'a str> {
+    let key_re = Regex::new(&format!(r"{}\s*:\s*\{{", regex::escape(name))).ok()?;
+    let capture = key_re.find(body)?;
+    let open_idx = capture.end() - 1;
+    let close_idx = matching_close(body.as_bytes(), open_idx, b'{', b'}')?;
+    Some(&body[open_idx + 1..close_idx])
+}
+
+/// Splits a `{ key: { ... }, key2: { ... } }` object body into `(key,
+/// inner_body)` pairs in declaration order, using balanced-brace scanning so
+/// nested content never gets mistaken for a sibling key.
+fn split_object_entries(body: &str) -> Vec<(String, String)> {
+    let key_re = Regex::new(r"(\w+)\s*:\s*\{").unwrap();
+    let bytes = body.as_bytes();
+    let mut result = Vec::new();
+    let mut pos = 0usize;
+    while pos < body.len() {
+        let Some(capture) = key_re.captures(&body[pos..]) else {
+            break;
+        };
+        let whole = capture.get(0).unwrap();
+        let key = capture[1].to_string();
+        let open_idx = pos + whole.end() - 1;
+        let Some(close_idx) = matching_close(bytes, open_idx, b'{', b'}') else {
+            break;
+        };
+        result.push((key, body[open_idx + 1..close_idx].to_string()));
+        pos = close_idx + 1;
+    }
+    result
+}
+
+/// Extracts top-level `identifier:` keys from an object body, skipping
+/// anything inside a string literal so a Tailwind class like
+/// `hover:bg-primary/90` is never mistaken for a `hover` key.
+fn parse_object_keys(body: &str) -> Vec<String> {
+    let bytes = body.as_bytes();
+    let mut keys = Vec::new();
+    let mut i = 0usize;
+    let mut in_string: Option<u8> = None;
+    while i < bytes.len() {
+        let byte = bytes[i];
+        if let Some(quote) = in_string {
+            if byte == b'\\' {
+                i += 2;
+                continue;
+            }
+            if byte == quote {
+                in_string = None;
+            }
+            i += 1;
+            continue;
+        }
+        if byte == b'"' || byte == b'\'' || byte == b'`' {
+            in_string = Some(byte);
+            i += 1;
+            continue;
+        }
+        if byte.is_ascii_alphabetic() || byte == b'_' {
+            let start = i;
+            while i < bytes.len() && (bytes[i].is_ascii_alphanumeric() || bytes[i] == b'_') {
+                i += 1;
+            }
+            let ident = &body[start..i];
+            let mut j = i;
+            while j < bytes.len() && bytes[j].is_ascii_whitespace() {
+                j += 1;
+            }
+            if j < bytes.len() && bytes[j] == b':' {
+                keys.push(ident.to_string());
+                i = j + 1;
+            }
+            continue;
+        }
+        i += 1;
+    }
+    keys
+}
+
+/// Extracts `key: "value"` pairs (e.g. a `defaultVariants` block) into a
+/// name -> value map.
+fn parse_string_value_pairs(body: &str) -> BTreeMap<String, String> {
+    let pair_re = Regex::new(r#"(\w+)\s*:\s*"([^"]*)""#).unwrap();
+    pair_re
+        .captures_iter(body)
+        .map(|capture| (capture[1].to_string(), capture[2].to_string()))
+        .collect()
+}
+
+/// Parses a `cva()` call's `variants: { <group>: { <key>: <value>, ... },
+/// ... }` object into one [`Prop`] per group -- `name` is the group name,
+/// `type_name` the literal union of its keys, `default` the matching
+/// `defaultVariants` entry, if any.
+fn parse_cva_variant_groups(source: &str, alias: &str) -> Vec<Prop> {
+    let Ok(const_re) = Regex::new(&format!(r"const\s+{}\s*=\s*cva\s*\(", regex::escape(alias)))
+    else {
+        return Vec::new();
+    };
+    let Some(mat) = const_re.find(source) else {
+        return Vec::new();
+    };
+    let call_open = mat.end() - 1;
+    let Some(call_close) = matching_close(source.as_bytes(), call_open, b'(', b')') else {
+        return Vec::new();
+    };
+    let call_body = &source[call_open + 1..call_close];
+
+    let Some(variants_body) = extract_named_object(call_body, "variants") else {
+        return Vec::new();
+    };
+    let defaults = extract_named_object(call_body, "defaultVariants")
+        .map(parse_string_value_pairs)
+        .unwrap_or_default();
+
+    split_object_entries(variants_body)
+        .into_iter()
+        .map(|(group_name, group_body)| {
+            let keys = parse_object_keys(&group_body);
+            let type_name = keys
+                .iter()
+                .map(|key| format!("\"{key}\""))
+                .collect::<Vec<_>>()
+                .join(" | ");
+            let default = defaults.get(&group_name).cloned();
+            Prop {
+                name: group_name,
+                type_name,
+                default,
+                description: None,
+            }
+        })
+        .collect()
 }
 
 fn parse_augmentation_fields(body: &str) -> Vec<Prop> {
@@ -262,9 +440,16 @@ fn parse_shadcn_source(slug: &str, source: &str) -> Vec<PartEntry> {
             })
             .unwrap_or_default();
 
-        let props_source = if !matched.augmentation.is_empty() {
+        let mut explicit_props = matched
+            .variant_alias
+            .as_ref()
+            .map(|alias| parse_cva_variant_groups(source, alias))
+            .unwrap_or_default();
+        explicit_props.extend(matched.augmentation);
+
+        let props_source = if !explicit_props.is_empty() {
             PropsSource::Explicit {
-                props: matched.augmentation,
+                props: explicit_props,
             }
         } else if let Some(composition_ref) = composition.first() {
             let part = composition_ref
@@ -368,5 +553,119 @@ function DialogContent({
             .find(|p| p.id == "header")
             .expect("header part");
         assert!(matches!(header.props_source, PropsSource::Unavailable));
+    }
+
+    const BUTTON_VARIANTS_CVA: &str = r#"
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none hover:bg-primary/90",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+        destructive: "bg-destructive text-white shadow-xs hover:bg-destructive/90",
+        outline: "border bg-background shadow-xs hover:bg-accent",
+        secondary: "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-9 px-4 py-2",
+        sm: "h-8 px-3",
+        lg: "h-10 px-6",
+        icon: "size-9",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
+"#;
+
+    #[test]
+    fn parses_cva_variant_groups() {
+        let props = parse_cva_variant_groups(BUTTON_VARIANTS_CVA, "buttonVariants");
+        assert_eq!(props.len(), 2);
+
+        let variant = &props[0];
+        assert_eq!(variant.name, "variant");
+        assert_eq!(
+            variant.type_name,
+            "\"default\" | \"destructive\" | \"outline\" | \"secondary\" | \"ghost\" | \"link\""
+        );
+        assert_eq!(variant.default.as_deref(), Some("default"));
+
+        let size = &props[1];
+        assert_eq!(size.name, "size");
+        assert_eq!(size.type_name, "\"default\" | \"sm\" | \"lg\" | \"icon\"");
+        assert_eq!(size.default.as_deref(), Some("default"));
+    }
+
+    #[test]
+    fn button_signature_merges_variant_groups_and_augmentation() {
+        let source = format!(
+            "{BUTTON_VARIANTS_CVA}\nfunction Button({{\n  className,\n  variant,\n  size,\n  asChild = false,\n  ...props\n}}: React.ComponentProps<\"button\"> &\n  VariantProps<typeof buttonVariants> & {{\n  asChild?: boolean\n}}) {{ return <button /> }}\n"
+        );
+        let parts = parse_shadcn_source("button", &source);
+        let root = parts.iter().find(|p| p.id == "root").expect("root part");
+        match &root.props_source {
+            PropsSource::Explicit { props } => {
+                let names: Vec<&str> = props.iter().map(|p| p.name.as_str()).collect();
+                assert_eq!(names, vec!["variant", "size", "asChild"]);
+            }
+            other => panic!("expected explicit, got {other:?}"),
+        }
+    }
+
+    /// A native-tag passthrough combined with a `cva()` variant group (no
+    /// `React.ComponentProps<typeof OtherComponent>` reference at all) is
+    /// the shape that keeps most non-`Button` parts among the 139
+    /// `unavailable` parts today (e.g. shadcn's real `alert.tsx`). The
+    /// `typeof alertVariants` inside `VariantProps<...>` also happens to
+    /// match `parse_type_expression`'s unrelated `typeof` composition
+    /// regex, but since `alertVariants` is a local `const`, not an import,
+    /// `resolve_import_axis` returns `None` for it and composition stays
+    /// empty -- only the variant-group extraction fires.
+    #[test]
+    fn native_tag_passthrough_with_cva_variant_groups_is_explicit() {
+        let source = r#"
+const alertVariants = cva(
+  "relative w-full rounded-lg border px-4 py-3 text-sm",
+  {
+    variants: {
+      variant: {
+        default: "bg-card text-card-foreground",
+        destructive: "text-destructive bg-card",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
+
+function Alert({
+  className,
+  variant,
+  ...props
+}: React.ComponentProps<"div"> & VariantProps<typeof alertVariants>) {
+  return <div />
+}
+"#;
+        let parts = parse_shadcn_source("alert", source);
+        let root = parts.iter().find(|p| p.id == "root").expect("root part");
+        assert!(
+            root.composition.is_empty(),
+            "a local cva alias must not be treated as upstream composition"
+        );
+        match &root.props_source {
+            PropsSource::Explicit { props } => {
+                assert_eq!(props.len(), 1);
+                assert_eq!(props[0].name, "variant");
+                assert_eq!(props[0].type_name, "\"default\" | \"destructive\"");
+            }
+            other => panic!("expected explicit, got {other:?}"),
+        }
     }
 }

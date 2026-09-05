@@ -9,10 +9,13 @@ mod case;
 mod dioxus_components;
 mod dioxus_primitives;
 mod dioxus_shared;
+mod radix_aliases;
 pub mod schema;
 mod shadcn;
 
-pub use schema::CatalogSnapshot;
+pub use case::part_id_for;
+pub use radix_aliases::{ResolvedProps, resolve_inherits_from};
+pub use schema::{CatalogSnapshot, PropsSource};
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum AxisKind {

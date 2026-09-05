@@ -1,0 +1,39 @@
+{
+  "adicoItem": "native-select",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-primitives": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": "native-select",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "size",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "option",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "opt-group",
+          "unresolved": "no prop data available for this entry"
+        }
+      ]
+    }
+  }
+}

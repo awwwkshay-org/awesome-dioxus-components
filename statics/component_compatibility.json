@@ -10534,7 +10534,7 @@
   "dioxus_components": {
     "axis": "dioxus-components",
     "catalog_path": "statics/catalogs/dioxus-components.json",
-    "catalog_refreshed_at": "2026-08-31",
+    "catalog_refreshed_at": "2026-09-05",
     "components": [
       {
         "name": "accordion",
@@ -10776,7 +10776,7 @@
   "shadcn": {
     "axis": "shadcn",
     "catalog_path": "statics/catalogs/shadcn.json",
-    "catalog_refreshed_at": "2026-09-04",
+    "catalog_refreshed_at": "2026-09-05",
     "components": [
       {
         "name": "accordion",
@@ -11089,5 +11089,5 @@
       "total_upstream_components": 61
     }
   },
-  "synced_at": "2026-09-04"
+  "synced_at": "2026-09-05"
 }

@@ -87,3 +87,6 @@ jobs:
 
       - name: Check playground demo controls aren't stale
         run: cargo run -p adico-xtask -- playground-controls check
+
+      - name: Check prop-parity records aren't stale
+        run: cargo run -p adico-xtask -- prop-parity check

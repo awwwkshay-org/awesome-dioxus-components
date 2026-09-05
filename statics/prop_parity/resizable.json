@@ -1,0 +1,34 @@
+{
+  "adicoItem": "resizable",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-primitives": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": "resizable",
+      "parts": [
+        {
+          "id": "panel-group",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "panel",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "handle",
+          "unresolved": "no prop data available for this entry"
+        }
+      ]
+    }
+  }
+}

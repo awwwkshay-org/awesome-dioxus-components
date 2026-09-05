@@ -5,6 +5,7 @@ mod component_compat;
 mod playground_controls;
 mod primitive_compat;
 mod primitive_usage;
+mod prop_parity;
 mod registry_introspect;
 mod rust_introspect;
 mod styling_usage;
@@ -147,6 +148,19 @@ fn main() {
             eprintln!("usage: cargo xtask playground-controls sync|check|diff");
             std::process::exit(2);
         }
+        [command, subcommand] if command == "prop-parity" && subcommand == "sync" => {
+            run_compat(prop_parity::sync);
+        }
+        [command, subcommand] if command == "prop-parity" && subcommand == "check" => {
+            run_compat(prop_parity::check);
+        }
+        [command, subcommand] if command == "prop-parity" && subcommand == "diff" => {
+            run_compat(prop_parity::diff);
+        }
+        [command] if command == "prop-parity" => {
+            eprintln!("usage: cargo xtask prop-parity sync|check|diff");
+            std::process::exit(2);
+        }
         [command, subcommand, axis] if command == "catalog" && subcommand == "fetch" => {
             if let Err(error) = catalog_fetch(axis, None) {
                 eprintln!("catalog fetch failed: {error}");
@@ -170,7 +184,7 @@ fn main() {
         }
         _ => {
             eprintln!(
-                "usage:\n  cargo xtask provenance check\n  cargo xtask registry build\n  cargo xtask registry validate [--source <registry-directory-or-manifest>]\n  cargo xtask catalog fetch <axis|all> [--revision <sha>]\n  cargo xtask primitive-compat sync|check|diff\n  cargo xtask component-compat sync|check\n  cargo xtask primitive-usage sync|check|diff\n  cargo xtask styling-usage sync|check|diff\n  cargo xtask playground-controls sync|check|diff"
+                "usage:\n  cargo xtask provenance check\n  cargo xtask registry build\n  cargo xtask registry validate [--source <registry-directory-or-manifest>]\n  cargo xtask catalog fetch <axis|all> [--revision <sha>]\n  cargo xtask primitive-compat sync|check|diff\n  cargo xtask component-compat sync|check\n  cargo xtask primitive-usage sync|check|diff\n  cargo xtask styling-usage sync|check|diff\n  cargo xtask playground-controls sync|check|diff\n  cargo xtask prop-parity sync|check|diff"
             );
             std::process::exit(2);
         }
@@ -373,7 +387,7 @@ fn load_registry_manifest(
         .map_err(|error| error.to_string())
 }
 
-fn write_if_changed(path: &Path, contents: &str) -> Result<(), String> {
+pub(crate) fn write_if_changed(path: &Path, contents: &str) -> Result<(), String> {
     let existing = fs::read_to_string(path).ok();
     if existing.as_deref() != Some(contents) {
         fs::write(path, contents)

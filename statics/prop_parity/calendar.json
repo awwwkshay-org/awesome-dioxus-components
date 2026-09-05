@@ -1,0 +1,293 @@
+{
+  "adicoItem": "calendar",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": "calendar",
+      "parts": [
+        {
+          "id": "view",
+          "unresolved": "no matching `view` part on axis `dioxus-components`'s `calendar` entry"
+        },
+        {
+          "id": "header",
+          "unresolved": "no matching `header` part on axis `dioxus-components`'s `calendar` entry"
+        },
+        {
+          "id": "navigation",
+          "unresolved": "no matching `navigation` part on axis `dioxus-components`'s `calendar` entry"
+        },
+        {
+          "id": "previous-month-button",
+          "unresolved": "no matching `previous-month-button` part on axis `dioxus-components`'s `calendar` entry"
+        },
+        {
+          "id": "next-month-button",
+          "unresolved": "no matching `next-month-button` part on axis `dioxus-components`'s `calendar` entry"
+        },
+        {
+          "id": "month-title",
+          "unresolved": "no matching `month-title` part on axis `dioxus-components`'s `calendar` entry"
+        },
+        {
+          "id": "select-month",
+          "unresolved": "no matching `select-month` part on axis `dioxus-components`'s `calendar` entry"
+        },
+        {
+          "id": "select-year",
+          "unresolved": "no matching `select-year` part on axis `dioxus-components`'s `calendar` entry"
+        },
+        {
+          "id": "select-month-select",
+          "unresolved": "no matching `select-month-select` part on axis `dioxus-components`'s `calendar` entry"
+        },
+        {
+          "id": "select-year-select",
+          "unresolved": "no matching `select-year-select` part on axis `dioxus-components`'s `calendar` entry"
+        },
+        {
+          "id": "select-month-value",
+          "unresolved": "no matching `select-month-value` part on axis `dioxus-components`'s `calendar` entry"
+        },
+        {
+          "id": "select-year-value",
+          "unresolved": "no matching `select-year-value` part on axis `dioxus-components`'s `calendar` entry"
+        },
+        {
+          "id": "grid",
+          "unresolved": "no matching `grid` part on axis `dioxus-components`'s `calendar` entry"
+        }
+      ]
+    },
+    "dioxus-primitives": {
+      "matchedComponent": "calendar",
+      "parts": [
+        {
+          "id": "view",
+          "props": [
+            {
+              "name": "offset",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "header",
+          "props": [
+            {
+              "name": "id",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "navigation",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "previous-month-button",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "next-month-button",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "month-title",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "select-month",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "select-year",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "select-month-select",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "select-year-select",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "select-month-value",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "select-year-value",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "grid",
+          "props": [
+            {
+              "name": "id",
+              "status": "present"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            }
+          ]
+        }
+      ]
+    },
+    "shadcn": {
+      "matchedComponent": "calendar",
+      "parts": [
+        {
+          "id": "view",
+          "unresolved": "no matching `view` part on axis `shadcn`'s `calendar` entry"
+        },
+        {
+          "id": "header",
+          "unresolved": "no matching `header` part on axis `shadcn`'s `calendar` entry"
+        },
+        {
+          "id": "navigation",
+          "unresolved": "no matching `navigation` part on axis `shadcn`'s `calendar` entry"
+        },
+        {
+          "id": "previous-month-button",
+          "unresolved": "no matching `previous-month-button` part on axis `shadcn`'s `calendar` entry"
+        },
+        {
+          "id": "next-month-button",
+          "unresolved": "no matching `next-month-button` part on axis `shadcn`'s `calendar` entry"
+        },
+        {
+          "id": "month-title",
+          "unresolved": "no matching `month-title` part on axis `shadcn`'s `calendar` entry"
+        },
+        {
+          "id": "select-month",
+          "unresolved": "no matching `select-month` part on axis `shadcn`'s `calendar` entry"
+        },
+        {
+          "id": "select-year",
+          "unresolved": "no matching `select-year` part on axis `shadcn`'s `calendar` entry"
+        },
+        {
+          "id": "select-month-select",
+          "unresolved": "no matching `select-month-select` part on axis `shadcn`'s `calendar` entry"
+        },
+        {
+          "id": "select-year-select",
+          "unresolved": "no matching `select-year-select` part on axis `shadcn`'s `calendar` entry"
+        },
+        {
+          "id": "select-month-value",
+          "unresolved": "no matching `select-month-value` part on axis `shadcn`'s `calendar` entry"
+        },
+        {
+          "id": "select-year-value",
+          "unresolved": "no matching `select-year-value` part on axis `shadcn`'s `calendar` entry"
+        },
+        {
+          "id": "grid",
+          "unresolved": "no matching `grid` part on axis `shadcn`'s `calendar` entry"
+        }
+      ]
+    }
+  }
+}

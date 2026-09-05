@@ -1,0 +1,45 @@
+{
+  "adicoItem": "button-group",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-primitives": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": "button-group",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "orientation",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "text",
+          "props": [
+            {
+              "name": "asChild",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no merge-props/slot mechanism to render a caller-supplied element in the component's place"
+            }
+          ]
+        },
+        {
+          "id": "separator",
+          "unresolved": "shadcn-internal self-reference to `@/registry/new-york-v4/ui/separator` -- resolving shadcn's own components against each other is out of scope for this change"
+        }
+      ]
+    }
+  }
+}

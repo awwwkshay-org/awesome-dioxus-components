@@ -1,0 +1,82 @@
+{
+  "adicoItem": "attachment",
+  "axes": {
+    "base-ui": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-components": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "dioxus-primitives": {
+      "matchedComponent": null,
+      "parts": []
+    },
+    "shadcn": {
+      "matchedComponent": "attachment",
+      "parts": [
+        {
+          "id": "root",
+          "props": [
+            {
+              "name": "size",
+              "status": "missing"
+            },
+            {
+              "name": "orientation",
+              "status": "missing"
+            },
+            {
+              "name": "state",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "group",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "asChild",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no merge-props/slot mechanism to render a caller-supplied element in the component's place"
+            }
+          ]
+        },
+        {
+          "id": "media",
+          "props": [
+            {
+              "name": "variant",
+              "status": "missing"
+            }
+          ]
+        },
+        {
+          "id": "content",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "title",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "description",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "actions",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "action",
+          "unresolved": "shadcn-internal self-reference to `@/registry/new-york-v4/ui/button` -- resolving shadcn's own components against each other is out of scope for this change"
+        }
+      ]
+    }
+  }
+}
