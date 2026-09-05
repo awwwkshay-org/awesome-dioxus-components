@@ -44,6 +44,15 @@ pub enum PropShape {
     Bool,
     /// `String` -- a `TextControl`. No generated code, same reason as `Bool`.
     Text,
+    /// A numeric type (`f32`/`f64`/any integer) -- a `NumberControl`. No
+    /// generated code, same reason as `Bool`.
+    Number,
+    /// `ReadSignal<Option<bool>>` (or `Signal<Option<bool>>`, or either
+    /// wrapped in an outer `Option<...>`) -- the tri-state
+    /// uncontrolled/on/off idiom several overlay components' `open` prop
+    /// uses -- an `OptionalBoolControl`. No generated code, same reason as
+    /// `Bool`.
+    OptionalBool,
     /// An enum type with a `#[default]` variant declared in the same file --
     /// generates a `pub const <NAME>_OPTIONS` and its exhaustiveness guard.
     Enum(String),
@@ -68,6 +77,19 @@ pub fn classify_prop_type(
         "Option<String>" => {
             return PropShape::Skipped("Option<String> has no matching demo control");
         }
+        // The real shape every controlled-`open` prop across the overlay
+        // family (`Tooltip`/`Popover`/`HoverCard`/menu family/`Sidebar`)
+        // actually declares -- verified against
+        // `packages/adico-primitives/src/{tooltip,popover,hover_card,menu}.rs`
+        // and `registry/ui/sidebar.rs`, all of which use
+        // `ReadSignal<Option<bool>>` with no outer `Option`, not the
+        // `Option<ReadSignal<Option<bool>>>` design.md's own Context
+        // section names -- an outer `Option` is included here too in case
+        // a future component declares it that way, but no current one does.
+        "ReadSignal<Option<bool>>"
+        | "Signal<Option<bool>>"
+        | "Option<ReadSignal<Option<bool>>>"
+        | "Option<Signal<Option<bool>>>" => return PropShape::OptionalBool,
         _ => {}
     }
     if type_name.starts_with("EventHandler<") {
@@ -77,7 +99,7 @@ pub fn classify_prop_type(
         return PropShape::Skipped("Signal/ReadSignal-typed props have no matching demo control");
     }
     if is_numeric_type(type_name) {
-        return PropShape::Skipped("numeric props have no matching demo control yet");
+        return PropShape::Number;
     }
     match enums.get(type_name) {
         Some(info) if info.default_variant.is_some() => PropShape::Enum(type_name.to_string()),
@@ -104,6 +126,25 @@ fn is_numeric_type(type_name: &str) -> bool {
             | "u128"
             | "usize"
     )
+}
+
+/// Converts a snake_case field identifier into a Title Case label
+/// (`default_open` -> `Default Open`) -- the field-name analog of
+/// `humanize_variant_label`, for a generated `<Comp>Controls`' per-field
+/// control labels.
+pub fn humanize_field_label(field_name: &str) -> String {
+    field_name
+        .split('_')
+        .filter(|word| !word.is_empty())
+        .map(|word| {
+            let mut chars = word.chars();
+            match chars.next() {
+                Some(first) => first.to_uppercase().collect::<String>() + chars.as_str(),
+                None => String::new(),
+            }
+        })
+        .collect::<Vec<_>>()
+        .join(" ")
 }
 
 /// Converts a PascalCase variant identifier into space-separated words for
@@ -145,14 +186,323 @@ fn qualifying_enum_names(
     names
 }
 
-/// Renders one component's generated file content, or `None` if it has no
-/// qualifying enum props (no file is written for such components).
+/// One qualifying (non-`Skipped`) prop field on a specific component, ready
+/// for `DemoState`/`Controls`/`Preview` codegen.
+struct QualifyingField<'a> {
+    name: &'a str,
+    shape: PropShape,
+    /// The field's real declared type (e.g. `"u32"`, `"ButtonVariant"`,
+    /// `"ReadSignal<Option<bool>>"`) -- kept alongside `shape` since a
+    /// `Number` field's `DemoState` slot must preserve its own real numeric
+    /// type, not just `f64` (which is only `NumberControl`'s own type).
+    type_name: &'a str,
+}
+
+/// A component's own props, looked up by its logical name -- the
+/// `#[derive(Props)]` struct is keyed under `<Name>Props` in
+/// `FileIntrospection::props`, while an inline-argument component is keyed
+/// directly under `<Name>` -- matching the fallback
+/// `packages/adico-xtask/src/prop_parity.rs` already established for this
+/// exact ambiguity.
+fn props_for_component<'a>(
+    component_name: &str,
+    introspection: &'a crate::rust_introspect::FileIntrospection,
+) -> Option<&'a Vec<crate::rust_introspect::PropField>> {
+    introspection
+        .props
+        .get(&format!("{component_name}Props"))
+        .or_else(|| introspection.props.get(component_name))
+}
+
+/// A component's own qualifying (controllable) fields, in declaration
+/// order. Empty for a component with no representable props, or none found
+/// at all (e.g. a bare `pub use` re-export with no local props visible to
+/// introspection -- see this module's own doc comment on that limitation).
+fn qualifying_fields<'a>(
+    component_name: &str,
+    introspection: &'a crate::rust_introspect::FileIntrospection,
+) -> Vec<QualifyingField<'a>> {
+    let Some(fields) = props_for_component(component_name, introspection) else {
+        return Vec::new();
+    };
+    fields
+        .iter()
+        .filter_map(
+            |field| match classify_prop_type(&field.type_name, &introspection.enums) {
+                PropShape::Skipped(_) => None,
+                shape => Some(QualifyingField {
+                    name: &field.name,
+                    shape,
+                    type_name: &field.type_name,
+                }),
+            },
+        )
+        .collect()
+}
+
+/// Whether a component declares its own `children: Element` prop -- decides
+/// whether its generated `Preview` takes a `children` parameter at all,
+/// since not every single-root component has one (e.g. `Switch`).
+fn has_children_field(
+    component_name: &str,
+    introspection: &crate::rust_introspect::FileIntrospection,
+) -> bool {
+    props_for_component(component_name, introspection).is_some_and(|fields| {
+        fields
+            .iter()
+            .any(|field| field.name == "children" && field.type_name == "Element")
+    })
+}
+
+/// The `DemoState` struct field's own type: matches the real prop type for
+/// every shape except `Bool`/`Text`/`OptionalBool`, which normalize to
+/// their control's own plain value type (`bool`/`String`/`Option<bool>`)
+/// since the real prop type for those (e.g. `Option<bool>`, or
+/// `ReadSignal<Option<bool>>`) is either identical or a reactive wrapper
+/// `Controls`/`Preview` construct fresh each render, not something
+/// `DemoState` itself needs to store.
+fn demo_state_field_type(field: &QualifyingField) -> String {
+    match &field.shape {
+        PropShape::Bool => "bool".to_string(),
+        PropShape::Text => "String".to_string(),
+        PropShape::Number => field.type_name.to_string(),
+        PropShape::OptionalBool => "Option<bool>".to_string(),
+        PropShape::Enum(enum_name) => enum_name.clone(),
+        PropShape::Skipped(_) => unreachable!("qualifying_fields already filtered Skipped"),
+    }
+}
+
+/// A fixed, deterministic default value expression per `PropShape` -- never
+/// the field's own `#[props(default = ...)]` expression, which may be an
+/// arbitrary Rust expression this generator does not attempt to
+/// round-trip. Matches `design.md`'s D2 decision.
+fn demo_state_default_expr(
+    field: &QualifyingField,
+    introspection: &crate::rust_introspect::FileIntrospection,
+) -> String {
+    match &field.shape {
+        PropShape::Bool => "false".to_string(),
+        PropShape::Text => "String::new()".to_string(),
+        PropShape::Number => {
+            if matches!(field.type_name, "f32" | "f64") {
+                "0.0".to_string()
+            } else {
+                "0".to_string()
+            }
+        }
+        PropShape::OptionalBool => "None".to_string(),
+        PropShape::Enum(enum_name) => {
+            let default_variant = introspection.enums[enum_name]
+                .default_variant
+                .as_deref()
+                .expect("a qualifying Enum field's enum always has a #[default] variant");
+            format!("{enum_name}::{default_variant}")
+        }
+        PropShape::Skipped(_) => unreachable!("qualifying_fields already filtered Skipped"),
+    }
+}
+
+/// Renders `pub struct <Comp>DemoState { ... }` plus its `Default` impl.
+fn render_demo_state(
+    component_name: &str,
+    fields: &[QualifyingField],
+    introspection: &crate::rust_introspect::FileIntrospection,
+) -> String {
+    let mut body = String::new();
+    body.push_str(&format!(
+        "/// Generated demo state for [`{component_name}`], one field per controllable prop.\n"
+    ));
+    body.push_str("#[derive(Clone, PartialEq)]\n");
+    body.push_str(&format!("pub struct {component_name}DemoState {{\n"));
+    for field in fields {
+        body.push_str(&format!(
+            "    pub {}: {},\n",
+            field.name,
+            demo_state_field_type(field)
+        ));
+    }
+    body.push_str("}\n\n");
+
+    body.push_str(&format!(
+        "impl Default for {component_name}DemoState {{\n    fn default() -> Self {{\n        Self {{\n"
+    ));
+    for field in fields {
+        body.push_str(&format!(
+            "            {}: {},\n",
+            field.name,
+            demo_state_default_expr(field, introspection)
+        ));
+    }
+    body.push_str("        }\n    }\n}\n\n");
+    body
+}
+
+/// Renders `#[component] pub fn <Comp>Controls(state: Signal<<Comp>DemoState>) -> Element`.
+/// Each field gets its own local `Signal`, seeded from `state`'s current
+/// value, bound to the matching control; one combined `use_effect` writes
+/// every local signal's value back into `state` on change. A local signal
+/// per field (rather than a generated field-projecting lens over `state`
+/// directly) keeps every existing control's `Signal<T>` signature exactly
+/// as Section 1 left it -- see `design.md`'s D2, which left this exact
+/// choice open as a Task 2 implementation detail.
+fn render_controls_component(component_name: &str, fields: &[QualifyingField]) -> String {
+    let mut body = String::new();
+    body.push_str(&format!(
+        "#[component]\npub fn {component_name}Controls(mut state: Signal<{component_name}DemoState>) -> Element {{\n"
+    ));
+    for field in fields {
+        let seed = if matches!(field.shape, PropShape::Number) {
+            format!("state().{} as f64", field.name)
+        } else {
+            format!("state().{}", field.name)
+        };
+        body.push_str(&format!(
+            "    let mut {name} = use_signal(|| {seed});\n",
+            name = field.name
+        ));
+    }
+    body.push_str("    use_effect(move || {\n");
+    body.push_str(&format!("        state.set({component_name}DemoState {{\n"));
+    for field in fields {
+        let value = if matches!(field.shape, PropShape::Number) {
+            format!("{}() as {}", field.name, field.type_name)
+        } else {
+            format!("{}()", field.name)
+        };
+        body.push_str(&format!("            {}: {value},\n", field.name));
+    }
+    body.push_str("        });\n    });\n");
+    body.push_str("    rsx! {\n");
+    for field in fields {
+        let label = humanize_field_label(field.name);
+        let name = field.name;
+        match &field.shape {
+            PropShape::Bool => {
+                body.push_str(&format!(
+                    "        BoolControl {{ label: \"{label}\", value: {name} }}\n"
+                ));
+            }
+            PropShape::Text => {
+                body.push_str(&format!(
+                    "        TextControl {{ label: \"{label}\", value: {name} }}\n"
+                ));
+            }
+            PropShape::Number => {
+                body.push_str(&format!(
+                    "        NumberControl {{ label: \"{label}\", value: {name} }}\n"
+                ));
+            }
+            PropShape::OptionalBool => {
+                body.push_str(&format!(
+                    "        OptionalBoolControl {{ label: \"{label}\", value: {name} }}\n"
+                ));
+            }
+            PropShape::Enum(enum_name) => {
+                let const_name = format!("{}_OPTIONS", to_screaming_snake_case(enum_name));
+                body.push_str(&format!(
+                    "        SelectControl {{ label: \"{label}\", value: {name}, options: {const_name} }}\n"
+                ));
+            }
+            PropShape::Skipped(_) => unreachable!("qualifying_fields already filtered Skipped"),
+        }
+    }
+    body.push_str("    }\n}\n\n");
+    body
+}
+
+/// Renders `#[component] pub fn <Comp>Preview(state: <Comp>DemoState, [children: Element])
+/// -> Element`, invoking the real component with every field -- only called
+/// for a single-root, non-generic item (`design.md`'s D3).
+fn render_preview_component(
+    component_name: &str,
+    fields: &[QualifyingField],
+    has_children: bool,
+) -> String {
+    let mut body = String::new();
+    if has_children {
+        body.push_str(&format!(
+            "#[component]\npub fn {component_name}Preview(state: {component_name}DemoState, children: Element) -> Element {{\n"
+        ));
+    } else {
+        body.push_str(&format!(
+            "#[component]\npub fn {component_name}Preview(state: {component_name}DemoState) -> Element {{\n"
+        ));
+    }
+    body.push_str(&format!("    rsx! {{\n        {component_name} {{\n"));
+    for field in fields {
+        let expr = if matches!(field.shape, PropShape::OptionalBool) {
+            format!("ReadSignal::from(Signal::new(state.{}))", field.name)
+        } else {
+            format!("state.{}", field.name)
+        };
+        body.push_str(&format!("            {}: {expr},\n", field.name));
+    }
+    if has_children {
+        body.push_str("            {children}\n");
+    }
+    body.push_str("        }\n    }\n}\n\n");
+    body
+}
+
+/// Renders one item's generated file content, or `None` if it has neither a
+/// qualifying enum prop (the pre-existing `_OPTIONS` constants) nor any
+/// component with at least one controllable prop (the new
+/// `DemoState`/`Controls`/`Preview` triad) -- no file is written for such
+/// items.
 fn render_component_file(
     item_stem: &str,
     introspection: &crate::rust_introspect::FileIntrospection,
 ) -> Option<String> {
     let enum_names = qualifying_enum_names(introspection);
-    if enum_names.is_empty() {
+
+    // Single-root, non-generic detection (design.md's D3): exactly one
+    // locally-visible component. A component whose only public surface is a
+    // bare `pub use` re-export of a primitive (e.g. `AspectRatio`,
+    // `ScrollArea`, `VirtualList`) is invisible to `introspection.components`
+    // entirely (this tool only reads syntax literally present in the given
+    // file, never follows a re-export across the crate boundary into
+    // `adico-primitives`) -- such an item's `components` count is 0, not 1,
+    // so it never qualifies here and gets no generated file at all, the
+    // same outcome as any other item with zero qualifying props. This is a
+    // known, accepted gap, not a bug: see this change's own task 2.3 "Done"
+    // note for the three named items it affects.
+    let sole_root = match introspection.components.as_slice() {
+        [only] if !introspection.generic.contains(only) => Some(only.as_str()),
+        _ => None,
+    };
+
+    let mut used_controls = BTreeSet::new();
+    let mut used_component_names = BTreeSet::new();
+    let mut demo_sections = String::new();
+    for component_name in &introspection.components {
+        let fields = qualifying_fields(component_name, introspection);
+        if fields.is_empty() {
+            continue;
+        }
+        for field in &fields {
+            used_controls.insert(match &field.shape {
+                PropShape::Bool => "BoolControl",
+                PropShape::Text => "TextControl",
+                PropShape::Number => "NumberControl",
+                PropShape::OptionalBool => "OptionalBoolControl",
+                PropShape::Enum(_) => "SelectControl",
+                PropShape::Skipped(_) => unreachable!("qualifying_fields already filtered Skipped"),
+            });
+        }
+        demo_sections.push_str(&render_demo_state(component_name, &fields, introspection));
+        demo_sections.push_str(&render_controls_component(component_name, &fields));
+        if sole_root == Some(component_name.as_str()) {
+            used_component_names.insert(component_name.clone());
+            let has_children = has_children_field(component_name, introspection);
+            demo_sections.push_str(&render_preview_component(
+                component_name,
+                &fields,
+                has_children,
+            ));
+        }
+    }
+
+    if enum_names.is_empty() && demo_sections.is_empty() {
         return None;
     }
 
@@ -163,14 +513,27 @@ fn render_component_file(
     body.push_str(&format!(
         "//! Source: `apps/playground/src/components/ui/{item_stem}.rs`.\n\n"
     ));
-    body.push_str(&format!(
-        "use crate::components::ui::{{{}}};\n\n",
-        enum_names
-            .clone()
-            .into_iter()
-            .collect::<Vec<_>>()
-            .join(", ")
-    ));
+    if !demo_sections.is_empty() {
+        body.push_str("use dioxus::prelude::*;\n\n");
+    }
+    if !used_controls.is_empty() {
+        body.push_str(&format!(
+            "use crate::components::controls::{{{}}};\n",
+            used_controls.into_iter().collect::<Vec<_>>().join(", ")
+        ));
+    }
+    let ui_imports: BTreeSet<String> = enum_names
+        .iter()
+        .cloned()
+        .chain(used_component_names)
+        .collect();
+    if !ui_imports.is_empty() {
+        body.push_str(&format!(
+            "use crate::components::ui::{{{}}};\n",
+            ui_imports.into_iter().collect::<Vec<_>>().join(", ")
+        ));
+    }
+    body.push('\n');
 
     for enum_name in &enum_names {
         let info = &introspection.enums[enum_name];
@@ -198,6 +561,8 @@ fn render_component_file(
         body.push_str("    }\n");
         body.push_str("};\n\n");
     }
+
+    body.push_str(&demo_sections);
 
     Some(body)
 }
@@ -526,12 +891,51 @@ mod tests {
             PropShape::Skipped("Signal/ReadSignal-typed props have no matching demo control")
         );
         assert_eq!(
-            classify_prop_type("f64", &enums),
-            PropShape::Skipped("numeric props have no matching demo control yet")
-        );
-        assert_eq!(
             classify_prop_type("SomeUnknownType", &enums),
             PropShape::Skipped("unrecognized prop type")
+        );
+    }
+
+    #[test]
+    fn classifies_numeric_types_as_number() {
+        let enums = BTreeMap::new();
+        for numeric in [
+            "f32", "f64", "i8", "i16", "i32", "i64", "i128", "isize", "u8", "u16", "u32", "u64",
+            "u128", "usize",
+        ] {
+            assert_eq!(classify_prop_type(numeric, &enums), PropShape::Number);
+        }
+    }
+
+    #[test]
+    fn classifies_the_controlled_open_shape_as_optional_bool() {
+        let enums = BTreeMap::new();
+        for shape in [
+            "ReadSignal<Option<bool>>",
+            "Signal<Option<bool>>",
+            "Option<ReadSignal<Option<bool>>>",
+            "Option<Signal<Option<bool>>>",
+        ] {
+            assert_eq!(classify_prop_type(shape, &enums), PropShape::OptionalBool);
+        }
+    }
+
+    #[test]
+    fn a_bool_wrapped_signal_over_a_non_bool_type_is_still_skipped() {
+        let enums = BTreeMap::new();
+        assert_eq!(
+            classify_prop_type("ReadSignal<Option<f64>>", &enums),
+            PropShape::Skipped("Signal/ReadSignal-typed props have no matching demo control")
+        );
+    }
+
+    #[test]
+    fn humanizes_a_snake_case_field_name() {
+        assert_eq!(humanize_field_label("variant"), "Variant");
+        assert_eq!(humanize_field_label("default_open"), "Default Open");
+        assert_eq!(
+            humanize_field_label("allow_multiple_pressed"),
+            "Allow Multiple Pressed"
         );
     }
 

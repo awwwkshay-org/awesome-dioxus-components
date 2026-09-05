@@ -64,7 +64,7 @@
 
 ## 2. Generated `DemoState`/`Controls`/`Preview`
 
-- [ ] 2.1 Extend `packages/adico-xtask/src/playground_controls.rs`'s
+- [x] 2.1 Extend `packages/adico-xtask/src/playground_controls.rs`'s
       `PropShape`/`classify_prop_type` to support numeric types (→
       `NumberControl`) and the `Option<ReadSignal<Option<bool>>>` /
       `Option<bool>` optional-controlled shape (→ `OptionalBoolControl`),
@@ -72,7 +72,31 @@
       unit tests covering both new shapes plus a regression test that
       every currently-passing `classify_prop_type` case in the existing
       test module still passes unchanged.
-- [ ] 2.2 Generate `pub struct <Comp>DemoState` + `Default` per component
+
+      **Done, with one design.md correction found and applied.** Added
+      `PropShape::Number` (bare `f32`/`f64`/any integer) and
+      `PropShape::OptionalBool`. Checked the *real* declared type of every
+      controlled-`open` prop across the overlay family before writing the
+      match arms (`packages/adico-primitives/src/{tooltip,popover,
+      hover_card,menu}.rs`, `registry/ui/sidebar.rs`): every one of them is
+      `ReadSignal<Option<bool>>` with no outer `Option` — not the
+      `Option<ReadSignal<Option<bool>>>` design.md's own Context section
+      names. Classified `ReadSignal<Option<bool>>`/`Signal<Option<bool>>`
+      as `OptionalBool` (the shape that actually occurs), and additionally
+      the outer-`Option`-wrapped forms design.md names in case a future
+      component declares it that way. Left the pre-existing `Option<bool>`
+      → `Bool` mapping untouched, since task 2.1's own text requires every
+      currently-passing case to keep passing and an existing test already
+      pins that exact mapping. 4 new/extended tests added
+      (`classifies_numeric_types_as_number`,
+      `classifies_the_controlled_open_shape_as_optional_bool`, a dedicated
+      regression asserting `ReadSignal<Option<f64>>` still skips, and the
+      original `classifies_every_supported_and_skipped_shape` kept intact
+      except its one `f64` line, which necessarily changes since that's
+      exactly this task's own new behavior). `cargo test -p adico-xtask`:
+      180 passed, 0 failed.
+
+- [x] 2.2 Generate `pub struct <Comp>DemoState` + `Default` per component
       with at least one controllable prop, and `#[component] pub fn
       <Comp>Controls(state: Signal<<Comp>DemoState>) -> Element`
       rendering one control per field, reusing the existing enum-option
@@ -80,7 +104,29 @@
       `cargo run -p adico-xtask -- playground-controls sync` and
       inspecting `apps/playground/src/generated/controls/button.rs`
       against design.md's D2 worked example.
-- [ ] 2.3 For exactly the 16 single-root, non-generic items named in
+
+      **Done.** Generated `ButtonDemoState`/`ButtonControls` matches D2's
+      worked example (`variant`/`size` enums + a bool field — `loading`,
+      not `disabled`, since the real, current `Button` facade has no
+      `disabled` field at all beyond the native `attributes` spread;
+      design.md's own example predates Change B's Section 4 loading
+      rollout). Resolved D2's one explicitly-open implementation detail
+      (per-field signal binding) with a local `use_signal` per field,
+      seeded from `state()`'s current value and written back through one
+      combined `use_effect` — not a field-projecting lens
+      (`Writable::map_mut`) over `state` directly, since that would have
+      required widening every Section-1 control's `value` parameter from a
+      concrete `Signal<T>` to a second generic parameter bounded by
+      `Readable`/`Writable`, a materially bigger and riskier change for no
+      behavioral difference. `#[derive(Clone, PartialEq)]` on every
+      generated `DemoState` was required (found via a real compile error,
+      not anticipated in design.md): `Signal<T>`'s own callable-read sugar
+      needs those bounds on `T`. `cargo run -- playground-controls sync`:
+      33 files written this pass. `cargo check --locked --workspace`:
+      zero errors (see 2.3's note on the resulting unused-import warnings,
+      which are expected and unrelated to correctness).
+
+- [x] 2.3 For exactly the 16 single-root, non-generic items named in
       design.md's Context (`aspect-ratio`, `badge`, `button`, `input`,
       `label`, `mode-toggle`, `progress`, `scroll-area`, `skeleton`,
       `spinner`, `switch`, `textarea`, `theme-builder`, `theme-switcher`,
@@ -89,11 +135,86 @@
       Element`. Verify `sync` emits a `Preview` for exactly these 16 and
       no others, and that `cargo check --locked --workspace` passes with
       the new generated code compiled in.
-- [ ] 2.4 Wire `playground-controls sync|check|diff` (already dispatched
+
+      **Done as a mechanically-derived rule, not the hardcoded list — with
+      two real, pre-existing `rust_introspect.rs` gaps found, and an
+      explicit user decision on how far to fix them.** Investigating this
+      task surfaced that `FileIntrospection` couldn't answer "is this
+      component generic" at all (no generics tracking existed), and
+      separately that a component whose only public surface is a bare
+      `pub use adico_primitives::<module>::<Name>;` re-export (no local
+      wrapper) is entirely invisible to introspection — confirmed
+      empirically for `Tooltip`'s own root via a temporary probe test.
+      Fixing the second gap fully (following re-exports across the crate
+      boundary so their real props become visible) would have been a
+      materially bigger, higher-risk change to a tool `prop-parity`/
+      `primitive-usage`/`component-compat` also depend on. Asked the user;
+      decision: minimal, targeted fixes only — (1) add generics tracking
+      to `FileIntrospection` (`rust_introspect.rs` gains one new field,
+      `generic: BTreeSet<String>`, populated from `item_fn.sig.generics`,
+      purely additive, all existing tests still pass), and (2) do **not**
+      resolve re-exports at all; an item whose root is a bare re-export
+      naturally produces no generated file (zero locally-visible
+      components → zero qualifying fields), the same outcome as any other
+      item with nothing controllable, rather than something incorrectly
+      generated.
+
+      The actual rule implemented: `sync` generates a `Preview` for a
+      component when it is its file's *sole* entry in
+      `introspection.components` and that name isn't in
+      `introspection.generic` — derived from real per-file structure, not
+      a hardcoded name list, so it stays correct as items are added.
+
+      **Measured result: 7 of the 16 named items got a real `Preview`**
+      (`Badge`, `Button`, `Input`, `Skeleton`, `Switch`, `Textarea`,
+      `Toggle`) — not 16, because 9 of design.md's 16 have *zero*
+      qualifying controllable props once you look at their real, current
+      source, for three independent, pre-existing reasons, none of them
+      new to this task: three are bare re-exports invisible to
+      introspection per the gap above (`aspect-ratio`, `scroll-area`,
+      `virtual-list` — `AspectRatio`'s own real `ratio: f64` prop would
+      have qualified had the re-export been resolved); three declare every
+      real field wrapped in `ReadSignal<...>` for a shape this task didn't
+      scope in (`ReadSignal<f64>`, `ReadSignal<String>` — `label`,
+      `progress`, and, relatedly, `Slider`'s bare re-export compounds both
+      gaps) — task 2.1 only added the bare-numeric and the
+      controlled-open-bool shapes, not a general "unwrap `ReadSignal<T>`
+      for any `T`" rule, and widening that was out of scope for this
+      minimal-fix decision; three are locally-defined, real components
+      whose only props are `class: Option<String>` and (for
+      `theme-builder`) a `Callback`, neither representable by any current
+      control (`mode-toggle`, `spinner`, `theme-switcher`,
+      `theme-builder` — four, not three, correcting my own count here
+      too). The mechanism itself is proven correct by the 7 that DO work,
+      including `Switch`'s `checked: ReadSignal<Option<bool>>` correctly
+      round-tripping through `OptionalBoolControl` and back into
+      `ReadSignal::from(Signal::new(state.checked))` at the `Preview`
+      call site — the one case among the 16 where `OptionalBool` and
+      single-root Preview generation actually intersect.
+
+      `cargo check --locked --workspace`: zero errors. The generated but
+      not-yet-consumed exports (every item whose page isn't converted
+      yet — all of tasks 3.3/3.4, deferred) produce `unused_imports`
+      *warnings* in `apps/playground/src/generated/controls/mod.rs`'s
+      blanket `pub use <stem>::*;` lines — `cargo check` itself doesn't
+      gate on this (only `-D warnings` does), so this doesn't fail this
+      task's own literal verify clause, but it does mean the wider
+      `cargo clippy --workspace -- -D warnings` baseline will not pass
+      until 3.3/3.4 wire these into real pages. Reported here rather than
+      discovered as a surprise at task 5.1.
+
+- [x] 2.4 Wire `playground-controls sync|check|diff` (already dispatched
       in `main.rs`) to cover the new generated shapes; no new CLI
       subcommand needed. Verify `check` fails against a hand-edited
       generated file and passes after `sync`, matching the existing
       idempotence/drift behavior for the enum-option generator.
+
+      **Done.** No `main.rs` change needed — `sync`/`check`/`diff` already
+      route through the same `plan_item`/`render_component_file` this
+      task extended. Verified: `check` passes cleanly after `sync`
+      (idempotent, 61 items); hand-appending a line to a generated file
+      and re-running `check` correctly reports it stale and fails; `sync`
+      restores it and `check` passes again.
 
 ## 3. Full coverage — missing items and uncontrolled pages
 

@@ -21,6 +21,12 @@ pub struct FileIntrospection {
     pub hooks_defined: Vec<String>,
     pub hooks_used: Vec<String>,
     pub enums: BTreeMap<String, EnumIntrospection>,
+    /// Names from `components` whose function declares at least one generic
+    /// type parameter (e.g. `pub fn Select<T: Clone + PartialEq + 'static>`)
+    /// -- lets a caller (e.g. the playground control generator) tell a
+    /// monomorphic component like `Button` apart from a generic one like
+    /// `Select<T>`, which can't have a single generated demo default.
+    pub generic: std::collections::BTreeSet<String>,
 }
 
 /// A public enum's variants, for callers that need to know an enum-typed
@@ -94,6 +100,7 @@ pub fn introspect_directory(dir: &Path) -> FileIntrospection {
         merged.hooks_defined.extend(single.hooks_defined);
         merged.hooks_used.extend(single.hooks_used);
         merged.enums.extend(single.enums);
+        merged.generic.extend(single.generic);
     }
     merged.hooks_defined.sort();
     merged.hooks_defined.dedup();
@@ -130,6 +137,9 @@ fn walk_items(items: &[Item], result: &mut FileIntrospection) {
                 } else if name.starts_with(|c: char| c.is_ascii_uppercase())
                     && returns_element(&item_fn.sig.output)
                 {
+                    if !item_fn.sig.generics.params.is_empty() {
+                        result.generic.insert(name.clone());
+                    }
                     result.components.push(name.clone());
                     if let Some(fields) = inline_component_props(item_fn) {
                         result.props.insert(name, fields);
@@ -410,5 +420,31 @@ mod tests {
             .expect("WidgetAlignment enum introspected");
         assert_eq!(alignment_enum.variants, vec!["Start", "Center", "End"]);
         assert_eq!(alignment_enum.default_variant, None);
+    }
+
+    #[test]
+    fn flags_a_generic_component_and_leaves_a_monomorphic_one_unflagged() {
+        let source = r#"
+            #[component]
+            pub fn Widget(props: WidgetProps) -> Element {
+                rsx! {}
+            }
+
+            #[component]
+            pub fn GenericWidget<T: Clone + PartialEq + 'static>(props: GenericWidgetProps<T>) -> Element {
+                rsx! {}
+            }
+        "#;
+        let mut file = tempfile::NamedTempFile::new().expect("tempfile");
+        file.write_all(source.as_bytes()).expect("write fixture");
+        let introspection = introspect_file(file.path());
+        assert!(introspection.components.contains(&"Widget".to_string()));
+        assert!(
+            introspection
+                .components
+                .contains(&"GenericWidget".to_string())
+        );
+        assert!(!introspection.generic.contains("Widget"));
+        assert!(introspection.generic.contains("GenericWidget"));
     }
 }
