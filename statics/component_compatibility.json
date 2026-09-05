@@ -3431,12 +3431,20 @@
                 "type": "Element"
               },
               {
+                "name": "id",
+                "type": "Option<String>"
+              },
+              {
                 "name": "radius",
                 "type": "Radius"
               },
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "ContextMenuItem": [
@@ -3457,12 +3465,24 @@
                 "type": "Callback<String>"
               },
               {
+                "name": "inset",
+                "type": "bool"
+              },
+              {
+                "name": "variant",
+                "type": "ContextMenuItemVariant"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               },
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "ContextMenuTrigger": [
@@ -3473,6 +3493,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }
@@ -5322,6 +5346,10 @@
                 "type": "Option<String>"
               },
               {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               }
@@ -5342,6 +5370,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "DropdownMenuItem": [
@@ -5362,12 +5394,28 @@
                 "type": "Callback<T>"
               },
               {
+                "name": "text_value",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "inset",
+                "type": "bool"
+              },
+              {
+                "name": "variant",
+                "type": "DropdownMenuItemVariant"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               },
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "DropdownMenuTrigger": [
@@ -5382,6 +5430,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }
@@ -5596,6 +5648,10 @@
                 "type": "Element"
               },
               {
+                "name": "id",
+                "type": "Option<String>"
+              },
+              {
                 "name": "radius",
                 "type": "Radius"
               },
@@ -5610,6 +5666,14 @@
               {
                 "name": "align",
                 "type": "Option<ContentAlign>"
+              },
+              {
+                "name": "force_mount",
+                "type": "bool"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "HoverCardTrigger": [
@@ -5618,8 +5682,16 @@
                 "type": "Element"
               },
               {
+                "name": "id",
+                "type": "Option<String>"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }
@@ -6516,6 +6588,10 @@
                 "type": "ReadSignal<bool>"
               },
               {
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               },
@@ -6526,6 +6602,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "MenubarContent": [
@@ -6534,12 +6614,20 @@
                 "type": "Element"
               },
               {
+                "name": "id",
+                "type": "Option<String>"
+              },
+              {
                 "name": "radius",
                 "type": "Radius"
               },
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "MenubarItem": [
@@ -6560,12 +6648,24 @@
                 "type": "Callback<String>"
               },
               {
+                "name": "inset",
+                "type": "bool"
+              },
+              {
+                "name": "variant",
+                "type": "MenubarItemVariant"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               },
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "MenubarTrigger": [
@@ -6576,6 +6676,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }
@@ -7569,6 +7673,10 @@
                 "type": "Element"
               },
               {
+                "name": "id",
+                "type": "Option<String>"
+              },
+              {
                 "name": "radius",
                 "type": "Radius"
               },
@@ -7583,6 +7691,10 @@
               {
                 "name": "align",
                 "type": "Option<ContentAlign>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "PopoverTrigger": [
@@ -7593,6 +7705,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }
@@ -10115,6 +10231,11 @@
               },
               {
                 "default": "default()",
+                "name": "max_length",
+                "type": "Option<u32>"
+              },
+              {
+                "default": "default()",
                 "name": "oninput",
                 "type": "EventHandler<FormEvent>"
               },
@@ -10656,6 +10777,10 @@
                 "type": "Option<String>"
               },
               {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               }
@@ -10684,6 +10809,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",
@@ -10943,6 +11072,10 @@
                 "type": "Element"
               },
               {
+                "name": "id",
+                "type": "Option<String>"
+              },
+              {
                 "name": "radius",
                 "type": "Radius"
               },
@@ -10957,6 +11090,10 @@
               {
                 "name": "align",
                 "type": "Option<ContentAlign>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "TooltipTrigger": [
@@ -10965,8 +11102,16 @@
                 "type": "Element"
               },
               {
+                "name": "id",
+                "type": "Option<String>"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }

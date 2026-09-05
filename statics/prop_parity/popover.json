@@ -9,7 +9,8 @@
           "props": [
             {
               "name": "handle",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer virtual-trigger API (associating an arbitrary external element as a trigger via an imperative handle, plus passing arbitrary payload data through it) has no adico equivalent; needs a new registration/imperative-handle mechanism, tracked as follow-up primitive work"
             },
             {
               "name": "nativeButton",
@@ -18,23 +19,28 @@
             },
             {
               "name": "payload",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer virtual-trigger API (associating an arbitrary external element as a trigger via an imperative handle, plus passing arbitrary payload data through it) has no adico equivalent; needs a new registration/imperative-handle mechanism, tracked as follow-up primitive work"
             },
             {
               "name": "openOnHover",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this trigger has no hover-intent support (open/close delay timing, whether hovering opens it at all, or whether clicking closes an already-open popup) -- it only opens/closes on click today; needs new primitive-level hover-timer work (navigation-menu already has the equivalent delay_ms/close_delay_ms pattern to port), tracked as follow-up"
             },
             {
               "name": "delay",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this trigger has no hover-intent support (open/close delay timing, whether hovering opens it at all, or whether clicking closes an already-open popup) -- it only opens/closes on click today; needs new primitive-level hover-timer work (navigation-menu already has the equivalent delay_ms/close_delay_ms pattern to port), tracked as follow-up"
             },
             {
               "name": "closeDelay",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this trigger has no hover-intent support (open/close delay timing, whether hovering opens it at all, or whether clicking closes an already-open popup) -- it only opens/closes on click today; needs new primitive-level hover-timer work (navigation-menu already has the equivalent delay_ms/close_delay_ms pattern to port), tracked as follow-up"
             },
             {
               "name": "id",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: settable via this part's generic `attributes` extends forwarding (spread last, so a caller-supplied value overrides adico's own internal one); no dedicated named prop for a plain global attribute with no additional behavior"
             },
             {
               "name": "className",
@@ -66,7 +72,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -79,7 +85,7 @@
           "props": [
             {
               "name": "id",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "class",
@@ -95,7 +101,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -118,7 +124,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -131,7 +137,7 @@
           "props": [
             {
               "name": "id",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "class",
@@ -147,7 +153,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -170,7 +176,8 @@
           "props": [
             {
               "name": "handle",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer virtual-trigger API (associating an arbitrary external element as a trigger via an imperative handle, plus passing arbitrary payload data through it) has no adico equivalent; needs a new registration/imperative-handle mechanism, tracked as follow-up primitive work"
             },
             {
               "name": "nativeButton",
@@ -179,23 +186,28 @@
             },
             {
               "name": "payload",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer virtual-trigger API (associating an arbitrary external element as a trigger via an imperative handle, plus passing arbitrary payload data through it) has no adico equivalent; needs a new registration/imperative-handle mechanism, tracked as follow-up primitive work"
             },
             {
               "name": "openOnHover",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this trigger has no hover-intent support (open/close delay timing, whether hovering opens it at all, or whether clicking closes an already-open popup) -- it only opens/closes on click today; needs new primitive-level hover-timer work (navigation-menu already has the equivalent delay_ms/close_delay_ms pattern to port), tracked as follow-up"
             },
             {
               "name": "delay",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this trigger has no hover-intent support (open/close delay timing, whether hovering opens it at all, or whether clicking closes an already-open popup) -- it only opens/closes on click today; needs new primitive-level hover-timer work (navigation-menu already has the equivalent delay_ms/close_delay_ms pattern to port), tracked as follow-up"
             },
             {
               "name": "closeDelay",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this trigger has no hover-intent support (open/close delay timing, whether hovering opens it at all, or whether clicking closes an already-open popup) -- it only opens/closes on click today; needs new primitive-level hover-timer work (navigation-menu already has the equivalent delay_ms/close_delay_ms pattern to port), tracked as follow-up"
             },
             {
               "name": "id",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: settable via this part's generic `attributes` extends forwarding (spread last, so a caller-supplied value overrides adico's own internal one); no dedicated named prop for a plain global attribute with no additional behavior"
             },
             {
               "name": "className",
@@ -218,11 +230,13 @@
           "props": [
             {
               "name": "initialFocus",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico restores focus automatically when a popup/menu opens or closes, with no caller-configurable override for where focus goes; needs new primitive-level focus-management work, tracked as follow-up"
             },
             {
               "name": "finalFocus",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico restores focus automatically when a popup/menu opens or closes, with no caller-configurable override for where focus goes; needs new primitive-level focus-management work, tracked as follow-up"
             },
             {
               "name": "className",

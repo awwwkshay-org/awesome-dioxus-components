@@ -165,6 +165,11 @@ const ITEM_RENAMES: &[(&str, &str, &str)] = &[
     ("navigation-menu", "delay", "delay_ms"),
     ("navigation-menu", "closeDelay", "close_delay_ms"),
     ("navigation-menu", "keepMounted", "force_mount"),
+    ("menubar", "loopFocus", "roving_loop"),
+    ("dropdown-menu", "loopFocus", "roving_loop"),
+    ("toggle-group", "loopFocus", "roving_loop"),
+    ("toggle-group", "multiple", "allow_multiple_pressed"),
+    ("dropdown-menu", "label", "text_value"),
 ];
 
 fn item_canonical_name(item: &str, raw_name: &str) -> String {
@@ -392,6 +397,60 @@ const NO_CONTROLLED_OPEN_ITEM_REASON: &str = "adico extension gap, deferred (not
 /// shared cross-item animated viewport wrapper has no adico equivalent --
 /// each of adico's own content parts positions independently instead.
 const SHARED_VIEWPORT_REASON: &str = "adico extension gap: shadcn's own convenience toggle for a single, shared cross-item animated viewport wrapper has no adico equivalent; each content part positions independently instead, a compositional difference not planned to change";
+
+/// Reason recorded for Base UI's newer "virtual trigger" API (`handle` +
+/// `payload`): associating an arbitrary external element as a trigger via
+/// an imperative handle object, and passing arbitrary payload data through
+/// it. No adico equivalent -- would need a whole registration/imperative-
+/// handle system, real primitive-level work, not a prop rename.
+const VIRTUAL_TRIGGER_REASON: &str = "adico extension gap, deferred (not a permanent design choice): Base UI's newer virtual-trigger API (associating an arbitrary external element as a trigger via an imperative handle, plus passing arbitrary payload data through it) has no adico equivalent; needs a new registration/imperative-handle mechanism, tracked as follow-up primitive work";
+
+/// Reason recorded where a trigger has no hover-intent support at all
+/// (open/close delay timing, whether hover opens it in the first place, or
+/// whether clicking it closes an already-open popup) -- adico's version of
+/// this trigger only opens/closes on click today. Deferred: real primitive
+/// behavior, same shape as `navigation-menu`'s own `delay_ms`/
+/// `close_delay_ms`, just not yet ported to this component.
+const HOVER_INTENT_REASON: &str = "adico extension gap, deferred (not a permanent design choice): this trigger has no hover-intent support (open/close delay timing, whether hovering opens it at all, or whether clicking closes an already-open popup) -- it only opens/closes on click today; needs new primitive-level hover-timer work (navigation-menu already has the equivalent delay_ms/close_delay_ms pattern to port), tracked as follow-up";
+
+/// Reason recorded where an upstream menu-item prop customizes raw click
+/// handling (a bespoke `onClick`, or a `closeOnClick` toggle) that adico's
+/// existing `on_select` callback (fires with the item's value on click,
+/// Enter, or Space, and always closes the menu) already covers with a
+/// different, adico-idiomatic shape.
+const MENU_ITEM_CLICK_REASON: &str = "adico extension gap: adico's on_select callback (fires with the item's value on click/Enter/Space, and always closes the menu) already covers item activation with a different, adico-idiomatic shape; a raw onClick handler or a closeOnClick toggle for it has no separate adico equivalent, and isn't planned since on_select already serves the same purpose";
+
+/// Reason recorded where a menu item has no per-item typeahead/keyboard-
+/// search text registration at all (unlike `dropdown-menu`'s own
+/// `MenuItem`, which registers `text_value` with the enclosing scope's
+/// typeahead search).
+const NO_ITEM_TYPEAHEAD_REASON: &str = "adico extension gap: this menu item has no per-item typeahead/keyboard-search text registration (dropdown-menu's own MenuItem has the equivalent text_value field; this item's own primitive has no such registration hook), not planned to change";
+
+/// Reason recorded for Base UI's focus-restoration hooks (where to send
+/// focus when a popup/menu opens or closes) -- adico restores focus
+/// automatically/internally with no caller-configurable override.
+const FOCUS_RESTORATION_REASON: &str = "adico extension gap, deferred (not a permanent design choice): adico restores focus automatically when a popup/menu opens or closes, with no caller-configurable override for where focus goes; needs new primitive-level focus-management work, tracked as follow-up";
+
+/// Reason recorded for Base UI's newer submenu-specific escape/id-tracking
+/// controls (closing only the innermost open submenu on Escape, overriding
+/// a submenu's generated trigger id) -- adico's menu-family primitives
+/// don't expose these as separate, caller-controllable knobs.
+const NO_SUBMENU_CONTROL_REASON: &str = "adico extension gap, deferred (not a permanent design choice): Base UI's newer submenu-specific escape/id-tracking controls (closing only the innermost open submenu on Escape, overriding a submenu's generated trigger id) have no adico equivalent; needs new primitive-level submenu-state work, tracked as follow-up";
+
+/// Reason recorded where adico tracks a toggle-group's pressed items by
+/// index in a `HashSet<usize>`, not by a caller-defined string
+/// value/`onValueChange` pair -- the same controlled-selection capability,
+/// a different identity model (permanent, not planned to change: adico's
+/// index-based model is what every `ToggleItem` already keys off of).
+const INDEX_BASED_SELECTION_REASON: &str = "adico extension gap: adico tracks a toggle group's pressed items by index in a HashSet<usize>, not by a caller-defined string value/onValueChange pair -- the same controlled-selection capability, a different identity model every ToggleItem already keys off of, not planned to change";
+
+/// Reason recorded for shadcn's own zero-gap "connected" segmented-control
+/// look (`spacing=0`, items flush against each other with shared borders).
+/// adico's `ToggleGroup` always spaces items apart with a visible gap; see
+/// `registry/ui/toggle_group.rs`'s own doc comment for why (a flush layout
+/// without deliberate border/corner handling per item previously read as a
+/// visual bug, reported live as "no space in toggle group").
+const SEGMENTED_SPACING_REASON: &str = "adico extension gap: shadcn's own zero-gap \"connected\" segmented-control look (spacing=0, items flush against each other with shared borders) has no adico equivalent; ToggleGroup always spaces items apart with a visible gap instead (see registry/ui/toggle_group.rs's own doc comment -- a flush layout without deliberate per-item border/corner handling previously read as a visual bug, reported live), not planned to change";
 
 /// Item-specific `intentional_difference` reasons for a genuine upstream
 /// prop that has no adico equivalent by design, keyed by
@@ -673,6 +732,156 @@ const INTENTIONAL_DIFFERENCE_REASONS: &[(&str, &str, &str, &str)] = &[
         "viewport",
         SHARED_VIEWPORT_REASON,
     ),
+    // dropdown-menu (Wave 2): `loopFocus` and `label` resolve via
+    // `ITEM_RENAMES`, not this table.
+    (
+        "dropdown-menu",
+        "root",
+        "highlightItemOnHover",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    (
+        "dropdown-menu",
+        "root",
+        "closeParentOnEsc",
+        NO_SUBMENU_CONTROL_REASON,
+    ),
+    (
+        "dropdown-menu",
+        "root",
+        "defaultTriggerId",
+        NO_SUBMENU_CONTROL_REASON,
+    ),
+    ("dropdown-menu", "root", "handle", VIRTUAL_TRIGGER_REASON),
+    ("dropdown-menu", "root", "modal", MODAL_POPUP_REASON),
+    (
+        "dropdown-menu",
+        "root",
+        "onOpenChangeComplete",
+        ANIMATION_COMPLETE_REASON,
+    ),
+    (
+        "dropdown-menu",
+        "root",
+        "triggerId",
+        NO_SUBMENU_CONTROL_REASON,
+    ),
+    (
+        "dropdown-menu",
+        "root",
+        "orientation",
+        FIXED_ORIENTATION_REASON,
+    ),
+    ("dropdown-menu", "trigger", "handle", VIRTUAL_TRIGGER_REASON),
+    (
+        "dropdown-menu",
+        "trigger",
+        "payload",
+        VIRTUAL_TRIGGER_REASON,
+    ),
+    (
+        "dropdown-menu",
+        "trigger",
+        "disabled",
+        CASCADING_DISABLED_REASON,
+    ),
+    (
+        "dropdown-menu",
+        "trigger",
+        "openOnHover",
+        HOVER_INTENT_REASON,
+    ),
+    ("dropdown-menu", "trigger", "delay", HOVER_INTENT_REASON),
+    (
+        "dropdown-menu",
+        "trigger",
+        "closeDelay",
+        HOVER_INTENT_REASON,
+    ),
+    (
+        "dropdown-menu",
+        "content",
+        "finalFocus",
+        FOCUS_RESTORATION_REASON,
+    ),
+    ("dropdown-menu", "item", "onClick", MENU_ITEM_CLICK_REASON),
+    (
+        "dropdown-menu",
+        "item",
+        "closeOnClick",
+        MENU_ITEM_CLICK_REASON,
+    ),
+    // hover-card (Wave 2)
+    ("hover-card", "trigger", "handle", VIRTUAL_TRIGGER_REASON),
+    ("hover-card", "trigger", "payload", VIRTUAL_TRIGGER_REASON),
+    ("hover-card", "trigger", "delay", HOVER_INTENT_REASON),
+    ("hover-card", "trigger", "closeDelay", HOVER_INTENT_REASON),
+    // context-menu (Wave 2)
+    ("context-menu", "item", "label", NO_ITEM_TYPEAHEAD_REASON),
+    ("context-menu", "item", "onClick", MENU_ITEM_CLICK_REASON),
+    (
+        "context-menu",
+        "item",
+        "closeOnClick",
+        MENU_ITEM_CLICK_REASON,
+    ),
+    (
+        "context-menu",
+        "content",
+        "finalFocus",
+        FOCUS_RESTORATION_REASON,
+    ),
+    // menubar (Wave 2): `loopFocus` resolves via `ITEM_RENAMES`.
+    ("menubar", "root", "modal", MODAL_POPUP_REASON),
+    ("menubar", "root", "orientation", FIXED_ORIENTATION_REASON),
+    // popover (Wave 2)
+    ("popover", "trigger", "handle", VIRTUAL_TRIGGER_REASON),
+    ("popover", "trigger", "payload", VIRTUAL_TRIGGER_REASON),
+    ("popover", "trigger", "openOnHover", HOVER_INTENT_REASON),
+    ("popover", "trigger", "delay", HOVER_INTENT_REASON),
+    ("popover", "trigger", "closeDelay", HOVER_INTENT_REASON),
+    ("popover", "trigger", "id", ATTRIBUTES_COVERAGE_REASON),
+    (
+        "popover",
+        "content",
+        "initialFocus",
+        FOCUS_RESTORATION_REASON,
+    ),
+    ("popover", "content", "finalFocus", FOCUS_RESTORATION_REASON),
+    // tooltip (Wave 2)
+    ("tooltip", "trigger", "closeOnClick", HOVER_INTENT_REASON),
+    ("tooltip", "trigger", "handle", VIRTUAL_TRIGGER_REASON),
+    ("tooltip", "trigger", "payload", VIRTUAL_TRIGGER_REASON),
+    ("tooltip", "trigger", "disabled", CASCADING_DISABLED_REASON),
+    ("tooltip", "trigger", "delay", HOVER_INTENT_REASON),
+    ("tooltip", "trigger", "closeDelay", HOVER_INTENT_REASON),
+    // toggle-group (Wave 2): `loopFocus`/`multiple` resolve via
+    // `ITEM_RENAMES`.
+    (
+        "toggle-group",
+        "root",
+        "defaultValue",
+        INDEX_BASED_SELECTION_REASON,
+    ),
+    (
+        "toggle-group",
+        "root",
+        "value",
+        INDEX_BASED_SELECTION_REASON,
+    ),
+    (
+        "toggle-group",
+        "root",
+        "onValueChange",
+        INDEX_BASED_SELECTION_REASON,
+    ),
+    (
+        "toggle-group",
+        "root",
+        "orientation",
+        ORIENTATION_REPRESENTATION_REASON,
+    ),
+    ("toggle-group", "root", "spacing", SEGMENTED_SPACING_REASON),
 ];
 
 fn react_only_structural_reason(raw_name: &str) -> Option<&'static str> {

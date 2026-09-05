@@ -10,16 +10,22 @@ use adico_primitives::hover_card::{
 pub use adico_primitives::{ContentAlign, ContentSide};
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The element that shows the [`HoverCardContent`] on hover or focus.
 #[component]
-pub fn HoverCardTrigger(children: Element, class: Option<String>) -> Element {
+pub fn HoverCardTrigger(
+    children: Element,
+    id: Option<String>,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "inline-flex items-center justify-center underline-offset-4 hover:underline",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        HoverCardPrimitiveTrigger { class, {children} }
+        HoverCardPrimitiveTrigger { id, class, attributes, {children} }
     }
 }
 
@@ -27,26 +33,34 @@ pub fn HoverCardTrigger(children: Element, class: Option<String>) -> Element {
 #[component]
 pub fn HoverCardContent(
     children: Element,
+    id: Option<String>,
+    #[props(default = Radius::Md)] radius: Radius,
     class: Option<String>,
     side: Option<ContentSide>,
     align: Option<ContentAlign>,
+    /// Keep content mounted while closed. Defaults to `false`, matching
+    /// Tooltip/Popover's own behavior -- the primitive's own default is
+    /// `true` (for consumers that want to keep content mounted for exit
+    /// animations).
+    #[props(default = false)]
+    force_mount: bool,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let side = side.unwrap_or(ContentSide::Bottom);
     let align = align.unwrap_or(ContentAlign::Center);
     let class = cn(&[
-        "z-50 w-64 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+        "z-50 w-64 border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
         HoverCardPrimitiveContent {
+            id,
             class,
             side,
             align,
-            // The primitive defaults `force_mount` to `true` for consumers
-            // that want to keep content mounted for exit animations; this
-            // styled facade instead mounts content only while open, matching
-            // Tooltip/Popover's behavior.
-            force_mount: false,
+            force_mount,
+            attributes,
             {children}
         }
     }

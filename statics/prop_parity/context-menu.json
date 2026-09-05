@@ -32,15 +32,18 @@
           "props": [
             {
               "name": "label",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this menu item has no per-item typeahead/keyboard-search text registration (dropdown-menu's own MenuItem has the equivalent text_value field; this item's own primitive has no such registration hook), not planned to change"
             },
             {
               "name": "onClick",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico's on_select callback (fires with the item's value on click/Enter/Space, and always closes the menu) already covers item activation with a different, adico-idiomatic shape; a raw onClick handler or a closeOnClick toggle for it has no separate adico equivalent, and isn't planned since on_select already serves the same purpose"
             },
             {
               "name": "closeOnClick",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico's on_select callback (fires with the item's value on click/Enter/Space, and always closes the menu) already covers item activation with a different, adico-idiomatic shape; a raw onClick handler or a closeOnClick toggle for it has no separate adico equivalent, and isn't planned since on_select already serves the same purpose"
             },
             {
               "name": "nativeButton",
@@ -94,7 +97,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -107,11 +110,11 @@
           "props": [
             {
               "name": "id",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -145,7 +148,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -182,7 +185,8 @@
           "props": [
             {
               "name": "finalFocus",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico restores focus automatically when a popup/menu opens or closes, with no caller-configurable override for where focus goes; needs new primitive-level focus-management work, tracked as follow-up"
             },
             {
               "name": "children",
@@ -214,23 +218,26 @@
           "props": [
             {
               "name": "inset",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "variant",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "label",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this menu item has no per-item typeahead/keyboard-search text registration (dropdown-menu's own MenuItem has the equivalent text_value field; this item's own primitive has no such registration hook), not planned to change"
             },
             {
               "name": "onClick",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico's on_select callback (fires with the item's value on click/Enter/Space, and always closes the menu) already covers item activation with a different, adico-idiomatic shape; a raw onClick handler or a closeOnClick toggle for it has no separate adico equivalent, and isn't planned since on_select already serves the same purpose"
             },
             {
               "name": "closeOnClick",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico's on_select callback (fires with the item's value on click/Enter/Space, and always closes the menu) already covers item activation with a different, adico-idiomatic shape; a raw onClick handler or a closeOnClick toggle for it has no separate adico equivalent, and isn't planned since on_select already serves the same purpose"
             },
             {
               "name": "nativeButton",

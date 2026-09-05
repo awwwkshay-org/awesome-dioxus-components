@@ -574,10 +574,100 @@ directly for the exact prop list; it is not duplicated here.
         covering it; reverted the two fixtures' incorrectly-rewritten
         `Cargo.toml` and reinstalled `slider` again to confirm the fixed
         version leaves them byte-identical.
-- [ ] 5.2 **Wave 2 — menu/overlay family** (34 missing entries):
+- [x] 5.2 **Wave 2 — menu/overlay family** (34 missing entries):
       `dropdown-menu` (5), `hover-card` (5), `popover` (6), `tooltip` (6),
       `toggle-group` (6), `context-menu` (3), `menubar` (3). Verify same
       as 5.1 for these seven items.
+
+      **Done: all 7 of 7.** `prop-parity diff` reports zero remaining
+      `missing` status for `dropdown-menu`, `hover-card`, `context-menu`,
+      `menubar`, `popover`, `tooltip`, `toggle-group`. Corrections and
+      real findings, in the order they surfaced:
+      - **A stale-looking `r#as` false positive was actually real, and
+        fixed in its own prior commit** (`dcf7985`), not part of this
+        wave's own work but load-bearing for it: `r#as` was showing
+        `missing` on `dropdown-menu`/`tooltip` (Wave 2) and unrelated
+        items (`item`, `sheet`, `sidebar`). It isn't a gap -- it's the
+        upstream `dioxus-components` fork's own polymorphic render-prop
+        escape hatch, deliberately never ported anywhere in this crate
+        (already documented in `collapsible.rs`'s own doc comment).
+        Reclassified via the existing structural-props table (renamed
+        from "React-only" in its doc comment, since this entry isn't).
+      - Real fixes, found by reading each primitive's own Props structs
+        directly (several items' catalog axis matches are `None` on
+        `dioxus-components`, so there was no "attributes missing" signal
+        pointing at every gap): `attributes: Vec<Attribute>` forwarding
+        added to every registry facade across all seven items (root,
+        trigger, content, and item parts) -- none forwarded it before,
+        though every primitive Props struct already declared it, the
+        same recurring defect class as every prior wave item.
+      - `menubar`'s `roving_loop` was a `navigation-menu`-shaped bug: a
+        fully wired, tested primitive field (`MenubarProps::roving_loop`)
+        the registry facade never exposed at all. Now forwarded, plus
+        `MenubarContent`'s own already-existing `id` field.
+      - `hover-card`'s `HoverCardContent` had `force_mount: false`
+        *hardcoded* rather than exposed as a prop (a real primitive field
+        with a different default than the facade's own), plus real `id`
+        fields on both its trigger and content the facade never forwarded.
+      - `popover`/`tooltip` both needed real `id` fields on trigger and
+        content forwarded from already-existing primitive fields; verified
+        `PopoverTrigger`'s own primitive implementation explicitly extracts
+        an `id` attribute out of `props.attributes` for `aria-labelledby`
+        association, and its `..props.attributes` spreads last -- so
+        `id` on `popover.trigger` is `ATTRIBUTES_COVERAGE_REASON`, not a
+        missing field, now that `attributes` forwarding exists.
+      - `dropdown-menu`'s `MenuItemProps::text_value` (registered with the
+        enclosing menu's typeahead search) already exists on the primitive
+        and maps directly to Base UI's `label` prop ("overrides the text
+        label used when the item is matched during keyboard text
+        navigation") -- added as a real field, plus a new
+        `ITEM_RENAMES` entry (`dropdown-menu`, `label` -> `text_value`).
+        `context-menu`'s own `ContextMenuItemProps` has no equivalent
+        field at all, so its own `label` gap is a real, permanent
+        capability gap instead (`NO_ITEM_TYPEAHEAD_REASON`).
+      - Real feature additions, matching shadcn's actual `cva` axes
+        (verified against `statics/catalogs/shadcn.json`, not guessed):
+        `inset: bool` + a `"default" | "destructive"` `*ItemVariant` enum
+        on `DropdownMenuItem`/`ContextMenuItem`/`MenubarItem` (three
+        near-identical small enums, one per item file, matching this
+        registry's established "small deliberate duplication over a
+        cross-item dependency" convention already used for
+        `ToggleItemSize`/`ToggleItemVariant`).
+      - `toggle_group.rs`'s own registry source revealed its design
+        directly: `allow_multiple_pressed: ReadSignal<bool>` *is* Base
+        UI's `multiple` (an `ITEM_RENAMES` entry, not
+        `SEPARATE_COMPONENT_REASON` -- there is no `ToggleGroupMulti`,
+        multiple-selection is a boolean flag on the one component), and
+        `horizontal: ReadSignal<bool>` already existed but needed
+        `ORIENTATION_REPRESENTATION_REASON`, not
+        `FIXED_ORIENTATION_REASON` (it genuinely has an orientation
+        toggle, just boolean-shaped). `value`/`defaultValue`/
+        `onValueChange` have no equivalent because adico tracks pressed
+        items by index in a `HashSet<usize>`, not by caller-defined string
+        identity -- a new `INDEX_BASED_SELECTION_REASON`. `spacing`
+        (shadcn's zero-gap "connected" segmented look) is an *already
+        documented* intentional exclusion -- the file's own doc comment
+        explains adico deliberately always spaces items apart (a past
+        live bug report: "no space in toggle group") -- given a name via
+        a new `SEGMENTED_SPACING_REASON` rather than reinvestigated.
+      - Six new shared reasons cover the rest, applied across every item
+        that has the matching upstream shape: `VIRTUAL_TRIGGER_REASON`
+        (Base UI's newer `handle`/`payload` imperative-trigger API, no
+        adico equivalent -- appears on `dropdown-menu`/`hover-card`/
+        `popover`/`tooltip` triggers), `HOVER_INTENT_REASON` (no
+        open/close delay timing or hover-vs-click-only support at all --
+        `dropdown-menu`/`hover-card`/`popover`/`tooltip` triggers;
+        `navigation-menu` already has the equivalent `delay_ms`/
+        `close_delay_ms` fields to port from, when this becomes real
+        work), `MENU_ITEM_CLICK_REASON` (`onClick`/`closeOnClick` already
+        covered by adico's differently-shaped `on_select` --
+        `dropdown-menu`/`context-menu` items), `FOCUS_RESTORATION_REASON`
+        (no caller-configurable focus-restoration hooks --
+        `dropdown-menu`/`context-menu`/`popover` content),
+        `NO_SUBMENU_CONTROL_REASON` (Base UI's newer nested-submenu
+        escape/id-tracking controls -- `dropdown-menu` root only), and
+        `MODAL_POPUP_REASON`/`ANIMATION_COMPLETE_REASON`/
+        `FIXED_ORIENTATION_REASON` reused unchanged from Wave 1.
 - [ ] 5.3 **Wave 3 — native leaf/form controls** (32 missing entries):
       `checkbox` (7), `switch` (6), `progress` (6), `input` (2),
       `textarea` (2), `toolbar` (2), `avatar` (2), `toggle` (1),

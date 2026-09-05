@@ -9,23 +9,26 @@
           "props": [
             {
               "name": "defaultValue",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico tracks a toggle group's pressed items by index in a HashSet<usize>, not by a caller-defined string value/onValueChange pair -- the same controlled-selection capability, a different identity model every ToggleItem already keys off of, not planned to change"
             },
             {
               "name": "value",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico tracks a toggle group's pressed items by index in a HashSet<usize>, not by a caller-defined string value/onValueChange pair -- the same controlled-selection capability, a different identity model every ToggleItem already keys off of, not planned to change"
             },
             {
               "name": "onValueChange",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico tracks a toggle group's pressed items by index in a HashSet<usize>, not by a caller-defined string value/onValueChange pair -- the same controlled-selection capability, a different identity model every ToggleItem already keys off of, not planned to change"
             },
             {
               "name": "loopFocus",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "multiple",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "disabled",
@@ -33,7 +36,8 @@
             },
             {
               "name": "orientation",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this is exposed as a plain boolean flag (e.g. `horizontal`) rather than a `\"horizontal\" | \"vertical\"` string enum -- same capability, a different representation, not planned to change"
             },
             {
               "name": "className",
@@ -106,7 +110,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -127,7 +131,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -150,27 +154,31 @@
           "props": [
             {
               "name": "spacing",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: shadcn's own zero-gap \"connected\" segmented-control look (spacing=0, items flush against each other with shared borders) has no adico equivalent; ToggleGroup always spaces items apart with a visible gap instead (see registry/ui/toggle_group.rs's own doc comment -- a flush layout without deliberate per-item border/corner handling previously read as a visual bug, reported live), not planned to change"
             },
             {
               "name": "defaultValue",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico tracks a toggle group's pressed items by index in a HashSet<usize>, not by a caller-defined string value/onValueChange pair -- the same controlled-selection capability, a different identity model every ToggleItem already keys off of, not planned to change"
             },
             {
               "name": "value",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico tracks a toggle group's pressed items by index in a HashSet<usize>, not by a caller-defined string value/onValueChange pair -- the same controlled-selection capability, a different identity model every ToggleItem already keys off of, not planned to change"
             },
             {
               "name": "onValueChange",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico tracks a toggle group's pressed items by index in a HashSet<usize>, not by a caller-defined string value/onValueChange pair -- the same controlled-selection capability, a different identity model every ToggleItem already keys off of, not planned to change"
             },
             {
               "name": "loopFocus",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "multiple",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "disabled",
@@ -178,7 +186,8 @@
             },
             {
               "name": "orientation",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this is exposed as a plain boolean flag (e.g. `horizontal`) rather than a `\"horizontal\" | \"vertical\"` string enum -- same capability, a different representation, not planned to change"
             },
             {
               "name": "className",

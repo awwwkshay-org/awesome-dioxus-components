@@ -24,6 +24,7 @@ pub fn DropdownMenu(
     #[props(default)] disabled: ReadSignal<bool>,
     #[props(default = ReadSignal::new(Signal::new(true)))] roving_loop: ReadSignal<bool>,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&[
@@ -38,6 +39,7 @@ pub fn DropdownMenu(
             disabled,
             roving_loop,
             class,
+            attributes,
             {children}
         }
     }
@@ -65,13 +67,14 @@ pub fn DropdownMenuTrigger(
     #[props(default = Radius::Md)]
     radius: Radius,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
         "inline-flex h-9 items-center justify-center border border-input bg-background px-3 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
         radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
-    rsx! { PrimitiveDropdownMenuTrigger { class, {children} } }
+    rsx! { PrimitiveDropdownMenuTrigger { class, attributes, {children} } }
 }
 
 /// An opaque, layered menu surface. It is absolutely positioned beneath its
@@ -84,13 +87,32 @@ pub fn DropdownMenuContent(
     #[props(default = Radius::Md)]
     radius: Radius,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
         "absolute left-0 top-full z-50 mt-1 min-w-40 overflow-hidden bg-popover p-1 text-popover-foreground shadow-md outline-none",
         radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
-    rsx! { PrimitiveDropdownMenuContent { id, class, {children} } }
+    rsx! { PrimitiveDropdownMenuContent { id, class, attributes, {children} } }
+}
+
+/// The visual treatment of a [`DropdownMenuItem`], matching shadcn's own
+/// `"default" | "destructive"` cva axis.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum DropdownMenuItemVariant {
+    #[default]
+    Default,
+    Destructive,
+}
+
+impl DropdownMenuItemVariant {
+    fn class(self) -> &'static str {
+        match self {
+            Self::Default => "",
+            Self::Destructive => "text-destructive focus:bg-destructive/10 focus:text-destructive",
+        }
+    }
 }
 
 /// A keyboard- and pointer-selectable menu item.
@@ -100,14 +122,37 @@ pub fn DropdownMenuItem<T: Clone + PartialEq + 'static>(
     index: ReadSignal<usize>,
     #[props(default)] disabled: ReadSignal<bool>,
     #[props(default)] on_select: Callback<T>,
+    /// Display text registered with the enclosing menu's typeahead search.
+    /// Omit to keep this item out of typeahead matching entirely.
+    #[props(default)]
+    text_value: ReadSignal<Option<String>>,
+    /// Indents the item to align with sibling items that have a leading
+    /// icon, matching shadcn's own boolean toggle.
+    #[props(default)]
+    inset: bool,
+    #[props(default)] variant: DropdownMenuItemVariant,
     children: Element,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
         "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+        variant.class(),
+        if inset { "pl-8" } else { "" },
         class.as_deref().unwrap_or_default(),
     ]);
-    rsx! { PrimitiveDropdownMenuItem { value, index, disabled, on_select, class, {children} } }
+    rsx! {
+        PrimitiveDropdownMenuItem {
+            value,
+            index,
+            disabled,
+            on_select,
+            text_value,
+            class,
+            attributes,
+            {children}
+        }
+    }
 }
 
 #[cfg(test)]

@@ -7,7 +7,7 @@
       "source": "ui/popover.rs",
       "targetRoot": "ui",
       "target": "popover.rs",
-      "checksum": "6c85713d38b784eb4db7516f9bc210ea03dbffd7a485abc7a1d8404ae49553e5"
+      "checksum": "d2771f1a9f56b68d89dfc0fafa996d12d713ea45f76a1c54fee3a7b9d30e982e"
     }
   ],
   "registryDependencies": [

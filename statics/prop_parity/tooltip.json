@@ -9,27 +9,33 @@
           "props": [
             {
               "name": "closeOnClick",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this trigger has no hover-intent support (open/close delay timing, whether hovering opens it at all, or whether clicking closes an already-open popup) -- it only opens/closes on click today; needs new primitive-level hover-timer work (navigation-menu already has the equivalent delay_ms/close_delay_ms pattern to port), tracked as follow-up"
             },
             {
               "name": "handle",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer virtual-trigger API (associating an arbitrary external element as a trigger via an imperative handle, plus passing arbitrary payload data through it) has no adico equivalent; needs a new registration/imperative-handle mechanism, tracked as follow-up primitive work"
             },
             {
               "name": "payload",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer virtual-trigger API (associating an arbitrary external element as a trigger via an imperative handle, plus passing arbitrary payload data through it) has no adico equivalent; needs a new registration/imperative-handle mechanism, tracked as follow-up primitive work"
             },
             {
               "name": "disabled",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: disabled is set once on the composite's root and cascades to every descendant; independently overriding it on just this sub-part has no adico equivalent and isn't planned, since a consistent whole-component disable is the far more common need"
             },
             {
               "name": "delay",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this trigger has no hover-intent support (open/close delay timing, whether hovering opens it at all, or whether clicking closes an already-open popup) -- it only opens/closes on click today; needs new primitive-level hover-timer work (navigation-menu already has the equivalent delay_ms/close_delay_ms pattern to port), tracked as follow-up"
             },
             {
               "name": "closeDelay",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this trigger has no hover-intent support (open/close delay timing, whether hovering opens it at all, or whether clicking closes an already-open popup) -- it only opens/closes on click today; needs new primitive-level hover-timer work (navigation-menu already has the equivalent delay_ms/close_delay_ms pattern to port), tracked as follow-up"
             },
             {
               "name": "className",
@@ -74,7 +80,7 @@
           "props": [
             {
               "name": "id",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "r#as",
@@ -83,7 +89,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -96,7 +102,7 @@
           "props": [
             {
               "name": "id",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "side",
@@ -108,7 +114,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -131,27 +137,33 @@
           "props": [
             {
               "name": "closeOnClick",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this trigger has no hover-intent support (open/close delay timing, whether hovering opens it at all, or whether clicking closes an already-open popup) -- it only opens/closes on click today; needs new primitive-level hover-timer work (navigation-menu already has the equivalent delay_ms/close_delay_ms pattern to port), tracked as follow-up"
             },
             {
               "name": "handle",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer virtual-trigger API (associating an arbitrary external element as a trigger via an imperative handle, plus passing arbitrary payload data through it) has no adico equivalent; needs a new registration/imperative-handle mechanism, tracked as follow-up primitive work"
             },
             {
               "name": "payload",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer virtual-trigger API (associating an arbitrary external element as a trigger via an imperative handle, plus passing arbitrary payload data through it) has no adico equivalent; needs a new registration/imperative-handle mechanism, tracked as follow-up primitive work"
             },
             {
               "name": "disabled",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: disabled is set once on the composite's root and cascades to every descendant; independently overriding it on just this sub-part has no adico equivalent and isn't planned, since a consistent whole-component disable is the far more common need"
             },
             {
               "name": "delay",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this trigger has no hover-intent support (open/close delay timing, whether hovering opens it at all, or whether clicking closes an already-open popup) -- it only opens/closes on click today; needs new primitive-level hover-timer work (navigation-menu already has the equivalent delay_ms/close_delay_ms pattern to port), tracked as follow-up"
             },
             {
               "name": "closeDelay",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this trigger has no hover-intent support (open/close delay timing, whether hovering opens it at all, or whether clicking closes an already-open popup) -- it only opens/closes on click today; needs new primitive-level hover-timer work (navigation-menu already has the equivalent delay_ms/close_delay_ms pattern to port), tracked as follow-up"
             },
             {
               "name": "className",

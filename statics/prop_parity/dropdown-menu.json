@@ -54,7 +54,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -72,7 +72,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -94,7 +94,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -128,7 +128,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -158,7 +158,8 @@
             },
             {
               "name": "highlightItemOnHover",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
             },
             {
               "name": "actionsRef",
@@ -167,31 +168,37 @@
             },
             {
               "name": "closeParentOnEsc",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer submenu-specific escape/id-tracking controls (closing only the innermost open submenu on Escape, overriding a submenu's generated trigger id) have no adico equivalent; needs new primitive-level submenu-state work, tracked as follow-up"
             },
             {
               "name": "defaultTriggerId",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer submenu-specific escape/id-tracking controls (closing only the innermost open submenu on Escape, overriding a submenu's generated trigger id) have no adico equivalent; needs new primitive-level submenu-state work, tracked as follow-up"
             },
             {
               "name": "handle",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer virtual-trigger API (associating an arbitrary external element as a trigger via an imperative handle, plus passing arbitrary payload data through it) has no adico equivalent; needs a new registration/imperative-handle mechanism, tracked as follow-up primitive work"
             },
             {
               "name": "loopFocus",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "modal",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this composite's popup/overlay layer has no modal-vs-non-modal focus-trap toggle; the popup's focus-containment behavior is fixed, not planned to become configurable"
             },
             {
               "name": "onOpenChangeComplete",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico has no callback for when an open/close animation actually finishes, distinct from when the open state itself changes; needs new primitive-level transition-end event plumbing, tracked as follow-up primitive work"
             },
             {
               "name": "triggerId",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer submenu-specific escape/id-tracking controls (closing only the innermost open submenu on Escape, overriding a submenu's generated trigger id) have no adico equivalent; needs new primitive-level submenu-state work, tracked as follow-up"
             },
             {
               "name": "disabled",
@@ -199,7 +206,8 @@
             },
             {
               "name": "orientation",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this composite only supports one fixed layout orientation; a caller-selectable horizontal/vertical toggle needs new layout work, tracked as follow-up"
             },
             {
               "name": "children",
@@ -212,7 +220,8 @@
           "props": [
             {
               "name": "handle",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer virtual-trigger API (associating an arbitrary external element as a trigger via an imperative handle, plus passing arbitrary payload data through it) has no adico equivalent; needs a new registration/imperative-handle mechanism, tracked as follow-up primitive work"
             },
             {
               "name": "nativeButton",
@@ -221,23 +230,28 @@
             },
             {
               "name": "payload",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer virtual-trigger API (associating an arbitrary external element as a trigger via an imperative handle, plus passing arbitrary payload data through it) has no adico equivalent; needs a new registration/imperative-handle mechanism, tracked as follow-up primitive work"
             },
             {
               "name": "disabled",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: disabled is set once on the composite's root and cascades to every descendant; independently overriding it on just this sub-part has no adico equivalent and isn't planned, since a consistent whole-component disable is the far more common need"
             },
             {
               "name": "openOnHover",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this trigger has no hover-intent support (open/close delay timing, whether hovering opens it at all, or whether clicking closes an already-open popup) -- it only opens/closes on click today; needs new primitive-level hover-timer work (navigation-menu already has the equivalent delay_ms/close_delay_ms pattern to port), tracked as follow-up"
             },
             {
               "name": "delay",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this trigger has no hover-intent support (open/close delay timing, whether hovering opens it at all, or whether clicking closes an already-open popup) -- it only opens/closes on click today; needs new primitive-level hover-timer work (navigation-menu already has the equivalent delay_ms/close_delay_ms pattern to port), tracked as follow-up"
             },
             {
               "name": "closeDelay",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this trigger has no hover-intent support (open/close delay timing, whether hovering opens it at all, or whether clicking closes an already-open popup) -- it only opens/closes on click today; needs new primitive-level hover-timer work (navigation-menu already has the equivalent delay_ms/close_delay_ms pattern to port), tracked as follow-up"
             },
             {
               "name": "children",
@@ -269,7 +283,8 @@
           "props": [
             {
               "name": "finalFocus",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico restores focus automatically when a popup/menu opens or closes, with no caller-configurable override for where focus goes; needs new primitive-level focus-management work, tracked as follow-up"
             },
             {
               "name": "children",
@@ -301,23 +316,25 @@
           "props": [
             {
               "name": "inset",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "variant",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "label",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "onClick",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico's on_select callback (fires with the item's value on click/Enter/Space, and always closes the menu) already covers item activation with a different, adico-idiomatic shape; a raw onClick handler or a closeOnClick toggle for it has no separate adico equivalent, and isn't planned since on_select already serves the same purpose"
             },
             {
               "name": "closeOnClick",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico's on_select callback (fires with the item's value on click/Enter/Space, and always closes the menu) already covers item activation with a different, adico-idiomatic shape; a raw onClick handler or a closeOnClick toggle for it has no separate adico equivalent, and isn't planned since on_select already serves the same purpose"
             },
             {
               "name": "nativeButton",

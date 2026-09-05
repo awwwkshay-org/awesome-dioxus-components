@@ -14,13 +14,18 @@ use crate::adico_lib::variants::Radius;
 
 /// The element that shows the [`TooltipContent`] on hover or focus.
 #[component]
-pub fn TooltipTrigger(children: Element, class: Option<String>) -> Element {
+pub fn TooltipTrigger(
+    children: Element,
+    id: Option<String>,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "inline-flex items-center justify-center",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        TooltipPrimitiveTrigger { class, {children} }
+        TooltipPrimitiveTrigger { id, class, attributes, {children} }
     }
 }
 
@@ -28,10 +33,12 @@ pub fn TooltipTrigger(children: Element, class: Option<String>) -> Element {
 #[component]
 pub fn TooltipContent(
     children: Element,
+    id: Option<String>,
     #[props(default = Radius::Md)] radius: Radius,
     class: Option<String>,
     side: Option<ContentSide>,
     align: Option<ContentAlign>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let side = side.unwrap_or(ContentSide::Top);
     let align = align.unwrap_or(ContentAlign::Center);
@@ -42,9 +49,11 @@ pub fn TooltipContent(
     ]);
     rsx! {
         TooltipPrimitiveContent {
+            id,
             class,
             side,
             align,
+            attributes,
             {children}
         }
     }

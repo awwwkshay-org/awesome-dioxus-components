@@ -9,11 +9,12 @@
           "props": [
             {
               "name": "loopFocus",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "modal",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this composite's popup/overlay layer has no modal-vs-non-modal focus-trap toggle; the popup's focus-containment behavior is fixed, not planned to become configurable"
             },
             {
               "name": "disabled",
@@ -21,7 +22,8 @@
             },
             {
               "name": "orientation",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this composite only supports one fixed layout orientation; a caller-selectable horizontal/vertical toggle needs new layout work, tracked as follow-up"
             },
             {
               "name": "className",
@@ -70,11 +72,11 @@
             },
             {
               "name": "roving_loop",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -92,7 +94,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -105,11 +107,11 @@
           "props": [
             {
               "name": "id",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -143,7 +145,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -165,11 +167,11 @@
             },
             {
               "name": "roving_loop",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -187,7 +189,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -200,11 +202,11 @@
           "props": [
             {
               "name": "id",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -238,7 +240,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -256,11 +258,12 @@
           "props": [
             {
               "name": "loopFocus",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "modal",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this composite's popup/overlay layer has no modal-vs-non-modal focus-trap toggle; the popup's focus-containment behavior is fixed, not planned to become configurable"
             },
             {
               "name": "disabled",
@@ -268,7 +271,8 @@
             },
             {
               "name": "orientation",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this composite only supports one fixed layout orientation; a caller-selectable horizontal/vertical toggle needs new layout work, tracked as follow-up"
             },
             {
               "name": "className",
@@ -304,11 +308,11 @@
           "props": [
             {
               "name": "inset",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "variant",
-              "status": "missing"
+              "status": "present"
             }
           ]
         }

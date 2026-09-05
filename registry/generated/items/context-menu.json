@@ -7,7 +7,7 @@
       "source": "ui/context_menu.rs",
       "targetRoot": "ui",
       "target": "context_menu.rs",
-      "checksum": "57b3f5a3c397c275d6162e6adef044d97c508863d057a53cfb950a0156c3e5f1"
+      "checksum": "fa2c3e2019f8a78537292810ebf7f9496db85a63ad7c8864287f8f1cb068a319"
     }
   ],
   "registryDependencies": [

@@ -28,6 +28,7 @@ pub fn ToggleGroup(
     #[props(default)] horizontal: ReadSignal<bool>,
     #[props(default = ReadSignal::new(Signal::new(true)))] roving_loop: ReadSignal<bool>,
     #[props(default)] class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&[
@@ -44,6 +45,7 @@ pub fn ToggleGroup(
             horizontal,
             roving_loop,
             class,
+            attributes,
             {children}
         }
     }
@@ -109,6 +111,7 @@ pub fn ToggleItem(
     #[props(default)] variant: ToggleItemVariant,
     #[props(default = Radius::Md)] radius: Radius,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&[
@@ -119,7 +122,13 @@ pub fn ToggleItem(
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        ToggleItemPrimitive { index, disabled, class, {children} }
+        ToggleItemPrimitive {
+            index,
+            disabled,
+            class,
+            attributes,
+            {children}
+        }
     }
 }
 

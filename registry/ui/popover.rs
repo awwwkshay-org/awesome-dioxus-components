@@ -14,13 +14,19 @@ use crate::adico_lib::variants::Radius;
 
 /// Opens the surrounding [`Popover`] through the owned headless primitive.
 #[component]
-pub fn PopoverTrigger(children: Element, class: Option<String>) -> Element {
+pub fn PopoverTrigger(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = button)]
+    attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "inline-flex items-center justify-center",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        PopoverPrimitiveTrigger { class, {children} }
+        PopoverPrimitiveTrigger { class, attributes, {children} }
     }
 }
 
@@ -28,10 +34,12 @@ pub fn PopoverTrigger(children: Element, class: Option<String>) -> Element {
 #[component]
 pub fn PopoverContent(
     children: Element,
+    id: Option<String>,
     #[props(default = Radius::Md)] radius: Radius,
     class: Option<String>,
     side: Option<ContentSide>,
     align: Option<ContentAlign>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let side = side.unwrap_or(ContentSide::Bottom);
     let align = align.unwrap_or(ContentAlign::Center);
@@ -42,9 +50,11 @@ pub fn PopoverContent(
     ]);
     rsx! {
         PopoverPrimitiveContent {
+            id,
             class,
             side,
             align,
+            attributes,
             {children}
         }
     }
