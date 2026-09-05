@@ -3,6 +3,12 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
+  "radiusException": [
+    {
+      "part": "item",
+      "reason": "DropdownMenuItem is a per-row highlight"
+    }
+  ],
   "inspiredBy": [
     "shadcn",
     "dioxus-components"

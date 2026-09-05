@@ -3,31 +3,31 @@
   "items": [
     {
       "address": "@adico/accordion",
-      "manifestDigest": "b3e19557cc0c6d00235338109676d42bb9adb8a56f83bef1686c8b94e43f7990",
+      "manifestDigest": "28e13a904e35de9861bcff2c33e08736610511bab1b2def1bb6424fc7c7bba74",
       "files": [
         {
           "path": "src/components/ui/accordion.rs",
-          "checksum": "a4ebf4a3d40ec0f5731bac5b4eb256bd73ce844253a1a25d7962d992da3fb8bb"
+          "checksum": "a36c7f6619d05b142691c7cbcd6e87eea19d3271e7935ff0ad0d8c37e3807266"
         }
       ]
     },
     {
       "address": "@adico/alert",
-      "manifestDigest": "aa7936cd618c829ed03f03615490c2f9c7cb6bb3aff157b724bd69b7b90b6d65",
+      "manifestDigest": "28e13a904e35de9861bcff2c33e08736610511bab1b2def1bb6424fc7c7bba74",
       "files": [
         {
           "path": "src/components/ui/alert.rs",
-          "checksum": "3ac89f4d2a09bf414a32ca80683c971f7e1f65bfe38d28d466ece8c3c7d52b75"
+          "checksum": "c94e992d01049bc54d9cf446fda160ab0861eb445e503ae09a093e601693d1e9"
         }
       ]
     },
     {
       "address": "@adico/alert-dialog",
-      "manifestDigest": "6a740ea1a76eb3155ab1587990f1de16035c75c458a0462bed7649232c9f1e45",
+      "manifestDigest": "ba25c6d591fe5e82835c0081cf4a59c60b519be8ac76c70f81af352faf5a1a5d",
       "files": [
         {
           "path": "src/components/ui/alert_dialog.rs",
-          "checksum": "7f486e9d98e86dcd739a9b9eb83e320857bdbc609e9a28929eb4f468e49a0c76"
+          "checksum": "8abb21ad3b6b17bce19dab70e3aa6c73b84b1366d7e7ac648ce36fc0270d1060"
         }
       ]
     },
@@ -43,21 +43,21 @@
     },
     {
       "address": "@adico/avatar",
-      "manifestDigest": "6120bc3a4aa8655bda36e619df98580b772dca8ad20ee83d51e069d7bfe9772f",
+      "manifestDigest": "ba25c6d591fe5e82835c0081cf4a59c60b519be8ac76c70f81af352faf5a1a5d",
       "files": [
         {
           "path": "src/components/ui/avatar.rs",
-          "checksum": "38c0f39a51dbe0a7629aad4a6b479d005c53f6c46e6a3c06c1461dcc5a0e974c"
+          "checksum": "100177f41029793022f7d850788e470d9df6b0864ab3f116195a0422ca79831d"
         }
       ]
     },
     {
       "address": "@adico/badge",
-      "manifestDigest": "d360609157c3bfbfb04af82af76c43d3af9d02b58949ecb79b8d4fab3ce76363",
+      "manifestDigest": "28e13a904e35de9861bcff2c33e08736610511bab1b2def1bb6424fc7c7bba74",
       "files": [
         {
           "path": "src/components/ui/badge.rs",
-          "checksum": "b346ba40209a2dfd3796df4feb017d6ee3ea098b1292eeaa11bde414b55f85b8"
+          "checksum": "c883f55a2fba6629e9771615b3b3c0fede3caf19649a780ac899beb9ab389b25"
         }
       ]
     },
@@ -73,51 +73,51 @@
     },
     {
       "address": "@adico/button",
-      "manifestDigest": "6a740ea1a76eb3155ab1587990f1de16035c75c458a0462bed7649232c9f1e45",
+      "manifestDigest": "77d9ae26a007bd1333bc85042853cbf4b67e07d27ece6aaeeedebd54c2bdd1f3",
       "files": [
         {
           "path": "src/components/ui/button.rs",
-          "checksum": "0f498536390cf5ee008340c199f0d412e346a4ee7477390cda9c93edb4f75ceb"
+          "checksum": "37189be9e7e77eb40af3872a097746c734ca5e1b1efb6c0e06d4bb261303d4ad"
         }
       ]
     },
     {
       "address": "@adico/button-group",
-      "manifestDigest": "da126c622f3a9ec240452dcf72e6decfb6d0977ec448228dea0a217689ad613a",
+      "manifestDigest": "a6e76d3b7c224a884a8201d4cea0936b41768ca74318ebd07a063d7d602593a0",
       "files": [
         {
           "path": "src/components/ui/button_group.rs",
-          "checksum": "176b08483332bb26b76ee64cfe63bbcc5fb1f666a8bbd93c4e3ca8a0ff6a1204"
+          "checksum": "eb7f932bef197a75a40e1d587f0dd877a7104e2eb5ffcf36b28fcb6f6c753454"
         }
       ]
     },
     {
       "address": "@adico/calendar",
-      "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
+      "manifestDigest": "ed3f0d07cdecb892476ff9f11cc7c3fcf4b58be868d38da2a99f1a11ba111fe3",
       "files": [
         {
           "path": "src/components/ui/calendar.rs",
-          "checksum": "5938c8ea7aaadc2158855f9aa70030a462e4b96f74a0d924a14a9c1e0c0ec9ab"
+          "checksum": "5f3c4188289335630cc873ee88d134c27dd0a8fad8fe3eeb41b6987bf8b53a5b"
         }
       ]
     },
     {
       "address": "@adico/card",
-      "manifestDigest": "d360609157c3bfbfb04af82af76c43d3af9d02b58949ecb79b8d4fab3ce76363",
+      "manifestDigest": "28e13a904e35de9861bcff2c33e08736610511bab1b2def1bb6424fc7c7bba74",
       "files": [
         {
           "path": "src/components/ui/card.rs",
-          "checksum": "16c77d9d9464259a4242a01c716a73f9c513dd855a635129da1311e8adbb84c0"
+          "checksum": "b4348c0a8dfe019fa162dd0c7b8041433302534eb847057646470b46a7996e1c"
         }
       ]
     },
     {
       "address": "@adico/carousel",
-      "manifestDigest": "dbad1f931483f16b930f4b3b5880c85f7fc7af4c0e7100231d88cc0effad5100",
+      "manifestDigest": "77d9ae26a007bd1333bc85042853cbf4b67e07d27ece6aaeeedebd54c2bdd1f3",
       "files": [
         {
           "path": "src/components/ui/carousel.rs",
-          "checksum": "0b9c087709a54bf95979170c5b69562e8da510f24d5d2a480fa7d77633729d9e"
+          "checksum": "2350bdcd165b60ae0b88003abcfd79f72cd6c200c5247e9896777ee0ac4673b8"
         }
       ]
     },
@@ -133,7 +133,7 @@
     },
     {
       "address": "@adico/cn",
-      "manifestDigest": "5000975a59c0ee8c7508ab739f37e4ac24532f78a07387590501e0867c9f187d",
+      "manifestDigest": "62844ef2283c1181994321e1f28a1337f2bbff372bac318a5c8e2470f46f13e8",
       "files": [
         {
           "path": "src/adico_lib/cn.rs",
@@ -153,131 +153,131 @@
     },
     {
       "address": "@adico/color-picker",
-      "manifestDigest": "c358c9e88540b195d3b6bc30db61870ef2f70b8b5e5093e53e3e46bde63c7ef5",
+      "manifestDigest": "ed3f0d07cdecb892476ff9f11cc7c3fcf4b58be868d38da2a99f1a11ba111fe3",
       "files": [
         {
           "path": "src/components/ui/color_picker.rs",
-          "checksum": "8f1f977cf609e3a21b192c83a84814de426184e1f686a9813ba7dce55fcd569d"
+          "checksum": "6066680f27fc5821adeba757f125fc3a23d7f84edc8a420452e1c9fb0ef0dc03"
         }
       ]
     },
     {
       "address": "@adico/combobox",
-      "manifestDigest": "5000975a59c0ee8c7508ab739f37e4ac24532f78a07387590501e0867c9f187d",
+      "manifestDigest": "ed3f0d07cdecb892476ff9f11cc7c3fcf4b58be868d38da2a99f1a11ba111fe3",
       "files": [
         {
           "path": "src/components/ui/combobox.rs",
-          "checksum": "db85839810560b7b2302c9737ea39185451303606ec6e94f55e2a1256df77568"
+          "checksum": "34138f61cae5234cc092461c906672bb7b44733c6ff3deb1381d7c748c52f6a1"
         }
       ]
     },
     {
       "address": "@adico/command",
-      "manifestDigest": "b6437acdbf5427ee8faab854b6fc0a682bc8214df00a79333a66db077a0a32cf",
+      "manifestDigest": "89db7db1cc31e0a82b5b66c53b78a0c2591052d3e917851759fd66b27fcec9a2",
       "files": [
         {
           "path": "src/components/ui/command.rs",
-          "checksum": "3ab08a5a722a85b6eb3a48666564e5a40d940de7d9e450b1fee60520b37173c3"
+          "checksum": "78c2674930274e760b33273f5fd0b0fea1f4b5bb241abab160b87577f3a250eb"
         }
       ]
     },
     {
       "address": "@adico/context-menu",
-      "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
+      "manifestDigest": "ba25c6d591fe5e82835c0081cf4a59c60b519be8ac76c70f81af352faf5a1a5d",
       "files": [
         {
           "path": "src/components/ui/context_menu.rs",
-          "checksum": "275e73d6b6571987c7a1dcb8498fb6bef49932c0d4622ccc88d81825bea1018e"
+          "checksum": "57b3f5a3c397c275d6162e6adef044d97c508863d057a53cfb950a0156c3e5f1"
         }
       ]
     },
     {
       "address": "@adico/date-picker",
-      "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
+      "manifestDigest": "ed3f0d07cdecb892476ff9f11cc7c3fcf4b58be868d38da2a99f1a11ba111fe3",
       "files": [
         {
           "path": "src/components/ui/date_picker.rs",
-          "checksum": "efdc41c9ac472d032b58983b1e7afc76f977027ef6fa1720a72ce04439321c4b"
+          "checksum": "70e24290c1d2b79470a26d140e3f26cc32c18767a71423ba5ca699b0e49c1550"
         }
       ]
     },
     {
       "address": "@adico/dialog",
-      "manifestDigest": "b6437acdbf5427ee8faab854b6fc0a682bc8214df00a79333a66db077a0a32cf",
+      "manifestDigest": "89db7db1cc31e0a82b5b66c53b78a0c2591052d3e917851759fd66b27fcec9a2",
       "files": [
         {
           "path": "src/components/ui/dialog.rs",
-          "checksum": "854367f085b8de1c110ada86cdc83e11947c736b3634dd7c852f7678f1ef60e9"
+          "checksum": "2667585dbdde4ae20bf48ac82d0d960d80237b0f77d08b1acfd045b086f7c329"
         }
       ]
     },
     {
       "address": "@adico/drag-and-drop-list",
-      "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
+      "manifestDigest": "89db7db1cc31e0a82b5b66c53b78a0c2591052d3e917851759fd66b27fcec9a2",
       "files": [
         {
           "path": "src/components/ui/drag_and_drop_list.rs",
-          "checksum": "fa735c6e83dfe3e40292eccb14b34f446102d317440be8f42d24cbd6e7fb1ebe"
+          "checksum": "efc96ddb2a953225801c31f30f0b65f66374904f9fd6a414f1468995fadc9ae3"
         }
       ]
     },
     {
       "address": "@adico/drawer",
-      "manifestDigest": "dbad1f931483f16b930f4b3b5880c85f7fc7af4c0e7100231d88cc0effad5100",
+      "manifestDigest": "77d9ae26a007bd1333bc85042853cbf4b67e07d27ece6aaeeedebd54c2bdd1f3",
       "files": [
         {
           "path": "src/components/ui/drawer.rs",
-          "checksum": "d8b0e29dabee7016be62e26944416d9bf5bd692925d47d3cb0be511fc85a80a6"
+          "checksum": "22cb6791fb2ed03ef404c317e28282d5a2271dbfd4056e43916740788b2d5783"
         }
       ]
     },
     {
       "address": "@adico/dropdown-menu",
-      "manifestDigest": "85f37b0740cabe9a4bd05a577acef8ce767b2745b09e79e56fe8ad5685572c27",
+      "manifestDigest": "89db7db1cc31e0a82b5b66c53b78a0c2591052d3e917851759fd66b27fcec9a2",
       "files": [
         {
           "path": "src/components/ui/dropdown_menu.rs",
-          "checksum": "cac8e6514de1305fd7e6174d9eb5795f2f5c777cc252ca1c542ec44302f485a0"
+          "checksum": "f2e840ae1b342ccabf588efe7ab70874e8ce6bd80a2c9ca5ff709e6c2cf7a95a"
         }
       ]
     },
     {
       "address": "@adico/empty",
-      "manifestDigest": "aa7936cd618c829ed03f03615490c2f9c7cb6bb3aff157b724bd69b7b90b6d65",
+      "manifestDigest": "ba25c6d591fe5e82835c0081cf4a59c60b519be8ac76c70f81af352faf5a1a5d",
       "files": [
         {
           "path": "src/components/ui/empty.rs",
-          "checksum": "d0c24fb61c768f96700eac0a7803efc0b492efd196501053a38779e6f451e964"
+          "checksum": "9baa414a192c57997bafe04025e3c21b492bbffea2035a23c6dd6818cb95269e"
         }
       ]
     },
     {
       "address": "@adico/hover-card",
-      "manifestDigest": "082e324f0ad11a331ae8766be7e3e752bb908dcae030d4c25b1c16dc990cdf72",
+      "manifestDigest": "4b25f64e9bc914257e56f20898218917bd82b246bc07e2c7391627b9096611a4",
       "files": [
         {
           "path": "src/components/ui/hover_card.rs",
-          "checksum": "e6241795cd2156cd1e9079438373f5cbde6c027583c9877c50a05bf398e13876"
+          "checksum": "de2da2b53137c17d67298b53f2e155bf9e6a01df7296bde1209eb08e34d677ac"
         }
       ]
     },
     {
       "address": "@adico/input",
-      "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
+      "manifestDigest": "28e13a904e35de9861bcff2c33e08736610511bab1b2def1bb6424fc7c7bba74",
       "files": [
         {
           "path": "src/components/ui/input.rs",
-          "checksum": "091f72be650f07842730efd10599346d8456d690bcd42e73a3bdd9b61aa30958"
+          "checksum": "edb23b9ba5f8d90cb0135782e0024c66da3330c30b6b257e2ac3094abcc51e3d"
         }
       ]
     },
     {
       "address": "@adico/input-group",
-      "manifestDigest": "f9ec8cccdcfd9e4a730445e226b360d35d42de24a56e063937dea5bec327821c",
+      "manifestDigest": "4b25f64e9bc914257e56f20898218917bd82b246bc07e2c7391627b9096611a4",
       "files": [
         {
           "path": "src/components/ui/input_group.rs",
-          "checksum": "502e4a59ed44ba4c794bdadff12151680fbf248e6dc1508784ffa6109956cdd0"
+          "checksum": "52674207ccc0f197ac8c3f58fafddab926a2b02f9c2d4af18719014ebd10655b"
         }
       ]
     },
@@ -293,21 +293,21 @@
     },
     {
       "address": "@adico/item",
-      "manifestDigest": "9f2ab141f61b0a1dee79fd83ed9bf921ced2b82fe45e2035145f9a56af0a5576",
+      "manifestDigest": "28e13a904e35de9861bcff2c33e08736610511bab1b2def1bb6424fc7c7bba74",
       "files": [
         {
           "path": "src/components/ui/item.rs",
-          "checksum": "ddb3930395ad96b2a0ad24f4673e2e1b80679337064f3504bbda24fe973a31c3"
+          "checksum": "e17eb338124f06ff4b413e6b2acbed87c936372a27bdc307caecf8882fdf61b8"
         }
       ]
     },
     {
       "address": "@adico/kbd",
-      "manifestDigest": "aa7936cd618c829ed03f03615490c2f9c7cb6bb3aff157b724bd69b7b90b6d65",
+      "manifestDigest": "28e13a904e35de9861bcff2c33e08736610511bab1b2def1bb6424fc7c7bba74",
       "files": [
         {
           "path": "src/components/ui/kbd.rs",
-          "checksum": "56bcf5ca15f414cf4fb9e30654475e592985f7599b0306bdf6fa7c0ca5d24dc0"
+          "checksum": "6668b8f7d9a54772c33c5cdae4590150eeb784b9fa6ec32b67e26d7719212837"
         }
       ]
     },
@@ -322,12 +322,22 @@
       ]
     },
     {
+      "address": "@adico/marker",
+      "manifestDigest": "28e13a904e35de9861bcff2c33e08736610511bab1b2def1bb6424fc7c7bba74",
+      "files": [
+        {
+          "path": "src/components/ui/marker.rs",
+          "checksum": "3cf70986b895cdac9b73d36327c7cc73b4c6c1476015b35bfc9af22560a0bcb9"
+        }
+      ]
+    },
+    {
       "address": "@adico/menubar",
-      "manifestDigest": "082e324f0ad11a331ae8766be7e3e752bb908dcae030d4c25b1c16dc990cdf72",
+      "manifestDigest": "ed3f0d07cdecb892476ff9f11cc7c3fcf4b58be868d38da2a99f1a11ba111fe3",
       "files": [
         {
           "path": "src/components/ui/menubar.rs",
-          "checksum": "fd760ca17fd82c771b6feaa27cfb9e413c4dda01c7759f09950e36851026bf28"
+          "checksum": "8dc5dcefdb1446b818fa25cae328ba38d19891f3cf2c750e6932c28910296816"
         }
       ]
     },
@@ -343,61 +353,61 @@
     },
     {
       "address": "@adico/native-select",
-      "manifestDigest": "31f0a0c0f5947af2822725f8a9edfafbfdef1e70a69e0118f0a3f345e64e67a6",
+      "manifestDigest": "4b25f64e9bc914257e56f20898218917bd82b246bc07e2c7391627b9096611a4",
       "files": [
         {
           "path": "src/components/ui/native_select.rs",
-          "checksum": "6cf7cc4893164a0bd07f1dafba4e9ec69e57507264a6daba9a8e792d310b4876"
+          "checksum": "15a1de9a30ff8129ee0ee578b9b9cff97c4c84cad30d01ea0e69e478d97b4b74"
         }
       ]
     },
     {
       "address": "@adico/navigation-menu",
-      "manifestDigest": "36afbac2e5b8cd4eb2694e3040632a469bc8b2f02fc3808d4a38a4f527dbc1a9",
+      "manifestDigest": "ea9b017af79f4d5fa7ddba196f39be7947a39167f5ee11d19721df8badf963d7",
       "files": [
         {
           "path": "src/components/ui/navigation_menu.rs",
-          "checksum": "37434d2e5b8047d384cc9fc312d0d5861b332aa1d1e4b632191d62ec917aa6f7"
+          "checksum": "a1de7734cdb59ad9ec77d0e057132d23bb04d785360287474adaf318f86be19f"
         }
       ]
     },
     {
       "address": "@adico/pagination",
-      "manifestDigest": "f2de3f7fe6aad9b754f5a965dd2c4d7f26017e1b425b750afda32de8458e9f80",
+      "manifestDigest": "ba25c6d591fe5e82835c0081cf4a59c60b519be8ac76c70f81af352faf5a1a5d",
       "files": [
         {
           "path": "src/components/ui/pagination.rs",
-          "checksum": "0a77c5c3935cccfa5a6063eaaac9427672f6956b7321d56232d7455997f08872"
+          "checksum": "06192f71d7f7207be4463c9be7bd656e36dfc707b93548ec6fc31e41080fc37b"
         }
       ]
     },
     {
       "address": "@adico/popover",
-      "manifestDigest": "082e324f0ad11a331ae8766be7e3e752bb908dcae030d4c25b1c16dc990cdf72",
+      "manifestDigest": "ed3f0d07cdecb892476ff9f11cc7c3fcf4b58be868d38da2a99f1a11ba111fe3",
       "files": [
         {
           "path": "src/components/ui/popover.rs",
-          "checksum": "2d9802779da4e8465a13522c7c659e1a837e91ed4afe1957f857dbd4b2a07c19"
+          "checksum": "6c85713d38b784eb4db7516f9bc210ea03dbffd7a485abc7a1d8404ae49553e5"
         }
       ]
     },
     {
       "address": "@adico/progress",
-      "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
+      "manifestDigest": "ba25c6d591fe5e82835c0081cf4a59c60b519be8ac76c70f81af352faf5a1a5d",
       "files": [
         {
           "path": "src/components/ui/progress.rs",
-          "checksum": "5983179bdf1b609f614f77e360d37ab04317a7a19e28d2f49e12ca634f5733c7"
+          "checksum": "3baf490aa47849e332a545608e5ae90b0e24ac376bb97ba3187e026de6631aee"
         }
       ]
     },
     {
       "address": "@adico/radio-group",
-      "manifestDigest": "48d06613a6d0c678c6eda3f2440cddcffb260af43c3e74cd91d23e1488036045",
+      "manifestDigest": "77d9ae26a007bd1333bc85042853cbf4b67e07d27ece6aaeeedebd54c2bdd1f3",
       "files": [
         {
           "path": "src/components/ui/radio_group.rs",
-          "checksum": "11ac72712581a1b29a03d8a20e2b8aaf9ad9c7e284d15f26f943dcdc911f758d"
+          "checksum": "2fbe5848b60f9038ee4641622abebb6e8303abd9b1c612231ca3c82bec3c95be"
         }
       ]
     },
@@ -423,11 +433,11 @@
     },
     {
       "address": "@adico/select",
-      "manifestDigest": "5000975a59c0ee8c7508ab739f37e4ac24532f78a07387590501e0867c9f187d",
+      "manifestDigest": "ea9b017af79f4d5fa7ddba196f39be7947a39167f5ee11d19721df8badf963d7",
       "files": [
         {
           "path": "src/components/ui/select.rs",
-          "checksum": "385dab953a65d9386200b1a9259b18ce176f318999594651e1ddda4d5be6d58c"
+          "checksum": "a01155b018ee507f3d64ba8502c02d547acf0399d1c4cf3ac3a97c899490a6ca"
         }
       ]
     },
@@ -443,37 +453,37 @@
     },
     {
       "address": "@adico/sidebar",
-      "manifestDigest": "9a88643478ba1cb07b75a6ef87eb53337739dd540672cca295a0ce896f5b9a90",
+      "manifestDigest": "a3012d5b47d80ab29ab210e4eb42e595e97fdcc4a162a2beb57b5b4ee6fb7098",
       "files": [
         {
           "path": "src/components/ui/sidebar.rs",
-          "checksum": "df86b197d033ececfd79ba7427ccb5b212df2e033cc3abffcd54359059f65adb"
+          "checksum": "5a1d8c6f7dbf7b49631f6242e5c1064037732af3c5300d626cb8d7a10527dd08"
         }
       ]
     },
     {
       "address": "@adico/skeleton",
-      "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
+      "manifestDigest": "77d9ae26a007bd1333bc85042853cbf4b67e07d27ece6aaeeedebd54c2bdd1f3",
       "files": [
         {
           "path": "src/components/ui/skeleton.rs",
-          "checksum": "397497604d3a590db6bf644c8dd55dabeb258e1d4dd5e2b77c63dfc1dc97a027"
+          "checksum": "88c3eedd32e12af3c661fd8f033ec9aa99d1603a74b4de3e42a2d9d5e77afb57"
         }
       ]
     },
     {
       "address": "@adico/slider",
-      "manifestDigest": "c358c9e88540b195d3b6bc30db61870ef2f70b8b5e5093e53e3e46bde63c7ef5",
+      "manifestDigest": "62844ef2283c1181994321e1f28a1337f2bbff372bac318a5c8e2470f46f13e8",
       "files": [
         {
           "path": "src/components/ui/slider.rs",
-          "checksum": "492966eb46178ffd248411d7204391d82117613f70ee44980bd5506dc0d67683"
+          "checksum": "6c4c07b72330c3f16c59aa04272ce41bf7c4cfdbc4edb23d13d09abae3674a64"
         }
       ]
     },
     {
       "address": "@adico/spinner",
-      "manifestDigest": "aa7936cd618c829ed03f03615490c2f9c7cb6bb3aff157b724bd69b7b90b6d65",
+      "manifestDigest": "ba25c6d591fe5e82835c0081cf4a59c60b519be8ac76c70f81af352faf5a1a5d",
       "files": [
         {
           "path": "src/components/ui/spinner.rs",
@@ -483,11 +493,11 @@
     },
     {
       "address": "@adico/switch",
-      "manifestDigest": "c25acea434eda1dfb6577cf7e48ccca6bf2e915646ac8c161f53f4f3a390246f",
+      "manifestDigest": "89db7db1cc31e0a82b5b66c53b78a0c2591052d3e917851759fd66b27fcec9a2",
       "files": [
         {
           "path": "src/components/ui/switch.rs",
-          "checksum": "0d39047640abc494d87b35d874879cbcb21715c4908468fa1adf1cce3cfee171"
+          "checksum": "276dbf6ad41ed04822baa2739b79587ea38538f9fcd61ba76fa044503d693cd0"
         }
       ]
     },
@@ -503,111 +513,111 @@
     },
     {
       "address": "@adico/tabs",
-      "manifestDigest": "696c744acf6991f555d9c1d201057ef4eb92de25616111d3bb30c4730a58de97",
+      "manifestDigest": "a6e76d3b7c224a884a8201d4cea0936b41768ca74318ebd07a063d7d602593a0",
       "files": [
         {
           "path": "src/components/ui/tabs.rs",
-          "checksum": "3f880caf77e5d7eabc644a74b7f9a7ebe44c94bf49dd5a74ac2929cc42a83178"
+          "checksum": "7f4205e3e09a54b86f87c51a3e3044a534b5a01f20dd7ac6be4e0319940708e1"
         }
       ]
     },
     {
       "address": "@adico/tag-group",
-      "manifestDigest": "5000975a59c0ee8c7508ab739f37e4ac24532f78a07387590501e0867c9f187d",
+      "manifestDigest": "89db7db1cc31e0a82b5b66c53b78a0c2591052d3e917851759fd66b27fcec9a2",
       "files": [
         {
           "path": "src/components/ui/tag_group.rs",
-          "checksum": "f4323d8e96e8c88e3ac8d070b97702ecf928bb5dcba3eb7774e91c066e58f3e0"
+          "checksum": "bbbc33eb06671384bdd13658808ba12148fdf3e29dff12340932ec0d1688c108"
         }
       ]
     },
     {
       "address": "@adico/textarea",
-      "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
+      "manifestDigest": "4b25f64e9bc914257e56f20898218917bd82b246bc07e2c7391627b9096611a4",
       "files": [
         {
           "path": "src/components/ui/textarea.rs",
-          "checksum": "2bc677d7a807373d4f4375b5461547dc690a6c05bca2793275ebfd5a1a803338"
+          "checksum": "a5a693882173096ccd38f4c89729a941e113ad98b5a42f2e9f447962f725fc42"
         }
       ]
     },
     {
       "address": "@adico/theme-builder",
-      "manifestDigest": "3861816c8cda09ec72f63e4e0301429451653bff31d2b2ba42c2f2baa058375f",
+      "manifestDigest": "77d9ae26a007bd1333bc85042853cbf4b67e07d27ece6aaeeedebd54c2bdd1f3",
       "files": [
         {
           "path": "src/components/ui/theme_builder.rs",
-          "checksum": "e6777861f30857f4acc2f96661feffd114f9570364f685c896ba50c635a7badb"
+          "checksum": "62e36ab9af4f59fcb4762ed7dfd0d77c6f2312207d8530655fc873f2565e0369"
         }
       ]
     },
     {
       "address": "@adico/theme-switcher",
-      "manifestDigest": "2056420f7a6703d4efbbae8d7900c140ee94bbf7b389c35c5808b21bf6e6d7dc",
+      "manifestDigest": "77d9ae26a007bd1333bc85042853cbf4b67e07d27ece6aaeeedebd54c2bdd1f3",
       "files": [
         {
           "path": "src/components/ui/theme_switcher.rs",
-          "checksum": "2014419589197764b0f0bea16c2f0f10cc8c1bc7800a1bf5d422fc62a9facc74"
+          "checksum": "193bfe883b90dcf114f3a130f689078a2fd0c905cea4c3851b837ec0f0265dea"
         }
       ]
     },
     {
       "address": "@adico/toast",
-      "manifestDigest": "21027dbd9efbcf92adb26f275b4cff53fe95524db5135de5d5d7a9a6b7ef53a5",
+      "manifestDigest": "89db7db1cc31e0a82b5b66c53b78a0c2591052d3e917851759fd66b27fcec9a2",
       "files": [
         {
           "path": "src/components/ui/toast.rs",
-          "checksum": "2c4cd387206210984f2fb611adce0e1ec6ed65fefde20d74d5457bae63dce0bf"
+          "checksum": "9dca6971a4d9608bf08cf7fb0d158a7eafc8761757c429a7cbf4aed71f0c481c"
         }
       ]
     },
     {
       "address": "@adico/toggle",
-      "manifestDigest": "fa4d05113e2b4b895618d941409b1a7b3d85bdc0f65f19e398c9dc3e2af762c1",
+      "manifestDigest": "4b25f64e9bc914257e56f20898218917bd82b246bc07e2c7391627b9096611a4",
       "files": [
         {
           "path": "src/components/ui/toggle.rs",
-          "checksum": "aac37fb5b508e918be8dc47654f8eabc9c1e0b50e871c2d85edad3a00e344cdd"
+          "checksum": "d7ee45a6fa3a58e03c05e8f79e76910b4b5ae74bef2d531dfc26877192464093"
         }
       ]
     },
     {
       "address": "@adico/toggle-group",
-      "manifestDigest": "c25acea434eda1dfb6577cf7e48ccca6bf2e915646ac8c161f53f4f3a390246f",
+      "manifestDigest": "62844ef2283c1181994321e1f28a1337f2bbff372bac318a5c8e2470f46f13e8",
       "files": [
         {
           "path": "src/components/ui/toggle_group.rs",
-          "checksum": "11a1eba1c6692506036bfd0ba2a323defed9f7041d7fd911d95a257090f82820"
+          "checksum": "20033c4cf927fcb8e1c385158cc1cc54c37176f79b2e055037c43e3bc8a486b8"
         }
       ]
     },
     {
       "address": "@adico/toolbar",
-      "manifestDigest": "6a740ea1a76eb3155ab1587990f1de16035c75c458a0462bed7649232c9f1e45",
+      "manifestDigest": "4b25f64e9bc914257e56f20898218917bd82b246bc07e2c7391627b9096611a4",
       "files": [
         {
           "path": "src/components/ui/toolbar.rs",
-          "checksum": "17a8e9653e81ee3edeed9c176c87c8ebba6e4de209fd0120c8ea9692be415aed"
+          "checksum": "d464473a192b8042706d57113511512bf85773899a883034b0f0b8c46735499f"
         }
       ]
     },
     {
       "address": "@adico/tooltip",
-      "manifestDigest": "082e324f0ad11a331ae8766be7e3e752bb908dcae030d4c25b1c16dc990cdf72",
+      "manifestDigest": "4b25f64e9bc914257e56f20898218917bd82b246bc07e2c7391627b9096611a4",
       "files": [
         {
           "path": "src/components/ui/tooltip.rs",
-          "checksum": "4ad2cc1d2fcfa2d398bc2be456fb062117511380f0d7f7d0413691d2ad69ed64"
+          "checksum": "a72ea54eab89c942297805962e426b80fdcadf9087d6211b3807f6f6e6c64095"
         }
       ]
     },
     {
       "address": "@adico/variants",
-      "manifestDigest": "be27ac1d4bbc459fcba0bba5ae110a4be683bb302c0eb9f205e409eb59ea92f5",
+      "manifestDigest": "62844ef2283c1181994321e1f28a1337f2bbff372bac318a5c8e2470f46f13e8",
       "files": [
         {
           "path": "src/adico_lib/variants.rs",
-          "checksum": "7f08cf8abecb10daf86a48aa30066ed6d6017c017166ce50e140e764346646c4"
+          "checksum": "dffee6b8e50ff1123a837a4636595adae01d1cd0093d05b7573381d07043ff1b"
         }
       ]
     },

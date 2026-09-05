@@ -3,6 +3,7 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
+  "radiusException": [],
   "inspiredBy": [
     "dioxus-components"
   ],

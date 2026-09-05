@@ -7,11 +7,12 @@
       "source": "ui/bubble.rs",
       "targetRoot": "ui",
       "target": "bubble.rs",
-      "checksum": "48d11e39508453e312068340332d6881327b5db2cd6aa8870598796b1bcfdc80"
+      "checksum": "f37f9a0ed54d6a8173b431a4a900008a7907aabdd66612261763c176a133cffa"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

@@ -8,6 +8,7 @@
   ],
   "tokenCompliant": true,
   "colorException": [],
+  "radiusException": [],
   "inspiredBy": [
     "shadcn",
     "dioxus-components"

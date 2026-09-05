@@ -112,6 +112,12 @@ pub fn DrawerOverlay(class: Option<String>) -> Element {
 /// primitive, positioned along the chosen [`DrawerDirection`] with a grab
 /// handle bar on `Top`/`Bottom` (purely visual -- see this module's doc
 /// comment on why it isn't draggable).
+///
+/// Deliberately has no `radius` prop: every real corner here is either
+/// [`DrawerDirection::class()`]'s side-specific, direction-dependent value
+/// (`rounded-{t,b,l,r}-[10px]`, none representable by a bare
+/// `Radius::class()` string) or decorative-internal (`DrawerClose`, the
+/// grab-handle bar).
 #[component]
 pub fn DrawerContent(
     children: Element,

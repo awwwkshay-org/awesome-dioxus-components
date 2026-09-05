@@ -215,6 +215,10 @@
             ],
             "AccordionTrigger": [
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -260,6 +264,11 @@
                 "default": "default()",
                 "name": "variant",
                 "type": "AlertVariant"
+              },
+              {
+                "default": "default()",
+                "name": "radius",
+                "type": "Radius"
               },
               {
                 "default": "default()",
@@ -480,6 +489,10 @@
                 "type": "Element"
               },
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               }
@@ -669,6 +682,11 @@
               },
               {
                 "default": "default()",
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
+                "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -797,6 +815,11 @@
           "props": {
             "AvatarFallbackProps": [
               {
+                "default": "Radius::Full",
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
@@ -834,6 +857,11 @@
                 "type": "AvatarSize"
               },
               {
+                "default": "Radius::Full",
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "default": "default()",
                 "name": "aria_label",
                 "type": "Option<String>"
@@ -868,6 +896,11 @@
                 "default": "default()",
                 "name": "variant",
                 "type": "BadgeVariant"
+              },
+              {
+                "default": "Radius::Md",
+                "name": "radius",
+                "type": "Radius"
               },
               {
                 "default": "default()",
@@ -1017,6 +1050,11 @@
                 "type": "BubbleAlign"
               },
               {
+                "default": "Radius::Xl",
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
@@ -1110,6 +1148,11 @@
                 "type": "ButtonSize"
               },
               {
+                "default": "Radius::Md",
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
@@ -1200,6 +1243,10 @@
               }
             ],
             "ButtonGroupText": [
+              {
+                "name": "radius",
+                "type": "Radius"
+              },
               {
                 "name": "class",
                 "type": "Option<String>"
@@ -1786,6 +1833,11 @@
                 "type": "Option<u8>"
               },
               {
+                "default": "Radius::Md",
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
@@ -1901,6 +1953,11 @@
               }
             ],
             "CardProps": [
+              {
+                "default": "Radius::Xl",
+                "name": "radius",
+                "type": "Radius"
+              },
               {
                 "default": "default()",
                 "name": "class",
@@ -2360,6 +2417,10 @@
                 "type": "ReadSignal<f64>"
               },
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -2753,6 +2814,10 @@
                 "type": "Option<String>"
               },
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               }
@@ -2765,6 +2830,10 @@
               {
                 "name": "id",
                 "type": "Option<String>"
+              },
+              {
+                "name": "radius",
+                "type": "Radius"
               },
               {
                 "name": "class",
@@ -3054,6 +3123,10 @@
                 "type": "Element"
               },
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               }
@@ -3296,6 +3369,10 @@
               {
                 "name": "children",
                 "type": "Element"
+              },
+              {
+                "name": "radius",
+                "type": "Radius"
               },
               {
                 "name": "class",
@@ -4342,6 +4419,11 @@
                 "type": "Callback<(), String>"
               },
               {
+                "default": "Radius::Md",
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
@@ -4683,6 +4765,10 @@
                 "type": "Element"
               },
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -4892,6 +4978,10 @@
               {
                 "name": "item_key",
                 "type": "Option<String>"
+              },
+              {
+                "name": "radius",
+                "type": "Radius"
               },
               {
                 "name": "class",
@@ -5176,6 +5266,10 @@
                 "type": "Option<String>"
               },
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               }
@@ -5212,6 +5306,10 @@
                 "type": "Element"
               },
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               }
@@ -5242,6 +5340,10 @@
           ],
           "props": {
             "Empty": [
+              {
+                "name": "radius",
+                "type": "Radius"
+              },
               {
                 "name": "class",
                 "type": "Option<String>"
@@ -5424,6 +5526,10 @@
                 "type": "Element"
               },
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -5508,6 +5614,11 @@
                 "type": "EventHandler<FormEvent>"
               },
               {
+                "default": "Radius::Md",
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
@@ -5543,6 +5654,10 @@
           ],
           "props": {
             "InputGroup": [
+              {
+                "name": "radius",
+                "type": "Radius"
+              },
               {
                 "name": "class",
                 "type": "Option<String>"
@@ -5978,6 +6093,11 @@
                 "type": "EventHandler<MouseEvent>"
               },
               {
+                "default": "Radius::Md",
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
@@ -6039,6 +6159,10 @@
           ],
           "props": {
             "Kbd": [
+              {
+                "name": "radius",
+                "type": "Radius"
+              },
               {
                 "name": "class",
                 "type": "Option<String>"
@@ -6157,6 +6281,11 @@
               }
             ],
             "MarkerProps": [
+              {
+                "default": "Radius::Full",
+                "name": "radius",
+                "type": "Radius"
+              },
               {
                 "default": "default()",
                 "name": "class",
@@ -6313,6 +6442,10 @@
                 "type": "Element"
               },
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               }
@@ -6321,6 +6454,10 @@
               {
                 "name": "children",
                 "type": "Element"
+              },
+              {
+                "name": "radius",
+                "type": "Radius"
               },
               {
                 "name": "class",
@@ -6737,6 +6874,11 @@
                 "type": "EventHandler<FormEvent>"
               },
               {
+                "default": "Radius::Md",
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
@@ -6915,6 +7057,10 @@
                 "type": "Element"
               },
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -6959,6 +7105,10 @@
                 "type": "Element"
               },
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               }
@@ -6977,6 +7127,10 @@
               {
                 "name": "children",
                 "type": "Element"
+              },
+              {
+                "name": "radius",
+                "type": "Radius"
               },
               {
                 "name": "class",
@@ -7065,6 +7219,11 @@
                 "default": "default()",
                 "name": "aria_label",
                 "type": "Option<String>"
+              },
+              {
+                "default": "Radius::Md",
+                "name": "radius",
+                "type": "Radius"
               },
               {
                 "default": "default()",
@@ -7273,6 +7432,10 @@
                 "type": "Element"
               },
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -7359,6 +7522,11 @@
                 "default": "ReadSignal::new(Signal::new(100.0))",
                 "name": "max",
                 "type": "ReadSignal<f64>"
+              },
+              {
+                "default": "Radius::Full",
+                "name": "radius",
+                "type": "Radius"
               },
               {
                 "default": "default()",
@@ -7982,6 +8150,10 @@
                 "type": "Option<String>"
               },
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -8082,6 +8254,10 @@
               {
                 "name": "children",
                 "type": "Element"
+              },
+              {
+                "name": "radius",
+                "type": "Radius"
               },
               {
                 "name": "class",
@@ -8456,6 +8632,11 @@
                 "type": "Option<bool>"
               },
               {
+                "default": "Radius::Md",
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
@@ -8551,6 +8732,10 @@
               {
                 "name": "children",
                 "type": "Element"
+              },
+              {
+                "name": "radius",
+                "type": "Radius"
               },
               {
                 "name": "class",
@@ -8802,6 +8987,10 @@
           "props": {
             "SliderRange": [
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -8816,6 +9005,10 @@
                 "type": "Option<usize>"
               },
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -8825,6 +9018,10 @@
               }
             ],
             "SliderTrack": [
+              {
+                "name": "radius",
+                "type": "Radius"
+              },
               {
                 "name": "class",
                 "type": "Option<String>"
@@ -8969,6 +9166,11 @@
                 "default": "default()",
                 "name": "size",
                 "type": "SwitchSize"
+              },
+              {
+                "default": "Radius::Full",
+                "name": "radius",
+                "type": "Radius"
               },
               {
                 "default": "default()",
@@ -9262,6 +9464,10 @@
               {
                 "name": "variant",
                 "type": "TabsVariant"
+              },
+              {
+                "name": "radius",
+                "type": "Radius"
               },
               {
                 "name": "class",
@@ -9642,6 +9848,10 @@
                 "type": "ReadSignal<bool>"
               },
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -9720,6 +9930,11 @@
                 "default": "default()",
                 "name": "oninput",
                 "type": "EventHandler<FormEvent>"
+              },
+              {
+                "default": "Radius::Md",
+                "name": "radius",
+                "type": "Radius"
               },
               {
                 "default": "default()",
@@ -10113,6 +10328,11 @@
                 "type": "Callback<Event<KeyboardData>>"
               },
               {
+                "default": "Radius::Md",
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
               },
@@ -10271,6 +10491,10 @@
                 "type": "ToggleItemVariant"
               },
               {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -10392,6 +10616,10 @@
               {
                 "name": "children",
                 "type": "Element"
+              },
+              {
+                "name": "radius",
+                "type": "Radius"
               },
               {
                 "name": "class",
@@ -10518,6 +10746,10 @@
               {
                 "name": "children",
                 "type": "Element"
+              },
+              {
+                "name": "radius",
+                "type": "Radius"
               },
               {
                 "name": "class",

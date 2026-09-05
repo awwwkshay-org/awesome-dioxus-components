@@ -136,14 +136,86 @@ checksum only surfaces later, at install time.
 
 ## 3. `radius` rollout
 
-- [ ] 3.1 Using `grep -lE "rounded-(none|sm|md|lg|xl|2xl|3xl|full)\b"
-      registry/ui/*.rs` (50 files as of this proposal) as the starting
-      candidate list, produce the final target list of components with a
-      genuine visible bounded surface (excluding any candidate whose
-      `rounded-*` usage is on a sub-element that isn't the component's own
-      semantic surface, with a recorded reason for each exclusion). Add
-      `radius: Radius` (`#[props(default)]`) to each.
-- [ ] 3.2 Strip every `rounded-*` literal from each target component's
+- [x] 3.1 Using `grep -lE "rounded-(none|sm|md|lg|xl|2xl|3xl|full)\b"
+      registry/ui/*.rs` (49 files as measured) as the starting candidate
+      list, hand-surveyed every file to produce the final target list
+      below: one `radius: Radius` per registry item (occasionally on more
+      than one exported component when they're genuinely one visual unit
+      rendered together, e.g. a trigger + its own popup), each with the
+      `#[props(default = Radius::<X>)]` matching that item's *current*
+      literal class (no visual regression), and every excluded sub-part
+      named with a reason.
+
+      **Target list** (item — component(s) — default — excluded sub-parts):
+      - accordion — `AccordionTrigger` — `Md`
+      - alert — `Alert` — `Default` (already `rounded-lg`)
+      - alert-dialog — `AlertDialogContent` — `Default`; excluded: `AlertDialogAction`/`AlertDialogCancel` (mirror `Button`'s own fixed corners, not the dialog panel's surface)
+      - attachment — `Attachment` — `Default`; excluded: `AttachmentTrigger`, `AttachmentMedia` (internal sub-regions of the card)
+      - avatar — `Avatar` + `AvatarFallback` (independent props, same default, since a caller who reshapes one should reshape both to keep the clip consistent) — `Full`
+      - badge — `Badge` — `Md`
+      - bubble — `BubbleContent` — `Xl` (`rounded-2xl`); excluded: `BubbleReactions` (separate decorative reaction pill)
+      - button — `Button` — `Md`; strip base string **and** every non-`Default`/`Icon` `ButtonSize::class()` arm (`Xs`/`Sm`/`Lg`/`IconXs`/`IconSm`/`IconLg`)
+      - button-group — `ButtonGroupText` — `Md`; excluded: `ButtonGroup`'s `has-[...]:[&>...]:rounded-r-md` (arbitrary-variant descendant selector, targets a nested select-trigger), `ButtonGroupOrientation::class()`'s `rounded-{l,r,t,b}-none` (side-specific joins)
+      - calendar — `CalendarView` — `Md`; excluded: nav buttons, month/year select triggers (internal chrome), grid's `[&_button]:rounded-md` (arbitrary-variant descendant selector)
+      - card — `Card` — `Xl`
+      - carousel — **excluded entirely**: no item-level bounded surface: the only `rounded-full` is `CarouselPrevious`/`CarouselNext`'s shared nav-button class, not the carousel's own surface
+      - color-picker — `ColorArea` — `Md`; excluded: `AreaThumb` (`rounded-full` drag handle); `AreaTrack`'s `rounded-[inherit]` needs no change (already inherits `ColorArea`'s corner automatically)
+      - combobox — `ComboboxInput` + `ComboboxList` (shared value — visually one paired control) — `Md`; excluded: `ComboboxOption` (per-row highlight)
+      - command — `Command` — `Md`; excluded: `CommandInput`, `CommandItem` (internal chrome/per-row highlight)
+      - context-menu — `ContextMenuContent` — `Md`; excluded: `ContextMenuItem` (per-row highlight)
+      - date-picker — `DatePickerInput` — `Md`; excluded: `DatePickerTrigger` (small disclosure icon), `[&_[role=spinbutton]]:rounded-sm` (arbitrary-variant descendant selector)
+      - dialog — `DialogContent` — `Default`; excluded: `DialogClose` (`rounded-xs`, not in the `Radius` scale at all)
+      - drag-and-drop-list — `DragAndDropListItem` — `Md`; excluded: `DragAndDropDropIndicator` (`rounded-full` drop-position line, not a content surface)
+      - drawer — **excluded entirely**: every real corner is either `DrawerDirection::class()`'s side-specific, direction-dependent value (`rounded-{t,b,l,r}-[10px]`, none matching the bare-`rounded-*` regex) or decorative-internal (`DrawerClose`, the grab-handle bar)
+      - dropdown-menu — `DropdownMenuContent` + `DropdownMenuTrigger` (shared value) — `Md`; excluded: `DropdownMenuItem` (per-row highlight)
+      - empty — `Empty` — `Default`; excluded: `EmptyMediaVariant::Icon`'s own `rounded-lg` (variant-gated chrome, not the root's own class)
+      - hover-card — `HoverCardContent` — `Md`
+      - input — `Input` — `Md`
+      - input-group — `InputGroup` — `Md`; excluded: `InputGroupInput`/`InputGroupTextarea`'s `rounded-none` (deliberately flush with the group border — changing it independently breaks the flush-field look, per the module's own doc comment)
+      - item — `Item` — `Md`
+      - kbd — `Kbd` — `Sm`
+      - marker — `Marker` — `Full`
+      - menubar — `Menubar` + `MenubarContent` (shared value) — `Md`; excluded: `MenubarTrigger`, `MenubarItem` (internal chrome/per-row highlight)
+      - native-select — `NativeSelect` — `Md`
+      - navigation-menu — `NavigationMenuTrigger` + `NavigationMenuContent` + `NavigationMenuLink` (shared value — one visual family) — `Md`
+      - pagination — `PaginationLink` — `Md` (`PaginationPrevious`/`PaginationNext` compose `PaginationLink` and inherit automatically; no separate prop)
+      - popover — `PopoverContent` — `Md`
+      - progress — `Progress` — `Full`
+      - radio-group — **excluded entirely**: a radio button's circular shape is its semantic identity (matching `skeleton`'s `Circle` variant reasoning), not an independent cosmetic dial; the outer ring and the `before:rounded-full` inner dot both stay hardcoded
+      - select — `SelectTrigger` + `SelectList` (shared value) — `Md`; excluded: `SelectOption` (per-row highlight)
+      - sidebar — `SidebarTrigger` and `SidebarMenuButton` (two **independent** props — not shared, since they're rendered in unrelated locations, not one visual unit) — `Md` each; excluded: `SidebarVariant::Floating`/`Inset`'s own conditional radius (switched by the variant itself, not a free-standing dial), `SidebarGroupLabel`-shaped internal chrome
+      - skeleton — **excluded entirely**: `SkeletonVariant::class()`'s `Default`/`Circle` distinction *is* the variant's whole job (rectangle vs. circle placeholder); an independent `radius` would allow a nonsensical `Circle` + `radius: None` combination
+      - slider — `SliderTrack`, `SliderRange`, `SliderThumb` (three **independent** props, matching their existing independent `class` params — no shared context exists to thread one value automatically) — `Full` each
+      - switch — `Switch` only (one prop; `SwitchThumb` is composed inline inside `Switch`'s own body, not a separately-invoked component, so `Switch` threads the same value to both its own track class and the inline thumb's class) — `Full`
+      - tabs — `TabList` — `Default` (already `rounded-lg`); excluded: `TabTrigger`'s `rounded-md`/`rounded-none` pair (encodes `TabsVariant`'s segmented-vs-underline visual identity — an independent radius would allow a broken hybrid)
+      - tag-group — `TagOption` — `Md`; excluded: `TagRemoveButton` (`rounded-full` icon control inside the chip)
+      - textarea — `Textarea` — `Md`
+      - theme-builder — **excluded entirely**: every `rounded-md` is internal preview-swatch/mockup chrome inside the editor panel, not the panel's own surface (its pre-existing `radius: String` field is the unrelated `--radius` CSS-value editor)
+      - theme-switcher — **excluded entirely**: the one `rounded-full` is a per-theme color-swatch dot rendered in a loop — circular is the established convention for a selectable color dot (same reasoning as `skeleton`'s `Circle` variant), not cosmetic
+      - toast — **excluded entirely, architectural conflict found during
+        implementation**: `Toast`'s facade takes `props: ToastProps` — the
+        primitive's own struct, re-exported verbatim, not a registry-owned
+        wrapper — because `ToastProvider`'s default `render_toast` callback
+        spreads `Toast { ..props }` from a `ToastPropsWithOwner`, which only
+        works if `Toast`'s param type structurally matches. Adding
+        `radius: Radius` would require either the primitive depending on
+        the registry-owned `Radius` type (violates the primitives → registry
+        one-directional dependency rule) or replacing `Toast`'s props type
+        with a registry-owned wrapper (breaks the `..props` spread). Neither
+        is worth forcing for one component's corner radius; `ToastCloseButton`
+        stays hardcoded too (it was only ever going to be excluded, per the
+        original survey).
+      - toggle — `Toggle` — `Md`
+      - toggle-group — `ToggleItem` — `Md`
+      - toolbar — `ToolbarButton` — `Md`
+      - tooltip — `TooltipContent` — `Md`
+
+      42 items get `radius`; 7 are excluded entirely (`carousel`, `drawer`,
+      `radio-group`, `skeleton`, `theme-builder`, `theme-switcher`,
+      `toast`), each with the reason recorded above (and to be repeated in
+      that component's own doc comment during 3.2, matching this file's
+      existing exception-documentation discipline).
+- [x] 3.2 Strip every `rounded-*` literal from each target component's
       base class string(s) **and** every `impl FooVariant/FooSize { fn
       class(self) }` match arm that currently hard-codes one (confirmed
       present in at least `button.rs`'s `ButtonSize::class()` — check all
@@ -152,21 +224,67 @@ checksum only surfaces later, at install time.
       per component that its Tailwind classes still produce the same
       visual rounding at the `Default` variant (no visual regression at
       the default).
-- [ ] 3.2b Add one `(item, part, "radius")` entry per task 3.1 target item
+- [x] 3.2b Add one `(item, part, "radius")` entry per task 3.1 target item
       to `packages/adico-xtask/src/prop_parity.rs`'s
       `ADICO_EXTENSION_REASONS` table (design.md's D3 addendum), naming
       the part `radius` actually lands on for that item, with reason
       "adico extension: consistent corner-radius control not present
-      upstream" (or the component-appropriate equivalent). Verify `cargo
+      upstream" (or the component-appropriate equivalent). 53 entries
+      added (some items have 2-3 radius-bearing parts); each part id
+      verified against the real id `statics/prop_parity/<item>.json`
+      already records, not hand-derived from the naming rule alone —
+      `TagOption`/`ToggleItem`/`TabList`/`ColorArea` don't share their
+      item's own name as a literal prefix, so `part_id_for` falls through
+      to kebab-casing the whole component name (`tag-option`/
+      `toggle-item`/`tab-list`/`color-area`) instead of stripping one, and
+      hand-guessing would have gotten these four wrong. Verified `cargo
       run -p adico-xtask -- prop-parity sync` classifies `radius` as
-      `adico_extension` with that reason on every target item, and
-      `prop-parity check` passes.
-- [ ] 3.3 Add condition (g) to `packages/adico-xtask/src/styling_usage.rs`:
+      `adico_extension` on 38 of the 42 target items (98 axis-level
+      entries) and `prop-parity check` passes. **Correction found during
+      implementation:** the remaining 4 items (`command`, `empty`, `kbd`,
+      `input-group`) plus `color-picker`'s specific `color-area` part
+      never fire — not a table defect, but a structural limit: their part
+      is `unresolved` on every axis (`cmdk` is a third-party dependency
+      with no catalog axis; "no prop data available"; no matching part id
+      on the axis at all), and `AdicoExtension` classification only runs
+      inside `resolve_full_part_props`'s `Resolved` branch. The table
+      entries stay in place as inert, future-proof documentation — exactly
+      the table's own stated purpose, if evidence ever becomes available
+      for these five, per the module's own doc comment.
+- [x] 3.3 Add condition (g) to `packages/adico-xtask/src/styling_usage.rs`:
       for every item in the task 3.1 target list, assert no `rounded-`
-      literal appears anywhere in its `registry/ui/*.rs` file outside
-      `Radius::class()`'s own match arms. Verify the new condition fails
-      against a deliberately reintroduced `rounded-md` literal in a test
-      fixture, then passes against the real, fixed source.
+      literal appears in its `registry/ui/*.rs` file's radius-bearing
+      component(s) outside `Radius::class()`'s own match arms. This is
+      per-*component*, not whole-file — an item's explicitly excluded
+      sub-parts (task 3.1's list) keep their own hard-coded `rounded-*`
+      and are not asserted against; record each item's excluded sub-part
+      names in a new hand-maintained `radiusException: Vec<{ part,
+      reason }>`-shaped field on `StylingUsageRecord` (preserved across
+      `sync`, matching `styleException`/`colorException`'s existing
+      preserve-on-sync behavior — this is the one condition in this file
+      that needs a new exception list, not a rule change to an existing
+      one). Verify the new condition fails against a deliberately
+      reintroduced `rounded-md` literal in a radius-bearing component with
+      no matching exception, then passes against the real, fixed source
+      with every excluded sub-part named in `radiusException`.
+      **Corrections found during implementation:** the naive whole-source
+      substring check produced two classes of false positive, both fixed
+      rather than accepted — a registry file's own `#[cfg(test)]` module
+      re-asserts a `class()` fn's literal output for testing (not live
+      production code), so the detector now splits the source at
+      `#[cfg(test)]` and only scans what precedes it; and two files
+      (`slider.rs`, `toggle_group.rs`) mentioned a literal `rounded-full`/
+      `rounded-md` in doc-comment *prose* explaining a design decision,
+      which the substring check couldn't distinguish from real code —
+      reworded both sentences to describe the shape without the literal
+      class name rather than teaching the checker to parse doc comments.
+      18 of the 42 target items needed a populated `radiusException`
+      (`alert-dialog`, `attachment`, `bubble`, `calendar`, `color-picker`,
+      `combobox`, `command`, `context-menu`, `date-picker`,
+      `drag-and-drop-list`, `dropdown-menu`, `empty`, `input-group`,
+      `menubar`, `select`, `sidebar`, `tabs`, `tag-group`); the other 24
+      target items' `radius`-bearing part(s) leave no stray literal at
+      all, so their exception list stays empty.
 
 ## 4. `loading` rollout
 

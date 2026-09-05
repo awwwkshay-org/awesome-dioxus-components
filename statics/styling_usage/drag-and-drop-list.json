@@ -3,6 +3,12 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
+  "radiusException": [
+    {
+      "part": "drag-and-drop-drop-indicator",
+      "reason": "a thin drop-position line, not a bounded content surface"
+    }
+  ],
   "inspiredBy": [
     "dioxus-components"
   ],

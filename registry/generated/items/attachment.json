@@ -7,13 +7,14 @@
       "source": "ui/attachment.rs",
       "targetRoot": "ui",
       "target": "attachment.rs",
-      "checksum": "26ea7ebaa852f2e41d0d3b49c499e8fcdb6792facfa604d37136e46cb1edb3e6"
+      "checksum": "ed1b853959a5a25ee4e18617e23ff994aa6734c54e2070609b95a5319cc4ff61"
     }
   ],
   "registryDependencies": [
-    "cn",
     "button",
-    "spinner"
+    "cn",
+    "spinner",
+    "variants"
   ],
   "cargoDependencies": [
     {

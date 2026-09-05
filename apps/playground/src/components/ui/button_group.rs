@@ -5,6 +5,7 @@ use dioxus::prelude::*;
 use adico_primitives::separator::Separator as SeparatorPrimitive;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The layout axis for a [`ButtonGroup`]'s children.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -62,10 +63,22 @@ pub fn ButtonGroup(
 
 /// Non-interactive text sharing a [`ButtonGroup`]'s joined border, e.g. a
 /// fixed unit label ("$", "@", "km") adjoining a `Button`.
+///
+/// `ButtonGroup`'s own `[&>*:not(:first-child)]:rounded-l-none`/
+/// `[&>*:not(:last-child)]:rounded-r-none` (in [`ButtonGroupOrientation`])
+/// and its `has-[select...]:[&>[data-slot=select-trigger]:last-of-type]:
+/// rounded-r-md` stay hardcoded, not driven by `radius` — both are
+/// side-specific joins/an arbitrary-variant descendant selector, neither
+/// representable by a bare `Radius::class()` string.
 #[component]
-pub fn ButtonGroupText(class: Option<String>, children: Element) -> Element {
+pub fn ButtonGroupText(
+    #[props(default = Radius::Md)] radius: Radius,
+    class: Option<String>,
+    children: Element,
+) -> Element {
     let class = cn(&[
-        "flex items-center gap-2 rounded-md border bg-muted px-4 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
+        "flex items-center gap-2 border bg-muted px-4 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

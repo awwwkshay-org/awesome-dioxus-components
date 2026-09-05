@@ -7,11 +7,12 @@
       "source": "ui/toggle.rs",
       "targetRoot": "ui",
       "target": "toggle.rs",
-      "checksum": "aac37fb5b508e918be8dc47654f8eabc9c1e0b50e871c2d85edad3a00e344cdd"
+      "checksum": "d7ee45a6fa3a58e03c05e8f79e76910b4b5ae74bef2d531dfc26877192464093"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

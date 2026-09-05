@@ -7,10 +7,12 @@
       "source": "ui/kbd.rs",
       "targetRoot": "ui",
       "target": "kbd.rs",
-      "checksum": "56bcf5ca15f414cf4fb9e30654475e592985f7599b0306bdf6fa7c0ca5d24dc0"
+      "checksum": "6668b8f7d9a54772c33c5cdae4590150eeb784b9fa6ec32b67e26d7719212837"
     }
   ],
-  "registryDependencies": [],
+  "registryDependencies": [
+    "variants"
+  ],
   "cargoDependencies": [
     {
       "crate": "dioxus",

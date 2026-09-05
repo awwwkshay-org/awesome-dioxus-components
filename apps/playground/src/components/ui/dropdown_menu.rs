@@ -13,6 +13,7 @@ use adico_primitives::dropdown_menu::{
 };
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// A positioned menu root retaining the primitive's controlled state API.
 #[component]
@@ -56,9 +57,18 @@ pub fn DropdownMenu(
 /// recommended nesting `Button` here, which does not match any real shipped
 /// consumer -- `mode_toggle.rs` was already the correct precedent.)
 #[component]
-pub fn DropdownMenuTrigger(children: Element, class: Option<String>) -> Element {
+pub fn DropdownMenuTrigger(
+    children: Element,
+    /// Corner radius. Set the same value on [`DropdownMenuContent`] for a
+    /// visually consistent trigger/popup pair — there is no shared context
+    /// between them to thread one value automatically.
+    #[props(default = Radius::Md)]
+    radius: Radius,
+    class: Option<String>,
+) -> Element {
     let class = cn(&[
-        "inline-flex h-9 items-center justify-center rounded-md border border-input bg-background px-3 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+        "inline-flex h-9 items-center justify-center border border-input bg-background px-3 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! { PrimitiveDropdownMenuTrigger { class, {children} } }
@@ -70,10 +80,14 @@ pub fn DropdownMenuTrigger(children: Element, class: Option<String>) -> Element 
 pub fn DropdownMenuContent(
     children: Element,
     id: Option<String>,
+    /// Corner radius. See [`DropdownMenuTrigger::radius`]'s own doc comment.
+    #[props(default = Radius::Md)]
+    radius: Radius,
     class: Option<String>,
 ) -> Element {
     let class = cn(&[
-        "absolute left-0 top-full z-50 mt-1 min-w-40 overflow-hidden rounded-md bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        "absolute left-0 top-full z-50 mt-1 min-w-40 overflow-hidden bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! { PrimitiveDropdownMenuContent { id, class, {children} } }

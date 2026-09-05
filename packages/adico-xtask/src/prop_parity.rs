@@ -135,12 +135,76 @@ const REACT_ONLY_STRUCTURAL: &[(&str, &str)] = &[
 /// conversion (`className` doesn't naturally snake-case to `class`).
 const RENAMES: &[(&str, &str)] = &[("className", "class")];
 
+/// Reason recorded for every `radius` extension entry below. `radius` has
+/// no upstream counterpart on any axis -- adico exposes a consistent
+/// corner-radius control shadcn/Base UI/dioxus-components/-primitives don't.
+const RADIUS_REASON: &str =
+    "adico extension: consistent corner-radius control not present upstream";
+
 /// Item-specific reasons for adico props with no upstream counterpart,
-/// keyed by `(item, part, prop)`. Empty today -- Change A adds no new
-/// props; a later change that adds a genuine adico extension (e.g.
-/// `radius`) adds its entry here, and the next `prop-parity sync`
-/// classifies it `adico_extension` with no other code change required.
-const ADICO_EXTENSION_REASONS: &[(&str, &str, &str, &str)] = &[];
+/// keyed by `(item, part, prop)`. Every `part` here is verified against the
+/// real part id `part_id_for`/the catalog fetchers already produce for that
+/// item (checked directly in `statics/prop_parity/<item>.json`, not
+/// hand-derived from the naming rule alone -- several diverge from a naive
+/// prefix-strip, e.g. `TagOption`/`ToggleItem`/`TabList`/`ColorArea` don't
+/// share their item's own name as a literal prefix, so `part_id_for` falls
+/// through to kebab-casing the whole component name instead of stripping
+/// one).
+const ADICO_EXTENSION_REASONS: &[(&str, &str, &str, &str)] = &[
+    ("accordion", "trigger", "radius", RADIUS_REASON),
+    ("alert", "root", "radius", RADIUS_REASON),
+    ("alert-dialog", "content", "radius", RADIUS_REASON),
+    ("attachment", "root", "radius", RADIUS_REASON),
+    ("avatar", "root", "radius", RADIUS_REASON),
+    ("avatar", "fallback", "radius", RADIUS_REASON),
+    ("badge", "root", "radius", RADIUS_REASON),
+    ("bubble", "content", "radius", RADIUS_REASON),
+    ("button", "root", "radius", RADIUS_REASON),
+    ("button-group", "text", "radius", RADIUS_REASON),
+    ("calendar", "view", "radius", RADIUS_REASON),
+    ("card", "root", "radius", RADIUS_REASON),
+    ("color-picker", "color-area", "radius", RADIUS_REASON),
+    ("combobox", "input", "radius", RADIUS_REASON),
+    ("combobox", "list", "radius", RADIUS_REASON),
+    ("command", "root", "radius", RADIUS_REASON),
+    ("context-menu", "content", "radius", RADIUS_REASON),
+    ("date-picker", "input", "radius", RADIUS_REASON),
+    ("dialog", "content", "radius", RADIUS_REASON),
+    ("drag-and-drop-list", "item", "radius", RADIUS_REASON),
+    ("dropdown-menu", "content", "radius", RADIUS_REASON),
+    ("dropdown-menu", "trigger", "radius", RADIUS_REASON),
+    ("empty", "root", "radius", RADIUS_REASON),
+    ("hover-card", "content", "radius", RADIUS_REASON),
+    ("input", "root", "radius", RADIUS_REASON),
+    ("input-group", "root", "radius", RADIUS_REASON),
+    ("item", "root", "radius", RADIUS_REASON),
+    ("kbd", "root", "radius", RADIUS_REASON),
+    ("marker", "root", "radius", RADIUS_REASON),
+    ("menubar", "root", "radius", RADIUS_REASON),
+    ("menubar", "content", "radius", RADIUS_REASON),
+    ("native-select", "root", "radius", RADIUS_REASON),
+    ("navigation-menu", "trigger", "radius", RADIUS_REASON),
+    ("navigation-menu", "content", "radius", RADIUS_REASON),
+    ("navigation-menu", "link", "radius", RADIUS_REASON),
+    ("pagination", "link", "radius", RADIUS_REASON),
+    ("popover", "content", "radius", RADIUS_REASON),
+    ("progress", "root", "radius", RADIUS_REASON),
+    ("select", "trigger", "radius", RADIUS_REASON),
+    ("select", "list", "radius", RADIUS_REASON),
+    ("sidebar", "trigger", "radius", RADIUS_REASON),
+    ("sidebar", "menu-button", "radius", RADIUS_REASON),
+    ("slider", "track", "radius", RADIUS_REASON),
+    ("slider", "range", "radius", RADIUS_REASON),
+    ("slider", "thumb", "radius", RADIUS_REASON),
+    ("switch", "root", "radius", RADIUS_REASON),
+    ("tabs", "tab-list", "radius", RADIUS_REASON),
+    ("tag-group", "tag-option", "radius", RADIUS_REASON),
+    ("textarea", "root", "radius", RADIUS_REASON),
+    ("toggle", "root", "radius", RADIUS_REASON),
+    ("toggle-group", "toggle-item", "radius", RADIUS_REASON),
+    ("toolbar", "button", "radius", RADIUS_REASON),
+    ("tooltip", "content", "radius", RADIUS_REASON),
+];
 
 fn react_only_structural_reason(raw_name: &str) -> Option<&'static str> {
     REACT_ONLY_STRUCTURAL

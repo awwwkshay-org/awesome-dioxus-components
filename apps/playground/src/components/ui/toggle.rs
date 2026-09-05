@@ -6,6 +6,7 @@ use dioxus::prelude::*;
 use adico_primitives::toggle::Toggle as TogglePrimitive;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The visual size of a [`Toggle`].
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -86,6 +87,9 @@ pub struct ToggleProps {
     /// Callback fired when a key is pressed on the toggle.
     #[props(default)]
     pub onkeydown: Callback<Event<KeyboardData>>,
+    /// Corner radius of the toggle surface.
+    #[props(default = Radius::Md)]
+    pub radius: Radius,
     /// Native button/global attributes and events.
     #[props(extends = GlobalAttributes)]
     #[props(extends = button)]
@@ -99,13 +103,14 @@ pub struct ToggleProps {
 #[component]
 pub fn Toggle(props: ToggleProps) -> Element {
     let class = cn(&[
-        "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium outline-none transition-colors \
+        "inline-flex items-center justify-center gap-2 text-sm font-medium outline-none transition-colors \
          hover:bg-muted hover:text-muted-foreground \
          focus-visible:ring-2 focus-visible:ring-ring/50 \
          disabled:pointer-events-none disabled:opacity-50 \
          data-[state=on]:bg-accent data-[state=on]:text-accent-foreground",
         props.variant.class(),
         props.size.class(),
+        props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

@@ -3,6 +3,16 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
+  "radiusException": [
+    {
+      "part": "input",
+      "reason": "InputGroupInput is deliberately flush (rounded-none) with the group's own border"
+    },
+    {
+      "part": "textarea",
+      "reason": "InputGroupTextarea is deliberately flush (rounded-none) with the group's own border"
+    }
+  ],
   "inspiredBy": [
     "shadcn"
   ],

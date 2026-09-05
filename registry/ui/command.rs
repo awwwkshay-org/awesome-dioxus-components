@@ -12,13 +12,19 @@ use adico_primitives::command::{
 
 use super::dialog::{Dialog, DialogContent};
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The root of a command palette: an always-visible, query-filtered,
 /// roving-focus list of actions.
 #[component]
-pub fn Command(children: Element, class: Option<String>) -> Element {
+pub fn Command(
+    children: Element,
+    #[props(default = Radius::Md)] radius: Radius,
+    class: Option<String>,
+) -> Element {
     let class = cn(&[
-        "flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground",
+        "flex h-full w-full flex-col overflow-hidden bg-popover text-popover-foreground",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

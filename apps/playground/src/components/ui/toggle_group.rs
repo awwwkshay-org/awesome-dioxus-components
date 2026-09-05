@@ -9,11 +9,12 @@ use adico_primitives::toggle_group::ToggleGroup as ToggleGroupPrimitive;
 use adico_primitives::toggle_group::ToggleItem as ToggleItemPrimitive;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The row of [`ToggleItem`]s. A styled facade over the primitive's own
 /// `ToggleGroup`, which has no default layout class at all (a bare
 /// `pub use` re-export previously): each `ToggleItem` is independently
-/// `rounded-md` (this crate doesn't replicate upstream's connected/flush
+/// rounded independently (this crate doesn't replicate upstream's connected/flush
 /// `spacing=0` segmented look), so with nothing spacing them apart the
 /// items rendered flush against each other with no visual gap at all --
 /// found live (reported directly by the user: "no space in toggle group").
@@ -106,13 +107,15 @@ pub fn ToggleItem(
     #[props(default)] disabled: ReadSignal<bool>,
     #[props(default)] size: ToggleItemSize,
     #[props(default)] variant: ToggleItemVariant,
+    #[props(default = Radius::Md)] radius: Radius,
     class: Option<String>,
     children: Element,
 ) -> Element {
     let class = cn(&[
-        "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium outline-none transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground",
+        "inline-flex items-center justify-center gap-2 text-sm font-medium outline-none transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground",
         variant.class(),
         size.class(),
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

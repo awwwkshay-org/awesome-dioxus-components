@@ -12,6 +12,7 @@ use adico_primitives::tag_group::{
 pub use adico_primitives::tag_group::{TagGroupEmpty, TagGroupEmptyProps};
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// A focusable group of tags with single selection, styled with the semantic
 /// surface tokens.
@@ -116,11 +117,13 @@ pub fn TagOption<T: Clone + PartialEq + 'static>(
     index: ReadSignal<usize>,
     #[props(default)] text_value: ReadSignal<Option<String>>,
     #[props(default)] disabled: ReadSignal<bool>,
+    #[props(default = Radius::Md)] radius: Radius,
     class: Option<String>,
     children: Element,
 ) -> Element {
     let class = cn(&[
-        "inline-flex items-center gap-1 rounded-md border border-transparent bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring/50 data-[selected=true]:bg-primary data-[selected=true]:text-primary-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+        "inline-flex items-center gap-1 border border-transparent bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring/50 data-[selected=true]:bg-primary data-[selected=true]:text-primary-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

@@ -6,6 +6,7 @@ use dioxus::prelude::*;
 use adico_primitives::switch::{Switch as SwitchPrimitive, SwitchThumb as SwitchThumbPrimitive};
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The visual size of a [`Switch`]. Was entirely absent before task 5.2 --
 /// upstream shadcn added a `size` axis (`sm`/`default`) to this component;
@@ -54,6 +55,9 @@ pub struct SwitchProps {
     /// The visual size.
     #[props(default)]
     pub size: SwitchSize,
+    /// Corner radius of the track and thumb (kept in sync between the two).
+    #[props(default = Radius::Full)]
+    pub radius: Radius,
     /// Callback fired when the checked state changes.
     #[props(default)]
     pub on_checked_change: Callback<bool>,
@@ -69,11 +73,12 @@ pub struct SwitchProps {
 #[component]
 pub fn Switch(props: SwitchProps) -> Element {
     let class = cn(&[
-        "peer group inline-flex shrink-0 items-center rounded-full border border-transparent shadow-xs outline-none transition-colors \
+        "peer group inline-flex shrink-0 items-center border border-transparent shadow-xs outline-none transition-colors \
          focus-visible:ring-2 focus-visible:ring-ring/50 \
          disabled:cursor-not-allowed disabled:opacity-50 \
          data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
         props.size.track_class(),
+        props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     // `group-data-[state=...]`, not a plain `data-[state=...]`: `data-state`
@@ -83,9 +88,10 @@ pub fn Switch(props: SwitchProps) -> Element {
     // regardless of checked state (found live: the track colors correctly
     // but the thumb sits frozen at the unchecked position).
     let thumb_class = cn(&[
-        "pointer-events-none block rounded-full bg-background shadow-lg ring-0 transition-transform \
+        "pointer-events-none block bg-background shadow-lg ring-0 transition-transform \
          group-data-[state=checked]:translate-x-[calc(100%-2px)] group-data-[state=unchecked]:translate-x-0",
         props.size.thumb_class(),
+        props.radius.class(),
     ]);
     rsx! {
         SwitchPrimitive {

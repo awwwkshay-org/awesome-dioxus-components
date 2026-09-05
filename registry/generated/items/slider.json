@@ -7,11 +7,12 @@
       "source": "ui/slider.rs",
       "targetRoot": "ui",
       "target": "slider.rs",
-      "checksum": "492966eb46178ffd248411d7204391d82117613f70ee44980bd5506dc0d67683"
+      "checksum": "6c4c07b72330c3f16c59aa04272ce41bf7c4cfdbc4edb23d13d09abae3674a64"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

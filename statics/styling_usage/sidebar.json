@@ -8,6 +8,20 @@
   ],
   "tokenCompliant": true,
   "colorException": [],
+  "radiusException": [
+    {
+      "part": "root",
+      "reason": "Sidebar's Floating-variant radius is switched by the variant itself, not a free-standing cosmetic dial"
+    },
+    {
+      "part": "inset",
+      "reason": "SidebarInset's Inset-variant radius is switched by the variant itself, not a free-standing cosmetic dial"
+    },
+    {
+      "part": "group-label",
+      "reason": "SidebarGroupLabel is a small internal chrome detail, not an independently-tunable surface"
+    }
+  ],
   "inspiredBy": [
     "shadcn",
     "dioxus-components"

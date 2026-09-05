@@ -9,6 +9,11 @@ use adico_primitives::radio_group::RadioItem as RadioItemPrimitive;
 use crate::adico_lib::cn::cn;
 
 /// A single selectable radio button within a [`RadioGroup`].
+///
+/// Deliberately has no `radius` prop: a radio button's circular shape is
+/// its semantic identity (matching `Skeleton`'s `Circle` variant reasoning
+/// in `skeleton.rs`), not an independent cosmetic choice — both the outer
+/// ring and the `before:rounded-full` inner selected-dot stay hardcoded.
 #[component]
 pub fn RadioItem(
     value: ReadSignal<String>,

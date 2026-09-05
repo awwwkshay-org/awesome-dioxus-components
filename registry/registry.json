@@ -39,7 +39,7 @@
           "source": "lib/variants.rs",
           "targetRoot": "lib",
           "target": "variants.rs",
-          "checksum": "7f08cf8abecb10daf86a48aa30066ed6d6017c017166ce50e140e764346646c4"
+          "checksum": "dffee6b8e50ff1123a837a4636595adae01d1cd0093d05b7573381d07043ff1b"
         }
       ],
       "moduleExports": [
@@ -62,11 +62,12 @@
           "source": "ui/button.rs",
           "targetRoot": "ui",
           "target": "button.rs",
-          "checksum": "0f498536390cf5ee008340c199f0d412e346a4ee7477390cda9c93edb4f75ceb"
+          "checksum": "37189be9e7e77eb40af3872a097746c734ca5e1b1efb6c0e06d4bb261303d4ad"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -161,12 +162,13 @@
           "source": "ui/dialog.rs",
           "targetRoot": "ui",
           "target": "dialog.rs",
-          "checksum": "854367f085b8de1c110ada86cdc83e11947c736b3634dd7c852f7678f1ef60e9"
+          "checksum": "2667585dbdde4ae20bf48ac82d0d960d80237b0f77d08b1acfd045b086f7c329"
         }
       ],
       "registryDependencies": [
+        "button",
         "cn",
-        "button"
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -215,7 +217,7 @@
           "source": "ui/select.rs",
           "targetRoot": "ui",
           "target": "select.rs",
-          "checksum": "385dab953a65d9386200b1a9259b18ce176f318999594651e1ddda4d5be6d58c"
+          "checksum": "a01155b018ee507f3d64ba8502c02d547acf0399d1c4cf3ac3a97c899490a6ca"
         }
       ],
       "cargoDependencies": [
@@ -236,7 +238,8 @@
         "radiusToken": true
       },
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "moduleExports": [
         {
@@ -265,11 +268,12 @@
           "source": "ui/badge.rs",
           "targetRoot": "ui",
           "target": "badge.rs",
-          "checksum": "b346ba40209a2dfd3796df4feb017d6ee3ea098b1292eeaa11bde414b55f85b8"
+          "checksum": "c883f55a2fba6629e9771615b3b3c0fede3caf19649a780ac899beb9ab389b25"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -308,11 +312,12 @@
           "source": "ui/card.rs",
           "targetRoot": "ui",
           "target": "card.rs",
-          "checksum": "16c77d9d9464259a4242a01c716a73f9c513dd855a635129da1311e8adbb84c0"
+          "checksum": "b4348c0a8dfe019fa162dd0c7b8041433302534eb847057646470b46a7996e1c"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -351,11 +356,12 @@
           "source": "ui/input.rs",
           "targetRoot": "ui",
           "target": "input.rs",
-          "checksum": "091f72be650f07842730efd10599346d8456d690bcd42e73a3bdd9b61aa30958"
+          "checksum": "edb23b9ba5f8d90cb0135782e0024c66da3330c30b6b257e2ac3094abcc51e3d"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -394,11 +400,12 @@
           "source": "ui/item.rs",
           "targetRoot": "ui",
           "target": "item.rs",
-          "checksum": "ddb3930395ad96b2a0ad24f4673e2e1b80679337064f3504bbda24fe973a31c3"
+          "checksum": "e17eb338124f06ff4b413e6b2acbed87c936372a27bdc307caecf8882fdf61b8"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -437,11 +444,12 @@
           "source": "ui/pagination.rs",
           "targetRoot": "ui",
           "target": "pagination.rs",
-          "checksum": "0a77c5c3935cccfa5a6063eaaac9427672f6956b7321d56232d7455997f08872"
+          "checksum": "06192f71d7f7207be4463c9be7bd656e36dfc707b93548ec6fc31e41080fc37b"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -480,7 +488,7 @@
           "source": "ui/skeleton.rs",
           "targetRoot": "ui",
           "target": "skeleton.rs",
-          "checksum": "397497604d3a590db6bf644c8dd55dabeb258e1d4dd5e2b77c63dfc1dc97a027"
+          "checksum": "88c3eedd32e12af3c661fd8f033ec9aa99d1603a74b4de3e42a2d9d5e77afb57"
         }
       ],
       "cargoDependencies": [
@@ -517,11 +525,12 @@
           "source": "ui/textarea.rs",
           "targetRoot": "ui",
           "target": "textarea.rs",
-          "checksum": "2bc677d7a807373d4f4375b5461547dc690a6c05bca2793275ebfd5a1a803338"
+          "checksum": "a5a693882173096ccd38f4c89729a941e113ad98b5a42f2e9f447962f725fc42"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -614,11 +623,12 @@
           "source": "ui/tooltip.rs",
           "targetRoot": "ui",
           "target": "tooltip.rs",
-          "checksum": "4ad2cc1d2fcfa2d398bc2be456fb062117511380f0d7f7d0413691d2ad69ed64"
+          "checksum": "a72ea54eab89c942297805962e426b80fdcadf9087d6211b3807f6f6e6c64095"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -667,11 +677,12 @@
           "source": "ui/popover.rs",
           "targetRoot": "ui",
           "target": "popover.rs",
-          "checksum": "2d9802779da4e8465a13522c7c659e1a837e91ed4afe1957f857dbd4b2a07c19"
+          "checksum": "6c85713d38b784eb4db7516f9bc210ea03dbffd7a485abc7a1d8404ae49553e5"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -720,11 +731,12 @@
           "source": "ui/hover_card.rs",
           "targetRoot": "ui",
           "target": "hover_card.rs",
-          "checksum": "e6241795cd2156cd1e9079438373f5cbde6c027583c9877c50a05bf398e13876"
+          "checksum": "de2da2b53137c17d67298b53f2e155bf9e6a01df7296bde1209eb08e34d677ac"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -773,7 +785,7 @@
           "source": "ui/dropdown_menu.rs",
           "targetRoot": "ui",
           "target": "dropdown_menu.rs",
-          "checksum": "cac8e6514de1305fd7e6174d9eb5795f2f5c777cc252ca1c542ec44302f485a0"
+          "checksum": "f2e840ae1b342ccabf588efe7ab70874e8ce6bd80a2c9ca5ff709e6c2cf7a95a"
         }
       ],
       "cargoDependencies": [
@@ -794,7 +806,8 @@
         "radiusToken": true
       },
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "moduleExports": [
         {
@@ -823,11 +836,12 @@
           "source": "ui/context_menu.rs",
           "targetRoot": "ui",
           "target": "context_menu.rs",
-          "checksum": "275e73d6b6571987c7a1dcb8498fb6bef49932c0d4622ccc88d81825bea1018e"
+          "checksum": "57b3f5a3c397c275d6162e6adef044d97c508863d057a53cfb950a0156c3e5f1"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -876,11 +890,12 @@
           "source": "ui/menubar.rs",
           "targetRoot": "ui",
           "target": "menubar.rs",
-          "checksum": "fd760ca17fd82c771b6feaa27cfb9e413c4dda01c7759f09950e36851026bf28"
+          "checksum": "8dc5dcefdb1446b818fa25cae328ba38d19891f3cf2c750e6932c28910296816"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -929,7 +944,7 @@
           "source": "ui/combobox.rs",
           "targetRoot": "ui",
           "target": "combobox.rs",
-          "checksum": "db85839810560b7b2302c9737ea39185451303606ec6e94f55e2a1256df77568"
+          "checksum": "34138f61cae5234cc092461c906672bb7b44733c6ff3deb1381d7c748c52f6a1"
         }
       ],
       "cargoDependencies": [
@@ -950,7 +965,8 @@
         "radiusToken": true
       },
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "moduleExports": [
         {
@@ -979,7 +995,7 @@
           "source": "ui/calendar.rs",
           "targetRoot": "ui",
           "target": "calendar.rs",
-          "checksum": "5938c8ea7aaadc2158855f9aa70030a462e4b96f74a0d924a14a9c1e0c0ec9ab"
+          "checksum": "5f3c4188289335630cc873ee88d134c27dd0a8fad8fe3eeb41b6987bf8b53a5b"
         }
       ],
       "cargoDependencies": [
@@ -1004,7 +1020,8 @@
         "radiusToken": true
       },
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "moduleExports": [
         {
@@ -1033,7 +1050,7 @@
           "source": "ui/date_picker.rs",
           "targetRoot": "ui",
           "target": "date_picker.rs",
-          "checksum": "efdc41c9ac472d032b58983b1e7afc76f977027ef6fa1720a72ce04439321c4b"
+          "checksum": "70e24290c1d2b79470a26d140e3f26cc32c18767a71423ba5ca699b0e49c1550"
         }
       ],
       "cargoDependencies": [
@@ -1058,9 +1075,10 @@
         "radiusToken": true
       },
       "registryDependencies": [
-        "cn",
         "calendar",
-        "popover"
+        "cn",
+        "popover",
+        "variants"
       ],
       "moduleExports": [
         {
@@ -1089,11 +1107,12 @@
           "source": "ui/sidebar.rs",
           "targetRoot": "ui",
           "target": "sidebar.rs",
-          "checksum": "df86b197d033ececfd79ba7427ccb5b212df2e033cc3abffcd54359059f65adb"
+          "checksum": "5a1d8c6f7dbf7b49631f6242e5c1064037732af3c5300d626cb8d7a10527dd08"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -1231,11 +1250,12 @@
           "source": "ui/progress.rs",
           "targetRoot": "ui",
           "target": "progress.rs",
-          "checksum": "5983179bdf1b609f614f77e360d37ab04317a7a19e28d2f49e12ca634f5733c7"
+          "checksum": "3baf490aa47849e332a545608e5ae90b0e24ac376bb97ba3187e026de6631aee"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -1281,11 +1301,12 @@
           "source": "ui/avatar.rs",
           "targetRoot": "ui",
           "target": "avatar.rs",
-          "checksum": "38c0f39a51dbe0a7629aad4a6b479d005c53f6c46e6a3c06c1461dcc5a0e974c"
+          "checksum": "100177f41029793022f7d850788e470d9df6b0864ab3f116195a0422ca79831d"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -1432,11 +1453,12 @@
           "source": "ui/switch.rs",
           "targetRoot": "ui",
           "target": "switch.rs",
-          "checksum": "0d39047640abc494d87b35d874879cbcb21715c4908468fa1adf1cce3cfee171"
+          "checksum": "276dbf6ad41ed04822baa2739b79587ea38538f9fcd61ba76fa044503d693cd0"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -1482,11 +1504,12 @@
           "source": "ui/toggle.rs",
           "targetRoot": "ui",
           "target": "toggle.rs",
-          "checksum": "aac37fb5b508e918be8dc47654f8eabc9c1e0b50e871c2d85edad3a00e344cdd"
+          "checksum": "d7ee45a6fa3a58e03c05e8f79e76910b4b5ae74bef2d531dfc26877192464093"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -1532,11 +1555,12 @@
           "source": "ui/accordion.rs",
           "targetRoot": "ui",
           "target": "accordion.rs",
-          "checksum": "a4ebf4a3d40ec0f5731bac5b4eb256bd73ce844253a1a25d7962d992da3fb8bb"
+          "checksum": "a36c7f6619d05b142691c7cbcd6e87eea19d3271e7935ff0ad0d8c37e3807266"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -1582,7 +1606,7 @@
           "source": "ui/radio_group.rs",
           "targetRoot": "ui",
           "target": "radio_group.rs",
-          "checksum": "11ac72712581a1b29a03d8a20e2b8aaf9ad9c7e284d15f26f943dcdc911f758d"
+          "checksum": "2fbe5848b60f9038ee4641622abebb6e8303abd9b1c612231ca3c82bec3c95be"
         }
       ],
       "registryDependencies": [
@@ -1632,11 +1656,12 @@
           "source": "ui/tabs.rs",
           "targetRoot": "ui",
           "target": "tabs.rs",
-          "checksum": "3f880caf77e5d7eabc644a74b7f9a7ebe44c94bf49dd5a74ac2929cc42a83178"
+          "checksum": "7f4205e3e09a54b86f87c51a3e3044a534b5a01f20dd7ac6be4e0319940708e1"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -1682,11 +1707,12 @@
           "source": "ui/toggle_group.rs",
           "targetRoot": "ui",
           "target": "toggle_group.rs",
-          "checksum": "11a1eba1c6692506036bfd0ba2a323defed9f7041d7fd911d95a257090f82820"
+          "checksum": "20033c4cf927fcb8e1c385158cc1cc54c37176f79b2e055037c43e3bc8a486b8"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -1777,12 +1803,13 @@
           "source": "ui/alert_dialog.rs",
           "targetRoot": "ui",
           "target": "alert_dialog.rs",
-          "checksum": "7f486e9d98e86dcd739a9b9eb83e320857bdbc609e9a28929eb4f468e49a0c76"
+          "checksum": "8abb21ad3b6b17bce19dab70e3aa6c73b84b1366d7e7ac648ce36fc0270d1060"
         }
       ],
       "registryDependencies": [
+        "button",
         "cn",
-        "button"
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -1831,7 +1858,7 @@
           "source": "ui/toast.rs",
           "targetRoot": "ui",
           "target": "toast.rs",
-          "checksum": "2c4cd387206210984f2fb611adce0e1ec6ed65fefde20d74d5457bae63dce0bf"
+          "checksum": "9dca6971a4d9608bf08cf7fb0d158a7eafc8761757c429a7cbf4aed71f0c481c"
         }
       ],
       "registryDependencies": [
@@ -1884,11 +1911,12 @@
           "source": "ui/slider.rs",
           "targetRoot": "ui",
           "target": "slider.rs",
-          "checksum": "492966eb46178ffd248411d7204391d82117613f70ee44980bd5506dc0d67683"
+          "checksum": "6c4c07b72330c3f16c59aa04272ce41bf7c4cfdbc4edb23d13d09abae3674a64"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -1937,11 +1965,12 @@
           "source": "ui/toolbar.rs",
           "targetRoot": "ui",
           "target": "toolbar.rs",
-          "checksum": "17a8e9653e81ee3edeed9c176c87c8ebba6e4de209fd0120c8ea9692be415aed"
+          "checksum": "d464473a192b8042706d57113511512bf85773899a883034b0f0b8c46735499f"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -2032,12 +2061,13 @@
           "source": "ui/color_picker.rs",
           "targetRoot": "ui",
           "target": "color_picker.rs",
-          "checksum": "8f1f977cf609e3a21b192c83a84814de426184e1f686a9813ba7dce55fcd569d"
+          "checksum": "6066680f27fc5821adeba757f125fc3a23d7f84edc8a420452e1c9fb0ef0dc03"
         }
       ],
       "registryDependencies": [
         "cn",
-        "slider"
+        "slider",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -2090,11 +2120,12 @@
           "source": "ui/drag_and_drop_list.rs",
           "targetRoot": "ui",
           "target": "drag_and_drop_list.rs",
-          "checksum": "fa735c6e83dfe3e40292eccb14b34f446102d317440be8f42d24cbd6e7fb1ebe"
+          "checksum": "efc96ddb2a953225801c31f30f0b65f66374904f9fd6a414f1468995fadc9ae3"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -2140,11 +2171,12 @@
           "source": "ui/tag_group.rs",
           "targetRoot": "ui",
           "target": "tag_group.rs",
-          "checksum": "f4323d8e96e8c88e3ac8d070b97702ecf928bb5dcba3eb7774e91c066e58f3e0"
+          "checksum": "bbbc33eb06671384bdd13658808ba12148fdf3e29dff12340932ec0d1688c108"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -2241,7 +2273,7 @@
           "source": "ui/theme_switcher.rs",
           "targetRoot": "ui",
           "target": "theme_switcher.rs",
-          "checksum": "2014419589197764b0f0bea16c2f0f10cc8c1bc7800a1bf5d422fc62a9facc74"
+          "checksum": "193bfe883b90dcf114f3a130f689078a2fd0c905cea4c3851b837ec0f0265dea"
         }
       ],
       "registryDependencies": [
@@ -2291,7 +2323,7 @@
           "source": "ui/theme_builder.rs",
           "targetRoot": "ui",
           "target": "theme_builder.rs",
-          "checksum": "e6777861f30857f4acc2f96661feffd114f9570364f685c896ba50c635a7badb"
+          "checksum": "62e36ab9af4f59fcb4762ed7dfd0d77c6f2312207d8530655fc873f2565e0369"
         }
       ],
       "registryDependencies": [
@@ -2341,11 +2373,12 @@
           "source": "ui/alert.rs",
           "targetRoot": "ui",
           "target": "alert.rs",
-          "checksum": "3ac89f4d2a09bf414a32ca80683c971f7e1f65bfe38d28d466ece8c3c7d52b75"
+          "checksum": "c94e992d01049bc54d9cf446fda160ab0861eb445e503ae09a093e601693d1e9"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -2384,11 +2417,12 @@
           "source": "ui/empty.rs",
           "targetRoot": "ui",
           "target": "empty.rs",
-          "checksum": "d0c24fb61c768f96700eac0a7803efc0b492efd196501053a38779e6f451e964"
+          "checksum": "9baa414a192c57997bafe04025e3c21b492bbffea2035a23c6dd6818cb95269e"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -2427,7 +2461,7 @@
           "source": "ui/kbd.rs",
           "targetRoot": "ui",
           "target": "kbd.rs",
-          "checksum": "56bcf5ca15f414cf4fb9e30654475e592985f7599b0306bdf6fa7c0ca5d24dc0"
+          "checksum": "6668b8f7d9a54772c33c5cdae4590150eeb784b9fa6ec32b67e26d7719212837"
         }
       ],
       "cargoDependencies": [
@@ -2453,7 +2487,10 @@
         "usage": "KbdGroup {\n    Kbd { \"Ctrl\" }\n    Kbd { \"K\" }\n}",
         "accessibility": "Renders the native `<kbd>` element, which assistive technology already recognizes as denoting keyboard input without any ARIA role needed (`registry/ui/kbd.rs`).",
         "keyboard": "No component-specific keyboard handling; purely presentational (it labels a shortcut, it does not implement one)."
-      }
+      },
+      "registryDependencies": [
+        "variants"
+      ]
     },
     {
       "name": "spinner",
@@ -2595,11 +2632,12 @@
           "source": "ui/button_group.rs",
           "targetRoot": "ui",
           "target": "button_group.rs",
-          "checksum": "176b08483332bb26b76ee64cfe63bbcc5fb1f666a8bbd93c4e3ca8a0ff6a1204"
+          "checksum": "eb7f932bef197a75a40e1d587f0dd877a7104e2eb5ffcf36b28fcb6f6c753454"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -2642,12 +2680,13 @@
           "source": "ui/input_group.rs",
           "targetRoot": "ui",
           "target": "input_group.rs",
-          "checksum": "502e4a59ed44ba4c794bdadff12151680fbf248e6dc1508784ffa6109956cdd0"
+          "checksum": "52674207ccc0f197ac8c3f58fafddab926a2b02f9c2d4af18719014ebd10655b"
         }
       ],
       "registryDependencies": [
+        "button",
         "cn",
-        "button"
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -2686,11 +2725,12 @@
           "source": "ui/native_select.rs",
           "targetRoot": "ui",
           "target": "native_select.rs",
-          "checksum": "6cf7cc4893164a0bd07f1dafba4e9ec69e57507264a6daba9a8e792d310b4876"
+          "checksum": "15a1de9a30ff8129ee0ee578b9b9cff97c4c84cad30d01ea0e69e478d97b4b74"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -2733,12 +2773,13 @@
           "source": "ui/command.rs",
           "targetRoot": "ui",
           "target": "command.rs",
-          "checksum": "3ab08a5a722a85b6eb3a48666564e5a40d940de7d9e450b1fee60520b37173c3"
+          "checksum": "78c2674930274e760b33273f5fd0b0fea1f4b5bb241abab160b87577f3a250eb"
         }
       ],
       "registryDependencies": [
         "cn",
-        "dialog"
+        "dialog",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -2784,11 +2825,12 @@
           "source": "ui/navigation_menu.rs",
           "targetRoot": "ui",
           "target": "navigation_menu.rs",
-          "checksum": "37434d2e5b8047d384cc9fc312d0d5861b332aa1d1e4b632191d62ec917aa6f7"
+          "checksum": "a1de7734cdb59ad9ec77d0e057132d23bb04d785360287474adaf318f86be19f"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -2834,7 +2876,7 @@
           "source": "ui/drawer.rs",
           "targetRoot": "ui",
           "target": "drawer.rs",
-          "checksum": "d8b0e29dabee7016be62e26944416d9bf5bd692925d47d3cb0be511fc85a80a6"
+          "checksum": "22cb6791fb2ed03ef404c317e28282d5a2271dbfd4056e43916740788b2d5783"
         }
       ],
       "registryDependencies": [
@@ -2885,7 +2927,7 @@
           "source": "ui/carousel.rs",
           "targetRoot": "ui",
           "target": "carousel.rs",
-          "checksum": "0b9c087709a54bf95979170c5b69562e8da510f24d5d2a480fa7d77633729d9e"
+          "checksum": "2350bdcd165b60ae0b88003abcfd79f72cd6c200c5247e9896777ee0ac4673b8"
         }
       ],
       "registryDependencies": [
@@ -3029,11 +3071,12 @@
           "source": "ui/marker.rs",
           "targetRoot": "ui",
           "target": "marker.rs",
-          "checksum": "4442be0498fdd91596cbffd2182bdcca08cffd286c82a55f05dd02bbf9f42dff"
+          "checksum": "3cf70986b895cdac9b73d36327c7cc73b4c6c1476015b35bfc9af22560a0bcb9"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -3072,11 +3115,12 @@
           "source": "ui/bubble.rs",
           "targetRoot": "ui",
           "target": "bubble.rs",
-          "checksum": "48d11e39508453e312068340332d6881327b5db2cd6aa8870598796b1bcfdc80"
+          "checksum": "f37f9a0ed54d6a8173b431a4a900008a7907aabdd66612261763c176a133cffa"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "variants"
       ],
       "cargoDependencies": [
         {
@@ -3209,13 +3253,14 @@
           "source": "ui/attachment.rs",
           "targetRoot": "ui",
           "target": "attachment.rs",
-          "checksum": "26ea7ebaa852f2e41d0d3b49c499e8fcdb6792facfa604d37136e46cb1edb3e6"
+          "checksum": "ed1b853959a5a25ee4e18617e23ff994aa6734c54e2070609b95a5319cc4ff61"
         }
       ],
       "registryDependencies": [
-        "cn",
         "button",
-        "spinner"
+        "cn",
+        "spinner",
+        "variants"
       ],
       "cargoDependencies": [
         {

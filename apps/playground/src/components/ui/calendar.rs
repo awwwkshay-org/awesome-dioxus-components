@@ -8,6 +8,7 @@ use adico_primitives::icons::ChevronDown;
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 use adico_primitives::calendar::{
     CalendarGrid as PrimitiveCalendarGrid, CalendarHeader as PrimitiveCalendarHeader,
     CalendarMonthTitle as PrimitiveCalendarMonthTitle,
@@ -33,6 +34,13 @@ pub use adico_primitives::calendar::{
 pub struct CalendarViewProps {
     #[props(default)]
     pub offset: Option<u8>,
+    /// Corner radius of the month panel. Internal chrome (nav buttons,
+    /// month/year select triggers, and the day grid's own
+    /// `[&_button]:rounded-md` descendant selector) stays hardcoded — none
+    /// are independently tunable, and the grid's selector targets nested
+    /// buttons `radius` can't reach.
+    #[props(default = Radius::Md)]
+    pub radius: Radius,
     #[props(default)]
     pub class: Option<String>,
     #[props(extends = GlobalAttributes)]
@@ -44,7 +52,8 @@ pub struct CalendarViewProps {
 #[component]
 pub fn CalendarView(props: CalendarViewProps) -> Element {
     let class = cn(&[
-        "h-[20rem] w-[18rem] rounded-md border bg-popover p-3 text-popover-foreground shadow-sm",
+        "h-[20rem] w-[18rem] border bg-popover p-3 text-popover-foreground shadow-sm",
+        props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

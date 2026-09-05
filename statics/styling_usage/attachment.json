@@ -3,6 +3,16 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
+  "radiusException": [
+    {
+      "part": "trigger",
+      "reason": "AttachmentTrigger is an internal sub-region of the card, not independently tunable"
+    },
+    {
+      "part": "media",
+      "reason": "AttachmentMedia is an internal sub-region of the card, not independently tunable"
+    }
+  ],
   "inspiredBy": [],
   "inspirationNote": ""
 }

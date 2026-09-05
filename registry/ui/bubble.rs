@@ -23,6 +23,7 @@
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// Which edge a [`Bubble`] (and its [`BubbleReactions`]) aligns to.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -98,6 +99,9 @@ pub struct BubbleContentProps {
     /// the ancestor [`Bubble`].
     #[props(default)]
     pub align: BubbleAlign,
+    /// Corner radius of the bubble surface.
+    #[props(default = Radius::Xl)]
+    pub radius: Radius,
     /// Extra classes appended to the semantic default.
     #[props(default)]
     pub class: Option<String>,
@@ -113,8 +117,9 @@ pub fn BubbleContent(props: BubbleContentProps) -> Element {
         BubbleAlign::End => "bg-primary text-primary-foreground",
     };
     let class = cn(&[
-        "max-w-[80%] rounded-2xl px-4 py-2 text-sm break-words",
+        "max-w-[80%] px-4 py-2 text-sm break-words",
         tone,
+        props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

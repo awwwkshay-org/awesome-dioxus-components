@@ -3,6 +3,7 @@
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The outer landmark wrapping a page-link list.
 #[component]
@@ -58,6 +59,9 @@ pub struct PaginationLinkProps {
     /// Accessible label for an icon-only or otherwise abbreviated link.
     #[props(default)]
     pub aria_label: Option<String>,
+    /// Corner radius of the link surface.
+    #[props(default = Radius::Md)]
+    pub radius: Radius,
     /// Extra semantic classes appended to the default treatment.
     #[props(default)]
     pub class: Option<String>,
@@ -79,8 +83,9 @@ pub fn PaginationLink(props: PaginationLinkProps) -> Element {
         "hover:bg-accent hover:text-accent-foreground"
     };
     let class = cn(&[
-        "inline-flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
+        "inline-flex h-9 w-9 items-center justify-center text-sm font-medium outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
         state_class,
+        props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     let aria_current = props.is_active.then_some("page");

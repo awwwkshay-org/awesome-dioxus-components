@@ -7,11 +7,12 @@
       "source": "ui/tag_group.rs",
       "targetRoot": "ui",
       "target": "tag_group.rs",
-      "checksum": "f4323d8e96e8c88e3ac8d070b97702ecf928bb5dcba3eb7774e91c066e58f3e0"
+      "checksum": "bbbc33eb06671384bdd13658808ba12148fdf3e29dff12340932ec0d1688c108"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

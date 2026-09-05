@@ -3,6 +3,7 @@
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The semantic presentation of an [`Alert`].
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -29,6 +30,9 @@ pub struct AlertProps {
     /// Semantic presentation variant.
     #[props(default)]
     pub variant: AlertVariant,
+    /// Corner radius of the alert surface.
+    #[props(default)]
+    pub radius: Radius,
     /// Extra classes appended to the semantic default.
     #[props(default)]
     pub class: Option<String>,
@@ -46,8 +50,9 @@ pub struct AlertProps {
 #[component]
 pub fn Alert(props: AlertProps) -> Element {
     let class = cn(&[
-        "relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-lg border px-4 py-3 text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>svg]:gap-x-3 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current",
+        "relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 border px-4 py-3 text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>svg]:gap-x-3 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current",
         props.variant.class(),
+        props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

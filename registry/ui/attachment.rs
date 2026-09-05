@@ -18,6 +18,7 @@ use dioxus::prelude::*;
 use adico_primitives::icons::{CircleAlert, CircleCheck, Paperclip};
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 use crate::components::ui::button::{Button, ButtonSize, ButtonVariant};
 use crate::components::ui::spinner::Spinner;
 
@@ -78,6 +79,9 @@ pub struct AttachmentProps {
     /// trailing status indicator.
     #[props(default)]
     pub state: AttachmentState,
+    /// Corner radius of the card surface.
+    #[props(default)]
+    pub radius: Radius,
     /// Extra classes appended to the semantic default.
     #[props(default)]
     pub class: Option<String>,
@@ -94,8 +98,9 @@ pub struct AttachmentProps {
 #[component]
 pub fn Attachment(props: AttachmentProps) -> Element {
     let class = cn(&[
-        "flex items-center gap-3 rounded-lg border bg-card p-3",
+        "flex items-center gap-3 border bg-card p-3",
         props.state.border_class(),
+        props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

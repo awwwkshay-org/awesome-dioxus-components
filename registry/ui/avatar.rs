@@ -9,6 +9,7 @@ use adico_primitives::avatar::{
 };
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The visual size of an [`Avatar`]. Was entirely absent before task 5.2 --
 /// upstream shadcn added a `size` axis; adico only ever rendered one fixed
@@ -45,6 +46,12 @@ pub struct AvatarProps {
     /// The visual size.
     #[props(default)]
     pub size: AvatarSize,
+    /// Corner radius of the avatar's clip shape. A caller who changes this
+    /// should also set the same value on [`AvatarFallback`] (they clip
+    /// independently — there is no shared context between them) to keep
+    /// the loading/error state visually consistent with the loaded image.
+    #[props(default = Radius::Full)]
+    pub radius: Radius,
     /// Accessible label for the avatar image role.
     #[props(default)]
     pub aria_label: Option<String>,
@@ -57,8 +64,9 @@ pub struct AvatarProps {
 #[component]
 pub fn Avatar(props: AvatarProps) -> Element {
     let class = cn(&[
-        "relative flex shrink-0 overflow-hidden rounded-full",
+        "relative flex shrink-0 overflow-hidden",
         props.size.class(),
+        props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -95,6 +103,10 @@ pub fn AvatarImage(props: AvatarImageProps) -> Element {
 /// Props for [`AvatarFallback`].
 #[derive(Props, Clone, PartialEq)]
 pub struct AvatarFallbackProps {
+    /// Corner radius of the fallback's clip shape. See [`Avatar::radius`]'s
+    /// own doc comment — keep this matching `Avatar`'s value.
+    #[props(default = Radius::Full)]
+    pub radius: Radius,
     /// Extra classes appended to the semantic default.
     #[props(default)]
     pub class: Option<String>,
@@ -106,7 +118,8 @@ pub struct AvatarFallbackProps {
 #[component]
 pub fn AvatarFallback(props: AvatarFallbackProps) -> Element {
     let class = cn(&[
-        "flex size-full items-center justify-center rounded-full bg-muted text-muted-foreground",
+        "flex size-full items-center justify-center bg-muted text-muted-foreground",
+        props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

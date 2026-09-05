@@ -17,6 +17,7 @@ use adico_primitives::{
 };
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The root of a navigation menu: a row of [`NavigationMenuItem`]s.
 #[component]
@@ -58,9 +59,18 @@ pub fn NavigationMenuItem(
 /// Opens the ancestor [`NavigationMenuItem`]'s [`NavigationMenuContent`] on
 /// hover-intent or click.
 #[component]
-pub fn NavigationMenuTrigger(children: Element, class: Option<String>) -> Element {
+pub fn NavigationMenuTrigger(
+    children: Element,
+    /// Corner radius. Set the same value on [`NavigationMenuContent`]/
+    /// [`NavigationMenuLink`] for a visually consistent family — there is
+    /// no shared context between them to thread one value automatically.
+    #[props(default = Radius::Md)]
+    radius: Radius,
+    class: Option<String>,
+) -> Element {
     let class = cn(&[
-        "group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-accent/50",
+        "group inline-flex h-9 w-max items-center justify-center bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-accent/50",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -78,6 +88,9 @@ pub fn NavigationMenuTrigger(children: Element, class: Option<String>) -> Elemen
 #[component]
 pub fn NavigationMenuContent(
     children: Element,
+    /// Corner radius. See [`NavigationMenuTrigger::radius`]'s own doc comment.
+    #[props(default = Radius::Md)]
+    radius: Radius,
     class: Option<String>,
     side: Option<ContentSide>,
     align: Option<ContentAlign>,
@@ -85,7 +98,8 @@ pub fn NavigationMenuContent(
     let side = side.unwrap_or(ContentSide::Bottom);
     let align = align.unwrap_or(ContentAlign::Start);
     let class = cn(&[
-        "min-w-[12rem] rounded-md border bg-popover p-4 text-popover-foreground shadow-md data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+        "min-w-[12rem] border bg-popover p-4 text-popover-foreground shadow-md data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -101,10 +115,14 @@ pub fn NavigationMenuLink(
     #[props(default)] active: ReadSignal<bool>,
     href: Option<String>,
     children: Element,
+    /// Corner radius. See [`NavigationMenuTrigger::radius`]'s own doc comment.
+    #[props(default = Radius::Md)]
+    radius: Radius,
     class: Option<String>,
 ) -> Element {
     let class = cn(&[
-        "block select-none space-y-1 rounded-md p-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[active=true]:bg-accent/50 data-[active=true]:text-accent-foreground",
+        "block select-none space-y-1 p-3 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[active=true]:bg-accent/50 data-[active=true]:text-accent-foreground",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

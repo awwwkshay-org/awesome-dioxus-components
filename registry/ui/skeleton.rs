@@ -46,6 +46,11 @@ pub struct SkeletonProps {
 }
 
 /// A pulsing placeholder shown in place of content still loading.
+///
+/// Deliberately has no `radius` prop: `SkeletonVariant::class()`'s
+/// `Default`/`Circle` distinction *is* the variant's whole job (rectangle
+/// vs. circle placeholder shape) — an independent `radius` would allow a
+/// nonsensical `Circle` + `radius: None` combination.
 #[component]
 pub fn Skeleton(props: SkeletonProps) -> Element {
     let class = [

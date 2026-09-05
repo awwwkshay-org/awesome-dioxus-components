@@ -3,6 +3,12 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
+  "radiusException": [
+    {
+      "part": "media",
+      "reason": "EmptyMediaVariant::Icon's own corner is variant-gated chrome, not the root's own class"
+    }
+  ],
   "inspiredBy": [
     "shadcn"
   ],

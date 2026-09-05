@@ -8,6 +8,7 @@
       "reason": "Preset swatches are literal previews of the palette options being offered and are documented as independent of the active light/dark mode; they must show the actual preset color, not the current theme's token value."
     }
   ],
+  "radiusException": [],
   "inspiredBy": [],
   "inspirationNote": "No shadcn or dioxus-components equivalent; an adico-specific composition with its own preset-swatch colorException already recorded."
 }

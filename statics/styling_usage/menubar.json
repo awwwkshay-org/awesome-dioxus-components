@@ -3,6 +3,16 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
+  "radiusException": [
+    {
+      "part": "trigger",
+      "reason": "MenubarTrigger is internal chrome of the bar"
+    },
+    {
+      "part": "item",
+      "reason": "MenubarItem is a per-row highlight"
+    }
+  ],
   "inspiredBy": [
     "shadcn",
     "dioxus-components"

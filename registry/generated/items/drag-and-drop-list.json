@@ -7,11 +7,12 @@
       "source": "ui/drag_and_drop_list.rs",
       "targetRoot": "ui",
       "target": "drag_and_drop_list.rs",
-      "checksum": "fa735c6e83dfe3e40292eccb14b34f446102d317440be8f42d24cbd6e7fb1ebe"
+      "checksum": "efc96ddb2a953225801c31f30f0b65f66374904f9fd6a414f1468995fadc9ae3"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

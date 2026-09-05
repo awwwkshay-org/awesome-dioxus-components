@@ -8,6 +8,16 @@
       "reason": "Matches shadcn's own current new-york-v4 Dialog source exactly, which uses bg-black/50 (not a semantic token) for its overlay backdrop."
     }
   ],
+  "radiusException": [
+    {
+      "part": "action",
+      "reason": "AlertDialogAction mirrors Button's own fixed corners, not the dialog panel's surface"
+    },
+    {
+      "part": "cancel",
+      "reason": "AlertDialogCancel mirrors Button's own fixed corners, not the dialog panel's surface"
+    }
+  ],
   "inspiredBy": [
     "shadcn",
     "dioxus-components"

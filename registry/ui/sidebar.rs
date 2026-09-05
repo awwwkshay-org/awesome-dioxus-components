@@ -22,6 +22,7 @@ use dioxus::prelude::*;
 use adico_primitives::{separator::Separator as SeparatorPrimitive, use_controlled};
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The side of the viewport a [`Sidebar`] is docked to.
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
@@ -185,6 +186,10 @@ pub fn Sidebar(props: SidebarProps) -> Element {
         SidebarSide::Left => "left-0",
         SidebarSide::Right => "right-0",
     };
+    // `Floating`'s rounded-lg (and `SidebarInset`'s own rounded-xl below) is
+    // switched by the variant itself, not an independent `radius` prop —
+    // there's no bounded surface here at all in the other variants to apply
+    // one to.
     let variant_class = match (props.variant, props.side) {
         (SidebarVariant::Sidebar, SidebarSide::Left) => "border-r",
         (SidebarVariant::Sidebar, SidebarSide::Right) => "border-l",
@@ -216,6 +221,7 @@ pub fn Sidebar(props: SidebarProps) -> Element {
 #[component]
 pub fn SidebarTrigger(
     children: Element,
+    #[props(default = Radius::Md)] radius: Radius,
     class: Option<String>,
     /// Native button/global attributes. Dioxus requires an element's
     /// attribute spread to be its last attribute, so this is listed after
@@ -229,7 +235,8 @@ pub fn SidebarTrigger(
 ) -> Element {
     let ctx = use_sidebar();
     let class = cn(&[
-        "inline-flex h-7 w-7 items-center justify-center rounded-md text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        "inline-flex h-7 w-7 items-center justify-center text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -371,7 +378,10 @@ pub fn SidebarGroup(children: Element, class: Option<String>) -> Element {
     }
 }
 
-/// The label heading a [`SidebarGroup`].
+/// The label heading a [`SidebarGroup`]. Deliberately has no `radius` prop:
+/// its `rounded-md` is a small internal chrome detail, not an
+/// independently-tunable surface (see `SidebarTrigger`/`SidebarMenuButton`
+/// for this item's actual `radius`-bearing controls).
 #[component]
 pub fn SidebarGroupLabel(children: Element, class: Option<String>) -> Element {
     let class = cn(&[
@@ -425,6 +435,9 @@ pub struct SidebarMenuButtonProps {
     /// Disables pointer and keyboard interaction with native semantics.
     #[props(default)]
     pub disabled: Option<bool>,
+    /// Corner radius of the control surface.
+    #[props(default = Radius::Md)]
+    pub radius: Radius,
     /// Extra classes appended to the semantic defaults.
     #[props(default)]
     pub class: Option<String>,
@@ -439,7 +452,8 @@ pub struct SidebarMenuButtonProps {
 #[component]
 pub fn SidebarMenuButton(props: SidebarMenuButtonProps) -> Element {
     let class = cn(&[
-        "flex h-8 w-full items-center gap-2 overflow-hidden rounded-md px-2 text-left text-sm outline-none transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring disabled:pointer-events-none disabled:opacity-50",
+        "flex h-8 w-full items-center gap-2 overflow-hidden px-2 text-left text-sm outline-none transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring disabled:pointer-events-none disabled:opacity-50",
+        props.radius.class(),
         if props.is_active {
             "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
         } else {

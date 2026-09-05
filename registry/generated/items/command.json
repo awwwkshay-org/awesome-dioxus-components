@@ -7,12 +7,13 @@
       "source": "ui/command.rs",
       "targetRoot": "ui",
       "target": "command.rs",
-      "checksum": "3ab08a5a722a85b6eb3a48666564e5a40d940de7d9e450b1fee60520b37173c3"
+      "checksum": "78c2674930274e760b33273f5fd0b0fea1f4b5bb241abab160b87577f3a250eb"
     }
   ],
   "registryDependencies": [
     "cn",
-    "dialog"
+    "dialog",
+    "variants"
   ],
   "cargoDependencies": [
     {

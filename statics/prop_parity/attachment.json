@@ -30,6 +30,11 @@
             {
               "name": "state",
               "status": "present"
+            },
+            {
+              "name": "radius",
+              "status": "adico_extension",
+              "reason": "adico extension: consistent corner-radius control not present upstream"
             }
           ]
         },

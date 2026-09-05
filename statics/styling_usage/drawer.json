@@ -8,6 +8,7 @@
       "reason": "Matches shadcn's own current new-york-v4 Dialog/Sheet source exactly, which uses bg-black/50 (not a semantic token) for its overlay backdrop -- same precedent already recorded for sheet.json."
     }
   ],
+  "radiusException": [],
   "inspiredBy": [
     "shadcn"
   ],

@@ -4,6 +4,7 @@ use dioxus::prelude::*;
 
 use super::button::{Button, ButtonSize, ButtonVariant};
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 pub use adico_primitives::dialog::{
     DialogContent as DialogPrimitiveContent, DialogDescription, DialogRoot as Dialog, DialogTitle,
 };
@@ -64,11 +65,13 @@ pub fn DialogOverlay(class: Option<String>) -> Element {
 #[component]
 pub fn DialogContent(
     children: Element,
+    #[props(default)] radius: Radius,
     class: Option<String>,
     #[props(default = true)] show_close_button: bool,
 ) -> Element {
     let class = cn(&[
-        "fixed left-1/2 top-1/2 z-[51] grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg border bg-background p-6 text-foreground shadow-lg",
+        "fixed left-1/2 top-1/2 z-[51] grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 border bg-background p-6 text-foreground shadow-lg",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

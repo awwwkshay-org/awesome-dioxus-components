@@ -7,12 +7,13 @@
       "source": "ui/alert_dialog.rs",
       "targetRoot": "ui",
       "target": "alert_dialog.rs",
-      "checksum": "7f486e9d98e86dcd739a9b9eb83e320857bdbc609e9a28929eb4f468e49a0c76"
+      "checksum": "8abb21ad3b6b17bce19dab70e3aa6c73b84b1366d7e7ac648ce36fc0270d1060"
     }
   ],
   "registryDependencies": [
+    "button",
     "cn",
-    "button"
+    "variants"
   ],
   "cargoDependencies": [
     {

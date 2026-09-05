@@ -13,6 +13,7 @@
       "reason": "Fallback default for a hex-color-conversion utility function, used only if HSL parsing fails; not a themable UI color."
     }
   ],
+  "radiusException": [],
   "inspiredBy": [],
   "inspirationNote": "No shadcn or dioxus-components equivalent; an adico-specific composition with its own generated-preview styleException already recorded."
 }

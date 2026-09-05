@@ -11,6 +11,7 @@ use adico_primitives::accordion::{
 use adico_primitives::icons::ChevronDown;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// A single collapsible section within an [`Accordion`]/[`AccordionMulti`].
 #[component]
@@ -29,9 +30,14 @@ pub fn AccordionItem(
 
 /// The clickable header that toggles the enclosing [`AccordionItem`].
 #[component]
-pub fn AccordionTrigger(class: Option<String>, children: Element) -> Element {
+pub fn AccordionTrigger(
+    #[props(default = Radius::Md)] radius: Radius,
+    class: Option<String>,
+    children: Element,
+) -> Element {
     let class = cn(&[
-        "flex w-full flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium outline-none transition-all hover:underline focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180",
+        "flex w-full flex-1 items-start justify-between gap-4 py-4 text-left text-sm font-medium outline-none transition-all hover:underline focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

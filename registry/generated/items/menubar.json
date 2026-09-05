@@ -7,11 +7,12 @@
       "source": "ui/menubar.rs",
       "targetRoot": "ui",
       "target": "menubar.rs",
-      "checksum": "fd760ca17fd82c771b6feaa27cfb9e413c4dda01c7759f09950e36851026bf28"
+      "checksum": "8dc5dcefdb1446b818fa25cae328ba38d19891f3cf2c750e6932c28910296816"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

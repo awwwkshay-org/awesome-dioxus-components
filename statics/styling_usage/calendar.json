@@ -3,6 +3,24 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
+  "radiusException": [
+    {
+      "part": "navigation",
+      "reason": "nav buttons are internal chrome of the month panel, not independently tunable"
+    },
+    {
+      "part": "select-month",
+      "reason": "month select trigger is internal chrome of the month panel, not independently tunable"
+    },
+    {
+      "part": "select-year",
+      "reason": "year select trigger is internal chrome of the month panel, not independently tunable"
+    },
+    {
+      "part": "grid",
+      "reason": "the day grid's [&_button]:rounded-md is an arbitrary-variant descendant selector targeting nested buttons radius can't reach"
+    }
+  ],
   "inspiredBy": [
     "shadcn",
     "dioxus-components"

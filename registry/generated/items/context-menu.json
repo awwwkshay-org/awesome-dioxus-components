@@ -7,11 +7,12 @@
       "source": "ui/context_menu.rs",
       "targetRoot": "ui",
       "target": "context_menu.rs",
-      "checksum": "275e73d6b6571987c7a1dcb8498fb6bef49932c0d4622ccc88d81825bea1018e"
+      "checksum": "57b3f5a3c397c275d6162e6adef044d97c508863d057a53cfb950a0156c3e5f1"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

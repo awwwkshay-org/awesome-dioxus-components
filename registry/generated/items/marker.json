@@ -7,11 +7,12 @@
       "source": "ui/marker.rs",
       "targetRoot": "ui",
       "target": "marker.rs",
-      "checksum": "4442be0498fdd91596cbffd2182bdcca08cffd286c82a55f05dd02bbf9f42dff"
+      "checksum": "3cf70986b895cdac9b73d36327c7cc73b4c6c1476015b35bfc9af22560a0bcb9"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

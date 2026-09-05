@@ -10,16 +10,23 @@ use adico_primitives::menubar::{
 };
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The horizontal bar containing one or more [`MenubarMenu`] entries.
 #[component]
 pub fn Menubar(
     #[props(default)] disabled: ReadSignal<bool>,
     children: Element,
+    /// Corner radius. Set the same value on [`MenubarContent`] for a
+    /// visually consistent bar/popup pair — there is no shared context
+    /// between them to thread one value automatically.
+    #[props(default = Radius::Md)]
+    radius: Radius,
     class: Option<String>,
 ) -> Element {
     let class = cn(&[
-        "flex h-9 items-center gap-1 rounded-md border bg-background p-1",
+        "flex h-9 items-center gap-1 border bg-background p-1",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -41,9 +48,16 @@ pub fn MenubarTrigger(children: Element, class: Option<String>) -> Element {
 
 /// Styled content backed by the owned Menubar positioning/roving-focus primitive.
 #[component]
-pub fn MenubarContent(children: Element, class: Option<String>) -> Element {
+pub fn MenubarContent(
+    children: Element,
+    /// Corner radius. See [`Menubar::radius`]'s own doc comment.
+    #[props(default = Radius::Md)]
+    radius: Radius,
+    class: Option<String>,
+) -> Element {
     let class = cn(&[
-        "absolute z-50 min-w-[12rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+        "absolute z-50 min-w-[12rem] overflow-hidden border bg-popover p-1 text-popover-foreground shadow-md data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

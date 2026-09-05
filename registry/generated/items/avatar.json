@@ -7,11 +7,12 @@
       "source": "ui/avatar.rs",
       "targetRoot": "ui",
       "target": "avatar.rs",
-      "checksum": "38c0f39a51dbe0a7629aad4a6b479d005c53f6c46e6a3c06c1461dcc5a0e974c"
+      "checksum": "100177f41029793022f7d850788e470d9df6b0864ab3f116195a0422ca79831d"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

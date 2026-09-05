@@ -15,6 +15,7 @@ pub use adico_primitives::color_picker::{
 
 use super::slider::{Slider, SliderThumb, SliderTrack};
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// Provides the color-picker context and synchronizes a color value between
 /// its descendants.
@@ -39,11 +40,13 @@ pub fn ColorPicker(
 #[component]
 pub fn ColorArea(
     #[props(default = 1.0)] step: ReadSignal<f64>,
+    #[props(default = Radius::Md)] radius: Radius,
     class: Option<String>,
     children: Element,
 ) -> Element {
     let class = cn(&[
-        "relative size-48 touch-none rounded-md border border-input",
+        "relative size-48 touch-none border border-input",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

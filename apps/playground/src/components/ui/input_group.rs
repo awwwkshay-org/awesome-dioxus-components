@@ -19,6 +19,7 @@ use dioxus::prelude::*;
 
 use super::button::{Button, ButtonSize, ButtonVariant};
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// Where an [`InputGroupAddon`] sits relative to its sibling control.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -61,13 +62,18 @@ impl InputGroupAlign {
 /// The bordered container joining an input/textarea control with its
 /// [`InputGroupAddon`]s into one visual field.
 #[component]
-pub fn InputGroup(class: Option<String>, children: Element) -> Element {
+pub fn InputGroup(
+    #[props(default = Radius::Md)] radius: Radius,
+    class: Option<String>,
+    children: Element,
+) -> Element {
     let class = cn(&[
-        "group/input-group relative flex w-full items-center rounded-md border border-input shadow-xs outline-none transition-[color,box-shadow]",
+        "group/input-group relative flex w-full items-center border border-input shadow-xs outline-none transition-[color,box-shadow]",
         "h-9 min-w-0 has-[>textarea]:h-auto",
         "has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col",
         "has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-[3px] has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50",
         "has-[[data-slot][aria-invalid=true]]:border-destructive has-[[data-slot][aria-invalid=true]]:ring-destructive/20 dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -131,7 +137,10 @@ pub fn InputGroupText(class: Option<String>, children: Element) -> Element {
 
 /// A borderless, transparent single-line control for an [`InputGroup`]. See
 /// this module's doc comment for why it authors its own classes rather than
-/// composing [`super::input::Input`].
+/// composing [`super::input::Input`]. Deliberately has no `radius` prop of
+/// its own: its `rounded-none` is required to stay flush with the group's
+/// own border (`InputGroup` owns the visible corner); an independent radius
+/// here would visually break that flush-field look.
 #[component]
 pub fn InputGroupInput(
     #[props(default = "text".to_string())] r#type: String,
@@ -166,7 +175,8 @@ pub fn InputGroupInput(
 
 /// A borderless, transparent multi-line control for an [`InputGroup`]. See
 /// this module's doc comment for why it authors its own classes rather than
-/// composing [`super::textarea::Textarea`].
+/// composing [`super::textarea::Textarea`]. Deliberately has no `radius`
+/// prop of its own — see [`InputGroupInput`]'s own doc comment for why.
 #[component]
 pub fn InputGroupTextarea(
     #[props(default)] value: Option<String>,

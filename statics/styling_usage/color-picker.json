@@ -8,6 +8,12 @@
       "reason": "The area-thumb outline must stay visible against an arbitrary user-picked color; a semantic token could blend into some picked colors, defeating the affordance."
     }
   ],
+  "radiusException": [
+    {
+      "part": "area-thumb",
+      "reason": "AreaThumb is the drag handle, a fixed circular affordance distinct from the area's own corner"
+    }
+  ],
   "inspiredBy": [
     "dioxus-components"
   ],

@@ -7,11 +7,12 @@
       "source": "ui/dropdown_menu.rs",
       "targetRoot": "ui",
       "target": "dropdown_menu.rs",
-      "checksum": "cac8e6514de1305fd7e6174d9eb5795f2f5c777cc252ca1c542ec44302f485a0"
+      "checksum": "f2e840ae1b342ccabf588efe7ab70874e8ce6bd80a2c9ca5ff709e6c2cf7a95a"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

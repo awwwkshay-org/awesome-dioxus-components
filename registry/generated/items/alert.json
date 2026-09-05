@@ -7,11 +7,12 @@
       "source": "ui/alert.rs",
       "targetRoot": "ui",
       "target": "alert.rs",
-      "checksum": "3ac89f4d2a09bf414a32ca80683c971f7e1f65bfe38d28d466ece8c3c7d52b75"
+      "checksum": "c94e992d01049bc54d9cf446fda160ab0861eb445e503ae09a093e601693d1e9"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

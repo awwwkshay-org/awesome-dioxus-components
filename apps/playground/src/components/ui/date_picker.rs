@@ -7,6 +7,7 @@ use time::{Date, macros::date};
 
 use super::popover::{PopoverContent, PopoverTrigger};
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 use adico_primitives::calendar::DateRange;
 use adico_primitives::date_picker::{
     DatePicker as PrimitiveDatePicker, DatePickerInput as PrimitiveDatePickerInput,
@@ -122,6 +123,10 @@ pub struct DatePickerInputProps {
     pub on_format_month_placeholder: Callback<(), String>,
     #[props(default = Callback::new(|_| "Y".to_string()))]
     pub on_format_year_placeholder: Callback<(), String>,
+    /// Corner radius of the field surface. `DatePickerTrigger`'s own small
+    /// disclosure icon stays hardcoded.
+    #[props(default = Radius::Md)]
+    pub radius: Radius,
     #[props(default)]
     pub class: Option<String>,
     #[props(extends = GlobalAttributes)]
@@ -134,7 +139,8 @@ pub struct DatePickerInputProps {
 #[component]
 pub fn DatePickerInput(props: DatePickerInputProps) -> Element {
     let class = cn(&[
-        "inline-flex h-9 items-center gap-1 rounded-md border border-input bg-background px-2 text-sm shadow-xs transition-colors focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/50 data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+        "inline-flex h-9 items-center gap-1 border border-input bg-background px-2 text-sm shadow-xs transition-colors focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/50 data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+        props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     let children = props.children.unwrap_or_else(|| {

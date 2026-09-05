@@ -7,11 +7,12 @@
       "source": "ui/badge.rs",
       "targetRoot": "ui",
       "target": "badge.rs",
-      "checksum": "b346ba40209a2dfd3796df4feb017d6ee3ea098b1292eeaa11bde414b55f85b8"
+      "checksum": "c883f55a2fba6629e9771615b3b3c0fede3caf19649a780ac899beb9ab389b25"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

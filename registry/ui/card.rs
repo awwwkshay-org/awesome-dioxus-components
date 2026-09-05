@@ -3,10 +3,14 @@
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The outer container for a Card composition.
 #[derive(Props, Clone, PartialEq)]
 pub struct CardProps {
+    /// Corner radius of the card surface.
+    #[props(default = Radius::Xl)]
+    pub radius: Radius,
     /// Extra classes appended to the semantic card surface.
     #[props(default)]
     pub class: Option<String>,
@@ -21,7 +25,8 @@ pub struct CardProps {
 #[component]
 pub fn Card(props: CardProps) -> Element {
     let class = cn(&[
-        "w-full rounded-xl border bg-card text-card-foreground shadow-sm",
+        "w-full border bg-card text-card-foreground shadow-sm",
+        props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

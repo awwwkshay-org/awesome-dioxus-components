@@ -7,11 +7,12 @@
       "source": "ui/progress.rs",
       "targetRoot": "ui",
       "target": "progress.rs",
-      "checksum": "5983179bdf1b609f614f77e360d37ab04317a7a19e28d2f49e12ca634f5733c7"
+      "checksum": "3baf490aa47849e332a545608e5ae90b0e24ac376bb97ba3187e026de6631aee"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

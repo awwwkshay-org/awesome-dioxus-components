@@ -8,6 +8,7 @@
       "reason": "The Verified variant deliberately uses a fixed, palette-independent success green so the checkmark badge reads consistently across every theme; an adico-specific addition with no shadcn or dioxus-components equivalent."
     }
   ],
+  "radiusException": [],
   "inspiredBy": [
     "shadcn",
     "dioxus-components"

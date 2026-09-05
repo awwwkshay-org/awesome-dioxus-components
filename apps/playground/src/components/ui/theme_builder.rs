@@ -812,6 +812,13 @@ fn next_palette_index(state: &mut u64) -> usize {
 /// `theme_mode` global signal -- it owns its own light/dark appearance
 /// selection, since it's an editing surface a consumer mounts occasionally
 /// (for example behind a settings dialog), not an always-active mode switch.
+///
+/// Deliberately has no `radius` prop: every `rounded-md` in this file is
+/// internal preview-swatch/mockup chrome inside the editor's own control
+/// panel, not the panel's own bounded surface. `ThemeVariables::radius`
+/// (`String`, edited live through this component) is the `--radius`
+/// CSS-value editor — an unrelated concept, not to be confused with the
+/// shared `Radius` enum.
 #[component]
 pub fn ThemeBuilder(
     #[props(default)] on_theme_change: Callback<ThemeVariables>,

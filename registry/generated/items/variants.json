@@ -7,7 +7,7 @@
       "source": "lib/variants.rs",
       "targetRoot": "lib",
       "target": "variants.rs",
-      "checksum": "7f08cf8abecb10daf86a48aa30066ed6d6017c017166ce50e140e764346646c4"
+      "checksum": "dffee6b8e50ff1123a837a4636595adae01d1cd0093d05b7573381d07043ff1b"
     }
   ],
   "registryDependencies": [],

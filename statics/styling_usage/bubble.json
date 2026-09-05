@@ -3,6 +3,12 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
+  "radiusException": [
+    {
+      "part": "reactions",
+      "reason": "BubbleReactions is a separate decorative reaction pill, not the bubble's own content surface"
+    }
+  ],
   "inspiredBy": [],
   "inspirationNote": ""
 }

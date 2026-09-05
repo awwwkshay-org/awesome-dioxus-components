@@ -7,7 +7,7 @@
       "source": "ui/theme_switcher.rs",
       "targetRoot": "ui",
       "target": "theme_switcher.rs",
-      "checksum": "2014419589197764b0f0bea16c2f0f10cc8c1bc7800a1bf5d422fc62a9facc74"
+      "checksum": "193bfe883b90dcf114f3a130f689078a2fd0c905cea4c3851b837ec0f0265dea"
     }
   ],
   "registryDependencies": [

@@ -3,6 +3,7 @@
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// Props for [`Input`].
 #[derive(Props, Clone, PartialEq)]
@@ -31,6 +32,9 @@ pub struct InputProps {
     /// Input event handler.
     #[props(default)]
     pub oninput: EventHandler<FormEvent>,
+    /// Corner radius of the input surface.
+    #[props(default = Radius::Md)]
+    pub radius: Radius,
     /// Extra classes appended to the semantic default.
     #[props(default)]
     pub class: Option<String>,
@@ -44,7 +48,8 @@ pub struct InputProps {
 #[component]
 pub fn Input(props: InputProps) -> Element {
     let class = cn(&[
-        "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 read-only:cursor-default read-only:bg-muted aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+        "flex h-9 w-full border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 read-only:cursor-default read-only:bg-muted aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+        props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

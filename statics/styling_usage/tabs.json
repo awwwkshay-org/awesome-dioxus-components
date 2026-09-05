@@ -3,6 +3,12 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
+  "radiusException": [
+    {
+      "part": "tab-trigger",
+      "reason": "TabTrigger's rounded-md/rounded-none pair encodes TabsVariant's segmented-vs-underline visual identity"
+    }
+  ],
   "inspiredBy": [
     "shadcn",
     "dioxus-components"

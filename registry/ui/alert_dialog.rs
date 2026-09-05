@@ -4,6 +4,7 @@ use dioxus::prelude::*;
 
 use super::button::{Button, ButtonSize, ButtonVariant};
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 use adico_primitives::alert_dialog::{
     AlertDialogAction as AlertDialogActionPrimitive,
     AlertDialogActions as AlertDialogActionsPrimitive,
@@ -62,9 +63,14 @@ pub fn AlertDialogOverlay(class: Option<String>) -> Element {
 
 /// Styled content backed by the owned AlertDialog focus-trap and ARIA primitive.
 #[component]
-pub fn AlertDialogContent(children: Element, class: Option<String>) -> Element {
+pub fn AlertDialogContent(
+    children: Element,
+    #[props(default)] radius: Radius,
+    class: Option<String>,
+) -> Element {
     let class = cn(&[
-        "fixed left-1/2 top-1/2 z-[51] grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg border bg-background p-6 text-foreground shadow-lg",
+        "fixed left-1/2 top-1/2 z-[51] grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 border bg-background p-6 text-foreground shadow-lg",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

@@ -7,11 +7,12 @@
       "source": "ui/combobox.rs",
       "targetRoot": "ui",
       "target": "combobox.rs",
-      "checksum": "db85839810560b7b2302c9737ea39185451303606ec6e94f55e2a1256df77568"
+      "checksum": "34138f61cae5234cc092461c906672bb7b44733c6ff3deb1381d7c748c52f6a1"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

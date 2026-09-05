@@ -3,6 +3,16 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
+  "radiusException": [
+    {
+      "part": "input",
+      "reason": "CommandInput is internal chrome nested inside the palette shell"
+    },
+    {
+      "part": "item",
+      "reason": "CommandItem is a per-row highlight"
+    }
+  ],
   "inspiredBy": [],
   "inspirationNote": ""
 }

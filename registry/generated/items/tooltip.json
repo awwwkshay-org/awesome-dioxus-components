@@ -7,11 +7,12 @@
       "source": "ui/tooltip.rs",
       "targetRoot": "ui",
       "target": "tooltip.rs",
-      "checksum": "4ad2cc1d2fcfa2d398bc2be456fb062117511380f0d7f7d0413691d2ad69ed64"
+      "checksum": "a72ea54eab89c942297805962e426b80fdcadf9087d6211b3807f6f6e6c64095"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

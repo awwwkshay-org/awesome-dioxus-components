@@ -3,6 +3,7 @@
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// A vertical list of [`Item`] rows.
 #[derive(Props, Clone, PartialEq)]
@@ -67,6 +68,9 @@ pub struct ItemProps {
     pub disabled: bool,
     #[props(default)]
     pub onclick: EventHandler<MouseEvent>,
+    /// Corner radius of the row surface.
+    #[props(default = Radius::Md)]
+    pub radius: Radius,
     #[props(default)]
     pub class: Option<String>,
     #[props(extends = GlobalAttributes)]
@@ -78,8 +82,9 @@ pub struct ItemProps {
 #[component]
 pub fn Item(props: ItemProps) -> Element {
     let class = cn(&[
-        "flex items-center gap-4 rounded-md p-4 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "flex items-center gap-4 p-4 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         props.variant.class(),
+        props.radius.class(),
         if props.disabled {
             "pointer-events-none opacity-50"
         } else {

@@ -3,6 +3,7 @@
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The presentation of an [`EmptyMedia`] slot.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -27,9 +28,14 @@ impl EmptyMediaVariant {
 
 /// A dashed-border placeholder region for empty/zero-data states.
 #[component]
-pub fn Empty(class: Option<String>, children: Element) -> Element {
+pub fn Empty(
+    #[props(default)] radius: Radius,
+    class: Option<String>,
+    children: Element,
+) -> Element {
     let class = cn(&[
-        "flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border-dashed p-6 text-center text-balance md:p-12",
+        "flex min-w-0 flex-1 flex-col items-center justify-center gap-6 border-dashed p-6 text-center text-balance md:p-12",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

@@ -112,6 +112,11 @@
             {
               "name": "children",
               "status": "present"
+            },
+            {
+              "name": "radius",
+              "status": "adico_extension",
+              "reason": "adico extension: consistent corner-radius control not present upstream"
             }
           ]
         }
@@ -179,6 +184,11 @@
               "name": "render",
               "status": "intentional_difference",
               "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            },
+            {
+              "name": "radius",
+              "status": "adico_extension",
+              "reason": "adico extension: consistent corner-radius control not present upstream"
             }
           ]
         }

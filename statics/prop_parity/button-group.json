@@ -32,6 +32,11 @@
               "name": "asChild",
               "status": "intentional_difference",
               "reason": "Dioxus has no merge-props/slot mechanism to render a caller-supplied element in the component's place"
+            },
+            {
+              "name": "radius",
+              "status": "adico_extension",
+              "reason": "adico extension: consistent corner-radius control not present upstream"
             }
           ]
         },

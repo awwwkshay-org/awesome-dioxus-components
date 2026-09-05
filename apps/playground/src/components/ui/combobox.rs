@@ -6,6 +6,7 @@
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 use adico_primitives::icons::{ChevronDown, ChevronUp};
 
 use adico_primitives::combobox::{
@@ -185,10 +186,16 @@ pub fn ComboboxMulti<T: Clone + PartialEq + 'static>(
 pub fn ComboboxInput(
     placeholder: Option<String>,
     id: Option<String>,
+    /// Corner radius. Set the same value on [`ComboboxList`] for a visually
+    /// consistent input/popup pair — there is no shared context between
+    /// them to thread one value automatically.
+    #[props(default = Radius::Md)]
+    radius: Radius,
     class: Option<String>,
 ) -> Element {
     let class = cn(&[
-        "h-9 w-full min-w-48 rounded-md border border-input bg-background px-3 pr-8 text-sm outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-50",
+        "h-9 w-full min-w-48 border border-input bg-background px-3 pr-8 text-sm outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-50",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -203,14 +210,22 @@ pub fn ComboboxInput(
 /// A listbox anchored to the input via the primitive's `Positioner`, so
 /// opening it does not shift layout.
 #[component]
-pub fn ComboboxList(children: Element, id: Option<String>, class: Option<String>) -> Element {
+pub fn ComboboxList(
+    children: Element,
+    id: Option<String>,
+    /// Corner radius. See [`ComboboxInput::radius`]'s own doc comment.
+    #[props(default = Radius::Md)]
+    radius: Radius,
+    class: Option<String>,
+) -> Element {
     // `w-full` would now mean 100% of the viewport (`Positioner`'s
     // `position: fixed` has no positioned ancestor to size against, unlike
     // the `absolute`-positioned listbox this replaced) — `min-w-48` is the
     // width baseline instead, matching `popover.rs`'s own fixed-width
     // precedent rather than trying to exactly match the input's width.
     let class = cn(&[
-        "z-50 max-h-72 min-w-48 overflow-y-auto rounded-md bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        "z-50 max-h-72 min-w-48 overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

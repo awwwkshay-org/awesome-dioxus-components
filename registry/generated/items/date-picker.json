@@ -7,13 +7,14 @@
       "source": "ui/date_picker.rs",
       "targetRoot": "ui",
       "target": "date_picker.rs",
-      "checksum": "efdc41c9ac472d032b58983b1e7afc76f977027ef6fa1720a72ce04439321c4b"
+      "checksum": "70e24290c1d2b79470a26d140e3f26cc32c18767a71423ba5ca699b0e49c1550"
     }
   ],
   "registryDependencies": [
-    "cn",
     "calendar",
-    "popover"
+    "cn",
+    "popover",
+    "variants"
   ],
   "cargoDependencies": [
     {

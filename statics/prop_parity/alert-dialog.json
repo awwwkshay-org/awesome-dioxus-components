@@ -128,6 +128,11 @@
             {
               "name": "children",
               "status": "present"
+            },
+            {
+              "name": "radius",
+              "status": "adico_extension",
+              "reason": "adico extension: consistent corner-radius control not present upstream"
             }
           ]
         },
@@ -252,6 +257,11 @@
             {
               "name": "size",
               "status": "missing"
+            },
+            {
+              "name": "radius",
+              "status": "adico_extension",
+              "reason": "adico extension: consistent corner-radius control not present upstream"
             }
           ]
         },

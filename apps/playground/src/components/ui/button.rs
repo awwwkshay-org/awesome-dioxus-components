@@ -9,6 +9,7 @@
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The semantic visual treatment for a [`Button`].
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -74,13 +75,13 @@ impl ButtonSize {
     fn class(self) -> &'static str {
         match self {
             Self::Default => "h-9 px-4 py-2",
-            Self::Xs => "h-6 gap-1 rounded-md px-2 text-xs",
-            Self::Sm => "h-8 gap-1.5 rounded-md px-3",
-            Self::Lg => "h-10 rounded-md px-6",
+            Self::Xs => "h-6 gap-1 px-2 text-xs",
+            Self::Sm => "h-8 gap-1.5 px-3",
+            Self::Lg => "h-10 px-6",
             Self::Icon => "size-9",
-            Self::IconXs => "size-6 rounded-md",
-            Self::IconSm => "size-8 rounded-md",
-            Self::IconLg => "size-10 rounded-md",
+            Self::IconXs => "size-6",
+            Self::IconSm => "size-8",
+            Self::IconLg => "size-10",
         }
     }
 }
@@ -94,6 +95,9 @@ pub struct ButtonProps {
     /// Visual size.
     #[props(default)]
     pub size: ButtonSize,
+    /// Corner radius of the button surface.
+    #[props(default = Radius::Md)]
+    pub radius: Radius,
     /// Extra classes appended to the component's semantic base classes.
     #[props(default)]
     pub class: Option<String>,
@@ -114,9 +118,10 @@ pub struct ButtonProps {
 #[component]
 pub fn Button(props: ButtonProps) -> Element {
     let class = cn(&[
-        "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium outline-none transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
+        "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap text-sm font-medium outline-none transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
         props.variant.class(),
         props.size.class(),
+        props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

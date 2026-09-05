@@ -10,6 +10,7 @@ use adico_primitives::toolbar::{
 };
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// A button within a [`Toolbar`] with roving-focus keyboard navigation.
 #[component]
@@ -24,10 +25,12 @@ pub fn ToolbarButton(
     #[props(default)]
     on_select: Callback<()>,
     children: Element,
+    #[props(default = Radius::Md)] radius: Radius,
     class: Option<String>,
 ) -> Element {
     let class = cn(&[
-        "inline-flex h-8 items-center justify-center gap-2 rounded-md px-2 text-sm font-medium outline-none transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50",
+        "inline-flex h-8 items-center justify-center gap-2 px-2 text-sm font-medium outline-none transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

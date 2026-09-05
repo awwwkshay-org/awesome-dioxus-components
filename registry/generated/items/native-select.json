@@ -7,11 +7,12 @@
       "source": "ui/native_select.rs",
       "targetRoot": "ui",
       "target": "native_select.rs",
-      "checksum": "6cf7cc4893164a0bd07f1dafba4e9ec69e57507264a6daba9a8e792d310b4876"
+      "checksum": "15a1de9a30ff8129ee0ee578b9b9cff97c4c84cad30d01ea0e69e478d97b4b74"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

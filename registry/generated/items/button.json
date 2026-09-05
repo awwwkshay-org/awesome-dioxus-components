@@ -7,11 +7,12 @@
       "source": "ui/button.rs",
       "targetRoot": "ui",
       "target": "button.rs",
-      "checksum": "0f498536390cf5ee008340c199f0d412e346a4ee7477390cda9c93edb4f75ceb"
+      "checksum": "37189be9e7e77eb40af3872a097746c734ca5e1b1efb6c0e06d4bb261303d4ad"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

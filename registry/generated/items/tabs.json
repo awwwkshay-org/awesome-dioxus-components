@@ -7,11 +7,12 @@
       "source": "ui/tabs.rs",
       "targetRoot": "ui",
       "target": "tabs.rs",
-      "checksum": "3f880caf77e5d7eabc644a74b7f9a7ebe44c94bf49dd5a74ac2929cc42a83178"
+      "checksum": "7f4205e3e09a54b86f87c51a3e3044a534b5a01f20dd7ac6be4e0319940708e1"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

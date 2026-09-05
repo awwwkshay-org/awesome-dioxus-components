@@ -7,11 +7,12 @@
       "source": "ui/card.rs",
       "targetRoot": "ui",
       "target": "card.rs",
-      "checksum": "16c77d9d9464259a4242a01c716a73f9c513dd855a635129da1311e8adbb84c0"
+      "checksum": "b4348c0a8dfe019fa162dd0c7b8041433302534eb847057646470b46a7996e1c"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

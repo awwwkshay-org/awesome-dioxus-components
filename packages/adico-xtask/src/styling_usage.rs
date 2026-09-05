@@ -71,6 +71,13 @@ pub struct ColorException {
     pub reason: String,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct RadiusException {
+    pub part: String,
+    pub reason: String,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum InspirationSource {
@@ -87,6 +94,15 @@ pub struct StylingUsageRecord {
     pub token_compliant: bool,
     #[serde(default)]
     pub color_exception: Vec<ColorException>,
+    /// Sub-parts this item's own `radius: Radius` rollout deliberately left
+    /// with a hardcoded `rounded-*` literal (internal composition detail,
+    /// side-specific join, variant-owned corner, etc. — see
+    /// `complete-component-prop-surface`'s task 3.1 for the full rationale
+    /// per item). Empty for an item with no `radius` prop at all, or one
+    /// whose `radius`-bearing part(s) leave no stray `rounded-*` literal
+    /// behind.
+    #[serde(default)]
+    pub radius_exception: Vec<RadiusException>,
     #[serde(default)]
     pub inspired_by: Vec<InspirationSource>,
     #[serde(default)]
@@ -153,6 +169,32 @@ fn contains_non_token_color(source: &str) -> bool {
         .any(|prefix| source.contains(prefix))
 }
 
+/// Whether this item declares a `radius: Radius` prop at all (imports the
+/// shared enum). An item with no `radius` prop is exempt from condition
+/// (g) entirely -- it may still hardcode `rounded-*` freely (a documented
+/// task 3.1 exclusion), same as it always could.
+fn declares_radius_prop(source: &str) -> bool {
+    source.contains("adico_lib::variants::Radius")
+}
+
+/// Whether the source contains a bare `rounded-<size>` Tailwind literal in
+/// *live* code, ignoring `#[cfg(test)] mod tests { ... }` (every registry
+/// file's own test module puts its assertions' literal strings inline,
+/// e.g. `"...rounded-full..."` re-asserting a `class()` fn's output, which
+/// is not a stray production-code literal condition (g) needs named).
+/// `Radius::class()`'s own match arms live in `registry/lib/variants.rs`,
+/// a different file never included in an item's own combined source (see
+/// `read_item_source`), so any remaining hit here is necessarily a *stray*
+/// literal outside that shared enum -- exactly what condition (g) exists
+/// to name.
+fn contains_rounded_literal(source: &str) -> bool {
+    const SIZES: &[&str] = &["none", "sm", "md", "lg", "xl", "2xl", "3xl", "full"];
+    let live_source = source.split("#[cfg(test)]").next().unwrap_or(source);
+    SIZES
+        .iter()
+        .any(|size| live_source.contains(&format!("rounded-{size}")))
+}
+
 // --- Pure, testable core ----------------------------------------------------
 
 fn check_item(item_name: &str, source: &str, record: &StylingUsageRecord) -> Vec<String> {
@@ -207,6 +249,27 @@ fn check_item(item_name: &str, source: &str, record: &StylingUsageRecord) -> Vec
         }
     }
 
+    // Condition (g): an item that declares a `radius: Radius` prop must not
+    // leave a stray `rounded-*` literal unexplained. `Radius::class()`'s own
+    // match arms live in a different file (`registry/lib/variants.rs`), so
+    // every hit here belongs to this item's own source and must be named.
+    if declares_radius_prop(source)
+        && contains_rounded_literal(source)
+        && record.radius_exception.is_empty()
+    {
+        violations.push(format!(
+            "{item_name}: declares a radius prop but source contains a stray rounded-* literal with no matching radiusException"
+        ));
+    }
+    for exception in &record.radius_exception {
+        if exception.reason.trim().is_empty() {
+            violations.push(format!(
+                "{item_name}: radiusException '{}' has an empty reason",
+                exception.part
+            ));
+        }
+    }
+
     violations
 }
 
@@ -229,6 +292,7 @@ pub fn sync(root: &Path) -> Result<(), String> {
                 style_exception: Vec::new(),
                 token_compliant: !contains_non_token_color(&source),
                 color_exception: Vec::new(),
+                radius_exception: Vec::new(),
                 inspired_by: Vec::new(),
                 inspiration_note: String::new(),
             },
@@ -358,6 +422,7 @@ mod tests {
             style_exception: Vec::new(),
             token_compliant: true,
             color_exception: Vec::new(),
+            radius_exception: Vec::new(),
             inspired_by: Vec::new(),
             inspiration_note: String::new(),
         }
@@ -375,6 +440,10 @@ mod tests {
             color_exception: vec![ColorException {
                 value: "text-white".to_string(),
                 reason: "matches upstream shadcn destructive variant".to_string(),
+            }],
+            radius_exception: vec![RadiusException {
+                part: "item".to_string(),
+                reason: "per-row highlight, internal to the list".to_string(),
             }],
             inspired_by: vec![
                 InspirationSource::Shadcn,
@@ -484,6 +553,64 @@ mod tests {
         let mut record = compliant_record();
         record.color_exception.push(ColorException {
             value: "text-white".to_string(),
+            reason: String::new(),
+        });
+        let violations = check_item("widget", "", &record);
+        assert!(
+            violations.iter().any(|v| v.contains("empty reason")),
+            "{violations:?}"
+        );
+    }
+
+    #[test]
+    fn condition_g_fails_on_uncovered_rounded_literal() {
+        let record = compliant_record();
+        let violations = check_item(
+            "widget",
+            r#"use crate::adico_lib::variants::Radius;
+            "rounded-md border","#,
+            &record,
+        );
+        assert!(
+            violations.iter().any(|v| v.contains("rounded-* literal")),
+            "{violations:?}"
+        );
+    }
+
+    #[test]
+    fn condition_g_passes_when_radius_exception_recorded() {
+        let mut record = compliant_record();
+        record.radius_exception.push(RadiusException {
+            part: "item".to_string(),
+            reason: "per-row highlight, internal to the list".to_string(),
+        });
+        let violations = check_item(
+            "widget",
+            r#"use crate::adico_lib::variants::Radius;
+            "rounded-sm px-2 py-1.5","#,
+            &record,
+        );
+        assert!(
+            !violations.iter().any(|v| v.contains("rounded-* literal")),
+            "{violations:?}"
+        );
+    }
+
+    #[test]
+    fn condition_g_ignores_items_with_no_radius_prop() {
+        let record = compliant_record();
+        let violations = check_item("widget", r#""rounded-md border","#, &record);
+        assert!(
+            !violations.iter().any(|v| v.contains("rounded-* literal")),
+            "{violations:?}"
+        );
+    }
+
+    #[test]
+    fn condition_g_fails_on_empty_radius_exception_reason() {
+        let mut record = compliant_record();
+        record.radius_exception.push(RadiusException {
+            part: "item".to_string(),
             reason: String::new(),
         });
         let violations = check_item("widget", "", &record);

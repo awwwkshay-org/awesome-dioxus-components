@@ -1046,7 +1046,7 @@ mod tests {
             .expect("official dialog should be present");
         let details = render_registry_item(dialog);
         assert!(details.contains("@adico/dialog\nType: registry:ui"));
-        assert!(details.contains("Registry dependencies:\n  cn"));
+        assert!(details.contains("Registry dependencies:\n  button\n  cn\n  variants"));
         assert!(details.contains("Cargo dependencies:\n  dioxus =0.7.9"));
         assert!(
             details.contains("Provenance: provenance/records/adico-primitives-dialog-select.json")

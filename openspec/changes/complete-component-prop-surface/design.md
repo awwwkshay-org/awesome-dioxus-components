@@ -155,11 +155,37 @@ there is nothing to migrate away from.
 
 ### D3: `radius` rollout — strip `rounded-*` from base strings *and* every variant/size class function, enforced by a real test
 
-`radius: Radius` is added to every component with a visible bounded
-surface (the population overlaps heavily with, but is not identical to,
-the 50 files that already hard-code `rounded-*` — a component with no
-visible bounded surface at all, if any exist among the 50, is excluded
-with a recorded reason rather than force-fit).
+`radius: Radius` is added **once per registry item, on that item's own
+root/primary visible surface** — not once per sub-component function.
+Several items (`calendar`, `attachment`, `bubble`, `button_group`,
+`sidebar`, …) have multiple sub-parts that each hard-code their own
+`rounded-*` (e.g. `calendar.rs`'s nav button, month/year select triggers,
+and per-day grid buttons); those sub-part corners are a fixed part of that
+sub-element's own internal composition, not independently caller-tunable,
+and stay hard-coded — recorded as an explicit per-item exclusion list in
+`tasks.md`, not silently left alone. The population overlaps heavily with,
+but is not identical to, the ~49 files that hard-code `rounded-*` today —
+a component with no visible bounded surface at all is excluded with a
+recorded reason rather than force-fit.
+
+**`Radius::Default`-vs-current-visual conflict, found before any file was
+touched:** `Radius::Default` resolves to `rounded-lg` (tracking the
+`--radius` theme token, per `registry/lib/variants.rs`), but a genuine
+majority of candidate roots currently hard-code Tailwind's fixed
+`rounded-md` (`badge`, `card`, `button`, `calendar`'s view, and others) —
+a different, non-token value (`0.375rem` vs `--radius`'s own default of
+`0.5rem`). Defaulting every item's new `radius` prop to `Radius::Default`
+would silently change these items' visuals even before a consumer touches
+the theme's radius slider, failing this task's own "no visual regression
+at the default" bar. Fixed two ways: `Radius` gained a `Md` variant
+(`rounded-md`, no `--radius` tracking — see `variants.rs`) sitting between
+`Sm` and `Default`, and every item's new `radius` field declares
+`#[props(default = Radius::<X>)]` matching that item's *current* literal
+class exactly (`Radius::Md` for the `rounded-md` majority, `Radius::Full`
+for `avatar`, `Radius::Xl` for `bubble`'s `rounded-2xl` content, plain
+`Radius::default()` only for the items already on `rounded-lg` today —
+`alert`, `alert_dialog`'s content). `tasks.md`'s per-item list records
+each chosen default alongside its item.
 
 The strip is **not only in base class strings**: in
 `registry/ui/button.rs`, `rounded-md` lives inside `ButtonSize::class()`
@@ -168,11 +194,21 @@ The strip is **not only in base class strings**: in
 with an `impl … { fn class(self) }`. Missing the per-variant/size copy
 would leave a competing hard-coded class `cn()` cannot resolve (Context).
 
+Two shapes can't be driven by `Radius::class()` at all and stay as
+recorded exclusions rather than attempted conversions: an arbitrary-variant
+descendant selector (`calendar.rs`'s `[&_button]:rounded-md`, which targets
+nested buttons `radius` doesn't reach) and a side-specific corner
+(`input_otp.rs`'s `first:rounded-l-md`/`last:rounded-r-md`, which
+`Radius::class()` has no side-aware equivalent for).
+
 Verification is a real, CI-gated test, not a one-off grep: a new unit test
 in `packages/adico-xtask/src/styling_usage.rs` asserts no `rounded-`
-literal appears anywhere in a radius-bearing item's `registry/ui/*.rs`
-file outside `Radius::class()`'s own match arms — condition (g), following
-the existing lettered-condition pattern (a)–(f) that file already uses.
+literal appears on a radius-bearing item's *radius-bearing part* outside
+`Radius::class()`'s own match arms — condition (g), following the existing
+lettered-condition pattern (a)–(f) that file already uses. This is
+per-part, not whole-file: a radius-bearing item's *other*, explicitly
+excluded sub-parts (per the list above) keep their own hard-coded
+`rounded-*` and are not asserted against.
 
 `radius` is an adico extension exactly like `loading` (D4), so it must
 register the same way: one `(item, part, prop)` entry per radius-bearing

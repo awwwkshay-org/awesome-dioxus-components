@@ -7,11 +7,12 @@
       "source": "ui/toolbar.rs",
       "targetRoot": "ui",
       "target": "toolbar.rs",
-      "checksum": "17a8e9653e81ee3edeed9c176c87c8ebba6e4de209fd0120c8ea9692be415aed"
+      "checksum": "d464473a192b8042706d57113511512bf85773899a883034b0f0b8c46735499f"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

@@ -3,6 +3,12 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
+  "radiusException": [
+    {
+      "part": "option",
+      "reason": "ComboboxOption is a per-row highlight, internal to the list"
+    }
+  ],
   "inspiredBy": [
     "shadcn",
     "dioxus-components"

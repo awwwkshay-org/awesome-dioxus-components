@@ -6,17 +6,27 @@
 
 use dioxus::prelude::*;
 
-const KBD_CLASS: &str = "pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 rounded-sm bg-muted px-1 font-sans text-xs font-medium text-muted-foreground select-none";
+use crate::adico_lib::variants::Radius;
+
+const KBD_CLASS: &str = "pointer-events-none inline-flex h-5 w-fit min-w-5 items-center justify-center gap-1 bg-muted px-1 font-sans text-xs font-medium text-muted-foreground select-none";
 const KBD_GROUP_CLASS: &str = "inline-flex items-center gap-1";
 
 /// A single visual keyboard key, e.g. `Kbd { "Ctrl" }`.
 #[component]
-pub fn Kbd(class: Option<String>, children: Element) -> Element {
-    let class = [KBD_CLASS, class.as_deref().unwrap_or_default()]
-        .into_iter()
-        .filter(|part| !part.is_empty())
-        .collect::<Vec<_>>()
-        .join(" ");
+pub fn Kbd(
+    #[props(default = Radius::Sm)] radius: Radius,
+    class: Option<String>,
+    children: Element,
+) -> Element {
+    let class = [
+        KBD_CLASS,
+        radius.class(),
+        class.as_deref().unwrap_or_default(),
+    ]
+    .into_iter()
+    .filter(|part| !part.is_empty())
+    .collect::<Vec<_>>()
+    .join(" ");
     rsx! {
         kbd { class, {children} }
     }

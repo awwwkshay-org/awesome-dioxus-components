@@ -16,6 +16,7 @@ pub use adico_primitives::drag_and_drop_list::{
 };
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// A reorderable list container. Keyboard reordering (Enter to lift/drop,
 /// Arrow keys to move, Escape to cancel, Delete/Backspace to remove) is
@@ -52,11 +53,13 @@ pub fn DragAndDropListItems(
 pub fn DragAndDropListItem(
     index: usize,
     #[props(default)] item_key: Option<String>,
+    #[props(default = Radius::Md)] radius: Radius,
     class: Option<String>,
     children: Element,
 ) -> Element {
     let class = cn(&[
-        "flex items-center gap-2 rounded-md border bg-background px-3 py-2 text-sm data-[is-grabbing=true]:opacity-50 data-[focus-visible=true]:ring-2 data-[focus-visible=true]:ring-ring/50",
+        "flex items-center gap-2 border bg-background px-3 py-2 text-sm data-[is-grabbing=true]:opacity-50 data-[focus-visible=true]:ring-2 data-[focus-visible=true]:ring-ring/50",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

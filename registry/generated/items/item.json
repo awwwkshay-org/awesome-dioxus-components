@@ -7,11 +7,12 @@
       "source": "ui/item.rs",
       "targetRoot": "ui",
       "target": "item.rs",
-      "checksum": "ddb3930395ad96b2a0ad24f4673e2e1b80679337064f3504bbda24fe973a31c3"
+      "checksum": "e17eb338124f06ff4b413e6b2acbed87c936372a27bdc307caecf8882fdf61b8"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

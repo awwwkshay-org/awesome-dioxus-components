@@ -3,6 +3,16 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
+  "radiusException": [
+    {
+      "part": "trigger",
+      "reason": "DatePickerTrigger is a small disclosure icon button, not the field's own surface"
+    },
+    {
+      "part": "input-value",
+      "reason": "the [role=spinbutton] descendant selector is an arbitrary-variant selector targeting nested spinbuttons radius can't reach"
+    }
+  ],
   "inspiredBy": [
     "dioxus-components"
   ],

@@ -7,11 +7,12 @@
       "source": "ui/hover_card.rs",
       "targetRoot": "ui",
       "target": "hover_card.rs",
-      "checksum": "e6241795cd2156cd1e9079438373f5cbde6c027583c9877c50a05bf398e13876"
+      "checksum": "de2da2b53137c17d67298b53f2e155bf9e6a01df7296bde1209eb08e34d677ac"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "variants"
   ],
   "cargoDependencies": [
     {

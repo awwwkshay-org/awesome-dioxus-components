@@ -26,6 +26,15 @@ use crate::adico_lib::cn::cn;
 /// The default styled toast card, composing the primitive's unstyled parts.
 /// Used as [`ToastProvider`]'s default `render_toast`; call directly only if
 /// building a custom `render_toast` that still wants this card's look.
+///
+/// Deliberately has no `radius` prop: this facade takes `props: ToastProps`
+/// — the primitive's own struct, re-exported verbatim, not a registry-owned
+/// wrapper — because `ToastProvider`'s default `render_toast` spreads
+/// `Toast { ..props }` from a `ToastPropsWithOwner`, which only works if
+/// `Toast`'s param type structurally matches. Adding `radius: Radius` would
+/// need either the primitive depending on the registry-owned `Radius` type
+/// (violates the primitives → registry dependency direction) or replacing
+/// this props type with a wrapper (breaks the `..props` spread).
 #[component]
 pub fn Toast(props: ToastProps) -> Element {
     // Field-by-field, not `..props`: spreading the whole `ToastProps`

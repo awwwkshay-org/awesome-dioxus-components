@@ -8,6 +8,7 @@
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 use adico_primitives::icons::{ChevronDown, ChevronUp};
 
 use adico_primitives::select::{
@@ -107,12 +108,18 @@ pub fn SelectMulti<T: Clone + PartialEq + 'static>(
 #[component]
 pub fn SelectTrigger(
     children: Element,
+    /// Corner radius. Set the same value on [`SelectList`] for a visually
+    /// consistent trigger/popup pair — there is no shared context between
+    /// them to thread one value automatically.
+    #[props(default = Radius::Md)]
+    radius: Radius,
     class: Option<String>,
     aria_label: Option<String>,
     aria_invalid: Option<bool>,
 ) -> Element {
     let class = cn(&[
-        "group flex h-9 w-full min-w-32 items-center justify-between gap-2 rounded-md border border-input bg-background px-3 text-sm outline-none transition-[color,box-shadow] focus-visible:ring-1 focus-visible:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+        "group flex h-9 w-full min-w-32 items-center justify-between gap-2 border border-input bg-background px-3 text-sm outline-none transition-[color,box-shadow] focus-visible:ring-1 focus-visible:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -186,11 +193,15 @@ pub fn SelectValue(placeholder: Option<String>, class: Option<String>) -> Elemen
 pub fn SelectList(
     children: Element,
     id: Option<String>,
+    /// Corner radius. See [`SelectTrigger::radius`]'s own doc comment.
+    #[props(default = Radius::Md)]
+    radius: Radius,
     class: Option<String>,
     aria_label: Option<String>,
 ) -> Element {
     let class = cn(&[
-        "z-50 max-h-72 min-w-32 overflow-y-auto rounded-md bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        "z-50 max-h-72 min-w-32 overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

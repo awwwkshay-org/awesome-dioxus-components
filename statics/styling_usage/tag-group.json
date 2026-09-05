@@ -8,6 +8,12 @@
       "reason": "A neutral, mode-aware hover-state tint independent of any accent color; a common pattern for a subtle interactive-state affordance that shouldn't tie to the active accent token."
     }
   ],
+  "radiusException": [
+    {
+      "part": "tag-remove-button",
+      "reason": "TagRemoveButton is a small icon control inside the chip"
+    }
+  ],
   "inspiredBy": [
     "dioxus-components"
   ],
