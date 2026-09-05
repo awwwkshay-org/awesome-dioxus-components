@@ -97,6 +97,11 @@ impl ThemePalette {
 /// role variables immediately and re-applies them whenever the resolved
 /// light/dark appearance changes (via the shared `theme_mode` signal), so a
 /// mode switch and a palette switch compose correctly.
+///
+/// Deliberately has no `radius` prop: the one `rounded-full` is a per-theme
+/// color-swatch dot rendered in a loop — circular is the established
+/// convention for a selectable color dot (same reasoning as `Skeleton`'s
+/// `Circle` variant), not a cosmetic choice.
 #[component]
 pub fn ThemeSwitcher(class: Option<String>) -> Element {
     let (mode, _) = use_persisted_theme_mode();

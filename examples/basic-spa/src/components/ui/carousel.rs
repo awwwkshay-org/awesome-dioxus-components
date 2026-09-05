@@ -94,6 +94,12 @@ impl CarouselContext {
 /// The root of a scroll-snap carousel: a `relative`-positioned wrapper around
 /// a [`CarouselContent`] and optional [`CarouselPrevious`]/[`CarouselNext`]
 /// paging controls.
+///
+/// Deliberately has no `radius` prop anywhere in this file: neither
+/// `Carousel`, `CarouselContent`, nor `CarouselItem` has a bounded surface
+/// of its own — the only `rounded-full` in this module is the shared nav-
+/// button class used by `CarouselPrevious`/`CarouselNext`, which is not the
+/// carousel's own surface.
 #[component]
 pub fn Carousel(
     children: Element,

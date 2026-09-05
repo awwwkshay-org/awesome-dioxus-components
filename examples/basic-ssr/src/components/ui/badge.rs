@@ -3,6 +3,7 @@
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The semantic presentation of a [`Badge`].
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -54,6 +55,9 @@ pub struct BadgeProps {
     /// Semantic presentation variant.
     #[props(default)]
     pub variant: BadgeVariant,
+    /// Corner radius of the badge pill.
+    #[props(default = Radius::Md)]
+    pub radius: Radius,
     /// Extra classes appended to the semantic default.
     #[props(default)]
     pub class: Option<String>,
@@ -69,8 +73,9 @@ pub struct BadgeProps {
 #[component]
 pub fn Badge(props: BadgeProps) -> Element {
     let class = cn(&[
-        "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+        "inline-flex items-center border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
         props.variant.class(),
+        props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

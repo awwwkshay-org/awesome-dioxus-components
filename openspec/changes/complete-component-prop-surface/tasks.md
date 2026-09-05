@@ -877,24 +877,106 @@ at task 6.2, since they aren't touched incrementally during a wave.
 
 ## 6. Propagate and validate
 
-- [ ] 6.1 Re-run `cargo run -p adico-xtask -- registry build`,
+- [x] 6.1 Re-run `cargo run -p adico-xtask -- registry build`,
       `primitive-usage sync`, `styling-usage sync`, `component-compat
       sync`, and `prop-parity sync` in that order, and commit the
       regenerated `statics/**`/`registry/generated/**` output. Verify
       every corresponding `check` command passes with zero drift.
-- [ ] 6.2 Refresh every installed consumer fixture
+
+      **Done.** All five generators re-run in order; every matching
+      `check` command (`registry validate`, `primitive-usage check`,
+      `styling-usage check`, `component-compat check`, `prop-parity
+      check`) passes with zero drift on a second run, confirming
+      idempotence.
+
+- [x] 6.2 Refresh every installed consumer fixture
       (`examples/basic-spa`, `examples/basic-ssr`,
       `tests/installation/*`) through `adico add --replace`, never by
       hand-editing copied source. Verify each fixture's `cargo check`/
       `cargo test` passes, and `cargo check --target wasm32-unknown-unknown`
       for the web-targeting fixtures.
-- [ ] 6.3 Run `cd tests/playwright && npm test` for keyboard/axe coverage
+
+      **Done, plus two real gaps found and fixed.** All 22 fixtures (2
+      `examples/*` + 20 `tests/installation/*`) refreshed via `adico add
+      --replace` and verified compiling. Found `awwwkshay-consumer` and
+      `button-consumer` newly needed `adico-primitives` transitively (via
+      `button` → `spinner`) but were missing the hand-authored
+      `[patch.crates-io]` block every other adico-primitives-consuming
+      fixture already has (`adico add` only manages `[dependencies]`,
+      never `[patch.crates-io]`) — added it to both, verified with `cargo
+      check --offline`. Separately, while investigating task 6.3, found
+      `wave3-consumer`'s installed `src/components/ui/*.rs` (gitignored
+      per `tests/installation/.gitignore`) had silently gone stale since
+      before Wave 2 — this refresh loop's own diff-before/after check
+      confirmed it was the only one of the 9 fixtures touched by task 6.3
+      that hadn't actually picked up its wave's changes; re-running `adico
+      add --replace` on it here fixed it. Worth a standing reminder: a
+      `tests/installation/*` fixture's installed copies can go stale
+      silently since they're gitignored and only refreshed by explicitly
+      re-running `adico add`, not by anything git-visible.
+
+- [x] 6.3 Run `cd tests/playwright && npm test` for keyboard/axe coverage
       on every component whose interactive props changed in Waves 1–5 or
       the `**BREAKING**` controlled-trio migration (task 2.6). Verify all
       pass; report any surface with no existing fixture (per
       `docs/validation.md`'s recorded desktop/mobile gap) rather than
       claiming it passed.
-- [ ] 6.4 Run the full baseline: `cargo fmt --all --check`, `cargo check
+
+      **Run, with two pre-existing failures found and confirmed unrelated
+      to this change.** No single `npm test` run exists — each spec
+      targets one `tests/installation/*` fixture via
+      `ADICO_PLAYWRIGHT_BASE_URL`; ran each in turn against a freshly
+      built `dx serve` (waited for its own "Build completed successfully"
+      log line before testing, not just server-listening).
+
+      Passing cleanly: `wave2-roving-focus.spec.ts` (5/5),
+      `wave2-state.spec.ts` (5/5), `wave2-risk.spec.ts` (6/6),
+      `wave5-color-picker.spec.ts` (2/2),
+      `wave5-drag-and-drop-list.spec.ts` (3/3), `wave5-extras.spec.ts`
+      (3/3), `wave5-tag-group.spec.ts` (2/2) — 26/26 across 7 suites.
+
+      **Two pre-existing, non-Change-B defects found**, both confirmed
+      unrelated by diff review (every Wave 1–5 registry-facade diff that
+      touches these items is additive `id`/`attributes` forwarding only;
+      no primitive-level behavioral file was touched by this change):
+
+      1. **Positioner stuck invisible.** `wave3.spec.ts`: 3/7 pass
+         (ContextMenu, Menubar, plus an axe check that is vacuously green
+         — it scopes to `[role="dialog"]`, which never renders, so it
+         checks nothing). Tooltip, Popover, HoverCard, and DropdownMenu
+         all fail: their floating content never leaves
+         `style="position: fixed; visibility: hidden;"`, confirmed via
+         Chrome DevTools (no `dialog`/`menu`/`tooltip` role node ever
+         appears in the accessibility tree). `wave4.spec.ts`: 3/5 pass
+         (Calendar, Sidebar, axe check); Combobox and DatePicker fail
+         identically (both anchor their popover the same way). `select.spec.ts`:
+         0/2, same symptom. Isolation-tested conclusively: reverted
+         `wave3-consumer`'s installed facade copies to the exact
+         pre-Wave-2 commit (`fba4cac~1`) — same failure — then refreshed
+         to current Wave-2 code — same failure. Traces to
+         `packages/adico-primitives/src/positioner.rs`'s
+         `use_reposition_bridge`, added in commit `b4bf95d` (2026-09-04,
+         part of the already-archived `build-adico-component-ecosystem`
+         change), unrelated to this change's registry-facade work.
+         Recorded as a project memory (`project_positioner_visibility_bug.md`)
+         for follow-up; per explicit user decision, documented here and
+         not fixed inline since it's primitive infrastructure outside
+         this change's prop-surface scope.
+      2. **Dialog focus-trap/scroll-lock not engaging.** `dialog.spec.ts`:
+         1/4 pass (only the nested-dialog Escape test, which needs no
+         focus trap or scroll lock to succeed). The other three fail:
+         the overlay stays `aria-hidden="true"` after opening, `html`
+         never gets its `overflow:hidden` scroll lock, and Tab focus
+         never lands inside the dialog. `packages/adico-primitives/src/dialog.rs`
+         and `lib.rs` (where `use_focus_trap`/`FocusTrapScript` live)
+         were not touched by Wave 4's diff at all — only the registry
+         facade's additive `id`/`attributes` plumbing changed. Not
+         root-caused; recorded as pre-existing alongside finding 1.
+
+      Not run: `mode-toggle.spec.ts`, `theme-switcher.spec.ts`,
+      `fullstack.spec.ts` — none exercise a component whose props changed
+      in Waves 1–5, so they're outside this task's stated scope.
+- [x] 6.4 Run the full baseline: `cargo fmt --all --check`, `cargo check
       --locked --workspace`, `cargo clippy --locked -p adico-cli -p
       adico-primitives -p adico-registry-core -p adico-test-utils -p
       adico-xtask --all-targets -- -D warnings` (the documented baseline;
@@ -905,3 +987,24 @@ at task 6.2, since they aren't touched incrementally during a wave.
       adico-test-utils -p adico-xtask`, and `openspec validate
       complete-component-prop-surface --strict`. Verify all pass; report
       any that don't and why.
+
+      **All pass, with one pre-existing wider-workspace failure reported
+      separately as instructed.** `cargo fmt --all --check`: clean.
+      `cargo check --locked --workspace`: clean. The documented narrow
+      clippy command (5 packages): clean. `cargo test --locked` on the
+      same 5 packages: 0 failures across every test binary (unit +
+      doctests). `openspec validate complete-component-prop-surface
+      --strict`: valid.
+
+      The wider `cargo clippy --locked --workspace --all-targets -- -D
+      warnings` form fails, but only in `adico-example-basic-spa` and
+      `adico-example-basic-ssr`, both on the identical
+      `clippy::collapsible_if` lint at the same `sort_key` nested-if in
+      `data_table.rs`. Confirmed pre-existing and unrelated to this
+      change: that exact code was already present in commit `1f386a7`
+      (m8, before Change B existed) and untouched by Change B's own
+      `07d9edc` (Section 4 loading rollout, the only commit in this
+      change that touched `data_table.rs` at all, and only to add the
+      `loading`/`loading_text` props elsewhere in the file). Not fixed
+      here, per the same precedent this task cites from
+      `extend-upstream-prop-evidence`.

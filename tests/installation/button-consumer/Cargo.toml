@@ -7,3 +7,7 @@ edition = "2024"
 
 [dependencies]
 dioxus = { version = "=0.7.9" }
+adico-primitives = "=0.1.0"
+
+[patch.crates-io]
+adico-primitives = { path = "../../../packages/adico-primitives" }
