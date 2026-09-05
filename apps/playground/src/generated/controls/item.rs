@@ -4,7 +4,37 @@
 use dioxus::prelude::*;
 
 use crate::components::controls::{BoolControl, SelectControl};
-use crate::components::ui::ItemVariant;
+use crate::components::ui::{ItemMediaVariant, ItemSize, ItemVariant};
+
+/// Generated from `ItemMediaVariant`'s declared variants.
+pub const ITEM_MEDIA_VARIANT_OPTIONS: &[(&str, ItemMediaVariant)] = &[
+    ("Default", ItemMediaVariant::Default),
+    ("Icon", ItemMediaVariant::Icon),
+    ("Image", ItemMediaVariant::Image),
+];
+
+const _: () = {
+    fn _exhaustive(value: ItemMediaVariant) {
+        match value {
+            ItemMediaVariant::Default => {}
+            ItemMediaVariant::Icon => {}
+            ItemMediaVariant::Image => {}
+        }
+    }
+};
+
+/// Generated from `ItemSize`'s declared variants.
+pub const ITEM_SIZE_OPTIONS: &[(&str, ItemSize)] =
+    &[("Sm", ItemSize::Sm), ("Default", ItemSize::Default)];
+
+const _: () = {
+    fn _exhaustive(value: ItemSize) {
+        match value {
+            ItemSize::Sm => {}
+            ItemSize::Default => {}
+        }
+    }
+};
 
 /// Generated from `ItemVariant`'s declared variants.
 pub const ITEM_VARIANT_OPTIONS: &[(&str, ItemVariant)] = &[
@@ -29,6 +59,7 @@ const _: () = {
 #[derive(Clone, PartialEq)]
 pub struct ItemDemoState {
     pub variant: ItemVariant,
+    pub size: ItemSize,
     pub disabled: bool,
 }
 
@@ -36,6 +67,7 @@ impl Default for ItemDemoState {
     fn default() -> Self {
         Self {
             variant: ItemVariant::Default,
+            size: ItemSize::Default,
             disabled: false,
         }
     }
@@ -44,15 +76,43 @@ impl Default for ItemDemoState {
 #[component]
 pub fn ItemControls(mut state: Signal<ItemDemoState>) -> Element {
     let mut variant = use_signal(|| state().variant);
+    let mut size = use_signal(|| state().size);
     let mut disabled = use_signal(|| state().disabled);
     use_effect(move || {
         state.set(ItemDemoState {
             variant: variant(),
+            size: size(),
             disabled: disabled(),
         });
     });
     rsx! {
         SelectControl { label: "Variant", value: variant, options: ITEM_VARIANT_OPTIONS }
+        SelectControl { label: "Size", value: size, options: ITEM_SIZE_OPTIONS }
         BoolControl { label: "Disabled", value: disabled }
+    }
+}
+
+/// Generated demo state for [`ItemMedia`], one field per controllable prop.
+#[derive(Clone, PartialEq)]
+pub struct ItemMediaDemoState {
+    pub variant: ItemMediaVariant,
+}
+
+impl Default for ItemMediaDemoState {
+    fn default() -> Self {
+        Self {
+            variant: ItemMediaVariant::Default,
+        }
+    }
+}
+
+#[component]
+pub fn ItemMediaControls(mut state: Signal<ItemMediaDemoState>) -> Element {
+    let mut variant = use_signal(|| state().variant);
+    use_effect(move || {
+        state.set(ItemMediaDemoState { variant: variant() });
+    });
+    rsx! {
+        SelectControl { label: "Variant", value: variant, options: ITEM_MEDIA_VARIANT_OPTIONS }
     }
 }

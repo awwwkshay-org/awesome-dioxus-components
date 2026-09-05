@@ -218,11 +218,36 @@
 
 ## 3. Full coverage — missing items and uncontrolled pages
 
-- [ ] 3.1 Install `attachment`, `bubble`, `data-table`, `marker`,
+- [x] 3.1 Install `attachment`, `bubble`, `data-table`, `marker`,
       `message`, and `message-scroller` into `apps/playground` via `adico
       add` (real CLI path). Verify `apps/playground/components.json`/
       `adico.lock` record the new items and `cargo check --locked
       --workspace` still passes.
+
+      **Done, plus a full refresh and one real generator bug found and
+      fixed.** `marker` was already installed (per proposal.md) but, like
+      several fixtures found stale during Change B, its installed copy
+      predated a real registry change (`MarkerVariant`); the other 5 were
+      genuinely missing. Rather than install just the 6 named items and
+      leave the rest of `apps/playground`'s 60 pre-existing items exactly
+      as they were (some almost certainly also stale, per the same
+      pattern), ran `adico add --all --replace` once to bring the whole
+      installed copy current in one pass — the resulting hash of every
+      installed file changed, confirming real drift beyond just these 6.
+
+      Regenerating `playground-controls sync` against the freshly-current
+      source surfaced a real bug this task's own testing hadn't caught:
+      `Attachment`'s own `state` field collided with `Controls`'
+      hardcoded outer `state: Signal<...>` parameter name, silently
+      shadowing it with a per-field local of the wrong type (a compile
+      error, not a silent miscompile — caught immediately by `cargo check
+      --locked --workspace`). Fixed with a `local_signal_name` helper: the
+      per-field local variable is renamed only when it would collide with
+      the fixed outer parameter name, keeping every other field's natural
+      name and preserving `proposal.md`'s `ButtonControls { state }`
+      field-init-shorthand calling convention on the outer parameter.
+      Added a regression test. `cargo test -p adico-xtask`: 181 passed.
+      `cargo check --locked --workspace`: zero errors.
 - [ ] 3.2 Add all 7 missing pages (`attachment`, `bubble`, `data-table`,
       `marker`, `message`, `message-scroller`, `theme-builder`), each
       using its generated `Controls` (and `Preview` if the item is one of

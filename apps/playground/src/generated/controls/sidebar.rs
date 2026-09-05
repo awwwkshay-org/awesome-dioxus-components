@@ -4,7 +4,10 @@
 use dioxus::prelude::*;
 
 use crate::components::controls::{BoolControl, OptionalBoolControl, SelectControl};
-use crate::components::ui::{SidebarCollapsible, SidebarSide, SidebarVariant};
+use crate::components::ui::{
+    SidebarCollapsible, SidebarMenuButtonSize, SidebarMenuButtonVariant, SidebarSide,
+    SidebarVariant,
+};
 
 /// Generated from `SidebarCollapsible`'s declared variants.
 pub const SIDEBAR_COLLAPSIBLE_OPTIONS: &[(&str, SidebarCollapsible)] = &[
@@ -19,6 +22,38 @@ const _: () = {
             SidebarCollapsible::Offcanvas => {}
             SidebarCollapsible::Icon => {}
             SidebarCollapsible::None => {}
+        }
+    }
+};
+
+/// Generated from `SidebarMenuButtonSize`'s declared variants.
+pub const SIDEBAR_MENU_BUTTON_SIZE_OPTIONS: &[(&str, SidebarMenuButtonSize)] = &[
+    ("Sm", SidebarMenuButtonSize::Sm),
+    ("Default", SidebarMenuButtonSize::Default),
+    ("Lg", SidebarMenuButtonSize::Lg),
+];
+
+const _: () = {
+    fn _exhaustive(value: SidebarMenuButtonSize) {
+        match value {
+            SidebarMenuButtonSize::Sm => {}
+            SidebarMenuButtonSize::Default => {}
+            SidebarMenuButtonSize::Lg => {}
+        }
+    }
+};
+
+/// Generated from `SidebarMenuButtonVariant`'s declared variants.
+pub const SIDEBAR_MENU_BUTTON_VARIANT_OPTIONS: &[(&str, SidebarMenuButtonVariant)] = &[
+    ("Default", SidebarMenuButtonVariant::Default),
+    ("Outline", SidebarMenuButtonVariant::Outline),
+];
+
+const _: () = {
+    fn _exhaustive(value: SidebarMenuButtonVariant) {
+        match value {
+            SidebarMenuButtonVariant::Default => {}
+            SidebarMenuButtonVariant::Outline => {}
         }
     }
 };
@@ -147,11 +182,45 @@ pub fn SidebarInsetControls(mut state: Signal<SidebarInsetDemoState>) -> Element
     }
 }
 
+/// Generated demo state for [`SidebarSeparator`], one field per controllable prop.
+#[derive(Clone, PartialEq)]
+pub struct SidebarSeparatorDemoState {
+    pub horizontal: bool,
+    pub decorative: bool,
+}
+
+impl Default for SidebarSeparatorDemoState {
+    fn default() -> Self {
+        Self {
+            horizontal: false,
+            decorative: false,
+        }
+    }
+}
+
+#[component]
+pub fn SidebarSeparatorControls(mut state: Signal<SidebarSeparatorDemoState>) -> Element {
+    let mut horizontal = use_signal(|| state().horizontal);
+    let mut decorative = use_signal(|| state().decorative);
+    use_effect(move || {
+        state.set(SidebarSeparatorDemoState {
+            horizontal: horizontal(),
+            decorative: decorative(),
+        });
+    });
+    rsx! {
+        BoolControl { label: "Horizontal", value: horizontal }
+        BoolControl { label: "Decorative", value: decorative }
+    }
+}
+
 /// Generated demo state for [`SidebarMenuButton`], one field per controllable prop.
 #[derive(Clone, PartialEq)]
 pub struct SidebarMenuButtonDemoState {
     pub is_active: bool,
     pub disabled: bool,
+    pub variant: SidebarMenuButtonVariant,
+    pub size: SidebarMenuButtonSize,
     pub loading: bool,
 }
 
@@ -160,6 +229,8 @@ impl Default for SidebarMenuButtonDemoState {
         Self {
             is_active: false,
             disabled: false,
+            variant: SidebarMenuButtonVariant::Default,
+            size: SidebarMenuButtonSize::Default,
             loading: false,
         }
     }
@@ -169,17 +240,23 @@ impl Default for SidebarMenuButtonDemoState {
 pub fn SidebarMenuButtonControls(mut state: Signal<SidebarMenuButtonDemoState>) -> Element {
     let mut is_active = use_signal(|| state().is_active);
     let mut disabled = use_signal(|| state().disabled);
+    let mut variant = use_signal(|| state().variant);
+    let mut size = use_signal(|| state().size);
     let mut loading = use_signal(|| state().loading);
     use_effect(move || {
         state.set(SidebarMenuButtonDemoState {
             is_active: is_active(),
             disabled: disabled(),
+            variant: variant(),
+            size: size(),
             loading: loading(),
         });
     });
     rsx! {
         BoolControl { label: "Is Active", value: is_active }
         BoolControl { label: "Disabled", value: disabled }
+        SelectControl { label: "Variant", value: variant, options: SIDEBAR_MENU_BUTTON_VARIANT_OPTIONS }
+        SelectControl { label: "Size", value: size, options: SIDEBAR_MENU_BUTTON_SIZE_OPTIONS }
         BoolControl { label: "Loading", value: loading }
     }
 }

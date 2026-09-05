@@ -337,6 +337,23 @@ fn render_demo_state(
     body
 }
 
+/// The identifier used for a field's own local per-field `Signal` inside a
+/// generated `<Comp>Controls` body. Identical to the field's own name,
+/// except when a real prop is itself named `state` -- which does happen
+/// (`Attachment`'s own `state` field) -- since the outer parameter is
+/// always named `state` too (preserving `proposal.md`'s
+/// `ButtonControls { state }` field-init-shorthand calling convention),
+/// and `let mut state = use_signal(|| state().state)` would silently
+/// shadow the outer parameter with a local of the wrong type. Found via a
+/// real compile error on `Attachment`, not anticipated in design.md.
+fn local_signal_name(field_name: &str) -> String {
+    if field_name == "state" {
+        "state_field".to_string()
+    } else {
+        field_name.to_string()
+    }
+}
+
 /// Renders `#[component] pub fn <Comp>Controls(state: Signal<<Comp>DemoState>) -> Element`.
 /// Each field gets its own local `Signal`, seeded from `state`'s current
 /// value, bound to the matching control; one combined `use_effect` writes
@@ -351,23 +368,22 @@ fn render_controls_component(component_name: &str, fields: &[QualifyingField]) -
         "#[component]\npub fn {component_name}Controls(mut state: Signal<{component_name}DemoState>) -> Element {{\n"
     ));
     for field in fields {
+        let local = local_signal_name(field.name);
         let seed = if matches!(field.shape, PropShape::Number) {
             format!("state().{} as f64", field.name)
         } else {
             format!("state().{}", field.name)
         };
-        body.push_str(&format!(
-            "    let mut {name} = use_signal(|| {seed});\n",
-            name = field.name
-        ));
+        body.push_str(&format!("    let mut {local} = use_signal(|| {seed});\n"));
     }
     body.push_str("    use_effect(move || {\n");
     body.push_str(&format!("        state.set({component_name}DemoState {{\n"));
     for field in fields {
+        let local = local_signal_name(field.name);
         let value = if matches!(field.shape, PropShape::Number) {
-            format!("{}() as {}", field.name, field.type_name)
+            format!("{local}() as {}", field.type_name)
         } else {
-            format!("{}()", field.name)
+            format!("{local}()")
         };
         body.push_str(&format!("            {}: {value},\n", field.name));
     }
@@ -375,7 +391,7 @@ fn render_controls_component(component_name: &str, fields: &[QualifyingField]) -
     body.push_str("    rsx! {\n");
     for field in fields {
         let label = humanize_field_label(field.name);
-        let name = field.name;
+        let name = local_signal_name(field.name);
         match &field.shape {
             PropShape::Bool => {
                 body.push_str(&format!(
@@ -960,5 +976,14 @@ mod tests {
     fn screaming_snake_case_matches_rust_const_naming() {
         assert_eq!(to_screaming_snake_case("ButtonVariant"), "BUTTON_VARIANT");
         assert_eq!(to_screaming_snake_case("Sidebar"), "SIDEBAR");
+    }
+
+    #[test]
+    fn a_field_literally_named_state_does_not_shadow_the_outer_signal() {
+        // Regression test for a real bug found on `Attachment`, whose own
+        // `state` field collided with the generated `Controls` function's
+        // outer `state: Signal<...>` parameter.
+        assert_eq!(local_signal_name("state"), "state_field");
+        assert_eq!(local_signal_name("variant"), "variant");
     }
 }

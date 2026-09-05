@@ -3,17 +3,17 @@
   "items": [
     {
       "address": "@adico/accordion",
-      "manifestDigest": "28e13a904e35de9861bcff2c33e08736610511bab1b2def1bb6424fc7c7bba74",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/accordion.rs",
-          "checksum": "a36c7f6619d05b142691c7cbcd6e87eea19d3271e7935ff0ad0d8c37e3807266"
+          "checksum": "23f226b5ce4e8e2c046c9bd6a64fe812ac68ea8155483605978ca281740622f9"
         }
       ]
     },
     {
       "address": "@adico/alert",
-      "manifestDigest": "28e13a904e35de9861bcff2c33e08736610511bab1b2def1bb6424fc7c7bba74",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/alert.rs",
@@ -23,17 +23,17 @@
     },
     {
       "address": "@adico/alert-dialog",
-      "manifestDigest": "4920a164da17eb5142b5bb4761c0f09b498e304abe7f01b9f203b9b95c055792",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/alert_dialog.rs",
-          "checksum": "4d5d1489ea60df4ef9b39639cc0c44536e034609d0aafb55522ef6aa988e0380"
+          "checksum": "98ded58c40ba6a9c75b42f1656548ea311f3b548827a09aef0b319a9a146dfa4"
         }
       ]
     },
     {
       "address": "@adico/aspect-ratio",
-      "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/aspect_ratio.rs",
@@ -42,18 +42,28 @@
       ]
     },
     {
+      "address": "@adico/attachment",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
+      "files": [
+        {
+          "path": "src/components/ui/attachment.rs",
+          "checksum": "80fac2fcc372358ce32669054d79363e34c85ba5054ee48aa8b6c3978a725337"
+        }
+      ]
+    },
+    {
       "address": "@adico/avatar",
-      "manifestDigest": "ba25c6d591fe5e82835c0081cf4a59c60b519be8ac76c70f81af352faf5a1a5d",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/avatar.rs",
-          "checksum": "100177f41029793022f7d850788e470d9df6b0864ab3f116195a0422ca79831d"
+          "checksum": "773d210344dc42c7689ff929789312c43e106f50270b4a0436d7f09334b9a2e4"
         }
       ]
     },
     {
       "address": "@adico/badge",
-      "manifestDigest": "28e13a904e35de9861bcff2c33e08736610511bab1b2def1bb6424fc7c7bba74",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/badge.rs",
@@ -63,7 +73,7 @@
     },
     {
       "address": "@adico/breadcrumb",
-      "manifestDigest": "4192d6f980baa9f09cbba5acd230447f943256421621f682f1bc3d54ae38174d",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/breadcrumb.rs",
@@ -72,8 +82,18 @@
       ]
     },
     {
+      "address": "@adico/bubble",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
+      "files": [
+        {
+          "path": "src/components/ui/bubble.rs",
+          "checksum": "7233fc2bdd562b11b6b9445995494645b51368fe181dd4c607ec0bffdd5c2838"
+        }
+      ]
+    },
+    {
       "address": "@adico/button",
-      "manifestDigest": "4920a164da17eb5142b5bb4761c0f09b498e304abe7f01b9f203b9b95c055792",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/button.rs",
@@ -83,7 +103,7 @@
     },
     {
       "address": "@adico/button-group",
-      "manifestDigest": "a6e76d3b7c224a884a8201d4cea0936b41768ca74318ebd07a063d7d602593a0",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/button_group.rs",
@@ -93,7 +113,7 @@
     },
     {
       "address": "@adico/calendar",
-      "manifestDigest": "ed3f0d07cdecb892476ff9f11cc7c3fcf4b58be868d38da2a99f1a11ba111fe3",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/calendar.rs",
@@ -103,7 +123,7 @@
     },
     {
       "address": "@adico/card",
-      "manifestDigest": "28e13a904e35de9861bcff2c33e08736610511bab1b2def1bb6424fc7c7bba74",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/card.rs",
@@ -113,7 +133,7 @@
     },
     {
       "address": "@adico/carousel",
-      "manifestDigest": "77d9ae26a007bd1333bc85042853cbf4b67e07d27ece6aaeeedebd54c2bdd1f3",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/carousel.rs",
@@ -123,7 +143,7 @@
     },
     {
       "address": "@adico/checkbox",
-      "manifestDigest": "21027dbd9efbcf92adb26f275b4cff53fe95524db5135de5d5d7a9a6b7ef53a5",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/checkbox.rs",
@@ -133,7 +153,7 @@
     },
     {
       "address": "@adico/cn",
-      "manifestDigest": "4920a164da17eb5142b5bb4761c0f09b498e304abe7f01b9f203b9b95c055792",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/adico_lib/cn.rs",
@@ -143,7 +163,7 @@
     },
     {
       "address": "@adico/collapsible",
-      "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/collapsible.rs",
@@ -153,47 +173,57 @@
     },
     {
       "address": "@adico/color-picker",
-      "manifestDigest": "ed3f0d07cdecb892476ff9f11cc7c3fcf4b58be868d38da2a99f1a11ba111fe3",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/color_picker.rs",
-          "checksum": "6066680f27fc5821adeba757f125fc3a23d7f84edc8a420452e1c9fb0ef0dc03"
+          "checksum": "b26f0a46957c8187fcf6c04fec6126f431b5c53e90395f33ddc8cee17dd84541"
         }
       ]
     },
     {
       "address": "@adico/combobox",
-      "manifestDigest": "ed3f0d07cdecb892476ff9f11cc7c3fcf4b58be868d38da2a99f1a11ba111fe3",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/combobox.rs",
-          "checksum": "34138f61cae5234cc092461c906672bb7b44733c6ff3deb1381d7c748c52f6a1"
+          "checksum": "f1acbc52ef16d5cbe8c320dc5363f229a9cb3427b6b588b5312d959789132a66"
         }
       ]
     },
     {
       "address": "@adico/command",
-      "manifestDigest": "89db7db1cc31e0a82b5b66c53b78a0c2591052d3e917851759fd66b27fcec9a2",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/command.rs",
-          "checksum": "78c2674930274e760b33273f5fd0b0fea1f4b5bb241abab160b87577f3a250eb"
+          "checksum": "cab89addc9a09e113e1a3d9a217771278fd0f6c972b0418f78258e3afddb3ac4"
         }
       ]
     },
     {
       "address": "@adico/context-menu",
-      "manifestDigest": "ba25c6d591fe5e82835c0081cf4a59c60b519be8ac76c70f81af352faf5a1a5d",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/context_menu.rs",
-          "checksum": "57b3f5a3c397c275d6162e6adef044d97c508863d057a53cfb950a0156c3e5f1"
+          "checksum": "fa2c3e2019f8a78537292810ebf7f9496db85a63ad7c8864287f8f1cb068a319"
+        }
+      ]
+    },
+    {
+      "address": "@adico/data-table",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
+      "files": [
+        {
+          "path": "src/components/ui/data_table.rs",
+          "checksum": "5038205d4ad44ba1dff3714692be6463b24162d5c54ea0328f71a850e5da1dce"
         }
       ]
     },
     {
       "address": "@adico/date-picker",
-      "manifestDigest": "ed3f0d07cdecb892476ff9f11cc7c3fcf4b58be868d38da2a99f1a11ba111fe3",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/date_picker.rs",
@@ -203,47 +233,47 @@
     },
     {
       "address": "@adico/dialog",
-      "manifestDigest": "89db7db1cc31e0a82b5b66c53b78a0c2591052d3e917851759fd66b27fcec9a2",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/dialog.rs",
-          "checksum": "2667585dbdde4ae20bf48ac82d0d960d80237b0f77d08b1acfd045b086f7c329"
+          "checksum": "3afac6316923fe84049032ab57394aa72033c2eca29e8d41db6499574ec71143"
         }
       ]
     },
     {
       "address": "@adico/drag-and-drop-list",
-      "manifestDigest": "89db7db1cc31e0a82b5b66c53b78a0c2591052d3e917851759fd66b27fcec9a2",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/drag_and_drop_list.rs",
-          "checksum": "efc96ddb2a953225801c31f30f0b65f66374904f9fd6a414f1468995fadc9ae3"
+          "checksum": "f6e0e96c7dd01540399fc17347b78f66c8e95f803e447fb96d867710618008d6"
         }
       ]
     },
     {
       "address": "@adico/drawer",
-      "manifestDigest": "77d9ae26a007bd1333bc85042853cbf4b67e07d27ece6aaeeedebd54c2bdd1f3",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/drawer.rs",
-          "checksum": "22cb6791fb2ed03ef404c317e28282d5a2271dbfd4056e43916740788b2d5783"
+          "checksum": "6eba76b697f6443b649aa7e5f73eccb12997fb8f4b0dc2127631ac0addb15e6d"
         }
       ]
     },
     {
       "address": "@adico/dropdown-menu",
-      "manifestDigest": "89db7db1cc31e0a82b5b66c53b78a0c2591052d3e917851759fd66b27fcec9a2",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/dropdown_menu.rs",
-          "checksum": "f2e840ae1b342ccabf588efe7ab70874e8ce6bd80a2c9ca5ff709e6c2cf7a95a"
+          "checksum": "a970a7d3363f294a3c8907e8c847b0a563abe27befab783633b4aaad51d67677"
         }
       ]
     },
     {
       "address": "@adico/empty",
-      "manifestDigest": "ba25c6d591fe5e82835c0081cf4a59c60b519be8ac76c70f81af352faf5a1a5d",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/empty.rs",
@@ -253,17 +283,17 @@
     },
     {
       "address": "@adico/hover-card",
-      "manifestDigest": "4b25f64e9bc914257e56f20898218917bd82b246bc07e2c7391627b9096611a4",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/hover_card.rs",
-          "checksum": "de2da2b53137c17d67298b53f2e155bf9e6a01df7296bde1209eb08e34d677ac"
+          "checksum": "a60ef80ebd7c89f4614888b7cd404e926f9e4a3509fe7168581a4406ca9b8dd7"
         }
       ]
     },
     {
       "address": "@adico/input",
-      "manifestDigest": "28e13a904e35de9861bcff2c33e08736610511bab1b2def1bb6424fc7c7bba74",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/input.rs",
@@ -273,7 +303,7 @@
     },
     {
       "address": "@adico/input-group",
-      "manifestDigest": "fd5cd786eebaec3d2ec7e6734d673001e337805d6f940c28e0b19fdf16e3f60e",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/input_group.rs",
@@ -283,7 +313,7 @@
     },
     {
       "address": "@adico/input-otp",
-      "manifestDigest": "017112ca532a7cc395e6713b300f5dc3781c12a4b06a36c3edfbec4e94ca415a",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/input_otp.rs",
@@ -293,17 +323,17 @@
     },
     {
       "address": "@adico/item",
-      "manifestDigest": "28e13a904e35de9861bcff2c33e08736610511bab1b2def1bb6424fc7c7bba74",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/item.rs",
-          "checksum": "e17eb338124f06ff4b413e6b2acbed87c936372a27bdc307caecf8882fdf61b8"
+          "checksum": "43139567eb6f2f0e20b124a61bad85c9d7d6a9a5596b4f4157ed9383a0b5aa43"
         }
       ]
     },
     {
       "address": "@adico/kbd",
-      "manifestDigest": "28e13a904e35de9861bcff2c33e08736610511bab1b2def1bb6424fc7c7bba74",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/kbd.rs",
@@ -313,37 +343,57 @@
     },
     {
       "address": "@adico/label",
-      "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/label.rs",
-          "checksum": "c39474fff2df114cfb9fde2a3350ef4eb0baeb00e4e857cbea945f0796713e5f"
+          "checksum": "825ebc71460df9708e5546d7372448586f39141f0d0c3c946590b39810d5ea04"
         }
       ]
     },
     {
       "address": "@adico/marker",
-      "manifestDigest": "28e13a904e35de9861bcff2c33e08736610511bab1b2def1bb6424fc7c7bba74",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/marker.rs",
-          "checksum": "3cf70986b895cdac9b73d36327c7cc73b4c6c1476015b35bfc9af22560a0bcb9"
+          "checksum": "fcbdc91ff83c32828f31d08a0fdbd61db2862a534e92f6d5072b8ec514dc4b34"
         }
       ]
     },
     {
       "address": "@adico/menubar",
-      "manifestDigest": "ed3f0d07cdecb892476ff9f11cc7c3fcf4b58be868d38da2a99f1a11ba111fe3",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/menubar.rs",
-          "checksum": "8dc5dcefdb1446b818fa25cae328ba38d19891f3cf2c750e6932c28910296816"
+          "checksum": "eac0400a9d587bbea6b634514be2d5c9209de1f41e647439ad49f61b57de2a02"
+        }
+      ]
+    },
+    {
+      "address": "@adico/message",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
+      "files": [
+        {
+          "path": "src/components/ui/message.rs",
+          "checksum": "6bc6000bb0f861b7e6d900e93343368bfdd4fcf2a822e2df7fb1e2378aba03f9"
+        }
+      ]
+    },
+    {
+      "address": "@adico/message-scroller",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
+      "files": [
+        {
+          "path": "src/components/ui/message_scroller.rs",
+          "checksum": "3639bb9bb5776050e367318ac59189bc2bb57eeec1346e02024972e52cc36b60"
         }
       ]
     },
     {
       "address": "@adico/mode-toggle",
-      "manifestDigest": "082e324f0ad11a331ae8766be7e3e752bb908dcae030d4c25b1c16dc990cdf72",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/mode_toggle.rs",
@@ -353,7 +403,7 @@
     },
     {
       "address": "@adico/native-select",
-      "manifestDigest": "4b25f64e9bc914257e56f20898218917bd82b246bc07e2c7391627b9096611a4",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/native_select.rs",
@@ -363,57 +413,57 @@
     },
     {
       "address": "@adico/navigation-menu",
-      "manifestDigest": "ea9b017af79f4d5fa7ddba196f39be7947a39167f5ee11d19721df8badf963d7",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/navigation_menu.rs",
-          "checksum": "a1de7734cdb59ad9ec77d0e057132d23bb04d785360287474adaf318f86be19f"
+          "checksum": "e730aaa685a779caff97e6ddf24143c23371a0b411cae3f14f86b7dea8fd58f0"
         }
       ]
     },
     {
       "address": "@adico/pagination",
-      "manifestDigest": "fd5cd786eebaec3d2ec7e6734d673001e337805d6f940c28e0b19fdf16e3f60e",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/pagination.rs",
-          "checksum": "33f490b8d49de69fc4d44c81d2b19b69a59e758a35562f54b08912ad64d5b1e9"
+          "checksum": "318389bfb014572ef61f2f5b44f4bb1d668d2b6fa4db7d42e3a486fdfbd6e0a9"
         }
       ]
     },
     {
       "address": "@adico/popover",
-      "manifestDigest": "ed3f0d07cdecb892476ff9f11cc7c3fcf4b58be868d38da2a99f1a11ba111fe3",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/popover.rs",
-          "checksum": "6c85713d38b784eb4db7516f9bc210ea03dbffd7a485abc7a1d8404ae49553e5"
+          "checksum": "d2771f1a9f56b68d89dfc0fafa996d12d713ea45f76a1c54fee3a7b9d30e982e"
         }
       ]
     },
     {
       "address": "@adico/progress",
-      "manifestDigest": "ba25c6d591fe5e82835c0081cf4a59c60b519be8ac76c70f81af352faf5a1a5d",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/progress.rs",
-          "checksum": "3baf490aa47849e332a545608e5ae90b0e24ac376bb97ba3187e026de6631aee"
+          "checksum": "354d9160e0efa300f28d79a0cb9a0324271a49192d428012b7736b43a7b66e8e"
         }
       ]
     },
     {
       "address": "@adico/radio-group",
-      "manifestDigest": "77d9ae26a007bd1333bc85042853cbf4b67e07d27ece6aaeeedebd54c2bdd1f3",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/radio_group.rs",
-          "checksum": "2fbe5848b60f9038ee4641622abebb6e8303abd9b1c612231ca3c82bec3c95be"
+          "checksum": "2f68bd618d836c19368aa86f9c077998df4fc066bc30daa3b9dee3f5aacd1f48"
         }
       ]
     },
     {
       "address": "@adico/resizable",
-      "manifestDigest": "917e6e189d3dc668d7dba0ca46342e534006b7cc362aa86619304a8ae2ca1318",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/resizable.rs",
@@ -423,7 +473,7 @@
     },
     {
       "address": "@adico/scroll-area",
-      "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/scroll_area.rs",
@@ -433,37 +483,37 @@
     },
     {
       "address": "@adico/select",
-      "manifestDigest": "ea9b017af79f4d5fa7ddba196f39be7947a39167f5ee11d19721df8badf963d7",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/select.rs",
-          "checksum": "a01155b018ee507f3d64ba8502c02d547acf0399d1c4cf3ac3a97c899490a6ca"
+          "checksum": "baa07c3be87debb9c323da3c84efc5bddbcd7e71ba66f5618b0e36a98f84ad44"
         }
       ]
     },
     {
       "address": "@adico/sheet",
-      "manifestDigest": "d360609157c3bfbfb04af82af76c43d3af9d02b58949ecb79b8d4fab3ce76363",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/sheet.rs",
-          "checksum": "f2ec0ae048921d5325f62856dd9d66590bd4a24c1b09f24c0f05783edab41474"
+          "checksum": "654e3af6cdf61dc7e64223ab4f41ecfb9442ce4e5783087a3eca2eafca3f6e81"
         }
       ]
     },
     {
       "address": "@adico/sidebar",
-      "manifestDigest": "fd5cd786eebaec3d2ec7e6734d673001e337805d6f940c28e0b19fdf16e3f60e",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/sidebar.rs",
-          "checksum": "aceaba4da18069736dfb511e4df7302caac8a41aac37a544fba12c7b443e3fe5"
+          "checksum": "7907f7dd39502c34b906145029f7e91c2d7debc6efae6ebd6a3aab248238aaf1"
         }
       ]
     },
     {
       "address": "@adico/skeleton",
-      "manifestDigest": "77d9ae26a007bd1333bc85042853cbf4b67e07d27ece6aaeeedebd54c2bdd1f3",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/skeleton.rs",
@@ -473,17 +523,17 @@
     },
     {
       "address": "@adico/slider",
-      "manifestDigest": "62844ef2283c1181994321e1f28a1337f2bbff372bac318a5c8e2470f46f13e8",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/slider.rs",
-          "checksum": "6c4c07b72330c3f16c59aa04272ce41bf7c4cfdbc4edb23d13d09abae3674a64"
+          "checksum": "eae76c51eb267b5e7db6d016f1abfdff26df789b7eb6e99945a78d01d8c67e96"
         }
       ]
     },
     {
       "address": "@adico/spinner",
-      "manifestDigest": "4920a164da17eb5142b5bb4761c0f09b498e304abe7f01b9f203b9b95c055792",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/spinner.rs",
@@ -493,17 +543,17 @@
     },
     {
       "address": "@adico/switch",
-      "manifestDigest": "89db7db1cc31e0a82b5b66c53b78a0c2591052d3e917851759fd66b27fcec9a2",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/switch.rs",
-          "checksum": "276dbf6ad41ed04822baa2739b79587ea38538f9fcd61ba76fa044503d693cd0"
+          "checksum": "4a5fc5c168765a5ca5797c33f259ec50e13db70d063d6f56e7fef502ea381dad"
         }
       ]
     },
     {
       "address": "@adico/table",
-      "manifestDigest": "a926fe51d666b7cfe0a2cb0be1823b9f068a4b233779603a667c699eaf7561a8",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/table.rs",
@@ -513,37 +563,37 @@
     },
     {
       "address": "@adico/tabs",
-      "manifestDigest": "a6e76d3b7c224a884a8201d4cea0936b41768ca74318ebd07a063d7d602593a0",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/tabs.rs",
-          "checksum": "7f4205e3e09a54b86f87c51a3e3044a534b5a01f20dd7ac6be4e0319940708e1"
+          "checksum": "a636070927ec590e0bf30b20a6ddb643161272cc8fd40689b9a267692e365850"
         }
       ]
     },
     {
       "address": "@adico/tag-group",
-      "manifestDigest": "89db7db1cc31e0a82b5b66c53b78a0c2591052d3e917851759fd66b27fcec9a2",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/tag_group.rs",
-          "checksum": "bbbc33eb06671384bdd13658808ba12148fdf3e29dff12340932ec0d1688c108"
+          "checksum": "ba180eaf98c34e2d35c1f62d8bdff436fb82887bbeac6e4a5b8903a87381c5be"
         }
       ]
     },
     {
       "address": "@adico/textarea",
-      "manifestDigest": "4b25f64e9bc914257e56f20898218917bd82b246bc07e2c7391627b9096611a4",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/textarea.rs",
-          "checksum": "a5a693882173096ccd38f4c89729a941e113ad98b5a42f2e9f447962f725fc42"
+          "checksum": "7883f26019d06844174bef0b65ab03a204a57026f504d9aacf820871de6397b8"
         }
       ]
     },
     {
       "address": "@adico/theme-builder",
-      "manifestDigest": "77d9ae26a007bd1333bc85042853cbf4b67e07d27ece6aaeeedebd54c2bdd1f3",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/theme_builder.rs",
@@ -553,7 +603,7 @@
     },
     {
       "address": "@adico/theme-switcher",
-      "manifestDigest": "77d9ae26a007bd1333bc85042853cbf4b67e07d27ece6aaeeedebd54c2bdd1f3",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/theme_switcher.rs",
@@ -563,17 +613,17 @@
     },
     {
       "address": "@adico/toast",
-      "manifestDigest": "89db7db1cc31e0a82b5b66c53b78a0c2591052d3e917851759fd66b27fcec9a2",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/toast.rs",
-          "checksum": "9dca6971a4d9608bf08cf7fb0d158a7eafc8761757c429a7cbf4aed71f0c481c"
+          "checksum": "2363d13a06a807ff16d02e6e42f8ac2839c9396f7c738a793727ddb2cdef6c8b"
         }
       ]
     },
     {
       "address": "@adico/toggle",
-      "manifestDigest": "4b25f64e9bc914257e56f20898218917bd82b246bc07e2c7391627b9096611a4",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/toggle.rs",
@@ -583,37 +633,37 @@
     },
     {
       "address": "@adico/toggle-group",
-      "manifestDigest": "62844ef2283c1181994321e1f28a1337f2bbff372bac318a5c8e2470f46f13e8",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/toggle_group.rs",
-          "checksum": "20033c4cf927fcb8e1c385158cc1cc54c37176f79b2e055037c43e3bc8a486b8"
+          "checksum": "64bc12ec1b9c23d077b0359bacad6c373f421b2cdf309e65fa81c3114b315d81"
         }
       ]
     },
     {
       "address": "@adico/toolbar",
-      "manifestDigest": "fd5cd786eebaec3d2ec7e6734d673001e337805d6f940c28e0b19fdf16e3f60e",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/toolbar.rs",
-          "checksum": "cce99664bc0e68fb4ba34c02419af046facea0345e729f9d29c3c19b4fb1e64a"
+          "checksum": "76e67f313945e950fa11f43137ee084a81f657fa1d8fffb122d66c1cccbb92d2"
         }
       ]
     },
     {
       "address": "@adico/tooltip",
-      "manifestDigest": "4b25f64e9bc914257e56f20898218917bd82b246bc07e2c7391627b9096611a4",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/tooltip.rs",
-          "checksum": "a72ea54eab89c942297805962e426b80fdcadf9087d6211b3807f6f6e6c64095"
+          "checksum": "cf830fd08b75c7762d5ad071dc1c01b83af962242282803eb37b9a6c5db13590"
         }
       ]
     },
     {
       "address": "@adico/variants",
-      "manifestDigest": "4920a164da17eb5142b5bb4761c0f09b498e304abe7f01b9f203b9b95c055792",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/adico_lib/variants.rs",
@@ -623,7 +673,7 @@
     },
     {
       "address": "@adico/virtual-list",
-      "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
+      "manifestDigest": "516cbd511f8e7ff5d166d59944625fbff543cddcc41401af0aae95dd5bebd701",
       "files": [
         {
           "path": "src/components/ui/virtual_list.rs",

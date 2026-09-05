@@ -25,6 +25,7 @@ pub fn ColorPicker(
     #[props(default)] on_color_change: Callback<palette::Hsv<palette::encoding::Srgb, f64>>,
     #[props(default)] disabled: ReadSignal<bool>,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&[
@@ -32,7 +33,14 @@ pub fn ColorPicker(
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        ColorPickerPrimitive { color, on_color_change, disabled, class, {children} }
+        ColorPickerPrimitive {
+            color,
+            on_color_change,
+            disabled,
+            class,
+            attributes,
+            {children}
+        }
     }
 }
 

@@ -160,6 +160,9 @@ pub struct SidebarProps {
     /// Additional CSS classes to append.
     #[props(default)]
     pub class: Option<String>,
+    /// Native aside/global attributes.
+    #[props(extends = GlobalAttributes)]
+    pub attributes: Vec<Attribute>,
     /// The children of the sidebar, typically [`SidebarHeader`]/[`SidebarContent`]/[`SidebarFooter`].
     pub children: Element,
 }
@@ -213,6 +216,7 @@ pub fn Sidebar(props: SidebarProps) -> Element {
             "data-state": state,
             "data-side": props.side.as_str(),
             "data-collapsible": collapsible,
+            ..props.attributes,
             {props.children}
         }
     }
@@ -264,7 +268,12 @@ pub fn SidebarTrigger(
 /// to the nearest positioned ancestor -- which, with no other Sidebar part
 /// establishing one, could be arbitrarily far up the consumer's own page.
 #[component]
-pub fn SidebarRail(class: Option<String>) -> Element {
+pub fn SidebarRail(
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = button)]
+    attributes: Vec<Attribute>,
+) -> Element {
     let ctx = use_sidebar();
     let class = cn(&[
         "absolute inset-y-0 z-20 w-4 -translate-x-1/2 cursor-col-resize bg-transparent hover:after:bg-sidebar-border after:absolute after:inset-y-0 after:left-1/2 after:w-px",
@@ -279,6 +288,7 @@ pub fn SidebarRail(class: Option<String>) -> Element {
             tabindex: -1,
             title: "Toggle Sidebar",
             onclick: move |_| ctx.toggle(),
+            ..attributes,
         }
     }
 }
@@ -303,6 +313,7 @@ pub fn SidebarInset(
     #[props(default)] variant: SidebarVariant,
     children: Element,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let variant_class = match variant {
         SidebarVariant::Inset => "m-2 rounded-xl shadow-sm",
@@ -314,68 +325,94 @@ pub fn SidebarInset(
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        main { class, "data-slot": "sidebar-inset", {children} }
+        main { class, "data-slot": "sidebar-inset", ..attributes, {children} }
     }
 }
 
 /// A header region pinned to the top of a [`Sidebar`].
 #[component]
-pub fn SidebarHeader(children: Element, class: Option<String>) -> Element {
+pub fn SidebarHeader(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "flex flex-col gap-2 p-2",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        div { class, "data-slot": "sidebar-header", {children} }
+        div { class, "data-slot": "sidebar-header", ..attributes, {children} }
     }
 }
 
 /// The scrollable main region of a [`Sidebar`].
 #[component]
-pub fn SidebarContent(children: Element, class: Option<String>) -> Element {
+pub fn SidebarContent(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "flex min-h-0 flex-1 flex-col gap-2 overflow-auto p-2",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        div { class, "data-slot": "sidebar-content", {children} }
+        div { class, "data-slot": "sidebar-content", ..attributes, {children} }
     }
 }
 
 /// A footer region pinned to the bottom of a [`Sidebar`].
 #[component]
-pub fn SidebarFooter(children: Element, class: Option<String>) -> Element {
+pub fn SidebarFooter(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "flex flex-col gap-2 p-2",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        div { class, "data-slot": "sidebar-footer", {children} }
+        div { class, "data-slot": "sidebar-footer", ..attributes, {children} }
     }
 }
 
 /// A horizontal rule between [`Sidebar`] sections, composing the owned
 /// `adico_primitives::separator::Separator` primitive.
 #[component]
-pub fn SidebarSeparator(class: Option<String>) -> Element {
+pub fn SidebarSeparator(
+    class: Option<String>,
+    #[props(default = true)] horizontal: bool,
+    #[props(default = true)] decorative: bool,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "mx-2 w-auto bg-sidebar-border",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        SeparatorPrimitive { class, horizontal: true, decorative: true }
+        SeparatorPrimitive {
+            class,
+            horizontal,
+            decorative,
+            attributes,
+        }
     }
 }
 
 /// A labeled group of related [`SidebarMenu`] items.
 #[component]
-pub fn SidebarGroup(children: Element, class: Option<String>) -> Element {
+pub fn SidebarGroup(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "relative flex w-full min-w-0 flex-col p-2",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        div { class, "data-slot": "sidebar-group", {children} }
+        div { class, "data-slot": "sidebar-group", ..attributes, {children} }
     }
 }
 
@@ -384,46 +421,102 @@ pub fn SidebarGroup(children: Element, class: Option<String>) -> Element {
 /// independently-tunable surface (see `SidebarTrigger`/`SidebarMenuButton`
 /// for this item's actual `radius`-bearing controls).
 #[component]
-pub fn SidebarGroupLabel(children: Element, class: Option<String>) -> Element {
+pub fn SidebarGroupLabel(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        div { class, "data-slot": "sidebar-group-label", {children} }
+        div { class, "data-slot": "sidebar-group-label", ..attributes, {children} }
     }
 }
 
 /// The content wrapper inside a [`SidebarGroup`].
 #[component]
-pub fn SidebarGroupContent(children: Element, class: Option<String>) -> Element {
+pub fn SidebarGroupContent(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&["w-full text-sm", class.as_deref().unwrap_or_default()]);
     rsx! {
-        div { class, "data-slot": "sidebar-group-content", {children} }
+        div { class, "data-slot": "sidebar-group-content", ..attributes, {children} }
     }
 }
 
 /// The list container for [`SidebarMenuItem`]s.
 #[component]
-pub fn SidebarMenu(children: Element, class: Option<String>) -> Element {
+pub fn SidebarMenu(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "flex w-full min-w-0 flex-col gap-1",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        ul { class, "data-slot": "sidebar-menu", {children} }
+        ul { class, "data-slot": "sidebar-menu", ..attributes, {children} }
     }
 }
 
 /// A single entry in a [`SidebarMenu`].
 #[component]
-pub fn SidebarMenuItem(children: Element, class: Option<String>) -> Element {
+pub fn SidebarMenuItem(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "group/menu-item relative",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        li { class, "data-slot": "sidebar-menu-item", {children} }
+        li { class, "data-slot": "sidebar-menu-item", ..attributes, {children} }
+    }
+}
+
+/// The visual treatment of a [`SidebarMenuButton`], matching shadcn's own
+/// `"default" | "outline"` cva axis.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum SidebarMenuButtonVariant {
+    #[default]
+    Default,
+    Outline,
+}
+
+impl SidebarMenuButtonVariant {
+    fn class(self) -> &'static str {
+        match self {
+            Self::Default => "",
+            Self::Outline => {
+                "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]"
+            }
+        }
+    }
+}
+
+/// The height of a [`SidebarMenuButton`], matching shadcn's own
+/// `"default" | "sm" | "lg"` cva axis.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum SidebarMenuButtonSize {
+    Sm,
+    #[default]
+    Default,
+    Lg,
+}
+
+impl SidebarMenuButtonSize {
+    fn class(self) -> &'static str {
+        match self {
+            Self::Sm => "h-7 text-xs",
+            Self::Default => "h-8 text-sm",
+            Self::Lg => "h-12 text-sm",
+        }
     }
 }
 
@@ -436,6 +529,12 @@ pub struct SidebarMenuButtonProps {
     /// Disables pointer and keyboard interaction with native semantics.
     #[props(default)]
     pub disabled: Option<bool>,
+    /// Visual treatment; see [`SidebarMenuButtonVariant`].
+    #[props(default)]
+    pub variant: SidebarMenuButtonVariant,
+    /// Height; see [`SidebarMenuButtonSize`].
+    #[props(default)]
+    pub size: SidebarMenuButtonSize,
     /// Corner radius of the control surface.
     #[props(default = Radius::Md)]
     pub radius: Radius,
@@ -462,7 +561,9 @@ pub struct SidebarMenuButtonProps {
 #[component]
 pub fn SidebarMenuButton(props: SidebarMenuButtonProps) -> Element {
     let class = cn(&[
-        "flex h-8 w-full items-center gap-2 overflow-hidden px-2 text-left text-sm outline-none transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring disabled:pointer-events-none disabled:opacity-50",
+        "flex w-full items-center gap-2 overflow-hidden px-2 text-left outline-none transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring disabled:pointer-events-none disabled:opacity-50",
+        props.variant.class(),
+        props.size.class(),
         props.radius.class(),
         if props.is_active {
             "bg-sidebar-accent text-sidebar-accent-foreground font-medium"

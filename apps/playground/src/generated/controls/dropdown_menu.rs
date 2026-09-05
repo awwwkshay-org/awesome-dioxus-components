@@ -3,7 +3,23 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, OptionalBoolControl};
+use crate::components::controls::{BoolControl, OptionalBoolControl, SelectControl};
+use crate::components::ui::DropdownMenuItemVariant;
+
+/// Generated from `DropdownMenuItemVariant`'s declared variants.
+pub const DROPDOWN_MENU_ITEM_VARIANT_OPTIONS: &[(&str, DropdownMenuItemVariant)] = &[
+    ("Default", DropdownMenuItemVariant::Default),
+    ("Destructive", DropdownMenuItemVariant::Destructive),
+];
+
+const _: () = {
+    fn _exhaustive(value: DropdownMenuItemVariant) {
+        match value {
+            DropdownMenuItemVariant::Default => {}
+            DropdownMenuItemVariant::Destructive => {}
+        }
+    }
+};
 
 /// Generated demo state for [`DropdownMenu`], one field per controllable prop.
 #[derive(Clone, PartialEq)]
@@ -34,5 +50,37 @@ pub fn DropdownMenuControls(mut state: Signal<DropdownMenuDemoState>) -> Element
     rsx! {
         OptionalBoolControl { label: "Open", value: open }
         BoolControl { label: "Default Open", value: default_open }
+    }
+}
+
+/// Generated demo state for [`DropdownMenuItem`], one field per controllable prop.
+#[derive(Clone, PartialEq)]
+pub struct DropdownMenuItemDemoState {
+    pub inset: bool,
+    pub variant: DropdownMenuItemVariant,
+}
+
+impl Default for DropdownMenuItemDemoState {
+    fn default() -> Self {
+        Self {
+            inset: false,
+            variant: DropdownMenuItemVariant::Default,
+        }
+    }
+}
+
+#[component]
+pub fn DropdownMenuItemControls(mut state: Signal<DropdownMenuItemDemoState>) -> Element {
+    let mut inset = use_signal(|| state().inset);
+    let mut variant = use_signal(|| state().variant);
+    use_effect(move || {
+        state.set(DropdownMenuItemDemoState {
+            inset: inset(),
+            variant: variant(),
+        });
+    });
+    rsx! {
+        BoolControl { label: "Inset", value: inset }
+        SelectControl { label: "Variant", value: variant, options: DROPDOWN_MENU_ITEM_VARIANT_OPTIONS }
     }
 }

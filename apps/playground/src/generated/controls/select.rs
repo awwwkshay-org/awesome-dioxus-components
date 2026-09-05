@@ -3,7 +3,23 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, OptionalBoolControl};
+use crate::components::controls::{BoolControl, OptionalBoolControl, SelectControl};
+use crate::components::ui::SelectTriggerSize;
+
+/// Generated from `SelectTriggerSize`'s declared variants.
+pub const SELECT_TRIGGER_SIZE_OPTIONS: &[(&str, SelectTriggerSize)] = &[
+    ("Sm", SelectTriggerSize::Sm),
+    ("Default", SelectTriggerSize::Default),
+];
+
+const _: () = {
+    fn _exhaustive(value: SelectTriggerSize) {
+        match value {
+            SelectTriggerSize::Sm => {}
+            SelectTriggerSize::Default => {}
+        }
+    }
+};
 
 /// Generated demo state for [`Select`], one field per controllable prop.
 #[derive(Clone, PartialEq)]
@@ -54,12 +70,14 @@ pub fn SelectMultiControls(mut state: Signal<SelectMultiDemoState>) -> Element {
 /// Generated demo state for [`SelectTrigger`], one field per controllable prop.
 #[derive(Clone, PartialEq)]
 pub struct SelectTriggerDemoState {
+    pub size: SelectTriggerSize,
     pub aria_invalid: bool,
 }
 
 impl Default for SelectTriggerDemoState {
     fn default() -> Self {
         Self {
+            size: SelectTriggerSize::Default,
             aria_invalid: false,
         }
     }
@@ -67,13 +85,16 @@ impl Default for SelectTriggerDemoState {
 
 #[component]
 pub fn SelectTriggerControls(mut state: Signal<SelectTriggerDemoState>) -> Element {
+    let mut size = use_signal(|| state().size);
     let mut aria_invalid = use_signal(|| state().aria_invalid);
     use_effect(move || {
         state.set(SelectTriggerDemoState {
+            size: size(),
             aria_invalid: aria_invalid(),
         });
     });
     rsx! {
+        SelectControl { label: "Size", value: size, options: SELECT_TRIGGER_SIZE_OPTIONS }
         BoolControl { label: "Aria Invalid", value: aria_invalid }
     }
 }

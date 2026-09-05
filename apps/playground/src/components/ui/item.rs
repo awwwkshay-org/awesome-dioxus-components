@@ -52,11 +52,32 @@ impl ItemVariant {
     }
 }
 
+/// The overall size of an [`Item`] row, matching shadcn's own
+/// `"default" | "sm"` cva axis.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum ItemSize {
+    Sm,
+    #[default]
+    Default,
+}
+
+impl ItemSize {
+    fn class(self) -> &'static str {
+        match self {
+            Self::Sm => "gap-3 p-3",
+            Self::Default => "gap-4 p-4",
+        }
+    }
+}
+
 /// A single row combining optional media, content, and actions.
 #[derive(Props, Clone, PartialEq)]
 pub struct ItemProps {
     #[props(default)]
     pub variant: ItemVariant,
+    /// Overall row size; see [`ItemSize`].
+    #[props(default)]
+    pub size: ItemSize,
     /// `Item` renders a `div`, which has no native HTML `disabled` attribute
     /// to defer to (unlike `Button`/`Input`'s categories) — disabling here
     /// is entirely synthetic (`aria-disabled`, a manual `onclick` guard, and
@@ -82,8 +103,9 @@ pub struct ItemProps {
 #[component]
 pub fn Item(props: ItemProps) -> Element {
     let class = cn(&[
-        "flex items-center gap-4 p-4 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "flex items-center text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         props.variant.class(),
+        props.size.class(),
         props.radius.class(),
         if props.disabled {
             "pointer-events-none opacity-50"
@@ -105,9 +127,37 @@ pub fn Item(props: ItemProps) -> Element {
     }
 }
 
+/// The content shape of an [`ItemMedia`] slot, matching shadcn's own
+/// `"default" | "icon" | "image"` cva axis.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum ItemMediaVariant {
+    /// No fixed sizing or background of its own, the existing default look.
+    #[default]
+    Default,
+    /// A small icon tile with a muted background.
+    Icon,
+    /// A larger image thumbnail with no background chrome of its own.
+    Image,
+}
+
+impl ItemMediaVariant {
+    fn class(self) -> &'static str {
+        match self {
+            Self::Default => "",
+            Self::Icon => "size-8 rounded-md bg-muted text-muted-foreground",
+            Self::Image => {
+                "size-10 overflow-hidden rounded-md [&>img]:size-full [&>img]:object-cover"
+            }
+        }
+    }
+}
+
 /// A leading icon, avatar, or image slot for an [`Item`].
 #[derive(Props, Clone, PartialEq)]
 pub struct ItemMediaProps {
+    /// Content shape; see [`ItemMediaVariant`].
+    #[props(default)]
+    pub variant: ItemMediaVariant,
     #[props(default)]
     pub class: Option<String>,
     #[props(extends = GlobalAttributes)]
@@ -120,6 +170,7 @@ pub struct ItemMediaProps {
 pub fn ItemMedia(props: ItemMediaProps) -> Element {
     let class = cn(&[
         "flex shrink-0 items-center justify-center",
+        props.variant.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

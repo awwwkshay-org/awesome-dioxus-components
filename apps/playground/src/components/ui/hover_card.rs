@@ -14,13 +14,18 @@ use crate::adico_lib::variants::Radius;
 
 /// The element that shows the [`HoverCardContent`] on hover or focus.
 #[component]
-pub fn HoverCardTrigger(children: Element, class: Option<String>) -> Element {
+pub fn HoverCardTrigger(
+    children: Element,
+    id: Option<String>,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "inline-flex items-center justify-center underline-offset-4 hover:underline",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        HoverCardPrimitiveTrigger { class, {children} }
+        HoverCardPrimitiveTrigger { id, class, attributes, {children} }
     }
 }
 
@@ -28,10 +33,18 @@ pub fn HoverCardTrigger(children: Element, class: Option<String>) -> Element {
 #[component]
 pub fn HoverCardContent(
     children: Element,
+    id: Option<String>,
     #[props(default = Radius::Md)] radius: Radius,
     class: Option<String>,
     side: Option<ContentSide>,
     align: Option<ContentAlign>,
+    /// Keep content mounted while closed. Defaults to `false`, matching
+    /// Tooltip/Popover's own behavior -- the primitive's own default is
+    /// `true` (for consumers that want to keep content mounted for exit
+    /// animations).
+    #[props(default = false)]
+    force_mount: bool,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let side = side.unwrap_or(ContentSide::Bottom);
     let align = align.unwrap_or(ContentAlign::Center);
@@ -42,14 +55,12 @@ pub fn HoverCardContent(
     ]);
     rsx! {
         HoverCardPrimitiveContent {
+            id,
             class,
             side,
             align,
-            // The primitive defaults `force_mount` to `true` for consumers
-            // that want to keep content mounted for exit animations; this
-            // styled facade instead mounts content only while open, matching
-            // Tooltip/Popover's behavior.
-            force_mount: false,
+            force_mount,
+            attributes,
             {children}
         }
     }

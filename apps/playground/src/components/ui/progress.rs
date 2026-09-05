@@ -28,6 +28,9 @@ pub struct ProgressProps {
     /// Accessible name for the progressbar role.
     #[props(default)]
     pub aria_label: Option<String>,
+    /// Native div/global attributes and events.
+    #[props(extends = GlobalAttributes)]
+    pub attributes: Vec<Attribute>,
 }
 
 /// A progress bar with the default adico/shadcn visual language.
@@ -46,6 +49,7 @@ pub fn Progress(props: ProgressProps) -> Element {
             max: props.max,
             class,
             aria_label: props.aria_label,
+            attributes: props.attributes,
             ProgressIndicatorPrimitive {
                 class: "h-full w-full flex-1 bg-primary transition-all",
                 style: indicator_style,

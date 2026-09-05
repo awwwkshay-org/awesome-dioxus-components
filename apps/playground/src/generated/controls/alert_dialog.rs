@@ -3,7 +3,48 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::BoolControl;
+use crate::components::controls::{BoolControl, SelectControl};
+use crate::components::ui::AlertDialogContentSize;
+
+/// Generated from `AlertDialogContentSize`'s declared variants.
+pub const ALERT_DIALOG_CONTENT_SIZE_OPTIONS: &[(&str, AlertDialogContentSize)] = &[
+    ("Default", AlertDialogContentSize::Default),
+    ("Sm", AlertDialogContentSize::Sm),
+];
+
+const _: () = {
+    fn _exhaustive(value: AlertDialogContentSize) {
+        match value {
+            AlertDialogContentSize::Default => {}
+            AlertDialogContentSize::Sm => {}
+        }
+    }
+};
+
+/// Generated demo state for [`AlertDialogContent`], one field per controllable prop.
+#[derive(Clone, PartialEq)]
+pub struct AlertDialogContentDemoState {
+    pub size: AlertDialogContentSize,
+}
+
+impl Default for AlertDialogContentDemoState {
+    fn default() -> Self {
+        Self {
+            size: AlertDialogContentSize::Default,
+        }
+    }
+}
+
+#[component]
+pub fn AlertDialogContentControls(mut state: Signal<AlertDialogContentDemoState>) -> Element {
+    let mut size = use_signal(|| state().size);
+    use_effect(move || {
+        state.set(AlertDialogContentDemoState { size: size() });
+    });
+    rsx! {
+        SelectControl { label: "Size", value: size, options: ALERT_DIALOG_CONTENT_SIZE_OPTIONS }
+    }
+}
 
 /// Generated demo state for [`AlertDialogAction`], one field per controllable prop.
 #[derive(Clone, PartialEq)]

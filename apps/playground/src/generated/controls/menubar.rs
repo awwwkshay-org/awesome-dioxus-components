@@ -3,18 +3,38 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::TextControl;
+use crate::components::controls::{BoolControl, SelectControl, TextControl};
+use crate::components::ui::MenubarItemVariant;
+
+/// Generated from `MenubarItemVariant`'s declared variants.
+pub const MENUBAR_ITEM_VARIANT_OPTIONS: &[(&str, MenubarItemVariant)] = &[
+    ("Default", MenubarItemVariant::Default),
+    ("Destructive", MenubarItemVariant::Destructive),
+];
+
+const _: () = {
+    fn _exhaustive(value: MenubarItemVariant) {
+        match value {
+            MenubarItemVariant::Default => {}
+            MenubarItemVariant::Destructive => {}
+        }
+    }
+};
 
 /// Generated demo state for [`MenubarItem`], one field per controllable prop.
 #[derive(Clone, PartialEq)]
 pub struct MenubarItemDemoState {
     pub value: String,
+    pub inset: bool,
+    pub variant: MenubarItemVariant,
 }
 
 impl Default for MenubarItemDemoState {
     fn default() -> Self {
         Self {
             value: String::new(),
+            inset: false,
+            variant: MenubarItemVariant::Default,
         }
     }
 }
@@ -22,10 +42,18 @@ impl Default for MenubarItemDemoState {
 #[component]
 pub fn MenubarItemControls(mut state: Signal<MenubarItemDemoState>) -> Element {
     let mut value = use_signal(|| state().value);
+    let mut inset = use_signal(|| state().inset);
+    let mut variant = use_signal(|| state().variant);
     use_effect(move || {
-        state.set(MenubarItemDemoState { value: value() });
+        state.set(MenubarItemDemoState {
+            value: value(),
+            inset: inset(),
+            variant: variant(),
+        });
     });
     rsx! {
         TextControl { label: "Value", value: value }
+        BoolControl { label: "Inset", value: inset }
+        SelectControl { label: "Variant", value: variant, options: MENUBAR_ITEM_VARIANT_OPTIONS }
     }
 }

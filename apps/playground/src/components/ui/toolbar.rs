@@ -37,6 +37,7 @@ pub fn ToolbarButton(
     #[props(default)]
     loading_text: Option<String>,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
         "inline-flex h-8 items-center justify-center gap-2 px-2 text-sm font-medium outline-none transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50",
@@ -51,6 +52,7 @@ pub fn ToolbarButton(
             on_click: on_select,
             class,
             aria_busy: loading,
+            attributes,
             if loading {
                 Spinner {}
                 if let Some(text) = loading_text {
@@ -71,13 +73,19 @@ pub fn ToolbarSeparator(
     #[props(default)] horizontal: Option<bool>,
     #[props(default = false)] decorative: bool,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
         "shrink-0 bg-border data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        ToolbarSeparatorPrimitive { horizontal, decorative, class }
+        ToolbarSeparatorPrimitive {
+            horizontal,
+            decorative,
+            class,
+            attributes,
+        }
     }
 }
 
