@@ -17,7 +17,7 @@
             },
             {
               "name": "className",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "style",
@@ -128,43 +128,43 @@
           "props": [
             {
               "name": "id",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "index",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "title",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "description",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "toast_type",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "on_close",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "permanent",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "duration",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
-              "status": "missing"
+              "status": "present"
             }
           ]
         },

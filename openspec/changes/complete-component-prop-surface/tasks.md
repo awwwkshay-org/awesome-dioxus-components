@@ -389,6 +389,45 @@ directly for the exact prop list; it is not duplicated here.
         registry layer wasn't forwarding them (same defect class as task
         2.3, but for a literal upstream prop named `attributes`, which
         2.3's native-event-name heuristic doesn't cover).
+      - Also fixed in this pass, discovered starting `slider` (the wave's
+        next item): `rust_introspect.rs`'s `inline_component_props`
+        deliberately returns `None` for the `props: FooProps` shape,
+        deferring to an `Item::Struct` match — but that only fires for a
+        `FooProps` struct *defined in the same file*. `Slider`/
+        `RangeSlider`/`Toast` wholesale-reuse the primitive's own Props
+        struct (`pub fn Slider(props: SliderProps)` + `pub use
+        adico_primitives::slider::SliderProps` — no local definition), so
+        `prop_parity.rs` saw zero adico fields for them and reported every
+        single upstream prop `missing` (26 for `slider`, matching
+        design.md's count, but for the wrong reason — a tooling gap, not a
+        real 26-prop surface gap). `introspect_item` now falls back to the
+        primitive module's own struct definitions (via the existing
+        `find_primitive_modules`) for a name this item's own registry
+        source doesn't already provide, never overriding a registry-owned
+        definition that legitimately narrows/widens the primitive's own
+        surface (two new tests cover both directions). Before the fix
+        every upstream prop on `slider`'s `root`/`range-slider` parts
+        showed `missing` (the false-positive inflation design.md's 26
+        count was measured against); after it, `prop-parity sync` reports
+        31 genuine `missing` entries (`root`'s real native form-integration
+        gaps, `thumb`'s per-thumb accessibility/behavior props, and three
+        `attributes`-forwarding gaps on `track`/`range`/`thumb`) — a higher
+        number than 26, since the count is now measuring the real surface
+        instead of an undercounted false positive; the same fallback
+        also corrected two *other* shapes of the identical underlying
+        problem ("no entry in `introspection.props` under the name
+        `adico_field_names` looks up"), each in a wave-relevant item:
+        `toast`'s facade reuses `ToastProps` wholesale, exactly like
+        `Slider`; `calendar`'s registry facade deliberately *consolidates*
+        several primitive components onto one shared, registry-owned
+        struct (`CalendarNavigationButtonProps` for both
+        `CalendarPreviousMonthButton`/`CalendarNextMonthButton`,
+        `CalendarSelectFieldProps` for four `CalendarSelect*` components),
+        so the naive `{component}Props` lookup misses even though a
+        same-shaped struct exists on the *primitive* side per component
+        (`CalendarNextMonthButtonProps`, etc.) — the fallback finds that
+        one instead, correctly, since the registry's own map has neither
+        key for these.
       - Also fixed in this pass (found via the full baseline run, unrelated
         to combobox itself but blocking a green baseline): `adico-cli`'s
         `plan_cargo_dependency_edits` rejected a *second*, separate

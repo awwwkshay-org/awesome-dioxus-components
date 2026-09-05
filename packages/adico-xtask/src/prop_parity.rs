@@ -44,7 +44,7 @@ use adico_registry_core::RegistryItem;
 use serde::Serialize;
 
 use crate::catalog::{self, CatalogSnapshot, PropsSource, ResolvedProps};
-use crate::registry_introspect::{load_registry_items, registry_root};
+use crate::registry_introspect::{find_primitive_modules, load_registry_items, registry_root};
 use crate::rust_introspect::{self, FileIntrospection};
 use crate::write_if_changed;
 
@@ -604,7 +604,42 @@ fn introspect_item(root: &Path, item: &RegistryItem) -> FileIntrospection {
         merged.components.extend(introspection.components);
         merged.props.extend(introspection.props);
     }
+    // A registry facade that wholesale-reuses a primitive's own Props
+    // struct (`pub fn Foo(props: FooProps)` plus `pub use
+    // adico_primitives::<module>::FooProps`, e.g. `Slider`/`RangeSlider`)
+    // has no local `FooProps` definition for `rust_introspect` to find --
+    // `inline_component_props` deliberately returns `None` for the
+    // `props: FooProps` shape, deferring to an `Item::Struct` match that
+    // only ever fires for a struct defined *in this same file*. Fall back
+    // to the primitive module's own struct definitions, but only to fill
+    // in a name this item's own registry source didn't already cover --
+    // never override a registry-owned entry (a locally defined `FooProps`,
+    // or an inline-args component recorded under the bare `Foo` key),
+    // which may legitimately narrow or widen the primitive's own surface.
+    for module in find_primitive_modules(root, item) {
+        let primitive_introspection = introspect_primitive_module(root, &module);
+        for (struct_name, fields) in primitive_introspection.props {
+            let component_key = struct_name.strip_suffix("Props").unwrap_or(&struct_name);
+            if merged.props.contains_key(&struct_name) || merged.props.contains_key(component_key) {
+                continue;
+            }
+            merged.props.insert(struct_name, fields);
+        }
+    }
     merged
+}
+
+fn introspect_primitive_module(root: &Path, module: &str) -> FileIntrospection {
+    let src = root.join("packages/adico-primitives/src");
+    let file_path = src.join(format!("{module}.rs"));
+    if file_path.is_file() {
+        return rust_introspect::introspect_file(&file_path);
+    }
+    let dir_path = src.join(module);
+    if dir_path.is_dir() {
+        return rust_introspect::introspect_directory(&dir_path);
+    }
+    FileIntrospection::default()
 }
 
 /// A component's own declared prop field names, plus whether one of them is
@@ -1064,6 +1099,93 @@ mod tests {
             compatibility: None,
             provenance: None,
         }
+    }
+
+    fn fixture_registry_file(source: &str) -> adico_registry_core::RegistryFile {
+        adico_registry_core::RegistryFile {
+            source: source.to_string(),
+            target_root: adico_registry_core::TargetRoot::Ui,
+            target: source.to_string(),
+            checksum: String::new(),
+        }
+    }
+
+    #[test]
+    fn introspect_item_falls_back_to_the_primitive_module_for_a_wholesale_reused_props_struct() {
+        // Mirrors `Slider`/`RangeSlider`/`Toast`: `pub fn Widget(props:
+        // WidgetProps)` plus `pub use adico_primitives::widget::WidgetProps`
+        // -- no local `WidgetProps` definition for `rust_introspect` to find
+        // in the registry file itself.
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("valid time")
+            .as_nanos();
+        let root = std::env::temp_dir().join(format!("adico-prop-parity-test-{nonce}"));
+        let registry_ui = root.join("registry/ui");
+        let primitive_src = root.join("packages/adico-primitives/src");
+        fs::create_dir_all(&registry_ui).expect("registry/ui should be creatable");
+        fs::create_dir_all(&primitive_src).expect("primitive src should be creatable");
+        fs::write(
+            registry_ui.join("widget.rs"),
+            "use adico_primitives::widget::WidgetPrimitive;\npub use adico_primitives::widget::WidgetProps;\n\n#[component]\npub fn Widget(props: WidgetProps) -> Element {\n    rsx! { WidgetPrimitive { value: props.value } }\n}\n",
+        )
+        .expect("registry fixture file should be writable");
+        fs::write(
+            primitive_src.join("widget.rs"),
+            "#[derive(Props, Clone, PartialEq)]\npub struct WidgetProps {\n    pub value: ReadSignal<bool>,\n    #[props(extends = GlobalAttributes)]\n    pub attributes: Vec<Attribute>,\n}\n",
+        )
+        .expect("primitive fixture file should be writable");
+
+        let mut item = fixture_item("widget");
+        item.files = vec![fixture_registry_file("ui/widget.rs")];
+        let introspection = introspect_item(&root, &item);
+
+        let fields = adico_field_names(&introspection, "Widget");
+        assert!(
+            fields.names.contains("value"),
+            "expected the primitive's own field, got {:?}",
+            fields.names
+        );
+        assert!(fields.has_attributes_extend);
+
+        fs::remove_dir_all(&root).expect("temporary root should be removable");
+    }
+
+    #[test]
+    fn introspect_item_never_overrides_a_registry_owned_props_definition() {
+        // A registry facade may deliberately narrow or widen the
+        // primitive's own field set (e.g. omitting an internal-only
+        // field) -- the primitive-module fallback must never clobber
+        // that with the primitive's own, different list.
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("valid time")
+            .as_nanos();
+        let root = std::env::temp_dir().join(format!("adico-prop-parity-test-override-{nonce}"));
+        let registry_ui = root.join("registry/ui");
+        let primitive_src = root.join("packages/adico-primitives/src");
+        fs::create_dir_all(&registry_ui).expect("registry/ui should be creatable");
+        fs::create_dir_all(&primitive_src).expect("primitive src should be creatable");
+        fs::write(
+            registry_ui.join("widget.rs"),
+            "use adico_primitives::widget::WidgetPrimitive;\n\n#[derive(Props, Clone, PartialEq)]\npub struct WidgetProps {\n    pub registry_only_field: Option<String>,\n}\n\n#[component]\npub fn Widget(props: WidgetProps) -> Element {\n    rsx! { WidgetPrimitive {} }\n}\n",
+        )
+        .expect("registry fixture file should be writable");
+        fs::write(
+            primitive_src.join("widget.rs"),
+            "#[derive(Props, Clone, PartialEq)]\npub struct WidgetProps {\n    pub primitive_only_field: ReadSignal<bool>,\n}\n",
+        )
+        .expect("primitive fixture file should be writable");
+
+        let mut item = fixture_item("widget");
+        item.files = vec![fixture_registry_file("ui/widget.rs")];
+        let introspection = introspect_item(&root, &item);
+
+        let fields = adico_field_names(&introspection, "Widget");
+        assert!(fields.names.contains("registry_only_field"));
+        assert!(!fields.names.contains("primitive_only_field"));
+
+        fs::remove_dir_all(&root).expect("temporary root should be removable");
     }
 
     #[test]
