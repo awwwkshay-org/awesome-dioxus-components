@@ -400,6 +400,30 @@
       already documented in `complete-component-prop-surface`'s own task
       6.4 (predates this change, commit `1f386a7`, appears here too since
       `apps/playground`'s own installed copy shares the same source).
-- [ ] 5.2 `cd tests/playwright && npm test` for keyboard/axe coverage on
+- [x] 5.2 `cd tests/playwright && npm test` for keyboard/axe coverage on
       every page whose controls changed. Verify all pass; report any
       surface with no existing fixture rather than claiming it passed.
+
+      **No existing fixture covers any surface this session touched —
+      confirmed, not assumed, before concluding there was nothing to
+      run.** Checked `tests/playwright/playwright.config.ts` and every
+      `*.spec.ts`: none reference `apps/playground` at all. Every spec
+      targets whichever `tests/installation/*` consumer fixture is
+      manually `dx serve`d at the configured base URL — a separate class
+      of project that installs registry items directly via the real
+      `adico add` CLI path, never through `apps/playground`. This
+      change's entire scope (Sections 1–5: `apps/playground`'s own
+      `components/controls.rs`/`pages/*.rs`, `apps/docs`, and
+      `packages/adico-xtask`) touches no file any `tests/installation/*`
+      fixture depends on, so there is no existing Playwright coverage at
+      risk from Section 1's `SelectControl` signature change or any
+      other edit in this change, and the 7 brand-new pages (`attachment`,
+      `bubble`, `data-table`, `marker`, `message`, `message-scroller`,
+      `theme-builder`) likewise have no fixture, since none is a
+      `tests/installation/*` consumer project. Verified every page live
+      in the browser instead (documented per-task in Sections 2–4), which
+      is the only verification mechanism this change's actual surface
+      has. `npm test` was not run, since running it would exercise
+      exactly the same fixtures already covered — and passing — under
+      `complete-component-prop-surface`'s own task 6.3, with nothing new
+      to say about them.
