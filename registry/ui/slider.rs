@@ -22,24 +22,15 @@ use crate::adico_lib::cn::cn;
 /// showing the root at literally `width: 0`).
 const SLIDER_ROOT_CLASS: &str = "relative flex w-full touch-none select-none items-center data-[orientation=vertical]:h-full data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col";
 
-/// `SliderProps`/`RangeSliderProps` have no dedicated `class` field (only
-/// `attributes: Vec<Attribute>`, extending `GlobalAttributes`), and a
-/// `class` keyword can't be mixed with a `..props` struct spread at a
-/// *component* call site (unlike a plain HTML tag) -- build the merged
-/// attribute list by hand, matching the primitive crate's own precedent in
-/// `popover.rs`/`hover_card.rs`/`tooltip.rs` for this exact limitation.
-fn with_class(class: &str, attributes: Vec<Attribute>) -> Vec<Attribute> {
-    let mut merged = vec![Attribute::new("class", class, None, false)];
-    merged.extend(attributes);
-    merged
-}
-
 /// A single-thumb slider with the default adico/shadcn root layout. See
 /// [`adico_primitives::slider::Slider`] for the full behavior/prop
 /// reference; this facade only adds the root's default class.
 #[component]
 pub fn Slider(props: SliderProps) -> Element {
-    let attributes = with_class(SLIDER_ROOT_CLASS, props.attributes);
+    let class = cn(&[
+        SLIDER_ROOT_CLASS,
+        props.class.as_deref().unwrap_or_default(),
+    ]);
     rsx! {
         SliderPrimitive {
             value: props.value,
@@ -52,7 +43,8 @@ pub fn Slider(props: SliderProps) -> Element {
             inverted: props.inverted,
             on_value_change: props.on_value_change,
             label: props.label,
-            attributes,
+            class,
+            attributes: props.attributes,
             {props.children}
         }
     }
@@ -63,7 +55,10 @@ pub fn Slider(props: SliderProps) -> Element {
 /// reference; this facade only adds the root's default class.
 #[component]
 pub fn RangeSlider(props: RangeSliderProps) -> Element {
-    let attributes = with_class(SLIDER_ROOT_CLASS, props.attributes);
+    let class = cn(&[
+        SLIDER_ROOT_CLASS,
+        props.class.as_deref().unwrap_or_default(),
+    ]);
     rsx! {
         RangeSliderPrimitive {
             value: props.value,
@@ -76,7 +71,8 @@ pub fn RangeSlider(props: RangeSliderProps) -> Element {
             inverted: props.inverted,
             on_value_change: props.on_value_change,
             label: props.label,
-            attributes,
+            class,
+            attributes: props.attributes,
             {props.children}
         }
     }
@@ -146,9 +142,9 @@ mod tests {
     }
 
     #[test]
-    fn with_class_prepends_class_ahead_of_caller_supplied_attributes() {
-        let merged = with_class("w-full", Vec::new());
-        assert_eq!(merged.len(), 1);
-        assert_eq!(merged[0].name, "class");
+    fn caller_class_is_appended_after_the_root_class() {
+        let class = cn(&[SLIDER_ROOT_CLASS, "extra-class"]);
+        assert!(class.contains("w-full"));
+        assert!(class.ends_with("extra-class"));
     }
 }

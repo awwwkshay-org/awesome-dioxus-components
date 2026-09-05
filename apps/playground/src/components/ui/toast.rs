@@ -28,16 +28,13 @@ use crate::adico_lib::cn::cn;
 /// building a custom `render_toast` that still wants this card's look.
 #[component]
 pub fn Toast(props: ToastProps) -> Element {
-    // Field-by-field, not `..props`: `ToastPrimitive` has no dedicated
-    // `class` field (only `attributes: Vec<Attribute>`, extending
-    // `GlobalAttributes`), and spreading the whole `ToastProps` struct
-    // bypasses that shorthand mechanism entirely (found via a real compile
-    // error, not assumed) -- passing `class` as its own keyword alongside
-    // the other fields individually is what actually routes it into
-    // `attributes`.
+    // Field-by-field, not `..props`: spreading the whole `ToastProps`
+    // struct would forward the caller's own `class` (now a real field) a
+    // second time alongside the merged one computed below.
     let class = cn(&[
         "group pointer-events-auto relative flex w-full items-start gap-3 overflow-hidden rounded-md border bg-background p-4 pr-8 text-foreground shadow-lg \
          data-[type=success]:border-emerald-500/50 data-[type=error]:border-destructive/50 data-[type=warning]:border-amber-500/50",
+        props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
         ToastPrimitive {
@@ -67,8 +64,15 @@ pub fn Toast(props: ToastProps) -> Element {
 /// styling unless `render_toast` is overridden.
 #[component]
 pub fn ToastProvider(
-    #[props(default = Duration::from_secs(5))] default_duration: Duration,
-    #[props(default = 10)] max_toasts: usize,
+    /// Kept as `ReadSignal`, matching the primitive's own field, so a
+    /// consumer can reactively change the dismissal duration after the
+    /// provider mounts instead of only setting it once at construction.
+    #[props(default = ReadSignal::new(Signal::new(Some(Duration::from_secs(5)))))]
+    default_duration: ReadSignal<Option<Duration>>,
+    /// Kept as `ReadSignal` for the same reactivity reason as
+    /// `default_duration` above.
+    #[props(default = ReadSignal::new(Signal::new(10)))]
+    max_toasts: ReadSignal<usize>,
     #[props(default = Callback::new(|props: ToastPropsWithOwner| rsx! { Toast { ..props } }))]
     render_toast: Callback<ToastPropsWithOwner, Element>,
     children: Element,
@@ -88,7 +92,7 @@ pub fn ToastProvider(
     ]);
     rsx! {
         ToastProviderPrimitive {
-            default_duration: Some(default_duration),
+            default_duration,
             max_toasts,
             render_toast,
             class,

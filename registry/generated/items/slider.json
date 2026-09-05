@@ -7,7 +7,7 @@
       "source": "ui/slider.rs",
       "targetRoot": "ui",
       "target": "slider.rs",
-      "checksum": "65e836be0b91d096f2f33460e5f9c9913e7fcdfbce700c8dd111f68e2868e356"
+      "checksum": "492966eb46178ffd248411d7204391d82117613f70ee44980bd5506dc0d67683"
     }
   ],
   "registryDependencies": [

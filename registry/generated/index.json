@@ -74,6 +74,7 @@
     "toggle-group": "items/toggle-group.json",
     "toolbar": "items/toolbar.json",
     "tooltip": "items/tooltip.json",
+    "variants": "items/variants.json",
     "virtual-list": "items/virtual-list.json"
   }
 }

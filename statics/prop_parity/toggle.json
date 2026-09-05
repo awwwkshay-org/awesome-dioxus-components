@@ -74,19 +74,19 @@
             },
             {
               "name": "onmounted",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "onfocus",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "onkeydown",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -120,19 +120,19 @@
             },
             {
               "name": "onmounted",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "onfocus",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "onkeydown",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",

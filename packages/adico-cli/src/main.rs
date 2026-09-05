@@ -525,6 +525,9 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "lib/cn.rs") => {
                 Ok(include_bytes!("../../../registry/lib/cn.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "lib/variants.rs") => {
+                Ok(include_bytes!("../../../registry/lib/variants.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, "ui/button.rs") => {
                 Ok(include_bytes!("../../../registry/ui/button.rs").to_vec())
             }

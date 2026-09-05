@@ -1,0 +1,36 @@
+{
+  "name": "variants",
+  "type": "registry:lib",
+  "description": "Shared adico-owned style vocabulary (e.g. Radius) for registry components.",
+  "files": [
+    {
+      "source": "lib/variants.rs",
+      "targetRoot": "lib",
+      "target": "variants.rs",
+      "checksum": "7f08cf8abecb10daf86a48aa30066ed6d6017c017166ce50e140e764346646c4"
+    }
+  ],
+  "registryDependencies": [],
+  "cargoDependencies": [],
+  "style": {
+    "semanticTokens": false,
+    "radiusToken": false,
+    "utilities": []
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "lib",
+      "module": "variants",
+      "reexport": false
+    }
+  ],
+  "documentation": {
+    "slug": "variants",
+    "compositionNote": null,
+    "usage": null,
+    "accessibility": null,
+    "keyboard": null
+  },
+  "compatibility": null,
+  "provenance": null
+}

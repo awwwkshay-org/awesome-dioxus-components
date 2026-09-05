@@ -183,3 +183,19 @@ Final validation, run against the complete working tree after section 6:
 
 New component work on `build-adico-component-ecosystem` (Wave 2 migration,
 paused at task 4.8e for this hardening pass) may resume.
+
+## Addendum (`complete-component-prop-surface`, task 2.4)
+
+Two more silently-dropped-prop defects of the same class as Menubar's
+`disabled` above, found via `extend-upstream-prop-evidence`'s generated
+`statics/prop_parity/*.json` records rather than a fresh manual audit:
+
+- `Checkbox`: the registry façade's public `Checkbox` component silently
+  dropped the primitive's form `value` (`ReadSignal<String>`, used to set
+  what a checked checkbox submits in a form) and its `attributes:
+  Vec<Attribute>` passthrough entirely — fixed by forwarding both.
+- `ToastProvider`: `default_duration`/`max_toasts` had been narrowed from
+  the primitive's `ReadSignal<Option<Duration>>`/`ReadSignal<usize>` to
+  plain `Duration`/`usize`, so a consumer could set them only once at
+  construction and never reactively change them afterward — fixed by
+  un-narrowing both back to the primitive's own `ReadSignal` types.

@@ -56,6 +56,13 @@ impl ItemVariant {
 pub struct ItemProps {
     #[props(default)]
     pub variant: ItemVariant,
+    /// `Item` renders a `div`, which has no native HTML `disabled` attribute
+    /// to defer to (unlike `Button`/`Input`'s categories) — disabling here
+    /// is entirely synthetic (`aria-disabled`, a manual `onclick` guard, and
+    /// the `Interactive` variant's tabindex), so this intentionally stays a
+    /// plain `bool` rather than the `Option<bool>`/`ReadSignal<bool>`
+    /// convention that applies to components with a real disabled state to
+    /// mirror.
     #[props(default)]
     pub disabled: bool,
     #[props(default)]

@@ -104,6 +104,10 @@ pub struct SliderProps {
     /// The label for the slider (for accessibility)
     pub label: ReadSignal<Option<String>>,
 
+    /// Extra classes appended to the root element's class list.
+    #[props(default)]
+    pub class: Option<String>,
+
     /// Additional attributes for the slider
     #[props(extends = GlobalAttributes)]
     pub attributes: Vec<Attribute>,
@@ -164,6 +168,7 @@ pub fn Slider(props: SliderProps) -> Element {
             horizontal: props.horizontal,
             inverted: props.inverted,
             label: props.label,
+            class: props.class,
             attributes: props.attributes,
             {props.children}
         }
@@ -210,6 +215,10 @@ pub struct RangeSliderProps {
 
     /// The label for the range slider (for accessibility)
     pub label: ReadSignal<Option<String>>,
+
+    /// Extra classes appended to the root element's class list.
+    #[props(default)]
+    pub class: Option<String>,
 
     /// Additional attributes for the range slider
     #[props(extends = GlobalAttributes)]
@@ -289,6 +298,7 @@ pub fn RangeSlider(props: RangeSliderProps) -> Element {
             horizontal: props.horizontal,
             inverted: props.inverted,
             label: props.label,
+            class: props.class,
             attributes: props.attributes,
             {props.children}
         }
@@ -306,6 +316,7 @@ struct SliderImplProps {
     horizontal: bool,
     inverted: bool,
     label: ReadSignal<Option<String>>,
+    class: Option<String>,
     #[props(extends = GlobalAttributes)]
     attributes: Vec<Attribute>,
     children: Element,
@@ -383,6 +394,7 @@ fn SliderImpl(props: SliderImplProps) -> Element {
 
     rsx! {
         div {
+            class: props.class.clone().unwrap_or_default(),
             role: "group",
             "data-disabled": props.disabled,
             "data-orientation": orientation,

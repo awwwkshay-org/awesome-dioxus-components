@@ -63,11 +63,11 @@
           "props": [
             {
               "name": "onclick",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             }
           ]
         },

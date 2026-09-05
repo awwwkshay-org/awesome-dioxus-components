@@ -81,15 +81,15 @@
             },
             {
               "name": "onmousedown",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "onmouseup",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             }
           ]
         },
@@ -102,15 +102,15 @@
             },
             {
               "name": "onmousedown",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "onmouseup",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             }
           ]
         },

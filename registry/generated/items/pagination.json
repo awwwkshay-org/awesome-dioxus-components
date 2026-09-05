@@ -7,7 +7,7 @@
       "source": "ui/pagination.rs",
       "targetRoot": "ui",
       "target": "pagination.rs",
-      "checksum": "67c0d6a6acc37a42ec7016f930f428c72c9e50445f37bd9874612d17e121bb8d"
+      "checksum": "0a77c5c3935cccfa5a6063eaaac9427672f6956b7321d56232d7455997f08872"
     }
   ],
   "registryDependencies": [

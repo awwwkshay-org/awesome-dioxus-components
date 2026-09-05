@@ -7,7 +7,7 @@
       "source": "ui/checkbox.rs",
       "targetRoot": "ui",
       "target": "checkbox.rs",
-      "checksum": "2699db3011942e89539ce919e4e3d5dae3225a0bc0c769ccb0a9879e5d6d8077"
+      "checksum": "fa99624b291e9709b33adbc46ac094082e5037e5d69a4afe75c5106d22356d75"
     }
   ],
   "registryDependencies": [

@@ -214,7 +214,19 @@ pub fn Sidebar(props: SidebarProps) -> Element {
 
 /// The button that toggles a [`Sidebar`] open and closed.
 #[component]
-pub fn SidebarTrigger(children: Element, class: Option<String>) -> Element {
+pub fn SidebarTrigger(
+    children: Element,
+    class: Option<String>,
+    /// Native button/global attributes. Dioxus requires an element's
+    /// attribute spread to be its last attribute, so this is listed after
+    /// the trigger's own `onclick` below — a caller passing their own
+    /// `onclick` here replaces the sidebar-toggle behavior rather than
+    /// composing with it, matching every other `attributes`-accepting
+    /// component in this registry (e.g. `SidebarMenuButton`).
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = button)]
+    attributes: Vec<Attribute>,
+) -> Element {
     let ctx = use_sidebar();
     let class = cn(&[
         "inline-flex h-7 w-7 items-center justify-center rounded-md text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
@@ -227,6 +239,7 @@ pub fn SidebarTrigger(children: Element, class: Option<String>) -> Element {
             "data-slot": "sidebar-trigger",
             aria_label: "Toggle Sidebar",
             onclick: move |_| ctx.toggle(),
+            ..attributes,
             {children}
         }
     }
@@ -411,7 +424,7 @@ pub struct SidebarMenuButtonProps {
     pub is_active: bool,
     /// Disables pointer and keyboard interaction with native semantics.
     #[props(default)]
-    pub disabled: bool,
+    pub disabled: Option<bool>,
     /// Extra classes appended to the semantic defaults.
     #[props(default)]
     pub class: Option<String>,

@@ -77,6 +77,19 @@ pub struct ToggleProps {
     /// Extra classes appended to the semantic default.
     #[props(default)]
     pub class: Option<String>,
+    /// Callback fired when the toggle is mounted.
+    #[props(default)]
+    pub onmounted: Callback<Event<MountedData>>,
+    /// Callback fired when the toggle receives focus.
+    #[props(default)]
+    pub onfocus: Callback<Event<FocusData>>,
+    /// Callback fired when a key is pressed on the toggle.
+    #[props(default)]
+    pub onkeydown: Callback<Event<KeyboardData>>,
+    /// Native button/global attributes and events.
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = button)]
+    pub attributes: Vec<Attribute>,
     /// Caller-composed toggle content.
     pub children: Element,
 }
@@ -101,7 +114,11 @@ pub fn Toggle(props: ToggleProps) -> Element {
             default_pressed: props.default_pressed,
             disabled: props.disabled,
             on_pressed_change: props.on_pressed_change,
+            onmounted: props.onmounted,
+            onfocus: props.onfocus,
+            onkeydown: props.onkeydown,
             class,
+            attributes: props.attributes,
             {props.children}
         }
     }

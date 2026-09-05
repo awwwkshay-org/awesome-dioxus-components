@@ -355,6 +355,10 @@ pub struct ToastProps {
     /// The duration for which the toast is displayed.
     pub duration: Option<Duration>,
 
+    /// Extra classes appended to the toast element's class list.
+    #[props(default)]
+    pub class: Option<String>,
+
     /// Additional attributes to apply to the toast element.
     #[props(extends = GlobalAttributes)]
     pub attributes: Vec<Attribute>,
@@ -524,6 +528,7 @@ pub fn Toast(props: ToastProps) -> Element {
     rsx! {
         div {
             id,
+            class: props.class.clone().unwrap_or_default(),
             role: "alertdialog",
             aria_labelledby: "{label_id}",
             aria_describedby: description_id,

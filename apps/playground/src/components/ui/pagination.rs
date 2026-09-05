@@ -115,6 +115,11 @@ pub fn PaginationPrevious(
     #[props(default)]
     compact: bool,
     class: Option<String>,
+    /// Native anchor and global Dioxus attributes, forwarded to the
+    /// underlying [`PaginationLink`].
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = a)]
+    attributes: Vec<Attribute>,
 ) -> Element {
     // `PaginationLink`'s base `w-9` fits a single-character page number, but
     // this preset's label ("Previous" by default) needs real width -- left
@@ -135,6 +140,7 @@ pub fn PaginationPrevious(
             href,
             onclick: move |event| onclick.call(event),
             aria_label: "Go to previous page",
+            attributes,
             span { "aria-hidden": "true", "‹" }
             if !compact { span { "{text}" } }
         }
@@ -153,6 +159,11 @@ pub fn PaginationNext(
     #[props(default)]
     compact: bool,
     class: Option<String>,
+    /// Native anchor and global Dioxus attributes, forwarded to the
+    /// underlying [`PaginationLink`].
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = a)]
+    attributes: Vec<Attribute>,
 ) -> Element {
     // See `PaginationPrevious`'s own comment for why this overrides width.
     let width_class = if compact { "" } else { "w-auto" };
@@ -168,6 +179,7 @@ pub fn PaginationNext(
             href,
             onclick: move |event| onclick.call(event),
             aria_label: "Go to next page",
+            attributes,
             if !compact { span { "{text}" } }
             span { "aria-hidden": "true", "›" }
         }

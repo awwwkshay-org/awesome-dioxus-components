@@ -67,10 +67,10 @@ pub fn AreaTrack(class: Option<String>, children: Element) -> Element {
 /// Typically contains an [`AreaThumbSaturationInput`] and [`AreaThumbValueInput`]
 /// for accessible keyboard/screen-reader support.
 #[component]
-pub fn AreaThumb(children: Element) -> Element {
+pub fn AreaThumb(class: Option<String>, children: Element) -> Element {
     let class = cn(&[
         "absolute size-4 -translate-x-1/2 translate-y-1/2 rounded-full border-2 border-white shadow-[0_0_0_1px_rgba(0,0,0,0.3)] outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[dragging=true]:cursor-grabbing",
-        "",
+        class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
         AreaThumbPrimitive { class, {children} }
@@ -95,7 +95,7 @@ pub fn AreaThumb(children: Element) -> Element {
 ///
 /// This must be used inside a [`ColorPicker`] component.
 #[component]
-pub fn HueSlider() -> Element {
+pub fn HueSlider(class: Option<String>) -> Element {
     let ctx = use_context::<ColorPickerContext>();
     let hue = use_memo(move || ctx.color().hue.into_positive_degrees());
 
@@ -107,6 +107,7 @@ pub fn HueSlider() -> Element {
             step: 1.0,
             label: Some("Hue".to_string()),
             on_value_change: move |h: f64| ctx.set_hue(h),
+            class,
             SliderTrack {
                 class: "bg-[linear-gradient(to_right,red,yellow,lime,cyan,blue,magenta,red)]",
                 SliderThumb {}
