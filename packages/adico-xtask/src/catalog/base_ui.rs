@@ -129,6 +129,11 @@ fn parse_component_html(slug: &str, document: &Html) -> Result<CatalogEntry, Str
             .map(element_text)
             .filter(|text| !text.is_empty())
             .unwrap_or_else(|| prop_name_from_id.to_string());
+        // The docs site renders a required prop's name with a literal
+        // trailing `*` (e.g. `value*`) -- a required-marker glyph, not part
+        // of the actual prop name, so scraping it verbatim makes `value*`
+        // fail to match every other axis's plain `value`.
+        let name = name.strip_suffix('*').map(str::to_string).unwrap_or(name);
         let type_name = summary
             .select(&type_selector)
             .next()
@@ -261,6 +266,28 @@ mod tests {
             panic!("expected explicit props");
         };
         assert_eq!(props[0].default, None, "em dash means no default");
+    }
+
+    #[test]
+    fn strips_the_required_prop_marker_from_the_scraped_name() {
+        let fixture = r#"
+            <details class="AccordionItem">
+              <summary id="ProgressRoot-value" aria-label="Prop: value, type: number | null">
+                <span class="ReferenceNameCell"><code>value*</code></span>
+                <span class="ReferenceTypeCell">number | null</span>
+              </summary>
+            </details>
+        "#;
+        let document = Html::parse_fragment(fixture);
+        let entry = parse_component_html("progress", &document).expect("parse succeeds");
+        let root = entry.parts.iter().find(|p| p.id == "root").unwrap();
+        let PropsSource::Explicit { props } = &root.props_source else {
+            panic!("expected explicit props");
+        };
+        assert_eq!(
+            props[0].name, "value",
+            "the docs site's required-prop marker (`value*`) must not become part of the name"
+        );
     }
 
     #[test]

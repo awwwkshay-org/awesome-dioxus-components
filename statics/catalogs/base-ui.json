@@ -604,7 +604,7 @@
             "kind": "explicit",
             "props": [
               {
-                "name": "children*",
+                "name": "children",
                 "type": "(item: any, index: number) => React.ReactNode"
               }
             ]
@@ -1942,7 +1942,7 @@
             "kind": "explicit",
             "props": [
               {
-                "name": "children*",
+                "name": "children",
                 "type": "(item: any, index: number) => React.ReactNode"
               }
             ]
@@ -3236,7 +3236,7 @@
                 "description": "Overrides the text label to use when the item is matched during keyboard text navigation."
               },
               {
-                "name": "value*",
+                "name": "value",
                 "type": "any",
                 "description": "Value of the radio item.\nThis is the value that will be set in the ContextMenu.RadioGroup when the item is selected."
               },
@@ -4563,7 +4563,7 @@
             "kind": "explicit",
             "props": [
               {
-                "name": "children*",
+                "name": "children",
                 "type": "(state: Field.Validity.State) => React.ReactNode",
                 "description": "A function that accepts the field validity state as an argument.\n<Field.Validity>\n  {(validity) => {\n    return <div>...</div>\n  }}\n</Field.Validity>"
               }
@@ -5219,7 +5219,7 @@
                 "description": "Overrides the text label to use when the item is matched during keyboard text navigation."
               },
               {
-                "name": "value*",
+                "name": "value",
                 "type": "any",
                 "description": "Value of the radio item.\nThis is the value that will be set in the Menu.RadioGroup when the item is selected."
               },
@@ -5747,7 +5747,7 @@
             "kind": "explicit",
             "props": [
               {
-                "name": "value*",
+                "name": "value",
                 "type": "number",
                 "description": "The current value."
               },
@@ -6704,7 +6704,7 @@
                 "description": "The virtual keyboard hint applied to the slot inputs and hidden validation input.\nBuilt-in validation modes provide sensible defaults, but you can override them when needed."
               },
               {
-                "name": "length*",
+                "name": "length",
                 "type": "number",
                 "description": "The number of OTP input slots.\nRequired so the root can clamp values, detect completion, and generate\nconsistent validation markup before all slots hydrate."
               },
@@ -7629,7 +7629,7 @@
             "kind": "explicit",
             "props": [
               {
-                "name": "value*",
+                "name": "value",
                 "type": "number | null",
                 "description": "The current value. The component is indeterminate when value is null."
               },
@@ -7845,7 +7845,7 @@
             "kind": "explicit",
             "props": [
               {
-                "name": "value*",
+                "name": "value",
                 "type": "Value",
                 "description": "The unique identifying value of the radio in a group."
               },
@@ -9327,7 +9327,7 @@
             "kind": "explicit",
             "props": [
               {
-                "name": "value*",
+                "name": "value",
                 "type": "Tabs.Tab.Value",
                 "description": "The value of the TabPanel. It will be shown when the Tab with the corresponding value is active."
               },
@@ -9406,7 +9406,7 @@
             "kind": "explicit",
             "props": [
               {
-                "name": "value*",
+                "name": "value",
                 "type": "Tabs.Tab.Value",
                 "description": "The value of the Tab."
               },
@@ -9612,7 +9612,7 @@
                 "description": "Whether to disable the popup from tracking any layout shift of its positioning anchor."
               },
               {
-                "name": "toast*",
+                "name": "toast",
                 "type": "ToastObject<any>",
                 "description": "The toast object associated with the positioner."
               },
@@ -9739,7 +9739,7 @@
                 "description": "Direction(s) in which the toast can be swiped to dismiss."
               },
               {
-                "name": "toast*",
+                "name": "toast",
                 "type": "Toast.Root.ToastObject",
                 "description": "The toast to render."
               },
