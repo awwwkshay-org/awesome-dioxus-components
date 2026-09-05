@@ -26,7 +26,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -64,7 +64,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -81,7 +81,7 @@
             },
             {
               "name": "id",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "class",
@@ -93,7 +93,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -111,7 +111,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -149,7 +149,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -166,7 +166,7 @@
             },
             {
               "name": "id",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "class",
@@ -178,7 +178,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",

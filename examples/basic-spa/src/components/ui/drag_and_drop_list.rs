@@ -16,6 +16,7 @@ pub use adico_primitives::drag_and_drop_list::{
 };
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// A reorderable list container. Keyboard reordering (Enter to lift/drop,
 /// Arrow keys to move, Escape to cancel, Delete/Backspace to remove) is
@@ -26,11 +27,12 @@ pub fn DragAndDropList(
     items: Vec<Element>,
     #[props(default)] aria_label: Option<String>,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     #[props(default)] children: Option<Element>,
 ) -> Element {
     let class = cn(&["flex flex-col gap-1", class.as_deref().unwrap_or_default()]);
     rsx! {
-        DragAndDropListPrimitive { items, aria_label, class, children }
+        DragAndDropListPrimitive { items, aria_label, class, attributes, children }
     }
 }
 
@@ -39,11 +41,12 @@ pub fn DragAndDropList(
 pub fn DragAndDropListItems(
     aria_label: String,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     #[props(default)] children: Option<Element>,
 ) -> Element {
     let class = cn(&["flex flex-col gap-1", class.as_deref().unwrap_or_default()]);
     rsx! {
-        DragAndDropListItemsPrimitive { aria_label, class, children }
+        DragAndDropListItemsPrimitive { aria_label, class, attributes, children }
     }
 }
 
@@ -52,15 +55,24 @@ pub fn DragAndDropListItems(
 pub fn DragAndDropListItem(
     index: usize,
     #[props(default)] item_key: Option<String>,
+    #[props(default = Radius::Md)] radius: Radius,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&[
-        "flex items-center gap-2 rounded-md border bg-background px-3 py-2 text-sm data-[is-grabbing=true]:opacity-50 data-[focus-visible=true]:ring-2 data-[focus-visible=true]:ring-ring/50",
+        "flex items-center gap-2 border bg-background px-3 py-2 text-sm data-[is-grabbing=true]:opacity-50 data-[focus-visible=true]:ring-2 data-[focus-visible=true]:ring-ring/50",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        DragAndDropListItemPrimitive { index, item_key, class, {children} }
+        DragAndDropListItemPrimitive {
+            index,
+            item_key,
+            class,
+            attributes,
+            {children}
+        }
     }
 }
 
@@ -70,13 +82,19 @@ pub fn DragAndDropDropIndicator(
     index: usize,
     position: &'static str,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
         "h-0.5 rounded-full bg-primary",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        DragAndDropDropIndicatorPrimitive { index, position, class }
+        DragAndDropDropIndicatorPrimitive {
+            index,
+            position,
+            class,
+            attributes,
+        }
     }
 }
 

@@ -15,6 +15,7 @@ pub use adico_primitives::color_picker::{
 
 use super::slider::{Slider, SliderThumb, SliderTrack};
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// Provides the color-picker context and synchronizes a color value between
 /// its descendants.
@@ -24,6 +25,7 @@ pub fn ColorPicker(
     #[props(default)] on_color_change: Callback<palette::Hsv<palette::encoding::Srgb, f64>>,
     #[props(default)] disabled: ReadSignal<bool>,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&[
@@ -31,7 +33,14 @@ pub fn ColorPicker(
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        ColorPickerPrimitive { color, on_color_change, disabled, class, {children} }
+        ColorPickerPrimitive {
+            color,
+            on_color_change,
+            disabled,
+            class,
+            attributes,
+            {children}
+        }
     }
 }
 
@@ -39,11 +48,13 @@ pub fn ColorPicker(
 #[component]
 pub fn ColorArea(
     #[props(default = 1.0)] step: ReadSignal<f64>,
+    #[props(default = Radius::Md)] radius: Radius,
     class: Option<String>,
     children: Element,
 ) -> Element {
     let class = cn(&[
-        "relative size-48 touch-none rounded-md border border-input",
+        "relative size-48 touch-none border border-input",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -67,10 +78,10 @@ pub fn AreaTrack(class: Option<String>, children: Element) -> Element {
 /// Typically contains an [`AreaThumbSaturationInput`] and [`AreaThumbValueInput`]
 /// for accessible keyboard/screen-reader support.
 #[component]
-pub fn AreaThumb(children: Element) -> Element {
+pub fn AreaThumb(class: Option<String>, children: Element) -> Element {
     let class = cn(&[
         "absolute size-4 -translate-x-1/2 translate-y-1/2 rounded-full border-2 border-white shadow-[0_0_0_1px_rgba(0,0,0,0.3)] outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[dragging=true]:cursor-grabbing",
-        "",
+        class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
         AreaThumbPrimitive { class, {children} }
@@ -95,7 +106,7 @@ pub fn AreaThumb(children: Element) -> Element {
 ///
 /// This must be used inside a [`ColorPicker`] component.
 #[component]
-pub fn HueSlider() -> Element {
+pub fn HueSlider(class: Option<String>) -> Element {
     let ctx = use_context::<ColorPickerContext>();
     let hue = use_memo(move || ctx.color().hue.into_positive_degrees());
 
@@ -107,6 +118,7 @@ pub fn HueSlider() -> Element {
             step: 1.0,
             label: Some("Hue".to_string()),
             on_value_change: move |h: f64| ctx.set_hue(h),
+            class,
             SliderTrack {
                 class: "bg-[linear-gradient(to_right,red,yellow,lime,cyan,blue,magenta,red)]",
                 SliderThumb {}

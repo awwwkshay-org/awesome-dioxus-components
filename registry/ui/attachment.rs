@@ -72,6 +72,44 @@ impl AttachmentState {
     }
 }
 
+/// The overall size of an [`Attachment`] card, matching shadcn's own
+/// `"default" | "sm" | "xs"` cva axis.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum AttachmentSize {
+    Xs,
+    Sm,
+    #[default]
+    Default,
+}
+
+impl AttachmentSize {
+    fn class(self) -> &'static str {
+        match self {
+            Self::Xs => "gap-1.5 p-1.5",
+            Self::Sm => "gap-2 p-2",
+            Self::Default => "gap-3 p-3",
+        }
+    }
+}
+
+/// The layout direction of an [`Attachment`] card, matching shadcn's own
+/// `"horizontal" | "vertical"` cva axis.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum AttachmentOrientation {
+    #[default]
+    Horizontal,
+    Vertical,
+}
+
+impl AttachmentOrientation {
+    fn class(self) -> &'static str {
+        match self {
+            Self::Horizontal => "flex-row items-center",
+            Self::Vertical => "flex-col items-start",
+        }
+    }
+}
+
 /// Props for [`Attachment`].
 #[derive(Props, Clone, PartialEq)]
 pub struct AttachmentProps {
@@ -79,6 +117,12 @@ pub struct AttachmentProps {
     /// trailing status indicator.
     #[props(default)]
     pub state: AttachmentState,
+    /// Overall card size; see [`AttachmentSize`].
+    #[props(default)]
+    pub size: AttachmentSize,
+    /// Layout direction; see [`AttachmentOrientation`].
+    #[props(default)]
+    pub orientation: AttachmentOrientation,
     /// Corner radius of the card surface.
     #[props(default)]
     pub radius: Radius,
@@ -98,7 +142,9 @@ pub struct AttachmentProps {
 #[component]
 pub fn Attachment(props: AttachmentProps) -> Element {
     let class = cn(&[
-        "flex items-center gap-3 border bg-card p-3",
+        "flex border bg-card",
+        props.orientation.class(),
+        props.size.class(),
         props.state.border_class(),
         props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
@@ -165,9 +211,32 @@ pub fn AttachmentTrigger(props: AttachmentTriggerProps) -> Element {
     }
 }
 
+/// The content shape of an [`AttachmentMedia`] slot, matching shadcn's own
+/// `"icon" | "image"` cva axis.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum AttachmentMediaVariant {
+    /// A small icon tile with a muted background, the existing default look.
+    #[default]
+    Icon,
+    /// A larger image thumbnail with no background chrome of its own.
+    Image,
+}
+
+impl AttachmentMediaVariant {
+    fn class(self) -> &'static str {
+        match self {
+            Self::Icon => "size-10 bg-muted text-muted-foreground",
+            Self::Image => "size-12",
+        }
+    }
+}
+
 /// Props for [`AttachmentMedia`].
 #[derive(Props, Clone, PartialEq)]
 pub struct AttachmentMediaProps {
+    /// Content shape; see [`AttachmentMediaVariant`].
+    #[props(default)]
+    pub variant: AttachmentMediaVariant,
     /// Extra classes appended to the semantic default.
     #[props(default)]
     pub class: Option<String>,
@@ -181,7 +250,8 @@ pub struct AttachmentMediaProps {
 #[component]
 pub fn AttachmentMedia(props: AttachmentMediaProps) -> Element {
     let class = cn(&[
-        "flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted text-muted-foreground [&>img]:size-full [&>img]:object-cover",
+        "flex shrink-0 items-center justify-center overflow-hidden rounded-md [&>img]:size-full [&>img]:object-cover",
+        props.variant.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

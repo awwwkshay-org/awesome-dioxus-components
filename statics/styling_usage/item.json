@@ -3,7 +3,12 @@
   "styleException": [],
   "tokenCompliant": true,
   "colorException": [],
-  "radiusException": [],
+  "radiusException": [
+    {
+      "part": "media",
+      "reason": "ItemMedia's Icon/Image variant corners are a fixed internal-composition detail of that variant's own visual identity, not an independently-tunable surface (the enclosing Item's own radius prop covers the row itself)"
+    }
+  ],
   "inspiredBy": [
     "shadcn",
     "dioxus-components"

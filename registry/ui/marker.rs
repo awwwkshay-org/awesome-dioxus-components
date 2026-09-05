@@ -17,9 +17,34 @@ use dioxus::prelude::*;
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
 
+/// The visual treatment of a [`Marker`] chip, matching shadcn's own cva axis.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum MarkerVariant {
+    /// A filled chip with a border, the existing default look.
+    #[default]
+    Default,
+    /// A bordered chip with no background fill.
+    Border,
+    /// No border or background at all, reading as inline plain text.
+    Separator,
+}
+
+impl MarkerVariant {
+    fn class(self) -> &'static str {
+        match self {
+            Self::Default => "border bg-muted",
+            Self::Border => "border bg-transparent",
+            Self::Separator => "border-transparent bg-transparent",
+        }
+    }
+}
+
 /// Props for [`Marker`].
 #[derive(Props, Clone, PartialEq)]
 pub struct MarkerProps {
+    /// Visual treatment; see [`MarkerVariant`].
+    #[props(default)]
+    pub variant: MarkerVariant,
     /// Corner radius of the marker chip.
     #[props(default = Radius::Full)]
     pub radius: Radius,
@@ -38,7 +63,8 @@ pub struct MarkerProps {
 #[component]
 pub fn Marker(props: MarkerProps) -> Element {
     let class = cn(&[
-        "inline-flex items-center gap-1 border bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground",
+        "inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium text-muted-foreground",
+        props.variant.class(),
         props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);

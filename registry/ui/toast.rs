@@ -84,6 +84,7 @@ pub fn ToastProvider(
     max_toasts: ReadSignal<usize>,
     #[props(default = Callback::new(|props: ToastPropsWithOwner| rsx! { Toast { ..props } }))]
     render_toast: Callback<ToastPropsWithOwner, Element>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     // `flex flex-col gap-2` on this element does nothing for spacing between
@@ -105,6 +106,7 @@ pub fn ToastProvider(
             max_toasts,
             render_toast,
             class,
+            attributes,
             {children}
         }
     }

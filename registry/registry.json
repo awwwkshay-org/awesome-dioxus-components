@@ -402,7 +402,7 @@
           "source": "ui/item.rs",
           "targetRoot": "ui",
           "target": "item.rs",
-          "checksum": "e17eb338124f06ff4b413e6b2acbed87c936372a27bdc307caecf8882fdf61b8"
+          "checksum": "43139567eb6f2f0e20b124a61bad85c9d7d6a9a5596b4f4157ed9383a0b5aa43"
         }
       ],
       "registryDependencies": [
@@ -446,7 +446,7 @@
           "source": "ui/pagination.rs",
           "targetRoot": "ui",
           "target": "pagination.rs",
-          "checksum": "33f490b8d49de69fc4d44c81d2b19b69a59e758a35562f54b08912ad64d5b1e9"
+          "checksum": "318389bfb014572ef61f2f5b44f4bb1d668d2b6fa4db7d42e3a486fdfbd6e0a9"
         }
       ],
       "registryDependencies": [
@@ -1110,7 +1110,7 @@
           "source": "ui/sidebar.rs",
           "targetRoot": "ui",
           "target": "sidebar.rs",
-          "checksum": "aceaba4da18069736dfb511e4df7302caac8a41aac37a544fba12c7b443e3fe5"
+          "checksum": "7907f7dd39502c34b906145029f7e91c2d7debc6efae6ebd6a3aab248238aaf1"
         }
       ],
       "registryDependencies": [
@@ -1660,7 +1660,7 @@
           "source": "ui/tabs.rs",
           "targetRoot": "ui",
           "target": "tabs.rs",
-          "checksum": "7f4205e3e09a54b86f87c51a3e3044a534b5a01f20dd7ac6be4e0319940708e1"
+          "checksum": "a636070927ec590e0bf30b20a6ddb643161272cc8fd40689b9a267692e365850"
         }
       ],
       "registryDependencies": [
@@ -1863,7 +1863,7 @@
           "source": "ui/toast.rs",
           "targetRoot": "ui",
           "target": "toast.rs",
-          "checksum": "9dca6971a4d9608bf08cf7fb0d158a7eafc8761757c429a7cbf4aed71f0c481c"
+          "checksum": "2363d13a06a807ff16d02e6e42f8ac2839c9396f7c738a793727ddb2cdef6c8b"
         }
       ],
       "registryDependencies": [
@@ -2067,7 +2067,7 @@
           "source": "ui/color_picker.rs",
           "targetRoot": "ui",
           "target": "color_picker.rs",
-          "checksum": "6066680f27fc5821adeba757f125fc3a23d7f84edc8a420452e1c9fb0ef0dc03"
+          "checksum": "b26f0a46957c8187fcf6c04fec6126f431b5c53e90395f33ddc8cee17dd84541"
         }
       ],
       "registryDependencies": [
@@ -2126,7 +2126,7 @@
           "source": "ui/drag_and_drop_list.rs",
           "targetRoot": "ui",
           "target": "drag_and_drop_list.rs",
-          "checksum": "efc96ddb2a953225801c31f30f0b65f66374904f9fd6a414f1468995fadc9ae3"
+          "checksum": "f6e0e96c7dd01540399fc17347b78f66c8e95f803e447fb96d867710618008d6"
         }
       ],
       "registryDependencies": [
@@ -2177,7 +2177,7 @@
           "source": "ui/tag_group.rs",
           "targetRoot": "ui",
           "target": "tag_group.rs",
-          "checksum": "bbbc33eb06671384bdd13658808ba12148fdf3e29dff12340932ec0d1688c108"
+          "checksum": "ba180eaf98c34e2d35c1f62d8bdff436fb82887bbeac6e4a5b8903a87381c5be"
         }
       ],
       "registryDependencies": [
@@ -3077,7 +3077,7 @@
           "source": "ui/marker.rs",
           "targetRoot": "ui",
           "target": "marker.rs",
-          "checksum": "3cf70986b895cdac9b73d36327c7cc73b4c6c1476015b35bfc9af22560a0bcb9"
+          "checksum": "fcbdc91ff83c32828f31d08a0fdbd61db2862a534e92f6d5072b8ec514dc4b34"
         }
       ],
       "registryDependencies": [
@@ -3121,7 +3121,7 @@
           "source": "ui/bubble.rs",
           "targetRoot": "ui",
           "target": "bubble.rs",
-          "checksum": "f37f9a0ed54d6a8173b431a4a900008a7907aabdd66612261763c176a133cffa"
+          "checksum": "7233fc2bdd562b11b6b9445995494645b51368fe181dd4c607ec0bffdd5c2838"
         }
       ],
       "registryDependencies": [
@@ -3259,7 +3259,7 @@
           "source": "ui/attachment.rs",
           "targetRoot": "ui",
           "target": "attachment.rs",
-          "checksum": "ed1b853959a5a25ee4e18617e23ff994aa6734c54e2070609b95a5319cc4ff61"
+          "checksum": "80fac2fcc372358ce32669054d79363e34c85ba5054ee48aa8b6c3978a725337"
         }
       ],
       "registryDependencies": [

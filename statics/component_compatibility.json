@@ -733,6 +733,11 @@
             "AttachmentMediaProps": [
               {
                 "default": "default()",
+                "name": "variant",
+                "type": "AttachmentMediaVariant"
+              },
+              {
+                "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -747,6 +752,16 @@
                 "default": "default()",
                 "name": "state",
                 "type": "AttachmentState"
+              },
+              {
+                "default": "default()",
+                "name": "size",
+                "type": "AttachmentSize"
+              },
+              {
+                "default": "default()",
+                "name": "orientation",
+                "type": "AttachmentOrientation"
               },
               {
                 "default": "default()",
@@ -1148,6 +1163,11 @@
                 "default": "default()",
                 "name": "align",
                 "type": "BubbleAlign"
+              },
+              {
+                "default": "default()",
+                "name": "variant",
+                "type": "BubbleVariant"
               },
               {
                 "default": "Radius::Xl",
@@ -2555,6 +2575,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",
@@ -5172,6 +5196,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "DragAndDropList": [
@@ -5186,6 +5214,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",
@@ -5210,6 +5242,10 @@
                 "type": "Option<String>"
               },
               {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               }
@@ -5222,6 +5258,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",
@@ -6346,6 +6386,11 @@
             "ItemMediaProps": [
               {
                 "default": "default()",
+                "name": "variant",
+                "type": "ItemMediaVariant"
+              },
+              {
+                "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -6363,6 +6408,11 @@
                 "default": "default()",
                 "name": "variant",
                 "type": "ItemVariant"
+              },
+              {
+                "default": "default()",
+                "name": "size",
+                "type": "ItemSize"
               },
               {
                 "default": "default()",
@@ -6567,6 +6617,11 @@
               }
             ],
             "MarkerProps": [
+              {
+                "default": "default()",
+                "name": "variant",
+                "type": "MarkerVariant"
+              },
               {
                 "default": "Radius::Full",
                 "name": "radius",
@@ -7538,6 +7593,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "PaginationContent": [
@@ -7548,12 +7607,20 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "PaginationEllipsis": [
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "PaginationItem": [
@@ -7564,6 +7631,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "PaginationLinkProps": [
@@ -8985,6 +9056,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "SidebarFooter": [
@@ -8995,6 +9070,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "SidebarGroup": [
@@ -9005,6 +9084,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "SidebarGroupContent": [
@@ -9015,6 +9098,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "SidebarGroupLabel": [
@@ -9025,6 +9112,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "SidebarHeader": [
@@ -9035,6 +9126,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "SidebarInset": [
@@ -9049,6 +9144,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "SidebarMenu": [
@@ -9059,6 +9158,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "SidebarMenuButtonProps": [
@@ -9071,6 +9174,16 @@
                 "default": "default()",
                 "name": "disabled",
                 "type": "Option<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "variant",
+                "type": "SidebarMenuButtonVariant"
+              },
+              {
+                "default": "default()",
+                "name": "size",
+                "type": "SidebarMenuButtonSize"
               },
               {
                 "default": "Radius::Md",
@@ -9109,6 +9222,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "SidebarProps": [
@@ -9131,6 +9248,10 @@
                 "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",
@@ -9171,12 +9292,28 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "SidebarSeparator": [
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "horizontal",
+                "type": "bool"
+              },
+              {
+                "name": "decorative",
+                "type": "bool"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "SidebarTrigger": [
@@ -9929,8 +10066,16 @@
                 "type": "ReadSignal<usize>"
               },
               {
+                "name": "id",
+                "type": "Option<String>"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",
@@ -9949,6 +10094,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",
@@ -9975,6 +10124,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",
@@ -10241,6 +10394,10 @@
                 "type": "Option<String>"
               },
               {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               }
@@ -10251,8 +10408,16 @@
                 "type": "Element"
               },
               {
+                "name": "id",
+                "type": "Option<String>"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "TagGroupMulti": [
@@ -10293,6 +10458,10 @@
                 "type": "Option<String>"
               },
               {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               }
@@ -10305,6 +10474,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "TagOption": [
@@ -10325,12 +10498,20 @@
                 "type": "ReadSignal<bool>"
               },
               {
+                "name": "id",
+                "type": "Option<String>"
+              },
+              {
                 "name": "radius",
                 "type": "Radius"
               },
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",
@@ -10345,6 +10526,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }
@@ -10681,6 +10866,10 @@
               {
                 "name": "render_toast",
                 "type": "Callback<ToastPropsWithOwner, Element>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",

@@ -50,7 +50,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -81,7 +81,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             }
           ]
         },
@@ -90,7 +90,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -103,7 +103,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -116,7 +116,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -129,7 +129,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -142,15 +142,15 @@
           "props": [
             {
               "name": "horizontal",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "decorative",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             }
           ]
         },
@@ -159,7 +159,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -177,7 +177,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -190,7 +190,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -203,7 +203,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -216,7 +216,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -233,11 +233,11 @@
             },
             {
               "name": "variant",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "size",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
@@ -245,7 +245,8 @@
             },
             {
               "name": "tooltip",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): a tooltip shown only once the ancestor sidebar collapses to icon-only mode has no adico equivalent; needs new cross-component wiring between the sidebar's own collapse state and a composed Tooltip, tracked as follow-up"
             },
             {
               "name": "r#as",
@@ -362,11 +363,11 @@
           "props": [
             {
               "name": "variant",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "size",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "loading",

@@ -21,11 +21,11 @@
           "props": [
             {
               "name": "size",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "orientation",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "state",
@@ -57,7 +57,7 @@
           "props": [
             {
               "name": "variant",
-              "status": "missing"
+              "status": "present"
             }
           ]
         },

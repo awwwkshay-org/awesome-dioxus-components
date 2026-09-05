@@ -8,7 +8,11 @@ use crate::components::ui::spinner::Spinner;
 
 /// The outer landmark wrapping a page-link list.
 #[component]
-pub fn Pagination(children: Element, class: Option<String>) -> Element {
+pub fn Pagination(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "mx-auto flex w-full justify-center",
         class.as_deref().unwrap_or_default(),
@@ -18,6 +22,7 @@ pub fn Pagination(children: Element, class: Option<String>) -> Element {
             class,
             role: "navigation",
             "aria-label": "pagination",
+            ..attributes,
             {children}
         }
     }
@@ -25,22 +30,30 @@ pub fn Pagination(children: Element, class: Option<String>) -> Element {
 
 /// The row of [`PaginationItem`]s.
 #[component]
-pub fn PaginationContent(children: Element, class: Option<String>) -> Element {
+pub fn PaginationContent(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "flex flex-row items-center gap-1",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        ul { class, {children} }
+        ul { class, ..attributes, {children} }
     }
 }
 
 /// A single entry in a [`PaginationContent`] list.
 #[component]
-pub fn PaginationItem(children: Element, class: Option<String>) -> Element {
+pub fn PaginationItem(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[class.as_deref().unwrap_or_default()]);
     rsx! {
-        li { class, {children} }
+        li { class, ..attributes, {children} }
     }
 }
 
@@ -217,7 +230,10 @@ pub fn PaginationNext(
 
 /// A non-interactive marker for skipped pages between [`PaginationLink`]s.
 #[component]
-pub fn PaginationEllipsis(class: Option<String>) -> Element {
+pub fn PaginationEllipsis(
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "flex h-9 w-9 items-center justify-center",
         class.as_deref().unwrap_or_default(),
@@ -226,6 +242,7 @@ pub fn PaginationEllipsis(class: Option<String>) -> Element {
         span {
             class,
             "aria-hidden": "true",
+            ..attributes,
             "…"
             span { class: "sr-only", "More pages" }
         }

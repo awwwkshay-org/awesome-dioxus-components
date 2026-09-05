@@ -17,7 +17,8 @@
             },
             {
               "name": "is_removable",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this is a behavior toggle specific to the matched third-party UI kit; adico's own primitive always behaves the one way described, with no caller opt-out, not planned to change"
             },
             {
               "name": "aria_label",
@@ -25,7 +26,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -63,7 +64,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -80,7 +81,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -101,7 +102,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -127,7 +128,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             }
           ]
         }

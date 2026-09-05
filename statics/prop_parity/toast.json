@@ -9,11 +9,13 @@
           "props": [
             {
               "name": "swipeDirection",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's swipe-to-dismiss gesture configuration for toasts has no adico equivalent; needs new pointer-gesture primitive work (the same category of deferred work already recorded for drawer.rs's own drag-to-dismiss scope reduction), tracked as follow-up"
             },
             {
               "name": "toast",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "className",
@@ -36,15 +38,16 @@
           "props": [
             {
               "name": "limit",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "toastManager",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "timeout",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -78,7 +81,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -86,35 +89,43 @@
             },
             {
               "name": "id",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "index",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "title",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "description",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "toast_type",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "on_close",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "permanent",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "duration",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             }
           ]
         }
@@ -185,7 +196,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",

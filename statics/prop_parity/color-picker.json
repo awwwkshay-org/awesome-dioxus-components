@@ -25,19 +25,22 @@
             },
             {
               "name": "open",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: the matched axis bakes an open/closed popover toggle directly into this one component; adico expects the caller to compose a separate Popover/PopoverTrigger/PopoverContent around it instead -- the same capability, achieved by composition rather than a dedicated prop, not planned to change"
             },
             {
               "name": "default_open",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: the matched axis bakes an open/closed popover toggle directly into this one component; adico expects the caller to compose a separate Popover/PopoverTrigger/PopoverContent around it instead -- the same capability, achieved by composition rather than a dedicated prop, not planned to change"
             },
             {
               "name": "on_open_change",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: the matched axis bakes an open/closed popover toggle directly into this one component; adico expects the caller to compose a separate Popover/PopoverTrigger/PopoverContent around it instead -- the same capability, achieved by composition rather than a dedicated prop, not planned to change"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",

@@ -13,7 +13,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -26,7 +26,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -39,7 +39,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -56,11 +56,13 @@
             },
             {
               "name": "size",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this is a visual-variant enum specific to the matched third-party UI kit's own opinionated design system, with no shadcn/Base UI counterpart; adico doesn't track that kit's own visual taxonomy, not planned to change"
             },
             {
               "name": "data_kind",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this is a visual-variant enum specific to the matched third-party UI kit's own opinionated design system, with no shadcn/Base UI counterpart; adico doesn't track that kit's own visual taxonomy, not planned to change"
             },
             {
               "name": "attributes",
@@ -134,7 +136,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             }
           ]
         }

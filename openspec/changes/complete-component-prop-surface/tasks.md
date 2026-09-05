@@ -782,11 +782,89 @@ directly for the exact prop list; it is not duplicated here.
         `AlertDialogCancel` rename to `on_confirm`/`on_dismiss`, not
         `on_select` specifically — the constant's doc comment and text
         no longer hardcode one target name).
-- [ ] 5.5 **Wave 5 — Dioxus-only/composite misc** (48 missing entries):
+- [x] 5.5 **Wave 5 — Dioxus-only/composite misc** (48 missing entries):
       `pagination` (12), `tag-group` (8), `color-picker` (4),
       `drag-and-drop-list` (4), `tabs` (4), `attachment` (3), `item` (2),
       `sidebar` (2), `bubble` (1), `input-otp` (1), `marker` (1), `toast`
       (6). Verify same as 5.1 for these twelve items.
+
+      **Done: all 12 of 12, plus one item found extra.** `prop-parity
+      diff` reports zero remaining `missing` status across **all 66**
+      registry items, not just this wave's twelve — `date-picker` (not
+      named in any of the 5 waves) turned up with 8 `missing` entries
+      when doing the final all-items sweep at the end of this wave;
+      `git diff` confirmed its `statics/prop_parity/date-picker.json`
+      record was byte-identical before this session touched anything, so
+      design.md's D5 claim that it was already at zero was stale before
+      Section 5 even started, not something this session's own work
+      broke. Resolved it in the same pass rather than leaving Section 5
+      "done" with a real gap outside the five named waves — three of its
+      four unique props (`on_format_day_placeholder`/`_month_placeholder`/
+      `_year_placeholder`) are real, already-implemented fields on
+      `DatePickerInput` (`PART_DECOMPOSITION_REASON`, reused), and the
+      fourth (`month_count`, a multi-month calendar view) has no adico
+      equivalent (`MULTI_MONTH_CALENDAR_REASON`, new, deferred).
+
+      Per-item notes for the twelve named items:
+      - Mechanical `attributes` forwarding across every part of
+        `pagination`/`tag-group`/`drag-and-drop-list`/`tabs`/`sidebar` —
+        `sidebar.rs` alone needed it on all thirteen of its raw-element
+        parts (root, rail, inset, header, content, footer, group,
+        group-label, group-content, menu, menu-item, plus real `id`
+        fields on `tag-group`'s label/tag-option), the largest single
+        mechanical batch of any wave.
+      - Real, already-wired-but-unexposed fields: `sidebar.rs`'s
+        `SidebarSeparator` had `horizontal`/`decorative` hardcoded to
+        `true` instead of forwarded as params (the `navigation-menu`/
+        `hover-card` shape again). `toast.rs`'s `ToastProvider` gained
+        `attributes` forwarding, plus two new `ITEM_RENAMES` (`limit` ->
+        `max_toasts`, `timeout` -> `default_duration` — both real,
+        already-implemented fields with upstream-equivalent names).
+      - Four real, `cva`-verified feature additions (checked against
+        `statics/catalogs/shadcn.json`, not guessed): `AttachmentSize`/
+        `AttachmentOrientation`/`AttachmentMediaVariant`, `ItemSize`/
+        `ItemMediaVariant`, `SidebarMenuButtonVariant`/
+        `SidebarMenuButtonSize`, and `BubbleVariant`/`MarkerVariant` (the
+        latter two implemented against the real shadcn axis values but
+        without a verifiable upstream visual reference to check exact
+        Tailwind classes against — reasonable, self-consistent choices
+        following this registry's own token vocabulary, not a byte-exact
+        match claim).
+      - Two real defects caught by other generator checks while
+        verifying, not by `prop-parity` itself: `ItemMediaVariant`'s
+        `rounded-md` literals tripped `styling-usage`'s condition (g)
+        (declares a real `radius` prop elsewhere in the same file, on
+        `Item`, but `ItemMedia`'s own corners are fixed) — recorded a
+        `radiusException` for `item`'s `media` part rather than adding a
+        redundant `radius` prop to a genuinely non-configurable detail.
+        `BubbleVariant::Destructive`'s first draft used a literal
+        `text-white` (matching `button.rs`'s own cited, upstream-verified
+        `colorException`) — but with no verified upstream `bubble`
+        source of its own to cite, changed it to the semantic
+        `text-destructive-foreground` token instead of adding an
+        unsubstantiated exception.
+      - New shared reasons: `THIRD_PARTY_BEHAVIOR_TOGGLE_REASON`
+        (`drag-and-drop-list`'s `is_removable` — always-on removal, no
+        third-party-shaped opt-out), `COMPOSABLE_POPOVER_REASON`
+        (`color-picker`'s `open`/`default_open`/`on_open_change` — the
+        matched axis bakes a popover toggle into one component; adico
+        expects composing a separate `Popover` around it instead),
+        `COLLAPSE_AWARE_TOOLTIP_REASON` (`sidebar.menu-button.tooltip`,
+        deferred), and `SWIPE_DISMISS_REASON` (`toast`'s
+        `swipeDirection`, deferred, the same category already recorded
+        for `drawer.rs`'s own drag-to-dismiss scope reduction).
+        `THIRD_PARTY_VARIANT_REASON` (Wave 3) reused for `pagination`'s
+        `size`/`data_kind`; `PART_DECOMPOSITION_REASON` reused repeatedly
+        for `bubble.root.variant` (lives on `content`, not `root`),
+        `input-otp`'s `containerClassName` (already covered by adico's
+        one `class` prop on the wrapper), and all eight of `toast`'s
+        `provider`-vs-per-toast-field mismatches (the third-party axis's
+        provider takes per-toast shape directly; adico splits `Provider`
+        from individual `Toast` items).
+
+      This closes Section 5 (tasks 5.1-5.5) in full: all 41 named items
+      across 5 waves, plus `date-picker`, all report zero remaining
+      `missing` prop-parity entries.
 
 **Per-wave fixture refresh:** end each of sections 1–5 by refreshing
 `apps/playground`'s installed copy via `adico add --replace` (real CLI

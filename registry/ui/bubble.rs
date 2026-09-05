@@ -92,6 +92,40 @@ pub fn BubbleGroup(props: BubbleGroupProps) -> Element {
     }
 }
 
+/// The color treatment of a [`BubbleContent`] surface, matching shadcn's own
+/// cva axis. Defaults to the existing align-driven tone (`bg-muted`/
+/// `bg-primary`) when left unset, preserving current behavior; an explicit
+/// variant overrides that tone.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum BubbleVariant {
+    /// Tone driven by `align`, the existing default look.
+    #[default]
+    Default,
+    Secondary,
+    Muted,
+    Tinted,
+    Outline,
+    Ghost,
+    Destructive,
+}
+
+impl BubbleVariant {
+    fn class(self, align: BubbleAlign) -> &'static str {
+        match self {
+            Self::Default => match align {
+                BubbleAlign::Start => "bg-muted text-foreground",
+                BubbleAlign::End => "bg-primary text-primary-foreground",
+            },
+            Self::Secondary => "bg-secondary text-secondary-foreground",
+            Self::Muted => "bg-muted text-muted-foreground",
+            Self::Tinted => "bg-accent text-accent-foreground",
+            Self::Outline => "border border-input bg-transparent text-foreground",
+            Self::Ghost => "bg-transparent text-foreground",
+            Self::Destructive => "bg-destructive text-destructive-foreground",
+        }
+    }
+}
+
 /// Props for [`BubbleContent`].
 #[derive(Props, Clone, PartialEq)]
 pub struct BubbleContentProps {
@@ -99,6 +133,9 @@ pub struct BubbleContentProps {
     /// the ancestor [`Bubble`].
     #[props(default)]
     pub align: BubbleAlign,
+    /// Color treatment; see [`BubbleVariant`].
+    #[props(default)]
+    pub variant: BubbleVariant,
     /// Corner radius of the bubble surface.
     #[props(default = Radius::Xl)]
     pub radius: Radius,
@@ -112,13 +149,9 @@ pub struct BubbleContentProps {
 /// The rounded bubble surface itself.
 #[component]
 pub fn BubbleContent(props: BubbleContentProps) -> Element {
-    let tone = match props.align {
-        BubbleAlign::Start => "bg-muted text-foreground",
-        BubbleAlign::End => "bg-primary text-primary-foreground",
-    };
     let class = cn(&[
         "max-w-[80%] px-4 py-2 text-sm break-words",
-        tone,
+        props.variant.class(props.align),
         props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);

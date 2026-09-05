@@ -12,12 +12,16 @@ use adico_primitives::tag_group::{
 pub use adico_primitives::tag_group::{TagGroupEmpty, TagGroupEmptyProps};
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// A focusable group of tags with single selection, styled with the semantic
 /// surface tokens.
 #[component]
 pub fn TagGroup<T: Clone + PartialEq + 'static>(
-    #[props(default)] value: Option<ReadSignal<Option<T>>>,
+    /// **BREAKING** (task 2.6): was `Option<ReadSignal<Option<T>>>`; see
+    /// `select.rs`'s own `Select::value` doc comment for the full rationale.
+    #[props(default = ReadSignal::new(Signal::new(None)))]
+    value: ReadSignal<Option<T>>,
     #[props(default)] default_value: Option<T>,
     #[props(default)] on_value_change: Callback<Option<T>>,
     #[props(default)] disabled: ReadSignal<bool>,
@@ -28,12 +32,13 @@ pub fn TagGroup<T: Clone + PartialEq + 'static>(
     >,
     #[props(default = ReadSignal::new(Signal::new(true)))] roving_loop: ReadSignal<bool>,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&["flex flex-col gap-2", class.as_deref().unwrap_or_default()]);
     rsx! {
         TagGroupPrimitive::<T> {
-            value,
+            value: Some(value),
             default_value,
             on_value_change,
             disabled,
@@ -42,6 +47,7 @@ pub fn TagGroup<T: Clone + PartialEq + 'static>(
             escape_clears_selection,
             roving_loop,
             class,
+            attributes,
             {children}
         }
     }
@@ -62,6 +68,7 @@ pub fn TagGroupMulti<T: Clone + PartialEq + 'static>(
     >,
     #[props(default = ReadSignal::new(Signal::new(true)))] roving_loop: ReadSignal<bool>,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&["flex flex-col gap-2", class.as_deref().unwrap_or_default()]);
@@ -76,6 +83,7 @@ pub fn TagGroupMulti<T: Clone + PartialEq + 'static>(
             escape_clears_selection,
             roving_loop,
             class,
+            attributes,
             {children}
         }
     }
@@ -83,25 +91,34 @@ pub fn TagGroupMulti<T: Clone + PartialEq + 'static>(
 
 /// Visible label for a [`TagGroup`]/[`TagGroupMulti`].
 #[component]
-pub fn TagGroupLabel(children: Element, class: Option<String>) -> Element {
+pub fn TagGroupLabel(
+    children: Element,
+    id: Option<String>,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "text-sm font-medium text-foreground",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        TagGroupLabelPrimitive { class, {children} }
+        TagGroupLabelPrimitive { id, class, attributes, {children} }
     }
 }
 
 /// Wrapping row container for [`TagOption`] tags.
 #[component]
-pub fn TagList(children: Element, class: Option<String>) -> Element {
+pub fn TagList(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "flex flex-wrap items-center gap-1.5 outline-none",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        TagListPrimitive { class, {children} }
+        TagListPrimitive { class, attributes, {children} }
     }
 }
 
@@ -113,11 +130,15 @@ pub fn TagOption<T: Clone + PartialEq + 'static>(
     index: ReadSignal<usize>,
     #[props(default)] text_value: ReadSignal<Option<String>>,
     #[props(default)] disabled: ReadSignal<bool>,
+    id: Option<String>,
+    #[props(default = Radius::Md)] radius: Radius,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&[
-        "inline-flex items-center gap-1 rounded-md border border-transparent bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring/50 data-[selected=true]:bg-primary data-[selected=true]:text-primary-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+        "inline-flex items-center gap-1 border border-transparent bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring/50 data-[selected=true]:bg-primary data-[selected=true]:text-primary-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -126,7 +147,9 @@ pub fn TagOption<T: Clone + PartialEq + 'static>(
             index,
             text_value,
             disabled,
+            id,
             class,
+            attributes,
             {children}
         }
     }
@@ -135,13 +158,17 @@ pub fn TagOption<T: Clone + PartialEq + 'static>(
 /// Remove button for the enclosing [`TagOption`]. Rendering this makes the
 /// tag removable via click and Delete/Backspace.
 #[component]
-pub fn TagRemoveButton(children: Element, class: Option<String>) -> Element {
+pub fn TagRemoveButton(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "ml-0.5 inline-flex size-3.5 items-center justify-center rounded-full outline-none hover:bg-black/10 disabled:pointer-events-none disabled:opacity-50 dark:hover:bg-white/10",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        TagRemoveButtonPrimitive { class, {children} }
+        TagRemoveButtonPrimitive { class, attributes, {children} }
     }
 }
 

@@ -37,19 +37,23 @@
             },
             {
               "name": "on_format_day_placeholder",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "on_format_month_placeholder",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "on_format_year_placeholder",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "month_count",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): showing multiple months side by side at once has no adico equivalent; needs new primitive-level work composing multiple synchronized calendar views, tracked as follow-up"
             },
             {
               "name": "disabled_ranges",
@@ -114,19 +118,23 @@
             },
             {
               "name": "on_format_day_placeholder",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "on_format_month_placeholder",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "on_format_year_placeholder",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "month_count",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): showing multiple months side by side at once has no adico equivalent; needs new primitive-level work composing multiple synchronized calendar views, tracked as follow-up"
             },
             {
               "name": "disabled_ranges",

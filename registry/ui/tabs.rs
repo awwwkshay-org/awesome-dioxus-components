@@ -42,6 +42,7 @@ pub fn TabList(
     #[props(default)]
     radius: Radius,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     use_context_provider(|| TabsListContext { variant });
@@ -63,7 +64,7 @@ pub fn TabList(
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        TabListPrimitive { class, {children} }
+        TabListPrimitive { class, attributes, {children} }
     }
 }
 
@@ -80,6 +81,7 @@ pub fn TabTrigger(
     #[props(default)] disabled: ReadSignal<bool>,
     id: Option<String>,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let variant = try_consume_context::<TabsListContext>()
@@ -99,7 +101,15 @@ pub fn TabTrigger(
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        TabTriggerPrimitive { value, index, disabled, id, class, {children} }
+        TabTriggerPrimitive {
+            value,
+            index,
+            disabled,
+            id,
+            class,
+            attributes,
+            {children}
+        }
     }
 }
 
@@ -108,7 +118,9 @@ pub fn TabTrigger(
 pub fn TabContent(
     value: String,
     index: ReadSignal<usize>,
+    id: Option<String>,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&[
@@ -116,7 +128,14 @@ pub fn TabContent(
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        TabContentPrimitive { value, index, class, {children} }
+        TabContentPrimitive {
+            value,
+            index,
+            id,
+            class,
+            attributes,
+            {children}
+        }
     }
 }
 

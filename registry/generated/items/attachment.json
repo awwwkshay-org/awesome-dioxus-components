@@ -7,7 +7,7 @@
       "source": "ui/attachment.rs",
       "targetRoot": "ui",
       "target": "attachment.rs",
-      "checksum": "ed1b853959a5a25ee4e18617e23ff994aa6734c54e2070609b95a5319cc4ff61"
+      "checksum": "80fac2fcc372358ce32669054d79363e34c85ba5054ee48aa8b6c3978a725337"
     }
   ],
   "registryDependencies": [

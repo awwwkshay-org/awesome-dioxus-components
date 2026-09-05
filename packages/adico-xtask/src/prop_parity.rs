@@ -171,6 +171,8 @@ const ITEM_RENAMES: &[(&str, &str, &str)] = &[
     ("toggle-group", "multiple", "allow_multiple_pressed"),
     ("dropdown-menu", "label", "text_value"),
     ("accordion", "onOpenChange", "on_change"),
+    ("toast", "limit", "max_toasts"),
+    ("toast", "timeout", "default_duration"),
 ];
 
 fn item_canonical_name(item: &str, raw_name: &str) -> String {
@@ -528,6 +530,39 @@ const SHAPE_VIA_RADIUS_REASON: &str = "adico extension gap: this shape toggle (e
 /// content, with no keep-mounted-for-animation or find-in-page-visible
 /// toggle at all.
 const NO_KEEP_MOUNTED_REASON: &str = "adico extension gap, deferred (not a permanent design choice): this composite always unmounts its closed/hidden content, with no keep-mounted-for-animation or find-in-page-visible toggle; needs new primitive-level mount-control work, tracked as follow-up";
+
+/// Reason recorded for a boolean behavior toggle specific to the matched
+/// third-party UI kit (not shadcn/Base UI), where adico's own primitive
+/// always behaves one fixed way with no opt-out.
+const THIRD_PARTY_BEHAVIOR_TOGGLE_REASON: &str = "adico extension gap: this is a behavior toggle specific to the matched third-party UI kit; adico's own primitive always behaves the one way described, with no caller opt-out, not planned to change";
+
+/// Reason recorded where the matched third-party UI kit bakes an open/
+/// closed popover toggle directly into one component, but adico expects
+/// the caller to compose a separate `Popover`/`PopoverTrigger`/
+/// `PopoverContent` around this component instead of a built-in toggle --
+/// the same composable capability, achieved by composition rather than a
+/// dedicated prop.
+const COMPOSABLE_POPOVER_REASON: &str = "adico extension gap: the matched axis bakes an open/closed popover toggle directly into this one component; adico expects the caller to compose a separate Popover/PopoverTrigger/PopoverContent around it instead -- the same capability, achieved by composition rather than a dedicated prop, not planned to change";
+
+/// Reason recorded for a collapse-state-aware tooltip (shown only once its
+/// ancestor sidebar collapses to icon-only mode) that has no adico
+/// equivalent. Deferred: needs new cross-component wiring between the
+/// sidebar's own collapse state and a composed `Tooltip`, not a prop
+/// rename.
+const COLLAPSE_AWARE_TOOLTIP_REASON: &str = "adico extension gap, deferred (not a permanent design choice): a tooltip shown only once the ancestor sidebar collapses to icon-only mode has no adico equivalent; needs new cross-component wiring between the sidebar's own collapse state and a composed Tooltip, tracked as follow-up";
+
+/// Reason recorded for Base UI's newer swipe-to-dismiss gesture
+/// configuration on toast notifications. No adico equivalent -- real
+/// pointer-gesture primitive work, not a prop rename (the same category of
+/// deferred work already recorded for `drawer.rs`'s own drag-to-dismiss
+/// scope reduction).
+const SWIPE_DISMISS_REASON: &str = "adico extension gap, deferred (not a permanent design choice): Base UI's swipe-to-dismiss gesture configuration for toasts has no adico equivalent; needs new pointer-gesture primitive work (the same category of deferred work already recorded for drawer.rs's own drag-to-dismiss scope reduction), tracked as follow-up";
+
+/// Reason recorded for a date-picker calendar that shows multiple months
+/// side by side at once (e.g. for a longer date-range selection). No
+/// adico equivalent -- would need composing multiple synchronized
+/// calendar views, real primitive-level work, not a prop rename.
+const MULTI_MONTH_CALENDAR_REASON: &str = "adico extension gap, deferred (not a permanent design choice): showing multiple months side by side at once has no adico equivalent; needs new primitive-level work composing multiple synchronized calendar views, tracked as follow-up";
 
 /// Item-specific `intentional_difference` reasons for a genuine upstream
 /// prop that has no adico equivalent by design, keyed by
@@ -1124,6 +1159,129 @@ const INTENTIONAL_DIFFERENCE_REASONS: &[(&str, &str, &str, &str)] = &[
     ("drawer", "trigger", "handle", VIRTUAL_TRIGGER_REASON),
     ("drawer", "trigger", "payload", VIRTUAL_TRIGGER_REASON),
     ("drawer", "trigger", "id", ATTRIBUTES_COVERAGE_REASON),
+    // pagination (Wave 5)
+    ("pagination", "link", "size", THIRD_PARTY_VARIANT_REASON),
+    (
+        "pagination",
+        "link",
+        "data_kind",
+        THIRD_PARTY_VARIANT_REASON,
+    ),
+    // color-picker (Wave 5)
+    ("color-picker", "root", "open", COMPOSABLE_POPOVER_REASON),
+    (
+        "color-picker",
+        "root",
+        "default_open",
+        COMPOSABLE_POPOVER_REASON,
+    ),
+    (
+        "color-picker",
+        "root",
+        "on_open_change",
+        COMPOSABLE_POPOVER_REASON,
+    ),
+    // drag-and-drop-list (Wave 5)
+    (
+        "drag-and-drop-list",
+        "root",
+        "is_removable",
+        THIRD_PARTY_BEHAVIOR_TOGGLE_REASON,
+    ),
+    // sidebar (Wave 5)
+    (
+        "sidebar",
+        "menu-button",
+        "tooltip",
+        COLLAPSE_AWARE_TOOLTIP_REASON,
+    ),
+    // bubble (Wave 5)
+    ("bubble", "root", "variant", PART_DECOMPOSITION_REASON),
+    // input-otp (Wave 5)
+    (
+        "input-otp",
+        "input-o-t-p",
+        "containerClassName",
+        PART_DECOMPOSITION_REASON,
+    ),
+    // toast (Wave 5): `limit`/`timeout` resolve via `ITEM_RENAMES`.
+    ("toast", "root", "swipeDirection", SWIPE_DISMISS_REASON),
+    ("toast", "root", "toast", PART_DECOMPOSITION_REASON),
+    (
+        "toast",
+        "provider",
+        "toastManager",
+        PART_DECOMPOSITION_REASON,
+    ),
+    ("toast", "provider", "id", PART_DECOMPOSITION_REASON),
+    ("toast", "provider", "index", PART_DECOMPOSITION_REASON),
+    ("toast", "provider", "title", PART_DECOMPOSITION_REASON),
+    (
+        "toast",
+        "provider",
+        "description",
+        PART_DECOMPOSITION_REASON,
+    ),
+    ("toast", "provider", "toast_type", PART_DECOMPOSITION_REASON),
+    ("toast", "provider", "on_close", PART_DECOMPOSITION_REASON),
+    ("toast", "provider", "permanent", PART_DECOMPOSITION_REASON),
+    ("toast", "provider", "duration", PART_DECOMPOSITION_REASON),
+    // date-picker: found extra, not part of any named wave -- design.md's
+    // D5 count listed it as already at zero, which was already stale by
+    // the time Section 5 started (verified via `git diff`: these records
+    // predate this session entirely). The placeholder-formatter callbacks
+    // are real, already-implemented fields, just on `DatePickerInput`
+    // (part `input`), not the matched axis's own `root`/`date-range-picker`
+    // decomposition; `month_count` (a multi-month calendar view) has no
+    // adico equivalent at all yet.
+    (
+        "date-picker",
+        "root",
+        "on_format_day_placeholder",
+        PART_DECOMPOSITION_REASON,
+    ),
+    (
+        "date-picker",
+        "root",
+        "on_format_month_placeholder",
+        PART_DECOMPOSITION_REASON,
+    ),
+    (
+        "date-picker",
+        "root",
+        "on_format_year_placeholder",
+        PART_DECOMPOSITION_REASON,
+    ),
+    (
+        "date-picker",
+        "root",
+        "month_count",
+        MULTI_MONTH_CALENDAR_REASON,
+    ),
+    (
+        "date-picker",
+        "date-range-picker",
+        "on_format_day_placeholder",
+        PART_DECOMPOSITION_REASON,
+    ),
+    (
+        "date-picker",
+        "date-range-picker",
+        "on_format_month_placeholder",
+        PART_DECOMPOSITION_REASON,
+    ),
+    (
+        "date-picker",
+        "date-range-picker",
+        "on_format_year_placeholder",
+        PART_DECOMPOSITION_REASON,
+    ),
+    (
+        "date-picker",
+        "date-range-picker",
+        "month_count",
+        MULTI_MONTH_CALENDAR_REASON,
+    ),
 ];
 
 fn react_only_structural_reason(raw_name: &str) -> Option<&'static str> {

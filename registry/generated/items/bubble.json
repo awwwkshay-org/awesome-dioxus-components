@@ -7,7 +7,7 @@
       "source": "ui/bubble.rs",
       "targetRoot": "ui",
       "target": "bubble.rs",
-      "checksum": "f37f9a0ed54d6a8173b431a4a900008a7907aabdd66612261763c176a133cffa"
+      "checksum": "7233fc2bdd562b11b6b9445995494645b51368fe181dd4c607ec0bffdd5c2838"
     }
   ],
   "registryDependencies": [

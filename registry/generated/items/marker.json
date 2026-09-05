@@ -7,7 +7,7 @@
       "source": "ui/marker.rs",
       "targetRoot": "ui",
       "target": "marker.rs",
-      "checksum": "3cf70986b895cdac9b73d36327c7cc73b4c6c1476015b35bfc9af22560a0bcb9"
+      "checksum": "fcbdc91ff83c32828f31d08a0fdbd61db2862a534e92f6d5072b8ec514dc4b34"
     }
   ],
   "registryDependencies": [
