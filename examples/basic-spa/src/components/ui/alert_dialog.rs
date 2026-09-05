@@ -4,6 +4,8 @@ use dioxus::prelude::*;
 
 use super::button::{Button, ButtonSize, ButtonVariant};
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
+use crate::components::ui::spinner::Spinner;
 use adico_primitives::alert_dialog::{
     AlertDialogAction as AlertDialogActionPrimitive,
     AlertDialogActions as AlertDialogActionsPrimitive,
@@ -25,6 +27,9 @@ pub fn AlertDialogTrigger(
     class: Option<String>,
     variant: Option<ButtonVariant>,
     size: Option<ButtonSize>,
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = button)]
+    attributes: Vec<Attribute>,
 ) -> Element {
     let context: adico_primitives::alert_dialog::AlertDialogCtx = use_context();
     rsx! {
@@ -33,6 +38,7 @@ pub fn AlertDialogTrigger(
             variant: variant.unwrap_or_default(),
             size: size.unwrap_or_default(),
             onclick: move |_| context.set_open(true),
+            attributes,
             {children}
         }
     }
@@ -60,16 +66,45 @@ pub fn AlertDialogOverlay(class: Option<String>) -> Element {
     }
 }
 
+/// The maximum width of an [`AlertDialogContent`], matching shadcn's own
+/// `"default" | "sm"` cva axis.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum AlertDialogContentSize {
+    #[default]
+    Default,
+    Sm,
+}
+
+impl AlertDialogContentSize {
+    fn class(self) -> &'static str {
+        match self {
+            Self::Default => "max-w-lg",
+            Self::Sm => "max-w-sm",
+        }
+    }
+}
+
 /// Styled content backed by the owned AlertDialog focus-trap and ARIA primitive.
 #[component]
-pub fn AlertDialogContent(children: Element, class: Option<String>) -> Element {
+pub fn AlertDialogContent(
+    children: Element,
+    id: Option<String>,
+    #[props(default)] radius: Radius,
+    #[props(default)] size: AlertDialogContentSize,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
-        "fixed left-1/2 top-1/2 z-[51] grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg border bg-background p-6 text-foreground shadow-lg",
+        "fixed left-1/2 top-1/2 z-[51] grid w-full -translate-x-1/2 -translate-y-1/2 gap-4 border bg-background p-6 text-foreground shadow-lg",
+        size.class(),
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
         AlertDialogContentPrimitive {
+            id,
             class,
+            attributes,
             {children}
         }
     }
@@ -77,24 +112,32 @@ pub fn AlertDialogContent(children: Element, class: Option<String>) -> Element {
 
 /// A semantic header helper for AlertDialog titles and descriptions.
 #[component]
-pub fn AlertDialogHeader(children: Element, class: Option<String>) -> Element {
+pub fn AlertDialogHeader(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "flex flex-col space-y-1.5 text-center sm:text-left",
         class.as_deref().unwrap_or_default(),
     ]);
-    rsx! { div { class, {children} } }
+    rsx! { div { class, ..attributes, {children} } }
 }
 
 /// A semantic footer helper that groups [`AlertDialogAction`] and
 /// [`AlertDialogCancel`] into shadcn's stacked/row action layout.
 #[component]
-pub fn AlertDialogActions(children: Element, class: Option<String>) -> Element {
+pub fn AlertDialogActions(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        AlertDialogActionsPrimitive { class, {children} }
+        AlertDialogActionsPrimitive { class, attributes, {children} }
     }
 }
 
@@ -103,14 +146,53 @@ pub fn AlertDialogActions(children: Element, class: Option<String>) -> Element {
 pub fn AlertDialogAction(
     children: Element,
     class: Option<String>,
-    on_click: Option<EventHandler<MouseEvent>>,
+    /// Fired when the affirming/destructive action is confirmed. Named
+    /// `on_confirm`, not the primitive's own `on_click`, matching this
+    /// registry's naming convention for primitive-backed components (the
+    /// primitive layer keeps `on_click` unchanged).
+    on_confirm: Option<EventHandler<MouseEvent>>,
+    /// Shows a [`Spinner`] and marks the action busy/disabled. An adico
+    /// extension — shadcn's own convention is composing
+    /// `<Button disabled><Spinner /></Button>` by hand. `disabled`/
+    /// `aria-busy` are set through the primitive's own `attributes`
+    /// extends mechanism (`AlertDialogActionPrimitive` has no dedicated
+    /// `disabled` field of its own).
+    #[props(default)]
+    loading: bool,
+    /// Replaces the action's visible content while `loading` is true.
+    #[props(default)]
+    loading_text: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
         "inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-xs hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         class.as_deref().unwrap_or_default(),
     ]);
+    // `disabled` isn't part of `GlobalAttributes` (the only extend
+    // `AlertDialogActionPrimitive`'s own `attributes` field declares), so
+    // it can't be set via the usual extends-shorthand keyword here --
+    // built by hand instead, matching `slider.rs`'s own precedent for this
+    // exact limitation. Appended after the caller's own `attributes` so a
+    // caller-supplied `disabled` doesn't accidentally win over `loading`.
+    let mut attributes = attributes;
+    attributes.push(Attribute::new("disabled", loading, None, false));
     rsx! {
-        AlertDialogActionPrimitive { class, on_click, {children} }
+        AlertDialogActionPrimitive {
+            class,
+            on_click: on_confirm,
+            attributes,
+            aria_busy: loading,
+            if loading {
+                Spinner {}
+                if let Some(text) = loading_text {
+                    "{text}"
+                } else {
+                    {children}
+                }
+            } else {
+                {children}
+            }
+        }
     }
 }
 
@@ -119,14 +201,23 @@ pub fn AlertDialogAction(
 pub fn AlertDialogCancel(
     children: Element,
     class: Option<String>,
-    on_click: Option<EventHandler<MouseEvent>>,
+    /// Fired when the dialog is dismissed. Named `on_dismiss`, matching
+    /// this registry's naming convention for primitive-backed components
+    /// (the primitive layer keeps `on_click` unchanged).
+    on_dismiss: Option<EventHandler<MouseEvent>>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
         "mt-2 inline-flex h-9 items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-xs hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:mt-0",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        AlertDialogCancelPrimitive { class, on_click, {children} }
+        AlertDialogCancelPrimitive {
+            class,
+            on_click: on_dismiss,
+            attributes,
+            {children}
+        }
     }
 }
 

@@ -51,6 +51,9 @@ pub fn SheetTrigger(
     class: Option<String>,
     variant: Option<ButtonVariant>,
     size: Option<ButtonSize>,
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = button)]
+    attributes: Vec<Attribute>,
 ) -> Element {
     let context: DialogCtx = use_context();
     rsx! {
@@ -59,6 +62,7 @@ pub fn SheetTrigger(
             variant: variant.unwrap_or_default(),
             size: size.unwrap_or_default(),
             onclick: move |_| context.set_open(true),
+            attributes,
             {children}
         }
     }
@@ -122,7 +126,13 @@ pub fn SheetContent(
 /// `DialogClose`: previously, closing a sheet from inside its own content
 /// required reaching into `adico_primitives::dialog::DialogCtx` directly.
 #[component]
-pub fn SheetClose(children: Option<Element>, class: Option<String>) -> Element {
+pub fn SheetClose(
+    children: Option<Element>,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = button)]
+    attributes: Vec<Attribute>,
+) -> Element {
     let context: DialogCtx = use_context();
     let class = cn(&[
         "rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none",
@@ -133,6 +143,7 @@ pub fn SheetClose(children: Option<Element>, class: Option<String>) -> Element {
             r#type: "button",
             class,
             onclick: move |_| context.set_open(false),
+            ..attributes,
             match children {
                 Some(children) => rsx! { {children} },
                 None => rsx! {
@@ -146,24 +157,32 @@ pub fn SheetClose(children: Option<Element>, class: Option<String>) -> Element {
 
 /// A semantic header helper for Sheet titles and descriptions.
 #[component]
-pub fn SheetHeader(children: Element, class: Option<String>) -> Element {
+pub fn SheetHeader(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "flex flex-col space-y-2 text-center sm:text-left",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        div { class, {children} }
+        div { class, ..attributes, {children} }
     }
 }
 
 /// A footer region typically used for Sheet actions.
 #[component]
-pub fn SheetFooter(children: Element, class: Option<String>) -> Element {
+pub fn SheetFooter(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        div { class, {children} }
+        div { class, ..attributes, {children} }
     }
 }

@@ -493,6 +493,10 @@
               {
                 "name": "loading_text",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "AlertDialogActions": [
@@ -503,6 +507,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "AlertDialogCancel": [
@@ -517,6 +525,10 @@
               {
                 "name": "on_dismiss",
                 "type": "Option<EventHandler<MouseEvent>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "AlertDialogContent": [
@@ -525,12 +537,24 @@
                 "type": "Element"
               },
               {
+                "name": "id",
+                "type": "Option<String>"
+              },
+              {
                 "name": "radius",
                 "type": "Radius"
               },
               {
+                "name": "size",
+                "type": "AlertDialogContentSize"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "AlertDialogHeader": [
@@ -541,6 +565,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "AlertDialogOverlay": [
@@ -565,6 +593,10 @@
               {
                 "name": "size",
                 "type": "Option<ButtonSize>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }
@@ -3261,6 +3293,18 @@
                 "type": "Callback<bool>"
               },
               {
+                "name": "title",
+                "type": "String"
+              },
+              {
+                "name": "description",
+                "type": "String"
+              },
+              {
+                "name": "show_close_button",
+                "type": "bool"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               },
@@ -4911,12 +4955,20 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "DialogContent": [
               {
                 "name": "children",
                 "type": "Element"
+              },
+              {
+                "name": "id",
+                "type": "Option<String>"
               },
               {
                 "name": "radius",
@@ -4929,6 +4981,10 @@
               {
                 "name": "show_close_button",
                 "type": "bool"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "DialogFooter": [
@@ -4939,6 +4995,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "DialogHeader": [
@@ -4949,6 +5009,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "DialogOverlay": [
@@ -4973,6 +5037,10 @@
               {
                 "name": "size",
                 "type": "Option<ButtonSize>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }
@@ -5353,6 +5421,10 @@
               {
                 "name": "size",
                 "type": "Option<ButtonSize>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }
@@ -8766,6 +8838,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "SheetContent": [
@@ -8794,6 +8870,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "SheetHeader": [
@@ -8804,6 +8884,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "SheetOverlay": [
@@ -8828,6 +8912,10 @@
               {
                 "name": "size",
                 "type": "Option<ButtonSize>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }

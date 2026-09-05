@@ -740,9 +740,48 @@ directly for the exact prop list; it is not duplicated here.
         `SHAPE_VIA_RADIUS_REASON` (avatar's third-party `shape` toggle is
         already covered by adico's own general-purpose `radius` prop),
         and `NO_KEEP_MOUNTED_REASON`.
-- [ ] 5.4 **Wave 4 — dialog/overlay content** (18 missing entries):
+- [x] 5.4 **Wave 4 — dialog/overlay content** (18 missing entries):
       `sheet` (6), `dialog` (3), `alert-dialog` (3), `drawer` (3),
       `command` (3). Verify same as 5.1 for these five items.
+
+      **Done: all 5 of 5.** `prop-parity diff` reports zero remaining
+      `missing` status for `sheet`, `dialog`, `alert-dialog`, `drawer`,
+      `command`. Notes:
+      - Mechanical `attributes` forwarding across every close/trigger/
+        header/footer/actions facade in `dialog.rs`/`sheet.rs`/
+        `alert_dialog.rs`/`drawer.rs` — the same recurring gap as every
+        prior wave, but concentrated here since these four items share
+        the identical composition shape (trigger wraps `Button`,
+        close/actions render raw native elements with no forwarding at
+        all).
+      - Two real feature additions matching shadcn's actual cva axes:
+        `AlertDialogContentSize { Default, Sm }` (verified against
+        `statics/catalogs/shadcn.json`), and `CommandDialog` gained real
+        `title`/`description`/`show_close_button` props — previously
+        `show_close_button: false` was hardcoded and no accessible
+        title/description was rendered at all (a real, pre-existing a11y
+        gap for a command palette with no visible dialog chrome, not
+        specific to this task but surfaced by it), now rendered via a
+        `span.sr-only` wrapping `DialogTitle`/`DialogDescription`.
+      - `AlertDialogAction`'s hand-built `attributes = vec![Attribute::
+        new("disabled", loading, ...)]` (from the earlier B4 loading
+        rollout) needed care: a caller's own `attributes` now merges in
+        first, with the loading-derived `disabled` pushed on afterward so
+        `loading` still always wins — not simply replaced.
+      - Reused every reason from Waves 1-3 with no new constants needed:
+        `VIRTUAL_TRIGGER_REASON` (`handle`/`payload` on all four trigger
+        parts), `ATTRIBUTES_COVERAGE_REASON` (`id` on the same triggers,
+        confirmed `Button`'s own `..props.attributes` spreads last),
+        `NO_KEEP_MOUNTED_REASON` (`forceRender` on every overlay part),
+        `FOCUS_RESTORATION_REASON` (`initialFocus`/`finalFocus` on
+        `sheet`/`dialog` content), `PART_DECOMPOSITION_REASON`
+        (`dialog.footer.showCloseButton` — the capability is real, on
+        `content`, not `footer`; shadcn's own catalog duplicates the prop
+        onto both parts), and `ON_SELECT_NAMING_REASON` (widened in
+        wording during this wave, since `AlertDialogAction`/
+        `AlertDialogCancel` rename to `on_confirm`/`on_dismiss`, not
+        `on_select` specifically — the constant's doc comment and text
+        no longer hardcode one target name).
 - [ ] 5.5 **Wave 5 — Dioxus-only/composite misc** (48 missing entries):
       `pagination` (12), `tag-group` (8), `color-picker` (4),
       `drag-and-drop-list` (4), `tabs` (4), `attachment` (3), `item` (2),

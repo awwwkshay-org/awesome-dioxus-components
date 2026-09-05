@@ -505,10 +505,11 @@ const THIRD_PARTY_VARIANT_REASON: &str = "adico extension gap: this is a visual-
 const FOCUSABLE_DISABLED_REASON: &str = "adico extension gap, deferred (not a permanent design choice): Base UI's newer focusableWhenDisabled toggle (a disabled control that stays in the tab order, communicating why via aria-disabled instead of removing focusability) has no adico equivalent; needs new primitive/facade behavior work, tracked as follow-up";
 
 /// Reason recorded where adico renames an upstream `onClick`/`on_click`
-/// activation callback to `on_select`, matching this registry's own
-/// naming convention for primitive-backed activation callbacks (documented
-/// inline at each call site that uses it).
-const ON_SELECT_NAMING_REASON: &str = "adico extension gap: adico renames this activation callback to on_select, matching this registry's own naming convention for primitive-backed components (documented inline at each call site that uses it) -- not a missing capability, a different, permanent name";
+/// activation callback to a semantic, call-site-specific name (`on_select`,
+/// `on_confirm`, `on_dismiss`, ...), matching this registry's own naming
+/// convention for primitive-backed activation callbacks (documented inline
+/// at each call site that uses it).
+const ON_SELECT_NAMING_REASON: &str = "adico extension gap: adico renames this activation callback to a semantic, call-site-specific name (on_select, on_confirm, on_dismiss, ...), matching this registry's own naming convention for primitive-backed components (documented inline at each call site that uses it) -- not a missing capability, a different, permanent name";
 
 /// Reason recorded for Base UI's newer `AvatarFallback` delay (wait N
 /// milliseconds after mount before rendering the fallback, avoiding a
@@ -1072,6 +1073,57 @@ const INTENTIONAL_DIFFERENCE_REASONS: &[(&str, &str, &str, &str)] = &[
         "focusableWhenDisabled",
         FOCUSABLE_DISABLED_REASON,
     ),
+    // sheet (Wave 4)
+    ("sheet", "trigger", "handle", VIRTUAL_TRIGGER_REASON),
+    ("sheet", "trigger", "payload", VIRTUAL_TRIGGER_REASON),
+    ("sheet", "trigger", "id", ATTRIBUTES_COVERAGE_REASON),
+    ("sheet", "overlay", "forceRender", NO_KEEP_MOUNTED_REASON),
+    ("sheet", "content", "initialFocus", FOCUS_RESTORATION_REASON),
+    ("sheet", "content", "finalFocus", FOCUS_RESTORATION_REASON),
+    // dialog (Wave 4)
+    ("dialog", "trigger", "handle", VIRTUAL_TRIGGER_REASON),
+    ("dialog", "trigger", "payload", VIRTUAL_TRIGGER_REASON),
+    ("dialog", "trigger", "id", ATTRIBUTES_COVERAGE_REASON),
+    ("dialog", "overlay", "forceRender", NO_KEEP_MOUNTED_REASON),
+    (
+        "dialog",
+        "content",
+        "initialFocus",
+        FOCUS_RESTORATION_REASON,
+    ),
+    ("dialog", "content", "finalFocus", FOCUS_RESTORATION_REASON),
+    (
+        "dialog",
+        "footer",
+        "showCloseButton",
+        PART_DECOMPOSITION_REASON,
+    ),
+    // alert-dialog (Wave 4)
+    ("alert-dialog", "trigger", "handle", VIRTUAL_TRIGGER_REASON),
+    ("alert-dialog", "trigger", "payload", VIRTUAL_TRIGGER_REASON),
+    ("alert-dialog", "trigger", "id", ATTRIBUTES_COVERAGE_REASON),
+    (
+        "alert-dialog",
+        "overlay",
+        "forceRender",
+        NO_KEEP_MOUNTED_REASON,
+    ),
+    (
+        "alert-dialog",
+        "action",
+        "on_click",
+        ON_SELECT_NAMING_REASON,
+    ),
+    (
+        "alert-dialog",
+        "cancel",
+        "on_click",
+        ON_SELECT_NAMING_REASON,
+    ),
+    // drawer (Wave 4)
+    ("drawer", "trigger", "handle", VIRTUAL_TRIGGER_REASON),
+    ("drawer", "trigger", "payload", VIRTUAL_TRIGGER_REASON),
+    ("drawer", "trigger", "id", ATTRIBUTES_COVERAGE_REASON),
 ];
 
 fn react_only_structural_reason(raw_name: &str) -> Option<&'static str> {

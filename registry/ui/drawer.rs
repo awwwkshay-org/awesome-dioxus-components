@@ -74,6 +74,9 @@ pub fn DrawerTrigger(
     class: Option<String>,
     variant: Option<ButtonVariant>,
     size: Option<ButtonSize>,
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = button)]
+    attributes: Vec<Attribute>,
 ) -> Element {
     let context: DialogCtx = use_context();
     rsx! {
@@ -82,6 +85,7 @@ pub fn DrawerTrigger(
             variant: variant.unwrap_or_default(),
             size: size.unwrap_or_default(),
             onclick: move |_| context.set_open(true),
+            attributes,
             {children}
         }
     }

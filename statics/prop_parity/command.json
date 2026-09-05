@@ -53,11 +53,11 @@
           "props": [
             {
               "name": "title",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "description",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "className",
@@ -65,7 +65,7 @@
             },
             {
               "name": "showCloseButton",
-              "status": "missing"
+              "status": "present"
             }
           ]
         }

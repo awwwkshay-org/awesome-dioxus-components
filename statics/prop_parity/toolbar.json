@@ -95,7 +95,7 @@
             {
               "name": "on_click",
               "status": "intentional_difference",
-              "reason": "adico extension gap: adico renames this activation callback to on_select, matching this registry's own naming convention for primitive-backed components (documented inline at each call site that uses it) -- not a missing capability, a different, permanent name"
+              "reason": "adico extension gap: adico renames this activation callback to a semantic, call-site-specific name (on_select, on_confirm, on_dismiss, ...), matching this registry's own naming convention for primitive-backed components (documented inline at each call site that uses it) -- not a missing capability, a different, permanent name"
             },
             {
               "name": "attributes",
@@ -158,7 +158,7 @@
             {
               "name": "on_click",
               "status": "intentional_difference",
-              "reason": "adico extension gap: adico renames this activation callback to on_select, matching this registry's own naming convention for primitive-backed components (documented inline at each call site that uses it) -- not a missing capability, a different, permanent name"
+              "reason": "adico extension gap: adico renames this activation callback to a semantic, call-site-specific name (on_select, on_confirm, on_dismiss, ...), matching this registry's own naming convention for primitive-backed components (documented inline at each call site that uses it) -- not a missing capability, a different, permanent name"
             },
             {
               "name": "attributes",

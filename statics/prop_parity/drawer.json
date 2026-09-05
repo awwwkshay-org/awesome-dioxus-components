@@ -9,7 +9,8 @@
           "props": [
             {
               "name": "handle",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer virtual-trigger API (associating an arbitrary external element as a trigger via an imperative handle, plus passing arbitrary payload data through it) has no adico equivalent; needs a new registration/imperative-handle mechanism, tracked as follow-up primitive work"
             },
             {
               "name": "nativeButton",
@@ -18,11 +19,13 @@
             },
             {
               "name": "payload",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer virtual-trigger API (associating an arbitrary external element as a trigger via an imperative handle, plus passing arbitrary payload data through it) has no adico equivalent; needs a new registration/imperative-handle mechanism, tracked as follow-up primitive work"
             },
             {
               "name": "id",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: settable via this part's generic `attributes` extends forwarding (spread last, so a caller-supplied value overrides adico's own internal one); no dedicated named prop for a plain global attribute with no additional behavior"
             },
             {
               "name": "className",

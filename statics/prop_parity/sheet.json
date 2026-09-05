@@ -25,7 +25,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "r#as",
@@ -43,7 +43,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -56,7 +56,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -78,7 +78,8 @@
           "props": [
             {
               "name": "handle",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer virtual-trigger API (associating an arbitrary external element as a trigger via an imperative handle, plus passing arbitrary payload data through it) has no adico equivalent; needs a new registration/imperative-handle mechanism, tracked as follow-up primitive work"
             },
             {
               "name": "nativeButton",
@@ -87,11 +88,13 @@
             },
             {
               "name": "payload",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer virtual-trigger API (associating an arbitrary external element as a trigger via an imperative handle, plus passing arbitrary payload data through it) has no adico equivalent; needs a new registration/imperative-handle mechanism, tracked as follow-up primitive work"
             },
             {
               "name": "id",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: settable via this part's generic `attributes` extends forwarding (spread last, so a caller-supplied value overrides adico's own internal one); no dedicated named prop for a plain global attribute with no additional behavior"
             },
             {
               "name": "className",
@@ -114,7 +117,8 @@
           "props": [
             {
               "name": "forceRender",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this composite always unmounts its closed/hidden content, with no keep-mounted-for-animation or find-in-page-visible toggle; needs new primitive-level mount-control work, tracked as follow-up"
             },
             {
               "name": "className",
@@ -145,11 +149,13 @@
             },
             {
               "name": "initialFocus",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico restores focus automatically when a popup/menu opens or closes, with no caller-configurable override for where focus goes; needs new primitive-level focus-management work, tracked as follow-up"
             },
             {
               "name": "finalFocus",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico restores focus automatically when a popup/menu opens or closes, with no caller-configurable override for where focus goes; needs new primitive-level focus-management work, tracked as follow-up"
             },
             {
               "name": "className",

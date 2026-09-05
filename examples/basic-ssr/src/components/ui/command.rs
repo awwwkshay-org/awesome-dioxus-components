@@ -10,15 +10,21 @@ use adico_primitives::command::{
     CommandSeparator as CommandPrimitiveSeparator,
 };
 
-use super::dialog::{Dialog, DialogContent};
+use super::dialog::{Dialog, DialogContent, DialogDescription, DialogTitle};
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The root of a command palette: an always-visible, query-filtered,
 /// roving-focus list of actions.
 #[component]
-pub fn Command(children: Element, class: Option<String>) -> Element {
+pub fn Command(
+    children: Element,
+    #[props(default = Radius::Md)] radius: Radius,
+    class: Option<String>,
+) -> Element {
     let class = cn(&[
-        "flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground",
+        "flex h-full w-full flex-col overflow-hidden bg-popover text-popover-foreground",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -132,13 +138,26 @@ pub fn CommandShortcut(children: Element, class: Option<String>) -> Element {
 pub fn CommandDialog(
     open: ReadSignal<Option<bool>>,
     #[props(default)] on_open_change: Callback<bool>,
+    /// Visually-hidden accessible title, announced by screen readers even
+    /// though the palette itself has no visible dialog chrome. Defaults to
+    /// "Command Palette", matching shadcn's own default.
+    #[props(default = "Command Palette".to_string())]
+    title: String,
+    /// Visually-hidden accessible description, announced alongside `title`.
+    #[props(default = "Search for a command to run...".to_string())]
+    description: String,
+    #[props(default = false)] show_close_button: bool,
     children: Element,
     class: Option<String>,
 ) -> Element {
     let class = cn(&["overflow-hidden p-0", class.as_deref().unwrap_or_default()]);
     rsx! {
         Dialog { open, on_open_change,
-            DialogContent { class, show_close_button: false,
+            DialogContent { class, show_close_button,
+                span { class: "sr-only",
+                    DialogTitle { "{title}" }
+                    DialogDescription { "{description}" }
+                }
                 Command { {children} }
             }
         }

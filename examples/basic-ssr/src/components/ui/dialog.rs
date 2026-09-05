@@ -4,6 +4,7 @@ use dioxus::prelude::*;
 
 use super::button::{Button, ButtonSize, ButtonVariant};
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 pub use adico_primitives::dialog::{
     DialogContent as DialogPrimitiveContent, DialogDescription, DialogRoot as Dialog, DialogTitle,
 };
@@ -20,6 +21,9 @@ pub fn DialogTrigger(
     class: Option<String>,
     variant: Option<ButtonVariant>,
     size: Option<ButtonSize>,
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = button)]
+    attributes: Vec<Attribute>,
 ) -> Element {
     let context: adico_primitives::dialog::DialogCtx = use_context();
     rsx! {
@@ -28,6 +32,7 @@ pub fn DialogTrigger(
             variant: variant.unwrap_or_default(),
             size: size.unwrap_or_default(),
             onclick: move |_| context.set_open(true),
+            attributes,
             {children}
         }
     }
@@ -64,16 +69,22 @@ pub fn DialogOverlay(class: Option<String>) -> Element {
 #[component]
 pub fn DialogContent(
     children: Element,
+    id: Option<String>,
+    #[props(default)] radius: Radius,
     class: Option<String>,
     #[props(default = true)] show_close_button: bool,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "fixed left-1/2 top-1/2 z-[51] grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg border bg-background p-6 text-foreground shadow-lg",
+        "fixed left-1/2 top-1/2 z-[51] grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 border bg-background p-6 text-foreground shadow-lg",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
         DialogPrimitiveContent {
+            id,
             class,
+            attributes,
             {children}
             if show_close_button {
                 DialogClose { class: "absolute right-4 top-4" }
@@ -84,12 +95,16 @@ pub fn DialogContent(
 
 /// A semantic header helper for Dialog titles and descriptions.
 #[component]
-pub fn DialogHeader(children: Element, class: Option<String>) -> Element {
+pub fn DialogHeader(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "flex flex-col space-y-1.5 text-center sm:text-left",
         class.as_deref().unwrap_or_default(),
     ]);
-    rsx! { div { class, {children} } }
+    rsx! { div { class, ..attributes, {children} } }
 }
 
 /// A semantic footer helper, typically for [`Dialog`] action buttons.
@@ -97,12 +112,16 @@ pub fn DialogHeader(children: Element, class: Option<String>) -> Element {
 /// existed -- a real, asymmetric composition gap against upstream, which
 /// has always paired the two.
 #[component]
-pub fn DialogFooter(children: Element, class: Option<String>) -> Element {
+pub fn DialogFooter(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
         class.as_deref().unwrap_or_default(),
     ]);
-    rsx! { div { class, {children} } }
+    rsx! { div { class, ..attributes, {children} } }
 }
 
 /// A dismissible close control for a [`Dialog`]. Composable anywhere inside
@@ -112,7 +131,13 @@ pub fn DialogFooter(children: Element, class: Option<String>) -> Element {
 /// reaching into `adico_primitives::dialog::DialogCtx` directly -- a
 /// primitive-internals leak this component now avoids.
 #[component]
-pub fn DialogClose(children: Option<Element>, class: Option<String>) -> Element {
+pub fn DialogClose(
+    children: Option<Element>,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = button)]
+    attributes: Vec<Attribute>,
+) -> Element {
     let context: adico_primitives::dialog::DialogCtx = use_context();
     let class = cn(&[
         "rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none",
@@ -123,6 +148,7 @@ pub fn DialogClose(children: Option<Element>, class: Option<String>) -> Element 
             r#type: "button",
             class,
             onclick: move |_| context.set_open(false),
+            ..attributes,
             match children {
                 Some(children) => rsx! { {children} },
                 None => rsx! {
