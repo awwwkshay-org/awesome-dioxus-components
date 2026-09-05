@@ -24,7 +24,7 @@
       and by installing `variants` into a scratch consumer via the real
       `adico add` CLI path (not a direct file copy) to confirm the new
       reader arm and checksum are both correct.
-- [ ] 1.2 Add `variants` to the `registryDependencies` of every item
+- [x] 1.2 Add `variants` to the `registryDependencies` of every item
       identified in task 3.1's target list (do not add it speculatively to
       items that don't get a `radius` prop). Verify
       `cargo run -p adico-xtask -- registry build` and `registry validate`
