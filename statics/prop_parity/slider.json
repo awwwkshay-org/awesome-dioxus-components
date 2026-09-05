@@ -9,7 +9,8 @@
           "props": [
             {
               "name": "name",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "defaultValue",
@@ -25,23 +26,28 @@
             },
             {
               "name": "onValueCommitted",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico only exposes a continuous value-change callback; a separate event that fires once only when an interaction settles (not on every intermediate value) needs new primitive-level pointer-up/keyup event plumbing, tracked as follow-up primitive work"
             },
             {
               "name": "form",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "locale",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: no locale-aware number-formatting infrastructure exists anywhere in this codebase yet; not specific to this component, and not planned as part of this change"
             },
             {
               "name": "thumbAlignment",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this is an advanced Base UI thumb-positioning/stepping refinement adico's slider primitive doesn't implement yet; tracked as follow-up primitive work, not covered by this change's prop-surface scope"
             },
             {
               "name": "thumbCollisionBehavior",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this is an advanced Base UI thumb-positioning/stepping refinement adico's slider primitive doesn't implement yet; tracked as follow-up primitive work, not covered by this change's prop-surface scope"
             },
             {
               "name": "step",
@@ -49,11 +55,13 @@
             },
             {
               "name": "largeStep",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this is an advanced Base UI thumb-positioning/stepping refinement adico's slider primitive doesn't implement yet; tracked as follow-up primitive work, not covered by this change's prop-surface scope"
             },
             {
               "name": "minStepsBetweenValues",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this is an advanced Base UI thumb-positioning/stepping refinement adico's slider primitive doesn't implement yet; tracked as follow-up primitive work, not covered by this change's prop-surface scope"
             },
             {
               "name": "min",
@@ -65,7 +73,8 @@
             },
             {
               "name": "format",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: no locale-aware number-formatting infrastructure exists anywhere in this codebase yet; not specific to this component, and not planned as part of this change"
             },
             {
               "name": "disabled",
@@ -73,7 +82,8 @@
             },
             {
               "name": "orientation",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this is exposed as a plain boolean flag (e.g. `horizontal`) rather than a `\"horizontal\" | \"vertical\"` string enum -- same capability, a different representation, not planned to change"
             },
             {
               "name": "className",
@@ -128,15 +138,18 @@
           "props": [
             {
               "name": "aria-valuetext",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico's per-thumb ARIA customization (accessible label/value-text derivation) isn't exposed as an overridable hook yet; tracked as follow-up accessibility work, not covered by this change's prop-surface scope"
             },
             {
               "name": "getAriaLabel",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico's per-thumb ARIA customization (accessible label/value-text derivation) isn't exposed as an overridable hook yet; tracked as follow-up accessibility work, not covered by this change's prop-surface scope"
             },
             {
               "name": "getAriaValueText",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico's per-thumb ARIA customization (accessible label/value-text derivation) isn't exposed as an overridable hook yet; tracked as follow-up accessibility work, not covered by this change's prop-surface scope"
             },
             {
               "name": "index",
@@ -144,23 +157,28 @@
             },
             {
               "name": "onBlur",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this thumb's focus/keyboard/tab-order behavior is already owned internally by the primitive (drag/keyboard value changes); exposing it as a raw overridable hook needs the primitive's own event composition to change first, tracked as follow-up primitive work"
             },
             {
               "name": "onFocus",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this thumb's focus/keyboard/tab-order behavior is already owned internally by the primitive (drag/keyboard value changes); exposing it as a raw overridable hook needs the primitive's own event composition to change first, tracked as follow-up primitive work"
             },
             {
               "name": "onKeyDown",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this thumb's focus/keyboard/tab-order behavior is already owned internally by the primitive (drag/keyboard value changes); exposing it as a raw overridable hook needs the primitive's own event composition to change first, tracked as follow-up primitive work"
             },
             {
               "name": "tabIndex",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this thumb's focus/keyboard/tab-order behavior is already owned internally by the primitive (drag/keyboard value changes); exposing it as a raw overridable hook needs the primitive's own event composition to change first, tracked as follow-up primitive work"
             },
             {
               "name": "disabled",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: disabled is set once on the composite's root and cascades to every descendant; independently overriding it on just this sub-part has no adico equivalent and isn't planned, since a consistent whole-component disable is the far more common need"
             },
             {
               "name": "inputRef",
@@ -427,7 +445,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -445,7 +463,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -467,7 +485,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -490,7 +508,8 @@
           "props": [
             {
               "name": "name",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "defaultValue",
@@ -506,23 +525,28 @@
             },
             {
               "name": "onValueCommitted",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico only exposes a continuous value-change callback; a separate event that fires once only when an interaction settles (not on every intermediate value) needs new primitive-level pointer-up/keyup event plumbing, tracked as follow-up primitive work"
             },
             {
               "name": "form",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "locale",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: no locale-aware number-formatting infrastructure exists anywhere in this codebase yet; not specific to this component, and not planned as part of this change"
             },
             {
               "name": "thumbAlignment",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this is an advanced Base UI thumb-positioning/stepping refinement adico's slider primitive doesn't implement yet; tracked as follow-up primitive work, not covered by this change's prop-surface scope"
             },
             {
               "name": "thumbCollisionBehavior",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this is an advanced Base UI thumb-positioning/stepping refinement adico's slider primitive doesn't implement yet; tracked as follow-up primitive work, not covered by this change's prop-surface scope"
             },
             {
               "name": "step",
@@ -530,11 +554,13 @@
             },
             {
               "name": "largeStep",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this is an advanced Base UI thumb-positioning/stepping refinement adico's slider primitive doesn't implement yet; tracked as follow-up primitive work, not covered by this change's prop-surface scope"
             },
             {
               "name": "minStepsBetweenValues",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this is an advanced Base UI thumb-positioning/stepping refinement adico's slider primitive doesn't implement yet; tracked as follow-up primitive work, not covered by this change's prop-surface scope"
             },
             {
               "name": "min",
@@ -546,7 +572,8 @@
             },
             {
               "name": "format",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: no locale-aware number-formatting infrastructure exists anywhere in this codebase yet; not specific to this component, and not planned as part of this change"
             },
             {
               "name": "disabled",
@@ -554,7 +581,8 @@
             },
             {
               "name": "orientation",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this is exposed as a plain boolean flag (e.g. `horizontal`) rather than a `\"horizontal\" | \"vertical\"` string enum -- same capability, a different representation, not planned to change"
             },
             {
               "name": "className",

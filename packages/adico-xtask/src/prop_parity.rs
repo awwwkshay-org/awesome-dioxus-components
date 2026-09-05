@@ -275,6 +275,48 @@ const FORM_PARTICIPATION_REASON: &str = "adico extension gap, deferred (not a pe
 /// allows.
 const CASCADING_DISABLED_REASON: &str = "adico extension gap: disabled is set once on the composite's root and cascades to every descendant; independently overriding it on just this sub-part has no adico equivalent and isn't planned, since a consistent whole-component disable is the far more common need";
 
+/// Reason recorded where the matched axis expects app-level locale/number
+/// formatting integration (a `locale`/`format` pair, typically feeding
+/// `Intl.NumberFormat` or similar) that this codebase has no equivalent
+/// infrastructure for anywhere yet -- not specific to one component.
+const LOCALE_FORMATTING_REASON: &str = "adico extension gap: no locale-aware number-formatting infrastructure exists anywhere in this codebase yet; not specific to this component, and not planned as part of this change";
+
+/// Reason recorded for a Base UI slider-thumb positioning/stepping
+/// refinement (collision avoidance between multiple thumbs, alignment
+/// against the track bounds, a larger keyboard step, a minimum spacing
+/// constraint between values) that adico's slider primitive doesn't
+/// implement yet. Deferred, not permanent: a real primitive-behavior
+/// follow-up, same terminal state as `FORM_PARTICIPATION_REASON`.
+const ADVANCED_THUMB_BEHAVIOR_REASON: &str = "adico extension gap, deferred (not a permanent design choice): this is an advanced Base UI thumb-positioning/stepping refinement adico's slider primitive doesn't implement yet; tracked as follow-up primitive work, not covered by this change's prop-surface scope";
+
+/// Reason recorded where adico only fires a continuous value-change
+/// callback and has no separate "interaction settled" event distinct from
+/// every intermediate value during a drag/keyboard adjustment. Deferred:
+/// needs new primitive-level pointer-up/keyup-driven event plumbing, not a
+/// prop rename.
+const VALUE_COMMIT_REASON: &str = "adico extension gap, deferred (not a permanent design choice): adico only exposes a continuous value-change callback; a separate event that fires once only when an interaction settles (not on every intermediate value) needs new primitive-level pointer-up/keyup event plumbing, tracked as follow-up primitive work";
+
+/// Reason recorded where adico represents an axis/direction as a plain
+/// boolean flag (e.g. `horizontal`) rather than the matched axis's
+/// `"horizontal" | "vertical"` string enum. Same capability, different,
+/// permanent representation.
+const ORIENTATION_REPRESENTATION_REASON: &str = "adico extension gap: this is exposed as a plain boolean flag (e.g. `horizontal`) rather than a `\"horizontal\" | \"vertical\"` string enum -- same capability, a different representation, not planned to change";
+
+/// Reason recorded for a Base UI slider-thumb ARIA-customization hook
+/// (a static/derived accessible label, or a caller-supplied accessible
+/// value-text formatter) that adico's `SliderThumb` doesn't expose.
+/// Deferred: real accessibility-surface work, not a prop rename.
+const THUMB_ARIA_CUSTOMIZATION_REASON: &str = "adico extension gap, deferred (not a permanent design choice): adico's per-thumb ARIA customization (accessible label/value-text derivation) isn't exposed as an overridable hook yet; tracked as follow-up accessibility work, not covered by this change's prop-surface scope";
+
+/// Reason recorded where a thumb-level focus/keyboard/tab-order override
+/// hook (`onFocus`/`onBlur`/`onKeyDown`/`tabIndex`) has no adico
+/// equivalent, because the primitive already owns that thumb's focus and
+/// keyboard-driven value changes internally -- exposing raw overrides
+/// risks conflicting with that internal behavior rather than composing
+/// with it. Deferred: would need the primitive's own event composition to
+/// change first, not a prop rename.
+const THUMB_EVENT_OVERRIDE_REASON: &str = "adico extension gap, deferred (not a permanent design choice): this thumb's focus/keyboard/tab-order behavior is already owned internally by the primitive (drag/keyboard value changes); exposing it as a raw overridable hook needs the primitive's own event composition to change first, tracked as follow-up primitive work";
+
 /// Item-specific `intentional_difference` reasons for a genuine upstream
 /// prop that has no adico equivalent by design, keyed by
 /// `(item, part, upstream_prop_name)` using the upstream axis's own raw
@@ -395,6 +437,70 @@ const INTENTIONAL_DIFFERENCE_REASONS: &[(&str, &str, &str, &str)] = &[
     ("combobox", "root", "required", FORM_PARTICIPATION_REASON),
     ("combobox", "root", "readOnly", FORM_PARTICIPATION_REASON),
     ("combobox", "input", "disabled", CASCADING_DISABLED_REASON),
+    // slider: native form-integration (deferred), advanced Base UI
+    // thumb/stepping behavior adico's primitive doesn't implement yet
+    // (deferred), locale/format (no infra anywhere, permanent),
+    // orientation-as-boolean (permanent), and per-thumb ARIA/event hooks
+    // (deferred). `root` appears on both `base-ui` and `shadcn` (same
+    // matched prop list), so each reason is entered for both axes.
+    ("slider", "root", "name", FORM_PARTICIPATION_REASON),
+    ("slider", "root", "form", FORM_PARTICIPATION_REASON),
+    ("slider", "root", "onValueCommitted", VALUE_COMMIT_REASON),
+    ("slider", "root", "locale", LOCALE_FORMATTING_REASON),
+    ("slider", "root", "format", LOCALE_FORMATTING_REASON),
+    (
+        "slider",
+        "root",
+        "thumbAlignment",
+        ADVANCED_THUMB_BEHAVIOR_REASON,
+    ),
+    (
+        "slider",
+        "root",
+        "thumbCollisionBehavior",
+        ADVANCED_THUMB_BEHAVIOR_REASON,
+    ),
+    (
+        "slider",
+        "root",
+        "largeStep",
+        ADVANCED_THUMB_BEHAVIOR_REASON,
+    ),
+    (
+        "slider",
+        "root",
+        "minStepsBetweenValues",
+        ADVANCED_THUMB_BEHAVIOR_REASON,
+    ),
+    (
+        "slider",
+        "root",
+        "orientation",
+        ORIENTATION_REPRESENTATION_REASON,
+    ),
+    (
+        "slider",
+        "thumb",
+        "aria-valuetext",
+        THUMB_ARIA_CUSTOMIZATION_REASON,
+    ),
+    (
+        "slider",
+        "thumb",
+        "getAriaLabel",
+        THUMB_ARIA_CUSTOMIZATION_REASON,
+    ),
+    (
+        "slider",
+        "thumb",
+        "getAriaValueText",
+        THUMB_ARIA_CUSTOMIZATION_REASON,
+    ),
+    ("slider", "thumb", "onBlur", THUMB_EVENT_OVERRIDE_REASON),
+    ("slider", "thumb", "onFocus", THUMB_EVENT_OVERRIDE_REASON),
+    ("slider", "thumb", "onKeyDown", THUMB_EVENT_OVERRIDE_REASON),
+    ("slider", "thumb", "tabIndex", THUMB_EVENT_OVERRIDE_REASON),
+    ("slider", "thumb", "disabled", CASCADING_DISABLED_REASON),
 ];
 
 fn react_only_structural_reason(raw_name: &str) -> Option<&'static str> {

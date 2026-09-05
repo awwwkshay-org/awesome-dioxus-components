@@ -259,16 +259,28 @@ fn dependency_shape(item: &Item) -> Option<DependencyShape> {
 }
 
 /// Reconciles an already-written dependency entry against a freshly
-/// resolved requirement, widening it in place when the new requirement
-/// needs strictly more (an additional feature, or default-features turned
-/// on) than what is currently written -- e.g. installing `spinner` alone
-/// first writes a plain `adico-primitives = "=0.1.0"` entry, and a later,
-/// separate `adico add dialog` needs that same dependency's `web` feature
-/// too. Returns `Ok(None)` when the existing entry already satisfies the
-/// request (including a consumer's own deliberately-added extra features),
-/// so the manifest is left untouched. A version or `package` mismatch is
-/// always a hard conflict -- that changes copied-source behavior and must
-/// not be silently rewritten.
+/// resolved requirement, widening its `features` list in place when the
+/// new requirement needs an additional named feature the existing entry
+/// doesn't already have -- e.g. installing `spinner` alone first writes a
+/// plain `adico-primitives = "=0.1.0"` entry, and a later, separate
+/// `adico add dialog` needs that same dependency's `web` feature too.
+/// Returns `Ok(None)` when the existing entry already satisfies the
+/// request (including a consumer's own deliberately-added extra
+/// features), so the manifest is left untouched. A version or `package`
+/// mismatch is always a hard conflict -- that changes copied-source
+/// behavior and must not be silently rewritten.
+///
+/// Deliberately never touches `default-features`: a consumer's own
+/// explicit `default-features = false` (this repo's own browser fixtures
+/// set it, to avoid inheriting fullstack/development-only default
+/// features from a runtime crate) must survive a later `adico add`
+/// regardless of what any registry item's own declared dependency
+/// happens to default to -- `UnifiedCargoDependency::default_features`
+/// has no way to express "doesn't care either way" distinct from "wants
+/// them on", so treating it as a signal to widen would make nearly every
+/// registry item silently re-enable a consumer's deliberately disabled
+/// defaults the next time any dependency on that crate needed a new
+/// feature.
 fn widen_existing_dependency(
     existing: &Item,
     requested: &UnifiedCargoDependency,
@@ -289,19 +301,17 @@ fn widen_existing_dependency(
         });
     }
     let requested_features: BTreeSet<_> = requested.features.iter().cloned().collect();
-    let already_satisfied = requested_features.is_subset(&shape.features)
-        && (!requested.default_features || shape.default_features);
-    if already_satisfied {
+    if requested_features.is_subset(&shape.features) {
         return Ok(None);
     }
-    let mut merged_features = shape.features;
+    let mut merged_features = shape.features.clone();
     merged_features.extend(requested_features);
     let merged = UnifiedCargoDependency {
         crate_name: requested.crate_name.clone(),
         package: requested.package.clone(),
         version: requested.version.clone(),
         features: merged_features.into_iter().collect(),
-        default_features: shape.default_features || requested.default_features,
+        default_features: shape.default_features,
         target: requested.target.clone(),
         origins: requested.origins.clone(),
     };
@@ -455,6 +465,33 @@ mod tests {
             .as_deref()
             .expect("the entry should be rewritten to add the missing feature");
         assert!(contents.contains("features = [\"web\"]"));
+        plan.apply().expect("plan should apply");
+        fs::remove_dir_all(path.parent().expect("temporary root should exist"))
+            .expect("temporary directory should be removable");
+    }
+
+    #[test]
+    fn widening_a_dependency_never_touches_an_explicit_default_features_false() {
+        // Mirrors this repo's own browser fixtures: `dioxus = { version =
+        // "=0.7.9", default-features = false, features = [...] }`, written
+        // by hand to avoid inheriting fullstack/development-only default
+        // features. A later `adico add` needing one more named feature on
+        // the same crate must add only that feature, never re-enable
+        // defaults.
+        let path = temporary_manifest(
+            "[dependencies]\ndioxus = { version = \"=0.7.9\", default-features = false, features = [\"web\"] }\n",
+        );
+        let mut requested = dependency("dioxus", "=0.7.9");
+        requested.features = vec!["macro".to_string()];
+        let plan = plan_cargo_dependency_edits(&path, &[requested])
+            .expect("widening features alongside default-features = false should plan");
+        let contents = plan
+            .contents
+            .as_deref()
+            .expect("the entry should be rewritten to add the missing feature");
+        assert!(contents.contains("default-features = false"));
+        assert!(contents.contains("\"macro\""));
+        assert!(contents.contains("\"web\""));
         plan.apply().expect("plan should apply");
         fs::remove_dir_all(path.parent().expect("temporary root should exist"))
             .expect("temporary directory should be removable");

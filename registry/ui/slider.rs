@@ -94,6 +94,7 @@ pub fn RangeSlider(props: RangeSliderProps) -> Element {
 pub fn SliderTrack(
     #[props(default = Radius::Full)] radius: Radius,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&[
@@ -102,7 +103,7 @@ pub fn SliderTrack(
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        SliderTrackPrimitive { class, {children} }
+        SliderTrackPrimitive { class, attributes, {children} }
     }
 }
 
@@ -112,6 +113,7 @@ pub fn SliderTrack(
 pub fn SliderRange(
     #[props(default = Radius::Full)] radius: Radius,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&[
@@ -120,7 +122,7 @@ pub fn SliderRange(
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        SliderRangePrimitive { class, {children} }
+        SliderRangePrimitive { class, attributes, {children} }
     }
 }
 
@@ -130,6 +132,7 @@ pub fn SliderThumb(
     index: Option<usize>,
     #[props(default = Radius::Full)] radius: Radius,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&[
@@ -138,7 +141,7 @@ pub fn SliderThumb(
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        SliderThumbPrimitive { index, class, {children} }
+        SliderThumbPrimitive { index, class, attributes, {children} }
     }
 }
 

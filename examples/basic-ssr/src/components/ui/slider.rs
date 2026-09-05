@@ -11,6 +11,7 @@ use adico_primitives::slider::{
 };
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// Root shadcn class every `Slider`/`RangeSlider` needs, previously supplied
 /// by neither the (bare re-exported) primitive nor this facade: without an
@@ -22,24 +23,15 @@ use crate::adico_lib::cn::cn;
 /// showing the root at literally `width: 0`).
 const SLIDER_ROOT_CLASS: &str = "relative flex w-full touch-none select-none items-center data-[orientation=vertical]:h-full data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col";
 
-/// `SliderProps`/`RangeSliderProps` have no dedicated `class` field (only
-/// `attributes: Vec<Attribute>`, extending `GlobalAttributes`), and a
-/// `class` keyword can't be mixed with a `..props` struct spread at a
-/// *component* call site (unlike a plain HTML tag) -- build the merged
-/// attribute list by hand, matching the primitive crate's own precedent in
-/// `popover.rs`/`hover_card.rs`/`tooltip.rs` for this exact limitation.
-fn with_class(class: &str, attributes: Vec<Attribute>) -> Vec<Attribute> {
-    let mut merged = vec![Attribute::new("class", class, None, false)];
-    merged.extend(attributes);
-    merged
-}
-
 /// A single-thumb slider with the default adico/shadcn root layout. See
 /// [`adico_primitives::slider::Slider`] for the full behavior/prop
 /// reference; this facade only adds the root's default class.
 #[component]
 pub fn Slider(props: SliderProps) -> Element {
-    let attributes = with_class(SLIDER_ROOT_CLASS, props.attributes);
+    let class = cn(&[
+        SLIDER_ROOT_CLASS,
+        props.class.as_deref().unwrap_or_default(),
+    ]);
     rsx! {
         SliderPrimitive {
             value: props.value,
@@ -52,7 +44,8 @@ pub fn Slider(props: SliderProps) -> Element {
             inverted: props.inverted,
             on_value_change: props.on_value_change,
             label: props.label,
-            attributes,
+            class,
+            attributes: props.attributes,
             {props.children}
         }
     }
@@ -63,7 +56,10 @@ pub fn Slider(props: SliderProps) -> Element {
 /// reference; this facade only adds the root's default class.
 #[component]
 pub fn RangeSlider(props: RangeSliderProps) -> Element {
-    let attributes = with_class(SLIDER_ROOT_CLASS, props.attributes);
+    let class = cn(&[
+        SLIDER_ROOT_CLASS,
+        props.class.as_deref().unwrap_or_default(),
+    ]);
     rsx! {
         RangeSliderPrimitive {
             value: props.value,
@@ -76,7 +72,8 @@ pub fn RangeSlider(props: RangeSliderProps) -> Element {
             inverted: props.inverted,
             on_value_change: props.on_value_change,
             label: props.label,
-            attributes,
+            class,
+            attributes: props.attributes,
             {props.children}
         }
     }
@@ -91,41 +88,60 @@ pub fn RangeSlider(props: RangeSliderProps) -> Element {
 /// track would therefore clip the thumb's `size-4` handle, which overflows
 /// the track's own `h-1.5`/`w-1.5` cross-axis size by design (the handle
 /// must be visibly larger than the track it rides on). [`SliderRange`]
-/// carries its own `rounded-full` instead, so the filled portion still
+/// carries its own full-radius corner instead, so the filled portion still
 /// renders with pill-shaped ends without relying on clipping.
 #[component]
-pub fn SliderTrack(class: Option<String>, children: Element) -> Element {
+pub fn SliderTrack(
+    #[props(default = Radius::Full)] radius: Radius,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+    children: Element,
+) -> Element {
     let class = cn(&[
-        "relative grow rounded-full bg-primary/20 data-[orientation=horizontal]:h-1.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1.5",
+        "relative grow bg-primary/20 data-[orientation=horizontal]:h-1.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1.5",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        SliderTrackPrimitive { class, {children} }
+        SliderTrackPrimitive { class, attributes, {children} }
     }
 }
 
 /// The filled portion of the [`SliderTrack`] between the minimum and the
 /// current value (or between the two thumbs of a [`RangeSlider`]).
 #[component]
-pub fn SliderRange(class: Option<String>, children: Element) -> Element {
+pub fn SliderRange(
+    #[props(default = Radius::Full)] radius: Radius,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+    children: Element,
+) -> Element {
     let class = cn(&[
-        "absolute rounded-full bg-primary data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full",
+        "absolute bg-primary data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        SliderRangePrimitive { class, {children} }
+        SliderRangePrimitive { class, attributes, {children} }
     }
 }
 
 /// A draggable/keyboard-movable thumb within a [`SliderTrack`].
 #[component]
-pub fn SliderThumb(index: Option<usize>, class: Option<String>, children: Element) -> Element {
+pub fn SliderThumb(
+    index: Option<usize>,
+    #[props(default = Radius::Full)] radius: Radius,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+    children: Element,
+) -> Element {
     let class = cn(&[
-        "absolute block size-4 shrink-0 -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary bg-background shadow-sm transition-colors hover:ring-4 hover:ring-ring/50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-[orientation=horizontal]:top-1/2 data-[orientation=vertical]:left-1/2",
+        "absolute block size-4 shrink-0 -translate-x-1/2 -translate-y-1/2 border border-primary bg-background shadow-sm transition-colors hover:ring-4 hover:ring-ring/50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-[orientation=horizontal]:top-1/2 data-[orientation=vertical]:left-1/2",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        SliderThumbPrimitive { index, class, {children} }
+        SliderThumbPrimitive { index, class, attributes, {children} }
     }
 }
 
@@ -146,9 +162,9 @@ mod tests {
     }
 
     #[test]
-    fn with_class_prepends_class_ahead_of_caller_supplied_attributes() {
-        let merged = with_class("w-full", Vec::new());
-        assert_eq!(merged.len(), 1);
-        assert_eq!(merged[0].name, "class");
+    fn caller_class_is_appended_after_the_root_class() {
+        let class = cn(&[SLIDER_ROOT_CLASS, "extra-class"]);
+        assert!(class.contains("w-full"));
+        assert!(class.ends_with("extra-class"));
     }
 }

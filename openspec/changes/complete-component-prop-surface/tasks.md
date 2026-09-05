@@ -445,6 +445,28 @@ directly for the exact prop list; it is not duplicated here.
         version/`package` mismatch. Added
         `a_later_add_widens_an_existing_dependency_to_add_a_missing_feature`
         covering it.
+      - **Correction to the fix above, found immediately while verifying
+        `slider`'s own consumer-fixture reinstall:** the first version of
+        `widen_existing_dependency` also OR'd `default_features` (`shape
+        .default_features || requested.default_features`), reasoning it
+        the same way as the feature-set union. That's wrong in the
+        opposite direction from the original bug: this repo's own browser
+        fixtures (`tests/installation/wave2-risk-consumer`,
+        `wave5-color-picker-consumer`) hand-write `dioxus = { ...,
+        default-features = false, features = [...] }` specifically so a
+        runtime crate doesn't inherit fullstack/development-only default
+        features, and `UnifiedCargoDependency::default_features` has no
+        way to express "doesn't care either way" distinct from "wants
+        them on" — so the very next `adico add` needing one more named
+        feature on that crate silently flipped `default-features = false`
+        back to enabled, reproduced live on both fixtures re-installing
+        `slider`. Fixed by never touching `default_features` in the
+        widened entry at all (always keep the existing value) — only the
+        named `features` set is ever unioned. Added
+        `widening_a_dependency_never_touches_an_explicit_default_features_false`
+        covering it; reverted the two fixtures' incorrectly-rewritten
+        `Cargo.toml` and reinstalled `slider` again to confirm the fixed
+        version leaves them byte-identical.
 - [ ] 5.2 **Wave 2 — menu/overlay family** (34 missing entries):
       `dropdown-menu` (5), `hover-card` (5), `popover` (6), `tooltip` (6),
       `toggle-group` (6), `context-menu` (3), `menubar` (3). Verify same
