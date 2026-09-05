@@ -1,14 +1,14 @@
 {
-  "tailwindOnly": true,
-  "styleException": [],
-  "tokenCompliant": false,
-  "colorException": [
+  "tailwindOnly": false,
+  "styleException": [
     {
-      "value": "bg-slate-500/bg-blue-500/bg-violet-500/bg-emerald-500/bg-rose-500 (preset swatches)",
-      "reason": "Preset swatches are literal previews of the palette options being offered and are documented as independent of the active light/dark mode; they must show the actual preset color, not the current theme's token value."
+      "description": "generated preset-swatch inline style (style: \"{primary_style}\"/\"{secondary_style}\"/\"{accent_style}\" in PaletteSwatch, theme_switcher.rs)",
+      "reason": "PaletteSwatch previews each preset's actual --primary/--secondary/--accent HSL values as overlapping circles; these are runtime-computed HSL triplets, not fixed classes, so they cannot be expressed as static Tailwind classes by definition -- the same reasoning already recorded for theme-builder's own live-preview inline style."
     }
   ],
+  "tokenCompliant": true,
+  "colorException": [],
   "radiusException": [],
   "inspiredBy": [],
-  "inspirationNote": "No shadcn or dioxus-components equivalent; an adico-specific composition with its own preset-swatch colorException already recorded."
+  "inspirationNote": "No shadcn or dioxus-components equivalent; an adico-specific composition with its own generated-preview styleException, matching theme-builder's."
 }

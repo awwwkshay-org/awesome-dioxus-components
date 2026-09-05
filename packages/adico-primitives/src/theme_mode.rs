@@ -245,6 +245,49 @@ pub fn apply_root_properties(pairs: &[(&str, String)]) {
 #[cfg(not(feature = "web"))]
 pub fn apply_root_properties(_pairs: &[(&str, String)]) {}
 
+/// Reads the current *cascaded* values of a list of custom properties off
+/// the document root on `web`, so a live theme editor (`theme-builder`,
+/// `theme-switcher`) can hydrate its initial per-token state from whatever
+/// theme is actually in effect -- the installed CSS's `:root`/`.dark`
+/// defaults, `mode-toggle`'s `.dark` class selector, or another such editor's
+/// own applied inline values -- instead of always starting from its own
+/// hardcoded defaults.
+///
+/// Deliberately does **not** clear any existing inline value on these
+/// properties before reading them (an earlier version did). `getComputedStyle`
+/// resolves a property to whatever's currently winning the cascade, and an
+/// inline value from a *different*, still-mounted editor (for example a
+/// persistent `theme-switcher` in a sidebar) is exactly the "live theme" this
+/// function exists to read -- clearing it first to avoid an editor reading
+/// its *own* stale echo was found to just as readily wipe out a *sibling*
+/// editor's legitimate current value, which this call has no way to tell
+/// apart from its own past self by inspecting the DOM alone. Callers that
+/// need to avoid reading their own stale echo should instead call this only
+/// once per mount (see `theme-builder`'s/`theme-switcher`'s own doc comments)
+/// rather than re-reading on every later change, since a fresh mount never
+/// has its own prior inline values still present (each editor's `use_drop`
+/// cleanup, where it has one, already removes them on unmount).
+///
+/// Returns an empty `Vec` on every other target, and on `web` if the eval
+/// channel fails for any reason. Callers should treat a returned length that
+/// doesn't match `names` as "hydration unavailable" and keep their existing
+/// values rather than partially applying a misaligned result.
+#[cfg(feature = "web")]
+pub async fn read_root_properties(names: &[&str]) -> Vec<String> {
+    let mut eval = dioxus_document::eval(
+        "const names = await dioxus.recv();
+        const style = getComputedStyle(document.documentElement);
+        dioxus.send(names.map((name) => style.getPropertyValue(name).trim()));",
+    );
+    let _ = eval.send(names);
+    eval.recv::<Vec<String>>().await.unwrap_or_default()
+}
+
+#[cfg(not(feature = "web"))]
+pub async fn read_root_properties(_names: &[&str]) -> Vec<String> {
+    Vec::new()
+}
+
 /// Removes a list of custom properties this consumer previously set with
 /// [`apply_root_properties`] from the document root, on `web`.
 ///

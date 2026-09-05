@@ -252,7 +252,7 @@
       ],
       "documentation": {
         "slug": "select",
-        "compositionNote": "The copied fa\u00e7ade re-exports the owned Select parts; applications can style each primitive part directly with Dioxus class attributes while the runtime retains keyboard, typeahead, and ARIA behavior.",
+        "compositionNote": "The copied façade re-exports the owned Select parts; applications can style each primitive part directly with Dioxus class attributes while the runtime retains keyboard, typeahead, and ARIA behavior.",
         "usage": "Select::<String> {\n    SelectTrigger { aria_label: \"Choose a fruit\", SelectValue { placeholder: \"Choose a fruit\" } }\n    SelectList { aria_label: \"Fruit options\",\n        SelectOption::<String> { index: 0usize, value: \"apple\".to_string(), text_value: \"Apple\".to_string(), \"Apple\" }\n    }\n}",
         "accessibility": "Implements the WAI-ARIA APG Listbox pattern: `SelectTrigger` is the APG's combobox-like button and `SelectList` is `role=\"listbox\"`, anchored to the trigger via `Positioner` (`packages/adico-primitives/src/select.rs`).",
         "keyboard": "Full keyboard support: arrow keys navigate options, Home/End jump to the ends, Enter selects, Escape closes; typeahead lets typing jump to a matching option."
@@ -821,7 +821,7 @@
       ],
       "documentation": {
         "slug": "dropdown-menu",
-        "compositionNote": "The copied fa\u00e7ade re-exports the owned DropdownMenu parts unstyled, matching select's approach: DropdownMenuItem is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains roving-focus keyboard and ARIA behavior.",
+        "compositionNote": "The copied façade re-exports the owned DropdownMenu parts unstyled, matching select's approach: DropdownMenuItem is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains roving-focus keyboard and ARIA behavior.",
         "usage": "DropdownMenu {\n    DropdownMenuTrigger { \"Open menu\" }\n    DropdownMenuContent {\n        DropdownMenuItem { index: 0usize, value: \"edit\".to_string(), on_select: move |_| {}, \"Edit\" }\n    }\n}",
         "accessibility": "`DropdownMenu`/`DropdownMenuTrigger`/`DropdownMenuContent`/`DropdownMenuItem` are direct re-exports of the shared `menu::Menu`/`MenuTrigger`/`MenuContent`/`MenuItem` primitive (`packages/adico-primitives/src/menu.rs`), matching Base UI's own anatomy where `Menu` *is* the dropdown menu -- `role=\"menu\"`/`role=\"menuitem\"` content on a roving-focus/dismissable-layer stack shared with `dialog`/`popover`.",
         "keyboard": "Arrow keys navigate items, Enter/Space activates the focused item, `ArrowRight`/`ArrowLeft` open/close submenus (`MenuSubmenuTrigger`); submenu hover-intent delay is not implemented, only click and arrow-key open/close."
@@ -980,7 +980,7 @@
       ],
       "documentation": {
         "slug": "combobox",
-        "compositionNote": "The copied fa\u00e7ade re-exports the owned Combobox parts unstyled, matching select's approach: ComboboxOption is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains filtering, roving-focus keyboard, and ARIA behavior.",
+        "compositionNote": "The copied façade re-exports the owned Combobox parts unstyled, matching select's approach: ComboboxOption is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains filtering, roving-focus keyboard, and ARIA behavior.",
         "usage": "Combobox::<String> {\n    ComboboxInput { placeholder: \"Search...\" }\n    ComboboxList {\n        ComboboxOption::<String> { value: \"a\".to_string(), index: 0usize, \"Option A\" }\n    }\n}",
         "accessibility": "Implements the WAI-ARIA APG Combobox (listbox popup) pattern: a text input that filters an anchored `role=\"listbox\"` popup while real DOM focus stays on the input -- navigation moves `aria-activedescendant`, not focus itself (`packages/adico-primitives/src/combobox.rs`). The popup is anchored via `Positioner` and dismissed via the shared layer/Escape/outside-dismiss stack.",
         "keyboard": "Arrow keys move the active descendant through filtered options while focus remains on the input; Enter commits the active option; Escape dismisses the popup (outside-click dismissal on `web` shares the known, unfixed `document::eval` listener defect recorded for this crate's other overlays)."
@@ -1035,7 +1035,7 @@
       ],
       "documentation": {
         "slug": "calendar",
-        "compositionNote": "The copied fa\u00e7ade styles the month view, navigation, title, and generated date grid with semantic shadcn tokens while the owned primitive retains single/range selection, constraints, keyboard navigation, focus, and ARIA behavior. Less common month/year selector parts remain composable exports.",
+        "compositionNote": "The copied façade styles the month view, navigation, title, and generated date grid with semantic shadcn tokens while the owned primitive retains single/range selection, constraints, keyboard navigation, focus, and ARIA behavior. Less common month/year selector parts remain composable exports.",
         "usage": "Calendar { value: value(), on_value_change: move |v| value.set(v) }",
         "accessibility": "`CalendarGridRoot` is `role=\"grid\"`, each week is `role=\"row\"`, and each day is a focusable button whose label states its full weekday/month/day/year; the weekday header row is `aria-hidden` since each day's own label already carries the weekday; the month/year heading is `role=\"heading\" aria-level=\"2\"` (`packages/adico-primitives/src/calendar.rs`, WAI-ARIA APG Grid pattern).",
         "keyboard": "Days share a single-tab-stop roving tabindex with arrow-key navigation across the grid; `RangeCalendar` additionally exposes `data-selection-start`/`data-selection-between`/`data-selection-end` per day for a two-endpoint range."
@@ -1092,7 +1092,7 @@
       ],
       "documentation": {
         "slug": "date-picker",
-        "compositionNote": "The copied fa\u00e7ade composes the installed semantic Calendar and Popover fa\u00e7ades over the owned DatePicker primitive. The primitive retains typed date/range state, constraints, keyboard focus, dismissal, and ARIA behavior.",
+        "compositionNote": "The copied façade composes the installed semantic Calendar and Popover façades over the owned DatePicker primitive. The primitive retains typed date/range state, constraints, keyboard focus, dismissal, and ARIA behavior.",
         "usage": "DatePicker { value: value(), on_value_change: move |v| value.set(v),\n    DatePickerInput {}\n    DatePickerPopover { DatePickerCalendar {} }\n}",
         "accessibility": "No dedicated APG \"Date Picker\" pattern exists; `DatePicker`/`DateRangePicker` render a composite `role=\"group\"` field containing one `role=\"spinbutton\"` segment per year/month/day, each with `aria-valuemin`/`aria-valuemax`/`aria-valuenow` (the APG Spin Button pattern applied per segment). `DatePickerSeparator` is `aria-hidden` (`packages/adico-primitives/src/date_picker.rs`). The popup composes this crate's `calendar` (Grid pattern) and `popover` primitives.",
         "keyboard": "Arrow keys increment/decrement the focused segment; the popover calendar shares `calendar`'s own roving-tabindex day navigation once opened."
@@ -2264,7 +2264,7 @@
       ],
       "documentation": {
         "slug": "mode-toggle",
-        "compositionNote": "Composes the installed dropdown-menu registry item with adico_primitives::theme_mode for Light/Dark/System selection. Persists the selection (localStorage on web, a preferences file on desktop) and applies the resolved appearance's class to the document root automatically. Classified `EXISTING_SHADCN_EQUIVALENT`-adjacent -- shadcn's theming docs ship an equivalent Light/Dark/System dropdown pattern; see statics/component_compatibility.json and design.md \u00a77b.",
+        "compositionNote": "Composes the installed dropdown-menu registry item with adico_primitives::theme_mode for Light/Dark/System selection. Persists the selection (localStorage on web, a preferences file on desktop) and applies the resolved appearance's class to the document root automatically. Classified `EXISTING_SHADCN_EQUIVALENT`-adjacent -- shadcn's theming docs ship an equivalent Light/Dark/System dropdown pattern; see statics/component_compatibility.json and design.md §7b.",
         "usage": "ModeToggle {}",
         "accessibility": "Composes the installed `DropdownMenuTrigger` (a `Button`) and `theme_mode`'s `ThemeMode`/`ResolvedTheme` resolution (`packages/adico-primitives/src/theme_mode.rs`); its own accessibility surface is entirely the composed `DropdownMenu`'s (`role=\"menu\"`/`role=\"menuitem\"`).",
         "keyboard": "Same as `DropdownMenu`: arrow keys navigate the light/dark/system options, Enter/Space selects one."
@@ -2279,11 +2279,12 @@
           "source": "ui/theme_switcher.rs",
           "targetRoot": "ui",
           "target": "theme_switcher.rs",
-          "checksum": "193bfe883b90dcf114f3a130f689078a2fd0c905cea4c3851b837ec0f0265dea"
+          "checksum": "a356bc9a4f860a90e568ba9ca9432c8041cbdad2652dcd64aa029ce7aa122455"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "select"
       ],
       "cargoDependencies": [
         {
@@ -2314,10 +2315,10 @@
       ],
       "documentation": {
         "slug": "theme-switcher",
-        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA`-style per design.md \u00a77b (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). A distilled palette picker (Slate/Blue/Violet/Emerald/Rose/Amber presets recoloring --primary/--primary-foreground and their Tailwind aliases) productizing the concept prototyped in apps/playground's advanced customization tray, which keeps its own full 28-token editor unchanged.",
+        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA`-style per design.md §7b (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). One combined palette picker (a Select over the Slate/Blue/Violet/Emerald/Rose/Amber presets, each option previewed as three overlapping primary/secondary/accent swatches) that recolors all three semantic role groups' raw custom properties together as one coordinated choice, depending on the installed `select` registry item for the picker itself -- productizing the concept prototyped in apps/playground's advanced customization tray, which keeps its own full 28-token editor unchanged.",
         "usage": "ThemeSwitcher {}",
-        "accessibility": "Composes `theme_mode`'s `ThemeMode`/`ResolvedTheme` resolution (`packages/adico-primitives/src/theme_mode.rs`) behind a styled `Button`-like trigger; its accessibility surface is a native button's.",
-        "keyboard": "Native button activation (Enter/Space); no custom keyboard layer."
+        "accessibility": "Each role picker composes the installed `select` item's Select/SelectTrigger/SelectList/SelectOption parts, so it inherits that component's WAI-ARIA APG listbox-popup pattern, roving-focus keyboard navigation, and typeahead -- see `select`'s own documentation for the full contract.",
+        "keyboard": "Inherited from the installed `select` item: Enter/Space/ArrowDown opens the trigger, Arrow keys move the roving highlight, Enter/Space selects, Escape closes."
       }
     },
     {
@@ -2329,7 +2330,7 @@
           "source": "ui/theme_builder.rs",
           "targetRoot": "ui",
           "target": "theme_builder.rs",
-          "checksum": "62e36ab9af4f59fcb4762ed7dfd0d77c6f2312207d8530655fc873f2565e0369"
+          "checksum": "86cf381d2d3a717b9380107217ff624468cec05a5518f7f7e20ff88f192fc821"
         }
       ],
       "registryDependencies": [
@@ -2364,7 +2365,7 @@
       ],
       "documentation": {
         "slug": "theme-builder",
-        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per design.md \u00a77d (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). Promotes apps/playground's advanced customization tray -- the full 28-semantic-token editor with independent light/dark values, a deterministic 'generate theme' action, and CSS export -- into a real, generic, installable component, since none of it is actually playground-specific in nature. Applies its edited tokens live through adico_primitives::theme_mode::apply_root_properties, the same document-root mechanism theme-switcher already uses for its 4 properties, so theme-builder composes with mode-toggle/theme-switcher on one mechanism. Renders its CSS export into a read-only, selectable textarea rather than calling the browser clipboard API directly, so it stays free of browser-interop details and needs no new cargo dependencies.",
+        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per design.md §7d (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). Promotes apps/playground's advanced customization tray -- the full 28-semantic-token editor with independent light/dark values, a deterministic 'generate theme' action, and CSS export -- into a real, generic, installable component, since none of it is actually playground-specific in nature. Applies its edited tokens live through adico_primitives::theme_mode::apply_root_properties, the same document-root mechanism theme-switcher already uses for its 4 properties, so theme-builder composes with mode-toggle/theme-switcher on one mechanism. Renders its CSS export into a read-only, selectable textarea rather than calling the browser clipboard API directly, so it stays free of browser-interop details and needs no new cargo dependencies.",
         "usage": "ThemeBuilderLauncher {}",
         "accessibility": "A styled composition around `theme_mode`'s `ThemeMode` primitive (`packages/adico-primitives/src/theme_mode.rs`); its editable token controls and CSS-export text area are plain form controls with native semantics, no custom ARIA widget roles.",
         "keyboard": "No custom keyboard layer; native form-control and button keyboard behavior throughout."

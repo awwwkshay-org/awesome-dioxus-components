@@ -38,10 +38,69 @@
 //! editor covers, and shadcn's own reference theme customizer does not
 //! expose them for interactive editing either -- recorded as a deliberate
 //! scope decision, not an oversight.
+//!
+//! **Hydrates from the live theme on mount**, rather than always starting
+//! from a hardcoded Slate/Light default: it reads
+//! [`use_persisted_theme_mode`] to learn which appearance is actually
+//! resolved (so it opens already showing "Dark" if the app is dark) and
+//! reads back each token's effective value with
+//! [`adico_primitives::theme_mode::read_root_properties`], once, on mount.
+//! This makes `ThemeBuilder` a *reader* of the persisted mode signal after
+//! all -- it still never calls that signal's setter, so it cannot change
+//! the app's persisted mode, only learn it. A *separate*, ordinary effect
+//! keeps `appearance` synced to the persisted mode on every *later* change
+//! too (so a mode-toggle flip while `ThemeBuilder` stays mounted still
+//! switches which of `light`/`dark` is active), but that resync never
+//! re-reads the DOM -- seeing why requires understanding why the read is
+//! one-shot in the first place:
+//!
+//! Reading on every mode change (not just once) was tried first and
+//! reverted. `read_root_properties` used to clear its own previously-applied
+//! inline values before reading, since without that clear, a component that
+//! re-reads after having already applied its own edits would just keep
+//! echoing its own prior inline values forever (`getComputedStyle` prefers
+//! an inline value over any class selector or `:root` rule for the same
+//! property) -- a self-referential loop a mode change alone could never
+//! break through. But *with* the clear, a later re-read was found to just as
+//! readily wipe out a *different*, still-mounted editor's legitimate inline
+//! value out from under it -- for example a persistent `theme-switcher` in
+//! the playground's sidebar, whose applied palette would otherwise get
+//! silently reset back to Slate the moment `ThemeBuilder` reads the DOM a
+//! second time. Reading once, on mount, sidesteps both problems: nothing has
+//! been applied by this instance yet, so there's no self-echo to guard
+//! against, and no in-mount re-read at all means no chance to clobber a
+//! sibling later. See `theme_mode.rs`'s doc comment on
+//! `read_root_properties` for the full story. Applying the freshly read
+//! values back to the document root before this one-shot hydration
+//! completes is still guarded against, so an early render never briefly
+//! stomps the live theme with hardcoded defaults. Inherits
+//! `use_persisted_theme_mode`'s own accepted limitation (see
+//! `theme_mode.rs`): a stored preference loads asynchronously, so the very
+//! first paint can briefly resolve to the system default before the stored
+//! choice lands -- and since hydration is one-shot, if that stored
+//! preference lands *after* hydration already ran, only `appearance` (via
+//! the separate resync effect above) catches up; the newly-active
+//! appearance's token values and palette matches keep whatever this
+//! component's own hardcoded defaults or an earlier edit already gave them.
+//!
+//! Hydration also reverse-matches the hydrated `--primary`/`--secondary`/
+//! `--accent` (and their `-foreground`) values against [`Palette`]'s own
+//! tables (`Palette::matching_primary`/`matching_surface`), so the
+//! `PaletteControl` swatch rows open with the right preset highlighted --
+//! for example, whatever a `theme-switcher` mounted elsewhere on the page
+//! (the playground's persistent sidebar instance, say) already applied --
+//! instead of always highlighting Slate while the *values* are actually
+//! correct. A role whose live value doesn't exactly match any of the 6
+//! presets (a direct per-token edit, for instance) simply leaves that row
+//! showing Slate highlighted without touching the live color, the same
+//! documented tradeoff `theme-switcher` makes for its own reverse-matching.
 
 use dioxus::prelude::*;
 
-use adico_primitives::theme_mode::{apply_root_properties, clear_root_properties};
+use adico_primitives::theme_mode::{
+    ResolvedTheme, apply_root_properties, clear_root_properties, read_root_properties,
+    use_persisted_theme_mode,
+};
 
 use crate::adico_lib::cn::cn;
 
@@ -80,7 +139,7 @@ impl ThemeAppearance {
 }
 
 /// A palette preset applied to a semantic role group (primary, secondary, or
-/// tertiary/accent).
+/// accent).
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub enum Palette {
     #[default]
@@ -193,6 +252,38 @@ impl Palette {
                 ColorTokens::new("30 47.8% 16.1%", "48 96.5% 88.8%")
             }
         }
+    }
+
+    /// The preset (if any) whose [`Self::primary_tokens`] exactly matches
+    /// `(background, foreground)` for the given appearance. Lets hydration
+    /// tell which preset (if any) is already live -- for example one a
+    /// `theme-switcher` mounted elsewhere on the page just applied -- so the
+    /// primary `PaletteControl` opens with the right swatch highlighted
+    /// instead of always Slate.
+    fn matching_primary(
+        background: &str,
+        foreground: &str,
+        appearance: ThemeAppearance,
+    ) -> Option<Self> {
+        Self::ALL.into_iter().find(|palette| {
+            let tokens = palette.primary_tokens(appearance);
+            tokens.background == background && tokens.foreground == foreground
+        })
+    }
+
+    /// The preset (if any) whose [`Self::surface_tokens`] exactly matches
+    /// `(background, foreground)` for the given appearance. See
+    /// [`Self::matching_primary`] -- same purpose, for the secondary/accent
+    /// `PaletteControl`s.
+    fn matching_surface(
+        background: &str,
+        foreground: &str,
+        appearance: ThemeAppearance,
+    ) -> Option<Self> {
+        Self::ALL.into_iter().find(|palette| {
+            let tokens = palette.surface_tokens(appearance);
+            tokens.background == background && tokens.foreground == foreground
+        })
     }
 }
 
@@ -343,6 +434,32 @@ const THEME_GROUPS: [ThemeGroup; 4] = [
         tokens: SIDEBAR_TOKENS,
     },
 ];
+
+/// Every [`ThemeToken`] this editor covers, in `THEME_GROUPS` order. Used to
+/// build the `getComputedStyle` read-back request on mount -- see
+/// [`hydrate_tokens`].
+fn all_theme_tokens() -> Vec<ThemeToken> {
+    THEME_GROUPS
+        .iter()
+        .flat_map(|group| group.tokens.iter().copied())
+        .collect()
+}
+
+/// Adopts freshly read-back values into `active`, one per `tokens[i]` /
+/// `values[i]` pair. A no-op if `values` doesn't have exactly one entry per
+/// token (an unavailable/failed read, per [`read_root_properties`]'s
+/// contract), and leaves any individually-empty value untouched rather than
+/// clobbering `active`'s existing value with an empty string.
+fn hydrate_tokens(active: &mut ThemeVariables, tokens: &[ThemeToken], values: &[String]) {
+    if values.len() != tokens.len() {
+        return;
+    }
+    for (token, value) in tokens.iter().zip(values) {
+        if !value.is_empty() {
+            active.set(*token, value.clone());
+        }
+    }
+}
 
 /// The complete set of semantic theme tokens for one appearance (light or
 /// dark). This is the payload shape [`ThemeBuilder`]'s `on_theme_change`
@@ -513,9 +630,19 @@ impl ThemeVariables {
         }
     }
 
-    /// The token pairs [`apply_root_properties`] needs to apply this
-    /// appearance to the document root, including the `--color-*` Tailwind
-    /// aliases every installed component's utility classes resolve against.
+    /// The token pairs [`apply_root_properties`]/[`read_root_properties`]
+    /// need to apply or read back this appearance on the document root.
+    ///
+    /// Deliberately only the 28 raw `--foo` custom properties, **not** the
+    /// `--color-foo` Tailwind aliases the installed `@theme` block derives
+    /// from them (`--color-primary: hsl(var(--primary))`, etc.): `var()`
+    /// lookups are live, so setting `--primary` here already updates
+    /// `--color-primary` everywhere it's used, with no separate write
+    /// needed. Verified live: inline-setting `--color-primary` itself (as
+    /// an earlier version of this function did) freezes it as a static
+    /// value that stops tracking `--primary`, which both doubles the
+    /// properties this component has to manage and defeats the very
+    /// liveness `read_root_properties` depends on to see a change.
     fn root_property_pairs(&self) -> Vec<(&'static str, String)> {
         vec![
             ("--background", self.background.clone()),
@@ -555,78 +682,6 @@ impl ThemeVariables {
             ),
             ("--sidebar-border", self.sidebar_border.clone()),
             ("--sidebar-ring", self.sidebar_ring.clone()),
-            ("--color-background", format!("hsl({})", self.background)),
-            ("--color-foreground", format!("hsl({})", self.foreground)),
-            ("--color-card", format!("hsl({})", self.card)),
-            (
-                "--color-card-foreground",
-                format!("hsl({})", self.card_foreground),
-            ),
-            ("--color-popover", format!("hsl({})", self.popover)),
-            (
-                "--color-popover-foreground",
-                format!("hsl({})", self.popover_foreground),
-            ),
-            ("--color-primary", format!("hsl({})", self.primary)),
-            (
-                "--color-primary-foreground",
-                format!("hsl({})", self.primary_foreground),
-            ),
-            ("--color-secondary", format!("hsl({})", self.secondary)),
-            (
-                "--color-secondary-foreground",
-                format!("hsl({})", self.secondary_foreground),
-            ),
-            ("--color-muted", format!("hsl({})", self.muted)),
-            (
-                "--color-muted-foreground",
-                format!("hsl({})", self.muted_foreground),
-            ),
-            ("--color-accent", format!("hsl({})", self.accent)),
-            (
-                "--color-accent-foreground",
-                format!("hsl({})", self.accent_foreground),
-            ),
-            ("--color-destructive", format!("hsl({})", self.destructive)),
-            (
-                "--color-destructive-foreground",
-                format!("hsl({})", self.destructive_foreground),
-            ),
-            ("--color-border", format!("hsl({})", self.border)),
-            ("--color-input", format!("hsl({})", self.input)),
-            ("--color-ring", format!("hsl({})", self.ring)),
-            (
-                "--color-sidebar",
-                format!("hsl({})", self.sidebar_background),
-            ),
-            (
-                "--color-sidebar-foreground",
-                format!("hsl({})", self.sidebar_foreground),
-            ),
-            (
-                "--color-sidebar-primary",
-                format!("hsl({})", self.sidebar_primary),
-            ),
-            (
-                "--color-sidebar-primary-foreground",
-                format!("hsl({})", self.sidebar_primary_foreground),
-            ),
-            (
-                "--color-sidebar-accent",
-                format!("hsl({})", self.sidebar_accent),
-            ),
-            (
-                "--color-sidebar-accent-foreground",
-                format!("hsl({})", self.sidebar_accent_foreground),
-            ),
-            (
-                "--color-sidebar-border",
-                format!("hsl({})", self.sidebar_border),
-            ),
-            (
-                "--color-sidebar-ring",
-                format!("hsl({})", self.sidebar_ring),
-            ),
         ]
     }
 
@@ -684,7 +739,7 @@ struct ThemeSelection {
     appearance: ThemeAppearance,
     primary_palette: Palette,
     secondary_palette: Palette,
-    tertiary_palette: Palette,
+    accent_palette: Palette,
     light: ThemeVariables,
     dark: ThemeVariables,
     random_seed: u64,
@@ -696,7 +751,7 @@ impl Default for ThemeSelection {
             appearance: ThemeAppearance::Light,
             primary_palette: Palette::Slate,
             secondary_palette: Palette::Slate,
-            tertiary_palette: Palette::Slate,
+            accent_palette: Palette::Slate,
             light: ThemeVariables::light(),
             dark: ThemeVariables::dark(),
             random_seed: 1,
@@ -763,8 +818,8 @@ impl ThemeSelection {
         }
     }
 
-    fn set_tertiary_palette(&mut self, palette: Palette) {
-        self.tertiary_palette = palette;
+    fn set_accent_palette(&mut self, palette: Palette) {
+        self.accent_palette = palette;
         for appearance in ThemeAppearance::ALL {
             let colors = palette.surface_tokens(appearance);
             let tokens = self.tokens_mut_for(appearance);
@@ -783,11 +838,11 @@ impl ThemeSelection {
         let mut state = self.random_seed;
         let primary = Palette::ALL[next_palette_index(&mut state)];
         let secondary = Palette::ALL[next_palette_index(&mut state)];
-        let tertiary = Palette::ALL[next_palette_index(&mut state)];
+        let accent = Palette::ALL[next_palette_index(&mut state)];
         self.random_seed = state;
         self.set_primary_palette(primary);
         self.set_secondary_palette(secondary);
-        self.set_tertiary_palette(tertiary);
+        self.set_accent_palette(accent);
     }
 
     fn reset(&mut self) {
@@ -808,10 +863,14 @@ fn next_palette_index(state: &mut u64) -> usize {
 /// edited tokens live to the document root via [`apply_root_properties`], so
 /// it composes with `mode-toggle`/`theme-switcher` on the same mechanism.
 ///
-/// Unlike `mode-toggle`, `ThemeBuilder` does not read or write the persisted
+/// Unlike `mode-toggle`, `ThemeBuilder` never *writes* the persisted
 /// `theme_mode` global signal -- it owns its own light/dark appearance
-/// selection, since it's an editing surface a consumer mounts occasionally
-/// (for example behind a settings dialog), not an always-active mode switch.
+/// selection once mounted (the `ThemeAppearanceControl` dropdown below edits
+/// it directly), since it's an editing surface a consumer mounts
+/// occasionally (for example behind a settings dialog), not an always-active
+/// mode switch. It does *read* that signal, once on mount and again on any
+/// later change, purely to seed/re-sync which appearance it opens showing
+/// (see the module doc comment's "Hydrates from the live theme" section).
 ///
 /// Deliberately has no `radius` prop: every `rounded-md` in this file is
 /// internal preview-swatch/mockup chrome inside the editor's own control
@@ -825,8 +884,83 @@ pub fn ThemeBuilder(
     class: Option<String>,
 ) -> Element {
     let mut selection = use_signal(ThemeSelection::default);
+    let mut hydrated = use_signal(|| false);
+    let (mode, _set_mode) = use_persisted_theme_mode();
+
+    // Keeps `appearance` synced to the persisted mode on every later change
+    // too (no DOM read here -- just which of `light`/`dark` is "active"),
+    // so a mode-toggle flip while `ThemeBuilder` is mounted still re-syncs
+    // its own appearance without needing to re-hydrate from the DOM.
+    use_effect(move || {
+        let appearance = match mode().resolve() {
+            ResolvedTheme::Light => ThemeAppearance::Light,
+            ResolvedTheme::Dark => ThemeAppearance::Dark,
+        };
+        selection.with_mut(|sel| sel.appearance = appearance);
+    });
+
+    // One-shot hydration: reads the DOM exactly once, on mount, not on every
+    // later mode change. Re-reading on every mode change was tried first and
+    // reverted: `read_root_properties` no longer clears inline values before
+    // reading (see its own doc comment), and without that clear a re-read
+    // would just keep echoing whatever this component itself last applied --
+    // but *with* the clear, a later re-read was found to just as readily
+    // wipe out a *different*, still-mounted editor's legitimate inline value
+    // (a `theme-switcher` in the sidebar, say) out from under it. A single
+    // read at mount has neither problem: nothing has been applied yet by
+    // this instance, so there's no self-echo to guard against, and no
+    // in-mount re-read means no chance to clobber a sibling later.
+    use_effect(move || {
+        if hydrated() {
+            return;
+        }
+        let appearance = match mode().resolve() {
+            ResolvedTheme::Light => ThemeAppearance::Light,
+            ResolvedTheme::Dark => ThemeAppearance::Dark,
+        };
+        spawn(async move {
+            let tokens = all_theme_tokens();
+            let names: Vec<&str> = tokens.iter().map(|token| token.label()).collect();
+            let values = read_root_properties(&names).await;
+            selection.with_mut(|sel| {
+                sel.appearance = appearance;
+                hydrate_tokens(sel.tokens_mut_for(appearance), &tokens, &values);
+                // Reverse-match which preset (if any) the freshly hydrated
+                // values correspond to, so the palette swatch rows open
+                // showing what's actually live -- for example a preset a
+                // `theme-switcher` mounted elsewhere on the page just
+                // applied -- instead of always Slate. `.clone()` ends the
+                // borrow from `tokens_mut_for` above before `sel`'s other
+                // fields are written below.
+                let active = sel.active_tokens().clone();
+                if let Some(found) = Palette::matching_primary(
+                    &active.primary,
+                    &active.primary_foreground,
+                    appearance,
+                ) {
+                    sel.primary_palette = found;
+                }
+                if let Some(found) = Palette::matching_surface(
+                    &active.secondary,
+                    &active.secondary_foreground,
+                    appearance,
+                ) {
+                    sel.secondary_palette = found;
+                }
+                if let Some(found) =
+                    Palette::matching_surface(&active.accent, &active.accent_foreground, appearance)
+                {
+                    sel.accent_palette = found;
+                }
+            });
+            hydrated.set(true);
+        });
+    });
 
     use_effect(move || {
+        if !hydrated() {
+            return;
+        }
         let current = selection();
         apply_root_properties(&current.active_tokens().root_property_pairs());
         on_theme_change.call(current.active_tokens().clone());
@@ -868,16 +1002,16 @@ pub fn ThemeBuilder(
                 on_change: move |palette| selection.write().set_secondary_palette(palette),
             }
             PaletteControl {
-                label: "Tertiary",
+                label: "Accent",
                 appearance: current.appearance,
                 primary_role: false,
-                value: current.tertiary_palette,
-                on_change: move |palette| selection.write().set_tertiary_palette(palette),
+                value: current.accent_palette,
+                on_change: move |palette| selection.write().set_accent_palette(palette),
             }
             ActiveRolePreview {
                 primary: current.primary_palette,
                 secondary: current.secondary_palette,
-                tertiary: current.tertiary_palette,
+                accent: current.accent_palette,
             }
             div { class: "grid gap-2 sm:grid-cols-2",
                 button {
@@ -985,7 +1119,7 @@ fn PaletteControl(
 }
 
 #[component]
-fn ActiveRolePreview(primary: Palette, secondary: Palette, tertiary: Palette) -> Element {
+fn ActiveRolePreview(primary: Palette, secondary: Palette, accent: Palette) -> Element {
     rsx! {
         div { class: "grid grid-cols-3 gap-1", aria_label: "Selected semantic roles",
             div { class: "rounded-md bg-primary px-1 py-1 text-center text-[10px] font-medium text-primary-foreground",
@@ -995,7 +1129,7 @@ fn ActiveRolePreview(primary: Palette, secondary: Palette, tertiary: Palette) ->
                 "Secondary · {secondary.label()}"
             }
             div { class: "rounded-md bg-accent px-1 py-1 text-center text-[10px] font-medium text-accent-foreground",
-                "Tertiary · {tertiary.label()}"
+                "Accent · {accent.label()}"
             }
         }
     }
@@ -1114,17 +1248,46 @@ fn parse_hsl(value: &str) -> Option<(f64, f64, f64)> {
 
 #[cfg(test)]
 mod tests {
-    use super::{Palette, ThemeAppearance, ThemeSelection, ThemeToken, hex_to_hsl, hsl_to_hex};
+    use super::{
+        Palette, ThemeAppearance, ThemeSelection, ThemeToken, ThemeVariables, hex_to_hsl,
+        hsl_to_hex, hydrate_tokens,
+    };
+
+    #[test]
+    fn palette_matching_round_trips_every_preset_and_appearance() {
+        for appearance in ThemeAppearance::ALL {
+            for palette in Palette::ALL {
+                let primary = palette.primary_tokens(appearance);
+                assert_eq!(
+                    Palette::matching_primary(primary.background, primary.foreground, appearance),
+                    Some(palette)
+                );
+                let surface = palette.surface_tokens(appearance);
+                assert_eq!(
+                    Palette::matching_surface(surface.background, surface.foreground, appearance),
+                    Some(palette)
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn palette_matching_is_none_for_an_unrecognized_value() {
+        assert_eq!(
+            Palette::matching_primary("1 2% 3%", "4 5% 6%", ThemeAppearance::Light),
+            None
+        );
+    }
 
     #[test]
     fn every_palette_combination_supplies_the_complete_semantic_contract() {
         for primary in Palette::ALL {
             for secondary in Palette::ALL {
-                for tertiary in Palette::ALL {
+                for accent in Palette::ALL {
                     let mut selection = ThemeSelection::default();
                     selection.set_primary_palette(primary);
                     selection.set_secondary_palette(secondary);
-                    selection.set_tertiary_palette(tertiary);
+                    selection.set_accent_palette(accent);
                     for appearance in ThemeAppearance::ALL {
                         selection.appearance = appearance;
                         let pairs = selection.active_tokens().root_property_pairs();
@@ -1147,19 +1310,11 @@ mod tests {
                                 "missing {token}"
                             );
                         }
-                        for alias in [
-                            "--color-primary",
-                            "--color-secondary",
-                            "--color-accent",
-                            "--color-card",
-                            "--color-sidebar",
-                            "--color-sidebar-primary",
-                        ] {
-                            assert!(
-                                pairs.iter().any(|(name, _)| *name == alias),
-                                "missing {alias}"
-                            );
-                        }
+                        assert!(
+                            pairs.iter().all(|(name, _)| !name.starts_with("--color-")),
+                            "root_property_pairs should stick to raw tokens -- the installed \
+                             @theme block already derives --color-* aliases from them live"
+                        );
                     }
                 }
             }
@@ -1190,14 +1345,14 @@ mod tests {
         let initial = (
             selection.primary_palette,
             selection.secondary_palette,
-            selection.tertiary_palette,
+            selection.accent_palette,
         );
         selection.generate_theme();
         assert_ne!(
             (
                 selection.primary_palette,
                 selection.secondary_palette,
-                selection.tertiary_palette,
+                selection.accent_palette,
             ),
             initial
         );
@@ -1212,7 +1367,7 @@ mod tests {
     }
 
     #[test]
-    fn token_overrides_update_the_matching_tailwind_aliases() {
+    fn token_overrides_update_the_raw_root_property_only() {
         let mut selection = ThemeSelection::default();
         selection
             .active_tokens_mut()
@@ -1224,9 +1379,9 @@ mod tests {
                 .any(|(name, value)| *name == "--primary" && value == "221.2 83.2% 53.3%")
         );
         assert!(
-            pairs.iter().any(
-                |(name, value)| *name == "--color-primary" && value == "hsl(221.2 83.2% 53.3%)"
-            )
+            !pairs.iter().any(|(name, _)| *name == "--color-primary"),
+            "no --color-primary pair should be written -- the installed @theme block's \
+             var(--primary) lookup already derives it live from the raw property above"
         );
     }
 
@@ -1244,6 +1399,24 @@ mod tests {
 
         selection.appearance = ThemeAppearance::Dark;
         assert!(selection.css_export().starts_with(".dark {"));
+    }
+
+    #[test]
+    fn hydrate_tokens_adopts_read_values_and_skips_empty_ones() {
+        let mut variables = ThemeVariables::light();
+        let tokens = [ThemeToken::Primary, ThemeToken::Background];
+        let values = ["1 2% 3%".to_string(), String::new()];
+        hydrate_tokens(&mut variables, &tokens, &values);
+        assert_eq!(variables.primary, "1 2% 3%");
+        assert_eq!(variables.background, ThemeVariables::light().background);
+    }
+
+    #[test]
+    fn hydrate_tokens_is_a_no_op_on_a_length_mismatch() {
+        let mut variables = ThemeVariables::light();
+        let before = variables.clone();
+        hydrate_tokens(&mut variables, &[ThemeToken::Primary], &[]);
+        assert_eq!(variables, before);
     }
 
     #[test]
