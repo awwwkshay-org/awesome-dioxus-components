@@ -6,7 +6,7 @@ use crate::components::demo::Demo;
 
 #[component]
 pub fn BadgePage() -> Element {
-    let mut variant = use_signal(|| components::ui::BadgeVariant::Default);
+    let variant = use_signal(|| components::ui::BadgeVariant::Default);
     let label = use_signal(|| "New".to_string());
     rsx! {
         Demo {
@@ -14,9 +14,8 @@ pub fn BadgePage() -> Element {
             controls: rsx! {
                 SelectControl {
                     label: "Variant",
-                    value: variant(),
-                    options: crate::generated::controls::BADGE_VARIANT_OPTIONS.to_vec(),
-                    on_change: move |value| variant.set(value),
+                    value: variant,
+                    options: crate::generated::controls::BADGE_VARIANT_OPTIONS,
                 }
                 TextControl { label: "Content", value: label }
             },

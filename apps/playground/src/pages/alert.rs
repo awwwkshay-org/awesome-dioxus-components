@@ -6,16 +6,15 @@ use crate::components::demo::Demo;
 
 #[component]
 pub fn AlertPage() -> Element {
-    let mut variant = use_signal(|| components::ui::AlertVariant::Default);
+    let variant = use_signal(|| components::ui::AlertVariant::Default);
     rsx! {
         Demo {
             name: "Alert",
             controls: rsx! {
                 SelectControl {
                     label: "Variant",
-                    value: variant(),
-                    options: crate::generated::controls::ALERT_VARIANT_OPTIONS.to_vec(),
-                    on_change: move |value| variant.set(value),
+                    value: variant,
+                    options: crate::generated::controls::ALERT_VARIANT_OPTIONS,
                 }
             },
             components::ui::Alert { class: "max-w-md", variant: variant(),

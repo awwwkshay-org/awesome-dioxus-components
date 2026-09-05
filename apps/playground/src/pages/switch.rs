@@ -7,16 +7,15 @@ use crate::components::demo::Demo;
 #[component]
 pub fn SwitchPage() -> Element {
     let mut checked = use_signal(|| false);
-    let mut size = use_signal(|| components::ui::SwitchSize::Default);
+    let size = use_signal(|| components::ui::SwitchSize::Default);
     rsx! {
         Demo {
             name: "Switch",
             controls: rsx! {
                 SelectControl {
                     label: "Size",
-                    value: size(),
-                    options: crate::generated::controls::SWITCH_SIZE_OPTIONS.to_vec(),
-                    on_change: move |value| size.set(value),
+                    value: size,
+                    options: crate::generated::controls::SWITCH_SIZE_OPTIONS,
                 }
             },
             components::ui::Switch {

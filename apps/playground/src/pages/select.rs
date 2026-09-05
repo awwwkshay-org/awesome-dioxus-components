@@ -1,16 +1,17 @@
 use dioxus::prelude::*;
 
 use crate::components;
-use crate::components::controls::{BoolControl, SelectControl};
+use crate::components::controls::{BoolControl, OptionalBoolControl, SelectControl};
 use crate::components::demo::Demo;
 
 #[component]
 pub fn SelectPage() -> Element {
     let disabled = use_signal(|| false);
     let multiple = use_signal(|| false);
-    let mut value = use_signal(|| None::<String>);
+    let mut value = use_signal(|| None::<&'static str>);
+    let value_string = use_memo(move || value().map(str::to_string));
     let mut values = use_signal(|| Some(Vec::<String>::new()));
-    let mut open = use_signal(|| None::<bool>);
+    let open = use_signal(|| None::<bool>);
     let invalid = use_signal(|| false);
     rsx! {
         Demo {
@@ -22,23 +23,13 @@ pub fn SelectPage() -> Element {
                 if !multiple() {
                     SelectControl {
                         label: "Value",
-                        value: value(),
-                        options: vec![
-                            ("None", None),
-                            ("Apple", Some("apple".to_string())),
-                            ("Banana", Some("banana".to_string())),
-                        ],
-                        on_change: move |next| value.set(next),
+                        value,
+                        options: &[("None", None), ("Apple", Some("apple")), ("Banana", Some("banana"))],
                     }
                 } else {
                     p { class: "self-end pb-2 text-sm text-muted-foreground", "Choose one or more options in the preview." }
                 }
-                SelectControl {
-                    label: "Open state",
-                    value: open(),
-                    options: vec![("Uncontrolled", None), ("Closed", Some(false)), ("Open", Some(true))],
-                    on_change: move |next| open.set(next),
-                }
+                OptionalBoolControl { label: "Open state", value: open }
             },
             if multiple() {
                 components::ui::SelectMulti::<String> {
@@ -60,9 +51,18 @@ pub fn SelectPage() -> Element {
             } else {
                 components::ui::Select::<String> {
                     disabled: disabled(),
-                    value: ReadSignal::from(value),
+                    value: ReadSignal::from(value_string),
                     open: open,
-                    on_value_change: move |next| value.set(next),
+                    on_value_change: move |next: Option<String>| {
+                        value
+                            .set(
+                                match next.as_deref() {
+                                    Some("apple") => Some("apple"),
+                                    Some("banana") => Some("banana"),
+                                    _ => None,
+                                },
+                            );
+                    },
                     components::ui::SelectTrigger {
                         class: "w-48",
                         aria_label: "Choose a fruit",

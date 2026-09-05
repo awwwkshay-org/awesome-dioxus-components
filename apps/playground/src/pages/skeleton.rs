@@ -6,7 +6,7 @@ use crate::components::demo::Demo;
 
 #[component]
 pub fn SkeletonPage() -> Element {
-    let mut variant = use_signal(|| components::ui::SkeletonVariant::Default);
+    let variant = use_signal(|| components::ui::SkeletonVariant::Default);
     let decorative = use_signal(|| true);
     rsx! {
         Demo {
@@ -14,9 +14,8 @@ pub fn SkeletonPage() -> Element {
             controls: rsx! {
                 SelectControl {
                     label: "Shape",
-                    value: variant(),
-                    options: crate::generated::controls::SKELETON_VARIANT_OPTIONS.to_vec(),
-                    on_change: move |value| variant.set(value),
+                    value: variant,
+                    options: crate::generated::controls::SKELETON_VARIANT_OPTIONS,
                 }
                 BoolControl { label: "Decorative", value: decorative }
             },

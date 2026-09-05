@@ -8,7 +8,7 @@ use crate::components::demo::Demo;
 #[component]
 pub fn PopoverPage() -> Element {
     let mut open = use_signal(|| false);
-    let mut align = use_signal(|| ContentAlign::Center);
+    let align = use_signal(|| ContentAlign::Center);
     rsx! {
         Demo {
             name: "Popover",
@@ -16,13 +16,12 @@ pub fn PopoverPage() -> Element {
                 BoolControl { label: "Open", value: open }
                 SelectControl {
                     label: "Align",
-                    value: align(),
-                    options: vec![
+                    value: align,
+                    options: &[
                         ("Start", ContentAlign::Start),
                         ("Center", ContentAlign::Center),
                         ("End", ContentAlign::End),
                     ],
-                    on_change: move |value| align.set(value),
                 }
             },
             components::ui::Popover {

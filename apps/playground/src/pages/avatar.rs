@@ -6,16 +6,15 @@ use crate::components::demo::Demo;
 
 #[component]
 pub fn AvatarPage() -> Element {
-    let mut size = use_signal(|| components::ui::AvatarSize::Default);
+    let size = use_signal(|| components::ui::AvatarSize::Default);
     rsx! {
         Demo {
             name: "Avatar",
             controls: rsx! {
                 SelectControl {
                     label: "Size",
-                    value: size(),
-                    options: crate::generated::controls::AVATAR_SIZE_OPTIONS.to_vec(),
-                    on_change: move |value| size.set(value),
+                    value: size,
+                    options: crate::generated::controls::AVATAR_SIZE_OPTIONS,
                 }
             },
             components::ui::Avatar { size: size(),

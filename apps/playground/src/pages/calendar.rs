@@ -12,7 +12,7 @@ pub fn CalendarPage() -> Element {
     let today = time::OffsetDateTime::now_utc().date();
     let mut view_date = use_signal(move || today);
     let disabled = use_signal(|| false);
-    let mut first_day_of_week = use_signal(|| Weekday::Sunday);
+    let first_day_of_week = use_signal(|| Weekday::Sunday);
     // Jump the visible month to a pre-existing selected date (e.g. on first
     // open) rather than always starting on today's month; mirrors the same
     // effect `DatePickerCalendar` already runs internally.
@@ -28,9 +28,8 @@ pub fn CalendarPage() -> Element {
                 BoolControl { label: "Disabled", value: disabled }
                 SelectControl {
                     label: "First day of week",
-                    value: first_day_of_week(),
-                    options: vec![("Sunday", Weekday::Sunday), ("Monday", Weekday::Monday)],
-                    on_change: move |next| first_day_of_week.set(next),
+                    value: first_day_of_week,
+                    options: &[("Sunday", Weekday::Sunday), ("Monday", Weekday::Monday)],
                 }
             },
             div { class: "flex w-full justify-center",

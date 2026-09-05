@@ -1,16 +1,17 @@
 use dioxus::prelude::*;
 
 use crate::components;
-use crate::components::controls::{BoolControl, SelectControl};
+use crate::components::controls::{BoolControl, OptionalBoolControl, SelectControl};
 use crate::components::demo::Demo;
 
 #[component]
 pub fn ComboboxPage() -> Element {
     let disabled = use_signal(|| false);
     let multiple = use_signal(|| false);
-    let mut value = use_signal(|| None::<String>);
+    let mut value = use_signal(|| None::<&'static str>);
+    let value_string = use_memo(move || value().map(str::to_string));
     let mut values = use_signal(|| Some(Vec::<String>::new()));
-    let mut open = use_signal(|| None::<bool>);
+    let open = use_signal(|| None::<bool>);
     rsx! {
         Demo {
             name: "Combobox",
@@ -20,19 +21,13 @@ pub fn ComboboxPage() -> Element {
                 if !multiple() {
                     SelectControl {
                         label: "Value",
-                        value: value(),
-                        options: vec![("None", None), ("Apple", Some("Apple".to_string())), ("Banana", Some("Banana".to_string()))],
-                        on_change: move |next| value.set(next),
+                        value,
+                        options: &[("None", None), ("Apple", Some("Apple")), ("Banana", Some("Banana"))],
                     }
                 } else {
                     p { class: "self-end pb-2 text-sm text-muted-foreground", "Choose one or more options in the preview." }
                 }
-                SelectControl {
-                    label: "Open state",
-                    value: open(),
-                    options: vec![("Uncontrolled", None), ("Closed", Some(false)), ("Open", Some(true))],
-                    on_change: move |next| open.set(next),
-                }
+                OptionalBoolControl { label: "Open state", value: open }
             },
             if multiple() {
                 components::ui::ComboboxMulti::<String> {
@@ -50,9 +45,18 @@ pub fn ComboboxPage() -> Element {
             } else {
                 components::ui::Combobox::<String> {
                     disabled: disabled(),
-                    value: ReadSignal::from(value),
+                    value: ReadSignal::from(value_string),
                     open: open,
-                    on_value_change: move |next| value.set(next),
+                    on_value_change: move |next: Option<String>| {
+                        value
+                            .set(
+                                match next.as_deref() {
+                                    Some("Apple") => Some("Apple"),
+                                    Some("Banana") => Some("Banana"),
+                                    _ => None,
+                                },
+                            );
+                    },
                     components::ui::ComboboxInput { class: "w-48", placeholder: "Search fruit" }
                     components::ui::ComboboxList { class: "w-48",
                         components::ui::ComboboxOption::<String> { value: "Apple".to_string(), index: 0usize, "Apple" }

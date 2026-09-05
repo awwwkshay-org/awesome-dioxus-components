@@ -16,9 +16,8 @@ pub fn PaginationPage() -> Element {
             controls: rsx! {
                 SelectControl {
                     label: "Active page",
-                    value: active_page(),
-                    options: vec![("Page 1", 1usize), ("Page 2", 2usize), ("Page 3", 3usize)],
-                    on_change: move |value| active_page.set(value),
+                    value: active_page,
+                    options: &[("Page 1", 1usize), ("Page 2", 2usize), ("Page 3", 3usize)],
                 }
                 BoolControl { label: "Compact previous / next", value: compact }
                 TextControl { label: "Previous text", value: previous_text }

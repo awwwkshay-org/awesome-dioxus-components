@@ -6,15 +6,14 @@ use crate::components::demo::Demo;
 
 #[component]
 pub fn NativeSelectPage() -> Element {
-    let mut size = use_signal(|| components::ui::NativeSelectSize::Default);
+    let size = use_signal(|| components::ui::NativeSelectSize::Default);
     rsx! {
         Demo { name: "NativeSelect",
             controls: rsx! {
                 SelectControl {
                     label: "Size",
-                    value: size(),
-                    options: crate::generated::controls::NATIVE_SELECT_SIZE_OPTIONS.to_vec(),
-                    on_change: move |value| size.set(value),
+                    value: size,
+                    options: crate::generated::controls::NATIVE_SELECT_SIZE_OPTIONS,
                 }
             },
             div { class: "flex flex-col gap-4",

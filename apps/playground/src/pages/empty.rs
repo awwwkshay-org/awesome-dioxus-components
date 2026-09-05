@@ -6,16 +6,15 @@ use crate::components::demo::Demo;
 
 #[component]
 pub fn EmptyPage() -> Element {
-    let mut variant = use_signal(|| components::ui::EmptyMediaVariant::Icon);
+    let variant = use_signal(|| components::ui::EmptyMediaVariant::Icon);
     rsx! {
         Demo {
             name: "Empty",
             controls: rsx! {
                 SelectControl {
                     label: "Media",
-                    value: variant(),
-                    options: crate::generated::controls::EMPTY_MEDIA_VARIANT_OPTIONS.to_vec(),
-                    on_change: move |value| variant.set(value),
+                    value: variant,
+                    options: crate::generated::controls::EMPTY_MEDIA_VARIANT_OPTIONS,
                 }
             },
             components::ui::Empty { class: "border max-w-md",

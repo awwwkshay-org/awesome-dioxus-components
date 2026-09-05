@@ -6,7 +6,7 @@ use crate::components::demo::Demo;
 
 #[component]
 pub fn ItemPage() -> Element {
-    let mut variant = use_signal(|| components::ui::ItemVariant::Default);
+    let variant = use_signal(|| components::ui::ItemVariant::Default);
     let disabled = use_signal(|| false);
     rsx! {
         Demo {
@@ -14,9 +14,8 @@ pub fn ItemPage() -> Element {
             controls: rsx! {
                 SelectControl {
                     label: "Variant",
-                    value: variant(),
-                    options: crate::generated::controls::ITEM_VARIANT_OPTIONS.to_vec(),
-                    on_change: move |value| variant.set(value),
+                    value: variant,
+                    options: crate::generated::controls::ITEM_VARIANT_OPTIONS,
                 }
                 BoolControl { label: "Disabled", value: disabled }
             },

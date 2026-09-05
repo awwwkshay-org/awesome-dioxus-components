@@ -14,10 +14,10 @@ enum ButtonContent {
 #[component]
 pub fn ButtonPage() -> Element {
     let disabled = use_signal(|| false);
-    let mut variant = use_signal(|| components::ui::ButtonVariant::Default);
-    let mut size = use_signal(|| components::ui::ButtonSize::Default);
-    let mut button_type = use_signal(|| "button".to_string());
-    let mut content = use_signal(|| ButtonContent::Text);
+    let variant = use_signal(|| components::ui::ButtonVariant::Default);
+    let size = use_signal(|| components::ui::ButtonSize::Default);
+    let button_type = use_signal(|| "button");
+    let content = use_signal(|| ButtonContent::Text);
     let label = use_signal(|| "Save changes".to_string());
     rsx! {
         Demo {
@@ -25,36 +25,28 @@ pub fn ButtonPage() -> Element {
             controls: rsx! {
                 SelectControl {
                     label: "Variant",
-                    value: variant(),
-                    options: crate::generated::controls::BUTTON_VARIANT_OPTIONS.to_vec(),
-                    on_change: move |value| variant.set(value),
+                    value: variant,
+                    options: crate::generated::controls::BUTTON_VARIANT_OPTIONS,
                 }
                 SelectControl {
                     label: "Size",
-                    value: size(),
-                    options: crate::generated::controls::BUTTON_SIZE_OPTIONS.to_vec(),
-                    on_change: move |value| size.set(value),
+                    value: size,
+                    options: crate::generated::controls::BUTTON_SIZE_OPTIONS,
                 }
                 BoolControl { label: "Disabled", value: disabled }
                 SelectControl {
                     label: "Native type",
-                    value: button_type(),
-                    options: vec![
-                        ("Button", "button".to_string()),
-                        ("Submit", "submit".to_string()),
-                        ("Reset", "reset".to_string()),
-                    ],
-                    on_change: move |value| button_type.set(value),
+                    value: button_type,
+                    options: &[("Button", "button"), ("Submit", "submit"), ("Reset", "reset")],
                 }
                 SelectControl {
                     label: "Children",
-                    value: content(),
-                    options: vec![
+                    value: content,
+                    options: &[
                         ("Text", ButtonContent::Text),
                         ("Icon only", ButtonContent::Icon),
                         ("Icon and text", ButtonContent::IconAndText),
                     ],
-                    on_change: move |value| content.set(value),
                 }
                 TextControl { label: "Text", value: label }
             },

@@ -6,15 +6,14 @@ use crate::components::demo::Demo;
 
 #[component]
 pub fn InputGroupPage() -> Element {
-    let mut addon_align = use_signal(|| components::ui::InputGroupAlign::InlineEnd);
+    let addon_align = use_signal(|| components::ui::InputGroupAlign::InlineEnd);
     rsx! {
         Demo { name: "InputGroup",
             controls: rsx! {
                 SelectControl {
                     label: "Addon align",
-                    value: addon_align(),
-                    options: crate::generated::controls::INPUT_GROUP_ALIGN_OPTIONS.to_vec(),
-                    on_change: move |value| addon_align.set(value),
+                    value: addon_align,
+                    options: crate::generated::controls::INPUT_GROUP_ALIGN_OPTIONS,
                 }
             },
             div { class: "flex max-w-sm flex-col gap-4",

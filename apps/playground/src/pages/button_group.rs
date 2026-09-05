@@ -6,15 +6,14 @@ use crate::components::demo::Demo;
 
 #[component]
 pub fn ButtonGroupPage() -> Element {
-    let mut orientation = use_signal(|| components::ui::ButtonGroupOrientation::Horizontal);
+    let orientation = use_signal(|| components::ui::ButtonGroupOrientation::Horizontal);
     rsx! {
         Demo { name: "ButtonGroup",
             controls: rsx! {
                 SelectControl {
                     label: "Orientation",
-                    value: orientation(),
-                    options: crate::generated::controls::BUTTON_GROUP_ORIENTATION_OPTIONS.to_vec(),
-                    on_change: move |value| orientation.set(value),
+                    value: orientation,
+                    options: crate::generated::controls::BUTTON_GROUP_ORIENTATION_OPTIONS,
                 }
             },
             div { class: "flex flex-col gap-4",

@@ -7,16 +7,15 @@ use crate::components::demo::Demo;
 #[component]
 pub fn TabsPage() -> Element {
     let mut value = use_signal(|| "tab1".to_string());
-    let mut variant = use_signal(|| components::ui::TabsVariant::Default);
+    let variant = use_signal(|| components::ui::TabsVariant::Default);
     rsx! {
         Demo {
             name: "Tabs",
             controls: rsx! {
                 SelectControl {
                     label: "Variant",
-                    value: variant(),
-                    options: crate::generated::controls::TABS_VARIANT_OPTIONS.to_vec(),
-                    on_change: move |value| variant.set(value),
+                    value: variant,
+                    options: crate::generated::controls::TABS_VARIANT_OPTIONS,
                 }
             },
             components::ui::Tabs {

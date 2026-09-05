@@ -1,16 +1,66 @@
 ## 1. New control primitives
 
-- [ ] 1.1 Add `NumberControl` and `OptionalBoolControl` to
+- [x] 1.1 Add `NumberControl` and `OptionalBoolControl` to
       `apps/playground/src/components/controls.rs` (design.md's D1
       signatures). Verify with a quick manual render in `dx serve` against
       a throwaway test page before wiring either into a real component
       page.
-- [ ] 1.2 Change `SelectControl`'s signature to `(label, value: Signal<T>,
+
+      **Done.** Both added exactly to D1's signatures. Verified live in
+      `dx serve`: temporarily added a `NumberControl` to `pages/button.rs`
+      (removed before finalizing this task) and confirmed the bound
+      `<input type="number">` respects `min`/`max`/`step` and two-way
+      binds. `OptionalBoolControl` was verified on the real, already-wired
+      `pages/tooltip.rs` (see 1.2 — the "Open state" tri-state control was
+      migrated onto it in the same pass, since it's exactly the shape D1
+      names as motivating the control): confirmed via the accessibility
+      tree that setting it to "On" actually drives the real `Tooltip`'s
+      `open` prop (its `tooltip` role node appeared, where it hadn't
+      before).
+
+- [x] 1.2 Change `SelectControl`'s signature to `(label, value: Signal<T>,
       options: &'static [(&'static str, T)])`, matching
       `BoolControl`/`TextControl`. Update every existing call site across
       `apps/playground/src/pages/*.rs` in the same task (do not leave a
       mixed old/new signature in the tree). Verify `cargo check --locked
       -p adico-playground` (or the workspace check) passes.
+
+      **Done, with two added-scope decisions surfaced here rather than
+      absorbed silently.** All 27 `SelectControl` call sites across
+      `apps/playground/src/pages/*.rs` migrated. Verify:
+      `cargo check --locked --workspace`, `cargo clippy --locked
+      --workspace --all-targets -- -D warnings` (clean except the
+      pre-existing, already-documented `data_table.rs` `collapsible_if`
+      failure in `examples/basic-spa`/`examples/basic-ssr`, unrelated to
+      this change — confirmed via `git log` predating this change), and
+      `cargo fmt --all --check` all pass.
+
+      Decision 1: the design's `&'static` options requirement can't hold
+      literal `String`/`Option<String>` values (not const-constructible),
+      which 3 of the 27 call sites used (`button.rs`'s native-type control,
+      `select.rs`/`combobox.rs`'s "Value" controls). Fixed by having the
+      control itself hold a `&'static str`/`Option<&'static str>`-typed
+      signal, deriving the `String`/`Option<String>` the real component
+      needs via a `use_memo` (read direction) and a small literal match
+      (write direction, `on_value_change`) at the page level — a page-local
+      adaptation to the new signature, not a new control shape.
+
+      Decision 2: 7 of the 27 call sites were the exact
+      `Option<bool>`-tri-state "Open state" idiom design.md's D1 cites as
+      `OptionalBoolControl`'s own motivation
+      (`context_menu`/`dropdown_menu`/`hover_card`/`tooltip`/`sidebar`/
+      `select`/`combobox`). Migrated these onto the new `OptionalBoolControl`
+      rather than just adjusting their `SelectControl` call (which would
+      have also worked, since `Option<bool>` literals are const) — using
+      the control the design added for exactly this shape, not leaving it
+      unused until task 3.
+
+      Also fixed 18 now-unnecessary `let mut` bindings the signature
+      change left behind (a page no longer calls `.set()` directly once
+      `SelectControl`/`OptionalBoolControl` owns the two-way binding) and
+      confirmed via `cargo check` that every remaining `mut` binding is
+      still genuinely needed (a handler elsewhere in the same page still
+      calls `.set()` on it directly).
 
 ## 2. Generated `DemoState`/`Controls`/`Preview`
 
