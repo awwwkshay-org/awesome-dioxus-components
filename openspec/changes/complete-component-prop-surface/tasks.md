@@ -347,9 +347,53 @@ directly for the exact prop list; it is not duplicated here.
       their updated source, and that re-running `prop-parity sync`
       produces records with zero remaining `missing` status for them.
 
-      **Progress: `combobox` done** (1 of 5). `prop-parity diff` reports
-      zero remaining `missing` status for it. Corrections found during
-      implementation, load-bearing for the rest of this wave:
+      **Progress: `combobox`, `slider`, `select` done** (3 of 5).
+      `prop-parity diff` reports zero remaining `missing` status for all
+      three. `select`'s own notes:
+      - Real fixes: `attributes: Vec<Attribute>` forwarding on `Select`,
+        `SelectMulti`, `SelectTrigger`, `SelectOption`, `SelectValue`,
+        `SelectList` (all six facades; the primitives already supported
+        it), and a new `SelectTriggerSize { Sm, Default }` enum matching
+        shadcn's own real `"sm" | "default"` cva axis on `select.trigger`
+        (verified against `statics/catalogs/shadcn.json`, not guessed) —
+        the hardcoded `h-9` moved out of the base class string into
+        `SelectTriggerSize::class()`, same discipline as the B3 radius
+        rollout.
+      - Reused reasons from `combobox`: `COLLECTION_MANAGEMENT_REASON`
+        (`highlightItemOnHover`, `autoComplete`, `isItemEqualToValue`,
+        `itemToStringLabel`/`Value`, `items`, `onOpenChangeComplete`),
+        `FORM_PARTICIPATION_REASON` (`form`, `readOnly`, `required`),
+        `ATTRIBUTES_COVERAGE_REASON` (`id`), `SEPARATE_COMPONENT_REASON`
+        (`multiple` → `SelectMulti`), `CASCADING_DISABLED_REASON`
+        (`trigger.disabled`).
+      - Two new reasons, both reused going forward: `MODAL_POPUP_REASON`
+        (`root.modal` — no modal-vs-non-modal focus-trap toggle) and
+        `CUSTOM_VALUE_RENDER_REASON` (`value.children` — no
+        caller-supplied value-renderer callback; needs the primitive to
+        thread the typed selected value out to one, deferred). Also
+        retroactively reclassified `combobox`'s own `root.modal` entry
+        from `COLLECTION_MANAGEMENT_REASON` to the new, more accurate
+        `MODAL_POPUP_REASON` — a one-line correction to the prior
+        commit's table, not a re-litigation of the entry itself.
+      - **Discovered defect, not fixed in this change:** `select`'s own
+        `name: ReadSignal<String>` field (present on both `Select` and
+        `SelectMulti`, both registry and primitive layers) is completely
+        dead — grepped for every use in `packages/adico-primitives/src/
+        select.rs` and found none; no hidden `<input name=... value=...>`
+        or any other consumer of it exists. Setting it silently does
+        nothing today. Invisible to `prop-parity` (the classifier only
+        checks field *presence*, not whether a field is wired to real
+        behavior), found only by reading source while checking whether
+        `name` explained why `form`/`readOnly`/`required` weren't also
+        already present. Left as `FORM_PARTICIPATION_REASON`'s deferred
+        follow-up work would fix this as a side effect (a real hidden
+        mirror `<input>` needs to consume `name` for the first time);
+        not fixed standalone here, since it's a pre-existing correctness
+        defect outside this wave's prop-surface-evidence scope, not a
+        `prop-parity` gap.
+
+      Corrections found during `combobox`, load-bearing for the rest of
+      this wave:
       - `prop_parity.rs` had no per-`(item, part, prop)` mechanism to
         classify a genuine *upstream* gap `intentional_difference` — only
         `ADICO_EXTENSION_REASONS` existed, for the opposite direction (an

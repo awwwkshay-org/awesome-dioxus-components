@@ -8224,6 +8224,10 @@
                 "type": "Option<String>"
               },
               {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               }
@@ -8248,6 +8252,10 @@
               {
                 "name": "aria_label",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "SelectMulti": [
@@ -8296,6 +8304,10 @@
                 "type": "Option<String>"
               },
               {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               }
@@ -8334,6 +8346,10 @@
                 "type": "Option<String>"
               },
               {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               }
@@ -8348,6 +8364,10 @@
                 "type": "Radius"
               },
               {
+                "name": "size",
+                "type": "SelectTriggerSize"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -8358,6 +8378,10 @@
               {
                 "name": "aria_invalid",
                 "type": "Option<bool>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "SelectValue": [
@@ -8368,6 +8392,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }

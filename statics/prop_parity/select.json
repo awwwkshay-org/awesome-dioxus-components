@@ -37,7 +37,8 @@
             },
             {
               "name": "highlightItemOnHover",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
             },
             {
               "name": "actionsRef",
@@ -46,39 +47,48 @@
             },
             {
               "name": "autoComplete",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
             },
             {
               "name": "form",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "isItemEqualToValue",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
             },
             {
               "name": "itemToStringLabel",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
             },
             {
               "name": "itemToStringValue",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
             },
             {
               "name": "items",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
             },
             {
               "name": "modal",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this composite's popup/overlay layer has no modal-vs-non-modal focus-trap toggle; the popup's focus-containment behavior is fixed, not planned to become configurable"
             },
             {
               "name": "multiple",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: exposed as a separate component (not a prop toggle on this one) to keep each component's controlled-value type concrete rather than a runtime-branching union"
             },
             {
               "name": "onOpenChangeComplete",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
             },
             {
               "name": "disabled",
@@ -86,11 +96,13 @@
             },
             {
               "name": "readOnly",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "required",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "inputRef",
@@ -99,7 +111,8 @@
             },
             {
               "name": "id",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: settable via this part's generic `attributes` extends forwarding (spread last, so a caller-supplied value overrides adico's own internal one); no dedicated named prop for a plain global attribute with no additional behavior"
             },
             {
               "name": "children",
@@ -121,7 +134,8 @@
             },
             {
               "name": "disabled",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: disabled is set once on the composite's root and cascades to every descendant; independently overriding it on just this sub-part has no adico equivalent and isn't planned, since a consistent whole-component disable is the far more common need"
             },
             {
               "name": "children",
@@ -161,7 +175,8 @@
             },
             {
               "name": "children",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico's value display always renders the selected option's own text; letting a caller supply a custom renderer needs the primitive to thread the typed selected value out to a caller-supplied render callback, tracked as follow-up primitive work"
             },
             {
               "name": "className",
@@ -253,7 +268,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -306,7 +321,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -351,7 +366,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -417,7 +432,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -470,7 +485,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -483,7 +498,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -529,7 +544,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -546,7 +561,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             }
           ]
         },
@@ -559,7 +574,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -610,7 +625,8 @@
             },
             {
               "name": "highlightItemOnHover",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
             },
             {
               "name": "actionsRef",
@@ -619,39 +635,48 @@
             },
             {
               "name": "autoComplete",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
             },
             {
               "name": "form",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "isItemEqualToValue",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
             },
             {
               "name": "itemToStringLabel",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
             },
             {
               "name": "itemToStringValue",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
             },
             {
               "name": "items",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
             },
             {
               "name": "modal",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this composite's popup/overlay layer has no modal-vs-non-modal focus-trap toggle; the popup's focus-containment behavior is fixed, not planned to become configurable"
             },
             {
               "name": "multiple",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: exposed as a separate component (not a prop toggle on this one) to keep each component's controlled-value type concrete rather than a runtime-branching union"
             },
             {
               "name": "onOpenChangeComplete",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
             },
             {
               "name": "disabled",
@@ -659,11 +684,13 @@
             },
             {
               "name": "readOnly",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "required",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "inputRef",
@@ -672,7 +699,8 @@
             },
             {
               "name": "id",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: settable via this part's generic `attributes` extends forwarding (spread last, so a caller-supplied value overrides adico's own internal one); no dedicated named prop for a plain global attribute with no additional behavior"
             },
             {
               "name": "children",
@@ -689,7 +717,7 @@
           "props": [
             {
               "name": "size",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "nativeButton",
@@ -698,7 +726,8 @@
             },
             {
               "name": "disabled",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: disabled is set once on the composite's root and cascades to every descendant; independently overriding it on just this sub-part has no adico equivalent and isn't planned, since a consistent whole-component disable is the far more common need"
             },
             {
               "name": "children",
@@ -738,7 +767,8 @@
             },
             {
               "name": "children",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico's value display always renders the selected option's own text; letting a caller supply a custom renderer needs the primitive to thread the typed selected value out to a caller-supplied render callback, tracked as follow-up primitive work"
             },
             {
               "name": "className",

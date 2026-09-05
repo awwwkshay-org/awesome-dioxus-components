@@ -133,7 +133,7 @@
             {
               "name": "modal",
               "status": "intentional_difference",
-              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
+              "reason": "adico extension gap: this composite's popup/overlay layer has no modal-vs-non-modal focus-trap toggle; the popup's focus-containment behavior is fixed, not planned to become configurable"
             },
             {
               "name": "multiple",

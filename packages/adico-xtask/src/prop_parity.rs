@@ -317,6 +317,19 @@ const THUMB_ARIA_CUSTOMIZATION_REASON: &str = "adico extension gap, deferred (no
 /// change first, not a prop rename.
 const THUMB_EVENT_OVERRIDE_REASON: &str = "adico extension gap, deferred (not a permanent design choice): this thumb's focus/keyboard/tab-order behavior is already owned internally by the primitive (drag/keyboard value changes); exposing it as a raw overridable hook needs the primitive's own event composition to change first, tracked as follow-up primitive work";
 
+/// Reason recorded where a composite's popup/overlay layer has no
+/// modal-vs-non-modal focus-trap toggle -- its focus-containment behavior
+/// is fixed, not planned to become configurable.
+const MODAL_POPUP_REASON: &str = "adico extension gap: this composite's popup/overlay layer has no modal-vs-non-modal focus-trap toggle; the popup's focus-containment behavior is fixed, not planned to become configurable";
+
+/// Reason recorded where the matched axis lets a caller supply a custom
+/// renderer/formatter for the currently selected value (a function or
+/// node overriding the default text display), which adico doesn't expose.
+/// Deferred: needs the primitive to thread the typed selected value out to
+/// a caller-supplied render callback, real primitive-level work, not a
+/// prop rename.
+const CUSTOM_VALUE_RENDER_REASON: &str = "adico extension gap, deferred (not a permanent design choice): adico's value display always renders the selected option's own text; letting a caller supply a custom renderer needs the primitive to thread the typed selected value out to a caller-supplied render callback, tracked as follow-up primitive work";
+
 /// Item-specific `intentional_difference` reasons for a genuine upstream
 /// prop that has no adico equivalent by design, keyed by
 /// `(item, part, upstream_prop_name)` using the upstream axis's own raw
@@ -421,7 +434,7 @@ const INTENTIONAL_DIFFERENCE_REASONS: &[(&str, &str, &str, &str)] = &[
         "loopFocus",
         COLLECTION_MANAGEMENT_REASON,
     ),
-    ("combobox", "root", "modal", COLLECTION_MANAGEMENT_REASON),
+    ("combobox", "root", "modal", MODAL_POPUP_REASON),
     ("combobox", "root", "multiple", SEPARATE_COMPONENT_REASON),
     ("combobox", "root", "placeholder", PART_DECOMPOSITION_REASON),
     ("combobox", "root", "aria_label", PART_DECOMPOSITION_REASON),
@@ -501,6 +514,55 @@ const INTENTIONAL_DIFFERENCE_REASONS: &[(&str, &str, &str, &str)] = &[
     ("slider", "thumb", "onKeyDown", THUMB_EVENT_OVERRIDE_REASON),
     ("slider", "thumb", "tabIndex", THUMB_EVENT_OVERRIDE_REASON),
     ("slider", "thumb", "disabled", CASCADING_DISABLED_REASON),
+    // select: the same Base UI collection-management API as combobox,
+    // native form-integration (deferred), a modal-popup toggle (permanent,
+    // reused from combobox), `multiple` as a separate `SelectMulti`
+    // component, and a custom value-renderer (deferred).
+    (
+        "select",
+        "root",
+        "highlightItemOnHover",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    (
+        "select",
+        "root",
+        "autoComplete",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    (
+        "select",
+        "root",
+        "isItemEqualToValue",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    (
+        "select",
+        "root",
+        "itemToStringLabel",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    (
+        "select",
+        "root",
+        "itemToStringValue",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    ("select", "root", "items", COLLECTION_MANAGEMENT_REASON),
+    (
+        "select",
+        "root",
+        "onOpenChangeComplete",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    ("select", "root", "form", FORM_PARTICIPATION_REASON),
+    ("select", "root", "readOnly", FORM_PARTICIPATION_REASON),
+    ("select", "root", "required", FORM_PARTICIPATION_REASON),
+    ("select", "root", "id", ATTRIBUTES_COVERAGE_REASON),
+    ("select", "root", "modal", MODAL_POPUP_REASON),
+    ("select", "root", "multiple", SEPARATE_COMPONENT_REASON),
+    ("select", "trigger", "disabled", CASCADING_DISABLED_REASON),
+    ("select", "value", "children", CUSTOM_VALUE_RENDER_REASON),
 ];
 
 fn react_only_structural_reason(raw_name: &str) -> Option<&'static str> {

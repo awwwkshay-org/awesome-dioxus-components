@@ -46,6 +46,7 @@ pub fn Select<T: Clone + PartialEq + 'static>(
     #[props(default = ReadSignal::new(Signal::new(std::time::Duration::from_millis(1000))))]
     typeahead_timeout: ReadSignal<std::time::Duration>,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&["inline-block", class.as_deref().unwrap_or_default()]);
@@ -62,6 +63,7 @@ pub fn Select<T: Clone + PartialEq + 'static>(
             roving_loop,
             typeahead_timeout,
             class,
+            attributes,
             {children}
         }
     }
@@ -83,6 +85,7 @@ pub fn SelectMulti<T: Clone + PartialEq + 'static>(
     #[props(default = ReadSignal::new(Signal::new(std::time::Duration::from_millis(1000))))]
     typeahead_timeout: ReadSignal<std::time::Duration>,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&["inline-block", class.as_deref().unwrap_or_default()]);
@@ -99,7 +102,26 @@ pub fn SelectMulti<T: Clone + PartialEq + 'static>(
             roving_loop,
             typeahead_timeout,
             class,
+            attributes,
             {children}
+        }
+    }
+}
+
+/// [`SelectTrigger`]'s height, matching shadcn's own `"sm" | "default"` cva
+/// size axis.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum SelectTriggerSize {
+    Sm,
+    #[default]
+    Default,
+}
+
+impl SelectTriggerSize {
+    pub fn class(self) -> &'static str {
+        match self {
+            SelectTriggerSize::Sm => "h-8",
+            SelectTriggerSize::Default => "h-9",
         }
     }
 }
@@ -113,12 +135,15 @@ pub fn SelectTrigger(
     /// them to thread one value automatically.
     #[props(default = Radius::Md)]
     radius: Radius,
+    #[props(default)] size: SelectTriggerSize,
     class: Option<String>,
     aria_label: Option<String>,
     aria_invalid: Option<bool>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "group flex h-9 w-full min-w-32 items-center justify-between gap-2 border border-input bg-background px-3 text-sm outline-none transition-[color,box-shadow] focus-visible:ring-1 focus-visible:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+        "group flex w-full min-w-32 items-center justify-between gap-2 border border-input bg-background px-3 text-sm outline-none transition-[color,box-shadow] focus-visible:ring-1 focus-visible:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+        size.class(),
         radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
@@ -127,6 +152,7 @@ pub fn SelectTrigger(
             class,
             aria_label,
             aria_invalid,
+            attributes,
             {children}
             span { class: "relative inline-flex size-4 shrink-0 text-muted-foreground", "aria-hidden": "true",
                 ChevronDown { class: "size-4 group-aria-expanded:hidden", size: 16 }
@@ -149,6 +175,7 @@ pub fn SelectOption<T: Clone + PartialEq + 'static>(
     #[props(default)] aria_label: Option<String>,
     #[props(default)] aria_roledescription: Option<String>,
     #[props(default)] class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&[
@@ -165,6 +192,7 @@ pub fn SelectOption<T: Clone + PartialEq + 'static>(
             aria_label,
             aria_roledescription,
             class,
+            attributes,
             span { class: "absolute left-2 flex size-3.5 items-center justify-center", "aria-hidden": "true",
                 SelectItemIndicator { "✓" }
             }
@@ -175,7 +203,11 @@ pub fn SelectOption<T: Clone + PartialEq + 'static>(
 
 /// The selected value or placeholder inside a [`SelectTrigger`].
 #[component]
-pub fn SelectValue(placeholder: Option<String>, class: Option<String>) -> Element {
+pub fn SelectValue(
+    placeholder: Option<String>,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "line-clamp-1 flex-1 text-left data-[placeholder=true]:text-muted-foreground",
         class.as_deref().unwrap_or_default(),
@@ -184,6 +216,7 @@ pub fn SelectValue(placeholder: Option<String>, class: Option<String>) -> Elemen
         PrimitiveSelectValue {
             class,
             placeholder: placeholder.unwrap_or_else(|| "Select an option".to_string()),
+            attributes,
         }
     }
 }
@@ -198,6 +231,7 @@ pub fn SelectList(
     radius: Radius,
     class: Option<String>,
     aria_label: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
         "z-50 max-h-72 min-w-32 overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
@@ -209,6 +243,7 @@ pub fn SelectList(
             id,
             class,
             aria_label,
+            attributes,
             {children}
         }
     }

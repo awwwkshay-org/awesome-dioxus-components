@@ -8,6 +8,7 @@
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 use adico_primitives::icons::{ChevronDown, ChevronUp};
 
 use adico_primitives::select::{
@@ -24,7 +25,16 @@ pub use adico_primitives::select::{
 /// A positioned Select root retaining the primitive's complete state model.
 #[component]
 pub fn Select<T: Clone + PartialEq + 'static>(
-    #[props(default)] value: Option<ReadSignal<Option<T>>>,
+    /// **BREAKING** (task 2.6): was `Option<ReadSignal<Option<T>>>`,
+    /// matching the primitive's own field verbatim. Standardized to the
+    /// single-`Option` shape every other controlled prop in this registry
+    /// uses (matching `SelectMulti`'s own `values: ReadSignal<Option<Vec<T>>>`)
+    /// — the outer `Option` served no behavioral purpose since
+    /// `use_controlled` already treats "no signal" and "a signal permanently
+    /// holding `None`" identically; wrapped in `Some(..)` when forwarded to
+    /// the primitive below, which keeps its own double-`Option` shape.
+    #[props(default = ReadSignal::new(Signal::new(None)))]
+    value: ReadSignal<Option<T>>,
     #[props(default)] default_value: Option<T>,
     #[props(default)] on_value_change: Callback<Option<T>>,
     #[props(default)] disabled: ReadSignal<bool>,
@@ -36,12 +46,13 @@ pub fn Select<T: Clone + PartialEq + 'static>(
     #[props(default = ReadSignal::new(Signal::new(std::time::Duration::from_millis(1000))))]
     typeahead_timeout: ReadSignal<std::time::Duration>,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&["inline-block", class.as_deref().unwrap_or_default()]);
     rsx! {
         PrimitiveSelect::<T> {
-            value,
+            value: Some(value),
             default_value,
             on_value_change,
             disabled,
@@ -52,6 +63,7 @@ pub fn Select<T: Clone + PartialEq + 'static>(
             roving_loop,
             typeahead_timeout,
             class,
+            attributes,
             {children}
         }
     }
@@ -73,6 +85,7 @@ pub fn SelectMulti<T: Clone + PartialEq + 'static>(
     #[props(default = ReadSignal::new(Signal::new(std::time::Duration::from_millis(1000))))]
     typeahead_timeout: ReadSignal<std::time::Duration>,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&["inline-block", class.as_deref().unwrap_or_default()]);
@@ -89,7 +102,26 @@ pub fn SelectMulti<T: Clone + PartialEq + 'static>(
             roving_loop,
             typeahead_timeout,
             class,
+            attributes,
             {children}
+        }
+    }
+}
+
+/// [`SelectTrigger`]'s height, matching shadcn's own `"sm" | "default"` cva
+/// size axis.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum SelectTriggerSize {
+    Sm,
+    #[default]
+    Default,
+}
+
+impl SelectTriggerSize {
+    pub fn class(self) -> &'static str {
+        match self {
+            SelectTriggerSize::Sm => "h-8",
+            SelectTriggerSize::Default => "h-9",
         }
     }
 }
@@ -98,12 +130,21 @@ pub fn SelectMulti<T: Clone + PartialEq + 'static>(
 #[component]
 pub fn SelectTrigger(
     children: Element,
+    /// Corner radius. Set the same value on [`SelectList`] for a visually
+    /// consistent trigger/popup pair — there is no shared context between
+    /// them to thread one value automatically.
+    #[props(default = Radius::Md)]
+    radius: Radius,
+    #[props(default)] size: SelectTriggerSize,
     class: Option<String>,
     aria_label: Option<String>,
     aria_invalid: Option<bool>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "group flex h-9 w-full min-w-32 items-center justify-between gap-2 rounded-md border border-input bg-background px-3 text-sm outline-none transition-[color,box-shadow] focus-visible:ring-1 focus-visible:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+        "group flex w-full min-w-32 items-center justify-between gap-2 border border-input bg-background px-3 text-sm outline-none transition-[color,box-shadow] focus-visible:ring-1 focus-visible:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+        size.class(),
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -111,6 +152,7 @@ pub fn SelectTrigger(
             class,
             aria_label,
             aria_invalid,
+            attributes,
             {children}
             span { class: "relative inline-flex size-4 shrink-0 text-muted-foreground", "aria-hidden": "true",
                 ChevronDown { class: "size-4 group-aria-expanded:hidden", size: 16 }
@@ -133,6 +175,7 @@ pub fn SelectOption<T: Clone + PartialEq + 'static>(
     #[props(default)] aria_label: Option<String>,
     #[props(default)] aria_roledescription: Option<String>,
     #[props(default)] class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&[
@@ -149,6 +192,7 @@ pub fn SelectOption<T: Clone + PartialEq + 'static>(
             aria_label,
             aria_roledescription,
             class,
+            attributes,
             span { class: "absolute left-2 flex size-3.5 items-center justify-center", "aria-hidden": "true",
                 SelectItemIndicator { "✓" }
             }
@@ -159,7 +203,11 @@ pub fn SelectOption<T: Clone + PartialEq + 'static>(
 
 /// The selected value or placeholder inside a [`SelectTrigger`].
 #[component]
-pub fn SelectValue(placeholder: Option<String>, class: Option<String>) -> Element {
+pub fn SelectValue(
+    placeholder: Option<String>,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "line-clamp-1 flex-1 text-left data-[placeholder=true]:text-muted-foreground",
         class.as_deref().unwrap_or_default(),
@@ -168,6 +216,7 @@ pub fn SelectValue(placeholder: Option<String>, class: Option<String>) -> Elemen
         PrimitiveSelectValue {
             class,
             placeholder: placeholder.unwrap_or_else(|| "Select an option".to_string()),
+            attributes,
         }
     }
 }
@@ -177,11 +226,16 @@ pub fn SelectValue(placeholder: Option<String>, class: Option<String>) -> Elemen
 pub fn SelectList(
     children: Element,
     id: Option<String>,
+    /// Corner radius. See [`SelectTrigger::radius`]'s own doc comment.
+    #[props(default = Radius::Md)]
+    radius: Radius,
     class: Option<String>,
     aria_label: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "z-50 max-h-72 min-w-32 overflow-y-auto rounded-md bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        "z-50 max-h-72 min-w-32 overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -189,6 +243,7 @@ pub fn SelectList(
             id,
             class,
             aria_label,
+            attributes,
             {children}
         }
     }
