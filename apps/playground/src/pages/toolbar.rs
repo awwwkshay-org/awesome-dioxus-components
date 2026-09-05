@@ -13,18 +13,18 @@ pub fn ToolbarPage() -> Element {
                 components::ui::Toolbar { aria_label: "Text formatting",
                     components::ui::ToolbarButton {
                         index: 0usize,
-                        on_click: move |_| active.set(Some("Bold")),
+                        on_select: move |_| active.set(Some("Bold")),
                         "Bold"
                     }
                     components::ui::ToolbarButton {
                         index: 1usize,
-                        on_click: move |_| active.set(Some("Italic")),
+                        on_select: move |_| active.set(Some("Italic")),
                         "Italic"
                     }
                     components::ui::ToolbarSeparator {}
                     components::ui::ToolbarButton {
                         index: 2usize,
-                        on_click: move |_| active.set(Some("Underline")),
+                        on_select: move |_| active.set(Some("Underline")),
                         "Underline"
                     }
                 }

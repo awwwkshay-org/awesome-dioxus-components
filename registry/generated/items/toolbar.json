@@ -7,7 +7,7 @@
       "source": "ui/toolbar.rs",
       "targetRoot": "ui",
       "target": "toolbar.rs",
-      "checksum": "db1937b43c1b6b447f292a83f4b121e74b93a101421ec67a8e767177ba9a98e6"
+      "checksum": "17a8e9653e81ee3edeed9c176c87c8ebba6e4de209fd0120c8ea9692be415aed"
     }
   ],
   "registryDependencies": [

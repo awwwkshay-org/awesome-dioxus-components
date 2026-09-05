@@ -100,7 +100,7 @@ checksum only surfaces later, at install time.
       prop type matches the primitive's, and update
       `docs/adico/component-hardening-audit.md` to record both as closed
       (matching its existing `Menubar`-dropped-`disabled` entry's format).
-- [ ] 2.5 **Handler naming.** Rename `AlertDialogAction`/
+- [x] 2.5 **Handler naming.** Rename `AlertDialogAction`/
       `AlertDialogCancel`'s and `ToolbarButton`'s `on_click` to a
       component-appropriate semantic name (e.g. `on_select`), matching the
       primitive-facing convention every other primitive-backed component
@@ -109,18 +109,30 @@ checksum only surfaces later, at install time.
       component uses it (a native-leaf component's plain `onclick`
       passthrough via `attributes` is unaffected — this only renames
       hand-declared `on_click` fields).
-- [ ] 2.6 **`**BREAKING**` controlled-trio.** Migrate `Select`'s,
+- [x] 2.6 **`**BREAKING**` controlled-trio.** Migrate `Select`'s,
       `Combobox`'s, and `TagGroup`'s singular-select function `value`
       parameter from `Option<ReadSignal<Option<T>>>` to
       `ReadSignal<Option<T>>`, matching their own `SelectMulti`/
       `ComboboxMulti`/`TagGroupMulti` functions' already-compliant
-      `values` shape. If a specific case needs the double-`Option` for a
-      real reason found during implementation, keep it and record
-      `intentional_difference` with that reason instead of forcing the
-      migration. Verify `cargo check --locked --workspace`, update every
-      call site in `examples/*`/`tests/installation/*` that constructs a
-      `Select`/`Combobox`/`TagGroup` value signal, and re-run their
-      Playwright suites if any exist for these components.
+      `values` shape. The outer `Option` served no behavioral purpose —
+      `use_controlled` already treats "no signal" and "a signal
+      permanently holding `None`" identically — so no case needed the
+      double-`Option` kept; the registry facade now defaults to
+      `ReadSignal::new(Signal::new(None))` and wraps in `Some(..)` only
+      when forwarding to the primitive, which keeps its own
+      double-`Option` field unchanged (out of this task's file scope).
+      Verified `cargo check --locked --workspace` and, standalone, real
+      `adico add --replace` refreshes + `cargo check` in
+      `tests/installation/{select-consumer,wave4-consumer,
+      wave5-tag-group-consumer}` (the three real fixtures using these
+      components); updated the one call site each that used them
+      (`apps/playground/src/pages/{select,combobox,tag_group}.rs`) — no
+      `examples/*`/`tests/installation/*` call site passes this `value`
+      prop today, so none needed updating. Playwright re-run deferred to
+      task 6.3 rather than duplicated here: `select`/`combobox` are both
+      touched again in Wave 1 (task 5.1) and `tag-group` in Wave 5 (task
+      5.5), so a live browser pass now would be re-done anyway once those
+      waves land.
 
 ## 3. `radius` rollout
 

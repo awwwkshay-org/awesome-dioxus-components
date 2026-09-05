@@ -23,11 +23,11 @@
     },
     {
       "address": "@adico/alert-dialog",
-      "manifestDigest": "48d06613a6d0c678c6eda3f2440cddcffb260af43c3e74cd91d23e1488036045",
+      "manifestDigest": "6a740ea1a76eb3155ab1587990f1de16035c75c458a0462bed7649232c9f1e45",
       "files": [
         {
           "path": "src/components/ui/alert_dialog.rs",
-          "checksum": "2c41967026291ed8d0ae2eaf03e532ed7ebaf4472c3caa490148d6317749f36d"
+          "checksum": "7f486e9d98e86dcd739a9b9eb83e320857bdbc609e9a28929eb4f468e49a0c76"
         }
       ]
     },
@@ -73,7 +73,7 @@
     },
     {
       "address": "@adico/button",
-      "manifestDigest": "dbad1f931483f16b930f4b3b5880c85f7fc7af4c0e7100231d88cc0effad5100",
+      "manifestDigest": "6a740ea1a76eb3155ab1587990f1de16035c75c458a0462bed7649232c9f1e45",
       "files": [
         {
           "path": "src/components/ui/button.rs",
@@ -133,7 +133,7 @@
     },
     {
       "address": "@adico/cn",
-      "manifestDigest": "21027dbd9efbcf92adb26f275b4cff53fe95524db5135de5d5d7a9a6b7ef53a5",
+      "manifestDigest": "5000975a59c0ee8c7508ab739f37e4ac24532f78a07387590501e0867c9f187d",
       "files": [
         {
           "path": "src/adico_lib/cn.rs",
@@ -163,11 +163,11 @@
     },
     {
       "address": "@adico/combobox",
-      "manifestDigest": "bc7dab45fe6885d41b40b651181ab27fbc160c9b27eec004ddb7813f7c773c4e",
+      "manifestDigest": "5000975a59c0ee8c7508ab739f37e4ac24532f78a07387590501e0867c9f187d",
       "files": [
         {
           "path": "src/components/ui/combobox.rs",
-          "checksum": "9c1ce354dd21f52be88359532867e56081d097c212e94b6d1cc3010a7ceb9488"
+          "checksum": "db85839810560b7b2302c9737ea39185451303606ec6e94f55e2a1256df77568"
         }
       ]
     },
@@ -423,11 +423,11 @@
     },
     {
       "address": "@adico/select",
-      "manifestDigest": "239c3f551487eaedbdfbeea6ef52450534b8649af00d8d82acd1aab4228e6901",
+      "manifestDigest": "5000975a59c0ee8c7508ab739f37e4ac24532f78a07387590501e0867c9f187d",
       "files": [
         {
           "path": "src/components/ui/select.rs",
-          "checksum": "b2c1e848351b69ce0029944a3b61392b8733b55d4d1093cadf70565d4de8f053"
+          "checksum": "385dab953a65d9386200b1a9259b18ce176f318999594651e1ddda4d5be6d58c"
         }
       ]
     },
@@ -513,11 +513,11 @@
     },
     {
       "address": "@adico/tag-group",
-      "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
+      "manifestDigest": "5000975a59c0ee8c7508ab739f37e4ac24532f78a07387590501e0867c9f187d",
       "files": [
         {
           "path": "src/components/ui/tag_group.rs",
-          "checksum": "290973b5332adfa0223fa92f9eac0f5d5e0a0d57b01fc1f0d00a2150bbb07ece"
+          "checksum": "f4323d8e96e8c88e3ac8d070b97702ecf928bb5dcba3eb7774e91c066e58f3e0"
         }
       ]
     },
@@ -583,11 +583,11 @@
     },
     {
       "address": "@adico/toolbar",
-      "manifestDigest": "2822d317f71c3167e33f3741adcedf90751daaf1140d976f77d0dd4b3b06871d",
+      "manifestDigest": "6a740ea1a76eb3155ab1587990f1de16035c75c458a0462bed7649232c9f1e45",
       "files": [
         {
           "path": "src/components/ui/toolbar.rs",
-          "checksum": "db1937b43c1b6b447f292a83f4b121e74b93a101421ec67a8e767177ba9a98e6"
+          "checksum": "17a8e9653e81ee3edeed9c176c87c8ebba6e4de209fd0120c8ea9692be415aed"
         }
       ]
     },

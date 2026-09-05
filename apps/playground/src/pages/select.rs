@@ -60,7 +60,7 @@ pub fn SelectPage() -> Element {
             } else {
                 components::ui::Select::<String> {
                     disabled: disabled(),
-                    value: Some(ReadSignal::from(value)),
+                    value: ReadSignal::from(value),
                     open: open,
                     on_value_change: move |next| value.set(next),
                     components::ui::SelectTrigger {

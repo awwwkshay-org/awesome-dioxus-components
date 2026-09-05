@@ -103,14 +103,18 @@ pub fn AlertDialogActions(children: Element, class: Option<String>) -> Element {
 pub fn AlertDialogAction(
     children: Element,
     class: Option<String>,
-    on_click: Option<EventHandler<MouseEvent>>,
+    /// Fired when the affirming/destructive action is confirmed. Named
+    /// `on_confirm`, not the primitive's own `on_click`, matching this
+    /// registry's naming convention for primitive-backed components (the
+    /// primitive layer keeps `on_click` unchanged).
+    on_confirm: Option<EventHandler<MouseEvent>>,
 ) -> Element {
     let class = cn(&[
         "inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-xs hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        AlertDialogActionPrimitive { class, on_click, {children} }
+        AlertDialogActionPrimitive { class, on_click: on_confirm, {children} }
     }
 }
 
@@ -119,14 +123,17 @@ pub fn AlertDialogAction(
 pub fn AlertDialogCancel(
     children: Element,
     class: Option<String>,
-    on_click: Option<EventHandler<MouseEvent>>,
+    /// Fired when the dialog is dismissed. Named `on_dismiss`, matching
+    /// this registry's naming convention for primitive-backed components
+    /// (the primitive layer keeps `on_click` unchanged).
+    on_dismiss: Option<EventHandler<MouseEvent>>,
 ) -> Element {
     let class = cn(&[
         "mt-2 inline-flex h-9 items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-xs hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:mt-0",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        AlertDialogCancelPrimitive { class, on_click, {children} }
+        AlertDialogCancelPrimitive { class, on_click: on_dismiss, {children} }
     }
 }
 

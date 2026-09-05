@@ -21,7 +21,10 @@ pub use adico_primitives::combobox::{
 /// A positioned root retaining the primitive's controlled state and filtering API.
 #[component]
 pub fn Combobox<T: Clone + PartialEq + 'static>(
-    #[props(default)] value: Option<ReadSignal<Option<T>>>,
+    /// **BREAKING** (task 2.6): was `Option<ReadSignal<Option<T>>>`; see
+    /// `select.rs`'s own `Select::value` doc comment for the full rationale.
+    #[props(default = ReadSignal::new(Signal::new(None)))]
+    value: ReadSignal<Option<T>>,
     #[props(default)] default_value: Option<T>,
     #[props(default)] on_value_change: Callback<Option<T>>,
     #[props(default)] disabled: ReadSignal<bool>,
@@ -47,7 +50,7 @@ pub fn Combobox<T: Clone + PartialEq + 'static>(
     ]);
     rsx! {
         PrimitiveCombobox::<T> {
-            value,
+            value: Some(value),
             default_value,
             on_value_change,
             disabled,

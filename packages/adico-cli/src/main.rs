@@ -1029,6 +1029,7 @@ mod tests {
                 "@adico/toggle-group".to_string(),
                 "@adico/toolbar".to_string(),
                 "@adico/tooltip".to_string(),
+                "@adico/variants".to_string(),
                 "@adico/virtual-list".to_string(),
             ]
         );

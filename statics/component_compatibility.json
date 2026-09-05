@@ -446,7 +446,7 @@
                 "type": "Option<String>"
               },
               {
-                "name": "on_click",
+                "name": "on_confirm",
                 "type": "Option<EventHandler<MouseEvent>>"
               }
             ],
@@ -470,7 +470,7 @@
                 "type": "Option<String>"
               },
               {
-                "name": "on_click",
+                "name": "on_dismiss",
                 "type": "Option<EventHandler<MouseEvent>>"
               }
             ],
@@ -2113,6 +2113,11 @@
                 "type": "ReadSignal<String>"
               },
               {
+                "default": "ReadSignal::new(Signal::new(String::from(\"on\")))",
+                "name": "value",
+                "type": "ReadSignal<String>"
+              },
+              {
                 "default": "default()",
                 "name": "on_checked_change",
                 "type": "Callback<CheckboxState>"
@@ -2126,6 +2131,10 @@
                 "default": "default()",
                 "name": "aria_label",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }
@@ -2327,6 +2336,10 @@
           "props": {
             "AreaThumb": [
               {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               }
@@ -2375,6 +2388,12 @@
               {
                 "name": "children",
                 "type": "Element"
+              }
+            ],
+            "HueSlider": [
+              {
+                "name": "class",
+                "type": "Option<String>"
               }
             ]
           }
@@ -2659,7 +2678,7 @@
             "Combobox": [
               {
                 "name": "value",
-                "type": "Option<ReadSignal<Option<T>>>"
+                "type": "ReadSignal<Option<T>>"
               },
               {
                 "name": "default_value",
@@ -7081,6 +7100,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "PaginationPrevious": [
@@ -7103,6 +7126,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }
@@ -7898,7 +7925,7 @@
             "Select": [
               {
                 "name": "value",
-                "type": "Option<ReadSignal<Option<T>>>"
+                "type": "ReadSignal<Option<T>>"
               },
               {
                 "name": "default_value",
@@ -8426,7 +8453,7 @@
               {
                 "default": "default()",
                 "name": "disabled",
-                "type": "bool"
+                "type": "Option<bool>"
               },
               {
                 "default": "default()",
@@ -8528,6 +8555,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }
@@ -8643,6 +8674,11 @@
                 "type": "ReadSignal<Option<String>>"
               },
               {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
               },
@@ -8699,6 +8735,11 @@
               {
                 "name": "label",
                 "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
               },
               {
                 "name": "attributes",
@@ -9482,7 +9523,7 @@
             "TagGroup": [
               {
                 "name": "value",
-                "type": "Option<ReadSignal<Option<T>>>"
+                "type": "ReadSignal<Option<T>>"
               },
               {
                 "name": "default_value",
@@ -9869,6 +9910,11 @@
                 "type": "Option<Duration>"
               },
               {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
               },
@@ -9929,11 +9975,11 @@
             "ToastProvider": [
               {
                 "name": "default_duration",
-                "type": "Duration"
+                "type": "ReadSignal<Option<Duration>>"
               },
               {
                 "name": "max_toasts",
-                "type": "usize"
+                "type": "ReadSignal<usize>"
               },
               {
                 "name": "render_toast",
@@ -10050,6 +10096,25 @@
                 "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "onmounted",
+                "type": "Callback<Event<MountedData>>"
+              },
+              {
+                "default": "default()",
+                "name": "onfocus",
+                "type": "Callback<Event<FocusData>>"
+              },
+              {
+                "default": "default()",
+                "name": "onkeydown",
+                "type": "Callback<Event<KeyboardData>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",
@@ -10321,7 +10386,7 @@
                 "type": "ReadSignal<bool>"
               },
               {
-                "name": "on_click",
+                "name": "on_select",
                 "type": "Callback<()>"
               },
               {

@@ -2943,6 +2943,11 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
               "name": "attributes",
               "type": "Vec<Attribute>"
             },
@@ -2999,6 +3004,11 @@
             {
               "name": "label",
               "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "default": "default()",
+              "name": "class",
+              "type": "Option<String>"
             },
             {
               "name": "attributes",
@@ -3356,6 +3366,11 @@
             {
               "name": "duration",
               "type": "Option<Duration>"
+            },
+            {
+              "default": "default()",
+              "name": "class",
+              "type": "Option<String>"
             },
             {
               "name": "attributes",
@@ -6839,6 +6854,11 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
               "name": "attributes",
               "type": "Vec<Attribute>"
             },
@@ -6895,6 +6915,11 @@
             {
               "name": "label",
               "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "default": "default()",
+              "name": "class",
+              "type": "Option<String>"
             },
             {
               "name": "attributes",
@@ -7450,6 +7475,11 @@
             {
               "name": "duration",
               "type": "Option<Duration>"
+            },
+            {
+              "default": "default()",
+              "name": "class",
+              "type": "Option<String>"
             },
             {
               "name": "attributes",

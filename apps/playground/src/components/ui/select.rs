@@ -24,7 +24,16 @@ pub use adico_primitives::select::{
 /// A positioned Select root retaining the primitive's complete state model.
 #[component]
 pub fn Select<T: Clone + PartialEq + 'static>(
-    #[props(default)] value: Option<ReadSignal<Option<T>>>,
+    /// **BREAKING** (task 2.6): was `Option<ReadSignal<Option<T>>>`,
+    /// matching the primitive's own field verbatim. Standardized to the
+    /// single-`Option` shape every other controlled prop in this registry
+    /// uses (matching `SelectMulti`'s own `values: ReadSignal<Option<Vec<T>>>`)
+    /// — the outer `Option` served no behavioral purpose since
+    /// `use_controlled` already treats "no signal" and "a signal permanently
+    /// holding `None`" identically; wrapped in `Some(..)` when forwarded to
+    /// the primitive below, which keeps its own double-`Option` shape.
+    #[props(default = ReadSignal::new(Signal::new(None)))]
+    value: ReadSignal<Option<T>>,
     #[props(default)] default_value: Option<T>,
     #[props(default)] on_value_change: Callback<Option<T>>,
     #[props(default)] disabled: ReadSignal<bool>,
@@ -41,7 +50,7 @@ pub fn Select<T: Clone + PartialEq + 'static>(
     let class = cn(&["inline-block", class.as_deref().unwrap_or_default()]);
     rsx! {
         PrimitiveSelect::<T> {
-            value,
+            value: Some(value),
             default_value,
             on_value_change,
             disabled,

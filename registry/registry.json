@@ -215,7 +215,7 @@
           "source": "ui/select.rs",
           "targetRoot": "ui",
           "target": "select.rs",
-          "checksum": "b2c1e848351b69ce0029944a3b61392b8733b55d4d1093cadf70565d4de8f053"
+          "checksum": "385dab953a65d9386200b1a9259b18ce176f318999594651e1ddda4d5be6d58c"
         }
       ],
       "cargoDependencies": [
@@ -929,7 +929,7 @@
           "source": "ui/combobox.rs",
           "targetRoot": "ui",
           "target": "combobox.rs",
-          "checksum": "9c1ce354dd21f52be88359532867e56081d097c212e94b6d1cc3010a7ceb9488"
+          "checksum": "db85839810560b7b2302c9737ea39185451303606ec6e94f55e2a1256df77568"
         }
       ],
       "cargoDependencies": [
@@ -1777,7 +1777,7 @@
           "source": "ui/alert_dialog.rs",
           "targetRoot": "ui",
           "target": "alert_dialog.rs",
-          "checksum": "2c41967026291ed8d0ae2eaf03e532ed7ebaf4472c3caa490148d6317749f36d"
+          "checksum": "7f486e9d98e86dcd739a9b9eb83e320857bdbc609e9a28929eb4f468e49a0c76"
         }
       ],
       "registryDependencies": [
@@ -1937,7 +1937,7 @@
           "source": "ui/toolbar.rs",
           "targetRoot": "ui",
           "target": "toolbar.rs",
-          "checksum": "db1937b43c1b6b447f292a83f4b121e74b93a101421ec67a8e767177ba9a98e6"
+          "checksum": "17a8e9653e81ee3edeed9c176c87c8ebba6e4de209fd0120c8ea9692be415aed"
         }
       ],
       "registryDependencies": [
@@ -2140,7 +2140,7 @@
           "source": "ui/tag_group.rs",
           "targetRoot": "ui",
           "target": "tag_group.rs",
-          "checksum": "290973b5332adfa0223fa92f9eac0f5d5e0a0d57b01fc1f0d00a2150bbb07ece"
+          "checksum": "f4323d8e96e8c88e3ac8d070b97702ecf928bb5dcba3eb7774e91c066e58f3e0"
         }
       ],
       "registryDependencies": [

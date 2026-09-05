@@ -10,7 +10,7 @@ pub fn TagGroupPage() -> Element {
         Demo {
             name: "TagGroup",
             components::ui::TagGroup::<String> {
-                value: Some(ReadSignal::from(value)),
+                value: ReadSignal::from(value),
                 on_value_change: move |v| value.set(v),
                 components::ui::TagGroupLabel { "Favorite language" }
                 components::ui::TagList {

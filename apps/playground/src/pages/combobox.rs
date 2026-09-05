@@ -50,7 +50,7 @@ pub fn ComboboxPage() -> Element {
             } else {
                 components::ui::Combobox::<String> {
                     disabled: disabled(),
-                    value: Some(ReadSignal::from(value)),
+                    value: ReadSignal::from(value),
                     open: open,
                     on_value_change: move |next| value.set(next),
                     components::ui::ComboboxInput { class: "w-48", placeholder: "Search fruit" }

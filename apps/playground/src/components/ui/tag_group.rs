@@ -17,7 +17,10 @@ use crate::adico_lib::cn::cn;
 /// surface tokens.
 #[component]
 pub fn TagGroup<T: Clone + PartialEq + 'static>(
-    #[props(default)] value: Option<ReadSignal<Option<T>>>,
+    /// **BREAKING** (task 2.6): was `Option<ReadSignal<Option<T>>>`; see
+    /// `select.rs`'s own `Select::value` doc comment for the full rationale.
+    #[props(default = ReadSignal::new(Signal::new(None)))]
+    value: ReadSignal<Option<T>>,
     #[props(default)] default_value: Option<T>,
     #[props(default)] on_value_change: Callback<Option<T>>,
     #[props(default)] disabled: ReadSignal<bool>,
@@ -33,7 +36,7 @@ pub fn TagGroup<T: Clone + PartialEq + 'static>(
     let class = cn(&["flex flex-col gap-2", class.as_deref().unwrap_or_default()]);
     rsx! {
         TagGroupPrimitive::<T> {
-            value,
+            value: Some(value),
             default_value,
             on_value_change,
             disabled,

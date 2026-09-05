@@ -16,7 +16,13 @@ use crate::adico_lib::cn::cn;
 pub fn ToolbarButton(
     index: ReadSignal<usize>,
     #[props(default)] disabled: ReadSignal<bool>,
-    #[props(default)] on_click: Callback<()>,
+    /// Fired when the button is activated. Named `on_select`, not the
+    /// primitive's own `on_click`, matching this registry's naming
+    /// convention for primitive-backed components (the primitive layer
+    /// keeps `on_click` unchanged) and `command.rs`/`context_menu.rs`'s
+    /// own `on_select` item-activation naming.
+    #[props(default)]
+    on_select: Callback<()>,
     children: Element,
     class: Option<String>,
 ) -> Element {
@@ -25,7 +31,13 @@ pub fn ToolbarButton(
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        ToolbarButtonPrimitive { index, disabled, on_click, class, {children} }
+        ToolbarButtonPrimitive {
+            index,
+            disabled,
+            on_click: on_select,
+            class,
+            {children}
+        }
     }
 }
 

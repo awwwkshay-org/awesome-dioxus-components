@@ -77,7 +77,7 @@
             },
             {
               "name": "on_click",
-              "status": "present"
+              "status": "missing"
             },
             {
               "name": "attributes",
@@ -124,7 +124,7 @@
             },
             {
               "name": "on_click",
-              "status": "present"
+              "status": "missing"
             },
             {
               "name": "attributes",

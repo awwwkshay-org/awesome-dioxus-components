@@ -153,7 +153,7 @@
           "props": [
             {
               "name": "on_click",
-              "status": "present"
+              "status": "missing"
             },
             {
               "name": "attributes",
@@ -170,7 +170,7 @@
           "props": [
             {
               "name": "on_click",
-              "status": "present"
+              "status": "missing"
             },
             {
               "name": "attributes",
