@@ -248,13 +248,40 @@
       field-init-shorthand calling convention on the outer parameter.
       Added a regression test. `cargo test -p adico-xtask`: 181 passed.
       `cargo check --locked --workspace`: zero errors.
-- [ ] 3.2 Add all 7 missing pages (`attachment`, `bubble`, `data-table`,
+- [x] 3.2 Add all 7 missing pages (`attachment`, `bubble`, `data-table`,
       `marker`, `message`, `message-scroller`, `theme-builder`), each
       using its generated `Controls` (and `Preview` if the item is one of
       the 16) from day one — no interim hand-written wiring. Add each
       page's `#[route]` variant in `apps/playground/src/routes.rs`,
       `nav_items()` entry, and `apps/playground/src/pages/mod.rs` export.
       Verify all 66 routes render in `dx serve`.
+
+      **Done.** None of these 7 are among the 16 single-root items (all
+      are multi-part, per proposal.md's own framing), so none get a
+      generated `Preview` — each page's live example is hand-composed
+      from the real parts, wired to whichever generated `<Part>Controls`
+      the item's root exposes: `AttachmentControls` (state/size/
+      orientation), `BubbleContentControls` (align/variant, also driving
+      the parent `Bubble`'s own `align`), `DataTableControls` (page_size/
+      loading), `MarkerControls` (variant), `MessageControls` (align),
+      `MessageScrollerControls` (bottom_threshold — the first page to
+      actually exercise `NumberControl` live). `theme-builder` has zero
+      qualifying props (only a `Callback` and `class`), so its page omits
+      `controls` entirely and relies on `Demo`'s own existing "this
+      component has no live props" fallback — verified live, not assumed.
+
+      All 7 routes added to `routes.rs` (`#[route(...)]` + `nav_items()`)
+      and `pages/mod.rs`. Verified every one live in `dx serve` +
+      browser: Attachment (confirmed the State control actually drives
+      the real component — switching to "Uploading" shows the spinner
+      indicator), Bubble, Marker, Message, MessageScroller (confirmed
+      NumberControl binds correctly, default overridden to a sensible 48
+      rather than the generated 0), DataTable (sortable columns,
+      pagination, Page Size/Loading controls all live), ThemeBuilder (the
+      pre-existing launcher-in-sidebar-footer usage still works
+      unaffected; the new dedicated page is additional, not a
+      replacement). `cargo check --locked --workspace`: zero errors.
+      `cargo fmt --all --check` / narrow clippy: clean.
 - [ ] 3.3 Wire the generated panel into the 23 currently-uncontrolled
       pages (`breadcrumb`, `carousel`, `checkbox`, `collapsible`,
       `color_picker`, `command`, `drag_and_drop_list`, `input_otp`,

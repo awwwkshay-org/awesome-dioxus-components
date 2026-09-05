@@ -8,16 +8,17 @@ use dioxus::prelude::*;
 use crate::components;
 use crate::components::theme_builder_launcher::ThemeBuilderLauncher;
 use crate::pages::{
-    AccordionPage, AlertDialogPage, AlertPage, AspectRatioPage, AvatarPage, BadgePage,
-    BreadcrumbPage, ButtonGroupPage, ButtonPage, CalendarPage, CardPage, CarouselPage,
-    CheckboxPage, CollapsiblePage, ColorPickerPage, ComboboxPage, CommandPage, ContextMenuPage,
-    DatePickerPage, DialogPage, DragAndDropListPage, DrawerPage, DropdownMenuPage, EmptyPage, Home,
-    HoverCardPage, InputGroupPage, InputOTPPage, InputPage, ItemPage, KbdPage, LabelPage,
-    MenubarPage, ModeTogglePage, NativeSelectPage, NavigationMenuPage, PaginationPage, PopoverPage,
+    AccordionPage, AlertDialogPage, AlertPage, AspectRatioPage, AttachmentPage, AvatarPage,
+    BadgePage, BreadcrumbPage, BubblePage, ButtonGroupPage, ButtonPage, CalendarPage, CardPage,
+    CarouselPage, CheckboxPage, CollapsiblePage, ColorPickerPage, ComboboxPage, CommandPage,
+    ContextMenuPage, DataTablePage, DatePickerPage, DialogPage, DragAndDropListPage, DrawerPage,
+    DropdownMenuPage, EmptyPage, Home, HoverCardPage, InputGroupPage, InputOTPPage, InputPage,
+    ItemPage, KbdPage, LabelPage, MarkerPage, MenubarPage, MessagePage, MessageScrollerPage,
+    ModeTogglePage, NativeSelectPage, NavigationMenuPage, PaginationPage, PopoverPage,
     ProgressPage, RadioGroupPage, ResizablePage, ScrollAreaPage, SelectPage, SheetPage,
     SidebarPage, SkeletonPage, SliderPage, SpinnerPage, SwitchPage, TablePage, TabsPage,
-    TagGroupPage, TextareaPage, ThemeSwitcherPage, ToastPage, ToggleGroupPage, TogglePage,
-    ToolbarPage, TooltipPage, VirtualListPage,
+    TagGroupPage, TextareaPage, ThemeBuilderPage, ThemeSwitcherPage, ToastPage, ToggleGroupPage,
+    TogglePage, ToolbarPage, TooltipPage, VirtualListPage,
 };
 
 const PLAYGROUND_LOGO: Asset = asset!("/assets/web/android-chrome-192x192.png");
@@ -145,6 +146,20 @@ pub enum Route {
     InputOTPPage {},
     #[route("/resizable")]
     ResizablePage {},
+    #[route("/attachment")]
+    AttachmentPage {},
+    #[route("/bubble")]
+    BubblePage {},
+    #[route("/data-table")]
+    DataTablePage {},
+    #[route("/marker")]
+    MarkerPage {},
+    #[route("/message")]
+    MessagePage {},
+    #[route("/message-scroller")]
+    MessageScrollerPage {},
+    #[route("/theme-builder")]
+    ThemeBuilderPage {},
 }
 
 pub fn nav_items() -> Vec<(&'static str, Route)> {
@@ -208,6 +223,13 @@ pub fn nav_items() -> Vec<(&'static str, Route)> {
         ("Carousel", Route::CarouselPage {}),
         ("InputOTP", Route::InputOTPPage {}),
         ("Resizable", Route::ResizablePage {}),
+        ("Attachment", Route::AttachmentPage {}),
+        ("Bubble", Route::BubblePage {}),
+        ("DataTable", Route::DataTablePage {}),
+        ("Marker", Route::MarkerPage {}),
+        ("Message", Route::MessagePage {}),
+        ("MessageScroller", Route::MessageScrollerPage {}),
+        ("ThemeBuilder", Route::ThemeBuilderPage {}),
     ]
 }
 
