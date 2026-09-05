@@ -414,6 +414,10 @@ pub struct ComboboxInputProps {
     #[props(default)]
     pub id: ReadSignal<Option<String>>,
 
+    /// Optional accessible label for the input.
+    #[props(default)]
+    pub aria_label: Option<String>,
+
     /// Additional attributes.
     #[props(extends = GlobalAttributes)]
     pub attributes: Vec<Attribute>,
@@ -507,6 +511,7 @@ pub fn ComboboxInput(props: ComboboxInputProps) -> Element {
             aria_expanded: open(),
             aria_controls: ctx.selectable.list_id,
             aria_activedescendant: active_descendant(),
+            aria_label: props.aria_label,
 
             "data-state": if open() { "open" } else { "closed" },
 
@@ -553,6 +558,10 @@ pub struct ComboboxListProps {
     #[props(default)]
     pub id: ReadSignal<Option<String>>,
 
+    /// Optional accessible label for the listbox.
+    #[props(default)]
+    pub aria_label: Option<String>,
+
     /// Additional attributes.
     #[props(extends = GlobalAttributes)]
     pub attributes: Vec<Attribute>,
@@ -585,6 +594,7 @@ pub fn ComboboxList(props: ComboboxListProps) -> Element {
                 offset: 4.0,
                 role: "listbox",
                 aria_multiselectable: ctx.selectable.selection_mode.is_multiple(),
+                aria_label: props.aria_label.clone(),
 
                 "data-state": if open() { "open" } else { "closed" },
 

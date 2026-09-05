@@ -41,7 +41,8 @@
             },
             {
               "name": "actionsRef",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "Dioxus uses component-local signals/mounted-node hooks for imperative access, not React imperative-handle refs"
             },
             {
               "name": "autoComplete",
@@ -613,7 +614,8 @@
             },
             {
               "name": "actionsRef",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "Dioxus uses component-local signals/mounted-node hooks for imperative access, not React imperative-handle refs"
             },
             {
               "name": "autoComplete",

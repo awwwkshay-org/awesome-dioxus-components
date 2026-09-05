@@ -129,6 +129,10 @@ const REACT_ONLY_STRUCTURAL: &[(&str, &str)] = &[
         "asChild",
         "Dioxus has no merge-props/slot mechanism to render a caller-supplied element in the component's place",
     ),
+    (
+        "actionsRef",
+        "Dioxus uses component-local signals/mounted-node hooks for imperative access, not React imperative-handle refs",
+    ),
 ];
 
 /// Explicit renames applied before generic camelCase-to-snake_case
@@ -225,6 +229,174 @@ const ADICO_EXTENSION_REASONS: &[(&str, &str, &str, &str)] = &[
     ("data-table", "root", "loading_text", LOADING_REASON),
 ];
 
+/// Reason recorded for Base UI's newer controlled-collection/virtualization
+/// API on combobox-shaped components: managing the item list, its identity
+/// comparison, and rendering virtualization from outside the component has
+/// no established Dioxus-idiomatic equivalent yet -- adico's combobox/select
+/// take `children`/registered options instead of a `items` + `itemToString*`
+/// data-driven contract.
+const COLLECTION_MANAGEMENT_REASON: &str = "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead";
+
+/// Reason recorded where adico exposes a Base UI boolean/behavioral toggle
+/// as a distinct component instead of a prop (e.g. `multiple` on
+/// `Combobox`/`Select` becomes `ComboboxMulti`/`SelectMulti`).
+const SEPARATE_COMPONENT_REASON: &str = "adico extension gap: exposed as a separate component (not a prop toggle on this one) to keep each component's controlled-value type concrete rather than a runtime-branching union";
+
+/// Reason recorded where an upstream root-level prop genuinely lives on one
+/// of adico's own sub-parts instead, because adico decomposes the
+/// composite differently than the matched axis does (e.g. `placeholder`
+/// lives on `ComboboxInput`, not `Combobox` itself).
+const PART_DECOMPOSITION_REASON: &str = "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole";
+
+/// Reason recorded where a plain global HTML attribute (no dedicated
+/// behavior of its own) is already settable through this part's generic
+/// `attributes` extends field -- which spreads last, so a caller-supplied
+/// value for it overrides adico's own internally generated one -- and so
+/// does not need a dedicated named prop.
+const ATTRIBUTES_COVERAGE_REASON: &str = "adico extension gap: settable via this part's generic `attributes` extends forwarding (spread last, so a caller-supplied value overrides adico's own internal one); no dedicated named prop for a plain global attribute with no additional behavior";
+
+/// Reason recorded for D6's "named as an explicit follow-up block" terminal
+/// state (design.md), used instead of a new `Status` variant: Change A's
+/// already-approved `adico-prop-parity` delta spec fixes the status enum at
+/// exactly `present | missing | intentional_difference | adico_extension`,
+/// so a genuine primitive-behavior gap that can't land in this change is
+/// still recorded as `intentional_difference`, with the reason text itself
+/// naming it a deferred follow-up rather than a permanent design choice.
+/// Native browser form participation (`FormData` inclusion, constraint
+/// validation) for a non-`<input>`-rooted composite requires a hidden
+/// mirror `<input>` synced to the controlled value -- a new
+/// `adico-primitives` mechanism, not a prop rename, and out of scope for
+/// this change's prop-surface work.
+const FORM_PARTICIPATION_REASON: &str = "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work";
+
+/// Reason recorded where adico's disabled state is set once on a
+/// composite's root and cascades to every descendant, rather than being
+/// independently overridable on one sub-part the way the matched axis
+/// allows.
+const CASCADING_DISABLED_REASON: &str = "adico extension gap: disabled is set once on the composite's root and cascades to every descendant; independently overriding it on just this sub-part has no adico equivalent and isn't planned, since a consistent whole-component disable is the far more common need";
+
+/// Item-specific `intentional_difference` reasons for a genuine upstream
+/// prop that has no adico equivalent by design, keyed by
+/// `(item, part, upstream_prop_name)` using the upstream axis's own raw
+/// spelling (matched before normalization, same convention as
+/// `REACT_ONLY_STRUCTURAL`). Distinct from `ADICO_EXTENSION_REASONS`, which
+/// documents the opposite direction -- an adico field with no upstream
+/// counterpart.
+const INTENTIONAL_DIFFERENCE_REASONS: &[(&str, &str, &str, &str)] = &[
+    // combobox: Base UI's data-driven collection-management/virtualization API.
+    ("combobox", "root", "items", COLLECTION_MANAGEMENT_REASON),
+    (
+        "combobox",
+        "root",
+        "filteredItems",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    (
+        "combobox",
+        "root",
+        "isItemEqualToValue",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    (
+        "combobox",
+        "root",
+        "itemToStringLabel",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    (
+        "combobox",
+        "root",
+        "itemToStringValue",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    (
+        "combobox",
+        "root",
+        "virtualized",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    ("combobox", "root", "grid", COLLECTION_MANAGEMENT_REASON),
+    ("combobox", "root", "inline", COLLECTION_MANAGEMENT_REASON),
+    ("combobox", "root", "limit", COLLECTION_MANAGEMENT_REASON),
+    (
+        "combobox",
+        "root",
+        "autoHighlight",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    (
+        "combobox",
+        "root",
+        "highlightItemOnHover",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    (
+        "combobox",
+        "root",
+        "onItemHighlighted",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    (
+        "combobox",
+        "root",
+        "openOnInputClick",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    (
+        "combobox",
+        "root",
+        "onOpenChangeComplete",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    (
+        "combobox",
+        "root",
+        "autoComplete",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    (
+        "combobox",
+        "root",
+        "defaultInputValue",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    (
+        "combobox",
+        "root",
+        "inputValue",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    (
+        "combobox",
+        "root",
+        "onInputValueChange",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    ("combobox", "root", "locale", COLLECTION_MANAGEMENT_REASON),
+    (
+        "combobox",
+        "root",
+        "loopFocus",
+        COLLECTION_MANAGEMENT_REASON,
+    ),
+    ("combobox", "root", "modal", COLLECTION_MANAGEMENT_REASON),
+    ("combobox", "root", "multiple", SEPARATE_COMPONENT_REASON),
+    ("combobox", "root", "placeholder", PART_DECOMPOSITION_REASON),
+    ("combobox", "root", "aria_label", PART_DECOMPOSITION_REASON),
+    (
+        "combobox",
+        "root",
+        "list_aria_label",
+        PART_DECOMPOSITION_REASON,
+    ),
+    ("combobox", "root", "id", ATTRIBUTES_COVERAGE_REASON),
+    ("combobox", "root", "name", FORM_PARTICIPATION_REASON),
+    ("combobox", "root", "form", FORM_PARTICIPATION_REASON),
+    ("combobox", "root", "required", FORM_PARTICIPATION_REASON),
+    ("combobox", "root", "readOnly", FORM_PARTICIPATION_REASON),
+    ("combobox", "input", "disabled", CASCADING_DISABLED_REASON),
+];
+
 fn react_only_structural_reason(raw_name: &str) -> Option<&'static str> {
     REACT_ONLY_STRUCTURAL
         .iter()
@@ -285,7 +457,12 @@ fn looks_like_native_event_name(raw_name: &str) -> bool {
         && raw_name.chars().all(|ch| ch.is_ascii_lowercase())
 }
 
-fn classify_upstream_prop(raw_name: &str, adico_fields: &AdicoFields) -> PropStatus {
+fn classify_upstream_prop(
+    item: &str,
+    part: &str,
+    raw_name: &str,
+    adico_fields: &AdicoFields,
+) -> PropStatus {
     if let Some(reason) = react_only_structural_reason(raw_name) {
         return PropStatus {
             name: raw_name.to_string(),
@@ -301,15 +478,25 @@ fn classify_upstream_prop(raw_name: &str, adico_fields: &AdicoFields) -> PropSta
     // finding for the ~22 of 66 registry items using this convention.
     let covered_by_attributes_extend =
         looks_like_native_event_name(raw_name) && adico_fields.has_attributes_extend;
-    let status =
-        if adico_fields.names.contains(&canonical_name(raw_name)) || covered_by_attributes_extend {
-            Status::Present
-        } else {
-            Status::Missing
+    if adico_fields.names.contains(&canonical_name(raw_name)) || covered_by_attributes_extend {
+        return PropStatus {
+            name: raw_name.to_string(),
+            status: Status::Present,
+            reason: None,
         };
+    }
+    if let Some(reason) =
+        adico_extension_reason(INTENTIONAL_DIFFERENCE_REASONS, item, part, raw_name)
+    {
+        return PropStatus {
+            name: raw_name.to_string(),
+            status: Status::IntentionalDifference,
+            reason: Some(reason.to_string()),
+        };
+    }
     PropStatus {
         name: raw_name.to_string(),
-        status,
+        status: Status::Missing,
         reason: None,
     }
 }
@@ -498,7 +685,7 @@ fn build_part_parity(
                     if react_only_structural_reason(&prop.name).is_none() {
                         matched_canonical.insert(canonical_name(&prop.name));
                     }
-                    classify_upstream_prop(&prop.name, &adico_fields)
+                    classify_upstream_prop(item_name, &part_id, &prop.name, &adico_fields)
                 })
                 .collect();
 
@@ -727,21 +914,21 @@ mod tests {
     #[test]
     fn casing_only_difference_is_present_not_missing() {
         let fields = field_names(&["on_open_change"]);
-        let status = classify_upstream_prop("onOpenChange", &fields);
+        let status = classify_upstream_prop("test-item", "test-part", "onOpenChange", &fields);
         assert_eq!(status.status, Status::Present);
     }
 
     #[test]
     fn class_name_rename_is_present() {
         let fields = field_names(&["class"]);
-        let status = classify_upstream_prop("className", &fields);
+        let status = classify_upstream_prop("test-item", "test-part", "className", &fields);
         assert_eq!(status.status, Status::Present);
     }
 
     #[test]
     fn render_prop_is_intentional_difference_with_fixed_reason() {
         let fields = field_names(&[]);
-        let status = classify_upstream_prop("render", &fields);
+        let status = classify_upstream_prop("test-item", "test-part", "render", &fields);
         assert_eq!(status.status, Status::IntentionalDifference);
         assert!(status.reason.is_some());
     }
@@ -749,14 +936,14 @@ mod tests {
     #[test]
     fn genuine_gap_is_missing() {
         let fields = field_names(&["checked"]);
-        let status = classify_upstream_prop("readOnly", &fields);
+        let status = classify_upstream_prop("test-item", "test-part", "readOnly", &fields);
         assert_eq!(status.status, Status::Missing);
     }
 
     #[test]
     fn native_event_name_is_missing_without_attributes_extend() {
         let fields = field_names(&["checked"]);
-        let status = classify_upstream_prop("onchange", &fields);
+        let status = classify_upstream_prop("test-item", "test-part", "onchange", &fields);
         assert_eq!(status.status, Status::Missing);
     }
 
@@ -764,7 +951,7 @@ mod tests {
     fn native_event_name_is_present_via_attributes_extend() {
         let mut fields = field_names(&["checked"]);
         fields.has_attributes_extend = true;
-        let status = classify_upstream_prop("onchange", &fields);
+        let status = classify_upstream_prop("test-item", "test-part", "onchange", &fields);
         assert_eq!(status.status, Status::Present);
     }
 
@@ -776,7 +963,7 @@ mod tests {
         // shape still reports `missing` even with `attributes` present.
         let mut fields = field_names(&["checked"]);
         fields.has_attributes_extend = true;
-        let status = classify_upstream_prop("on_checked_change", &fields);
+        let status = classify_upstream_prop("test-item", "test-part", "on_checked_change", &fields);
         assert_eq!(status.status, Status::Missing);
     }
 

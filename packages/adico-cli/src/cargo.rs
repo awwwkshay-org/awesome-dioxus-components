@@ -91,7 +91,12 @@ fn plan_one_dependency(
             })?;
             verify_existing_dependency(inherited, dependency)
         }
-        Some(existing) => verify_existing_dependency(existing, dependency),
+        Some(existing) => {
+            if let Some(widened) = widen_existing_dependency(existing, dependency)? {
+                table[&dependency.crate_name] = widened;
+            }
+            Ok(())
+        }
     }
 }
 
@@ -209,6 +214,7 @@ struct DependencyShape {
     version: Option<String>,
     package: Option<String>,
     features: BTreeSet<String>,
+    default_features: bool,
 }
 
 fn dependency_shape(item: &Item) -> Option<DependencyShape> {
@@ -217,6 +223,7 @@ fn dependency_shape(item: &Item) -> Option<DependencyShape> {
             version: Some(version.to_string()),
             package: None,
             features: BTreeSet::new(),
+            default_features: true,
         });
     }
     let table = item.as_inline_table()?;
@@ -239,11 +246,66 @@ fn dependency_shape(item: &Item) -> Option<DependencyShape> {
                 .collect()
         })
         .unwrap_or_default();
+    let default_features = table
+        .get("default-features")
+        .and_then(Value::as_bool)
+        .unwrap_or(true);
     Some(DependencyShape {
         version,
         package,
         features,
+        default_features,
     })
+}
+
+/// Reconciles an already-written dependency entry against a freshly
+/// resolved requirement, widening it in place when the new requirement
+/// needs strictly more (an additional feature, or default-features turned
+/// on) than what is currently written -- e.g. installing `spinner` alone
+/// first writes a plain `adico-primitives = "=0.1.0"` entry, and a later,
+/// separate `adico add dialog` needs that same dependency's `web` feature
+/// too. Returns `Ok(None)` when the existing entry already satisfies the
+/// request (including a consumer's own deliberately-added extra features),
+/// so the manifest is left untouched. A version or `package` mismatch is
+/// always a hard conflict -- that changes copied-source behavior and must
+/// not be silently rewritten.
+fn widen_existing_dependency(
+    existing: &Item,
+    requested: &UnifiedCargoDependency,
+) -> Result<Option<Item>, CargoEditError> {
+    let shape = dependency_shape(existing).ok_or_else(|| {
+        CargoEditError::UnsupportedExistingDependency {
+            crate_name: requested.crate_name.clone(),
+        }
+    })?;
+    if shape.version.as_deref() != Some(requested.version.as_str())
+        || shape.package != requested.package
+    {
+        return Err(CargoEditError::DependencyConflict {
+            crate_name: requested.crate_name.clone(),
+            existing_version: shape.version,
+            requested_version: requested.version.clone(),
+            origins: requested.origins.iter().map(ToString::to_string).collect(),
+        });
+    }
+    let requested_features: BTreeSet<_> = requested.features.iter().cloned().collect();
+    let already_satisfied = requested_features.is_subset(&shape.features)
+        && (!requested.default_features || shape.default_features);
+    if already_satisfied {
+        return Ok(None);
+    }
+    let mut merged_features = shape.features;
+    merged_features.extend(requested_features);
+    let merged = UnifiedCargoDependency {
+        crate_name: requested.crate_name.clone(),
+        package: requested.package.clone(),
+        version: requested.version.clone(),
+        features: merged_features.into_iter().collect(),
+        default_features: shape.default_features || requested.default_features,
+        target: requested.target.clone(),
+        origins: requested.origins.clone(),
+    };
+    Ok(Some(dependency_item(&merged)))
 }
 
 /// Structured Cargo-manifest planning errors. No error returns a partial plan.
@@ -374,6 +436,26 @@ mod tests {
                 .expect_err("external workspace manifest must not be guessed"),
             CargoEditError::AmbiguousWorkspaceDependency { .. }
         ));
+        fs::remove_dir_all(path.parent().expect("temporary root should exist"))
+            .expect("temporary directory should be removable");
+    }
+
+    #[test]
+    fn a_later_add_widens_an_existing_dependency_to_add_a_missing_feature() {
+        // Mirrors installing `spinner` (no features) in one `adico add`,
+        // then `dialog` (needs the `web` feature on the same crate) in a
+        // separate, later invocation.
+        let path = temporary_manifest("[dependencies]\nadico-primitives = \"=0.1.0\"\n");
+        let mut requested = dependency("adico-primitives", "=0.1.0");
+        requested.features = vec!["web".to_string()];
+        let plan = plan_cargo_dependency_edits(&path, &[requested])
+            .expect("widening an existing dependency's features should plan");
+        let contents = plan
+            .contents
+            .as_deref()
+            .expect("the entry should be rewritten to add the missing feature");
+        assert!(contents.contains("features = [\"web\"]"));
+        plan.apply().expect("plan should apply");
         fs::remove_dir_all(path.parent().expect("temporary root should exist"))
             .expect("temporary directory should be removable");
     }

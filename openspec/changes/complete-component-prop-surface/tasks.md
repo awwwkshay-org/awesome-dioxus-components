@@ -346,6 +346,66 @@ directly for the exact prop list; it is not duplicated here.
       prop-parity diff` reports no drift for these five items against
       their updated source, and that re-running `prop-parity sync`
       produces records with zero remaining `missing` status for them.
+
+      **Progress: `combobox` done** (1 of 5). `prop-parity diff` reports
+      zero remaining `missing` status for it. Corrections found during
+      implementation, load-bearing for the rest of this wave:
+      - `prop_parity.rs` had no per-`(item, part, prop)` mechanism to
+        classify a genuine *upstream* gap `intentional_difference` — only
+        `ADICO_EXTENSION_REASONS` existed, for the opposite direction (an
+        adico field with no upstream counterpart). Added
+        `INTENTIONAL_DIFFERENCE_REASONS`, keyed and looked up identically
+        (reusing `adico_extension_reason`), consulted by
+        `classify_upstream_prop` (now threaded `item`/`part`) after the
+        presence check and before falling through to `missing`. This is
+        what D6's "record it `intentional_difference` with a written
+        reason" was always going to need; see design.md's D6 addendum for
+        the four reason categories this introduces
+        (`COLLECTION_MANAGEMENT_REASON`, `SEPARATE_COMPONENT_REASON`,
+        `PART_DECOMPOSITION_REASON`, `ATTRIBUTES_COVERAGE_REASON`,
+        `CASCADING_DISABLED_REASON`, `FORM_PARTICIPATION_REASON`).
+      - `combobox`'s `name`/`form`/`required`/`readOnly` (base-ui `root`)
+        need native browser form participation (`FormData` inclusion,
+        constraint validation) via a hidden mirror `<input>` synced to the
+        controlled value — a new `adico-primitives` mechanism, not a prop
+        rename. Per D6's third terminal state ("named as an explicit
+        follow-up ... a genuine primitive-behavior gap requiring new
+        `adico-primitives` work"), recorded `intentional_difference` with
+        `FORM_PARTICIPATION_REASON` rather than built here — Change A's
+        already-approved 4-status schema (`present | missing |
+        intentional_difference | adico_extension`) has no fifth status,
+        so the reason text itself names it a deferred follow-up. **This
+        pattern will very likely recur** for `select`/`calendar` later in
+        this wave and for `switch`/`checkbox`/`progress`/`radio-group` in
+        Wave 3 — resolve it the same way there rather than re-litigating,
+        and track the accumulated list of components needing this as a
+        candidate for a future change.
+      - Two genuine gaps got real fixes instead of a reason: `aria_label`
+        on `ComboboxInput` and `ComboboxList` (adico had no accessible-name
+        prop at either level) and `attributes: Vec<Attribute>` forwarding
+        on all five combobox registry facades (`Combobox`, `ComboboxMulti`,
+        `ComboboxOption`, `ComboboxEmpty`, `ComboboxInput`, `ComboboxList`)
+        — the primitives already had `attributes` fields; only the
+        registry layer wasn't forwarding them (same defect class as task
+        2.3, but for a literal upstream prop named `attributes`, which
+        2.3's native-event-name heuristic doesn't cover).
+      - Also fixed in this pass (found via the full baseline run, unrelated
+        to combobox itself but blocking a green baseline): `adico-cli`'s
+        `plan_cargo_dependency_edits` rejected a *second*, separate
+        `adico add` that needed an additional Cargo feature on a
+        dependency an *earlier* `adico add` had already written without
+        it (e.g. `spinner` alone writes a plain `adico-primitives =
+        "=0.1.0"`; a later `adico add dialog` needs `features = ["web"]`
+        on the same crate) — surfaced by Section 4's `loading` rollout
+        giving `button` a new `spinner` registry dependency, which put
+        `dialog` (`registryDependencies: [button, ...]`) and `spinner` in
+        the same merged Cargo dependency for the first time.
+        `packages/adico-cli/src/cargo.rs`'s existing-dependency branch now
+        widens (rewrites to add the missing feature/`default-features`)
+        instead of erroring, and only still hard-errors on a genuine
+        version/`package` mismatch. Added
+        `a_later_add_widens_an_existing_dependency_to_add_a_missing_feature`
+        covering it.
 - [ ] 5.2 **Wave 2 — menu/overlay family** (34 missing entries):
       `dropdown-menu` (5), `hover-card` (5), `popover` (6), `tooltip` (6),
       `toggle-group` (6), `context-menu` (3), `menubar` (3). Verify same

@@ -2530,6 +2530,11 @@
                 "type": "ReadSignal<Option<String>>"
               },
               {
+                "default": "default()",
+                "name": "aria_label",
+                "type": "Option<String>"
+              },
+              {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
               }
@@ -2545,6 +2550,11 @@
                 "default": "default()",
                 "name": "id",
                 "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "default": "default()",
+                "name": "aria_label",
+                "type": "Option<String>"
               },
               {
                 "name": "attributes",
@@ -2808,6 +2818,10 @@
                 "type": "Option<String>"
               },
               {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               }
@@ -2820,6 +2834,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "ComboboxInput": [
@@ -2832,12 +2850,20 @@
                 "type": "Option<String>"
               },
               {
+                "name": "aria_label",
+                "type": "Option<String>"
+              },
+              {
                 "name": "radius",
                 "type": "Radius"
               },
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "ComboboxList": [
@@ -2850,12 +2876,20 @@
                 "type": "Option<String>"
               },
               {
+                "name": "aria_label",
+                "type": "Option<String>"
+              },
+              {
                 "name": "radius",
                 "type": "Radius"
               },
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "ComboboxMulti": [
@@ -2912,6 +2946,10 @@
                 "type": "Option<String>"
               },
               {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               }
@@ -2948,6 +2986,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",

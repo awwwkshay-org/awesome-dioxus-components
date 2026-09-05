@@ -294,6 +294,79 @@ resolved" step naming `prop-parity diff` as the mechanical check — a wave
 is not done while `prop-parity diff` still reports drift for its items
 against what the updated source should produce.
 
+**D6 addendum (found implementing Wave 1's `combobox`): the mechanism for
+the second and third terminal states didn't exist yet, and had to be
+built before any wave item could actually reach zero `missing`.**
+`prop_parity.rs` only had `ADICO_EXTENSION_REASONS`, keyed by
+`(item, part, prop)` — for the opposite direction, an adico field with no
+upstream counterpart. There was no equivalent table for a genuine
+*upstream* prop that adico intentionally doesn't (or can't yet) have.
+Added `INTENTIONAL_DIFFERENCE_REASONS`, same shape and same lookup
+(`adico_extension_reason` is generic over the table, reused as-is),
+consulted by `classify_upstream_prop` (now takes `item`/`part`, not just
+the raw prop name) after the presence check and before falling through to
+`missing`.
+
+Five reason categories cover Wave 1's `combobox`, and are expected to
+recur for the rest of the wave and beyond:
+- `COLLECTION_MANAGEMENT_REASON` — Base UI's newer data-driven
+  collection-management/virtualization API (`items`, `filteredItems`,
+  `isItemEqualToValue`, `itemToStringLabel`/`Value`, `virtualized`,
+  `grid`, `limit`, `locale`, ...) has no established Dioxus-idiomatic
+  equivalent; adico's combobox/select are children/registration-driven
+  instead. Permanent, not a follow-up.
+- `SEPARATE_COMPONENT_REASON` — a Base UI boolean toggle (`multiple`)
+  becomes a distinct adico component (`ComboboxMulti`) instead of a prop,
+  to keep each component's controlled-value type concrete rather than a
+  runtime-branching union. Permanent.
+- `PART_DECOMPOSITION_REASON` — the matched axis's own part boundaries
+  don't line up with adico's (e.g. dioxus-components' single-component
+  `Combobox` has `placeholder`/`aria_label` directly on `root`; adico
+  decomposes into `ComboboxInput`/`ComboboxList`). Permanent, and only
+  correct to use once the capability genuinely exists on adico's own
+  part — verified per entry, not assumed.
+- `ATTRIBUTES_COVERAGE_REASON` — a plain global HTML attribute with no
+  behavior of its own (e.g. `id` on a composite root) is already settable
+  through that part's generic `attributes` extends field, which spreads
+  last and so overrides adico's own internally generated value; no
+  dedicated named prop is needed. Permanent, and only correct once that
+  part's `attributes` forwarding actually lands (sequencing matters: this
+  reason would be false before the attributes-forwarding fix below).
+- `CASCADING_DISABLED_REASON` — adico's `disabled` is set once on a
+  composite's root and cascades to every descendant; independently
+  overriding it on one sub-part (Base UI's per-part `disabled`) has no
+  adico equivalent and isn't planned. Permanent.
+- `FORM_PARTICIPATION_REASON` — the third D6 terminal state
+  ("named as an explicit follow-up block"), recorded as
+  `intentional_difference` rather than a new `Status` variant: Change A's
+  already-approved `adico-prop-parity` delta spec fixes the schema at
+  exactly `present | missing | intentional_difference | adico_extension`,
+  so adding a fifth `follow_up` status would be a schema change to an
+  already-reviewed contract, done as a side effect of Change B's wave
+  work rather than a deliberate decision. Native browser form
+  participation (`FormData` inclusion, constraint validation) for a
+  composite whose root isn't itself a native `<input>` needs a hidden
+  mirror `<input>` synced to the controlled value — a new
+  `adico-primitives` mechanism, not a prop rename, and out of scope for
+  this change's prop-surface work. The reason text itself says "deferred,
+  not a permanent design choice" so a later reader (or a future change)
+  can find every component this applies to by grepping the constant, and
+  the accumulating list of affected components is worth carrying forward
+  as a candidate for its own future change once a wave is done surfacing
+  them all.
+
+A quick worked example, since the categories above sound similar without
+one: `combobox`'s base-ui `root` gaps split as `id` →
+`ATTRIBUTES_COVERAGE_REASON` (the root `div` already spreads
+`..props.attributes` last, so a caller-supplied `id` overrides the
+internally generated one, once that part's `attributes` field exists);
+`name`/`form`/`required`/`readOnly` → `FORM_PARTICIPATION_REASON`
+(genuinely absent, deferred); `multiple` → `SEPARATE_COMPONENT_REASON`
+(exists, as `ComboboxMulti`); `items`/`filteredItems`/`virtualized`/etc.
+→ `COLLECTION_MANAGEMENT_REASON` (genuinely absent, permanent); and
+`aria_label`/`placeholder` → `PART_DECOMPOSITION_REASON` (exist, on
+`ComboboxInput`/`ComboboxList` rather than the composite root).
+
 ## Risks / Trade-offs
 
 - [Bulk registry changes across most of 66 files risk breaking installed

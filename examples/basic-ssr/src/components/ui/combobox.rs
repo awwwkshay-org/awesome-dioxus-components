@@ -6,6 +6,7 @@
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 use adico_primitives::icons::{ChevronDown, ChevronUp};
 
 use adico_primitives::combobox::{
@@ -21,7 +22,10 @@ pub use adico_primitives::combobox::{
 /// A positioned root retaining the primitive's controlled state and filtering API.
 #[component]
 pub fn Combobox<T: Clone + PartialEq + 'static>(
-    #[props(default)] value: Option<ReadSignal<Option<T>>>,
+    /// **BREAKING** (task 2.6): was `Option<ReadSignal<Option<T>>>`; see
+    /// `select.rs`'s own `Select::value` doc comment for the full rationale.
+    #[props(default = ReadSignal::new(Signal::new(None)))]
+    value: ReadSignal<Option<T>>,
     #[props(default)] default_value: Option<T>,
     #[props(default)] on_value_change: Callback<Option<T>>,
     #[props(default)] disabled: ReadSignal<bool>,
@@ -35,6 +39,7 @@ pub fn Combobox<T: Clone + PartialEq + 'static>(
     #[props(default = Callback::new(|(query, text): (String, String)| default_combobox_filter(&query, &text)))]
     filter: Callback<(String, String), bool>,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     // `relative` is load-bearing here, unlike `select.rs`'s equivalent root: `ComboboxChevron`
@@ -47,7 +52,7 @@ pub fn Combobox<T: Clone + PartialEq + 'static>(
     ]);
     rsx! {
         PrimitiveCombobox::<T> {
-            value,
+            value: Some(value),
             default_value,
             on_value_change,
             disabled,
@@ -60,6 +65,7 @@ pub fn Combobox<T: Clone + PartialEq + 'static>(
             roving_loop,
             filter,
             class,
+            attributes,
             {children}
             ComboboxChevron {}
         }
@@ -94,6 +100,7 @@ pub fn ComboboxOption<T: Clone + PartialEq + 'static>(
     #[props(default)] aria_label: Option<String>,
     #[props(default)] aria_roledescription: Option<String>,
     #[props(default)] class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&[
@@ -110,6 +117,7 @@ pub fn ComboboxOption<T: Clone + PartialEq + 'static>(
             aria_label,
             aria_roledescription,
             class,
+            attributes,
             span { class: "absolute left-2 flex size-3.5 items-center justify-center", "aria-hidden": "true",
                 ComboboxItemIndicator { "✓" }
             }
@@ -120,13 +128,17 @@ pub fn ComboboxOption<T: Clone + PartialEq + 'static>(
 
 /// The semantic empty state shown when no combobox option matches the query.
 #[component]
-pub fn ComboboxEmpty(children: Element, class: Option<String>) -> Element {
+pub fn ComboboxEmpty(
+    children: Element,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     let class = cn(&[
         "px-2 py-1.5 text-sm text-muted-foreground",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        adico_primitives::combobox::ComboboxEmpty { class, {children} }
+        adico_primitives::combobox::ComboboxEmpty { class, attributes, {children} }
     }
 }
 
@@ -148,6 +160,7 @@ pub fn ComboboxMulti<T: Clone + PartialEq + 'static>(
     #[props(default = Callback::new(|(query, text): (String, String)| default_combobox_filter(&query, &text)))]
     filter: Callback<(String, String), bool>,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     // See `Combobox`'s own comment: `relative` here anchors `ComboboxChevron`'s
@@ -171,6 +184,7 @@ pub fn ComboboxMulti<T: Clone + PartialEq + 'static>(
             roving_loop,
             filter,
             class,
+            attributes,
             {children}
             ComboboxChevron {}
         }
@@ -182,17 +196,32 @@ pub fn ComboboxMulti<T: Clone + PartialEq + 'static>(
 pub fn ComboboxInput(
     placeholder: Option<String>,
     id: Option<String>,
+    /// Optional accessible label, for when no visible `<label>` describes
+    /// this input.
+    #[props(default)]
+    aria_label: Option<String>,
+    /// Corner radius. Set the same value on [`ComboboxList`] for a visually
+    /// consistent input/popup pair — there is no shared context between
+    /// them to thread one value automatically.
+    #[props(default = Radius::Md)]
+    radius: Radius,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = input)]
+    attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "h-9 w-full min-w-48 rounded-md border border-input bg-background px-3 pr-8 text-sm outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-50",
+        "h-9 w-full min-w-48 border border-input bg-background px-3 pr-8 text-sm outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-50",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
         PrimitiveComboboxInput {
             id,
             placeholder: placeholder.unwrap_or_default(),
+            aria_label,
             class,
+            attributes,
         }
     }
 }
@@ -200,20 +229,35 @@ pub fn ComboboxInput(
 /// A listbox anchored to the input via the primitive's `Positioner`, so
 /// opening it does not shift layout.
 #[component]
-pub fn ComboboxList(children: Element, id: Option<String>, class: Option<String>) -> Element {
+pub fn ComboboxList(
+    children: Element,
+    id: Option<String>,
+    /// Optional accessible label for the listbox, for when no visible
+    /// heading describes it.
+    #[props(default)]
+    aria_label: Option<String>,
+    /// Corner radius. See [`ComboboxInput::radius`]'s own doc comment.
+    #[props(default = Radius::Md)]
+    radius: Radius,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
     // `w-full` would now mean 100% of the viewport (`Positioner`'s
     // `position: fixed` has no positioned ancestor to size against, unlike
     // the `absolute`-positioned listbox this replaced) — `min-w-48` is the
     // width baseline instead, matching `popover.rs`'s own fixed-width
     // precedent rather than trying to exactly match the input's width.
     let class = cn(&[
-        "z-50 max-h-72 min-w-48 overflow-y-auto rounded-md bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        "z-50 max-h-72 min-w-48 overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
         PrimitiveComboboxList {
             id,
+            aria_label,
             class,
+            attributes,
             {children}
         }
     }
