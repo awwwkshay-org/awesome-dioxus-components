@@ -22,22 +22,14 @@ const _: () = {
 };
 
 /// Generated demo state for [`Alert`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct AlertDemoState {
     pub variant: AlertVariant,
 }
 
-impl Default for AlertDemoState {
-    fn default() -> Self {
-        Self {
-            variant: AlertVariant::Default,
-        }
-    }
-}
-
 #[component]
 pub fn AlertControls(mut state: Signal<AlertDemoState>) -> Element {
-    let mut variant = use_signal(|| state().variant);
+    let variant = use_signal(|| state().variant);
     use_effect(move || {
         state.set(AlertDemoState { variant: variant() });
     });

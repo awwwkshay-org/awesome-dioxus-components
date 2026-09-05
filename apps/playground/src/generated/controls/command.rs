@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 use crate::components::controls::{BoolControl, OptionalBoolControl, TextControl};
 
 /// Generated demo state for [`CommandDialog`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct CommandDialogDemoState {
     pub open: Option<bool>,
     pub title: String,
@@ -14,23 +14,12 @@ pub struct CommandDialogDemoState {
     pub show_close_button: bool,
 }
 
-impl Default for CommandDialogDemoState {
-    fn default() -> Self {
-        Self {
-            open: None,
-            title: String::new(),
-            description: String::new(),
-            show_close_button: false,
-        }
-    }
-}
-
 #[component]
 pub fn CommandDialogControls(mut state: Signal<CommandDialogDemoState>) -> Element {
-    let mut open = use_signal(|| state().open);
-    let mut title = use_signal(|| state().title);
-    let mut description = use_signal(|| state().description);
-    let mut show_close_button = use_signal(|| state().show_close_button);
+    let open = use_signal(|| state().open);
+    let title = use_signal(|| state().title);
+    let description = use_signal(|| state().description);
+    let show_close_button = use_signal(|| state().show_close_button);
     use_effect(move || {
         state.set(CommandDialogDemoState {
             open: open(),

@@ -57,28 +57,18 @@ const _: () = {
 };
 
 /// Generated demo state for [`Button`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct ButtonDemoState {
     pub variant: ButtonVariant,
     pub size: ButtonSize,
     pub loading: bool,
 }
 
-impl Default for ButtonDemoState {
-    fn default() -> Self {
-        Self {
-            variant: ButtonVariant::Default,
-            size: ButtonSize::Default,
-            loading: false,
-        }
-    }
-}
-
 #[component]
 pub fn ButtonControls(mut state: Signal<ButtonDemoState>) -> Element {
-    let mut variant = use_signal(|| state().variant);
-    let mut size = use_signal(|| state().size);
-    let mut loading = use_signal(|| state().loading);
+    let variant = use_signal(|| state().variant);
+    let size = use_signal(|| state().size);
+    let loading = use_signal(|| state().loading);
     use_effect(move || {
         state.set(ButtonDemoState {
             variant: variant(),

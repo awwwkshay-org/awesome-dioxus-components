@@ -6,25 +6,16 @@ use dioxus::prelude::*;
 use crate::components::controls::{BoolControl, NumberControl};
 
 /// Generated demo state for [`DataTable`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct DataTableDemoState {
     pub page_size: usize,
     pub loading: bool,
 }
 
-impl Default for DataTableDemoState {
-    fn default() -> Self {
-        Self {
-            page_size: 0,
-            loading: false,
-        }
-    }
-}
-
 #[component]
 pub fn DataTableControls(mut state: Signal<DataTableDemoState>) -> Element {
-    let mut page_size = use_signal(|| state().page_size as f64);
-    let mut loading = use_signal(|| state().loading);
+    let page_size = use_signal(|| state().page_size as f64);
+    let loading = use_signal(|| state().loading);
     use_effect(move || {
         state.set(DataTableDemoState {
             page_size: page_size() as usize,

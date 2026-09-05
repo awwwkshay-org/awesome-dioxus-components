@@ -6,22 +6,14 @@ use dioxus::prelude::*;
 use crate::components::controls::BoolControl;
 
 /// Generated demo state for [`DrawerContent`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct DrawerContentDemoState {
     pub show_close_button: bool,
 }
 
-impl Default for DrawerContentDemoState {
-    fn default() -> Self {
-        Self {
-            show_close_button: false,
-        }
-    }
-}
-
 #[component]
 pub fn DrawerContentControls(mut state: Signal<DrawerContentDemoState>) -> Element {
-    let mut show_close_button = use_signal(|| state().show_close_button);
+    let show_close_button = use_signal(|| state().show_close_button);
     use_effect(move || {
         state.set(DrawerContentDemoState {
             show_close_button: show_close_button(),

@@ -22,25 +22,16 @@ const _: () = {
 };
 
 /// Generated demo state for [`ContextMenuItem`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct ContextMenuItemDemoState {
     pub inset: bool,
     pub variant: ContextMenuItemVariant,
 }
 
-impl Default for ContextMenuItemDemoState {
-    fn default() -> Self {
-        Self {
-            inset: false,
-            variant: ContextMenuItemVariant::Default,
-        }
-    }
-}
-
 #[component]
 pub fn ContextMenuItemControls(mut state: Signal<ContextMenuItemDemoState>) -> Element {
-    let mut inset = use_signal(|| state().inset);
-    let mut variant = use_signal(|| state().variant);
+    let inset = use_signal(|| state().inset);
+    let variant = use_signal(|| state().variant);
     use_effect(move || {
         state.set(ContextMenuItemDemoState {
             inset: inset(),

@@ -77,28 +77,18 @@ const _: () = {
 };
 
 /// Generated demo state for [`Attachment`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct AttachmentDemoState {
     pub state: AttachmentState,
     pub size: AttachmentSize,
     pub orientation: AttachmentOrientation,
 }
 
-impl Default for AttachmentDemoState {
-    fn default() -> Self {
-        Self {
-            state: AttachmentState::Idle,
-            size: AttachmentSize::Default,
-            orientation: AttachmentOrientation::Horizontal,
-        }
-    }
-}
-
 #[component]
 pub fn AttachmentControls(mut state: Signal<AttachmentDemoState>) -> Element {
-    let mut state_field = use_signal(|| state().state);
-    let mut size = use_signal(|| state().size);
-    let mut orientation = use_signal(|| state().orientation);
+    let state_field = use_signal(|| state().state);
+    let size = use_signal(|| state().size);
+    let orientation = use_signal(|| state().orientation);
     use_effect(move || {
         state.set(AttachmentDemoState {
             state: state_field(),
@@ -114,22 +104,14 @@ pub fn AttachmentControls(mut state: Signal<AttachmentDemoState>) -> Element {
 }
 
 /// Generated demo state for [`AttachmentMedia`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct AttachmentMediaDemoState {
     pub variant: AttachmentMediaVariant,
 }
 
-impl Default for AttachmentMediaDemoState {
-    fn default() -> Self {
-        Self {
-            variant: AttachmentMediaVariant::Icon,
-        }
-    }
-}
-
 #[component]
 pub fn AttachmentMediaControls(mut state: Signal<AttachmentMediaDemoState>) -> Element {
-    let mut variant = use_signal(|| state().variant);
+    let variant = use_signal(|| state().variant);
     use_effect(move || {
         state.set(AttachmentMediaDemoState { variant: variant() });
     });
@@ -139,22 +121,14 @@ pub fn AttachmentMediaControls(mut state: Signal<AttachmentMediaDemoState>) -> E
 }
 
 /// Generated demo state for [`AttachmentAction`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct AttachmentActionDemoState {
     pub aria_label: String,
 }
 
-impl Default for AttachmentActionDemoState {
-    fn default() -> Self {
-        Self {
-            aria_label: String::new(),
-        }
-    }
-}
-
 #[component]
 pub fn AttachmentActionControls(mut state: Signal<AttachmentActionDemoState>) -> Element {
-    let mut aria_label = use_signal(|| state().aria_label);
+    let aria_label = use_signal(|| state().aria_label);
     use_effect(move || {
         state.set(AttachmentActionDemoState {
             aria_label: aria_label(),

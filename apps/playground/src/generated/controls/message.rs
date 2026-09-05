@@ -20,22 +20,14 @@ const _: () = {
 };
 
 /// Generated demo state for [`Message`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct MessageDemoState {
     pub align: MessageAlign,
 }
 
-impl Default for MessageDemoState {
-    fn default() -> Self {
-        Self {
-            align: MessageAlign::Start,
-        }
-    }
-}
-
 #[component]
 pub fn MessageControls(mut state: Signal<MessageDemoState>) -> Element {
-    let mut align = use_signal(|| state().align);
+    let align = use_signal(|| state().align);
     use_effect(move || {
         state.set(MessageDemoState { align: align() });
     });

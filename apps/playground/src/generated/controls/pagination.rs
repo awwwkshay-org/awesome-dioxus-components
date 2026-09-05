@@ -6,25 +6,16 @@ use dioxus::prelude::*;
 use crate::components::controls::BoolControl;
 
 /// Generated demo state for [`PaginationLink`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct PaginationLinkDemoState {
     pub is_active: bool,
     pub loading: bool,
 }
 
-impl Default for PaginationLinkDemoState {
-    fn default() -> Self {
-        Self {
-            is_active: false,
-            loading: false,
-        }
-    }
-}
-
 #[component]
 pub fn PaginationLinkControls(mut state: Signal<PaginationLinkDemoState>) -> Element {
-    let mut is_active = use_signal(|| state().is_active);
-    let mut loading = use_signal(|| state().loading);
+    let is_active = use_signal(|| state().is_active);
+    let loading = use_signal(|| state().loading);
     use_effect(move || {
         state.set(PaginationLinkDemoState {
             is_active: is_active(),
@@ -38,20 +29,14 @@ pub fn PaginationLinkControls(mut state: Signal<PaginationLinkDemoState>) -> Ele
 }
 
 /// Generated demo state for [`PaginationPrevious`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct PaginationPreviousDemoState {
     pub compact: bool,
 }
 
-impl Default for PaginationPreviousDemoState {
-    fn default() -> Self {
-        Self { compact: false }
-    }
-}
-
 #[component]
 pub fn PaginationPreviousControls(mut state: Signal<PaginationPreviousDemoState>) -> Element {
-    let mut compact = use_signal(|| state().compact);
+    let compact = use_signal(|| state().compact);
     use_effect(move || {
         state.set(PaginationPreviousDemoState { compact: compact() });
     });
@@ -61,20 +46,14 @@ pub fn PaginationPreviousControls(mut state: Signal<PaginationPreviousDemoState>
 }
 
 /// Generated demo state for [`PaginationNext`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct PaginationNextDemoState {
     pub compact: bool,
 }
 
-impl Default for PaginationNextDemoState {
-    fn default() -> Self {
-        Self { compact: false }
-    }
-}
-
 #[component]
 pub fn PaginationNextControls(mut state: Signal<PaginationNextDemoState>) -> Element {
-    let mut compact = use_signal(|| state().compact);
+    let compact = use_signal(|| state().compact);
     use_effect(move || {
         state.set(PaginationNextDemoState { compact: compact() });
     });

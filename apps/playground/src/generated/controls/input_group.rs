@@ -26,22 +26,14 @@ const _: () = {
 };
 
 /// Generated demo state for [`InputGroupAddon`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct InputGroupAddonDemoState {
     pub align: InputGroupAlign,
 }
 
-impl Default for InputGroupAddonDemoState {
-    fn default() -> Self {
-        Self {
-            align: InputGroupAlign::InlineStart,
-        }
-    }
-}
-
 #[component]
 pub fn InputGroupAddonControls(mut state: Signal<InputGroupAddonDemoState>) -> Element {
-    let mut align = use_signal(|| state().align);
+    let align = use_signal(|| state().align);
     use_effect(move || {
         state.set(InputGroupAddonDemoState { align: align() });
     });
@@ -51,20 +43,14 @@ pub fn InputGroupAddonControls(mut state: Signal<InputGroupAddonDemoState>) -> E
 }
 
 /// Generated demo state for [`InputGroupButton`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct InputGroupButtonDemoState {
     pub loading: bool,
 }
 
-impl Default for InputGroupButtonDemoState {
-    fn default() -> Self {
-        Self { loading: false }
-    }
-}
-
 #[component]
 pub fn InputGroupButtonControls(mut state: Signal<InputGroupButtonDemoState>) -> Element {
-    let mut loading = use_signal(|| state().loading);
+    let loading = use_signal(|| state().loading);
     use_effect(move || {
         state.set(InputGroupButtonDemoState { loading: loading() });
     });
@@ -74,28 +60,18 @@ pub fn InputGroupButtonControls(mut state: Signal<InputGroupButtonDemoState>) ->
 }
 
 /// Generated demo state for [`InputGroupInput`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct InputGroupInputDemoState {
     pub r#type: String,
     pub disabled: bool,
     pub invalid: bool,
 }
 
-impl Default for InputGroupInputDemoState {
-    fn default() -> Self {
-        Self {
-            r#type: String::new(),
-            disabled: false,
-            invalid: false,
-        }
-    }
-}
-
 #[component]
 pub fn InputGroupInputControls(mut state: Signal<InputGroupInputDemoState>) -> Element {
-    let mut r#type = use_signal(|| state().r#type);
-    let mut disabled = use_signal(|| state().disabled);
-    let mut invalid = use_signal(|| state().invalid);
+    let r#type = use_signal(|| state().r#type);
+    let disabled = use_signal(|| state().disabled);
+    let invalid = use_signal(|| state().invalid);
     use_effect(move || {
         state.set(InputGroupInputDemoState {
             r#type: r#type(),
@@ -111,25 +87,16 @@ pub fn InputGroupInputControls(mut state: Signal<InputGroupInputDemoState>) -> E
 }
 
 /// Generated demo state for [`InputGroupTextarea`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct InputGroupTextareaDemoState {
     pub disabled: bool,
     pub invalid: bool,
 }
 
-impl Default for InputGroupTextareaDemoState {
-    fn default() -> Self {
-        Self {
-            disabled: false,
-            invalid: false,
-        }
-    }
-}
-
 #[component]
 pub fn InputGroupTextareaControls(mut state: Signal<InputGroupTextareaDemoState>) -> Element {
-    let mut disabled = use_signal(|| state().disabled);
-    let mut invalid = use_signal(|| state().invalid);
+    let disabled = use_signal(|| state().disabled);
+    let invalid = use_signal(|| state().invalid);
     use_effect(move || {
         state.set(InputGroupTextareaDemoState {
             disabled: disabled(),

@@ -60,22 +60,14 @@ const _: () = {
 };
 
 /// Generated demo state for [`Bubble`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct BubbleDemoState {
     pub align: BubbleAlign,
 }
 
-impl Default for BubbleDemoState {
-    fn default() -> Self {
-        Self {
-            align: BubbleAlign::Start,
-        }
-    }
-}
-
 #[component]
 pub fn BubbleControls(mut state: Signal<BubbleDemoState>) -> Element {
-    let mut align = use_signal(|| state().align);
+    let align = use_signal(|| state().align);
     use_effect(move || {
         state.set(BubbleDemoState { align: align() });
     });
@@ -85,25 +77,16 @@ pub fn BubbleControls(mut state: Signal<BubbleDemoState>) -> Element {
 }
 
 /// Generated demo state for [`BubbleContent`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct BubbleContentDemoState {
     pub align: BubbleAlign,
     pub variant: BubbleVariant,
 }
 
-impl Default for BubbleContentDemoState {
-    fn default() -> Self {
-        Self {
-            align: BubbleAlign::Start,
-            variant: BubbleVariant::Default,
-        }
-    }
-}
-
 #[component]
 pub fn BubbleContentControls(mut state: Signal<BubbleContentDemoState>) -> Element {
-    let mut align = use_signal(|| state().align);
-    let mut variant = use_signal(|| state().variant);
+    let align = use_signal(|| state().align);
+    let variant = use_signal(|| state().variant);
     use_effect(move || {
         state.set(BubbleContentDemoState {
             align: align(),
@@ -117,25 +100,16 @@ pub fn BubbleContentControls(mut state: Signal<BubbleContentDemoState>) -> Eleme
 }
 
 /// Generated demo state for [`BubbleReactions`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct BubbleReactionsDemoState {
     pub align: BubbleAlign,
     pub side: BubbleReactionsSide,
 }
 
-impl Default for BubbleReactionsDemoState {
-    fn default() -> Self {
-        Self {
-            align: BubbleAlign::Start,
-            side: BubbleReactionsSide::Bottom,
-        }
-    }
-}
-
 #[component]
 pub fn BubbleReactionsControls(mut state: Signal<BubbleReactionsDemoState>) -> Element {
-    let mut align = use_signal(|| state().align);
-    let mut side = use_signal(|| state().side);
+    let align = use_signal(|| state().align);
+    let side = use_signal(|| state().side);
     use_effect(move || {
         state.set(BubbleReactionsDemoState {
             align: align(),

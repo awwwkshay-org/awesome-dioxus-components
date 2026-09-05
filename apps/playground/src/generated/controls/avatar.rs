@@ -24,22 +24,14 @@ const _: () = {
 };
 
 /// Generated demo state for [`Avatar`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct AvatarDemoState {
     pub size: AvatarSize,
 }
 
-impl Default for AvatarDemoState {
-    fn default() -> Self {
-        Self {
-            size: AvatarSize::Default,
-        }
-    }
-}
-
 #[component]
 pub fn AvatarControls(mut state: Signal<AvatarDemoState>) -> Element {
-    let mut size = use_signal(|| state().size);
+    let size = use_signal(|| state().size);
     use_effect(move || {
         state.set(AvatarDemoState { size: size() });
     });
@@ -49,20 +41,14 @@ pub fn AvatarControls(mut state: Signal<AvatarDemoState>) -> Element {
 }
 
 /// Generated demo state for [`AvatarImage`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct AvatarImageDemoState {
     pub src: String,
 }
 
-impl Default for AvatarImageDemoState {
-    fn default() -> Self {
-        Self { src: String::new() }
-    }
-}
-
 #[component]
 pub fn AvatarImageControls(mut state: Signal<AvatarImageDemoState>) -> Element {
-    let mut src = use_signal(|| state().src);
+    let src = use_signal(|| state().src);
     use_effect(move || {
         state.set(AvatarImageDemoState { src: src() });
     });

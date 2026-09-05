@@ -22,28 +22,18 @@ const _: () = {
 };
 
 /// Generated demo state for [`MenubarItem`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct MenubarItemDemoState {
     pub value: String,
     pub inset: bool,
     pub variant: MenubarItemVariant,
 }
 
-impl Default for MenubarItemDemoState {
-    fn default() -> Self {
-        Self {
-            value: String::new(),
-            inset: false,
-            variant: MenubarItemVariant::Default,
-        }
-    }
-}
-
 #[component]
 pub fn MenubarItemControls(mut state: Signal<MenubarItemDemoState>) -> Element {
-    let mut value = use_signal(|| state().value);
-    let mut inset = use_signal(|| state().inset);
-    let mut variant = use_signal(|| state().variant);
+    let value = use_signal(|| state().value);
+    let inset = use_signal(|| state().inset);
+    let variant = use_signal(|| state().variant);
     use_effect(move || {
         state.set(MenubarItemDemoState {
             value: value(),

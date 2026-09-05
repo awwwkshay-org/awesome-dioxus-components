@@ -7,7 +7,7 @@ use crate::components::controls::BoolControl;
 use crate::components::ui::Textarea;
 
 /// Generated demo state for [`Textarea`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct TextareaDemoState {
     pub disabled: bool,
     pub readonly: bool,
@@ -15,23 +15,12 @@ pub struct TextareaDemoState {
     pub invalid: bool,
 }
 
-impl Default for TextareaDemoState {
-    fn default() -> Self {
-        Self {
-            disabled: false,
-            readonly: false,
-            required: false,
-            invalid: false,
-        }
-    }
-}
-
 #[component]
 pub fn TextareaControls(mut state: Signal<TextareaDemoState>) -> Element {
-    let mut disabled = use_signal(|| state().disabled);
-    let mut readonly = use_signal(|| state().readonly);
-    let mut required = use_signal(|| state().required);
-    let mut invalid = use_signal(|| state().invalid);
+    let disabled = use_signal(|| state().disabled);
+    let readonly = use_signal(|| state().readonly);
+    let required = use_signal(|| state().required);
+    let invalid = use_signal(|| state().invalid);
     use_effect(move || {
         state.set(TextareaDemoState {
             disabled: disabled(),

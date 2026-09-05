@@ -22,22 +22,14 @@ const _: () = {
 };
 
 /// Generated demo state for [`TabList`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct TabListDemoState {
     pub variant: TabsVariant,
 }
 
-impl Default for TabListDemoState {
-    fn default() -> Self {
-        Self {
-            variant: TabsVariant::Default,
-        }
-    }
-}
-
 #[component]
 pub fn TabListControls(mut state: Signal<TabListDemoState>) -> Element {
-    let mut variant = use_signal(|| state().variant);
+    let variant = use_signal(|| state().variant);
     use_effect(move || {
         state.set(TabListDemoState { variant: variant() });
     });
@@ -47,22 +39,14 @@ pub fn TabListControls(mut state: Signal<TabListDemoState>) -> Element {
 }
 
 /// Generated demo state for [`TabTrigger`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct TabTriggerDemoState {
     pub value: String,
 }
 
-impl Default for TabTriggerDemoState {
-    fn default() -> Self {
-        Self {
-            value: String::new(),
-        }
-    }
-}
-
 #[component]
 pub fn TabTriggerControls(mut state: Signal<TabTriggerDemoState>) -> Element {
-    let mut value = use_signal(|| state().value);
+    let value = use_signal(|| state().value);
     use_effect(move || {
         state.set(TabTriggerDemoState { value: value() });
     });
@@ -72,22 +56,14 @@ pub fn TabTriggerControls(mut state: Signal<TabTriggerDemoState>) -> Element {
 }
 
 /// Generated demo state for [`TabContent`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct TabContentDemoState {
     pub value: String,
 }
 
-impl Default for TabContentDemoState {
-    fn default() -> Self {
-        Self {
-            value: String::new(),
-        }
-    }
-}
-
 #[component]
 pub fn TabContentControls(mut state: Signal<TabContentDemoState>) -> Element {
-    let mut value = use_signal(|| state().value);
+    let value = use_signal(|| state().value);
     use_effect(move || {
         state.set(TabContentDemoState { value: value() });
     });

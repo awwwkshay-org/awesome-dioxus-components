@@ -32,22 +32,14 @@ const _: () = {
 };
 
 /// Generated demo state for [`Badge`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct BadgeDemoState {
     pub variant: BadgeVariant,
 }
 
-impl Default for BadgeDemoState {
-    fn default() -> Self {
-        Self {
-            variant: BadgeVariant::Default,
-        }
-    }
-}
-
 #[component]
 pub fn BadgeControls(mut state: Signal<BadgeDemoState>) -> Element {
-    let mut variant = use_signal(|| state().variant);
+    let variant = use_signal(|| state().variant);
     use_effect(move || {
         state.set(BadgeDemoState { variant: variant() });
     });

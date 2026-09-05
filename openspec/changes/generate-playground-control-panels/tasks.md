@@ -340,7 +340,7 @@
 
 ## 5. Validate
 
-- [ ] 5.1 Run the full baseline: `cargo fmt --all --check`, `cargo check
+- [x] 5.1 Run the full baseline: `cargo fmt --all --check`, `cargo check
       --locked --workspace`, `cargo clippy --locked -p adico-cli -p
       adico-primitives -p adico-registry-core -p adico-test-utils -p
       adico-xtask --all-targets -- -D warnings` (documented baseline;
@@ -351,6 +351,55 @@
       playground-controls check`, and `openspec validate
       generate-playground-control-panels --strict`. Verify all pass;
       report any that don't and why.
+
+      **All pass, plus three real generator bugs found and fixed by
+      running the wider clippy form for the first time on this
+      change's own generated code.** `cargo fmt --all --check`: clean.
+      `cargo check --locked --workspace`: zero errors. The documented
+      narrow clippy command: clean. `cargo test --locked` on the 5
+      baseline packages: 695 passed, 0 failed, 1 ignored, across every
+      package (182 for `adico-xtask`, up from 176 pre-change — the 6 new
+      `component_props`/`playground_controls`/`rust_introspect` tests).
+      `playground-controls check` / `component-props check`: both pass.
+      `openspec validate generate-playground-control-panels --strict`:
+      valid.
+
+      The wider `cargo clippy --locked --workspace --all-targets -- -D
+      warnings` form initially surfaced 3 real defects in *this session's
+      own generated code* (not caught earlier since I had only been
+      running plain `cargo check`, never clippy, on `adico-playground`
+      during Sections 2–4 — a real process gap, noted for next time):
+      1. A redundant `as f64` cast whenever a `Number`-shaped field's real
+         type already *was* `f64` (`clippy::unnecessary_cast`).
+      2. Every generated per-field local `Signal` marked `mut` when none
+         of them are ever `.set()` directly in generated code — only
+         passed by value into a control, which mutates its own copy
+         (`clippy::unused_mut`; only the outer `state` parameter
+         genuinely needs `mut`, since *it* is `.set()` directly in
+         `use_effect`).
+      3. Every generated `impl Default for <Comp>DemoState` was
+         mechanically identical to what `#[derive(Default)]` would
+         produce — provable in general, not per-case: `classify_prop_type`
+         already requires an `Enum` field's enum to declare its own
+         `#[default]` variant (which itself requires that enum to derive
+         `Default`), and every other shape's chosen default (`false`,
+         `String::new()`, `0`/`0.0`, `None`) is exactly that type's own
+         `Default::default()` — so a derive is always equivalent, never
+         just true by coincidence (`clippy::derivable_impls`). Removed the
+         hand-written impl and its now-dead `demo_state_default_expr`
+         helper entirely.
+
+      Fixed all three in `playground_controls.rs`, re-ran `sync`, and
+      confirmed the wider clippy form no longer reports any of them.
+      Remaining wider-form findings are pre-existing and unrelated,
+      already covered by this task's own "report separately" clause:
+      21 `unused_imports` + 11 `never used` constant warnings in
+      generated-but-not-yet-page-converted modules (tasks 3.3/3.4,
+      explicitly deferred this session — expected, resolves once those
+      pages are converted) and the `data_table.rs` `collapsible_if` lint
+      already documented in `complete-component-prop-surface`'s own task
+      6.4 (predates this change, commit `1f386a7`, appears here too since
+      `apps/playground`'s own installed copy shares the same source).
 - [ ] 5.2 `cd tests/playwright && npm test` for keyboard/axe coverage on
       every page whose controls changed. Verify all pass; report any
       surface with no existing fixture rather than claiming it passed.

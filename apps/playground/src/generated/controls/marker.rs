@@ -24,22 +24,14 @@ const _: () = {
 };
 
 /// Generated demo state for [`Marker`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct MarkerDemoState {
     pub variant: MarkerVariant,
 }
 
-impl Default for MarkerDemoState {
-    fn default() -> Self {
-        Self {
-            variant: MarkerVariant::Default,
-        }
-    }
-}
-
 #[component]
 pub fn MarkerControls(mut state: Signal<MarkerDemoState>) -> Element {
-    let mut variant = use_signal(|| state().variant);
+    let variant = use_signal(|| state().variant);
     use_effect(move || {
         state.set(MarkerDemoState { variant: variant() });
     });

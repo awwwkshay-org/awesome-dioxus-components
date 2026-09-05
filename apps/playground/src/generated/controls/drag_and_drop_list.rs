@@ -6,22 +6,14 @@ use dioxus::prelude::*;
 use crate::components::controls::{NumberControl, TextControl};
 
 /// Generated demo state for [`DragAndDropListItems`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct DragAndDropListItemsDemoState {
     pub aria_label: String,
 }
 
-impl Default for DragAndDropListItemsDemoState {
-    fn default() -> Self {
-        Self {
-            aria_label: String::new(),
-        }
-    }
-}
-
 #[component]
 pub fn DragAndDropListItemsControls(mut state: Signal<DragAndDropListItemsDemoState>) -> Element {
-    let mut aria_label = use_signal(|| state().aria_label);
+    let aria_label = use_signal(|| state().aria_label);
     use_effect(move || {
         state.set(DragAndDropListItemsDemoState {
             aria_label: aria_label(),
@@ -33,20 +25,14 @@ pub fn DragAndDropListItemsControls(mut state: Signal<DragAndDropListItemsDemoSt
 }
 
 /// Generated demo state for [`DragAndDropListItem`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct DragAndDropListItemDemoState {
     pub index: usize,
 }
 
-impl Default for DragAndDropListItemDemoState {
-    fn default() -> Self {
-        Self { index: 0 }
-    }
-}
-
 #[component]
 pub fn DragAndDropListItemControls(mut state: Signal<DragAndDropListItemDemoState>) -> Element {
-    let mut index = use_signal(|| state().index as f64);
+    let index = use_signal(|| state().index as f64);
     use_effect(move || {
         state.set(DragAndDropListItemDemoState {
             index: index() as usize,
@@ -58,22 +44,16 @@ pub fn DragAndDropListItemControls(mut state: Signal<DragAndDropListItemDemoStat
 }
 
 /// Generated demo state for [`DragAndDropDropIndicator`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct DragAndDropDropIndicatorDemoState {
     pub index: usize,
-}
-
-impl Default for DragAndDropDropIndicatorDemoState {
-    fn default() -> Self {
-        Self { index: 0 }
-    }
 }
 
 #[component]
 pub fn DragAndDropDropIndicatorControls(
     mut state: Signal<DragAndDropDropIndicatorDemoState>,
 ) -> Element {
-    let mut index = use_signal(|| state().index as f64);
+    let index = use_signal(|| state().index as f64);
     use_effect(move || {
         state.set(DragAndDropDropIndicatorDemoState {
             index: index() as usize,

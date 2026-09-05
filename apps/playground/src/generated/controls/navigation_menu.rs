@@ -6,20 +6,14 @@ use dioxus::prelude::*;
 use crate::components::controls::BoolControl;
 
 /// Generated demo state for [`NavigationMenuContent`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct NavigationMenuContentDemoState {
     pub force_mount: bool,
 }
 
-impl Default for NavigationMenuContentDemoState {
-    fn default() -> Self {
-        Self { force_mount: false }
-    }
-}
-
 #[component]
 pub fn NavigationMenuContentControls(mut state: Signal<NavigationMenuContentDemoState>) -> Element {
-    let mut force_mount = use_signal(|| state().force_mount);
+    let force_mount = use_signal(|| state().force_mount);
     use_effect(move || {
         state.set(NavigationMenuContentDemoState {
             force_mount: force_mount(),
@@ -31,22 +25,14 @@ pub fn NavigationMenuContentControls(mut state: Signal<NavigationMenuContentDemo
 }
 
 /// Generated demo state for [`NavigationMenuLink`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct NavigationMenuLinkDemoState {
     pub close_on_click: bool,
 }
 
-impl Default for NavigationMenuLinkDemoState {
-    fn default() -> Self {
-        Self {
-            close_on_click: false,
-        }
-    }
-}
-
 #[component]
 pub fn NavigationMenuLinkControls(mut state: Signal<NavigationMenuLinkDemoState>) -> Element {
-    let mut close_on_click = use_signal(|| state().close_on_click);
+    let close_on_click = use_signal(|| state().close_on_click);
     use_effect(move || {
         state.set(NavigationMenuLinkDemoState {
             close_on_click: close_on_click(),

@@ -6,25 +6,16 @@ use dioxus::prelude::*;
 use crate::components::controls::{BoolControl, OptionalBoolControl};
 
 /// Generated demo state for [`DatePickerPopover`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct DatePickerPopoverDemoState {
     pub open: Option<bool>,
     pub default_open: bool,
 }
 
-impl Default for DatePickerPopoverDemoState {
-    fn default() -> Self {
-        Self {
-            open: None,
-            default_open: false,
-        }
-    }
-}
-
 #[component]
 pub fn DatePickerPopoverControls(mut state: Signal<DatePickerPopoverDemoState>) -> Element {
-    let mut open = use_signal(|| state().open);
-    let mut default_open = use_signal(|| state().default_open);
+    let open = use_signal(|| state().open);
+    let default_open = use_signal(|| state().default_open);
     use_effect(move || {
         state.set(DatePickerPopoverDemoState {
             open: open(),

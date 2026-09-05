@@ -6,20 +6,14 @@ use dioxus::prelude::*;
 use crate::components::controls::NumberControl;
 
 /// Generated demo state for [`AccordionItem`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct AccordionItemDemoState {
     pub index: usize,
 }
 
-impl Default for AccordionItemDemoState {
-    fn default() -> Self {
-        Self { index: 0 }
-    }
-}
-
 #[component]
 pub fn AccordionItemControls(mut state: Signal<AccordionItemDemoState>) -> Element {
-    let mut index = use_signal(|| state().index as f64);
+    let index = use_signal(|| state().index as f64);
     use_effect(move || {
         state.set(AccordionItemDemoState {
             index: index() as usize,

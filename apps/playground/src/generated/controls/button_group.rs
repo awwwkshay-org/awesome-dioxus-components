@@ -22,22 +22,14 @@ const _: () = {
 };
 
 /// Generated demo state for [`ButtonGroup`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct ButtonGroupDemoState {
     pub orientation: ButtonGroupOrientation,
 }
 
-impl Default for ButtonGroupDemoState {
-    fn default() -> Self {
-        Self {
-            orientation: ButtonGroupOrientation::Horizontal,
-        }
-    }
-}
-
 #[component]
 pub fn ButtonGroupControls(mut state: Signal<ButtonGroupDemoState>) -> Element {
-    let mut orientation = use_signal(|| state().orientation);
+    let orientation = use_signal(|| state().orientation);
     use_effect(move || {
         state.set(ButtonGroupDemoState {
             orientation: orientation(),
@@ -49,20 +41,14 @@ pub fn ButtonGroupControls(mut state: Signal<ButtonGroupDemoState>) -> Element {
 }
 
 /// Generated demo state for [`ButtonGroupSeparator`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct ButtonGroupSeparatorDemoState {
     pub horizontal: bool,
 }
 
-impl Default for ButtonGroupSeparatorDemoState {
-    fn default() -> Self {
-        Self { horizontal: false }
-    }
-}
-
 #[component]
 pub fn ButtonGroupSeparatorControls(mut state: Signal<ButtonGroupSeparatorDemoState>) -> Element {
-    let mut horizontal = use_signal(|| state().horizontal);
+    let horizontal = use_signal(|| state().horizontal);
     use_effect(move || {
         state.set(ButtonGroupSeparatorDemoState {
             horizontal: horizontal(),

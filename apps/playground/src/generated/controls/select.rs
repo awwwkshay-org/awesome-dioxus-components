@@ -22,20 +22,14 @@ const _: () = {
 };
 
 /// Generated demo state for [`Select`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct SelectDemoState {
     pub open: Option<bool>,
 }
 
-impl Default for SelectDemoState {
-    fn default() -> Self {
-        Self { open: None }
-    }
-}
-
 #[component]
 pub fn SelectControls(mut state: Signal<SelectDemoState>) -> Element {
-    let mut open = use_signal(|| state().open);
+    let open = use_signal(|| state().open);
     use_effect(move || {
         state.set(SelectDemoState { open: open() });
     });
@@ -45,20 +39,14 @@ pub fn SelectControls(mut state: Signal<SelectDemoState>) -> Element {
 }
 
 /// Generated demo state for [`SelectMulti`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct SelectMultiDemoState {
     pub open: Option<bool>,
 }
 
-impl Default for SelectMultiDemoState {
-    fn default() -> Self {
-        Self { open: None }
-    }
-}
-
 #[component]
 pub fn SelectMultiControls(mut state: Signal<SelectMultiDemoState>) -> Element {
-    let mut open = use_signal(|| state().open);
+    let open = use_signal(|| state().open);
     use_effect(move || {
         state.set(SelectMultiDemoState { open: open() });
     });
@@ -68,25 +56,16 @@ pub fn SelectMultiControls(mut state: Signal<SelectMultiDemoState>) -> Element {
 }
 
 /// Generated demo state for [`SelectTrigger`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct SelectTriggerDemoState {
     pub size: SelectTriggerSize,
     pub aria_invalid: bool,
 }
 
-impl Default for SelectTriggerDemoState {
-    fn default() -> Self {
-        Self {
-            size: SelectTriggerSize::Default,
-            aria_invalid: false,
-        }
-    }
-}
-
 #[component]
 pub fn SelectTriggerControls(mut state: Signal<SelectTriggerDemoState>) -> Element {
-    let mut size = use_signal(|| state().size);
-    let mut aria_invalid = use_signal(|| state().aria_invalid);
+    let size = use_signal(|| state().size);
+    let aria_invalid = use_signal(|| state().aria_invalid);
     use_effect(move || {
         state.set(SelectTriggerDemoState {
             size: size(),

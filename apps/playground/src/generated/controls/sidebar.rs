@@ -89,25 +89,16 @@ const _: () = {
 };
 
 /// Generated demo state for [`SidebarProvider`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct SidebarProviderDemoState {
     pub open: Option<bool>,
     pub default_open: bool,
 }
 
-impl Default for SidebarProviderDemoState {
-    fn default() -> Self {
-        Self {
-            open: None,
-            default_open: false,
-        }
-    }
-}
-
 #[component]
 pub fn SidebarProviderControls(mut state: Signal<SidebarProviderDemoState>) -> Element {
-    let mut open = use_signal(|| state().open);
-    let mut default_open = use_signal(|| state().default_open);
+    let open = use_signal(|| state().open);
+    let default_open = use_signal(|| state().default_open);
     use_effect(move || {
         state.set(SidebarProviderDemoState {
             open: open(),
@@ -121,28 +112,18 @@ pub fn SidebarProviderControls(mut state: Signal<SidebarProviderDemoState>) -> E
 }
 
 /// Generated demo state for [`Sidebar`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct SidebarDemoState {
     pub side: SidebarSide,
     pub collapsible: SidebarCollapsible,
     pub variant: SidebarVariant,
 }
 
-impl Default for SidebarDemoState {
-    fn default() -> Self {
-        Self {
-            side: SidebarSide::Left,
-            collapsible: SidebarCollapsible::Offcanvas,
-            variant: SidebarVariant::Sidebar,
-        }
-    }
-}
-
 #[component]
 pub fn SidebarControls(mut state: Signal<SidebarDemoState>) -> Element {
-    let mut side = use_signal(|| state().side);
-    let mut collapsible = use_signal(|| state().collapsible);
-    let mut variant = use_signal(|| state().variant);
+    let side = use_signal(|| state().side);
+    let collapsible = use_signal(|| state().collapsible);
+    let variant = use_signal(|| state().variant);
     use_effect(move || {
         state.set(SidebarDemoState {
             side: side(),
@@ -158,22 +139,14 @@ pub fn SidebarControls(mut state: Signal<SidebarDemoState>) -> Element {
 }
 
 /// Generated demo state for [`SidebarInset`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct SidebarInsetDemoState {
     pub variant: SidebarVariant,
 }
 
-impl Default for SidebarInsetDemoState {
-    fn default() -> Self {
-        Self {
-            variant: SidebarVariant::Sidebar,
-        }
-    }
-}
-
 #[component]
 pub fn SidebarInsetControls(mut state: Signal<SidebarInsetDemoState>) -> Element {
-    let mut variant = use_signal(|| state().variant);
+    let variant = use_signal(|| state().variant);
     use_effect(move || {
         state.set(SidebarInsetDemoState { variant: variant() });
     });
@@ -183,25 +156,16 @@ pub fn SidebarInsetControls(mut state: Signal<SidebarInsetDemoState>) -> Element
 }
 
 /// Generated demo state for [`SidebarSeparator`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct SidebarSeparatorDemoState {
     pub horizontal: bool,
     pub decorative: bool,
 }
 
-impl Default for SidebarSeparatorDemoState {
-    fn default() -> Self {
-        Self {
-            horizontal: false,
-            decorative: false,
-        }
-    }
-}
-
 #[component]
 pub fn SidebarSeparatorControls(mut state: Signal<SidebarSeparatorDemoState>) -> Element {
-    let mut horizontal = use_signal(|| state().horizontal);
-    let mut decorative = use_signal(|| state().decorative);
+    let horizontal = use_signal(|| state().horizontal);
+    let decorative = use_signal(|| state().decorative);
     use_effect(move || {
         state.set(SidebarSeparatorDemoState {
             horizontal: horizontal(),
@@ -215,7 +179,7 @@ pub fn SidebarSeparatorControls(mut state: Signal<SidebarSeparatorDemoState>) ->
 }
 
 /// Generated demo state for [`SidebarMenuButton`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct SidebarMenuButtonDemoState {
     pub is_active: bool,
     pub disabled: bool,
@@ -224,25 +188,13 @@ pub struct SidebarMenuButtonDemoState {
     pub loading: bool,
 }
 
-impl Default for SidebarMenuButtonDemoState {
-    fn default() -> Self {
-        Self {
-            is_active: false,
-            disabled: false,
-            variant: SidebarMenuButtonVariant::Default,
-            size: SidebarMenuButtonSize::Default,
-            loading: false,
-        }
-    }
-}
-
 #[component]
 pub fn SidebarMenuButtonControls(mut state: Signal<SidebarMenuButtonDemoState>) -> Element {
-    let mut is_active = use_signal(|| state().is_active);
-    let mut disabled = use_signal(|| state().disabled);
-    let mut variant = use_signal(|| state().variant);
-    let mut size = use_signal(|| state().size);
-    let mut loading = use_signal(|| state().loading);
+    let is_active = use_signal(|| state().is_active);
+    let disabled = use_signal(|| state().disabled);
+    let variant = use_signal(|| state().variant);
+    let size = use_signal(|| state().size);
+    let loading = use_signal(|| state().loading);
     use_effect(move || {
         state.set(SidebarMenuButtonDemoState {
             is_active: is_active(),

@@ -22,22 +22,14 @@ const _: () = {
 };
 
 /// Generated demo state for [`EmptyMedia`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct EmptyMediaDemoState {
     pub variant: EmptyMediaVariant,
 }
 
-impl Default for EmptyMediaDemoState {
-    fn default() -> Self {
-        Self {
-            variant: EmptyMediaVariant::Default,
-        }
-    }
-}
-
 #[component]
 pub fn EmptyMediaControls(mut state: Signal<EmptyMediaDemoState>) -> Element {
-    let mut variant = use_signal(|| state().variant);
+    let variant = use_signal(|| state().variant);
     use_effect(move || {
         state.set(EmptyMediaDemoState { variant: variant() });
     });

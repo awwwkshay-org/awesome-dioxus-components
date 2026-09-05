@@ -22,25 +22,16 @@ const _: () = {
 };
 
 /// Generated demo state for [`Skeleton`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct SkeletonDemoState {
     pub variant: SkeletonVariant,
     pub decorative: bool,
 }
 
-impl Default for SkeletonDemoState {
-    fn default() -> Self {
-        Self {
-            variant: SkeletonVariant::Default,
-            decorative: false,
-        }
-    }
-}
-
 #[component]
 pub fn SkeletonControls(mut state: Signal<SkeletonDemoState>) -> Element {
-    let mut variant = use_signal(|| state().variant);
-    let mut decorative = use_signal(|| state().decorative);
+    let variant = use_signal(|| state().variant);
+    let decorative = use_signal(|| state().decorative);
     use_effect(move || {
         state.set(SkeletonDemoState {
             variant: variant(),

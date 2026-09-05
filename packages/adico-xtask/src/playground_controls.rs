@@ -272,47 +272,21 @@ fn demo_state_field_type(field: &QualifyingField) -> String {
     }
 }
 
-/// A fixed, deterministic default value expression per `PropShape` -- never
-/// the field's own `#[props(default = ...)]` expression, which may be an
-/// arbitrary Rust expression this generator does not attempt to
-/// round-trip. Matches `design.md`'s D2 decision.
-fn demo_state_default_expr(
-    field: &QualifyingField,
-    introspection: &crate::rust_introspect::FileIntrospection,
-) -> String {
-    match &field.shape {
-        PropShape::Bool => "false".to_string(),
-        PropShape::Text => "String::new()".to_string(),
-        PropShape::Number => {
-            if matches!(field.type_name, "f32" | "f64") {
-                "0.0".to_string()
-            } else {
-                "0".to_string()
-            }
-        }
-        PropShape::OptionalBool => "None".to_string(),
-        PropShape::Enum(enum_name) => {
-            let default_variant = introspection.enums[enum_name]
-                .default_variant
-                .as_deref()
-                .expect("a qualifying Enum field's enum always has a #[default] variant");
-            format!("{enum_name}::{default_variant}")
-        }
-        PropShape::Skipped(_) => unreachable!("qualifying_fields already filtered Skipped"),
-    }
-}
-
-/// Renders `pub struct <Comp>DemoState { ... }` plus its `Default` impl.
-fn render_demo_state(
-    component_name: &str,
-    fields: &[QualifyingField],
-    introspection: &crate::rust_introspect::FileIntrospection,
-) -> String {
+/// Renders `pub struct <Comp>DemoState { ... }`, deriving `Default` rather
+/// than hand-writing an `impl Default` block: every `PropShape`'s
+/// `DemoState` field type (`bool`/`String`/a numeric primitive/
+/// `Option<bool>`/an enum whose own `#[default]` variant this generator
+/// already requires via `classify_prop_type`'s `Enum` match arm) has a
+/// `Default::default()` that is exactly the value this generator would
+/// otherwise have chosen by hand, so a derive produces identical behavior
+/// with no generated code -- caught by `clippy::derivable_impls` on the
+/// very first hand-written version, not anticipated in design.md.
+fn render_demo_state(component_name: &str, fields: &[QualifyingField]) -> String {
     let mut body = String::new();
     body.push_str(&format!(
         "/// Generated demo state for [`{component_name}`], one field per controllable prop.\n"
     ));
-    body.push_str("#[derive(Clone, PartialEq)]\n");
+    body.push_str("#[derive(Clone, Default, PartialEq)]\n");
     body.push_str(&format!("pub struct {component_name}DemoState {{\n"));
     for field in fields {
         body.push_str(&format!(
@@ -322,18 +296,6 @@ fn render_demo_state(
         ));
     }
     body.push_str("}\n\n");
-
-    body.push_str(&format!(
-        "impl Default for {component_name}DemoState {{\n    fn default() -> Self {{\n        Self {{\n"
-    ));
-    for field in fields {
-        body.push_str(&format!(
-            "            {}: {},\n",
-            field.name,
-            demo_state_default_expr(field, introspection)
-        ));
-    }
-    body.push_str("        }\n    }\n}\n\n");
     body
 }
 
@@ -369,18 +331,21 @@ fn render_controls_component(component_name: &str, fields: &[QualifyingField]) -
     ));
     for field in fields {
         let local = local_signal_name(field.name);
-        let seed = if matches!(field.shape, PropShape::Number) {
+        // `NumberControl` is always `Signal<f64>`; only cast when the real
+        // field type isn't already `f64` (a redundant same-type cast is a
+        // clippy error under this baseline's `-D warnings`).
+        let seed = if matches!(field.shape, PropShape::Number) && field.type_name != "f64" {
             format!("state().{} as f64", field.name)
         } else {
             format!("state().{}", field.name)
         };
-        body.push_str(&format!("    let mut {local} = use_signal(|| {seed});\n"));
+        body.push_str(&format!("    let {local} = use_signal(|| {seed});\n"));
     }
     body.push_str("    use_effect(move || {\n");
     body.push_str(&format!("        state.set({component_name}DemoState {{\n"));
     for field in fields {
         let local = local_signal_name(field.name);
-        let value = if matches!(field.shape, PropShape::Number) {
+        let value = if matches!(field.shape, PropShape::Number) && field.type_name != "f64" {
             format!("{local}() as {}", field.type_name)
         } else {
             format!("{local}()")
@@ -505,7 +470,7 @@ fn render_component_file(
                 PropShape::Skipped(_) => unreachable!("qualifying_fields already filtered Skipped"),
             });
         }
-        demo_sections.push_str(&render_demo_state(component_name, &fields, introspection));
+        demo_sections.push_str(&render_demo_state(component_name, &fields));
         demo_sections.push_str(&render_controls_component(component_name, &fields));
         if sole_root == Some(component_name.as_str()) {
             used_component_names.insert(component_name.clone());

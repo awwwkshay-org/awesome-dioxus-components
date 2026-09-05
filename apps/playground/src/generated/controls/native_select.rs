@@ -22,7 +22,7 @@ const _: () = {
 };
 
 /// Generated demo state for [`NativeSelect`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct NativeSelectDemoState {
     pub size: NativeSelectSize,
     pub disabled: bool,
@@ -30,23 +30,12 @@ pub struct NativeSelectDemoState {
     pub invalid: bool,
 }
 
-impl Default for NativeSelectDemoState {
-    fn default() -> Self {
-        Self {
-            size: NativeSelectSize::Default,
-            disabled: false,
-            required: false,
-            invalid: false,
-        }
-    }
-}
-
 #[component]
 pub fn NativeSelectControls(mut state: Signal<NativeSelectDemoState>) -> Element {
-    let mut size = use_signal(|| state().size);
-    let mut disabled = use_signal(|| state().disabled);
-    let mut required = use_signal(|| state().required);
-    let mut invalid = use_signal(|| state().invalid);
+    let size = use_signal(|| state().size);
+    let disabled = use_signal(|| state().disabled);
+    let required = use_signal(|| state().required);
+    let invalid = use_signal(|| state().invalid);
     use_effect(move || {
         state.set(NativeSelectDemoState {
             size: size(),
@@ -64,20 +53,14 @@ pub fn NativeSelectControls(mut state: Signal<NativeSelectDemoState>) -> Element
 }
 
 /// Generated demo state for [`NativeSelectOption`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct NativeSelectOptionDemoState {
     pub disabled: bool,
 }
 
-impl Default for NativeSelectOptionDemoState {
-    fn default() -> Self {
-        Self { disabled: false }
-    }
-}
-
 #[component]
 pub fn NativeSelectOptionControls(mut state: Signal<NativeSelectOptionDemoState>) -> Element {
-    let mut disabled = use_signal(|| state().disabled);
+    let disabled = use_signal(|| state().disabled);
     use_effect(move || {
         state.set(NativeSelectOptionDemoState {
             disabled: disabled(),
@@ -89,22 +72,14 @@ pub fn NativeSelectOptionControls(mut state: Signal<NativeSelectOptionDemoState>
 }
 
 /// Generated demo state for [`NativeSelectOptGroup`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct NativeSelectOptGroupDemoState {
     pub label: String,
 }
 
-impl Default for NativeSelectOptGroupDemoState {
-    fn default() -> Self {
-        Self {
-            label: String::new(),
-        }
-    }
-}
-
 #[component]
 pub fn NativeSelectOptGroupControls(mut state: Signal<NativeSelectOptGroupDemoState>) -> Element {
-    let mut label = use_signal(|| state().label);
+    let label = use_signal(|| state().label);
     use_effect(move || {
         state.set(NativeSelectOptGroupDemoState { label: label() });
     });

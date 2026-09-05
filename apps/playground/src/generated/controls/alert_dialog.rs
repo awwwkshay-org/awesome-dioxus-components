@@ -22,22 +22,14 @@ const _: () = {
 };
 
 /// Generated demo state for [`AlertDialogContent`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct AlertDialogContentDemoState {
     pub size: AlertDialogContentSize,
 }
 
-impl Default for AlertDialogContentDemoState {
-    fn default() -> Self {
-        Self {
-            size: AlertDialogContentSize::Default,
-        }
-    }
-}
-
 #[component]
 pub fn AlertDialogContentControls(mut state: Signal<AlertDialogContentDemoState>) -> Element {
-    let mut size = use_signal(|| state().size);
+    let size = use_signal(|| state().size);
     use_effect(move || {
         state.set(AlertDialogContentDemoState { size: size() });
     });
@@ -47,20 +39,14 @@ pub fn AlertDialogContentControls(mut state: Signal<AlertDialogContentDemoState>
 }
 
 /// Generated demo state for [`AlertDialogAction`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct AlertDialogActionDemoState {
     pub loading: bool,
 }
 
-impl Default for AlertDialogActionDemoState {
-    fn default() -> Self {
-        Self { loading: false }
-    }
-}
-
 #[component]
 pub fn AlertDialogActionControls(mut state: Signal<AlertDialogActionDemoState>) -> Element {
-    let mut loading = use_signal(|| state().loading);
+    let loading = use_signal(|| state().loading);
     use_effect(move || {
         state.set(AlertDialogActionDemoState { loading: loading() });
     });

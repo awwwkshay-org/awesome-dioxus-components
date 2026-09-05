@@ -6,20 +6,14 @@ use dioxus::prelude::*;
 use crate::components::controls::BoolControl;
 
 /// Generated demo state for [`HoverCardContent`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct HoverCardContentDemoState {
     pub force_mount: bool,
 }
 
-impl Default for HoverCardContentDemoState {
-    fn default() -> Self {
-        Self { force_mount: false }
-    }
-}
-
 #[component]
 pub fn HoverCardContentControls(mut state: Signal<HoverCardContentDemoState>) -> Element {
-    let mut force_mount = use_signal(|| state().force_mount);
+    let force_mount = use_signal(|| state().force_mount);
     use_effect(move || {
         state.set(HoverCardContentDemoState {
             force_mount: force_mount(),

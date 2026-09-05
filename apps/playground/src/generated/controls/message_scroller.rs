@@ -6,25 +6,17 @@ use dioxus::prelude::*;
 use crate::components::controls::NumberControl;
 
 /// Generated demo state for [`MessageScroller`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct MessageScrollerDemoState {
     pub bottom_threshold: f64,
 }
 
-impl Default for MessageScrollerDemoState {
-    fn default() -> Self {
-        Self {
-            bottom_threshold: 0.0,
-        }
-    }
-}
-
 #[component]
 pub fn MessageScrollerControls(mut state: Signal<MessageScrollerDemoState>) -> Element {
-    let mut bottom_threshold = use_signal(|| state().bottom_threshold as f64);
+    let bottom_threshold = use_signal(|| state().bottom_threshold);
     use_effect(move || {
         state.set(MessageScrollerDemoState {
-            bottom_threshold: bottom_threshold() as f64,
+            bottom_threshold: bottom_threshold(),
         });
     });
     rsx! {

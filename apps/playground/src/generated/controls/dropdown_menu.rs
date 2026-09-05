@@ -22,25 +22,16 @@ const _: () = {
 };
 
 /// Generated demo state for [`DropdownMenu`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct DropdownMenuDemoState {
     pub open: Option<bool>,
     pub default_open: bool,
 }
 
-impl Default for DropdownMenuDemoState {
-    fn default() -> Self {
-        Self {
-            open: None,
-            default_open: false,
-        }
-    }
-}
-
 #[component]
 pub fn DropdownMenuControls(mut state: Signal<DropdownMenuDemoState>) -> Element {
-    let mut open = use_signal(|| state().open);
-    let mut default_open = use_signal(|| state().default_open);
+    let open = use_signal(|| state().open);
+    let default_open = use_signal(|| state().default_open);
     use_effect(move || {
         state.set(DropdownMenuDemoState {
             open: open(),
@@ -54,25 +45,16 @@ pub fn DropdownMenuControls(mut state: Signal<DropdownMenuDemoState>) -> Element
 }
 
 /// Generated demo state for [`DropdownMenuItem`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct DropdownMenuItemDemoState {
     pub inset: bool,
     pub variant: DropdownMenuItemVariant,
 }
 
-impl Default for DropdownMenuItemDemoState {
-    fn default() -> Self {
-        Self {
-            inset: false,
-            variant: DropdownMenuItemVariant::Default,
-        }
-    }
-}
-
 #[component]
 pub fn DropdownMenuItemControls(mut state: Signal<DropdownMenuItemDemoState>) -> Element {
-    let mut inset = use_signal(|| state().inset);
-    let mut variant = use_signal(|| state().variant);
+    let inset = use_signal(|| state().inset);
+    let variant = use_signal(|| state().variant);
     use_effect(move || {
         state.set(DropdownMenuItemDemoState {
             inset: inset(),

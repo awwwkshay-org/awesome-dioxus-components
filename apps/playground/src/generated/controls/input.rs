@@ -7,7 +7,7 @@ use crate::components::controls::{BoolControl, TextControl};
 use crate::components::ui::Input;
 
 /// Generated demo state for [`Input`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct InputDemoState {
     pub r#type: String,
     pub disabled: bool,
@@ -16,25 +16,13 @@ pub struct InputDemoState {
     pub invalid: bool,
 }
 
-impl Default for InputDemoState {
-    fn default() -> Self {
-        Self {
-            r#type: String::new(),
-            disabled: false,
-            readonly: false,
-            required: false,
-            invalid: false,
-        }
-    }
-}
-
 #[component]
 pub fn InputControls(mut state: Signal<InputDemoState>) -> Element {
-    let mut r#type = use_signal(|| state().r#type);
-    let mut disabled = use_signal(|| state().disabled);
-    let mut readonly = use_signal(|| state().readonly);
-    let mut required = use_signal(|| state().required);
-    let mut invalid = use_signal(|| state().invalid);
+    let r#type = use_signal(|| state().r#type);
+    let disabled = use_signal(|| state().disabled);
+    let readonly = use_signal(|| state().readonly);
+    let required = use_signal(|| state().required);
+    let invalid = use_signal(|| state().invalid);
     use_effect(move || {
         state.set(InputDemoState {
             r#type: r#type(),

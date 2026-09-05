@@ -39,25 +39,16 @@ const _: () = {
 };
 
 /// Generated demo state for [`ToggleItem`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct ToggleItemDemoState {
     pub size: ToggleItemSize,
     pub variant: ToggleItemVariant,
 }
 
-impl Default for ToggleItemDemoState {
-    fn default() -> Self {
-        Self {
-            size: ToggleItemSize::Default,
-            variant: ToggleItemVariant::Default,
-        }
-    }
-}
-
 #[component]
 pub fn ToggleItemControls(mut state: Signal<ToggleItemDemoState>) -> Element {
-    let mut size = use_signal(|| state().size);
-    let mut variant = use_signal(|| state().variant);
+    let size = use_signal(|| state().size);
+    let variant = use_signal(|| state().variant);
     use_effect(move || {
         state.set(ToggleItemDemoState {
             size: size(),

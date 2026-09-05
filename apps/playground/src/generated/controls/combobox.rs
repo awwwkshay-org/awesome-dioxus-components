@@ -6,20 +6,14 @@ use dioxus::prelude::*;
 use crate::components::controls::OptionalBoolControl;
 
 /// Generated demo state for [`Combobox`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct ComboboxDemoState {
     pub open: Option<bool>,
 }
 
-impl Default for ComboboxDemoState {
-    fn default() -> Self {
-        Self { open: None }
-    }
-}
-
 #[component]
 pub fn ComboboxControls(mut state: Signal<ComboboxDemoState>) -> Element {
-    let mut open = use_signal(|| state().open);
+    let open = use_signal(|| state().open);
     use_effect(move || {
         state.set(ComboboxDemoState { open: open() });
     });
@@ -29,20 +23,14 @@ pub fn ComboboxControls(mut state: Signal<ComboboxDemoState>) -> Element {
 }
 
 /// Generated demo state for [`ComboboxMulti`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct ComboboxMultiDemoState {
     pub open: Option<bool>,
 }
 
-impl Default for ComboboxMultiDemoState {
-    fn default() -> Self {
-        Self { open: None }
-    }
-}
-
 #[component]
 pub fn ComboboxMultiControls(mut state: Signal<ComboboxMultiDemoState>) -> Element {
-    let mut open = use_signal(|| state().open);
+    let open = use_signal(|| state().open);
     use_effect(move || {
         state.set(ComboboxMultiDemoState { open: open() });
     });

@@ -6,33 +6,23 @@ use dioxus::prelude::*;
 use crate::components::controls::{BoolControl, NumberControl};
 
 /// Generated demo state for [`ResizablePanel`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct ResizablePanelDemoState {
     pub default_size: f64,
     pub min_size: f64,
     pub max_size: f64,
 }
 
-impl Default for ResizablePanelDemoState {
-    fn default() -> Self {
-        Self {
-            default_size: 0.0,
-            min_size: 0.0,
-            max_size: 0.0,
-        }
-    }
-}
-
 #[component]
 pub fn ResizablePanelControls(mut state: Signal<ResizablePanelDemoState>) -> Element {
-    let mut default_size = use_signal(|| state().default_size as f64);
-    let mut min_size = use_signal(|| state().min_size as f64);
-    let mut max_size = use_signal(|| state().max_size as f64);
+    let default_size = use_signal(|| state().default_size);
+    let min_size = use_signal(|| state().min_size);
+    let max_size = use_signal(|| state().max_size);
     use_effect(move || {
         state.set(ResizablePanelDemoState {
-            default_size: default_size() as f64,
-            min_size: min_size() as f64,
-            max_size: max_size() as f64,
+            default_size: default_size(),
+            min_size: min_size(),
+            max_size: max_size(),
         });
     });
     rsx! {
@@ -43,20 +33,14 @@ pub fn ResizablePanelControls(mut state: Signal<ResizablePanelDemoState>) -> Ele
 }
 
 /// Generated demo state for [`ResizableHandle`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct ResizableHandleDemoState {
     pub with_handle: bool,
 }
 
-impl Default for ResizableHandleDemoState {
-    fn default() -> Self {
-        Self { with_handle: false }
-    }
-}
-
 #[component]
 pub fn ResizableHandleControls(mut state: Signal<ResizableHandleDemoState>) -> Element {
-    let mut with_handle = use_signal(|| state().with_handle);
+    let with_handle = use_signal(|| state().with_handle);
     use_effect(move || {
         state.set(ResizableHandleDemoState {
             with_handle: with_handle(),

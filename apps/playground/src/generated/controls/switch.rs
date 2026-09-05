@@ -20,28 +20,18 @@ const _: () = {
 };
 
 /// Generated demo state for [`Switch`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct SwitchDemoState {
     pub checked: Option<bool>,
     pub default_checked: bool,
     pub size: SwitchSize,
 }
 
-impl Default for SwitchDemoState {
-    fn default() -> Self {
-        Self {
-            checked: None,
-            default_checked: false,
-            size: SwitchSize::Default,
-        }
-    }
-}
-
 #[component]
 pub fn SwitchControls(mut state: Signal<SwitchDemoState>) -> Element {
-    let mut checked = use_signal(|| state().checked);
-    let mut default_checked = use_signal(|| state().default_checked);
-    let mut size = use_signal(|| state().size);
+    let checked = use_signal(|| state().checked);
+    let default_checked = use_signal(|| state().default_checked);
+    let size = use_signal(|| state().size);
     use_effect(move || {
         state.set(SwitchDemoState {
             checked: checked(),

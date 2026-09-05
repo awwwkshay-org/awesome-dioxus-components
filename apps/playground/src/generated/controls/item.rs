@@ -56,28 +56,18 @@ const _: () = {
 };
 
 /// Generated demo state for [`Item`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct ItemDemoState {
     pub variant: ItemVariant,
     pub size: ItemSize,
     pub disabled: bool,
 }
 
-impl Default for ItemDemoState {
-    fn default() -> Self {
-        Self {
-            variant: ItemVariant::Default,
-            size: ItemSize::Default,
-            disabled: false,
-        }
-    }
-}
-
 #[component]
 pub fn ItemControls(mut state: Signal<ItemDemoState>) -> Element {
-    let mut variant = use_signal(|| state().variant);
-    let mut size = use_signal(|| state().size);
-    let mut disabled = use_signal(|| state().disabled);
+    let variant = use_signal(|| state().variant);
+    let size = use_signal(|| state().size);
+    let disabled = use_signal(|| state().disabled);
     use_effect(move || {
         state.set(ItemDemoState {
             variant: variant(),
@@ -93,22 +83,14 @@ pub fn ItemControls(mut state: Signal<ItemDemoState>) -> Element {
 }
 
 /// Generated demo state for [`ItemMedia`], one field per controllable prop.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Default, PartialEq)]
 pub struct ItemMediaDemoState {
     pub variant: ItemMediaVariant,
 }
 
-impl Default for ItemMediaDemoState {
-    fn default() -> Self {
-        Self {
-            variant: ItemMediaVariant::Default,
-        }
-    }
-}
-
 #[component]
 pub fn ItemMediaControls(mut state: Signal<ItemMediaDemoState>) -> Element {
-    let mut variant = use_signal(|| state().variant);
+    let variant = use_signal(|| state().variant);
     use_effect(move || {
         state.set(ItemMediaDemoState { variant: variant() });
     });
