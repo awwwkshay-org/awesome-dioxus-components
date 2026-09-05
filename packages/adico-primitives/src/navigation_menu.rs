@@ -458,6 +458,12 @@ pub struct NavigationMenuLinkProps {
     #[props(default)]
     pub active: ReadSignal<bool>,
 
+    /// Whether selecting this link closes any open content. Defaults to
+    /// `true` -- set to `false` for a link that should stay open (e.g. one
+    /// that only navigates within the same open panel).
+    #[props(default = true)]
+    pub close_on_click: bool,
+
     /// Additional attributes to apply to the anchor element (e.g. `href`).
     #[props(extends = GlobalAttributes, extends = a)]
     pub attributes: Vec<Attribute>,
@@ -472,7 +478,8 @@ pub struct NavigationMenuLinkProps {
 /// [`NavigationMenuItem`]'s activator (in place of a
 /// [`NavigationMenuTrigger`]/[`NavigationMenuContent`] pair, when that item
 /// has no dropdown of its own) or nested inside a [`NavigationMenuContent`]
-/// as a sub-navigation link. Selecting it closes any open content.
+/// as a sub-navigation link. Selecting it closes any open content by
+/// default; set `close_on_click: false` to keep it open.
 ///
 /// ## Styling
 ///
@@ -488,7 +495,11 @@ pub fn NavigationMenuLink(props: NavigationMenuLinkProps) -> Element {
         a {
             "aria-current": (props.active)().then_some("page"),
             "data-active": props.active,
-            onclick: move |_| ctx.set_open_index.call(None),
+            onclick: move |_| {
+                if props.close_on_click {
+                    ctx.set_open_index.call(None);
+                }
+            },
             ..props.attributes,
             {props.children}
         }

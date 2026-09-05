@@ -88,7 +88,7 @@
             {
               "name": "onOpenChangeComplete",
               "status": "intentional_difference",
-              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico has no callback for when an open/close animation actually finishes, distinct from when the open state itself changes; needs new primitive-level transition-end event plumbing, tracked as follow-up primitive work"
             },
             {
               "name": "disabled",
@@ -676,7 +676,7 @@
             {
               "name": "onOpenChangeComplete",
               "status": "intentional_difference",
-              "reason": "adico extension gap: Base UI's data-driven collection-management/virtualization API (item list, identity comparison, virtualized rendering) has no established Dioxus-idiomatic equivalent yet; adico's combobox/select are children/registration-driven instead"
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico has no callback for when an open/close animation actually finishes, distinct from when the open state itself changes; needs new primitive-level transition-end event plumbing, tracked as follow-up primitive work"
             },
             {
               "name": "disabled",

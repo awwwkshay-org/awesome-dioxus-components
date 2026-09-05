@@ -9,15 +9,18 @@
           "props": [
             {
               "name": "defaultValue",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico tracks which item is open internally (by index) with no caller-controllable value/onValueChange API or stable per-item value identity; needs new primitive-level controlled-state work, tracked as follow-up"
             },
             {
               "name": "value",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico tracks which item is open internally (by index) with no caller-controllable value/onValueChange API or stable per-item value identity; needs new primitive-level controlled-state work, tracked as follow-up"
             },
             {
               "name": "onValueChange",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico tracks which item is open internally (by index) with no caller-controllable value/onValueChange API or stable per-item value identity; needs new primitive-level controlled-state work, tracked as follow-up"
             },
             {
               "name": "actionsRef",
@@ -26,19 +29,21 @@
             },
             {
               "name": "onOpenChangeComplete",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico has no callback for when an open/close animation actually finishes, distinct from when the open state itself changes; needs new primitive-level transition-end event plumbing, tracked as follow-up primitive work"
             },
             {
               "name": "delay",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "closeDelay",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "orientation",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this composite only supports one fixed layout orientation; a caller-selectable horizontal/vertical toggle needs new layout work, tracked as follow-up"
             },
             {
               "name": "className",
@@ -80,7 +85,8 @@
           "props": [
             {
               "name": "value",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico tracks which item is open internally (by index) with no caller-controllable value/onValueChange API or stable per-item value identity; needs new primitive-level controlled-state work, tracked as follow-up"
             },
             {
               "name": "className",
@@ -141,7 +147,7 @@
             },
             {
               "name": "keepMounted",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "render",
@@ -160,7 +166,7 @@
           "props": [
             {
               "name": "closeOnClick",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "active",
@@ -205,19 +211,23 @@
           "props": [
             {
               "name": "viewport",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: shadcn's own convenience toggle for a single, shared cross-item animated viewport wrapper has no adico equivalent; each content part positions independently instead, a compositional difference not planned to change"
             },
             {
               "name": "defaultValue",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico tracks which item is open internally (by index) with no caller-controllable value/onValueChange API or stable per-item value identity; needs new primitive-level controlled-state work, tracked as follow-up"
             },
             {
               "name": "value",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico tracks which item is open internally (by index) with no caller-controllable value/onValueChange API or stable per-item value identity; needs new primitive-level controlled-state work, tracked as follow-up"
             },
             {
               "name": "onValueChange",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico tracks which item is open internally (by index) with no caller-controllable value/onValueChange API or stable per-item value identity; needs new primitive-level controlled-state work, tracked as follow-up"
             },
             {
               "name": "actionsRef",
@@ -226,19 +236,21 @@
             },
             {
               "name": "onOpenChangeComplete",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico has no callback for when an open/close animation actually finishes, distinct from when the open state itself changes; needs new primitive-level transition-end event plumbing, tracked as follow-up primitive work"
             },
             {
               "name": "delay",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "closeDelay",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "orientation",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this composite only supports one fixed layout orientation; a caller-selectable horizontal/vertical toggle needs new layout work, tracked as follow-up"
             },
             {
               "name": "className",
@@ -280,7 +292,8 @@
           "props": [
             {
               "name": "value",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): adico tracks which item is open internally (by index) with no caller-controllable value/onValueChange API or stable per-item value identity; needs new primitive-level controlled-state work, tracked as follow-up"
             },
             {
               "name": "className",
@@ -341,7 +354,7 @@
             },
             {
               "name": "keepMounted",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "render",
@@ -360,7 +373,7 @@
           "props": [
             {
               "name": "closeOnClick",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "active",

@@ -136,8 +136,37 @@ const REACT_ONLY_STRUCTURAL: &[(&str, &str)] = &[
 ];
 
 /// Explicit renames applied before generic camelCase-to-snake_case
-/// conversion (`className` doesn't naturally snake-case to `class`).
+/// conversion (`className` doesn't naturally snake-case to `class`). Only
+/// safe here when the target spelling is consistent across *every* item
+/// that has this upstream prop -- `className` -> `class` always is. A name
+/// that denotes different concepts on different items (see
+/// `ITEM_RENAMES`'s own doc comment) must not go in this table: it would
+/// mark some unrelated item's same-named-but-different field `present`.
 const RENAMES: &[(&str, &str)] = &[("className", "class")];
+
+/// Per-item prop renames, keyed by `(item, raw_upstream_name)` -> adico's
+/// own field name, consulted only for that one item. Unlike `RENAMES`,
+/// these upstream names are *not* safe to rename globally: `keepMounted`
+/// alone appears on over 30 unrelated parts across a dozen components in
+/// `statics/catalogs/base-ui.json` (portals, indicators, panels), and
+/// `delay`/`closeDelay` appear on every hover-intent trigger (menu,
+/// popover, preview-card, tooltip) -- a global rename to `force_mount`/
+/// `delay_ms`/`close_delay_ms` would mark an unrelated item's unrelated
+/// field `present` by coincidence of spelling.
+const ITEM_RENAMES: &[(&str, &str, &str)] = &[
+    ("navigation-menu", "delay", "delay_ms"),
+    ("navigation-menu", "closeDelay", "close_delay_ms"),
+    ("navigation-menu", "keepMounted", "force_mount"),
+];
+
+fn item_canonical_name(item: &str, raw_name: &str) -> String {
+    for (table_item, from, to) in ITEM_RENAMES {
+        if *table_item == item && *from == raw_name {
+            return (*to).to_string();
+        }
+    }
+    canonical_name(raw_name)
+}
 
 /// Reason recorded for every `radius` extension entry below. `radius` has
 /// no upstream counterpart on any axis -- adico exposes a consistent
@@ -330,6 +359,32 @@ const MODAL_POPUP_REASON: &str = "adico extension gap: this composite's popup/ov
 /// prop rename.
 const CUSTOM_VALUE_RENDER_REASON: &str = "adico extension gap, deferred (not a permanent design choice): adico's value display always renders the selected option's own text; letting a caller supply a custom renderer needs the primitive to thread the typed selected value out to a caller-supplied render callback, tracked as follow-up primitive work";
 
+/// Reason recorded where the matched axis fires a callback once an
+/// open/close animation finishes, distinct from the moment the open state
+/// itself changes -- adico has no such completion signal for this
+/// composite yet. Deferred: needs new primitive-level transition-end
+/// event plumbing, not a prop rename.
+const ANIMATION_COMPLETE_REASON: &str = "adico extension gap, deferred (not a permanent design choice): adico has no callback for when an open/close animation actually finishes, distinct from when the open state itself changes; needs new primitive-level transition-end event plumbing, tracked as follow-up primitive work";
+
+/// Reason recorded where a composite supports only one fixed layout
+/// orientation (no caller-selectable horizontal/vertical toggle at all,
+/// unlike `ORIENTATION_REPRESENTATION_REASON`'s case of "has it, just a
+/// different representation").
+const FIXED_ORIENTATION_REASON: &str = "adico extension gap, deferred (not a permanent design choice): this composite only supports one fixed layout orientation; a caller-selectable horizontal/vertical toggle needs new layout work, tracked as follow-up";
+
+/// Reason recorded where the matched axis's controlled-value system (a
+/// stable per-item identity plus a root-level `value`/`onValueChange`
+/// pair tracking which item is currently open/active) has no adico
+/// equivalent -- adico tracks the open item by internal index only, with
+/// no caller-controllable API. Deferred: a real controlled-value feature,
+/// not a prop rename.
+const NO_CONTROLLED_OPEN_ITEM_REASON: &str = "adico extension gap, deferred (not a permanent design choice): adico tracks which item is open internally (by index) with no caller-controllable value/onValueChange API or stable per-item value identity; needs new primitive-level controlled-state work, tracked as follow-up";
+
+/// Reason recorded where shadcn's own convenience toggle for a single,
+/// shared cross-item animated viewport wrapper has no adico equivalent --
+/// each of adico's own content parts positions independently instead.
+const SHARED_VIEWPORT_REASON: &str = "adico extension gap: shadcn's own convenience toggle for a single, shared cross-item animated viewport wrapper has no adico equivalent; each content part positions independently instead, a compositional difference not planned to change";
+
 /// Item-specific `intentional_difference` reasons for a genuine upstream
 /// prop that has no adico equivalent by design, keyed by
 /// `(item, part, upstream_prop_name)` using the upstream axis's own raw
@@ -401,7 +456,7 @@ const INTENTIONAL_DIFFERENCE_REASONS: &[(&str, &str, &str, &str)] = &[
         "combobox",
         "root",
         "onOpenChangeComplete",
-        COLLECTION_MANAGEMENT_REASON,
+        ANIMATION_COMPLETE_REASON,
     ),
     (
         "combobox",
@@ -553,7 +608,7 @@ const INTENTIONAL_DIFFERENCE_REASONS: &[(&str, &str, &str, &str)] = &[
         "select",
         "root",
         "onOpenChangeComplete",
-        COLLECTION_MANAGEMENT_REASON,
+        ANIMATION_COMPLETE_REASON,
     ),
     ("select", "root", "form", FORM_PARTICIPATION_REASON),
     ("select", "root", "readOnly", FORM_PARTICIPATION_REASON),
@@ -563,6 +618,53 @@ const INTENTIONAL_DIFFERENCE_REASONS: &[(&str, &str, &str, &str)] = &[
     ("select", "root", "multiple", SEPARATE_COMPONENT_REASON),
     ("select", "trigger", "disabled", CASCADING_DISABLED_REASON),
     ("select", "value", "children", CUSTOM_VALUE_RENDER_REASON),
+    // navigation-menu: `delay`/`closeDelay`/`keepMounted` are real,
+    // renamed fields (see `ITEM_RENAMES`) and so never reach this table;
+    // the remaining gaps are a real controlled-open-item API adico
+    // doesn't have, an animation-complete callback, and a fixed single
+    // orientation.
+    (
+        "navigation-menu",
+        "root",
+        "defaultValue",
+        NO_CONTROLLED_OPEN_ITEM_REASON,
+    ),
+    (
+        "navigation-menu",
+        "root",
+        "value",
+        NO_CONTROLLED_OPEN_ITEM_REASON,
+    ),
+    (
+        "navigation-menu",
+        "root",
+        "onValueChange",
+        NO_CONTROLLED_OPEN_ITEM_REASON,
+    ),
+    (
+        "navigation-menu",
+        "item",
+        "value",
+        NO_CONTROLLED_OPEN_ITEM_REASON,
+    ),
+    (
+        "navigation-menu",
+        "root",
+        "onOpenChangeComplete",
+        ANIMATION_COMPLETE_REASON,
+    ),
+    (
+        "navigation-menu",
+        "root",
+        "orientation",
+        FIXED_ORIENTATION_REASON,
+    ),
+    (
+        "navigation-menu",
+        "root",
+        "viewport",
+        SHARED_VIEWPORT_REASON,
+    ),
 ];
 
 fn react_only_structural_reason(raw_name: &str) -> Option<&'static str> {
@@ -646,7 +748,11 @@ fn classify_upstream_prop(
     // finding for the ~22 of 66 registry items using this convention.
     let covered_by_attributes_extend =
         looks_like_native_event_name(raw_name) && adico_fields.has_attributes_extend;
-    if adico_fields.names.contains(&canonical_name(raw_name)) || covered_by_attributes_extend {
+    if adico_fields
+        .names
+        .contains(&item_canonical_name(item, raw_name))
+        || covered_by_attributes_extend
+    {
         return PropStatus {
             name: raw_name.to_string(),
             status: Status::Present,

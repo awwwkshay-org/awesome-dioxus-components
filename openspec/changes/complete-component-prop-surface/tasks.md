@@ -340,16 +340,79 @@ best-matching axis — implement it, or record it `intentional_difference`
 with a written reason (design.md's D6). Consult the generated JSON file
 directly for the exact prop list; it is not duplicated here.
 
-- [ ] 5.1 **Wave 1 — composite/collection controls** (96 missing entries):
+- [x] 5.1 **Wave 1 — composite/collection controls** (96 missing entries):
       `combobox` (29), `slider` (26), `select` (16), `calendar` (14),
       `navigation-menu` (11). Verify `cargo run -p adico-xtask --
       prop-parity diff` reports no drift for these five items against
       their updated source, and that re-running `prop-parity sync`
       produces records with zero remaining `missing` status for them.
 
-      **Progress: `combobox`, `slider`, `select` done** (3 of 5).
-      `prop-parity diff` reports zero remaining `missing` status for all
-      three. `select`'s own notes:
+      **Done: all 5 of 5.** `prop-parity diff` reports zero remaining
+      `missing` status for `combobox`, `slider`, `select`, `calendar`,
+      `navigation-menu`. `calendar` needed no further work at all once the
+      `introspect_item` fallback (below) landed — it was already at zero
+      `missing` before this item's own turn came up. `navigation-menu`'s
+      own notes:
+      - Real fixes, all found by reading `packages/adico-primitives/src/
+        navigation_menu.rs` directly (its own catalog axis match is
+        `None` on `dioxus-components`/`dioxus-primitives`, so there was no
+        "attributes missing" signal pointing at this item the way there
+        was for the other four): `attributes: Vec<Attribute>` forwarding
+        added to all six registry facades (`NavigationMenu`,
+        `NavigationMenuList`, `NavigationMenuItem`, `NavigationMenuTrigger`,
+        `NavigationMenuContent`, `NavigationMenuLink`) — none of them
+        forwarded it before, even though every one of the primitive's own
+        Props structs already declared it; `delay_ms`/`close_delay_ms`
+        (hover-intent open/close timing) and `force_mount` (keep content
+        mounted while closed) were already fully wired and tested
+        primitive fields the registry facade simply never exposed; and a
+        genuinely new primitive feature, `close_on_click: bool` (default
+        `true`) on `NavigationMenuLink`, gating what was previously an
+        unconditional `ctx.set_open_index.call(None)` — small enough to
+        implement directly rather than defer (one field, one `if`).
+      - `delay`/`closeDelay`/`keepMounted` needed a **new, per-item**
+        rename mechanism: the existing global `RENAMES` table (currently
+        just `className` -> `class`) is only safe for a name whose target
+        spelling is consistent across *every* item that has it. Checked
+        first — `keepMounted` alone appears on 30+ unrelated parts across
+        a dozen `statics/catalogs/base-ui.json` components (portals,
+        indicators, panels), and `delay`/`closeDelay` appear on every
+        other hover-intent trigger (menu, popover, preview-card, tooltip);
+        a global rename to `force_mount`/`delay_ms`/`close_delay_ms` would
+        have marked an unrelated item's unrelated field `present` by
+        coincidence of spelling. Added `ITEM_RENAMES`, keyed by
+        `(item, raw_upstream_name)`, consulted only for that one item via
+        a new `item_canonical_name` wrapper around `canonical_name`.
+      - Three new reasons: `ANIMATION_COMPLETE_REASON`
+        (`onOpenChangeComplete` — no transition-end event, deferred; also
+        retroactively reclassifies `combobox`'s and `select`'s own
+        `onOpenChangeComplete` entries, which had been folded into
+        `COLLECTION_MANAGEMENT_REASON` inaccurately — same one-line
+        correction discipline as the earlier `modal` fix),
+        `FIXED_ORIENTATION_REASON` (`orientation` — one fixed layout, no
+        horizontal/vertical toggle at all, unlike slider's
+        `ORIENTATION_REPRESENTATION_REASON` case of "has it, differently
+        represented"), and `NO_CONTROLLED_OPEN_ITEM_REASON`
+        (`defaultValue`/`value`/`onValueChange` on `root`, `value` on
+        `item` — adico tracks the open item by internal index only, no
+        controllable value API or stable per-item identity).
+      - One more new reason, `SHARED_VIEWPORT_REASON`, for shadcn's own
+        `viewport: boolean` convenience toggle (a single shared cross-item
+        animated viewport wrapper Base UI itself doesn't have — confirmed
+        absent from `statics/catalogs/base-ui.json`'s `navigation-menu`
+        entry, present only on the `shadcn` axis); adico's content parts
+        each position independently instead.
+      - Not covered by a real fix, this file's Rust-level tests, or a
+        Playwright pass in this task: `close_on_click`'s actual click
+        behavior. This crate's existing `navigation_menu.rs` tests are all
+        pure SSR-render/structural checks with no click-simulation
+        pattern to extend, and the field doesn't affect initial render
+        output at all (only click behavior) — verifying it belongs in
+        `tests/playwright`'s keyboard/interaction coverage once
+        `navigation-menu` gets exercised there, not a new Rust unit-test
+        pattern invented for one field.
+
+      `select`'s own notes:
       - Real fixes: `attributes: Vec<Attribute>` forwarding on `Select`,
         `SelectMulti`, `SelectTrigger`, `SelectOption`, `SelectValue`,
         `SelectList` (all six facades; the primitives already supported

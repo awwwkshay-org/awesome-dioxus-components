@@ -7045,6 +7045,11 @@
                 "type": "ReadSignal<bool>"
               },
               {
+                "default": "true",
+                "name": "close_on_click",
+                "type": "bool"
+              },
+              {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
               },
@@ -7127,6 +7132,22 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "delay_ms",
+                "type": "ReadSignal<u64>"
+              },
+              {
+                "name": "close_delay_ms",
+                "type": "ReadSignal<u64>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "NavigationMenuContent": [
@@ -7149,6 +7170,14 @@
               {
                 "name": "align",
                 "type": "Option<ContentAlign>"
+              },
+              {
+                "name": "force_mount",
+                "type": "bool"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "NavigationMenuItem": [
@@ -7167,6 +7196,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "NavigationMenuLink": [
@@ -7187,8 +7220,16 @@
                 "type": "Radius"
               },
               {
+                "name": "close_on_click",
+                "type": "bool"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "NavigationMenuList": [
@@ -7199,6 +7240,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "NavigationMenuTrigger": [
@@ -7213,6 +7258,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }
