@@ -55,6 +55,18 @@ pub struct AvatarProps {
     /// Accessible label for the avatar image role.
     #[props(default)]
     pub aria_label: Option<String>,
+    /// Called when the image loads successfully.
+    #[props(default)]
+    pub on_load: Option<EventHandler<()>>,
+    /// Called when the image fails to load.
+    #[props(default)]
+    pub on_error: Option<EventHandler<()>>,
+    /// Called when the avatar's loading state changes.
+    #[props(default)]
+    pub on_state_change: Option<EventHandler<adico_primitives::avatar::AvatarState>>,
+    /// Native div/global attributes and events.
+    #[props(extends = GlobalAttributes)]
+    pub attributes: Vec<Attribute>,
     /// Caller-composed [`AvatarImage`]/[`AvatarFallback`] children.
     pub children: Element,
 }
@@ -70,13 +82,24 @@ pub fn Avatar(props: AvatarProps) -> Element {
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        AvatarPrimitive { class, aria_label: props.aria_label, {props.children} }
+        AvatarPrimitive {
+            class,
+            aria_label: props.aria_label,
+            on_load: props.on_load,
+            on_error: props.on_error,
+            on_state_change: props.on_state_change,
+            attributes: props.attributes,
+            {props.children}
+        }
     }
 }
 
 /// Props for [`AvatarImage`].
 #[derive(Props, Clone, PartialEq)]
 pub struct AvatarImageProps {
+    /// Optional id for the image element.
+    #[props(default)]
+    pub id: ReadSignal<Option<String>>,
     /// The image source URL.
     pub src: String,
     /// Alt text for the image.
@@ -85,6 +108,9 @@ pub struct AvatarImageProps {
     /// Extra classes appended to the semantic default.
     #[props(default)]
     pub class: Option<String>,
+    /// Native img/global attributes and events.
+    #[props(extends = GlobalAttributes)]
+    pub attributes: Vec<Attribute>,
 }
 
 /// The styled avatar image; stops rendering on load failure so
@@ -96,7 +122,13 @@ pub fn AvatarImage(props: AvatarImageProps) -> Element {
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        AvatarImagePrimitive { src: props.src, alt: props.alt, class }
+        AvatarImagePrimitive {
+            id: props.id,
+            src: props.src,
+            alt: props.alt,
+            class,
+            attributes: props.attributes,
+        }
     }
 }
 
@@ -110,6 +142,9 @@ pub struct AvatarFallbackProps {
     /// Extra classes appended to the semantic default.
     #[props(default)]
     pub class: Option<String>,
+    /// Native div/global attributes and events.
+    #[props(extends = GlobalAttributes)]
+    pub attributes: Vec<Attribute>,
     /// Caller-composed fallback content (initials, an icon, etc.).
     pub children: Element,
 }
@@ -123,7 +158,11 @@ pub fn AvatarFallback(props: AvatarFallbackProps) -> Element {
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        AvatarFallbackPrimitive { class, {props.children} }
+        AvatarFallbackPrimitive {
+            class,
+            attributes: props.attributes,
+            {props.children}
+        }
     }
 }
 

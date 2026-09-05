@@ -15,6 +15,10 @@ pub struct LabelProps {
     /// Extra classes appended to the semantic default.
     #[props(default)]
     pub class: Option<String>,
+    /// Native label/global attributes and events.
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = label)]
+    pub attributes: Vec<Attribute>,
     /// Caller-composed label content.
     pub children: Element,
 }
@@ -30,6 +34,7 @@ pub fn Label(props: LabelProps) -> Element {
         LabelPrimitive {
             html_for: props.html_for,
             class,
+            attributes: props.attributes,
             {props.children}
         }
     }

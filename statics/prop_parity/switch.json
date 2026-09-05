@@ -25,11 +25,12 @@
             },
             {
               "name": "value",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "form",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "nativeButton",
@@ -38,7 +39,8 @@
             },
             {
               "name": "uncheckedValue",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "disabled",
@@ -46,11 +48,12 @@
             },
             {
               "name": "readOnly",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "required",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "inputRef",
@@ -59,7 +62,8 @@
             },
             {
               "name": "id",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: settable via this part's generic `attributes` extends forwarding (spread last, so a caller-supplied value overrides adico's own internal one); no dedicated named prop for a plain global attribute with no additional behavior"
             },
             {
               "name": "className",
@@ -104,7 +108,7 @@
             },
             {
               "name": "required",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "name",
@@ -112,7 +116,7 @@
             },
             {
               "name": "value",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "on_checked_change",
@@ -120,11 +124,12 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this component always renders its own fixed built-in visual (a checkmark, a thumb, a fill bar) with no children slot for the caller to customize it; the shadcn axis doesn't expose this as customizable either, confirming it's a deliberate design choice, not planned to change"
             },
             {
               "name": "radius",
@@ -155,7 +160,7 @@
             },
             {
               "name": "required",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "name",
@@ -163,7 +168,7 @@
             },
             {
               "name": "value",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "on_checked_change",
@@ -171,11 +176,12 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this component always renders its own fixed built-in visual (a checkmark, a thumb, a fill bar) with no children slot for the caller to customize it; the shadcn axis doesn't expose this as customizable either, confirming it's a deliberate design choice, not planned to change"
             },
             {
               "name": "radius",
@@ -214,11 +220,12 @@
             },
             {
               "name": "value",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "form",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "nativeButton",
@@ -227,7 +234,8 @@
             },
             {
               "name": "uncheckedValue",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "disabled",
@@ -235,11 +243,12 @@
             },
             {
               "name": "readOnly",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "required",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "inputRef",
@@ -248,7 +257,8 @@
             },
             {
               "name": "id",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: settable via this part's generic `attributes` extends forwarding (spread last, so a caller-supplied value overrides adico's own internal one); no dedicated named prop for a plain global attribute with no additional behavior"
             },
             {
               "name": "className",

@@ -25,7 +25,8 @@
             },
             {
               "name": "indeterminate",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this is represented as one three-variant enum (e.g. CheckboxState { Checked, Indeterminate, Unchecked }) rather than a separate checked/indeterminate boolean pair -- same capability, a different representation, not planned to change"
             },
             {
               "name": "value",
@@ -33,7 +34,8 @@
             },
             {
               "name": "form",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "nativeButton",
@@ -42,11 +44,13 @@
             },
             {
               "name": "parent",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's tri-state parent/child checkbox relationship (a parent automatically becoming indeterminate based on its children's checked states, e.g. a \"select all\" pattern) has no adico equivalent; needs new primitive-level relationship-tracking work, tracked as follow-up"
             },
             {
               "name": "uncheckedValue",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "disabled",
@@ -54,7 +58,8 @@
             },
             {
               "name": "readOnly",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "required",
@@ -67,7 +72,8 @@
             },
             {
               "name": "id",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: settable via this part's generic `attributes` extends forwarding (spread last, so a caller-supplied value overrides adico's own internal one); no dedicated named prop for a plain global attribute with no additional behavior"
             },
             {
               "name": "className",
@@ -127,7 +133,8 @@
             },
             {
               "name": "children",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this component always renders its own fixed built-in visual (a checkmark, a thumb, a fill bar) with no children slot for the caller to customize it; the shadcn axis doesn't expose this as customizable either, confirming it's a deliberate design choice, not planned to change"
             }
           ]
         }
@@ -173,7 +180,8 @@
             },
             {
               "name": "children",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this component always renders its own fixed built-in visual (a checkmark, a thumb, a fill bar) with no children slot for the caller to customize it; the shadcn axis doesn't expose this as customizable either, confirming it's a deliberate design choice, not planned to change"
             }
           ]
         }
@@ -203,7 +211,8 @@
             },
             {
               "name": "indeterminate",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this is represented as one three-variant enum (e.g. CheckboxState { Checked, Indeterminate, Unchecked }) rather than a separate checked/indeterminate boolean pair -- same capability, a different representation, not planned to change"
             },
             {
               "name": "value",
@@ -211,7 +220,8 @@
             },
             {
               "name": "form",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "nativeButton",
@@ -220,11 +230,13 @@
             },
             {
               "name": "parent",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's tri-state parent/child checkbox relationship (a parent automatically becoming indeterminate based on its children's checked states, e.g. a \"select all\" pattern) has no adico equivalent; needs new primitive-level relationship-tracking work, tracked as follow-up"
             },
             {
               "name": "uncheckedValue",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "disabled",
@@ -232,7 +244,8 @@
             },
             {
               "name": "readOnly",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): native form participation (FormData inclusion, constraint validation) needs a hidden mirror <input> synced to the controlled value, a new adico-primitives mechanism this change's prop-surface scope does not cover; tracked as follow-up primitive work"
             },
             {
               "name": "required",
@@ -245,7 +258,8 @@
             },
             {
               "name": "id",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: settable via this part's generic `attributes` extends forwarding (spread last, so a caller-supplied value overrides adico's own internal one); no dedicated named prop for a plain global attribute with no additional behavior"
             },
             {
               "name": "className",

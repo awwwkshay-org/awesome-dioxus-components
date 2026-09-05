@@ -9,7 +9,8 @@
           "props": [
             {
               "name": "focusableWhenDisabled",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer focusableWhenDisabled toggle (a disabled control that stays in the tab order, communicating why via aria-disabled instead of removing focusability) has no adico equivalent; needs new primitive/facade behavior work, tracked as follow-up"
             },
             {
               "name": "nativeButton",
@@ -56,7 +57,8 @@
           "props": [
             {
               "name": "orientation",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this is exposed as a plain boolean flag (e.g. `horizontal`) rather than a `\"horizontal\" | \"vertical\"` string enum -- same capability, a different representation, not planned to change"
             },
             {
               "name": "className",
@@ -92,11 +94,12 @@
             },
             {
               "name": "on_click",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico renames this activation callback to on_select, matching this registry's own naming convention for primitive-backed components (documented inline at each call site that uses it) -- not a missing capability, a different, permanent name"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -132,7 +135,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             }
           ]
         }
@@ -154,11 +157,12 @@
             },
             {
               "name": "on_click",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico renames this activation callback to on_select, matching this registry's own naming convention for primitive-backed components (documented inline at each call site that uses it) -- not a missing capability, a different, permanent name"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -194,7 +198,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             }
           ]
         }

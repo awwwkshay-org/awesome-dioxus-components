@@ -183,8 +183,16 @@
           "props": {
             "AccordionContent": [
               {
+                "name": "id",
+                "type": "Option<String>"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",
@@ -205,8 +213,20 @@
                 "type": "ReadSignal<bool>"
               },
               {
+                "name": "on_change",
+                "type": "Callback<bool,()>"
+              },
+              {
+                "name": "on_trigger_click",
+                "type": "Callback"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",
@@ -215,12 +235,20 @@
             ],
             "AccordionTrigger": [
               {
+                "name": "id",
+                "type": "Option<String>"
+              },
+              {
                 "name": "radius",
                 "type": "Radius"
               },
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",
@@ -833,11 +861,20 @@
                 "type": "Option<String>"
               },
               {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               }
             ],
             "AvatarImageProps": [
+              {
+                "default": "default()",
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
               {
                 "name": "src",
                 "type": "String"
@@ -851,6 +888,10 @@
                 "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "AvatarProps": [
@@ -873,6 +914,25 @@
                 "default": "default()",
                 "name": "aria_label",
                 "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "on_load",
+                "type": "Option<EventHandler<()>>"
+              },
+              {
+                "default": "default()",
+                "name": "on_error",
+                "type": "Option<EventHandler<()>>"
+              },
+              {
+                "default": "default()",
+                "name": "on_state_change",
+                "type": "Option<EventHandler<adico_primitives::avatar::AvatarState>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",
@@ -6382,6 +6442,10 @@
                 "type": "Option<String>"
               },
               {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               }
@@ -7790,6 +7854,10 @@
                 "default": "default()",
                 "name": "aria_label",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }
@@ -7923,6 +7991,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               },
               {
                 "name": "children",
@@ -9462,7 +9534,17 @@
               },
               {
                 "default": "default()",
+                "name": "required",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
                 "name": "name",
+                "type": "ReadSignal<String>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(String::from(\"on\")))",
+                "name": "value",
                 "type": "ReadSignal<String>"
               },
               {
@@ -9489,6 +9571,10 @@
                 "default": "default()",
                 "name": "aria_label",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }
@@ -10948,6 +11034,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ],
             "ToolbarSeparator": [
@@ -10962,6 +11052,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
               }
             ]
           }

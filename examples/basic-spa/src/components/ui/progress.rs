@@ -8,6 +8,7 @@ use adico_primitives::progress::{
 };
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// Props for [`Progress`].
 #[derive(Props, Clone, PartialEq)]
@@ -18,19 +19,26 @@ pub struct ProgressProps {
     /// The maximum value. Defaults to 100.
     #[props(default = ReadSignal::new(Signal::new(100.0)))]
     pub max: ReadSignal<f64>,
+    /// Corner radius of the track surface.
+    #[props(default = Radius::Full)]
+    pub radius: Radius,
     /// Extra classes appended to the semantic default.
     #[props(default)]
     pub class: Option<String>,
     /// Accessible name for the progressbar role.
     #[props(default)]
     pub aria_label: Option<String>,
+    /// Native div/global attributes and events.
+    #[props(extends = GlobalAttributes)]
+    pub attributes: Vec<Attribute>,
 }
 
 /// A progress bar with the default adico/shadcn visual language.
 #[component]
 pub fn Progress(props: ProgressProps) -> Element {
     let class = cn(&[
-        "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
+        "relative h-2 w-full overflow-hidden bg-primary/20",
+        props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     let percentage = props.value.cloned().unwrap_or(0.0) / (props.max)() * 100.0;
@@ -41,6 +49,7 @@ pub fn Progress(props: ProgressProps) -> Element {
             max: props.max,
             class,
             aria_label: props.aria_label,
+            attributes: props.attributes,
             ProgressIndicatorPrimitive {
                 class: "h-full w-full flex-1 bg-primary transition-all",
                 style: indicator_style,

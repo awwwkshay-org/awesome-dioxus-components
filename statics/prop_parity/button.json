@@ -9,7 +9,8 @@
           "props": [
             {
               "name": "focusableWhenDisabled",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's newer focusableWhenDisabled toggle (a disabled control that stays in the tab order, communicating why via aria-disabled instead of removing focusability) has no adico equivalent; needs new primitive/facade behavior work, tracked as follow-up"
             },
             {
               "name": "nativeButton",

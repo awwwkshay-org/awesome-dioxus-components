@@ -8,24 +8,28 @@
           "id": "root",
           "props": [
             {
-              "name": "value*",
-              "status": "missing"
+              "name": "value",
+              "status": "present"
             },
             {
               "name": "aria-valuetext",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this composite assumes a fixed minimum of 0 and derives its accessible value text automatically, with no caller-configurable minimum or value-text-formatter hook; needs new primitive-level range/ARIA plumbing, tracked as follow-up"
             },
             {
               "name": "getAriaValueText",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this composite assumes a fixed minimum of 0 and derives its accessible value text automatically, with no caller-configurable minimum or value-text-formatter hook; needs new primitive-level range/ARIA plumbing, tracked as follow-up"
             },
             {
               "name": "locale",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: no locale-aware number-formatting infrastructure exists anywhere in this codebase yet; not specific to this component, and not planned as part of this change"
             },
             {
               "name": "min",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this composite assumes a fixed minimum of 0 and derives its accessible value text automatically, with no caller-configurable minimum or value-text-formatter hook; needs new primitive-level range/ARIA plumbing, tracked as follow-up"
             },
             {
               "name": "max",
@@ -33,7 +37,8 @@
             },
             {
               "name": "format",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: no locale-aware number-formatting infrastructure exists anywhere in this codebase yet; not specific to this component, and not planned as part of this change"
             },
             {
               "name": "className",
@@ -74,11 +79,12 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this component always renders its own fixed built-in visual (a checkmark, a thumb, a fill bar) with no children slot for the caller to customize it; the shadcn axis doesn't expose this as customizable either, confirming it's a deliberate design choice, not planned to change"
             },
             {
               "name": "radius",
@@ -105,11 +111,12 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this component always renders its own fixed built-in visual (a checkmark, a thumb, a fill bar) with no children slot for the caller to customize it; the shadcn axis doesn't expose this as customizable either, confirming it's a deliberate design choice, not planned to change"
             },
             {
               "name": "radius",
@@ -127,24 +134,28 @@
           "id": "root",
           "props": [
             {
-              "name": "value*",
-              "status": "missing"
+              "name": "value",
+              "status": "present"
             },
             {
               "name": "aria-valuetext",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this composite assumes a fixed minimum of 0 and derives its accessible value text automatically, with no caller-configurable minimum or value-text-formatter hook; needs new primitive-level range/ARIA plumbing, tracked as follow-up"
             },
             {
               "name": "getAriaValueText",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this composite assumes a fixed minimum of 0 and derives its accessible value text automatically, with no caller-configurable minimum or value-text-formatter hook; needs new primitive-level range/ARIA plumbing, tracked as follow-up"
             },
             {
               "name": "locale",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: no locale-aware number-formatting infrastructure exists anywhere in this codebase yet; not specific to this component, and not planned as part of this change"
             },
             {
               "name": "min",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this composite assumes a fixed minimum of 0 and derives its accessible value text automatically, with no caller-configurable minimum or value-text-formatter hook; needs new primitive-level range/ARIA plumbing, tracked as follow-up"
             },
             {
               "name": "max",
@@ -152,7 +163,8 @@
             },
             {
               "name": "format",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: no locale-aware number-formatting infrastructure exists anywhere in this codebase yet; not specific to this component, and not planned as part of this change"
             },
             {
               "name": "className",

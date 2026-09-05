@@ -668,11 +668,78 @@ directly for the exact prop list; it is not duplicated here.
         escape/id-tracking controls -- `dropdown-menu` root only), and
         `MODAL_POPUP_REASON`/`ANIMATION_COMPLETE_REASON`/
         `FIXED_ORIENTATION_REASON` reused unchanged from Wave 1.
-- [ ] 5.3 **Wave 3 — native leaf/form controls** (32 missing entries):
+- [x] 5.3 **Wave 3 — native leaf/form controls** (32 missing entries):
       `checkbox` (7), `switch` (6), `progress` (6), `input` (2),
       `textarea` (2), `toolbar` (2), `avatar` (2), `toggle` (1),
       `accordion` (1), `button` (1), `label` (1), `radio-group` (1).
       Verify same as 5.1 for these twelve items.
+
+      **Done: all 12 of 12.** `prop-parity diff` reports zero remaining
+      `missing` status for every item in this wave. Notes:
+      - **A real upstream-fetcher bug, fixed in its own right (not a wave
+        item, but discovered triaging `progress`):** Base UI's docs site
+        renders a required prop's name with a literal trailing `*` (e.g.
+        `value*`), and `catalog/base_ui.rs`'s scraper captured it verbatim
+        as part of the prop name -- so `value*` never matched adico's own
+        `value` field anywhere it occurred. Affected 13 prop entries
+        across 4 base names (`children*`, `length*`, `toast*`, `value*`)
+        scattered through `statics/catalogs/base-ui.json`, not just
+        `progress`. Fixed the scraper to strip a trailing `*`, added a
+        test, and patched the 13 already-fetched entries directly
+        (`json.dump(..., ensure_ascii=False)` to avoid an unrelated
+        1514-line diff from Python re-escaping every non-ASCII character
+        Rust's `serde_json` had written literally) rather than re-running
+        the network fetch for a one-character fix.
+      - **A test/production-data collision, fixed in the same pass:**
+        `prop_parity.rs`'s own unit tests used a hardcoded fixture item
+        named `"switch"` (predating this wave) purely as an arbitrary
+        test name -- coincidentally colliding with `switch` once it
+        became a real item with its own `readOnly` table entry, flipping
+        a test's expected `Missing` to `IntentionalDifference` and
+        failing it. Renamed the fixture to `fixture-widget` /
+        `FixtureWidget`, guaranteed never to collide with a real registry
+        item name, rather than special-casing the assertion.
+      - Real fixes, the by-now-familiar shape (a real, already-wired
+        primitive field the registry facade never forwarded): `switch`
+        (`required`, `value`, `attributes`), `avatar` (`on_load`,
+        `on_error`, `on_state_change` on `Avatar`; `id`+`attributes` on
+        `AvatarImage`; `attributes` on `AvatarFallback`), `accordion`
+        (`on_change`, `on_trigger_click`, `attributes` on `AccordionItem`;
+        `id`+`attributes` on `AccordionTrigger`/`AccordionContent`), plus
+        mechanical `attributes` forwarding on `label`, `radio-group`,
+        `progress`, `toolbar` (`ToolbarButton`/`ToolbarSeparator`).
+      - Two more `ITEM_RENAMES` entries:
+        `("accordion", "onOpenChange", "on_change")` and confirmed
+        `checkbox`'s existing `CheckboxState { Checked, Indeterminate,
+        Unchecked }` already covers Base UI's separate
+        `checked`/`indeterminate` boolean pair (a new
+        `TRISTATE_ENUM_REASON`, not a rename -- the shapes don't line up
+        1:1 the way a plain rename requires).
+      - `toggle_group.rs` reading directly paid off again: `Toolbar`'s
+        `ToolbarSeparator` already has `horizontal: Option<bool>`
+        (`ORIENTATION_REPRESENTATION_REASON`, reused), and
+        `ToolbarButton`'s `on_select` (documented inline as a deliberate
+        rename from the primitive's own `on_click`) is a new, reusable
+        `ON_SELECT_NAMING_REASON`.
+      - Ten new reasons cover the remaining permanent/deferred gaps,
+        several already written to generalize beyond this wave:
+        `FIXED_INDICATOR_REASON` (checkbox/switch/progress always render
+        their own built-in visual, no children slot -- confirmed against
+        the `shadcn` axis, which doesn't expose this either),
+        `PARENT_CHECKBOX_REASON`, `ARIA_VALUE_CUSTOMIZATION_REASON`,
+        `NATIVE_LEAF_CONTROLLED_ONLY_REASON` (`Input`/`Textarea` mirror
+        plain HTML's `value`+`oninput`, not the controlled/uncontrolled
+        `defaultValue`+`onValueChange` duality other components use),
+        `NO_CHILDREN_COMPOSITION_REASON`, `THIRD_PARTY_VARIANT_REASON`,
+        `FOCUSABLE_DISABLED_REASON` (Base UI's newer
+        `focusableWhenDisabled`, needed by both `toolbar.button` and
+        `button.root` -- deferred rather than half-implemented only for
+        `ToolbarButton`, since `Button`'s own `disabled` is entirely
+        delegated to the generic `attributes` escape hatch with no
+        dedicated field to pair a new toggle against), `FALLBACK_DELAY_REASON`,
+        `SHAPE_VIA_RADIUS_REASON` (avatar's third-party `shape` toggle is
+        already covered by adico's own general-purpose `radius` prop),
+        and `NO_KEEP_MOUNTED_REASON`.
 - [ ] 5.4 **Wave 4 — dialog/overlay content** (18 missing entries):
       `sheet` (6), `dialog` (3), `alert-dialog` (3), `drawer` (3),
       `command` (3). Verify same as 5.1 for these five items.

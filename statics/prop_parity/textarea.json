@@ -89,7 +89,8 @@
             },
             {
               "name": "variant",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this is a visual-variant enum specific to the matched third-party UI kit's own opinionated design system, with no shadcn/Base UI counterpart; adico doesn't track that kit's own visual taxonomy, not planned to change"
             },
             {
               "name": "attributes",
@@ -97,7 +98,8 @@
             },
             {
               "name": "children",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: the matched axis's own component wraps composable children around or inside this native leaf element (e.g. icon adornments); adico's own facade mirrors plain native HTML instead, which has no children slot on this element, not planned to change"
             },
             {
               "name": "radius",

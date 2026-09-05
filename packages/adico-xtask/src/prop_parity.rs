@@ -170,6 +170,7 @@ const ITEM_RENAMES: &[(&str, &str, &str)] = &[
     ("toggle-group", "loopFocus", "roving_loop"),
     ("toggle-group", "multiple", "allow_multiple_pressed"),
     ("dropdown-menu", "label", "text_value"),
+    ("accordion", "onOpenChange", "on_change"),
 ];
 
 fn item_canonical_name(item: &str, raw_name: &str) -> String {
@@ -451,6 +452,81 @@ const INDEX_BASED_SELECTION_REASON: &str = "adico extension gap: adico tracks a 
 /// without deliberate border/corner handling per item previously read as a
 /// visual bug, reported live as "no space in toggle group").
 const SEGMENTED_SPACING_REASON: &str = "adico extension gap: shadcn's own zero-gap \"connected\" segmented-control look (spacing=0, items flush against each other with shared borders) has no adico equivalent; ToggleGroup always spaces items apart with a visible gap instead (see registry/ui/toggle_group.rs's own doc comment -- a flush layout without deliberate per-item border/corner handling previously read as a visual bug, reported live), not planned to change";
+
+/// Reason recorded where adico represents a Base UI checked/indeterminate
+/// boolean pair as one three-variant enum instead (e.g. `Checkbox`'s
+/// `CheckboxState { Checked, Indeterminate, Unchecked }`). Same capability,
+/// a different, permanent representation.
+const TRISTATE_ENUM_REASON: &str = "adico extension gap: this is represented as one three-variant enum (e.g. CheckboxState { Checked, Indeterminate, Unchecked }) rather than a separate checked/indeterminate boolean pair -- same capability, a different representation, not planned to change";
+
+/// Reason recorded where adico's checkbox/switch/toggle-style control
+/// always renders its own fixed built-in visual (a checkmark, a thumb, a
+/// fill bar) with no children slot for the caller to customize it -- the
+/// primitive's own Props struct may declare `children` generically, but
+/// the registry facade always supplies it internally.
+const FIXED_INDICATOR_REASON: &str = "adico extension gap: this component always renders its own fixed built-in visual (a checkmark, a thumb, a fill bar) with no children slot for the caller to customize it; the shadcn axis doesn't expose this as customizable either, confirming it's a deliberate design choice, not planned to change";
+
+/// Reason recorded for Base UI's tri-state parent/child checkbox
+/// relationship (a parent checkbox that automatically becomes
+/// indeterminate based on its children's checked states, e.g. a
+/// "select all" pattern). No adico equivalent -- real, moderately complex
+/// primitive-level work, not a prop rename.
+const PARENT_CHECKBOX_REASON: &str = "adico extension gap, deferred (not a permanent design choice): Base UI's tri-state parent/child checkbox relationship (a parent automatically becoming indeterminate based on its children's checked states, e.g. a \"select all\" pattern) has no adico equivalent; needs new primitive-level relationship-tracking work, tracked as follow-up";
+
+/// Reason recorded for a per-value ARIA-customization hook (an accessible
+/// value-text formatter, or a caller-configurable minimum) that a
+/// value-bearing composite doesn't expose -- adico assumes a fixed minimum
+/// of 0 and derives the accessible value text automatically.
+const ARIA_VALUE_CUSTOMIZATION_REASON: &str = "adico extension gap, deferred (not a permanent design choice): this composite assumes a fixed minimum of 0 and derives its accessible value text automatically, with no caller-configurable minimum or value-text-formatter hook; needs new primitive-level range/ARIA plumbing, tracked as follow-up";
+
+/// Reason recorded where a native-leaf-element component (mirroring plain
+/// HTML's own `value` + `oninput` convention, e.g. `Input`/`Textarea`) has
+/// no separate uncontrolled `defaultValue`/`onValueChange` pair the way
+/// primitive-backed components do -- a deliberate, permanent convention
+/// difference for this category of component, not a gap.
+const NATIVE_LEAF_CONTROLLED_ONLY_REASON: &str = "adico extension gap: this native-leaf-element component mirrors plain HTML's own value + oninput convention, not the separate controlled/uncontrolled defaultValue+onValueChange duality primitive-backed components use; a deliberate, permanent convention for this category of component";
+
+/// Reason recorded where the matched third-party axis's own component
+/// wraps composable children around or inside a native leaf element (e.g.
+/// icon adornments) that adico's own facade, mirroring plain native HTML,
+/// does not support -- a native `<input>`/`<textarea>` cannot have
+/// children in the first place.
+const NO_CHILDREN_COMPOSITION_REASON: &str = "adico extension gap: the matched axis's own component wraps composable children around or inside this native leaf element (e.g. icon adornments); adico's own facade mirrors plain native HTML instead, which has no children slot on this element, not planned to change";
+
+/// Reason recorded for a visual-variant enum specific to the matched
+/// third-party UI kit's own opinionated design system, with no shadcn/
+/// Base UI counterpart and no adico equivalent.
+const THIRD_PARTY_VARIANT_REASON: &str = "adico extension gap: this is a visual-variant enum specific to the matched third-party UI kit's own opinionated design system, with no shadcn/Base UI counterpart; adico doesn't track that kit's own visual taxonomy, not planned to change";
+
+/// Reason recorded for Base UI's newer `focusableWhenDisabled` toggle (a
+/// disabled button that stays in the tab order, communicating why via
+/// `aria-disabled` instead of removing focusability entirely). No adico
+/// equivalent -- real primitive/facade behavior work, not a prop rename.
+const FOCUSABLE_DISABLED_REASON: &str = "adico extension gap, deferred (not a permanent design choice): Base UI's newer focusableWhenDisabled toggle (a disabled control that stays in the tab order, communicating why via aria-disabled instead of removing focusability) has no adico equivalent; needs new primitive/facade behavior work, tracked as follow-up";
+
+/// Reason recorded where adico renames an upstream `onClick`/`on_click`
+/// activation callback to `on_select`, matching this registry's own
+/// naming convention for primitive-backed activation callbacks (documented
+/// inline at each call site that uses it).
+const ON_SELECT_NAMING_REASON: &str = "adico extension gap: adico renames this activation callback to on_select, matching this registry's own naming convention for primitive-backed components (documented inline at each call site that uses it) -- not a missing capability, a different, permanent name";
+
+/// Reason recorded for Base UI's newer `AvatarFallback` delay (wait N
+/// milliseconds after mount before rendering the fallback, avoiding a
+/// flash-of-fallback for fast-loading images). No adico equivalent --
+/// needs a new primitive-level timer, not a prop rename.
+const FALLBACK_DELAY_REASON: &str = "adico extension gap, deferred (not a permanent design choice): Base UI's fallback-delay toggle (wait N milliseconds after mount before rendering the fallback, avoiding a flash-of-fallback for fast-loading images) has no adico equivalent; needs a new primitive-level timer, tracked as follow-up";
+
+/// Reason recorded for the matched third-party axis's own `shape` prop
+/// toggle (e.g. circle vs. square) -- adico already covers this via its
+/// general-purpose `radius` prop (e.g. `Radius::Full` for a circle,
+/// `Radius::None` for a square), not a dedicated shape enum. Same
+/// capability, a different, permanent representation.
+const SHAPE_VIA_RADIUS_REASON: &str = "adico extension gap: this shape toggle (e.g. circle vs. square) is already covered by adico's own general-purpose radius prop instead of a dedicated shape enum -- same capability, a different, permanent representation";
+
+/// Reason recorded where a composite always unmounts its closed/hidden
+/// content, with no keep-mounted-for-animation or find-in-page-visible
+/// toggle at all.
+const NO_KEEP_MOUNTED_REASON: &str = "adico extension gap, deferred (not a permanent design choice): this composite always unmounts its closed/hidden content, with no keep-mounted-for-animation or find-in-page-visible toggle; needs new primitive-level mount-control work, tracked as follow-up";
 
 /// Item-specific `intentional_difference` reasons for a genuine upstream
 /// prop that has no adico equivalent by design, keyed by
@@ -882,6 +958,120 @@ const INTENTIONAL_DIFFERENCE_REASONS: &[(&str, &str, &str, &str)] = &[
         ORIENTATION_REPRESENTATION_REASON,
     ),
     ("toggle-group", "root", "spacing", SEGMENTED_SPACING_REASON),
+    // checkbox (Wave 3)
+    ("checkbox", "root", "indeterminate", TRISTATE_ENUM_REASON),
+    ("checkbox", "root", "form", FORM_PARTICIPATION_REASON),
+    ("checkbox", "root", "parent", PARENT_CHECKBOX_REASON),
+    (
+        "checkbox",
+        "root",
+        "uncheckedValue",
+        FORM_PARTICIPATION_REASON,
+    ),
+    ("checkbox", "root", "readOnly", FORM_PARTICIPATION_REASON),
+    ("checkbox", "root", "id", ATTRIBUTES_COVERAGE_REASON),
+    ("checkbox", "root", "children", FIXED_INDICATOR_REASON),
+    // switch (Wave 3)
+    ("switch", "root", "form", FORM_PARTICIPATION_REASON),
+    (
+        "switch",
+        "root",
+        "uncheckedValue",
+        FORM_PARTICIPATION_REASON,
+    ),
+    ("switch", "root", "readOnly", FORM_PARTICIPATION_REASON),
+    ("switch", "root", "id", ATTRIBUTES_COVERAGE_REASON),
+    ("switch", "root", "children", FIXED_INDICATOR_REASON),
+    // progress (Wave 3)
+    (
+        "progress",
+        "root",
+        "aria-valuetext",
+        ARIA_VALUE_CUSTOMIZATION_REASON,
+    ),
+    (
+        "progress",
+        "root",
+        "getAriaValueText",
+        ARIA_VALUE_CUSTOMIZATION_REASON,
+    ),
+    ("progress", "root", "min", ARIA_VALUE_CUSTOMIZATION_REASON),
+    ("progress", "root", "locale", LOCALE_FORMATTING_REASON),
+    ("progress", "root", "format", LOCALE_FORMATTING_REASON),
+    ("progress", "root", "children", FIXED_INDICATOR_REASON),
+    // toggle (Wave 3)
+    ("toggle", "root", "value", INDEX_BASED_SELECTION_REASON),
+    // input (Wave 3)
+    (
+        "input",
+        "root",
+        "defaultValue",
+        NATIVE_LEAF_CONTROLLED_ONLY_REASON,
+    ),
+    (
+        "input",
+        "root",
+        "onValueChange",
+        NATIVE_LEAF_CONTROLLED_ONLY_REASON,
+    ),
+    ("input", "root", "children", NO_CHILDREN_COMPOSITION_REASON),
+    // textarea (Wave 3)
+    ("textarea", "root", "variant", THIRD_PARTY_VARIANT_REASON),
+    (
+        "textarea",
+        "root",
+        "children",
+        NO_CHILDREN_COMPOSITION_REASON,
+    ),
+    // toolbar (Wave 3)
+    (
+        "toolbar",
+        "button",
+        "focusableWhenDisabled",
+        FOCUSABLE_DISABLED_REASON,
+    ),
+    (
+        "toolbar",
+        "separator",
+        "orientation",
+        ORIENTATION_REPRESENTATION_REASON,
+    ),
+    ("toolbar", "button", "on_click", ON_SELECT_NAMING_REASON),
+    // avatar (Wave 3)
+    (
+        "avatar",
+        "image",
+        "onLoadingStatusChange",
+        PART_DECOMPOSITION_REASON,
+    ),
+    ("avatar", "fallback", "delay", FALLBACK_DELAY_REASON),
+    ("avatar", "root", "shape", SHAPE_VIA_RADIUS_REASON),
+    // accordion (Wave 3): `onOpenChange` resolves via `ITEM_RENAMES`.
+    (
+        "accordion",
+        "item",
+        "default_open",
+        PART_DECOMPOSITION_REASON,
+    ),
+    (
+        "accordion",
+        "content",
+        "hiddenUntilFound",
+        NO_KEEP_MOUNTED_REASON,
+    ),
+    (
+        "accordion",
+        "content",
+        "keepMounted",
+        NO_KEEP_MOUNTED_REASON,
+    ),
+    // button (Wave 3)
+    (
+        "button",
+        "root",
+        "focusableWhenDisabled",
+        FOCUSABLE_DISABLED_REASON,
+    ),
 ];
 
 fn react_only_structural_reason(raw_name: &str) -> Option<&'static str> {
@@ -1516,8 +1706,8 @@ mod tests {
             revision: "test".to_string(),
             refreshed_at: "2026-09-05".to_string(),
             entries: vec![CatalogEntry {
-                id: "switch".to_string(),
-                name: "Switch".to_string(),
+                id: "fixture-widget".to_string(),
+                name: "FixtureWidget".to_string(),
                 parts: vec![PartEntry {
                     id: "root".to_string(),
                     composition: Vec::new(),
@@ -1564,9 +1754,9 @@ mod tests {
             exists: true,
             ..Default::default()
         };
-        introspection.components.push("Switch".to_string());
+        introspection.components.push("FixtureWidget".to_string());
         introspection.props.insert(
-            "SwitchProps".to_string(),
+            "FixtureWidgetProps".to_string(),
             vec![PropField {
                 name: "checked".to_string(),
                 type_name: "ReadSignal<Option<bool>>".to_string(),
@@ -1685,14 +1875,17 @@ mod tests {
         let mut snapshots: StdBTreeMap<String, CatalogSnapshot> = StdBTreeMap::new();
         snapshots.insert("base-ui".to_string(), base_ui.clone());
         let introspection = fixture_introspection();
-        let item = fixture_item("switch");
+        let item = fixture_item("fixture-widget");
 
         let context = ResolutionContext {
             snapshots: &snapshots,
             base_ui: &base_ui,
         };
         let axis_parity = build_axis_parity(&item, &introspection, "base-ui", &base_ui, &context);
-        assert_eq!(axis_parity.matched_component.as_deref(), Some("switch"));
+        assert_eq!(
+            axis_parity.matched_component.as_deref(),
+            Some("fixture-widget")
+        );
         let root = axis_parity
             .parts
             .iter()
@@ -1714,7 +1907,7 @@ mod tests {
         snapshots.insert("base-ui".to_string(), base_ui.clone());
         snapshots.insert("dioxus-components".to_string(), empty.clone());
         let introspection = fixture_introspection();
-        let item = fixture_item("switch");
+        let item = fixture_item("fixture-widget");
 
         let context = ResolutionContext {
             snapshots: &snapshots,
@@ -1733,7 +1926,7 @@ mod tests {
         let mut snapshots: StdBTreeMap<String, CatalogSnapshot> = StdBTreeMap::new();
         snapshots.insert("base-ui".to_string(), snapshot.clone());
         let introspection = fixture_introspection();
-        let item = fixture_item("switch");
+        let item = fixture_item("fixture-widget");
 
         let context = ResolutionContext {
             snapshots: &snapshots,

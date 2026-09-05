@@ -13,7 +13,7 @@
             },
             {
               "name": "onOpenChange",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "disabled",
@@ -82,15 +82,16 @@
             },
             {
               "name": "default_open",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "on_change",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "on_trigger_click",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "index",
@@ -98,7 +99,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -111,11 +112,11 @@
           "props": [
             {
               "name": "id",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -133,11 +134,11 @@
           "props": [
             {
               "name": "id",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -159,15 +160,16 @@
             },
             {
               "name": "default_open",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "on_change",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "on_trigger_click",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "index",
@@ -175,7 +177,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -188,11 +190,11 @@
           "props": [
             {
               "name": "id",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -210,11 +212,11 @@
           "props": [
             {
               "name": "id",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -236,7 +238,7 @@
             },
             {
               "name": "onOpenChange",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "disabled",
@@ -292,7 +294,8 @@
           "props": [
             {
               "name": "hiddenUntilFound",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this composite always unmounts its closed/hidden content, with no keep-mounted-for-animation or find-in-page-visible toggle; needs new primitive-level mount-control work, tracked as follow-up"
             },
             {
               "name": "className",
@@ -305,7 +308,8 @@
             },
             {
               "name": "keepMounted",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): this composite always unmounts its closed/hidden content, with no keep-mounted-for-animation or find-in-page-visible toggle; needs new primitive-level mount-control work, tracked as follow-up"
             },
             {
               "name": "render",

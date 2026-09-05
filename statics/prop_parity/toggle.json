@@ -9,7 +9,8 @@
           "props": [
             {
               "name": "value",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico tracks a toggle group's pressed items by index in a HashSet<usize>, not by a caller-defined string value/onValueChange pair -- the same controlled-selection capability, a different identity model every ToggleItem already keys off of, not planned to change"
             },
             {
               "name": "defaultPressed",
@@ -173,7 +174,8 @@
             },
             {
               "name": "value",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico tracks a toggle group's pressed items by index in a HashSet<usize>, not by a caller-defined string value/onValueChange pair -- the same controlled-selection capability, a different identity model every ToggleItem already keys off of, not planned to change"
             },
             {
               "name": "defaultPressed",

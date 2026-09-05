@@ -33,7 +33,8 @@
           "props": [
             {
               "name": "onLoadingStatusChange",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "className",
@@ -56,7 +57,8 @@
           "props": [
             {
               "name": "delay",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's fallback-delay toggle (wait N milliseconds after mount before rendering the fallback, avoiding a flash-of-fallback for fast-loading images) has no adico equivalent; needs a new primitive-level timer, tracked as follow-up"
             },
             {
               "name": "className",
@@ -89,15 +91,15 @@
           "props": [
             {
               "name": "on_load",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "on_error",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "on_state_change",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "size",
@@ -105,11 +107,12 @@
             },
             {
               "name": "shape",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this shape toggle (e.g. circle vs. square) is already covered by adico's own general-purpose radius prop instead of a dedicated shape enum -- same capability, a different, permanent representation"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -127,7 +130,7 @@
           "props": [
             {
               "name": "id",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "src",
@@ -139,7 +142,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             }
           ]
         },
@@ -148,7 +151,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -171,19 +174,19 @@
           "props": [
             {
               "name": "on_load",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "on_error",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "on_state_change",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -201,7 +204,7 @@
           "props": [
             {
               "name": "id",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "src",
@@ -213,7 +216,7 @@
             },
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             }
           ]
         },
@@ -222,7 +225,7 @@
           "props": [
             {
               "name": "attributes",
-              "status": "missing"
+              "status": "present"
             },
             {
               "name": "children",
@@ -273,7 +276,8 @@
           "props": [
             {
               "name": "onLoadingStatusChange",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: adico exposes this on a different sub-part than the matched axis's own decomposition, not missing from the composite as a whole"
             },
             {
               "name": "className",
@@ -296,7 +300,8 @@
           "props": [
             {
               "name": "delay",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap, deferred (not a permanent design choice): Base UI's fallback-delay toggle (wait N milliseconds after mount before rendering the fallback, avoiding a flash-of-fallback for fast-loading images) has no adico equivalent; needs a new primitive-level timer, tracked as follow-up"
             },
             {
               "name": "className",

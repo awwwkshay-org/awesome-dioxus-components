@@ -21,6 +21,7 @@ pub fn RadioItem(
     #[props(default)] disabled: ReadSignal<bool>,
     id: Option<String>,
     class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
     children: Element,
 ) -> Element {
     let class = cn(&[
@@ -28,7 +29,15 @@ pub fn RadioItem(
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        RadioItemPrimitive { value, index, disabled, id, class, {children} }
+        RadioItemPrimitive {
+            value,
+            index,
+            disabled,
+            id,
+            class,
+            attributes,
+            {children}
+        }
     }
 }
 

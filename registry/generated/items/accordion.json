@@ -7,7 +7,7 @@
       "source": "ui/accordion.rs",
       "targetRoot": "ui",
       "target": "accordion.rs",
-      "checksum": "a36c7f6619d05b142691c7cbcd6e87eea19d3271e7935ff0ad0d8c37e3807266"
+      "checksum": "23f226b5ce4e8e2c046c9bd6a64fe812ac68ea8155483605978ca281740622f9"
     }
   ],
   "registryDependencies": [

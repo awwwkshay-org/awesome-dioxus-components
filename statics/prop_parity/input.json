@@ -9,7 +9,8 @@
           "props": [
             {
               "name": "defaultValue",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this native-leaf-element component mirrors plain HTML's own value + oninput convention, not the separate controlled/uncontrolled defaultValue+onValueChange duality primitive-backed components use; a deliberate, permanent convention for this category of component"
             },
             {
               "name": "value",
@@ -17,7 +18,8 @@
             },
             {
               "name": "onValueChange",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: this native-leaf-element component mirrors plain HTML's own value + oninput convention, not the separate controlled/uncontrolled defaultValue+onValueChange duality primitive-backed components use; a deliberate, permanent convention for this category of component"
             },
             {
               "name": "className",
@@ -130,7 +132,8 @@
             },
             {
               "name": "children",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "adico extension gap: the matched axis's own component wraps composable children around or inside this native leaf element (e.g. icon adornments); adico's own facade mirrors plain native HTML instead, which has no children slot on this element, not planned to change"
             },
             {
               "name": "radius",

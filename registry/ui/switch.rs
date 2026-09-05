@@ -49,9 +49,15 @@ pub struct SwitchProps {
     /// Whether the switch is disabled.
     #[props(default)]
     pub disabled: ReadSignal<bool>,
+    /// Whether the switch is required in a form.
+    #[props(default)]
+    pub required: ReadSignal<bool>,
     /// The name attribute for form submission.
     #[props(default)]
     pub name: ReadSignal<String>,
+    /// The value attribute for form submission.
+    #[props(default = ReadSignal::new(Signal::new(String::from("on"))))]
+    pub value: ReadSignal<String>,
     /// The visual size.
     #[props(default)]
     pub size: SwitchSize,
@@ -67,6 +73,9 @@ pub struct SwitchProps {
     /// Accessible label, since the switch itself has no visible text.
     #[props(default)]
     pub aria_label: Option<String>,
+    /// Native input/global attributes and events.
+    #[props(extends = GlobalAttributes)]
+    pub attributes: Vec<Attribute>,
 }
 
 /// A toggle switch with the default adico/shadcn visual language.
@@ -98,10 +107,13 @@ pub fn Switch(props: SwitchProps) -> Element {
             checked: props.checked,
             default_checked: props.default_checked,
             disabled: props.disabled,
+            required: props.required,
             name: props.name,
+            value: props.value,
             on_checked_change: props.on_checked_change,
             class,
             aria_label: props.aria_label,
+            attributes: props.attributes,
             SwitchThumbPrimitive { class: thumb_class }
         }
     }

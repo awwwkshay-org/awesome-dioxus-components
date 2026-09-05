@@ -6,6 +6,7 @@ use dioxus::prelude::*;
 use adico_primitives::toggle::Toggle as TogglePrimitive;
 
 use crate::adico_lib::cn::cn;
+use crate::adico_lib::variants::Radius;
 
 /// The visual size of a [`Toggle`].
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -77,6 +78,22 @@ pub struct ToggleProps {
     /// Extra classes appended to the semantic default.
     #[props(default)]
     pub class: Option<String>,
+    /// Callback fired when the toggle is mounted.
+    #[props(default)]
+    pub onmounted: Callback<Event<MountedData>>,
+    /// Callback fired when the toggle receives focus.
+    #[props(default)]
+    pub onfocus: Callback<Event<FocusData>>,
+    /// Callback fired when a key is pressed on the toggle.
+    #[props(default)]
+    pub onkeydown: Callback<Event<KeyboardData>>,
+    /// Corner radius of the toggle surface.
+    #[props(default = Radius::Md)]
+    pub radius: Radius,
+    /// Native button/global attributes and events.
+    #[props(extends = GlobalAttributes)]
+    #[props(extends = button)]
+    pub attributes: Vec<Attribute>,
     /// Caller-composed toggle content.
     pub children: Element,
 }
@@ -86,13 +103,14 @@ pub struct ToggleProps {
 #[component]
 pub fn Toggle(props: ToggleProps) -> Element {
     let class = cn(&[
-        "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium outline-none transition-colors \
+        "inline-flex items-center justify-center gap-2 text-sm font-medium outline-none transition-colors \
          hover:bg-muted hover:text-muted-foreground \
          focus-visible:ring-2 focus-visible:ring-ring/50 \
          disabled:pointer-events-none disabled:opacity-50 \
          data-[state=on]:bg-accent data-[state=on]:text-accent-foreground",
         props.variant.class(),
         props.size.class(),
+        props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -101,7 +119,11 @@ pub fn Toggle(props: ToggleProps) -> Element {
             default_pressed: props.default_pressed,
             disabled: props.disabled,
             on_pressed_change: props.on_pressed_change,
+            onmounted: props.onmounted,
+            onfocus: props.onfocus,
+            onkeydown: props.onkeydown,
             class,
+            attributes: props.attributes,
             {props.children}
         }
     }
