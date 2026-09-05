@@ -67,7 +67,8 @@
           "props": [
             {
               "name": "r#as",
-              "status": "missing"
+              "status": "intentional_difference",
+              "reason": "The upstream dioxus-components fork's own polymorphic render-prop escape hatch (merges default behavioral attributes with caller-supplied ones and optionally renders a custom root/trigger element) is deliberately not ported anywhere in this crate -- default attributes are written directly on each element with `..props.attributes` spread after them instead, the same rationale as `asChild` above"
             },
             {
               "name": "attributes",

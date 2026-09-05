@@ -106,8 +106,12 @@ struct PropParityRecord {
 
 // --- Prop-name normalization (design.md's normalization decision) -------
 
-/// React-only structural props: always `intentional_difference` regardless
-/// of any adico field match, each with a fixed, specific reason.
+/// Structural props with no adico equivalent by framework design: always
+/// `intentional_difference` regardless of any adico field match, each with
+/// a fixed, specific reason. Named for the common case (a React-only prop
+/// with no Dioxus equivalent), but also covers `r#as` -- a Dioxus-side
+/// structural prop from the upstream dioxus-components fork this crate
+/// deliberately never ported, for the identical reason as `asChild`.
 const REACT_ONLY_STRUCTURAL: &[(&str, &str)] = &[
     (
         "render",
@@ -132,6 +136,10 @@ const REACT_ONLY_STRUCTURAL: &[(&str, &str)] = &[
     (
         "actionsRef",
         "Dioxus uses component-local signals/mounted-node hooks for imperative access, not React imperative-handle refs",
+    ),
+    (
+        "r#as",
+        "The upstream dioxus-components fork's own polymorphic render-prop escape hatch (merges default behavioral attributes with caller-supplied ones and optionally renders a custom root/trigger element) is deliberately not ported anywhere in this crate -- default attributes are written directly on each element with `..props.attributes` spread after them instead, the same rationale as `asChild` above",
     ),
 ];
 
