@@ -35,6 +35,16 @@
             {
               "name": "size",
               "status": "present"
+            },
+            {
+              "name": "loading",
+              "status": "adico_extension",
+              "reason": "adico extension: shadcn composes `<Button disabled><Spinner /></Button>` by hand; adico exposes it as a first-class prop instead"
+            },
+            {
+              "name": "loading_text",
+              "status": "adico_extension",
+              "reason": "adico extension: shadcn composes `<Button disabled><Spinner /></Button>` by hand; adico exposes it as a first-class prop instead"
             }
           ]
         },

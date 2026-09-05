@@ -4,6 +4,7 @@ use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
+use crate::components::ui::spinner::Spinner;
 
 /// The outer landmark wrapping a page-link list.
 #[component]
@@ -62,6 +63,15 @@ pub struct PaginationLinkProps {
     /// Corner radius of the link surface.
     #[props(default = Radius::Md)]
     pub radius: Radius,
+    /// Shows a [`Spinner`] and marks the link busy; also disables its
+    /// click behavior, since a native anchor has no `disabled` attribute
+    /// to defer to. An adico extension — shadcn's own convention is
+    /// composing `<Button disabled><Spinner /></Button>` by hand.
+    #[props(default)]
+    pub loading: bool,
+    /// Replaces the link's visible content while `loading` is true.
+    #[props(default)]
+    pub loading_text: Option<String>,
     /// Extra semantic classes appended to the default treatment.
     #[props(default)]
     pub class: Option<String>,
@@ -90,20 +100,34 @@ pub fn PaginationLink(props: PaginationLinkProps) -> Element {
     ]);
     let aria_current = props.is_active.then_some("page");
     let action_only = props.href.is_none();
+    let loading = props.loading;
     rsx! {
         a {
             class,
             href: props.href.unwrap_or_else(|| "#".to_string()),
             aria_current,
+            aria_busy: loading,
+            "aria-disabled": loading,
             aria_label: props.aria_label,
             onclick: move |event| {
-                if action_only {
+                if action_only || loading {
                     event.prevent_default();
                 }
-                props.onclick.call(event);
+                if !loading {
+                    props.onclick.call(event);
+                }
             },
             ..props.attributes,
-            {props.children}
+            if loading {
+                Spinner {}
+                if let Some(text) = props.loading_text {
+                    "{text}"
+                } else {
+                    {props.children}
+                }
+            } else {
+                {props.children}
+            }
         }
     }
 }

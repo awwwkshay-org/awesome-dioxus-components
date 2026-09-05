@@ -34,6 +34,7 @@ use crate::components::ui::input::Input;
 use crate::components::ui::pagination::{
     Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious,
 };
+use crate::components::ui::spinner::Spinner;
 use crate::components::ui::table::{Table, TableBody, TableCell, TableHead, TableHeader, TableRow};
 
 /// Sort direction applied to a [`DataTableColumn`] with a `sort_key`.
@@ -119,6 +120,17 @@ pub struct DataTableProps<T: Clone + PartialEq + 'static> {
     /// Rows shown per page.
     #[props(default = 10)]
     pub page_size: usize,
+    /// Shows a [`Spinner`] in place of the row data (rows/pagination
+    /// controls are ignored while true). An adico extension — shadcn's
+    /// own convention is composing `<Button disabled><Spinner /></Button>`
+    /// by hand; there is no upstream precedent for a whole-table loading
+    /// state at all.
+    #[props(default)]
+    pub loading: bool,
+    /// Replaces the loading row's default "Loading..." text while
+    /// `loading` is true.
+    #[props(default)]
+    pub loading_text: Option<String>,
     /// Extra classes appended to the outer wrapper.
     #[props(default)]
     pub class: Option<String>,
@@ -238,7 +250,7 @@ pub fn DataTable<T: Clone + PartialEq + 'static>(props: DataTableProps<T>) -> El
     ]);
 
     rsx! {
-        div { class,
+        div { class, aria_busy: props.loading,
             if filter_key.is_some() {
                 div { class: "flex items-center",
                     Input {
@@ -299,7 +311,19 @@ pub fn DataTable<T: Clone + PartialEq + 'static>(props: DataTableProps<T>) -> El
                     }
                 }
                 TableBody {
-                    if page_rows().is_empty() {
+                    if props.loading {
+                        TableRow {
+                            TableCell {
+                                class: "h-24 text-center text-muted-foreground",
+                                div { class: "flex items-center justify-center gap-2",
+                                    Spinner {}
+                                    span {
+                                        {props.loading_text.clone().unwrap_or_else(|| "Loading...".to_string())}
+                                    }
+                                }
+                            }
+                        }
+                    } else if page_rows().is_empty() {
                         TableRow {
                             TableCell {
                                 class: "h-24 text-center text-muted-foreground",

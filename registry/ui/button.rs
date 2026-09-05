@@ -10,6 +10,7 @@ use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
+use crate::components::ui::spinner::Spinner;
 
 /// The semantic visual treatment for a [`Button`].
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -105,8 +106,20 @@ pub struct ButtonProps {
     /// for registry components such as DialogTrigger and SheetTrigger.
     #[props(default)]
     pub onclick: EventHandler<MouseEvent>,
+    /// Shows a [`Spinner`] and marks the button busy/disabled. An adico
+    /// extension — shadcn's own convention is composing
+    /// `<Button disabled><Spinner /></Button>` by hand at each call site.
+    #[props(default)]
+    pub loading: bool,
+    /// Replaces the button's visible content while `loading` is true. Has
+    /// no effect when `loading` is false.
+    #[props(default)]
+    pub loading_text: Option<String>,
     /// Native button and global attributes, including `disabled`, `type`, and
-    /// event handlers.
+    /// event handlers. Because Dioxus requires an element's attribute
+    /// spread to be its last attribute, a caller's own `disabled` here
+    /// takes precedence over `loading`'s — same precedent as every other
+    /// `attributes`-accepting component in this registry.
     #[props(extends = GlobalAttributes)]
     #[props(extends = button)]
     pub attributes: Vec<Attribute>,
@@ -128,8 +141,19 @@ pub fn Button(props: ButtonProps) -> Element {
         button {
             class,
             onclick: move |event| props.onclick.call(event),
+            disabled: props.loading,
+            aria_busy: props.loading,
             ..props.attributes,
-            {props.children}
+            if props.loading {
+                Spinner {}
+                if let Some(text) = props.loading_text {
+                    "{text}"
+                } else {
+                    {props.children}
+                }
+            } else {
+                {props.children}
+            }
         }
     }
 }

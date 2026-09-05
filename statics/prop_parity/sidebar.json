@@ -255,6 +255,16 @@
               "status": "present"
             },
             {
+              "name": "loading",
+              "status": "adico_extension",
+              "reason": "adico extension: shadcn composes `<Button disabled><Spinner /></Button>` by hand; adico exposes it as a first-class prop instead"
+            },
+            {
+              "name": "loading_text",
+              "status": "adico_extension",
+              "reason": "adico extension: shadcn composes `<Button disabled><Spinner /></Button>` by hand; adico exposes it as a first-class prop instead"
+            },
+            {
               "name": "radius",
               "status": "adico_extension",
               "reason": "adico extension: consistent corner-radius control not present upstream"
@@ -355,6 +365,16 @@
             {
               "name": "size",
               "status": "missing"
+            },
+            {
+              "name": "loading",
+              "status": "adico_extension",
+              "reason": "adico extension: shadcn composes `<Button disabled><Spinner /></Button>` by hand; adico exposes it as a first-class prop instead"
+            },
+            {
+              "name": "loading_text",
+              "status": "adico_extension",
+              "reason": "adico extension: shadcn composes `<Button disabled><Spinner /></Button>` by hand; adico exposes it as a first-class prop instead"
             },
             {
               "name": "radius",

@@ -23,6 +23,7 @@ use adico_primitives::{separator::Separator as SeparatorPrimitive, use_controlle
 
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
+use crate::components::ui::spinner::Spinner;
 
 /// The side of the viewport a [`Sidebar`] is docked to.
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
@@ -438,6 +439,15 @@ pub struct SidebarMenuButtonProps {
     /// Corner radius of the control surface.
     #[props(default = Radius::Md)]
     pub radius: Radius,
+    /// Shows a [`Spinner`] and marks the control busy/disabled (combined
+    /// with `disabled` above). An adico extension — shadcn's own
+    /// convention is composing `<Button disabled><Spinner /></Button>` by
+    /// hand.
+    #[props(default)]
+    pub loading: bool,
+    /// Replaces the control's visible content while `loading` is true.
+    #[props(default)]
+    pub loading_text: Option<String>,
     /// Extra classes appended to the semantic defaults.
     #[props(default)]
     pub class: Option<String>,
@@ -461,15 +471,26 @@ pub fn SidebarMenuButton(props: SidebarMenuButtonProps) -> Element {
         },
         props.class.as_deref().unwrap_or_default(),
     ]);
+    let is_disabled = props.disabled.unwrap_or(false) || props.loading;
     rsx! {
         button {
             class,
             r#type: "button",
             "data-slot": "sidebar-menu-button",
             "data-active": props.is_active,
-            disabled: props.disabled,
+            disabled: is_disabled,
+            aria_busy: props.loading,
             ..props.attributes,
-            {props.children}
+            if props.loading {
+                Spinner {}
+                if let Some(text) = props.loading_text {
+                    "{text}"
+                } else {
+                    {props.children}
+                }
+            } else {
+                {props.children}
+            }
         }
     }
 }

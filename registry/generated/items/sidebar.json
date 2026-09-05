@@ -7,11 +7,12 @@
       "source": "ui/sidebar.rs",
       "targetRoot": "ui",
       "target": "sidebar.rs",
-      "checksum": "5a1d8c6f7dbf7b49631f6242e5c1064037732af3c5300d626cb8d7a10527dd08"
+      "checksum": "aceaba4da18069736dfb511e4df7302caac8a41aac37a544fba12c7b443e3fe5"
     }
   ],
   "registryDependencies": [
     "cn",
+    "spinner",
     "variants"
   ],
   "cargoDependencies": [

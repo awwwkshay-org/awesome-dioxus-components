@@ -457,6 +457,14 @@
               {
                 "name": "on_confirm",
                 "type": "Option<EventHandler<MouseEvent>>"
+              },
+              {
+                "name": "loading",
+                "type": "bool"
+              },
+              {
+                "name": "loading_text",
+                "type": "Option<String>"
               }
             ],
             "AlertDialogActions": [
@@ -1161,6 +1169,16 @@
                 "default": "default()",
                 "name": "onclick",
                 "type": "EventHandler<MouseEvent>"
+              },
+              {
+                "default": "default()",
+                "name": "loading",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "loading_text",
+                "type": "Option<String>"
               },
               {
                 "name": "attributes",
@@ -3478,6 +3496,16 @@
               },
               {
                 "default": "default()",
+                "name": "loading",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "loading_text",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
               }
@@ -5699,6 +5727,14 @@
                 "type": "EventHandler<MouseEvent>"
               },
               {
+                "name": "loading",
+                "type": "bool"
+              },
+              {
+                "name": "loading_text",
+                "type": "Option<String>"
+              },
+              {
                 "name": "children",
                 "type": "Element"
               }
@@ -7227,6 +7263,16 @@
               },
               {
                 "default": "default()",
+                "name": "loading",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "loading_text",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -8635,6 +8681,16 @@
                 "default": "Radius::Md",
                 "name": "radius",
                 "type": "Radius"
+              },
+              {
+                "default": "default()",
+                "name": "loading",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "loading_text",
+                "type": "Option<String>"
               },
               {
                 "default": "default()",
@@ -10620,6 +10676,14 @@
               {
                 "name": "radius",
                 "type": "Radius"
+              },
+              {
+                "name": "loading",
+                "type": "bool"
+              },
+              {
+                "name": "loading_text",
+                "type": "Option<String>"
               },
               {
                 "name": "class",

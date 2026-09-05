@@ -288,22 +288,49 @@ checksum only surfaces later, at install time.
 
 ## 4. `loading` rollout
 
-- [ ] 4.1 Add `loading: bool` (`#[props(default)]`) and `loading_text:
+- [x] 4.1 Add `loading: bool` (`#[props(default)]`) and `loading_text:
       Option<String>` to `Button`, `InputGroupButton`, `PaginationLink`,
       `AlertDialogAction`, `ToolbarButton`, `SidebarMenuButton`, and
       `DataTable`. Each composes the existing `Spinner` registry item
       (declared in `registryDependencies`, not duplicated) when `loading`
       is true, sets `aria-busy="true"` and native `disabled`, and renders
       `loading_text` in place of/alongside the normal content per that
-      component's own composition shape.
-- [ ] 4.2 Add each of the seven `(item, part, prop)` entries to
+      component's own composition shape. `InputGroupButton` simply
+      forwards to `Button` (composes it already). `PaginationLink` renders
+      an `<a>`, which has no native `disabled` — uses `aria-disabled` plus
+      an onclick guard instead. `AlertDialogActionPrimitive`'s `attributes`
+      only extends `GlobalAttributes` (no `button`-specific extend), so
+      `disabled` isn't available via the usual shorthand keyword there —
+      built by hand via `Attribute::new(...)`, matching `slider.rs`'s own
+      precedent for this exact limitation. `ToolbarButton`/
+      `SidebarMenuButton` combine `loading` with their existing `disabled`
+      field via `use_memo`/a plain `||`. `DataTable` (a whole-table
+      pattern, not a single button) renders a full-width row with the
+      spinner + text in place of the row data while loading; found
+      `TableCell` has no `attributes` passthrough at all, so `aria-busy`
+      moved to the outer wrapper `div` instead (a native element, no
+      extends limitation there). **Also found and fixed a real
+      methodological gotcha**, not a task defect: `adico`'s registry
+      source is embedded via `include_bytes!` at *compile* time, so
+      invoking the pre-built `target/debug/adico` binary directly (instead
+      of through `cargo run -p adico-cli --`) silently serves stale
+      registry content after a source edit — caught when
+      `examples/{basic-spa,basic-ssr}` kept installing an already-fixed
+      `data_table.rs`'s *previous* broken revision.
+- [x] 4.2 Add each of the seven `(item, part, prop)` entries to
       `packages/adico-xtask/src/prop_parity.rs`'s `ADICO_EXTENSION_REASONS`
       table with the reason "adico extension: shadcn composes `<Button
       disabled><Spinner /></Button>` by hand; adico exposes it as a first-class
-      prop instead" (or the component-appropriate equivalent). Verify
-      `cargo run -p adico-xtask -- prop-parity sync` classifies `loading`/
-      `loading_text` as `adico_extension` with that reason on all seven
-      items, and `prop-parity check` passes.
+      prop instead" (or the component-appropriate equivalent). 14 entries
+      added (`loading` + `loading_text` × 7 items). Verified `cargo run -p
+      adico-xtask -- prop-parity sync` classifies both as `adico_extension`
+      on 6 of the 7 items (`button`, `input-group`, `pagination`,
+      `alert-dialog`, `toolbar`, `sidebar`); `data-table`'s entries stay
+      inert (zero resolvable parts on any axis — a Dioxus-only pattern
+      with no shadcn/dioxus-components catalog match at all), the same
+      documented structural limit task 3.2b already recorded for
+      `command`/`empty`/`kbd`/`input-group`'s `radius`. `prop-parity check`
+      passes.
 
 ## 5. Parity-prop waves
 

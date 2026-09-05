@@ -73,11 +73,11 @@
     },
     {
       "address": "@adico/button",
-      "manifestDigest": "9a545394db7ae3f6ba3c621c0d86a8316ec065fb82ceb669a628287c6066a9b6",
+      "manifestDigest": "f7351ab1044e4937c613da87a011a0b739d253839a16f1f9bb96b7f677bb728e",
       "files": [
         {
           "path": "src/components/ui/button.rs",
-          "checksum": "0f498536390cf5ee008340c199f0d412e346a4ee7477390cda9c93edb4f75ceb"
+          "checksum": "bc3b73c1f6cc3c5c3f62d2d914b6b2756ae33ad1ceca58c3f925da1faf318a1e"
         }
       ]
     },
@@ -113,17 +113,17 @@
     },
     {
       "address": "@adico/checkbox",
-      "manifestDigest": "a91217cd21d297915f7a44ea5bdf73686864b53c82c84ef6aaf01dcfc2fb0e48",
+      "manifestDigest": "f7351ab1044e4937c613da87a011a0b739d253839a16f1f9bb96b7f677bb728e",
       "files": [
         {
           "path": "src/components/ui/checkbox.rs",
-          "checksum": "2699db3011942e89539ce919e4e3d5dae3225a0bc0c769ccb0a9879e5d6d8077"
+          "checksum": "fa99624b291e9709b33adbc46ac094082e5037e5d69a4afe75c5106d22356d75"
         }
       ]
     },
     {
       "address": "@adico/cn",
-      "manifestDigest": "832aec6e1f9b279544c035f4910ab19bb0c4acda9c92bacb0fee2b9e8bb80337",
+      "manifestDigest": "f7351ab1044e4937c613da87a011a0b739d253839a16f1f9bb96b7f677bb728e",
       "files": [
         {
           "path": "src/adico_lib/cn.rs",
@@ -183,11 +183,11 @@
     },
     {
       "address": "@adico/data-table",
-      "manifestDigest": "a91217cd21d297915f7a44ea5bdf73686864b53c82c84ef6aaf01dcfc2fb0e48",
+      "manifestDigest": "f7351ab1044e4937c613da87a011a0b739d253839a16f1f9bb96b7f677bb728e",
       "files": [
         {
           "path": "src/components/ui/data_table.rs",
-          "checksum": "2d5c0400c036052001402f45c3adfcd88d3dd0a3039fd5c5c303c1f7f7966dae"
+          "checksum": "5038205d4ad44ba1dff3714692be6463b24162d5c54ea0328f71a850e5da1dce"
         }
       ]
     },
@@ -233,11 +233,11 @@
     },
     {
       "address": "@adico/dropdown-menu",
-      "manifestDigest": "a91217cd21d297915f7a44ea5bdf73686864b53c82c84ef6aaf01dcfc2fb0e48",
+      "manifestDigest": "f7351ab1044e4937c613da87a011a0b739d253839a16f1f9bb96b7f677bb728e",
       "files": [
         {
           "path": "src/components/ui/dropdown_menu.rs",
-          "checksum": "cac8e6514de1305fd7e6174d9eb5795f2f5c777cc252ca1c542ec44302f485a0"
+          "checksum": "f2e840ae1b342ccabf588efe7ab70874e8ce6bd80a2c9ca5ff709e6c2cf7a95a"
         }
       ]
     },
@@ -253,11 +253,11 @@
     },
     {
       "address": "@adico/input",
-      "manifestDigest": "a91217cd21d297915f7a44ea5bdf73686864b53c82c84ef6aaf01dcfc2fb0e48",
+      "manifestDigest": "f7351ab1044e4937c613da87a011a0b739d253839a16f1f9bb96b7f677bb728e",
       "files": [
         {
           "path": "src/components/ui/input.rs",
-          "checksum": "091f72be650f07842730efd10599346d8456d690bcd42e73a3bdd9b61aa30958"
+          "checksum": "edb23b9ba5f8d90cb0135782e0024c66da3330c30b6b257e2ac3094abcc51e3d"
         }
       ]
     },
@@ -353,11 +353,11 @@
     },
     {
       "address": "@adico/pagination",
-      "manifestDigest": "a91217cd21d297915f7a44ea5bdf73686864b53c82c84ef6aaf01dcfc2fb0e48",
+      "manifestDigest": "f7351ab1044e4937c613da87a011a0b739d253839a16f1f9bb96b7f677bb728e",
       "files": [
         {
           "path": "src/components/ui/pagination.rs",
-          "checksum": "67c0d6a6acc37a42ec7016f930f428c72c9e50445f37bd9874612d17e121bb8d"
+          "checksum": "33f490b8d49de69fc4d44c81d2b19b69a59e758a35562f54b08912ad64d5b1e9"
         }
       ]
     },
@@ -463,7 +463,7 @@
     },
     {
       "address": "@adico/spinner",
-      "manifestDigest": "9a545394db7ae3f6ba3c621c0d86a8316ec065fb82ceb669a628287c6066a9b6",
+      "manifestDigest": "f7351ab1044e4937c613da87a011a0b739d253839a16f1f9bb96b7f677bb728e",
       "files": [
         {
           "path": "src/components/ui/spinner.rs",
@@ -483,7 +483,7 @@
     },
     {
       "address": "@adico/table",
-      "manifestDigest": "a91217cd21d297915f7a44ea5bdf73686864b53c82c84ef6aaf01dcfc2fb0e48",
+      "manifestDigest": "f7351ab1044e4937c613da87a011a0b739d253839a16f1f9bb96b7f677bb728e",
       "files": [
         {
           "path": "src/components/ui/table.rs",
@@ -578,6 +578,16 @@
         {
           "path": "src/components/ui/tooltip.rs",
           "checksum": "4ad2cc1d2fcfa2d398bc2be456fb062117511380f0d7f7d0413691d2ad69ed64"
+        }
+      ]
+    },
+    {
+      "address": "@adico/variants",
+      "manifestDigest": "f7351ab1044e4937c613da87a011a0b739d253839a16f1f9bb96b7f677bb728e",
+      "files": [
+        {
+          "path": "src/adico_lib/variants.rs",
+          "checksum": "dffee6b8e50ff1123a837a4636595adae01d1cd0093d05b7573381d07043ff1b"
         }
       ]
     },

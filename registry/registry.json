@@ -62,11 +62,12 @@
           "source": "ui/button.rs",
           "targetRoot": "ui",
           "target": "button.rs",
-          "checksum": "37189be9e7e77eb40af3872a097746c734ca5e1b1efb6c0e06d4bb261303d4ad"
+          "checksum": "bc3b73c1f6cc3c5c3f62d2d914b6b2756ae33ad1ceca58c3f925da1faf318a1e"
         }
       ],
       "registryDependencies": [
         "cn",
+        "spinner",
         "variants"
       ],
       "cargoDependencies": [
@@ -106,17 +107,18 @@
           "source": "ui/data_table.rs",
           "targetRoot": "ui",
           "target": "data_table.rs",
-          "checksum": "2d5c0400c036052001402f45c3adfcd88d3dd0a3039fd5c5c303c1f7f7966dae"
+          "checksum": "5038205d4ad44ba1dff3714692be6463b24162d5c54ea0328f71a850e5da1dce"
         }
       ],
       "registryDependencies": [
-        "cn",
-        "table",
-        "checkbox",
-        "dropdown-menu",
         "button",
+        "checkbox",
+        "cn",
+        "dropdown-menu",
         "input",
-        "pagination"
+        "pagination",
+        "spinner",
+        "table"
       ],
       "cargoDependencies": [
         {
@@ -444,11 +446,12 @@
           "source": "ui/pagination.rs",
           "targetRoot": "ui",
           "target": "pagination.rs",
-          "checksum": "06192f71d7f7207be4463c9be7bd656e36dfc707b93548ec6fc31e41080fc37b"
+          "checksum": "33f490b8d49de69fc4d44c81d2b19b69a59e758a35562f54b08912ad64d5b1e9"
         }
       ],
       "registryDependencies": [
         "cn",
+        "spinner",
         "variants"
       ],
       "cargoDependencies": [
@@ -1107,11 +1110,12 @@
           "source": "ui/sidebar.rs",
           "targetRoot": "ui",
           "target": "sidebar.rs",
-          "checksum": "5a1d8c6f7dbf7b49631f6242e5c1064037732af3c5300d626cb8d7a10527dd08"
+          "checksum": "aceaba4da18069736dfb511e4df7302caac8a41aac37a544fba12c7b443e3fe5"
         }
       ],
       "registryDependencies": [
         "cn",
+        "spinner",
         "variants"
       ],
       "cargoDependencies": [
@@ -1803,12 +1807,13 @@
           "source": "ui/alert_dialog.rs",
           "targetRoot": "ui",
           "target": "alert_dialog.rs",
-          "checksum": "8abb21ad3b6b17bce19dab70e3aa6c73b84b1366d7e7ac648ce36fc0270d1060"
+          "checksum": "4d5d1489ea60df4ef9b39639cc0c44536e034609d0aafb55522ef6aa988e0380"
         }
       ],
       "registryDependencies": [
         "button",
         "cn",
+        "spinner",
         "variants"
       ],
       "cargoDependencies": [
@@ -1965,11 +1970,12 @@
           "source": "ui/toolbar.rs",
           "targetRoot": "ui",
           "target": "toolbar.rs",
-          "checksum": "d464473a192b8042706d57113511512bf85773899a883034b0f0b8c46735499f"
+          "checksum": "cce99664bc0e68fb4ba34c02419af046facea0345e729f9d29c3c19b4fb1e64a"
         }
       ],
       "registryDependencies": [
         "cn",
+        "spinner",
         "variants"
       ],
       "cargoDependencies": [
@@ -2680,7 +2686,7 @@
           "source": "ui/input_group.rs",
           "targetRoot": "ui",
           "target": "input_group.rs",
-          "checksum": "52674207ccc0f197ac8c3f58fafddab926a2b02f9c2d4af18719014ebd10655b"
+          "checksum": "eadff178dda4c1697abf0ce53475464697d2e2c445597f032816515d23d1d24f"
         }
       ],
       "registryDependencies": [

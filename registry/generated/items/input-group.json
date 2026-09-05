@@ -7,7 +7,7 @@
       "source": "ui/input_group.rs",
       "targetRoot": "ui",
       "target": "input_group.rs",
-      "checksum": "52674207ccc0f197ac8c3f58fafddab926a2b02f9c2d4af18719014ebd10655b"
+      "checksum": "eadff178dda4c1697abf0ce53475464697d2e2c445597f032816515d23d1d24f"
     }
   ],
   "registryDependencies": [

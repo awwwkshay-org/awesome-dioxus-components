@@ -35,6 +35,16 @@
               "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
             },
             {
+              "name": "loading",
+              "status": "adico_extension",
+              "reason": "adico extension: shadcn composes `<Button disabled><Spinner /></Button>` by hand; adico exposes it as a first-class prop instead"
+            },
+            {
+              "name": "loading_text",
+              "status": "adico_extension",
+              "reason": "adico extension: shadcn composes `<Button disabled><Spinner /></Button>` by hand; adico exposes it as a first-class prop instead"
+            },
+            {
               "name": "radius",
               "status": "adico_extension",
               "reason": "adico extension: consistent corner-radius control not present upstream"
@@ -93,6 +103,16 @@
               "status": "present"
             },
             {
+              "name": "loading",
+              "status": "adico_extension",
+              "reason": "adico extension: shadcn composes `<Button disabled><Spinner /></Button>` by hand; adico exposes it as a first-class prop instead"
+            },
+            {
+              "name": "loading_text",
+              "status": "adico_extension",
+              "reason": "adico extension: shadcn composes `<Button disabled><Spinner /></Button>` by hand; adico exposes it as a first-class prop instead"
+            },
+            {
               "name": "radius",
               "status": "adico_extension",
               "reason": "adico extension: consistent corner-radius control not present upstream"
@@ -143,6 +163,16 @@
             {
               "name": "children",
               "status": "present"
+            },
+            {
+              "name": "loading",
+              "status": "adico_extension",
+              "reason": "adico extension: shadcn composes `<Button disabled><Spinner /></Button>` by hand; adico exposes it as a first-class prop instead"
+            },
+            {
+              "name": "loading_text",
+              "status": "adico_extension",
+              "reason": "adico extension: shadcn composes `<Button disabled><Spinner /></Button>` by hand; adico exposes it as a first-class prop instead"
             },
             {
               "name": "radius",

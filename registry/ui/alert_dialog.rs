@@ -5,6 +5,7 @@ use dioxus::prelude::*;
 use super::button::{Button, ButtonSize, ButtonVariant};
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
+use crate::components::ui::spinner::Spinner;
 use adico_primitives::alert_dialog::{
     AlertDialogAction as AlertDialogActionPrimitive,
     AlertDialogActions as AlertDialogActionsPrimitive,
@@ -114,13 +115,45 @@ pub fn AlertDialogAction(
     /// registry's naming convention for primitive-backed components (the
     /// primitive layer keeps `on_click` unchanged).
     on_confirm: Option<EventHandler<MouseEvent>>,
+    /// Shows a [`Spinner`] and marks the action busy/disabled. An adico
+    /// extension — shadcn's own convention is composing
+    /// `<Button disabled><Spinner /></Button>` by hand. `disabled`/
+    /// `aria-busy` are set through the primitive's own `attributes`
+    /// extends mechanism (`AlertDialogActionPrimitive` has no dedicated
+    /// `disabled` field of its own).
+    #[props(default)]
+    loading: bool,
+    /// Replaces the action's visible content while `loading` is true.
+    #[props(default)]
+    loading_text: Option<String>,
 ) -> Element {
     let class = cn(&[
         "inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-xs hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         class.as_deref().unwrap_or_default(),
     ]);
+    // `disabled` isn't part of `GlobalAttributes` (the only extend
+    // `AlertDialogActionPrimitive`'s own `attributes` field declares), so
+    // it can't be set via the usual extends-shorthand keyword here --
+    // built by hand instead, matching `slider.rs`'s own precedent for this
+    // exact limitation.
+    let attributes = vec![Attribute::new("disabled", loading, None, false)];
     rsx! {
-        AlertDialogActionPrimitive { class, on_click: on_confirm, {children} }
+        AlertDialogActionPrimitive {
+            class,
+            on_click: on_confirm,
+            attributes,
+            aria_busy: loading,
+            if loading {
+                Spinner {}
+                if let Some(text) = loading_text {
+                    "{text}"
+                } else {
+                    {children}
+                }
+            } else {
+                {children}
+            }
+        }
     }
 }
 

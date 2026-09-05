@@ -115,11 +115,24 @@ pub fn InputGroupButton(
     #[props(default = ButtonSize::Xs)] size: ButtonSize,
     class: Option<String>,
     #[props(default)] onclick: EventHandler<MouseEvent>,
+    /// Forwarded straight to the inner [`Button`]; see its own `loading` doc
+    /// comment.
+    #[props(default)]
+    loading: bool,
+    #[props(default)] loading_text: Option<String>,
     children: Element,
 ) -> Element {
     let class = cn(&["shadow-none", class.as_deref().unwrap_or_default()]);
     rsx! {
-        Button { variant, size, class, onclick, {children} }
+        Button {
+            variant,
+            size,
+            class,
+            onclick,
+            loading,
+            loading_text,
+            {children}
+        }
     }
 }
 

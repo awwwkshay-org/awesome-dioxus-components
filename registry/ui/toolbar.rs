@@ -11,6 +11,7 @@ use adico_primitives::toolbar::{
 
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
+use crate::components::ui::spinner::Spinner;
 
 /// A button within a [`Toolbar`] with roving-focus keyboard navigation.
 #[component]
@@ -26,6 +27,15 @@ pub fn ToolbarButton(
     on_select: Callback<()>,
     children: Element,
     #[props(default = Radius::Md)] radius: Radius,
+    /// Shows a [`Spinner`] and marks the button busy/disabled (combined
+    /// with `disabled` above). An adico extension — shadcn's own
+    /// convention is composing `<Button disabled><Spinner /></Button>` by
+    /// hand.
+    #[props(default)]
+    loading: bool,
+    /// Replaces the button's visible content while `loading` is true.
+    #[props(default)]
+    loading_text: Option<String>,
     class: Option<String>,
 ) -> Element {
     let class = cn(&[
@@ -33,13 +43,24 @@ pub fn ToolbarButton(
         radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
+    let combined_disabled = use_memo(move || disabled() || loading);
     rsx! {
         ToolbarButtonPrimitive {
             index,
-            disabled,
+            disabled: combined_disabled,
             on_click: on_select,
             class,
-            {children}
+            aria_busy: loading,
+            if loading {
+                Spinner {}
+                if let Some(text) = loading_text {
+                    "{text}"
+                } else {
+                    {children}
+                }
+            } else {
+                {children}
+            }
         }
     }
 }

@@ -141,6 +141,11 @@ const RENAMES: &[(&str, &str)] = &[("className", "class")];
 const RADIUS_REASON: &str =
     "adico extension: consistent corner-radius control not present upstream";
 
+/// Reason recorded for every `loading`/`loading_text` extension entry
+/// below. shadcn's own convention composes `<Button disabled><Spinner
+/// /></Button>` by hand at each call site instead of a first-class prop.
+const LOADING_REASON: &str = "adico extension: shadcn composes `<Button disabled><Spinner /></Button>` by hand; adico exposes it as a first-class prop instead";
+
 /// Item-specific reasons for adico props with no upstream counterpart,
 /// keyed by `(item, part, prop)`. Every `part` here is verified against the
 /// real part id `part_id_for`/the catalog fetchers already produce for that
@@ -204,6 +209,20 @@ const ADICO_EXTENSION_REASONS: &[(&str, &str, &str, &str)] = &[
     ("toggle-group", "toggle-item", "radius", RADIUS_REASON),
     ("toolbar", "button", "radius", RADIUS_REASON),
     ("tooltip", "content", "radius", RADIUS_REASON),
+    ("button", "root", "loading", LOADING_REASON),
+    ("button", "root", "loading_text", LOADING_REASON),
+    ("input-group", "button", "loading", LOADING_REASON),
+    ("input-group", "button", "loading_text", LOADING_REASON),
+    ("pagination", "link", "loading", LOADING_REASON),
+    ("pagination", "link", "loading_text", LOADING_REASON),
+    ("alert-dialog", "action", "loading", LOADING_REASON),
+    ("alert-dialog", "action", "loading_text", LOADING_REASON),
+    ("toolbar", "button", "loading", LOADING_REASON),
+    ("toolbar", "button", "loading_text", LOADING_REASON),
+    ("sidebar", "menu-button", "loading", LOADING_REASON),
+    ("sidebar", "menu-button", "loading_text", LOADING_REASON),
+    ("data-table", "root", "loading", LOADING_REASON),
+    ("data-table", "root", "loading_text", LOADING_REASON),
 ];
 
 fn react_only_structural_reason(raw_name: &str) -> Option<&'static str> {

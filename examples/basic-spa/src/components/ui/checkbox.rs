@@ -29,6 +29,9 @@ pub struct CheckboxProps {
     /// The name of the checkbox, used in forms.
     #[props(default)]
     pub name: ReadSignal<String>,
+    /// The value submitted with the checkbox's form, used in forms.
+    #[props(default = ReadSignal::new(Signal::new(String::from("on"))))]
+    pub value: ReadSignal<String>,
     /// Callback fired when the checked state changes.
     #[props(default)]
     pub on_checked_change: Callback<CheckboxState>,
@@ -38,6 +41,9 @@ pub struct CheckboxProps {
     /// Accessible label, since the checkbox itself has no visible text.
     #[props(default)]
     pub aria_label: Option<String>,
+    /// Native input/global attributes and events.
+    #[props(extends = GlobalAttributes)]
+    pub attributes: Vec<Attribute>,
 }
 
 /// A checkbox input with the default adico/shadcn visual language.
@@ -59,9 +65,11 @@ pub fn Checkbox(props: CheckboxProps) -> Element {
             disabled: props.disabled,
             required: props.required,
             name: props.name,
+            value: props.value,
             on_checked_change: props.on_checked_change,
             class,
             aria_label: props.aria_label,
+            attributes: props.attributes,
             CheckboxIndicatorPrimitive { class: "flex items-center justify-center text-current",
                 Check { class: "size-3.5" }
             }

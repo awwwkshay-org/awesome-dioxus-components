@@ -7,17 +7,18 @@
       "source": "ui/data_table.rs",
       "targetRoot": "ui",
       "target": "data_table.rs",
-      "checksum": "2d5c0400c036052001402f45c3adfcd88d3dd0a3039fd5c5c303c1f7f7966dae"
+      "checksum": "5038205d4ad44ba1dff3714692be6463b24162d5c54ea0328f71a850e5da1dce"
     }
   ],
   "registryDependencies": [
-    "cn",
-    "table",
-    "checkbox",
-    "dropdown-menu",
     "button",
+    "checkbox",
+    "cn",
+    "dropdown-menu",
     "input",
-    "pagination"
+    "pagination",
+    "spinner",
+    "table"
   ],
   "cargoDependencies": [
     {
