@@ -1,6 +1,7 @@
 {
   "classification": "delegated",
   "primitiveModules": [
-    "context_menu"
+    "context_menu",
+    "menu"
   ]
 }

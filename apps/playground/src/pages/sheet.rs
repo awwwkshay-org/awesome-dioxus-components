@@ -8,6 +8,7 @@ use crate::generated::controls::{SheetContentControls, SheetContentDemoState};
 #[component]
 pub fn SheetPage() -> Element {
     let side = use_signal(|| components::ui::SheetSide::Right);
+    let mut marketing_emails = use_signal(|| false);
     // `SheetContent`'s own real default is `show_close_button: true`; see
     // `pages/dialog.rs`'s identical override for why.
     let content_state = use_signal(|| SheetContentDemoState {
@@ -37,7 +38,35 @@ pub fn SheetPage() -> Element {
                         components::ui::SheetTitle { "Settings" }
                         components::ui::SheetDescription { "Adjust your preferences." }
                     }
-                    components::ui::SheetFooter { "Done" }
+                    div { class: "flex flex-col gap-4 py-2",
+                        div { class: "flex flex-col gap-2",
+                            components::ui::Label { html_for: "sheet-demo-display-name", "Display name" }
+                            components::ui::Input {
+                                id: "sheet-demo-display-name",
+                                placeholder: "How others see you",
+                            }
+                        }
+                        div { class: "flex flex-col gap-2",
+                            components::ui::Label { html_for: "sheet-demo-email", "Email" }
+                            components::ui::Input {
+                                id: "sheet-demo-email",
+                                r#type: "email",
+                                placeholder: "m@example.com",
+                            }
+                        }
+                        div { class: "flex items-center justify-between",
+                            components::ui::Label { html_for: "sheet-demo-marketing", "Marketing emails" }
+                            components::ui::Switch {
+                                id: "sheet-demo-marketing",
+                                checked: ReadSignal::from(Signal::new(Some(marketing_emails()))),
+                                on_checked_change: move |checked| marketing_emails.set(checked),
+                            }
+                        }
+                    }
+                    components::ui::SheetFooter {
+                        components::ui::SheetClose { "Close" }
+                        components::ui::Button { "Save" }
+                    }
                 }
             }
         }

@@ -1,19 +1,39 @@
 //! Small bound controls used on component pages to edit a prop live and
 //! re-render the demo immediately, Storybook-style.
+//!
+//! Each widget's interactive element is an installed registry component
+//! (`Switch`, `Input`, `NativeSelect`) rather than a hand-styled raw HTML
+//! input, so the playground's own tooling demonstrates the components it
+//! distributes. The caption stays a wrapping native `<label>` (implicit
+//! association): the installed `Label` requires `html_for`, and minting a
+//! unique id per control would collide when several generated panels on one
+//! page bind the same prop name (e.g. two "Disabled" controls).
+//!
+//! The five public signatures here are frozen: generated
+//! `<Component>Controls` panels (`cargo xtask playground-controls sync`)
+//! emit calls against exactly these prop lists.
 
 use dioxus::prelude::*;
+
+use crate::components::ui;
+
+/// `NativeSelect`'s root wrapper is deliberately `w-fit`; inside the
+/// controls grid every widget should stretch. Composing around the existing
+/// API (spec: no registry change for playground convenience): a child
+/// selector on the wrapping label out-specifies `w-fit` without touching
+/// the registry component.
+const CONTROL_LABEL_CLASS: &str = "flex w-full flex-col gap-1 text-sm font-medium [&>div]:w-full";
 
 #[component]
 pub fn BoolControl(label: &'static str, value: Signal<bool>) -> Element {
     rsx! {
-        label { class: "flex w-full flex-col gap-1 text-sm font-medium",
+        label { class: CONTROL_LABEL_CLASS,
             span { "{label}" }
-            span { class: "flex h-9 w-full items-center rounded-md border border-input bg-background px-3 shadow-xs",
-                input {
-                    r#type: "checkbox",
+            span { class: "flex h-9 w-full items-center",
+                ui::Switch {
+                    checked: ReadSignal::from(Signal::new(Some(value()))),
+                    on_checked_change: move |checked| value.set(checked),
                     aria_label: label,
-                    checked: value(),
-                    onchange: move |event| value.set(event.checked()),
                 }
             }
         }
@@ -23,53 +43,51 @@ pub fn BoolControl(label: &'static str, value: Signal<bool>) -> Element {
 #[component]
 pub fn TextControl(label: &'static str, value: Signal<String>) -> Element {
     rsx! {
-        label { class: "flex w-full flex-col gap-1 text-sm font-medium",
+        label { class: CONTROL_LABEL_CLASS,
             span { "{label}" }
-            input {
-                class: "h-9 w-full rounded-md border border-input bg-background px-3 text-sm font-normal shadow-xs outline-none focus-visible:ring-1 focus-visible:ring-ring",
-                r#type: "text",
-                value: "{value}",
-                oninput: move |event| value.set(event.value()),
+            ui::Input {
+                value: Some(value()),
+                oninput: move |event: FormEvent| value.set(event.value()),
             }
         }
     }
 }
 
-/// A closed-enum control: renders a `<select>` over `options` (display label,
-/// value) two-way bound to `value`, matching `BoolControl`/`TextControl`'s
-/// calling convention.
+/// A closed-enum control: renders an installed [`ui::NativeSelect`] over
+/// `options` (display label, value) two-way bound to `value`, matching
+/// `BoolControl`/`TextControl`'s calling convention.
 #[component]
 pub fn SelectControl<T: Clone + PartialEq + 'static>(
     label: &'static str,
     value: Signal<T>,
     options: &'static [(&'static str, T)],
 ) -> Element {
+    let selected_index = options
+        .iter()
+        .position(|(_, option)| *option == value())
+        .unwrap_or(0);
     rsx! {
-        label { class: "flex w-full flex-col gap-1 text-sm font-medium",
+        label { class: CONTROL_LABEL_CLASS,
             span { "{label}" }
-            select {
-                class: "h-9 w-full rounded-md border border-input bg-background px-3 text-sm font-normal shadow-xs outline-none focus-visible:ring-1 focus-visible:ring-ring",
-                onchange: move |event| {
+            ui::NativeSelect {
+                value: Some(selected_index.to_string()),
+                oninput: move |event: FormEvent| {
                     if let Ok(index) = event.value().parse::<usize>()
                         && let Some((_, option)) = options.get(index)
                     {
                         value.set(option.clone());
                     }
                 },
-                for (index , (option_label , option)) in options.iter().enumerate() {
-                    option {
-                        value: "{index}",
-                        selected: *option == value(),
-                        "{option_label}"
-                    }
+                for (index , (option_label , _)) in options.iter().enumerate() {
+                    ui::NativeSelectOption { value: "{index}", "{option_label}" }
                 }
             }
         }
     }
 }
 
-/// A bound `<input type="number">`, for numeric props (e.g. `Slider`'s
-/// `min`/`max`/`step`, `Progress`'s `value`/`max`).
+/// A bound installed [`ui::Input`] of `type="number"`, for numeric props
+/// (e.g. `Slider`'s `min`/`max`/`step`, `Progress`'s `value`/`max`).
 #[component]
 pub fn NumberControl(
     label: &'static str,
@@ -79,16 +97,15 @@ pub fn NumberControl(
     #[props(default)] step: Option<f64>,
 ) -> Element {
     rsx! {
-        label { class: "flex w-full flex-col gap-1 text-sm font-medium",
+        label { class: CONTROL_LABEL_CLASS,
             span { "{label}" }
-            input {
-                class: "h-9 w-full rounded-md border border-input bg-background px-3 text-sm font-normal shadow-xs outline-none focus-visible:ring-1 focus-visible:ring-ring",
+            ui::Input {
                 r#type: "number",
-                value: "{value}",
+                value: Some(value().to_string()),
                 min: min.map(|value| value.to_string()),
                 max: max.map(|value| value.to_string()),
                 step: step.map(|value| value.to_string()),
-                oninput: move |event| {
+                oninput: move |event: FormEvent| {
                     if let Ok(parsed) = event.value().parse::<f64>() {
                         value.set(parsed);
                     }
@@ -98,18 +115,23 @@ pub fn NumberControl(
     }
 }
 
-/// A tri-state `<select>` (`Uncontrolled` / `On` / `Off`) for the
+/// A tri-state select (`Uncontrolled` / `On` / `Off`) for the
 /// `Option<ReadSignal<Option<bool>>>`-shaped optional-controlled idiom, so a
 /// demo can show a component's own uncontrolled default alongside forcing it
 /// open or closed.
 #[component]
 pub fn OptionalBoolControl(label: &'static str, value: Signal<Option<bool>>) -> Element {
+    let current = match value() {
+        Some(true) => "on",
+        Some(false) => "off",
+        None => "uncontrolled",
+    };
     rsx! {
-        label { class: "flex w-full flex-col gap-1 text-sm font-medium",
+        label { class: CONTROL_LABEL_CLASS,
             span { "{label}" }
-            select {
-                class: "h-9 w-full rounded-md border border-input bg-background px-3 text-sm font-normal shadow-xs outline-none focus-visible:ring-1 focus-visible:ring-ring",
-                onchange: move |event| {
+            ui::NativeSelect {
+                value: Some(current.to_string()),
+                oninput: move |event: FormEvent| {
                     value
                         .set(
                             match event.value().as_str() {
@@ -119,9 +141,9 @@ pub fn OptionalBoolControl(label: &'static str, value: Signal<Option<bool>>) -> 
                             },
                         );
                 },
-                option { value: "uncontrolled", selected: value().is_none(), "Uncontrolled" }
-                option { value: "on", selected: value() == Some(true), "On" }
-                option { value: "off", selected: value() == Some(false), "Off" }
+                ui::NativeSelectOption { value: "uncontrolled", "Uncontrolled" }
+                ui::NativeSelectOption { value: "on", "On" }
+                ui::NativeSelectOption { value: "off", "Off" }
             }
         }
     }

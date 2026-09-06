@@ -1,3 +1,4 @@
+use adico_primitives::ContentAlign;
 use dioxus::prelude::*;
 
 use crate::components;
@@ -16,12 +17,22 @@ pub fn ComboboxPage() -> Element {
     let mut values = use_signal(|| Some(Vec::<String>::new()));
     let state = use_signal(ComboboxDemoState::default);
     let multi_state = use_signal(ComboboxMultiDemoState::default);
+    let align = use_signal(|| ContentAlign::Center);
     rsx! {
         Demo {
             name: "Combobox",
             controls: rsx! {
                 BoolControl { label: "Disabled", value: disabled }
                 BoolControl { label: "Multi-select", value: multiple }
+                SelectControl {
+                    label: "Align",
+                    value: align,
+                    options: &[
+                        ("Start", ContentAlign::Start),
+                        ("Center", ContentAlign::Center),
+                        ("End", ContentAlign::End),
+                    ],
+                }
                 if !multiple() {
                     SelectControl {
                         label: "Value",
@@ -41,7 +52,7 @@ pub fn ComboboxPage() -> Element {
                     open: multi_state().open,
                     on_values_change: move |next| values.set(Some(next)),
                     components::ui::ComboboxInput { class: "w-48", placeholder: "Search fruits" }
-                    components::ui::ComboboxList { class: "w-48",
+                    components::ui::ComboboxList { class: "w-48", align: align(),
                         components::ui::ComboboxOption::<String> { value: "Apple".to_string(), index: 0usize, "Apple" }
                         components::ui::ComboboxOption::<String> { value: "Banana".to_string(), index: 1usize, "Banana" }
                         components::ui::ComboboxEmpty { "No results" }
@@ -63,7 +74,7 @@ pub fn ComboboxPage() -> Element {
                             );
                     },
                     components::ui::ComboboxInput { class: "w-48", placeholder: "Search fruit" }
-                    components::ui::ComboboxList { class: "w-48",
+                    components::ui::ComboboxList { class: "w-48", align: align(),
                         components::ui::ComboboxOption::<String> { value: "Apple".to_string(), index: 0usize, "Apple" }
                         components::ui::ComboboxOption::<String> { value: "Banana".to_string(), index: 1usize, "Banana" }
                         components::ui::ComboboxEmpty { "No results" }

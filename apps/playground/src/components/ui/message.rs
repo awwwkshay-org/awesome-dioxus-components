@@ -2,8 +2,9 @@
 //!
 //! The full message row: avatar, header (sender/timestamp), content (a
 //! `Bubble` or any other rendered content), and footer -- laid out on the
-//! left (received) or right (sent) edge. Purely presentational; no dedicated
-//! primitive dependency (task 10.1's own audit).
+//! left (received) or right (sent) edge, with the avatar always immediately
+//! left of its own column. Purely presentational; no dedicated primitive
+//! dependency (task 10.1's own audit).
 
 use dioxus::prelude::*;
 
@@ -46,19 +47,36 @@ pub struct MessageProps {
 
 /// A single message row: an optional avatar plus a header/content/footer
 /// column, laid out to one edge.
+///
+/// The avatar and its column always render in that order -- avatar first,
+/// column second -- and travel together: `justify-end` shifts the whole
+/// `[avatar, column]` pair to the row's right edge for a sent message rather
+/// than reversing their order. An earlier version used `flex-row-reverse`
+/// for `End`, which swapped the *order* too, so a sent message's avatar
+/// rendered after its bubble (visually landing on the bubble's far side)
+/// while a received message's avatar rendered before its bubble -- found
+/// live via a screenshot of a conversation where the avatar's side relative
+/// to its own bubble flipped message-to-message instead of staying put.
+///
+/// The row cross-axis alignment is `items-start` (top), not `items-end`:
+/// found live via a screenshot showing the avatar sinking to the bottom of
+/// the whole header+content+footer stack (level with the footer's read
+/// receipt) instead of sitting beside the sender name, for a standalone
+/// message that has all three sections. Top alignment matches how avatars
+/// are conventionally placed next to the name line in chat UIs.
 #[component]
 pub fn Message(props: MessageProps) -> Element {
-    let row_direction = match props.align {
-        MessageAlign::Start => "flex-row",
-        MessageAlign::End => "flex-row-reverse",
+    let justify = match props.align {
+        MessageAlign::Start => "",
+        MessageAlign::End => "justify-end",
     };
     let text_align = match props.align {
         MessageAlign::Start => "items-start text-left",
         MessageAlign::End => "items-end text-right",
     };
     let class = cn(&[
-        "flex w-full items-end gap-2",
-        row_direction,
+        "flex w-full items-start gap-2",
+        justify,
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -181,10 +199,11 @@ mod tests {
     use super::*;
 
     #[test]
-    fn end_align_reverses_the_row_and_right_aligns_text() {
+    fn end_align_justifies_the_row_without_reversing_its_order() {
         assert_eq!(MessageAlign::default(), MessageAlign::Start);
-        let class = cn(&["flex-row-reverse"]);
-        assert!(class.contains("flex-row-reverse"));
+        let class = cn(&["justify-end"]);
+        assert!(class.contains("justify-end"));
+        assert!(!class.contains("flex-row-reverse"));
     }
 
     #[component]

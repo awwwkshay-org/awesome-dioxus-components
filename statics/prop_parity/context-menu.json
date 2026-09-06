@@ -69,6 +69,60 @@
               "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
             }
           ]
+        },
+        {
+          "id": "group",
+          "props": [
+            {
+              "name": "children",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "label",
+          "unresolved": "no matching `label` part on axis `base-ui`'s `context-menu` entry"
+        },
+        {
+          "id": "separator",
+          "props": [
+            {
+              "name": "orientation",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "shortcut",
+          "unresolved": "no matching `shortcut` part on axis `base-ui`'s `context-menu` entry"
         }
       ]
     },
@@ -86,6 +140,22 @@
         {
           "id": "item",
           "unresolved": "no resolvable Base UI equivalent for component `context_menu`"
+        },
+        {
+          "id": "group",
+          "unresolved": "no matching `group` part on axis `dioxus-components`'s `context-menu` entry"
+        },
+        {
+          "id": "label",
+          "unresolved": "no matching `label` part on axis `dioxus-components`'s `context-menu` entry"
+        },
+        {
+          "id": "separator",
+          "unresolved": "no matching `separator` part on axis `dioxus-components`'s `context-menu` entry"
+        },
+        {
+          "id": "shortcut",
+          "unresolved": "no matching `shortcut` part on axis `dioxus-components`'s `context-menu` entry"
         }
       ]
     },
@@ -155,6 +225,22 @@
               "status": "present"
             }
           ]
+        },
+        {
+          "id": "group",
+          "unresolved": "no matching `group` part on axis `dioxus-primitives`'s `context-menu` entry"
+        },
+        {
+          "id": "label",
+          "unresolved": "no matching `label` part on axis `dioxus-primitives`'s `context-menu` entry"
+        },
+        {
+          "id": "separator",
+          "unresolved": "no matching `separator` part on axis `dioxus-primitives`'s `context-menu` entry"
+        },
+        {
+          "id": "shortcut",
+          "unresolved": "no matching `shortcut` part on axis `dioxus-primitives`'s `context-menu` entry"
         }
       ]
     },
@@ -263,6 +349,65 @@
               "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
             }
           ]
+        },
+        {
+          "id": "group",
+          "props": [
+            {
+              "name": "children",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "label",
+          "props": [
+            {
+              "name": "inset",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "separator",
+          "props": [
+            {
+              "name": "orientation",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "shortcut",
+          "unresolved": "no prop data available for this entry"
         }
       ]
     }

@@ -19,7 +19,6 @@ use adico_primitives::otp_field::{
 };
 
 use crate::adico_lib::cn::cn;
-use adico_primitives::icons::Dot;
 
 /// The root of a one-time-passcode input: owns the combined value across a
 /// run of [`InputOTPGroup`]/[`InputOTPSlot`]/[`InputOTPSeparator`] children.
@@ -37,6 +36,11 @@ pub fn InputOTP(
     length: ReadSignal<usize>,
     #[props(default)] disabled: ReadSignal<bool>,
     #[props(default)] read_only: ReadSignal<bool>,
+    /// Visually obscures each entered character (password-style slots).
+    /// Purely presentational: the value and its callbacks are identical in
+    /// both modes, and toggling never clears entered characters.
+    #[props(default)]
+    mask: ReadSignal<bool>,
     #[props(default)] name: ReadSignal<String>,
     class: Option<String>,
     children: Element,
@@ -54,6 +58,7 @@ pub fn InputOTP(
             length,
             disabled,
             read_only,
+            mask,
             name,
             class,
             {children}
@@ -85,13 +90,12 @@ pub fn InputOTPSlot(index: ReadSignal<usize>, class: Option<String>) -> Element 
     }
 }
 
-/// A visual divider between [`InputOTPGroup`]s, rendered as a dot (matching
-/// upstream's own default separator glyph).
+/// A visual divider between [`InputOTPGroup`]s, rendered as a dash.
 #[component]
 pub fn InputOTPSeparator() -> Element {
     rsx! {
         OtpFieldPrimitiveSeparator {
-            Dot { class: "size-4" }
+            span { class: "text-muted-foreground", "-" }
         }
     }
 }

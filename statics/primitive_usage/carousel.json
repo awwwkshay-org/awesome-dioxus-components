@@ -3,6 +3,6 @@
   "primitiveModules": [
     "icons"
   ],
-  "reason": "Its `icons` import is purely decorative (the prev/next arrow glyphs) -- the actual paging behavior (native CSS scroll-snap plus MountedData::scroll/onscroll/onkeydown) is implemented entirely at the registry layer, not delegated to any adico-primitives module, to avoid adico-primitives::pointer's global pointer-position registry (see registry/ui/carousel.rs's own module doc comment, and resizable.json's identical rationale).",
-  "followUp": "If a second registry item needs the same scroll-snap-paging shape, promote this behavior into a real adico-primitives module instead of duplicating it at the registry layer again."
+  "reason": "Its `icons` import is purely decorative (the prev/next arrow glyphs) -- the actual paging behavior (native CSS scroll-snap plus MountedData::scroll/onscroll/onkeydown, and pointer-drag paging via per-element onpointerdown plus a transient overlay, the same containment pattern as resizable) is implemented entirely at the registry layer, not delegated to any adico-primitives module. The original motivation cited adico-primitives::pointer's global pointer-position registry as a broken-on-web pattern; that claim was later retracted (packages/adico-primitives/src/positioner.rs's 2026-09-03 note), but the per-element approach never needed that registry either way -- see registry/ui/carousel.rs's own module doc comment.",
+  "followUp": "If a second registry item needs the same scroll-snap-paging or track-drag shape, promote this behavior into a real adico-primitives module (shared with resizable's identical per-element drag) instead of duplicating it at the registry layer again."
 }

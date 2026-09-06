@@ -43,3 +43,20 @@ pub fn ContextMenuItemControls(mut state: Signal<ContextMenuItemDemoState>) -> E
         SelectControl { label: "Variant", value: variant, options: CONTEXT_MENU_ITEM_VARIANT_OPTIONS }
     }
 }
+
+/// Generated demo state for [`ContextMenuLabel`], one field per controllable prop.
+#[derive(Clone, Default, PartialEq)]
+pub struct ContextMenuLabelDemoState {
+    pub inset: bool,
+}
+
+#[component]
+pub fn ContextMenuLabelControls(mut state: Signal<ContextMenuLabelDemoState>) -> Element {
+    let inset = use_signal(|| state().inset);
+    use_effect(move || {
+        state.set(ContextMenuLabelDemoState { inset: inset() });
+    });
+    rsx! {
+        BoolControl { label: "Inset", value: inset }
+    }
+}

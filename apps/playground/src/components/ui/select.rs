@@ -9,6 +9,7 @@ use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
+use adico_primitives::ContentAlign;
 use adico_primitives::icons::{ChevronDown, ChevronUp};
 
 use adico_primitives::select::{
@@ -229,6 +230,9 @@ pub fn SelectList(
     /// Corner radius. See [`SelectTrigger::radius`]'s own doc comment.
     #[props(default = Radius::Md)]
     radius: Radius,
+    /// Alignment of the list relative to its trigger.
+    #[props(default = ContentAlign::Center)]
+    align: ContentAlign,
     class: Option<String>,
     aria_label: Option<String>,
     #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
@@ -242,6 +246,7 @@ pub fn SelectList(
         PrimitiveSelectList {
             id,
             class,
+            align,
             aria_label,
             attributes,
             {children}

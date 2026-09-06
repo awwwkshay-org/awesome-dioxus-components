@@ -1,3 +1,4 @@
+use adico_primitives::ContentAlign;
 use dioxus::prelude::*;
 
 use crate::components;
@@ -14,6 +15,7 @@ pub fn SelectPage() -> Element {
     let mut values = use_signal(|| Some(Vec::<String>::new()));
     let open = use_signal(|| None::<bool>);
     let trigger_state = use_signal(SelectTriggerDemoState::default);
+    let align = use_signal(|| ContentAlign::Center);
     rsx! {
         Demo {
             name: "Select",
@@ -21,6 +23,15 @@ pub fn SelectPage() -> Element {
                 BoolControl { label: "Disabled", value: disabled }
                 BoolControl { label: "Multi-select", value: multiple }
                 SelectTriggerControls { state: trigger_state }
+                SelectControl {
+                    label: "Align",
+                    value: align,
+                    options: &[
+                        ("Start", ContentAlign::Start),
+                        ("Center", ContentAlign::Center),
+                        ("End", ContentAlign::End),
+                    ],
+                }
                 if !multiple() {
                     SelectControl {
                         label: "Value",
@@ -45,7 +56,7 @@ pub fn SelectPage() -> Element {
                         size: trigger_state().size,
                         components::ui::SelectValue { placeholder: "Choose fruits" }
                     }
-                    components::ui::SelectList { class: "w-48", aria_label: "Fruit options",
+                    components::ui::SelectList { class: "w-48", align: align(), aria_label: "Fruit options",
                         components::ui::SelectOption::<String> { index: 0usize, value: "apple", text_value: "Apple", "Apple" }
                         components::ui::SelectOption::<String> { index: 1usize, value: "banana", text_value: "Banana", "Banana" }
                     }
@@ -72,7 +83,7 @@ pub fn SelectPage() -> Element {
                         size: trigger_state().size,
                         components::ui::SelectValue { placeholder: "Choose a fruit" }
                     }
-                    components::ui::SelectList { class: "w-48", aria_label: "Fruit options",
+                    components::ui::SelectList { class: "w-48", align: align(), aria_label: "Fruit options",
                         components::ui::SelectOption::<String> { index: 0usize, value: "apple", text_value: "Apple", "Apple" }
                         components::ui::SelectOption::<String> { index: 1usize, value: "banana", text_value: "Banana", "Banana" }
                     }

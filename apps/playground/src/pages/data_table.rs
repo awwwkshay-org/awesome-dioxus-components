@@ -37,6 +37,7 @@ pub fn DataTablePage() -> Element {
     rsx! {
         Demo {
             name: "DataTable",
+            wide: true,
             controls: rsx! {
                 DataTableControls { state }
             },

@@ -147,10 +147,25 @@ pub struct BubbleContentProps {
 }
 
 /// The rounded bubble surface itself.
+///
+/// Capped at a fixed `max-w-xs`, not a percentage like `max-w-[80%]`: a
+/// percentage `max-width` here needs its containing block's width to be
+/// definite at the point Chrome computes it, but nested inside a shrink-to-
+/// fit ancestor (e.g. `Message`'s avatar-hugging column, which must stay
+/// content-sized for the avatar to sit flush against the bubble) that width
+/// is still being determined, so the percentage falls back to unconstrained
+/// for that computation -- content lays out on one line, `Bubble`'s parent
+/// sizes itself to that unwrapped width, and only then does the percentage
+/// resolve against the now-definite size and force a wrap, stranding the
+/// wrapped bubble inside a box still sized for the unwrapped one. A fixed
+/// unit resolves identically regardless of the ancestor's own sizing pass,
+/// so it can never disagree with itself this way. Found live via a
+/// screenshot of a `MessageScroller` conversation with a visible gap between
+/// an avatar and its own (wrapped, multi-line) bubble.
 #[component]
 pub fn BubbleContent(props: BubbleContentProps) -> Element {
     let class = cn(&[
-        "max-w-[80%] px-4 py-2 text-sm break-words",
+        "max-w-xs px-4 py-2 text-sm break-words",
         props.variant.class(props.align),
         props.radius.class(),
         props.class.as_deref().unwrap_or_default(),

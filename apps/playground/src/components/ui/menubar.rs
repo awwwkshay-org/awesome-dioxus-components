@@ -4,6 +4,16 @@
 use dioxus::prelude::*;
 
 pub use adico_primitives::menubar::MenubarMenu;
+// `MenuGroup`/`MenuGroupLabel`/`MenuSeparator` consume no menu context, so
+// they compose safely inside a `MenubarContent` even though the menubar's
+// own primitive scope is independent of `adico_primitives::menu`.
+// Checkbox/radio/submenu parts are deliberately NOT re-faced here: they
+// require the `MenuContext` only the dropdown-menu root provides and would
+// panic at runtime inside a menubar.
+use adico_primitives::menu::{
+    MenuGroup as PrimitiveMenuGroup, MenuGroupLabel as PrimitiveMenuGroupLabel,
+    MenuSeparator as PrimitiveMenuSeparator,
+};
 use adico_primitives::menubar::{
     Menubar as MenubarPrimitive, MenubarContent as MenubarPrimitiveContent,
     MenubarItem as MenubarPrimitiveItem, MenubarTrigger as MenubarPrimitiveTrigger,
@@ -131,5 +141,65 @@ pub fn MenubarItem(
             attributes,
             {children}
         }
+    }
+}
+
+/// A purely visual/ARIA grouping of related items — typically a
+/// [`MenubarLabel`] followed by [`MenubarItem`]s. Does not affect keyboard
+/// navigation ordering.
+#[component]
+pub fn MenubarGroup(
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+    children: Element,
+) -> Element {
+    let class = cn(&[class.as_deref().unwrap_or_default()]);
+    rsx! { PrimitiveMenuGroup { class, attributes, {children} } }
+}
+
+/// A non-interactive heading for a [`MenubarGroup`] (or a whole menu).
+#[component]
+pub fn MenubarLabel(
+    /// Indents the label to align with inset items, matching shadcn's own
+    /// boolean toggle.
+    #[props(default)]
+    inset: bool,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+    children: Element,
+) -> Element {
+    let class = cn(&[
+        "px-2 py-1.5 text-sm font-semibold",
+        if inset { "pl-8" } else { "" },
+        class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! { PrimitiveMenuGroupLabel { class, attributes, {children} } }
+}
+
+/// A visual divider between menu items or groups.
+#[component]
+pub fn MenubarSeparator(
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
+    let class = cn(&[
+        "-mx-1 my-1 h-px bg-border",
+        class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! { PrimitiveMenuSeparator { class, attributes } }
+}
+
+/// A trailing keyboard-shortcut hint (e.g. `⌘N`) for a menu item. Purely
+/// presentational — no primitive backs this and it registers no key binding,
+/// matching upstream shadcn's own `MenubarShortcut` (a styled `<span>`; same
+/// precedent as the `command` registry item's `CommandShortcut`).
+#[component]
+pub fn MenubarShortcut(children: Element, class: Option<String>) -> Element {
+    let class = cn(&[
+        "ml-auto text-xs tracking-widest text-muted-foreground",
+        class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        span { class, {children} }
     }
 }

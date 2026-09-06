@@ -57,6 +57,22 @@
         {
           "id": "item",
           "unresolved": "no matching `item` part on axis `base-ui`'s `menubar` entry"
+        },
+        {
+          "id": "group",
+          "unresolved": "no matching `group` part on axis `base-ui`'s `menubar` entry"
+        },
+        {
+          "id": "label",
+          "unresolved": "no matching `label` part on axis `base-ui`'s `menubar` entry"
+        },
+        {
+          "id": "separator",
+          "unresolved": "no matching `separator` part on axis `base-ui`'s `menubar` entry"
+        },
+        {
+          "id": "shortcut",
+          "unresolved": "no matching `shortcut` part on axis `base-ui`'s `menubar` entry"
         }
       ]
     },
@@ -152,6 +168,22 @@
               "status": "present"
             }
           ]
+        },
+        {
+          "id": "group",
+          "unresolved": "no matching `group` part on axis `dioxus-components`'s `menubar` entry"
+        },
+        {
+          "id": "label",
+          "unresolved": "no matching `label` part on axis `dioxus-components`'s `menubar` entry"
+        },
+        {
+          "id": "separator",
+          "unresolved": "no matching `separator` part on axis `dioxus-components`'s `menubar` entry"
+        },
+        {
+          "id": "shortcut",
+          "unresolved": "no matching `shortcut` part on axis `dioxus-components`'s `menubar` entry"
         }
       ]
     },
@@ -247,6 +279,22 @@
               "status": "present"
             }
           ]
+        },
+        {
+          "id": "group",
+          "unresolved": "no matching `group` part on axis `dioxus-primitives`'s `menubar` entry"
+        },
+        {
+          "id": "label",
+          "unresolved": "no matching `label` part on axis `dioxus-primitives`'s `menubar` entry"
+        },
+        {
+          "id": "separator",
+          "unresolved": "no matching `separator` part on axis `dioxus-primitives`'s `menubar` entry"
+        },
+        {
+          "id": "shortcut",
+          "unresolved": "no matching `shortcut` part on axis `dioxus-primitives`'s `menubar` entry"
         }
       ]
     },
@@ -315,6 +363,27 @@
               "status": "present"
             }
           ]
+        },
+        {
+          "id": "group",
+          "unresolved": "Base UI's `menubar` exposes only a `root` part; its menu items come from the separate `menu` component, and mapping menubar's sub-parts onto menu's is a composition judgment left unmade"
+        },
+        {
+          "id": "label",
+          "props": [
+            {
+              "name": "inset",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "separator",
+          "unresolved": "Base UI's `menubar` exposes only a `root` part; its menu items come from the separate `menu` component, and mapping menubar's sub-parts onto menu's is a composition judgment left unmade"
+        },
+        {
+          "id": "shortcut",
+          "unresolved": "no prop data available for this entry"
         }
       ]
     }

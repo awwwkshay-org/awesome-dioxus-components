@@ -3,19 +3,172 @@
   "axes": {
     "base-ui": {
       "matchedComponent": "collapsible",
-      "parts": []
+      "parts": [
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "content",
+          "unresolved": "no matching `content` part on axis `base-ui`'s `collapsible` entry"
+        }
+      ]
     },
     "dioxus-components": {
       "matchedComponent": "collapsible",
-      "parts": []
+      "parts": [
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "r#as",
+              "status": "intentional_difference",
+              "reason": "The upstream dioxus-components fork's own polymorphic render-prop escape hatch (merges default behavioral attributes with caller-supplied ones and optionally renders a custom root/trigger element) is deliberately not ported anywhere in this crate -- default attributes are written directly on each element with `..props.attributes` spread after them instead, the same rationale as `asChild` above"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "content",
+          "props": [
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
     },
     "dioxus-primitives": {
       "matchedComponent": "collapsible",
-      "parts": []
+      "parts": [
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "r#as",
+              "status": "intentional_difference",
+              "reason": "The upstream dioxus-components fork's own polymorphic render-prop escape hatch (merges default behavioral attributes with caller-supplied ones and optionally renders a custom root/trigger element) is deliberately not ported anywhere in this crate -- default attributes are written directly on each element with `..props.attributes` spread after them instead, the same rationale as `asChild` above"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "content",
+          "props": [
+            {
+              "name": "id",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        }
+      ]
     },
     "shadcn": {
       "matchedComponent": "collapsible",
-      "parts": []
+      "parts": [
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "content",
+          "props": [
+            {
+              "name": "hiddenUntilFound",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "keepMounted",
+              "status": "missing"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        }
+      ]
     }
   }
 }

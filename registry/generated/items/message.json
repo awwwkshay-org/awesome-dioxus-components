@@ -7,7 +7,7 @@
       "source": "ui/message.rs",
       "targetRoot": "ui",
       "target": "message.rs",
-      "checksum": "6bc6000bb0f861b7e6d900e93343368bfdd4fcf2a822e2df7fb1e2378aba03f9"
+      "checksum": "989029e6277413306c4d5e875fe93c00f878e2fc0938d1755ff9dc3b5cbd9c71"
     }
   ],
   "registryDependencies": [

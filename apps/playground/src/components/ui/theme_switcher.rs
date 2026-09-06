@@ -75,6 +75,17 @@
 //! further `--primary` changes -- the same defect fixed in `theme-builder`;
 //! see that file's module doc comment and `theme_mode.rs`'s
 //! `read_root_properties` doc comment for the full story.
+//!
+//! `SelectList` is given an explicit `w-56`, not `w-full`: the list is
+//! `position: fixed` (`Positioner`'s own placement mechanism), so its
+//! containing block is the viewport, not the trigger -- `w-full` there
+//! resolved to 100% of the *viewport* width, not the trigger's width,
+//! making the palette dropdown visually span the whole screen. Found live
+//! via a screenshot; confirmed by reading the popup's own computed
+//! `position: fixed; left: 8px;` (the 8px collision-padding floor, not a
+//! position relative to the trigger) and measured `width: 1280` matching
+//! the viewport exactly. Every other `Select` consumer in this registry
+//! already uses a fixed width on its own `SelectList` for the same reason.
 
 use dioxus::prelude::*;
 
@@ -255,8 +266,17 @@ static PALETTE: GlobalSignal<ThemePalette> = Global::new(ThemePalette::default);
 /// per-preset color-swatch dots rendered in a loop -- circular is the
 /// established convention for a selectable color dot (same reasoning as
 /// `Skeleton`'s `Circle` variant), not a cosmetic choice.
+///
+/// `show_label` defaults to `true` (the visible "Theme" caption above the
+/// select, as demoed on this component's own page); a caller placing this
+/// next to other already-labeled controls -- e.g. a sidebar footer row
+/// beside `ModeToggle` -- can pass `false` to drop the redundant caption.
+/// Safe to hide purely visually: `SelectTrigger`'s own `aria_label` already
+/// names the control for assistive tech independently of this text, so
+/// `show_label: false` omits the caption outright rather than merely
+/// visually hiding it.
 #[component]
-pub fn ThemeSwitcher(class: Option<String>) -> Element {
+pub fn ThemeSwitcher(class: Option<String>, #[props(default = true)] show_label: bool) -> Element {
     let (mode, _set_mode) = use_persisted_theme_mode();
     let (palette, set_palette) = use_persisted_global(
         &PALETTE,
@@ -291,7 +311,9 @@ pub fn ThemeSwitcher(class: Option<String>) -> Element {
                 "grid gap-1 text-xs font-medium text-muted-foreground",
                 class.as_deref().unwrap_or_default(),
             ]),
-            "Theme"
+            if show_label {
+                "Theme"
+            }
             Select::<ThemePalette> {
                 value: ReadSignal::from(value),
                 on_value_change: move |next: Option<ThemePalette>| {
@@ -303,7 +325,7 @@ pub fn ThemeSwitcher(class: Option<String>) -> Element {
                         SelectValue { placeholder: "Choose a theme" }
                     }
                 }
-                SelectList { class: "w-full", aria_label: "Theme palette options",
+                SelectList { class: "w-56", aria_label: "Theme palette options",
                     for (index , option) in ThemePalette::ALL.into_iter().enumerate() {
                         SelectOption::<ThemePalette> {
                             index,

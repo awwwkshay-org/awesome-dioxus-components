@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::components;
-use crate::components::controls::SelectControl;
+use crate::components::controls::NumberControl;
 use crate::components::demo::Demo;
 
 #[component]
@@ -11,13 +11,15 @@ pub fn ProgressPage() -> Element {
         Demo {
             name: "Progress",
             controls: rsx! {
-                SelectControl {
+                NumberControl {
                     label: "Value",
                     value,
-                    options: &[("0%", 0.0), ("25%", 25.0), ("50%", 50.0), ("75%", 75.0), ("100%", 100.0)],
+                    min: 0.0,
+                    max: 100.0,
+                    step: 1.0,
                 }
             },
-            components::ui::Progress { value: value(), class: "w-full max-w-sm" }
+            components::ui::Progress { value: value().clamp(0.0, 100.0), class: "w-full max-w-sm" }
         }
     }
 }

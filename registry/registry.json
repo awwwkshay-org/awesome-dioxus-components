@@ -219,7 +219,7 @@
           "source": "ui/select.rs",
           "targetRoot": "ui",
           "target": "select.rs",
-          "checksum": "baa07c3be87debb9c323da3c84efc5bddbcd7e71ba66f5618b0e36a98f84ad44"
+          "checksum": "b7e94fb76d03646dc35f45af0093590db737d2f7ce532c85de47b39631341083"
         }
       ],
       "cargoDependencies": [
@@ -528,7 +528,7 @@
           "source": "ui/textarea.rs",
           "targetRoot": "ui",
           "target": "textarea.rs",
-          "checksum": "7883f26019d06844174bef0b65ab03a204a57026f504d9aacf820871de6397b8"
+          "checksum": "85020b646f54742ea018b53c04bb9d529c189fed6a4f24137008b3239b3531cc"
         }
       ],
       "registryDependencies": [
@@ -788,7 +788,7 @@
           "source": "ui/dropdown_menu.rs",
           "targetRoot": "ui",
           "target": "dropdown_menu.rs",
-          "checksum": "a970a7d3363f294a3c8907e8c847b0a563abe27befab783633b4aaad51d67677"
+          "checksum": "88d42f5c54ee9fe89d6a18b65584dddec978ee7f97fdf01e40c5c2c3fe8d93d7"
         }
       ],
       "cargoDependencies": [
@@ -839,7 +839,7 @@
           "source": "ui/context_menu.rs",
           "targetRoot": "ui",
           "target": "context_menu.rs",
-          "checksum": "fa2c3e2019f8a78537292810ebf7f9496db85a63ad7c8864287f8f1cb068a319"
+          "checksum": "a70a7673133d78b9e51fe71fc2bdc437bbf891e33b8cb2b695d987872c906564"
         }
       ],
       "registryDependencies": [
@@ -893,7 +893,7 @@
           "source": "ui/menubar.rs",
           "targetRoot": "ui",
           "target": "menubar.rs",
-          "checksum": "eac0400a9d587bbea6b634514be2d5c9209de1f41e647439ad49f61b57de2a02"
+          "checksum": "e8358f7eaf803aad2f77a8ce9d6457647bc4f211feba9924ebc392adc8184ee0"
         }
       ],
       "registryDependencies": [
@@ -947,7 +947,7 @@
           "source": "ui/combobox.rs",
           "targetRoot": "ui",
           "target": "combobox.rs",
-          "checksum": "f1acbc52ef16d5cbe8c320dc5363f229a9cb3427b6b588b5312d959789132a66"
+          "checksum": "67885d3edba9639ab4b14028fdaf2d3ca158e111e90d6d9bcfa9379a398e2141"
         }
       ],
       "cargoDependencies": [
@@ -1412,7 +1412,7 @@
           "source": "ui/collapsible.rs",
           "targetRoot": "ui",
           "target": "collapsible.rs",
-          "checksum": "9e5983ccab481bcf769a2bc772cabc7d9c5244c9e8131729ba39180bdfc762e7"
+          "checksum": "53b618620c7a5736ae21cea790ef818f23697615ea0abca552e1283b3a3c9b3a"
         }
       ],
       "cargoDependencies": [
@@ -2279,7 +2279,7 @@
           "source": "ui/theme_switcher.rs",
           "targetRoot": "ui",
           "target": "theme_switcher.rs",
-          "checksum": "2f3648304be6f9f054bdbb87def3b11b4b11c3e73d1ff47dc59d8e6f3ae90e01"
+          "checksum": "4f6ee190bffb46aaf7f1fbd8c4a76f8e8902f01d3b0ca051344b9fca9f205cdd"
         }
       ],
       "registryDependencies": [
@@ -2934,7 +2934,7 @@
           "source": "ui/carousel.rs",
           "targetRoot": "ui",
           "target": "carousel.rs",
-          "checksum": "2350bdcd165b60ae0b88003abcfd79f72cd6c200c5247e9896777ee0ac4673b8"
+          "checksum": "086922e407d9248fc923025c9d1645582e3b5a13097a8ad997969be5522be8b3"
         }
       ],
       "registryDependencies": [
@@ -2985,7 +2985,7 @@
           "source": "ui/input_otp.rs",
           "targetRoot": "ui",
           "target": "input_otp.rs",
-          "checksum": "340844969905d19b3e7963162af66d633eaef4482f25eec5cfff34d6d8dc2b86"
+          "checksum": "6774ec365219f98cfdd75fa41279fcd844a0e14d158821d659c1388df39916b2"
         }
       ],
       "registryDependencies": [
@@ -3122,7 +3122,7 @@
           "source": "ui/bubble.rs",
           "targetRoot": "ui",
           "target": "bubble.rs",
-          "checksum": "7233fc2bdd562b11b6b9445995494645b51368fe181dd4c607ec0bffdd5c2838"
+          "checksum": "dbf1c728017eca68953dcf36ab7dc723223db60bc3673bcc0321bcde7ddb3a62"
         }
       ],
       "registryDependencies": [
@@ -3166,7 +3166,7 @@
           "source": "ui/message.rs",
           "targetRoot": "ui",
           "target": "message.rs",
-          "checksum": "6bc6000bb0f861b7e6d900e93343368bfdd4fcf2a822e2df7fb1e2378aba03f9"
+          "checksum": "989029e6277413306c4d5e875fe93c00f878e2fc0938d1755ff9dc3b5cbd9c71"
         }
       ],
       "registryDependencies": [

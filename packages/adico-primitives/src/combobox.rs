@@ -562,6 +562,10 @@ pub struct ComboboxListProps {
     #[props(default)]
     pub aria_label: Option<String>,
 
+    /// Alignment of the listbox relative to [`ComboboxInput`].
+    #[props(default = ContentAlign::Center)]
+    pub align: ContentAlign,
+
     /// Additional attributes.
     #[props(extends = GlobalAttributes)]
     pub attributes: Vec<Attribute>,
@@ -590,7 +594,7 @@ pub fn ComboboxList(props: ComboboxListProps) -> Element {
                 id: (listbox.id)(),
                 anchor_id: ctx.input_id,
                 side: ContentSide::Bottom,
-                align: ContentAlign::Center,
+                align: props.align,
                 offset: 4.0,
                 role: "listbox",
                 aria_multiselectable: ctx.selectable.selection_mode.is_multiple(),

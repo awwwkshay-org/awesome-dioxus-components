@@ -47,3 +47,20 @@ pub fn MenubarItemControls(mut state: Signal<MenubarItemDemoState>) -> Element {
         SelectControl { label: "Variant", value: variant, options: MENUBAR_ITEM_VARIANT_OPTIONS }
     }
 }
+
+/// Generated demo state for [`MenubarLabel`], one field per controllable prop.
+#[derive(Clone, Default, PartialEq)]
+pub struct MenubarLabelDemoState {
+    pub inset: bool,
+}
+
+#[component]
+pub fn MenubarLabelControls(mut state: Signal<MenubarLabelDemoState>) -> Element {
+    let inset = use_signal(|| state().inset);
+    use_effect(move || {
+        state.set(MenubarLabelDemoState { inset: inset() });
+    });
+    rsx! {
+        BoolControl { label: "Inset", value: inset }
+    }
+}

@@ -715,6 +715,11 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
+              "name": "aria_label",
+              "type": "Option<String>"
+            },
+            {
               "name": "attributes",
               "type": "Vec<Attribute>"
             }
@@ -730,6 +735,16 @@
               "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "default": "default()",
+              "name": "aria_label",
+              "type": "Option<String>"
+            },
+            {
+              "default": "ContentAlign::Center",
+              "name": "align",
+              "type": "ContentAlign"
             },
             {
               "name": "attributes",
@@ -1892,6 +1907,11 @@
               "type": "ReadSignal<bool>"
             },
             {
+              "default": "true",
+              "name": "close_on_click",
+              "type": "bool"
+            },
+            {
               "name": "attributes",
               "type": "Vec<Attribute>"
             },
@@ -2126,6 +2146,11 @@
             {
               "default": "default()",
               "name": "read_only",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "default": "default()",
+              "name": "mask",
               "type": "ReadSignal<bool>"
             },
             {
@@ -2643,6 +2668,11 @@
               "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "default": "ContentAlign::Center",
+              "name": "align",
+              "type": "ContentAlign"
             },
             {
               "name": "attributes",
@@ -3809,6 +3839,7 @@
       "navigation_menu",
       "number_field",
       "otp_field",
+      "persisted_state",
       "positioner",
       "preview_card",
       "scroll_lock",
@@ -4957,6 +4988,11 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "default()",
+              "name": "aria_label",
+              "type": "Option<String>"
+            },
+            {
               "name": "attributes",
               "type": "Vec<Attribute>"
             }
@@ -4972,6 +5008,16 @@
               "default": "default()",
               "name": "id",
               "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "default": "default()",
+              "name": "aria_label",
+              "type": "Option<String>"
+            },
+            {
+              "default": "ContentAlign::Center",
+              "name": "align",
+              "type": "ContentAlign"
             },
             {
               "name": "attributes",
@@ -6534,6 +6580,11 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "ContentAlign::Center",
+              "name": "align",
+              "type": "ContentAlign"
+            },
+            {
               "name": "attributes",
               "type": "Vec<Attribute>"
             },
@@ -7891,12 +7942,12 @@
       "source": "https://github.com/DioxusLabs/dioxus-components/tree/bf007c15d0cf4d04d3181cc46cf12325aa773955/primitives/src"
     },
     "summary": {
-      "adico_only_extras": 21,
+      "adico_only_extras": 22,
       "built": 40,
       "not_started": 2,
       "total_modules": 42
     }
   },
   "generator": "cargo xtask primitive-compat sync",
-  "synced_at": "2026-09-05"
+  "synced_at": "2026-09-06"
 }

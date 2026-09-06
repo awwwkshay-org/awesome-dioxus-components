@@ -23,6 +23,46 @@
         {
           "id": "item",
           "unresolved": "no resolvable Base UI equivalent for component `dioxus_attributes`"
+        },
+        {
+          "id": "group",
+          "unresolved": "no matching `group` part on axis `dioxus-components`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "label",
+          "unresolved": "no matching `label` part on axis `dioxus-components`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "separator",
+          "unresolved": "no matching `separator` part on axis `dioxus-components`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "shortcut",
+          "unresolved": "no matching `shortcut` part on axis `dioxus-components`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "checkbox-item",
+          "unresolved": "no matching `checkbox-item` part on axis `dioxus-components`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "radio-group",
+          "unresolved": "no matching `radio-group` part on axis `dioxus-components`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "radio-item",
+          "unresolved": "no matching `radio-item` part on axis `dioxus-components`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "sub",
+          "unresolved": "no matching `sub` part on axis `dioxus-components`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "sub-trigger",
+          "unresolved": "no matching `sub-trigger` part on axis `dioxus-components`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "sub-content",
+          "unresolved": "no matching `sub-content` part on axis `dioxus-components`'s `dropdown-menu` entry"
         }
       ]
     },
@@ -135,6 +175,46 @@
               "status": "present"
             }
           ]
+        },
+        {
+          "id": "group",
+          "unresolved": "no matching `group` part on axis `dioxus-primitives`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "label",
+          "unresolved": "no matching `label` part on axis `dioxus-primitives`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "separator",
+          "unresolved": "no matching `separator` part on axis `dioxus-primitives`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "shortcut",
+          "unresolved": "no matching `shortcut` part on axis `dioxus-primitives`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "checkbox-item",
+          "unresolved": "no matching `checkbox-item` part on axis `dioxus-primitives`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "radio-group",
+          "unresolved": "no matching `radio-group` part on axis `dioxus-primitives`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "radio-item",
+          "unresolved": "no matching `radio-item` part on axis `dioxus-primitives`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "sub",
+          "unresolved": "no matching `sub` part on axis `dioxus-primitives`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "sub-trigger",
+          "unresolved": "no matching `sub-trigger` part on axis `dioxus-primitives`'s `dropdown-menu` entry"
+        },
+        {
+          "id": "sub-content",
+          "unresolved": "no matching `sub-content` part on axis `dioxus-primitives`'s `dropdown-menu` entry"
         }
       ]
     },
@@ -343,6 +423,286 @@
             },
             {
               "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "group",
+          "props": [
+            {
+              "name": "children",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "label",
+          "props": [
+            {
+              "name": "inset",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "separator",
+          "props": [
+            {
+              "name": "orientation",
+              "status": "missing"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "shortcut",
+          "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "checkbox-item",
+          "props": [
+            {
+              "name": "label",
+              "status": "missing"
+            },
+            {
+              "name": "defaultChecked",
+              "status": "present"
+            },
+            {
+              "name": "checked",
+              "status": "present"
+            },
+            {
+              "name": "onCheckedChange",
+              "status": "present"
+            },
+            {
+              "name": "onClick",
+              "status": "missing"
+            },
+            {
+              "name": "closeOnClick",
+              "status": "missing"
+            },
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "radio-group",
+          "props": [
+            {
+              "name": "defaultValue",
+              "status": "present"
+            },
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "onValueChange",
+              "status": "present"
+            },
+            {
+              "name": "disabled",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "radio-item",
+          "props": [
+            {
+              "name": "label",
+              "status": "missing"
+            },
+            {
+              "name": "value",
+              "status": "present"
+            },
+            {
+              "name": "onClick",
+              "status": "missing"
+            },
+            {
+              "name": "closeOnClick",
+              "status": "missing"
+            },
+            {
+              "name": "nativeButton",
+              "status": "intentional_difference",
+              "reason": "Dioxus components render a single fixed element type; there is no prop to swap between a native <button> and a generic element"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "className",
+              "status": "present"
+            },
+            {
+              "name": "style",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no inline style-object prop; styling is done via `class`/Tailwind utilities"
+            },
+            {
+              "name": "render",
+              "status": "intentional_difference",
+              "reason": "Dioxus has no render-prop/style-object escape hatch to swap the rendered element"
+            }
+          ]
+        },
+        {
+          "id": "sub",
+          "props": [
+            {
+              "name": "defaultOpen",
+              "status": "present"
+            },
+            {
+              "name": "open",
+              "status": "present"
+            },
+            {
+              "name": "onOpenChange",
+              "status": "present"
+            },
+            {
+              "name": "highlightItemOnHover",
+              "status": "missing"
+            },
+            {
+              "name": "actionsRef",
+              "status": "intentional_difference",
+              "reason": "Dioxus uses component-local signals/mounted-node hooks for imperative access, not React imperative-handle refs"
+            },
+            {
+              "name": "closeParentOnEsc",
+              "status": "missing"
+            },
+            {
+              "name": "loopFocus",
+              "status": "missing"
+            },
+            {
+              "name": "onOpenChangeComplete",
+              "status": "missing"
+            },
+            {
+              "name": "disabled",
+              "status": "present"
+            },
+            {
+              "name": "orientation",
+              "status": "missing"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "sub-trigger",
+          "props": [
+            {
+              "name": "inset",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "sub-content",
+          "props": [
+            {
+              "name": "finalFocus",
+              "status": "missing"
+            },
+            {
+              "name": "children",
               "status": "present"
             },
             {

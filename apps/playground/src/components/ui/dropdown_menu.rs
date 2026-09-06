@@ -11,9 +11,24 @@ use adico_primitives::dropdown_menu::{
     DropdownMenuItem as PrimitiveDropdownMenuItem,
     DropdownMenuTrigger as PrimitiveDropdownMenuTrigger,
 };
+use adico_primitives::icons::{Check, ChevronRight, Circle};
+use adico_primitives::menu::{
+    MenuCheckboxItem as PrimitiveMenuCheckboxItem, MenuContent as PrimitiveMenuContent,
+    MenuGroup as PrimitiveMenuGroup, MenuGroupLabel as PrimitiveMenuGroupLabel,
+    MenuRadioGroup as PrimitiveMenuRadioGroup, MenuRadioItem as PrimitiveMenuRadioItem,
+    MenuSeparator as PrimitiveMenuSeparator, MenuSubmenuRoot as PrimitiveMenuSubmenuRoot,
+    MenuSubmenuTrigger as PrimitiveMenuSubmenuTrigger,
+};
+use adico_primitives::{ContentAlign, ContentSide};
 
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
+
+/// The shared item visual base, kept identical across [`DropdownMenuItem`],
+/// [`DropdownMenuCheckboxItem`], [`DropdownMenuRadioItem`], and
+/// [`DropdownMenuSubTrigger`] so every selectable row in one menu reads the
+/// same.
+const ITEM_BASE_CLASS: &str = "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 focus:bg-accent focus:text-accent-foreground";
 
 /// A positioned menu root retaining the primitive's controlled state API.
 #[component]
@@ -86,6 +101,9 @@ pub fn DropdownMenuContent(
     /// Corner radius. See [`DropdownMenuTrigger::radius`]'s own doc comment.
     #[props(default = Radius::Md)]
     radius: Radius,
+    /// Alignment of the content relative to its trigger.
+    #[props(default = ContentAlign::Start)]
+    align: ContentAlign,
     class: Option<String>,
     #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
@@ -94,7 +112,7 @@ pub fn DropdownMenuContent(
         radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
-    rsx! { PrimitiveDropdownMenuContent { id, class, attributes, {children} } }
+    rsx! { PrimitiveDropdownMenuContent { id, class, align, attributes, {children} } }
 }
 
 /// The visual treatment of a [`DropdownMenuItem`], matching shadcn's own
@@ -136,7 +154,7 @@ pub fn DropdownMenuItem<T: Clone + PartialEq + 'static>(
     #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+        ITEM_BASE_CLASS,
         variant.class(),
         if inset { "pl-8" } else { "" },
         class.as_deref().unwrap_or_default(),
@@ -152,6 +170,234 @@ pub fn DropdownMenuItem<T: Clone + PartialEq + 'static>(
             attributes,
             {children}
         }
+    }
+}
+
+/// A purely visual/ARIA grouping of related items — typically a
+/// [`DropdownMenuLabel`] followed by [`DropdownMenuItem`]s. Does not affect
+/// keyboard navigation ordering.
+#[component]
+pub fn DropdownMenuGroup(
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+    children: Element,
+) -> Element {
+    let class = cn(&[class.as_deref().unwrap_or_default()]);
+    rsx! { PrimitiveMenuGroup { class, attributes, {children} } }
+}
+
+/// A non-interactive heading for a [`DropdownMenuGroup`] (or a whole menu).
+#[component]
+pub fn DropdownMenuLabel(
+    /// Indents the label to align with inset items, matching shadcn's own
+    /// boolean toggle.
+    #[props(default)]
+    inset: bool,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+    children: Element,
+) -> Element {
+    let class = cn(&[
+        "px-2 py-1.5 text-sm font-semibold",
+        if inset { "pl-8" } else { "" },
+        class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! { PrimitiveMenuGroupLabel { class, attributes, {children} } }
+}
+
+/// A visual divider between menu items or groups.
+#[component]
+pub fn DropdownMenuSeparator(
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
+    let class = cn(&[
+        "-mx-1 my-1 h-px bg-border",
+        class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! { PrimitiveMenuSeparator { class, attributes } }
+}
+
+/// A trailing keyboard-shortcut hint (e.g. `⇧⌘P`) for a menu item. Purely
+/// presentational — no primitive backs this and it registers no key binding,
+/// matching upstream shadcn's own `DropdownMenuShortcut` (a styled `<span>`;
+/// same precedent as the `command` registry item's `CommandShortcut`).
+#[component]
+pub fn DropdownMenuShortcut(children: Element, class: Option<String>) -> Element {
+    let class = cn(&[
+        "ml-auto text-xs tracking-widest text-muted-foreground",
+        class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        span { class, {children} }
+    }
+}
+
+/// A menu item with a checked state, toggled on select without closing the
+/// menu. Controlled via `checked`/`on_checked_change` or uncontrolled via
+/// `default_checked`. The check indicator is driven purely by the
+/// primitive's own `data-state` attribute.
+#[component]
+pub fn DropdownMenuCheckboxItem(
+    index: ReadSignal<usize>,
+    #[props(default)] checked: ReadSignal<Option<bool>>,
+    #[props(default)] default_checked: bool,
+    #[props(default)] on_checked_change: Callback<bool>,
+    #[props(default)] disabled: ReadSignal<bool>,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+    children: Element,
+) -> Element {
+    let class = cn(&[
+        ITEM_BASE_CLASS,
+        "group pl-8",
+        class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        PrimitiveMenuCheckboxItem {
+            index,
+            checked,
+            default_checked,
+            on_checked_change,
+            disabled,
+            class,
+            attributes,
+            span { class: "pointer-events-none absolute left-2 flex size-3.5 items-center justify-center",
+                Check { class: "size-4 opacity-0 group-data-[state=checked]:opacity-100" }
+            }
+            {children}
+        }
+    }
+}
+
+/// Groups [`DropdownMenuRadioItem`]s into a single-select set. Controlled
+/// via `value`/`on_value_change` or uncontrolled via `default_value`.
+#[component]
+pub fn DropdownMenuRadioGroup<T: Clone + PartialEq + 'static>(
+    #[props(default)] value: Option<ReadSignal<Option<T>>>,
+    #[props(default)] default_value: Option<T>,
+    #[props(default)] on_value_change: Callback<T>,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+    children: Element,
+) -> Element {
+    let class = cn(&[class.as_deref().unwrap_or_default()]);
+    rsx! {
+        PrimitiveMenuRadioGroup::<T> {
+            value,
+            default_value,
+            on_value_change,
+            class,
+            attributes,
+            {children}
+        }
+    }
+}
+
+/// A single-select item within a [`DropdownMenuRadioGroup`]. Selecting it
+/// sets the group's value and closes the menu. The dot indicator is driven
+/// purely by the primitive's own `data-state` attribute.
+#[component]
+pub fn DropdownMenuRadioItem<T: Clone + PartialEq + 'static>(
+    value: ReadSignal<T>,
+    index: ReadSignal<usize>,
+    #[props(default)] disabled: ReadSignal<bool>,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+    children: Element,
+) -> Element {
+    let class = cn(&[
+        ITEM_BASE_CLASS,
+        "group pl-8",
+        class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        PrimitiveMenuRadioItem::<T> {
+            value,
+            index,
+            disabled,
+            class,
+            attributes,
+            span { class: "pointer-events-none absolute left-2 flex size-3.5 items-center justify-center",
+                Circle { class: "size-2 fill-current opacity-0 group-data-[state=checked]:opacity-100" }
+            }
+            {children}
+        }
+    }
+}
+
+/// A nested submenu root. Acts as an item in the parent menu's keyboard
+/// order (via `index`) while hosting its own [`DropdownMenuSubTrigger`] and
+/// [`DropdownMenuSubContent`]. Nesting composes to any depth.
+#[component]
+pub fn DropdownMenuSub(
+    index: ReadSignal<usize>,
+    #[props(default)] open: ReadSignal<Option<bool>>,
+    #[props(default)] default_open: bool,
+    #[props(default)] on_open_change: Callback<bool>,
+    #[props(default)] disabled: ReadSignal<bool>,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+    children: Element,
+) -> Element {
+    let class = cn(&["relative", class.as_deref().unwrap_or_default()]);
+    rsx! {
+        PrimitiveMenuSubmenuRoot {
+            index,
+            open,
+            default_open,
+            on_open_change,
+            disabled,
+            class,
+            attributes,
+            {children}
+        }
+    }
+}
+
+/// The trigger row for a [`DropdownMenuSub`], styled like a regular item
+/// with a trailing chevron. Opens on click, `ArrowRight`, or hover intent.
+#[component]
+pub fn DropdownMenuSubTrigger(
+    /// Indents the trigger to align with sibling inset items.
+    #[props(default)]
+    inset: bool,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+    children: Element,
+) -> Element {
+    let class = cn(&[
+        ITEM_BASE_CLASS,
+        "data-[state=open]:bg-accent data-[state=open]:text-accent-foreground",
+        if inset { "pl-8" } else { "" },
+        class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        PrimitiveMenuSubmenuTrigger { class, attributes,
+            {children}
+            ChevronRight { class: "ml-auto size-4" }
+        }
+    }
+}
+
+/// A [`DropdownMenuSub`]'s flyout surface, opening to the trigger's right
+/// (the primitive's positioner handles placement and collision flipping).
+#[component]
+pub fn DropdownMenuSubContent(
+    /// Corner radius. See [`DropdownMenuTrigger`]'s own doc comment.
+    #[props(default = Radius::Md)]
+    radius: Radius,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+    children: Element,
+) -> Element {
+    let class = cn(&[
+        "z-50 min-w-32 overflow-hidden bg-popover p-1 text-popover-foreground shadow-lg",
+        radius.class(),
+        class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        PrimitiveMenuContent { side: ContentSide::Right, class, attributes, {children} }
     }
 }
 

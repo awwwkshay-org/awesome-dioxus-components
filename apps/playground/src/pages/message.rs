@@ -16,6 +16,11 @@ pub fn MessagePage() -> Element {
             div { class: "w-full max-w-sm",
                 components::ui::Message {
                     align: state().align,
+                    // No `MessageHeader`: the avatar already identifies the
+                    // sender, so a name label here would be redundant. This
+                    // also means the bubble is the column's first child, so
+                    // `Message`'s `items-start` naturally aligns the avatar
+                    // with the bubble's own top edge instead of a name line.
                     avatar: rsx! {
                         components::ui::MessageAvatar {
                             components::ui::Avatar { size: components::ui::AvatarSize::Sm,
@@ -23,7 +28,6 @@ pub fn MessagePage() -> Element {
                             }
                         }
                     },
-                    components::ui::MessageHeader { "Alex" }
                     components::ui::MessageContent {
                         components::ui::Bubble {
                             components::ui::BubbleContent { "Hey, did you see the latest deploy?" }

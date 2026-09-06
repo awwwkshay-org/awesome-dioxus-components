@@ -7,6 +7,7 @@ use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
+use adico_primitives::ContentAlign;
 use adico_primitives::icons::{ChevronDown, ChevronUp};
 
 use adico_primitives::combobox::{
@@ -239,6 +240,9 @@ pub fn ComboboxList(
     /// Corner radius. See [`ComboboxInput::radius`]'s own doc comment.
     #[props(default = Radius::Md)]
     radius: Radius,
+    /// Alignment of the listbox relative to its input.
+    #[props(default = ContentAlign::Center)]
+    align: ContentAlign,
     class: Option<String>,
     #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
@@ -256,6 +260,7 @@ pub fn ComboboxList(
         PrimitiveComboboxList {
             id,
             aria_label,
+            align,
             class,
             attributes,
             {children}

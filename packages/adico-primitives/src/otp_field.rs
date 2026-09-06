@@ -21,10 +21,12 @@
 // this crate has no existing precedent for on any other primitive; genuine follow-on scope, not
 // silently assumed to work. Also not built: `autoSubmit` (submitting the owning form once
 // complete -- this crate's primitives don't drive form submission elsewhere either, e.g.
-// `form.rs`'s own module doc defers cross-field orchestration), `validationType`/`normalizeValue`
+// `form.rs`'s own module doc defers cross-field orchestration), and `validationType`/`normalizeValue`
 // (character-class validation/normalization -- no equivalent validation-registry primitive
-// exists yet, same gap `field.rs`'s doc comment already names for `Form`), and `mask` (masked
-// slot display).
+// exists yet, same gap `field.rs`'s doc comment already names for `Form`). Masked slot display
+// (`mask`), previously on this not-built list, IS now built: a reactive root-level flag that
+// renders each slot as `type="password"` -- purely presentational, the value model and callbacks
+// are identical in both modes.
 
 //! Defines the [`OtpFieldRoot`] component and its sub-components, which provide an accessible
 //! one-time-passcode input split across individually focusable single-character slots.
@@ -51,6 +53,7 @@ struct OtpFieldCtx {
     length: ReadSignal<usize>,
     disabled: ReadSignal<bool>,
     read_only: ReadSignal<bool>,
+    mask: ReadSignal<bool>,
     slot_refs: Signal<Vec<Option<Rc<MountedData>>>>,
     root_id: Signal<String>,
 }
@@ -122,6 +125,14 @@ pub struct OtpFieldRootProps {
     #[props(default)]
     pub read_only: ReadSignal<bool>,
 
+    /// Whether each slot visually obscures its entered character by
+    /// rendering as a password-type input. Purely presentational: the
+    /// value model, focus movement, and value callbacks are identical in
+    /// both modes, and toggling never clears or reorders entered
+    /// characters.
+    #[props(default)]
+    pub mask: ReadSignal<bool>,
+
     /// The name of the field, used in forms.
     #[props(default)]
     pub name: ReadSignal<String>,
@@ -185,6 +196,7 @@ pub fn OtpFieldRoot(props: OtpFieldRootProps) -> Element {
         length: props.length,
         disabled: props.disabled,
         read_only: props.read_only,
+        mask: props.mask,
         slot_refs,
         root_id,
     });
@@ -217,6 +229,9 @@ pub struct OtpFieldInputProps {
 /// The [`OtpFieldInput`] component defines the following data attribute you
 /// can use to control styling:
 /// - `data-disabled`: Indicates whether the field ignores user interaction.
+///
+/// While the root's `mask` flag is on, the slot renders as
+/// `type="password"` (obscuring its character); otherwise `type="text"`.
 #[component]
 pub fn OtpFieldInput(props: OtpFieldInputProps) -> Element {
     let ctx: OtpFieldCtx = use_context();
@@ -229,7 +244,7 @@ pub fn OtpFieldInput(props: OtpFieldInputProps) -> Element {
     rsx! {
         input {
             id: ctx.slot_id(index),
-            type: "text",
+            type: if (ctx.mask)() { "password" } else { "text" },
             inputmode: "numeric",
             autocomplete: if index == 0 { "one-time-code" } else { "off" },
             maxlength: "1",
@@ -340,6 +355,41 @@ mod tests {
     fn slots_to_value_compacts_holes() {
         let slots = vec![Some('1'), None, Some('3')];
         assert_eq!(slots_to_value(&slots), "13");
+    }
+
+    #[test]
+    fn mask_renders_password_inputs_without_touching_the_value() {
+        fn render_with(mask: bool) -> String {
+            let mut dom = VirtualDom::new_with_props(
+                |mask: bool| {
+                    let value = ReadSignal::new(Signal::new(Some("12".to_string())));
+                    let mask = ReadSignal::new(Signal::new(mask));
+                    rsx! {
+                        OtpFieldRoot { aria_label: "Code", length: 2usize, value, mask,
+                            OtpFieldInput { index: 0usize }
+                            OtpFieldInput { index: 1usize }
+                        }
+                    }
+                },
+                mask,
+            );
+            dom.rebuild_in_place();
+            dioxus_ssr::render(&dom)
+        }
+
+        let masked = render_with(true);
+        assert_eq!(masked.matches("type=\"password\"").count(), 2);
+        assert!(!masked.contains("type=\"text\""));
+        // Masking is presentational only: the same characters stay in the
+        // rendered slot values.
+        assert!(masked.contains("value=\"1\""));
+        assert!(masked.contains("value=\"2\""));
+
+        let unmasked = render_with(false);
+        assert_eq!(unmasked.matches("type=\"text\"").count(), 2);
+        assert!(!unmasked.contains("type=\"password\""));
+        assert!(unmasked.contains("value=\"1\""));
+        assert!(unmasked.contains("value=\"2\""));
     }
 
     #[test]

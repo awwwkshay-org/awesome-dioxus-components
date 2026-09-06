@@ -508,6 +508,10 @@ pub struct SelectListProps {
     #[props(default)]
     pub id: ReadSignal<Option<String>>,
 
+    /// Alignment of the list relative to [`SelectTrigger`].
+    #[props(default = ContentAlign::Center)]
+    pub align: ContentAlign,
+
     /// Additional attributes for the list
     #[props(extends = GlobalAttributes)]
     pub attributes: Vec<Attribute>,
@@ -613,7 +617,7 @@ pub fn SelectList(props: SelectListProps) -> Element {
                 id: (listbox.id)(),
                 anchor_id: ctx.trigger_id,
                 side: ContentSide::Bottom,
-                align: ContentAlign::Center,
+                align: props.align,
                 offset: 4.0,
                 role: "listbox",
                 tabindex: if focused() { "0" } else { "-1" },

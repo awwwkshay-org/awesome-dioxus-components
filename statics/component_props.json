@@ -1063,7 +1063,36 @@
       }
     ]
   },
-  "collapsible": {},
+  "collapsible": {
+    "CollapsibleContent": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "CollapsibleTrigger": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
   "color_picker": {
     "AreaThumb": [
       {
@@ -1255,6 +1284,10 @@
       {
         "name": "radius",
         "type": "Radius"
+      },
+      {
+        "name": "align",
+        "type": "ContentAlign"
       },
       {
         "name": "class",
@@ -1529,6 +1562,20 @@
         "type": "Vec<Attribute>"
       }
     ],
+    "ContextMenuGroup": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
     "ContextMenuItem": [
       {
         "name": "value",
@@ -1565,6 +1612,44 @@
       {
         "name": "attributes",
         "type": "Vec<Attribute>"
+      }
+    ],
+    "ContextMenuLabel": [
+      {
+        "name": "inset",
+        "type": "bool"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "ContextMenuSeparator": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "ContextMenuShortcut": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
       }
     ],
     "ContextMenuTrigger": [
@@ -2182,6 +2267,40 @@
         "type": "Element"
       }
     ],
+    "DropdownMenuCheckboxItem": [
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "checked",
+        "type": "ReadSignal<Option<bool>>"
+      },
+      {
+        "name": "default_checked",
+        "type": "bool"
+      },
+      {
+        "name": "on_checked_change",
+        "type": "Callback<bool>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
     "DropdownMenuContent": [
       {
         "name": "children",
@@ -2196,12 +2315,30 @@
         "type": "Radius"
       },
       {
+        "name": "align",
+        "type": "ContentAlign"
+      },
+      {
         "name": "class",
         "type": "Option<String>"
       },
       {
         "name": "attributes",
         "type": "Vec<Attribute>"
+      }
+    ],
+    "DropdownMenuGroup": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
       }
     ],
     "DropdownMenuItem": [
@@ -2244,6 +2381,166 @@
       {
         "name": "attributes",
         "type": "Vec<Attribute>"
+      }
+    ],
+    "DropdownMenuLabel": [
+      {
+        "name": "inset",
+        "type": "bool"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "DropdownMenuRadioGroup": [
+      {
+        "name": "value",
+        "type": "Option<ReadSignal<Option<T>>>"
+      },
+      {
+        "name": "default_value",
+        "type": "Option<T>"
+      },
+      {
+        "name": "on_value_change",
+        "type": "Callback<T>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "DropdownMenuRadioItem": [
+      {
+        "name": "value",
+        "type": "ReadSignal<T>"
+      },
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "DropdownMenuSeparator": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "DropdownMenuShortcut": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      }
+    ],
+    "DropdownMenuSub": [
+      {
+        "name": "index",
+        "type": "ReadSignal<usize>"
+      },
+      {
+        "name": "open",
+        "type": "ReadSignal<Option<bool>>"
+      },
+      {
+        "name": "default_open",
+        "type": "bool"
+      },
+      {
+        "name": "on_open_change",
+        "type": "Callback<bool>"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "DropdownMenuSubContent": [
+      {
+        "name": "radius",
+        "type": "Radius"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "DropdownMenuSubTrigger": [
+      {
+        "name": "inset",
+        "type": "bool"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
       }
     ],
     "DropdownMenuTrigger": [
@@ -2622,6 +2919,10 @@
         "type": "ReadSignal<bool>"
       },
       {
+        "name": "mask",
+        "type": "ReadSignal<bool>"
+      },
+      {
         "name": "name",
         "type": "ReadSignal<String>"
       },
@@ -2978,6 +3279,20 @@
         "type": "Vec<Attribute>"
       }
     ],
+    "MenubarGroup": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
     "MenubarItem": [
       {
         "name": "index",
@@ -3014,6 +3329,44 @@
       {
         "name": "attributes",
         "type": "Vec<Attribute>"
+      }
+    ],
+    "MenubarLabel": [
+      {
+        "name": "inset",
+        "type": "bool"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "MenubarSeparator": [
+      {
+        "name": "class",
+        "type": "Option<String>"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ],
+    "MenubarShortcut": [
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>"
       }
     ],
     "MenubarTrigger": [
@@ -3819,6 +4172,10 @@
       {
         "name": "radius",
         "type": "Radius"
+      },
+      {
+        "name": "align",
+        "type": "ContentAlign"
       },
       {
         "name": "class",
@@ -4931,6 +5288,10 @@
       {
         "name": "class",
         "type": "Option<String>"
+      },
+      {
+        "name": "show_label",
+        "type": "bool"
       }
     ]
   },

@@ -1,5 +1,6 @@
 {
-  "classification": "presentational",
+  "classification": "exception",
   "primitiveModules": [],
-  "reason": "Native <textarea> styling only; no controlled state beyond what the consumer wires up."
+  "reason": "Native <textarea> styling plus one piece of registry-layer state: a use_signal-tracked character count that renders the `N / max` counter when `max_length` is set. The count mirrors the native input's own value length rather than owning any editing behavior, so no existing primitive (use_controlled is for controlled/uncontrolled value ownership, which stays with the consumer here) is a natural owner.",
+  "followUp": "If a second registry item needs the same typed-length-tracking shape (e.g. a counter on input or input-group), promote it into a small shared primitive instead of duplicating the count-mirroring signal at the registry layer again."
 }

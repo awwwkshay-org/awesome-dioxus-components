@@ -66,3 +66,87 @@ pub fn DropdownMenuItemControls(mut state: Signal<DropdownMenuItemDemoState>) ->
         SelectControl { label: "Variant", value: variant, options: DROPDOWN_MENU_ITEM_VARIANT_OPTIONS }
     }
 }
+
+/// Generated demo state for [`DropdownMenuLabel`], one field per controllable prop.
+#[derive(Clone, Default, PartialEq)]
+pub struct DropdownMenuLabelDemoState {
+    pub inset: bool,
+}
+
+#[component]
+pub fn DropdownMenuLabelControls(mut state: Signal<DropdownMenuLabelDemoState>) -> Element {
+    let inset = use_signal(|| state().inset);
+    use_effect(move || {
+        state.set(DropdownMenuLabelDemoState { inset: inset() });
+    });
+    rsx! {
+        BoolControl { label: "Inset", value: inset }
+    }
+}
+
+/// Generated demo state for [`DropdownMenuCheckboxItem`], one field per controllable prop.
+#[derive(Clone, Default, PartialEq)]
+pub struct DropdownMenuCheckboxItemDemoState {
+    pub checked: Option<bool>,
+    pub default_checked: bool,
+}
+
+#[component]
+pub fn DropdownMenuCheckboxItemControls(
+    mut state: Signal<DropdownMenuCheckboxItemDemoState>,
+) -> Element {
+    let checked = use_signal(|| state().checked);
+    let default_checked = use_signal(|| state().default_checked);
+    use_effect(move || {
+        state.set(DropdownMenuCheckboxItemDemoState {
+            checked: checked(),
+            default_checked: default_checked(),
+        });
+    });
+    rsx! {
+        OptionalBoolControl { label: "Checked", value: checked }
+        BoolControl { label: "Default Checked", value: default_checked }
+    }
+}
+
+/// Generated demo state for [`DropdownMenuSub`], one field per controllable prop.
+#[derive(Clone, Default, PartialEq)]
+pub struct DropdownMenuSubDemoState {
+    pub open: Option<bool>,
+    pub default_open: bool,
+}
+
+#[component]
+pub fn DropdownMenuSubControls(mut state: Signal<DropdownMenuSubDemoState>) -> Element {
+    let open = use_signal(|| state().open);
+    let default_open = use_signal(|| state().default_open);
+    use_effect(move || {
+        state.set(DropdownMenuSubDemoState {
+            open: open(),
+            default_open: default_open(),
+        });
+    });
+    rsx! {
+        OptionalBoolControl { label: "Open", value: open }
+        BoolControl { label: "Default Open", value: default_open }
+    }
+}
+
+/// Generated demo state for [`DropdownMenuSubTrigger`], one field per controllable prop.
+#[derive(Clone, Default, PartialEq)]
+pub struct DropdownMenuSubTriggerDemoState {
+    pub inset: bool,
+}
+
+#[component]
+pub fn DropdownMenuSubTriggerControls(
+    mut state: Signal<DropdownMenuSubTriggerDemoState>,
+) -> Element {
+    let inset = use_signal(|| state().inset);
+    use_effect(move || {
+        state.set(DropdownMenuSubTriggerDemoState { inset: inset() });
+    });
+    rsx! {
+        BoolControl { label: "Inset", value: inset }
+    }
+}

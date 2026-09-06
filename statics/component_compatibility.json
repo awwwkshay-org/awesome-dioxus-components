@@ -2341,7 +2341,8 @@
             "use_unique_id"
           ],
           "modules": [
-            "collapsible"
+            "collapsible",
+            "icons"
           ],
           "props": {
             "CollapsibleContentProps": [
@@ -2406,11 +2407,43 @@
         },
         "name": "collapsible",
         "registry_facade": {
-          "components": [],
+          "components": [
+            "CollapsibleTrigger",
+            "CollapsibleContent"
+          ],
           "files": [
             "ui/collapsible.rs"
           ],
-          "props": {}
+          "props": {
+            "CollapsibleContent": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ],
+            "CollapsibleTrigger": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ]
+          }
         },
         "registry_manifest_found": true
       },
@@ -2671,6 +2704,11 @@
                 "default": "default()",
                 "name": "aria_label",
                 "type": "Option<String>"
+              },
+              {
+                "default": "ContentAlign::Center",
+                "name": "align",
+                "type": "ContentAlign"
               },
               {
                 "name": "attributes",
@@ -2998,6 +3036,10 @@
               {
                 "name": "radius",
                 "type": "Radius"
+              },
+              {
+                "name": "align",
+                "type": "ContentAlign"
               },
               {
                 "name": "class",
@@ -3437,21 +3479,37 @@
             "ContextMenu",
             "ContextMenuTrigger",
             "ContextMenuContent",
-            "ContextMenuItem"
+            "ContextMenuItem",
+            "Menu",
+            "MenuTrigger",
+            "MenuContent",
+            "MenuItem",
+            "MenuCheckboxItem",
+            "MenuRadioGroup",
+            "MenuRadioItem",
+            "MenuGroup",
+            "MenuGroupLabel",
+            "MenuSeparator",
+            "MenuSubmenuRoot",
+            "MenuSubmenuTrigger"
           ],
           "hooks_used": [
             "use_animated_open",
             "use_collection_provider",
             "use_controlled",
+            "use_effect_cleanup",
             "use_escape_key",
             "use_id_or",
             "use_item",
+            "use_layer",
             "use_long_press",
             "use_outside_dismiss",
+            "use_typeahead",
             "use_unique_id"
           ],
           "modules": [
-            "context_menu"
+            "context_menu",
+            "menu"
           ],
           "props": {
             "ContextMenuContentProps": [
@@ -3539,6 +3597,281 @@
                 "name": "children",
                 "type": "Element"
               }
+            ],
+            "MenuCheckboxItemProps": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "default": "default()",
+                "name": "checked",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "default": "default()",
+                "name": "default_checked",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "on_checked_change",
+                "type": "Callback<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuContentProps": [
+              {
+                "default": "default()",
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "default": "ContentSide::Bottom",
+                "name": "side",
+                "type": "ContentSide"
+              },
+              {
+                "default": "ContentAlign::Start",
+                "name": "align",
+                "type": "ContentAlign"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuGroupLabel": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuGroupProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuItemProps": [
+              {
+                "name": "value",
+                "type": "ReadSignal<T>"
+              },
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "text_value",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "default": "default()",
+                "name": "on_select",
+                "type": "Callback<T>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuProps": [
+              {
+                "default": "default()",
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "default": "default()",
+                "name": "default_open",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "on_open_change",
+                "type": "Callback<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(true))",
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(Duration::from_millis(500)))",
+                "name": "typeahead_timeout",
+                "type": "ReadSignal<Duration>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuRadioGroupProps": [
+              {
+                "default": "default()",
+                "name": "value",
+                "type": "Option<ReadSignal<Option<T>>>"
+              },
+              {
+                "default": "default()",
+                "name": "default_value",
+                "type": "Option<T>"
+              },
+              {
+                "default": "default()",
+                "name": "on_value_change",
+                "type": "Callback<T>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuRadioItemProps": [
+              {
+                "name": "value",
+                "type": "ReadSignal<T>"
+              },
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuSeparator": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ],
+            "MenuSubmenuRootProps": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "default": "default()",
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "default": "default()",
+                "name": "default_open",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "on_open_change",
+                "type": "Callback<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(200))",
+                "name": "open_delay_ms",
+                "type": "ReadSignal<u64>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(200))",
+                "name": "close_delay_ms",
+                "type": "ReadSignal<u64>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(Duration::from_millis(500)))",
+                "name": "typeahead_timeout",
+                "type": "ReadSignal<Duration>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuSubmenuTrigger": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuTriggerProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
             ]
           }
         },
@@ -3547,7 +3880,11 @@
           "components": [
             "ContextMenuTrigger",
             "ContextMenuContent",
-            "ContextMenuItem"
+            "ContextMenuItem",
+            "ContextMenuGroup",
+            "ContextMenuLabel",
+            "ContextMenuSeparator",
+            "ContextMenuShortcut"
           ],
           "files": [
             "ui/context_menu.rs"
@@ -3573,6 +3910,20 @@
               {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
+              }
+            ],
+            "ContextMenuGroup": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
               }
             ],
             "ContextMenuItem": [
@@ -3611,6 +3962,44 @@
               {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
+              }
+            ],
+            "ContextMenuLabel": [
+              {
+                "name": "inset",
+                "type": "bool"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ContextMenuSeparator": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ],
+            "ContextMenuShortcut": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
               }
             ],
             "ContextMenuTrigger": [
@@ -5473,12 +5862,313 @@
       },
       {
         "adico_primitive": {
-          "components": [],
-          "hooks_used": [],
-          "modules": [
-            "dropdown_menu"
+          "components": [
+            "Menu",
+            "MenuTrigger",
+            "MenuContent",
+            "MenuItem",
+            "MenuCheckboxItem",
+            "MenuRadioGroup",
+            "MenuRadioItem",
+            "MenuGroup",
+            "MenuGroupLabel",
+            "MenuSeparator",
+            "MenuSubmenuRoot",
+            "MenuSubmenuTrigger"
           ],
-          "props": {}
+          "hooks_used": [
+            "use_animated_open",
+            "use_collection_provider",
+            "use_controlled",
+            "use_effect_cleanup",
+            "use_id_or",
+            "use_item",
+            "use_layer",
+            "use_typeahead",
+            "use_unique_id"
+          ],
+          "modules": [
+            "dropdown_menu",
+            "icons",
+            "menu"
+          ],
+          "props": {
+            "MenuCheckboxItemProps": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "default": "default()",
+                "name": "checked",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "default": "default()",
+                "name": "default_checked",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "on_checked_change",
+                "type": "Callback<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuContentProps": [
+              {
+                "default": "default()",
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "default": "ContentSide::Bottom",
+                "name": "side",
+                "type": "ContentSide"
+              },
+              {
+                "default": "ContentAlign::Start",
+                "name": "align",
+                "type": "ContentAlign"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuGroupLabel": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuGroupProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuItemProps": [
+              {
+                "name": "value",
+                "type": "ReadSignal<T>"
+              },
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "text_value",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "default": "default()",
+                "name": "on_select",
+                "type": "Callback<T>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuProps": [
+              {
+                "default": "default()",
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "default": "default()",
+                "name": "default_open",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "on_open_change",
+                "type": "Callback<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(true))",
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(Duration::from_millis(500)))",
+                "name": "typeahead_timeout",
+                "type": "ReadSignal<Duration>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuRadioGroupProps": [
+              {
+                "default": "default()",
+                "name": "value",
+                "type": "Option<ReadSignal<Option<T>>>"
+              },
+              {
+                "default": "default()",
+                "name": "default_value",
+                "type": "Option<T>"
+              },
+              {
+                "default": "default()",
+                "name": "on_value_change",
+                "type": "Callback<T>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuRadioItemProps": [
+              {
+                "name": "value",
+                "type": "ReadSignal<T>"
+              },
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuSeparator": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ],
+            "MenuSubmenuRootProps": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "default": "default()",
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "default": "default()",
+                "name": "default_open",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "on_open_change",
+                "type": "Callback<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(200))",
+                "name": "open_delay_ms",
+                "type": "ReadSignal<u64>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(200))",
+                "name": "close_delay_ms",
+                "type": "ReadSignal<u64>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(Duration::from_millis(500)))",
+                "name": "typeahead_timeout",
+                "type": "ReadSignal<Duration>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuSubmenuTrigger": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuTriggerProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
         },
         "name": "dropdown-menu",
         "registry_facade": {
@@ -5486,7 +6176,17 @@
             "DropdownMenu",
             "DropdownMenuTrigger",
             "DropdownMenuContent",
-            "DropdownMenuItem"
+            "DropdownMenuItem",
+            "DropdownMenuGroup",
+            "DropdownMenuLabel",
+            "DropdownMenuSeparator",
+            "DropdownMenuShortcut",
+            "DropdownMenuCheckboxItem",
+            "DropdownMenuRadioGroup",
+            "DropdownMenuRadioItem",
+            "DropdownMenuSub",
+            "DropdownMenuSubTrigger",
+            "DropdownMenuSubContent"
           ],
           "files": [
             "ui/dropdown_menu.rs"
@@ -5526,6 +6226,40 @@
                 "type": "Element"
               }
             ],
+            "DropdownMenuCheckboxItem": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "checked",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "name": "default_checked",
+                "type": "bool"
+              },
+              {
+                "name": "on_checked_change",
+                "type": "Callback<bool>"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
             "DropdownMenuContent": [
               {
                 "name": "children",
@@ -5540,12 +6274,30 @@
                 "type": "Radius"
               },
               {
+                "name": "align",
+                "type": "ContentAlign"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               },
               {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
+              }
+            ],
+            "DropdownMenuGroup": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
               }
             ],
             "DropdownMenuItem": [
@@ -5588,6 +6340,166 @@
               {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
+              }
+            ],
+            "DropdownMenuLabel": [
+              {
+                "name": "inset",
+                "type": "bool"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "DropdownMenuRadioGroup": [
+              {
+                "name": "value",
+                "type": "Option<ReadSignal<Option<T>>>"
+              },
+              {
+                "name": "default_value",
+                "type": "Option<T>"
+              },
+              {
+                "name": "on_value_change",
+                "type": "Callback<T>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "DropdownMenuRadioItem": [
+              {
+                "name": "value",
+                "type": "ReadSignal<T>"
+              },
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "DropdownMenuSeparator": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ],
+            "DropdownMenuShortcut": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "DropdownMenuSub": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "name": "default_open",
+                "type": "bool"
+              },
+              {
+                "name": "on_open_change",
+                "type": "Callback<bool>"
+              },
+              {
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "DropdownMenuSubContent": [
+              {
+                "name": "radius",
+                "type": "Radius"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "DropdownMenuSubTrigger": [
+              {
+                "name": "inset",
+                "type": "bool"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
               }
             ],
             "DropdownMenuTrigger": [
@@ -6116,7 +7028,6 @@
           ],
           "hooks_used": [],
           "modules": [
-            "icons",
             "otp_field"
           ],
           "props": {
@@ -6162,6 +7073,11 @@
               {
                 "default": "default()",
                 "name": "read_only",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "mask",
                 "type": "ReadSignal<bool>"
               },
               {
@@ -6229,6 +7145,10 @@
               },
               {
                 "name": "read_only",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "mask",
                 "type": "ReadSignal<bool>"
               },
               {
@@ -6648,6 +7568,18 @@
       {
         "adico_primitive": {
           "components": [
+            "Menu",
+            "MenuTrigger",
+            "MenuContent",
+            "MenuItem",
+            "MenuCheckboxItem",
+            "MenuRadioGroup",
+            "MenuRadioItem",
+            "MenuGroup",
+            "MenuGroupLabel",
+            "MenuSeparator",
+            "MenuSubmenuRoot",
+            "MenuSubmenuTrigger",
             "Menubar",
             "MenubarMenu",
             "MenubarTrigger",
@@ -6657,17 +7589,297 @@
           "hooks_used": [
             "use_animated_open",
             "use_collection_provider",
+            "use_controlled",
             "use_deferred_collection_focus",
             "use_direction",
+            "use_effect_cleanup",
             "use_escape_key",
             "use_id_or",
             "use_item",
+            "use_layer",
+            "use_typeahead",
             "use_unique_id"
           ],
           "modules": [
+            "menu",
             "menubar"
           ],
           "props": {
+            "MenuCheckboxItemProps": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "default": "default()",
+                "name": "checked",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "default": "default()",
+                "name": "default_checked",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "on_checked_change",
+                "type": "Callback<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuContentProps": [
+              {
+                "default": "default()",
+                "name": "id",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "default": "ContentSide::Bottom",
+                "name": "side",
+                "type": "ContentSide"
+              },
+              {
+                "default": "ContentAlign::Start",
+                "name": "align",
+                "type": "ContentAlign"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuGroupLabel": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuGroupProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuItemProps": [
+              {
+                "name": "value",
+                "type": "ReadSignal<T>"
+              },
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "text_value",
+                "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "default": "default()",
+                "name": "on_select",
+                "type": "Callback<T>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuProps": [
+              {
+                "default": "default()",
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "default": "default()",
+                "name": "default_open",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "on_open_change",
+                "type": "Callback<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(true))",
+                "name": "roving_loop",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(Duration::from_millis(500)))",
+                "name": "typeahead_timeout",
+                "type": "ReadSignal<Duration>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuRadioGroupProps": [
+              {
+                "default": "default()",
+                "name": "value",
+                "type": "Option<ReadSignal<Option<T>>>"
+              },
+              {
+                "default": "default()",
+                "name": "default_value",
+                "type": "Option<T>"
+              },
+              {
+                "default": "default()",
+                "name": "on_value_change",
+                "type": "Callback<T>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuRadioItemProps": [
+              {
+                "name": "value",
+                "type": "ReadSignal<T>"
+              },
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuSeparator": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ],
+            "MenuSubmenuRootProps": [
+              {
+                "name": "index",
+                "type": "ReadSignal<usize>"
+              },
+              {
+                "default": "default()",
+                "name": "open",
+                "type": "ReadSignal<Option<bool>>"
+              },
+              {
+                "default": "default()",
+                "name": "default_open",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "on_open_change",
+                "type": "Callback<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "disabled",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(200))",
+                "name": "open_delay_ms",
+                "type": "ReadSignal<u64>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(200))",
+                "name": "close_delay_ms",
+                "type": "ReadSignal<u64>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(Duration::from_millis(500)))",
+                "name": "typeahead_timeout",
+                "type": "ReadSignal<Duration>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuSubmenuTrigger": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenuTriggerProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
             "MenubarContentProps": [
               {
                 "name": "id",
@@ -6767,7 +7979,11 @@
             "Menubar",
             "MenubarTrigger",
             "MenubarContent",
-            "MenubarItem"
+            "MenubarItem",
+            "MenubarGroup",
+            "MenubarLabel",
+            "MenubarSeparator",
+            "MenubarShortcut"
           ],
           "files": [
             "ui/menubar.rs"
@@ -6821,6 +8037,20 @@
                 "type": "Vec<Attribute>"
               }
             ],
+            "MenubarGroup": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
             "MenubarItem": [
               {
                 "name": "index",
@@ -6857,6 +8087,44 @@
               {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
+              }
+            ],
+            "MenubarLabel": [
+              {
+                "name": "inset",
+                "type": "bool"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "MenubarSeparator": [
+              {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              }
+            ],
+            "MenubarShortcut": [
+              {
+                "name": "children",
+                "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
               }
             ],
             "MenubarTrigger": [
@@ -8350,6 +9618,11 @@
                 "type": "ReadSignal<Option<String>>"
               },
               {
+                "default": "ContentAlign::Center",
+                "name": "align",
+                "type": "ContentAlign"
+              },
+              {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
               },
@@ -8624,6 +9897,10 @@
               {
                 "name": "radius",
                 "type": "Radius"
+              },
+              {
+                "name": "align",
+                "type": "ContentAlign"
               },
               {
                 "name": "class",
@@ -10656,10 +11933,12 @@
         "adico_primitive": {
           "components": [],
           "hooks_used": [
+            "use_persisted_global",
             "use_persisted_theme_mode",
             "use_theme_mode"
           ],
           "modules": [
+            "persisted_state",
             "theme_mode"
           ],
           "props": {}
@@ -10677,6 +11956,10 @@
               {
                 "name": "class",
                 "type": "Option<String>"
+              },
+              {
+                "name": "show_label",
+                "type": "bool"
               }
             ]
           }
@@ -12097,5 +13380,5 @@
       "total_upstream_components": 61
     }
   },
-  "synced_at": "2026-09-05"
+  "synced_at": "2026-09-06"
 }

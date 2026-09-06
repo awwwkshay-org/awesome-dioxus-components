@@ -4,10 +4,15 @@ use crate::components;
 use crate::components::controls::{SelectControl, TextControl};
 use crate::components::demo::Demo;
 use crate::generated::controls::{
-    PaginationLinkControls, PaginationLinkDemoState, PaginationNextControls,
-    PaginationNextDemoState, PaginationPreviousControls, PaginationPreviousDemoState,
+    PaginationNextControls, PaginationNextDemoState, PaginationPreviousControls,
+    PaginationPreviousDemoState,
 };
 
+/// The page renders only a realistic pagination row. The generated
+/// `PaginationLinkControls` panel is deliberately omitted: the page links
+/// derive `is_active` from `active_page`, so that panel has no realistic
+/// binding target — and the spec forbids inventing a demo element (the old
+/// "Standalone link: 4" chip) just to host a panel's bindings.
 #[component]
 pub fn PaginationPage() -> Element {
     let mut active_page = use_signal(|| 2usize);
@@ -15,11 +20,6 @@ pub fn PaginationPage() -> Element {
     let next_text = use_signal(|| "Next".to_string());
     let previous_state = use_signal(PaginationPreviousDemoState::default);
     let next_state = use_signal(PaginationNextDemoState::default);
-    // The three page-number links below derive their own `is_active` from
-    // `active_page`, so binding the shared `PaginationLinkDemoState` there
-    // would leave one of its two fields inert. This standalone link
-    // demonstrates the generated panel in full instead.
-    let link_state = use_signal(PaginationLinkDemoState::default);
     rsx! {
         Demo {
             name: "Pagination",
@@ -39,59 +39,44 @@ pub fn PaginationPage() -> Element {
                     "Next button"
                 }
                 PaginationNextControls { state: next_state }
-                span { class: "col-span-full text-xs font-semibold text-muted-foreground",
-                    "Standalone link"
-                }
-                PaginationLinkControls { state: link_state }
             },
-            div { class: "flex flex-col gap-4",
-                components::ui::Pagination {
-                    components::ui::PaginationContent {
-                        components::ui::PaginationItem {
-                            components::ui::PaginationPrevious {
-                                text: previous_text(),
-                                compact: previous_state().compact,
-                                onclick: move |_| active_page.set(active_page().saturating_sub(1).max(1)),
-                            }
-                        }
-                        components::ui::PaginationItem {
-                            components::ui::PaginationLink {
-                                is_active: active_page() == 1,
-                                onclick: move |_| active_page.set(1),
-                                "1"
-                            }
-                        }
-                        components::ui::PaginationItem {
-                            components::ui::PaginationLink {
-                                is_active: active_page() == 2,
-                                onclick: move |_| active_page.set(2),
-                                "2"
-                            }
-                        }
-                        components::ui::PaginationItem {
-                            components::ui::PaginationLink {
-                                is_active: active_page() == 3,
-                                onclick: move |_| active_page.set(3),
-                                "3"
-                            }
-                        }
-                        components::ui::PaginationItem { components::ui::PaginationEllipsis {} }
-                        components::ui::PaginationItem {
-                            components::ui::PaginationNext {
-                                text: next_text(),
-                                compact: next_state().compact,
-                                onclick: move |_| active_page.set((active_page() + 1).min(3)),
-                            }
+            components::ui::Pagination {
+                components::ui::PaginationContent {
+                    components::ui::PaginationItem {
+                        components::ui::PaginationPrevious {
+                            text: previous_text(),
+                            compact: previous_state().compact,
+                            onclick: move |_| active_page.set(active_page().saturating_sub(1).max(1)),
                         }
                     }
-                }
-                div { class: "flex items-center gap-2",
-                    span { class: "text-sm text-muted-foreground", "Standalone link:" }
-                    components::ui::PaginationLink {
-                        is_active: link_state().is_active,
-                        loading: link_state().loading,
-                        onclick: move |_| {},
-                        "4"
+                    components::ui::PaginationItem {
+                        components::ui::PaginationLink {
+                            is_active: active_page() == 1,
+                            onclick: move |_| active_page.set(1),
+                            "1"
+                        }
+                    }
+                    components::ui::PaginationItem {
+                        components::ui::PaginationLink {
+                            is_active: active_page() == 2,
+                            onclick: move |_| active_page.set(2),
+                            "2"
+                        }
+                    }
+                    components::ui::PaginationItem {
+                        components::ui::PaginationLink {
+                            is_active: active_page() == 3,
+                            onclick: move |_| active_page.set(3),
+                            "3"
+                        }
+                    }
+                    components::ui::PaginationItem { components::ui::PaginationEllipsis {} }
+                    components::ui::PaginationItem {
+                        components::ui::PaginationNext {
+                            text: next_text(),
+                            compact: next_state().compact,
+                            onclick: move |_| active_page.set((active_page() + 1).min(3)),
+                        }
                     }
                 }
             }
