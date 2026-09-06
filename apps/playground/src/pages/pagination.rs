@@ -31,8 +31,17 @@ pub fn PaginationPage() -> Element {
                 }
                 TextControl { label: "Previous text", value: previous_text }
                 TextControl { label: "Next text", value: next_text }
+                span { class: "col-span-full text-xs font-semibold text-muted-foreground",
+                    "Previous button"
+                }
                 PaginationPreviousControls { state: previous_state }
+                span { class: "col-span-full text-xs font-semibold text-muted-foreground",
+                    "Next button"
+                }
                 PaginationNextControls { state: next_state }
+                span { class: "col-span-full text-xs font-semibold text-muted-foreground",
+                    "Standalone link"
+                }
                 PaginationLinkControls { state: link_state }
             },
             div { class: "flex flex-col gap-4",

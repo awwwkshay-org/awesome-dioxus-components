@@ -1,6 +1,7 @@
 {
   "classification": "delegated",
   "primitiveModules": [
+    "persisted_state",
     "theme_mode"
   ]
 }

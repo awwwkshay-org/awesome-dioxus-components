@@ -108,8 +108,13 @@ Every playground component route SHALL render a centered, logical-size example
 of the actual installed component and SHALL explicitly define the supported
 props, options, types, values, and states that users can modify live. Controls
 SHALL remain strongly typed by the route's Dioxus state rather than attempting
-runtime reflection over component props. Controls that cannot be demonstrated
-safely or meaningfully SHALL be documented as unavailable with their reason.
+runtime reflection over component props. A generated `<Component>DemoState`/
+`<Component>Controls` pair (`adico-playground-demo-controls`) satisfies this
+requirement's strong-typing constraint for every prop the generator supports;
+a component's remaining unsupported props, or its live preview when the
+component is not single-root and non-generic, stay hand-written. Controls
+that cannot be demonstrated safely or meaningfully SHALL be documented as
+unavailable with their reason.
 
 #### Scenario: User explores Button options
 - **WHEN** a user opens the Button playground route
@@ -122,6 +127,13 @@ safely or meaningfully SHALL be documented as unavailable with their reason.
   appearance, or selection state
 - **THEN** its route presents the applicable options as live controls and the
   rendered component updates without a page reload
+
+#### Scenario: A route's controls come from the generated panel
+- **WHEN** a component has a generated `<Component>DemoState`/
+  `<Component>Controls` pair covering all of its controllable props
+- **THEN** its playground route renders that generated panel bound to a
+  `use_signal(<Component>DemoState::default)` rather than a page-local,
+  hand-declared signal per prop
 
 ### Requirement: Improvements preserve source ownership and validation
 Every improvement SHALL originate in registry source or the owned primitive
@@ -170,3 +182,27 @@ registry, and SHALL NOT require an adico-only extension prop (for example
 - **THEN** it passes with zero `missing`-classified props remaining
   unresolved across every item, as the mechanical completion gate for this
   requirement's upstream-parity dimension
+
+### Requirement: theme-switcher's palette selection persists across reloads
+`theme-switcher`'s selected coordinated palette preset SHALL persist across
+a page reload, in addition to staying synced across every
+simultaneously-mounted instance on the same page. `theme-builder`'s own
+per-token edits are explicitly out of scope and SHALL remain an unpersisted,
+transient live-preview surface.
+
+#### Scenario: User selects a preset and reloads
+- **WHEN** a user selects a palette preset in `theme-switcher` and reloads
+  the page
+- **THEN** the same preset is selected on reload, and its colors are applied
+
+#### Scenario: User selects a preset and toggles light/dark
+- **WHEN** a user selects a palette preset and then toggles the light/dark
+  appearance
+- **THEN** that preset's colors are recomputed for the new appearance and
+  the selected preset itself is unchanged
+
+#### Scenario: Two ThemeSwitcher instances are mounted at once
+- **WHEN** two `theme-switcher` instances are mounted on the same page (for
+  example a persistent sidebar instance and a demo-page instance)
+- **THEN** both show and drive the same selection, and changing either one
+  updates the other immediately

@@ -28,39 +28,45 @@
 //! matching the existing `mode-toggle -> dropdown-menu` / `date-picker ->
 //! calendar, popover` cross-`registry:ui` dependency precedent.
 //!
-//! The selected preset lives in a module-level [`PALETTE`] `GlobalSignal`
-//! (matching `theme_mode.rs`'s own `MODE` convention), not a per-mount
-//! `use_signal`: the playground mounts both a persistent sidebar instance
-//! and, on this component's own demo page, a second instance at the same
-//! time, and both need to show and drive the same live selection rather
-//! than each keeping its own independent copy that silently drifts from the
-//! other's.
+//! **The selected preset is persisted**, through
+//! [`adico_primitives::persisted_state::use_persisted_global`] under the
+//! `adico-theme-palette` key (`localStorage` on `web`, a small preferences
+//! file on `native`) -- the same generic primitive
+//! `adico_primitives::theme_mode::use_persisted_theme_mode` itself is built
+//! on, so the choice survives a reload the same way the light/dark/system
+//! mode already does. The persisted store, not the DOM, is this component's
+//! source of truth; every mounted instance (a persistent sidebar picker and
+//! this component's own demo page, for example) shares one live selection
+//! through the same module-level [`PALETTE`] `GlobalSignal`
+//! `use_persisted_global` drives, so changing it in one place updates every
+//! other mounted instance immediately, with no reload needed to notice.
 //!
-//! **Hydrates from the live theme on mount**, rather than always resetting
-//! to hardcoded Slate: it reads back the primary/secondary/accent role
-//! groups' effective raw values with
-//! [`adico_primitives::theme_mode::read_root_properties`], once, on mount,
-//! and adopts a preset only if all three roles independently match the
-//! *same* preset in [`ThemePalette`]'s HSL tables -- if a consumer used
-//! `theme-builder` to give the roles inconsistent values, or nothing
-//! matches, this component falls back to showing Slate selected without
-//! touching the live color itself; it has no notion of "custom", only which
-//! of its 6 coordinated presets (if any) is currently in effect. Without
-//! this, mounting a second `ThemeSwitcher` (for example the playground's own
-//! persistent sidebar instance plus this component's own demo page) would
-//! silently reset every role back to Slate the moment either one mounted.
+//! An earlier version instead read the live `--primary`/`--secondary`/
+//! `--accent` values back off the document root once on mount and
+//! reverse-matched them against the preset tables. That only ever recovered
+//! a value already applied *in the same page session* -- a reload discards
+//! it -- so it bought nothing a persisted store doesn't do strictly better,
+//! and it's gone now.
 //!
-//! The read is deliberately one-shot (gated by a `hydrated` flag), not
-//! repeated on every later mode change -- re-reading was tried first and
-//! reverted after it was found to silently wipe out a *different*,
-//! still-mounted editor's own applied colors (a `theme-builder` instance
-//! opened in a dialog, say) the moment this component's own hydration effect
-//! re-ran. See `theme-builder`'s own module doc comment and
-//! `theme_mode.rs`'s `read_root_properties` doc comment for the full story;
-//! the short version is that a mode change alone needs no fresh DOM read
-//! here anyway -- the "apply" effect below already recomputes each role's
-//! actual colors purely from [`PALETTE`] and the freshly resolved
-//! appearance.
+//! **A protection was deliberately dropped along with it.** The old
+//! read-back was gated behind a one-shot `hydrated` flag specifically so
+//! this component would *adopt* a still-mounted sibling editor's live colors
+//! rather than stomp them. The apply effect below now writes the persisted
+//! preset's inline properties immediately on every mount, so mounting a
+//! `ThemeSwitcher` while a `theme-builder` has live per-token edits applied
+//! overwrites the primary/secondary/accent subset of those edits. This is
+//! the accepted trade, not a new regression: the direction that actually
+//! matters -- `theme-builder` reading back whatever `theme-switcher` last
+//! applied -- is unaffected and still works via `theme-builder`'s own,
+//! separate DOM read-back; and a `theme-builder` edit is explicitly
+//! transient (it has its own `use_drop` cleanup on unmount) while a
+//! `theme-switcher` preset is a persisted, durable user setting.
+//!
+//! Accepted limitation, inherited from `use_persisted_global`: on `web` the
+//! stored preset loads asynchronously after first mount, so a reload
+//! briefly applies the default Slate before the persisted preset lands --
+//! strictly better than the previous behavior, which lost the selection
+//! entirely on every reload.
 //!
 //! Writes only the raw `--foo` custom properties, never the `--color-foo`
 //! Tailwind aliases the installed `@theme` block already derives from them
@@ -72,8 +78,9 @@
 
 use dioxus::prelude::*;
 
+use adico_primitives::persisted_state::use_persisted_global;
 use adico_primitives::theme_mode::{
-    ResolvedTheme, apply_root_properties, read_root_properties, use_persisted_theme_mode,
+    ResolvedTheme, apply_root_properties, use_persisted_theme_mode,
 };
 
 use super::select::{Select, SelectList, SelectOption, SelectTrigger, SelectValue};
@@ -111,6 +118,28 @@ impl ThemePalette {
             Self::Rose => "Rose",
             Self::Amber => "Amber",
         }
+    }
+
+    /// The short, lowercase persistence token for this preset, matching
+    /// `ThemeMode`'s own `"light"`/`"dark"`/`"system"` token convention --
+    /// deliberately not derived from [`Self::label`] (whose casing is a
+    /// display concern), so a future label-text change can never silently
+    /// change the persisted storage format.
+    const fn token(self) -> &'static str {
+        match self {
+            Self::Slate => "slate",
+            Self::Blue => "blue",
+            Self::Violet => "violet",
+            Self::Emerald => "emerald",
+            Self::Rose => "rose",
+            Self::Amber => "amber",
+        }
+    }
+
+    fn from_token(token: &str) -> Option<Self> {
+        Self::ALL
+            .into_iter()
+            .find(|candidate| candidate.token() == token)
     }
 
     /// `(--primary, --primary-foreground)` HSL pair, matching
@@ -151,22 +180,6 @@ impl ThemePalette {
             (Self::Amber, false) => ("48 96.5% 88.8%", "26 83.3% 14.1%"),
             (Self::Amber, true) => ("30 47.8% 16.1%", "48 96.5% 88.8%"),
         }
-    }
-
-    /// The preset (if any) whose [`Self::primary_hsl`] exactly matches
-    /// `(background, foreground)` for the given appearance.
-    fn matching_primary(background: &str, foreground: &str, dark: bool) -> Option<Self> {
-        Self::ALL
-            .into_iter()
-            .find(|palette| palette.primary_hsl(dark) == (background, foreground))
-    }
-
-    /// The preset (if any) whose [`Self::surface_hsl`] exactly matches
-    /// `(background, foreground)` for the given appearance.
-    fn matching_surface(background: &str, foreground: &str, dark: bool) -> Option<Self> {
-        Self::ALL
-            .into_iter()
-            .find(|palette| palette.surface_hsl(dark) == (background, foreground))
     }
 
     /// The raw property/value pairs this preset contributes when applied to
@@ -214,69 +227,22 @@ impl ThemePalette {
     }
 }
 
-/// Every raw custom property this component writes, across all three role
-/// groups -- the hydration read-back request on mount asks for exactly
-/// these.
-const ALL_PROPERTY_NAMES: [&str; 14] = [
-    "--primary",
-    "--primary-foreground",
-    "--ring",
-    "--sidebar-primary",
-    "--sidebar-primary-foreground",
-    "--sidebar-ring",
-    "--secondary",
-    "--secondary-foreground",
-    "--muted",
-    "--muted-foreground",
-    "--accent",
-    "--accent-foreground",
-    "--sidebar-accent",
-    "--sidebar-accent-foreground",
-];
+/// Distinct from `theme-mode`'s own `adico-theme-mode` key: the appearance
+/// (light/dark/system) and the palette preset are two independent settings a
+/// consumer sets separately, and both need to survive a reload on their own.
+const PALETTE_STORAGE_KEY: &str = "adico-theme-palette";
 
 /// The single coordinated preset every mounted `ThemeSwitcher` shares. A
 /// `GlobalSignal` (matching `theme_mode.rs`'s own `MODE` convention) rather
 /// than a per-mount `use_signal`, so a persistent sidebar instance and this
 /// component's own demo-page instance -- or any two simultaneously-mounted
 /// instances -- read and drive the same live selection instead of silently
-/// diverging until one of them happens to re-hydrate from the DOM.
+/// diverging. Driven exclusively through
+/// `adico_primitives::persisted_state::use_persisted_global` inside
+/// [`ThemeSwitcher`] -- never write it directly (`*PALETTE.write() = ...`)
+/// anywhere else, or the UI updates but the choice silently stops
+/// persisting.
 static PALETTE: GlobalSignal<ThemePalette> = Global::new(ThemePalette::default);
-
-/// Looks up `name`'s freshly read-back value out of a `values` slice
-/// positioned the same as [`ALL_PROPERTY_NAMES`].
-fn read_value<'a>(values: &'a [String], name: &str) -> Option<&'a str> {
-    ALL_PROPERTY_NAMES
-        .iter()
-        .position(|candidate| *candidate == name)
-        .map(|index| values[index].as_str())
-}
-
-/// The single coordinated preset currently in effect across all three role
-/// groups, read back from `values` (positioned like [`ALL_PROPERTY_NAMES`]),
-/// or `None` if the roles don't all agree on the same preset (an
-/// unavailable read, or a `theme-builder` edit that gave the roles
-/// inconsistent values).
-fn matching_combined_palette(values: &[String], dark: bool) -> Option<ThemePalette> {
-    if values.len() != ALL_PROPERTY_NAMES.len() {
-        return None;
-    }
-    let primary = read_value(values, "--primary")
-        .zip(read_value(values, "--primary-foreground"))
-        .and_then(|(background, foreground)| {
-            ThemePalette::matching_primary(background, foreground, dark)
-        })?;
-    let secondary = read_value(values, "--secondary")
-        .zip(read_value(values, "--secondary-foreground"))
-        .and_then(|(background, foreground)| {
-            ThemePalette::matching_surface(background, foreground, dark)
-        })?;
-    let accent = read_value(values, "--accent")
-        .zip(read_value(values, "--accent-foreground"))
-        .and_then(|(background, foreground)| {
-            ThemePalette::matching_surface(background, foreground, dark)
-        })?;
-    (primary == secondary && secondary == accent).then_some(primary)
-}
 
 /// A single combined palette picker: one [`Select`] whose 6 options each set
 /// the primary, secondary, and accent role groups together as one
@@ -292,38 +258,24 @@ fn matching_combined_palette(values: &[String], dark: bool) -> Option<ThemePalet
 #[component]
 pub fn ThemeSwitcher(class: Option<String>) -> Element {
     let (mode, _set_mode) = use_persisted_theme_mode();
-    let mut hydrated = use_signal(|| false);
+    let (palette, set_palette) = use_persisted_global(
+        &PALETTE,
+        PALETTE_STORAGE_KEY,
+        ThemePalette::token,
+        ThemePalette::from_token,
+    );
 
-    // One-shot hydration: reads the DOM exactly once, on mount, not on every
-    // later mode change -- a re-read on every mode change was tried first
-    // and reverted (see `read_root_properties`'s and `theme-builder`'s own
-    // doc comments): with `read_root_properties` no longer clearing inline
-    // values before reading, a later re-read would just keep echoing
-    // whatever this component itself already applied, and it isn't needed
-    // anyway -- the "apply" effect below already recomputes pure colors for
-    // whichever appearance is now resolved from `PALETTE` alone, no fresh
-    // DOM read required.
+    // Reads `mode()` and `palette()` *inside* the effect body (not as
+    // captured plain values) so Dioxus's reactive tracking re-runs this on
+    // either a mode change or a palette change -- the exact convention
+    // `theme_mode.rs`'s own `apply_resolved_class` doc comment warns about:
+    // an earlier version that passed the resolved value in as a plain
+    // argument compiled and rendered fine but silently stopped re-applying
+    // after first mount.
     use_effect(move || {
-        if hydrated() {
-            return;
-        }
         let dark = mode().resolve() == ResolvedTheme::Dark;
-        spawn(async move {
-            let values = read_root_properties(&ALL_PROPERTY_NAMES).await;
-            if let Some(found) = matching_combined_palette(&values, dark) {
-                *PALETTE.write() = found;
-            }
-            hydrated.set(true);
-        });
-    });
-
-    use_effect(move || {
-        if !hydrated() {
-            return;
-        }
-        let dark = mode().resolve() == ResolvedTheme::Dark;
-        let current = *PALETTE.read();
-        let mut pairs = Vec::with_capacity(ALL_PROPERTY_NAMES.len());
+        let current = palette();
+        let mut pairs = Vec::new();
         pairs.extend(current.primary_pairs(dark));
         pairs.extend(current.secondary_pairs(dark));
         pairs.extend(current.accent_pairs(dark));
@@ -331,7 +283,7 @@ pub fn ThemeSwitcher(class: Option<String>) -> Element {
     });
 
     let dark = mode().resolve() == ResolvedTheme::Dark;
-    let value = use_memo(|| Some(*PALETTE.read()));
+    let value = use_memo(move || Some(palette()));
 
     rsx! {
         label {
@@ -343,11 +295,11 @@ pub fn ThemeSwitcher(class: Option<String>) -> Element {
             Select::<ThemePalette> {
                 value: ReadSignal::from(value),
                 on_value_change: move |next: Option<ThemePalette>| {
-                    *PALETTE.write() = next.unwrap_or_default()
+                    set_palette.call(next.unwrap_or_default())
                 },
                 SelectTrigger { class: "w-full", aria_label: "Theme palette",
                     div { class: "flex flex-1 items-center gap-2",
-                        PaletteSwatch { palette: *PALETTE.read(), dark }
+                        PaletteSwatch { palette: palette(), dark }
                         SelectValue { placeholder: "Choose a theme" }
                     }
                 }
@@ -408,24 +360,6 @@ fn PaletteSwatch(palette: ThemePalette, dark: bool) -> Element {
 mod tests {
     use super::*;
 
-    fn combined_values(palette: ThemePalette, dark: bool) -> Vec<String> {
-        let mut pairs = Vec::new();
-        pairs.extend(palette.primary_pairs(dark));
-        pairs.extend(palette.secondary_pairs(dark));
-        pairs.extend(palette.accent_pairs(dark));
-        ALL_PROPERTY_NAMES
-            .iter()
-            .map(|name| {
-                pairs
-                    .iter()
-                    .find(|(candidate, _)| candidate == name)
-                    .unwrap()
-                    .1
-                    .clone()
-            })
-            .collect()
-    }
-
     #[test]
     fn every_palette_has_a_distinct_label() {
         let labels: Vec<_> = ThemePalette::ALL.iter().map(|p| p.label()).collect();
@@ -467,75 +401,45 @@ mod tests {
     }
 
     #[test]
-    fn matching_primary_and_surface_round_trip_every_preset() {
-        for dark in [false, true] {
-            for palette in ThemePalette::ALL {
-                let (background, foreground) = palette.primary_hsl(dark);
-                assert_eq!(
-                    ThemePalette::matching_primary(background, foreground, dark),
-                    Some(palette)
-                );
-                let (background, foreground) = palette.surface_hsl(dark);
-                assert_eq!(
-                    ThemePalette::matching_surface(background, foreground, dark),
-                    Some(palette)
-                );
-            }
+    fn palette_tokens_round_trip_every_preset() {
+        for palette in ThemePalette::ALL {
+            assert_eq!(ThemePalette::from_token(palette.token()), Some(palette));
         }
     }
 
     #[test]
-    fn matching_primary_is_none_for_an_unrecognized_value() {
-        assert_eq!(
-            ThemePalette::matching_primary("1 2% 3%", "4 5% 6%", false),
-            None
-        );
-    }
-
-    #[test]
-    fn read_value_looks_up_by_name_regardless_of_position() {
-        let values: Vec<String> = ALL_PROPERTY_NAMES
-            .iter()
-            .enumerate()
-            .map(|(index, _)| index.to_string())
-            .collect();
-        assert_eq!(read_value(&values, "--sidebar-ring"), Some("5"));
-        assert_eq!(read_value(&values, "--nonexistent"), None);
-    }
-
-    #[test]
-    fn matching_combined_palette_adopts_a_fully_consistent_live_theme() {
-        for dark in [false, true] {
-            for palette in ThemePalette::ALL {
-                let values = combined_values(palette, dark);
-                assert_eq!(matching_combined_palette(&values, dark), Some(palette));
-            }
+    fn palette_tokens_are_distinct_lowercase_ascii() {
+        let tokens: Vec<_> = ThemePalette::ALL.iter().map(|p| p.token()).collect();
+        for (index, token) in tokens.iter().enumerate() {
+            assert!(!tokens[index + 1..].contains(token));
+            assert!(token.chars().all(|c| c.is_ascii_lowercase()));
         }
     }
 
     #[test]
-    fn matching_combined_palette_is_none_when_roles_disagree() {
+    fn from_token_rejects_an_unrecognized_token() {
+        // Locks in that persisted tokens are the lowercase form (`token()`,
+        // not `label()`), so a future label-text change can't silently
+        // change the persisted storage format.
+        assert_eq!(ThemePalette::from_token(""), None);
+        assert_eq!(ThemePalette::from_token("slat"), None);
+        assert_eq!(ThemePalette::from_token("Slate"), None);
+    }
+
+    #[test]
+    fn the_three_role_groups_apply_fourteen_distinct_properties() {
         let dark = false;
-        let mut pairs = Vec::new();
-        pairs.extend(ThemePalette::Slate.primary_pairs(dark));
-        pairs.extend(ThemePalette::Blue.secondary_pairs(dark));
-        pairs.extend(ThemePalette::Slate.accent_pairs(dark));
-        let values: Vec<String> = ALL_PROPERTY_NAMES
-            .iter()
-            .map(|name| {
-                pairs
-                    .iter()
-                    .find(|(candidate, _)| candidate == name)
-                    .unwrap()
-                    .1
-                    .clone()
-            })
-            .collect();
-        assert_eq!(matching_combined_palette(&values, dark), None);
-    }
-
-    #[test]
-    fn matching_combined_palette_is_none_on_a_length_mismatch() {
-        assert_eq!(matching_combined_palette(&[], false), None);
+        let palette = ThemePalette::default();
+        let mut names: Vec<&str> = Vec::new();
+        names.extend(palette.primary_pairs(dark).map(|(name, _)| name));
+        names.extend(palette.secondary_pairs(dark).map(|(name, _)| name));
+        names.extend(palette.accent_pairs(dark).map(|(name, _)| name));
+        assert_eq!(names.len(), 14);
+        for (index, name) in names.iter().enumerate() {
+            assert!(
+                !names[index + 1..].contains(name),
+                "{name} written by more than one role group"
+            );
+        }
     }
 }

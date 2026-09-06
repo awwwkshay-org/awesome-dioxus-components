@@ -81,13 +81,16 @@ pub fn use_theme_mode(
     crate::use_controlled(mode, default_mode, on_change)
 }
 
-// Only referenced from `load_persisted_mode`/`persist_mode`'s `web` branches below -- the
-// `native` branches key off a preferences file, not a named storage entry, so this is `web`-only
-// unlike `mode_token`/`mode_from_token` below, which both branches share.
-#[cfg(feature = "web")]
+/// Names both the `localStorage` entry and (via `persisted_state`'s
+/// `{storage_key}.json` convention) the native preferences file --
+/// previously `adico-theme-mode.json`'s hand-rolled `{"mode":"..."}` field,
+/// now that same file's `{"value":"..."}` field (see
+/// [`crate::persisted_state`]'s module doc comment). A pre-existing native
+/// file written by a build from before this module existed is simply not
+/// read -- a one-time reset of a non-durable temp-directory preference, not
+/// a real migration concern.
 const STORAGE_KEY: &str = "adico-theme-mode";
 
-#[cfg(any(feature = "web", feature = "native"))]
 fn mode_token(mode: ThemeMode) -> &'static str {
     match mode {
         ThemeMode::Light => "light",
@@ -96,7 +99,6 @@ fn mode_token(mode: ThemeMode) -> &'static str {
     }
 }
 
-#[cfg(any(feature = "web", feature = "native"))]
 fn mode_from_token(token: &str) -> Option<ThemeMode> {
     match token {
         "light" => Some(ThemeMode::Light),
@@ -116,83 +118,32 @@ fn mode_from_token(token: &str) -> Option<ThemeMode> {
 static MODE: GlobalSignal<ThemeMode> = Global::new(ThemeMode::default);
 
 /// An uncontrolled `ThemeMode` signal, shared app-wide, that persists the
-/// user's selection across reloads (`localStorage` on `web`; a small JSON
-/// preferences file on `native`) and applies the resolved appearance's class
-/// to the document root on `web`. Builds with neither feature enabled have no
-/// persistence or DOM target and behave like a plain in-memory shared signal
-/// defaulting to [`ThemeMode::System`] every render — the same accepted
-/// limitation this crate's other stateful client primitives have for
-/// SSR/server builds.
+/// user's selection across reloads (`localStorage` on `web`; a small
+/// preferences file on `native`, via [`crate::persisted_state::use_persisted_global`])
+/// and applies the resolved appearance's class to the document root on
+/// `web`. Builds with neither feature enabled have no persistence or DOM
+/// target and behave like a plain in-memory shared signal defaulting to
+/// [`ThemeMode::System`] every render — the same accepted limitation this
+/// crate's other stateful client primitives have for SSR/server builds.
 ///
-/// Accepted v1 limitation (see `design.md` §7b): the persisted value is read
-/// asynchronously after first mount, so a `web` render briefly shows the
-/// default `System` resolution before the stored preference applies. This is
-/// a named gap, not a silent one — a synchronous, hydration-matching read
-/// would need an inline pre-hydration script, which is out of scope here.
+/// Accepted v1 limitation (see `persisted_state`'s own module doc comment):
+/// the persisted value is read asynchronously after first mount, so a `web`
+/// render briefly shows the default `System` resolution before the stored
+/// preference applies. This is a named gap, not a silent one — a
+/// synchronous, hydration-matching read would need an inline pre-hydration
+/// script, which is out of scope here.
 pub fn use_persisted_theme_mode() -> (Memo<ThemeMode>, Callback<ThemeMode>) {
-    let value = use_memo(|| *MODE.read());
-
-    let on_loaded = use_callback(|loaded: ThemeMode| *MODE.write() = loaded);
-    load_persisted_mode(on_loaded);
-
-    let set_mode = use_callback(|next: ThemeMode| {
-        *MODE.write() = next;
-        persist_mode(next);
-    });
+    let (value, set_mode) = crate::persisted_state::use_persisted_global(
+        &MODE,
+        STORAGE_KEY,
+        mode_token,
+        mode_from_token,
+    );
 
     apply_resolved_class();
 
     (value, set_mode)
 }
-
-#[cfg(feature = "web")]
-fn load_persisted_mode(on_loaded: Callback<ThemeMode>) {
-    use_effect(move || {
-        let mut eval = dioxus_document::eval(
-            "const key = await dioxus.recv();
-            dioxus.send(window.localStorage.getItem(key));",
-        );
-        let _ = eval.send(STORAGE_KEY);
-        spawn(async move {
-            if let Ok(Some(token)) = eval.recv::<Option<String>>().await
-                && let Some(mode) = mode_from_token(&token)
-            {
-                on_loaded.call(mode);
-            }
-        });
-    });
-}
-
-#[cfg(feature = "native")]
-fn load_persisted_mode(on_loaded: Callback<ThemeMode>) {
-    use_effect(move || {
-        if let Some(token) = read_desktop_preferences()
-            && let Some(mode) = mode_from_token(&token)
-        {
-            on_loaded.call(mode);
-        }
-    });
-}
-
-#[cfg(not(any(feature = "web", feature = "native")))]
-fn load_persisted_mode(_on_loaded: Callback<ThemeMode>) {}
-
-#[cfg(feature = "web")]
-fn persist_mode(mode: ThemeMode) {
-    let eval = dioxus_document::eval(
-        "const [key, value] = await dioxus.recv();
-        window.localStorage.setItem(key, value);",
-    );
-    let _ = eval.send((STORAGE_KEY, mode_token(mode)));
-}
-
-#[cfg(feature = "native")]
-fn persist_mode(mode: ThemeMode) {
-    write_desktop_preferences(mode_token(mode));
-}
-
-#[cfg(not(any(feature = "web", feature = "native")))]
-fn persist_mode(_mode: ThemeMode) {}
 
 /// Applies `MODE`'s resolved appearance's CSS class to the document root on
 /// `web`, matching the `class`-driven dark-mode convention `adico-cli`'s CSS
@@ -313,34 +264,6 @@ pub fn clear_root_properties(names: &[&str]) {
 #[cfg(not(feature = "web"))]
 pub fn clear_root_properties(_names: &[&str]) {}
 
-/// A deliberately simple location: the OS temp directory rather than a real
-/// per-app data directory (which would need an additional dependency this
-/// crate doesn't otherwise need, e.g. `dirs`). Named, accepted v1 limitation
-/// — a production consumer wanting a proper app-data location can override
-/// this by writing their own persistence around `use_theme_mode` instead of
-/// `use_persisted_theme_mode`.
-#[cfg(feature = "native")]
-fn desktop_preferences_path() -> std::path::PathBuf {
-    std::env::temp_dir().join("adico-theme-mode.json")
-}
-
-#[cfg(feature = "native")]
-fn read_desktop_preferences() -> Option<String> {
-    let contents = std::fs::read_to_string(desktop_preferences_path()).ok()?;
-    contents
-        .split_once("\"mode\":\"")
-        .and_then(|(_, rest)| rest.split_once('"'))
-        .map(|(mode, _)| mode.to_string())
-}
-
-#[cfg(feature = "native")]
-fn write_desktop_preferences(mode: &str) {
-    let _ = std::fs::write(
-        desktop_preferences_path(),
-        format!("{{\"mode\":\"{mode}\"}}"),
-    );
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -349,6 +272,23 @@ mod tests {
     fn light_and_dark_resolve_to_themselves() {
         assert_eq!(ThemeMode::Light.resolve(), ResolvedTheme::Light);
         assert_eq!(ThemeMode::Dark.resolve(), ResolvedTheme::Dark);
+    }
+
+    // `mode_token`/`mode_from_token` are no longer `cfg`-gated (they're now
+    // used unconditionally as fn-pointer arguments to `use_persisted_global`,
+    // so a build with neither `web` nor `native` still needs them to exist),
+    // which is what makes this test possible to write unconditionally too.
+    #[test]
+    fn mode_tokens_round_trip_and_are_distinct() {
+        let modes = [ThemeMode::Light, ThemeMode::Dark, ThemeMode::System];
+        let tokens: Vec<_> = modes.iter().map(|mode| mode_token(*mode)).collect();
+        for (index, mode) in modes.iter().enumerate() {
+            assert_eq!(mode_from_token(tokens[index]), Some(*mode));
+        }
+        for (index, token) in tokens.iter().enumerate() {
+            assert!(!tokens[index + 1..].contains(token));
+        }
+        assert_eq!(mode_from_token("nope"), None);
     }
 
     // This crate's own `default = []` means `cargo test -p adico-primitives`

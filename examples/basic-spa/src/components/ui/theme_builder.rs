@@ -45,14 +45,24 @@
 //! resolved (so it opens already showing "Dark" if the app is dark) and
 //! reads back each token's effective value with
 //! [`adico_primitives::theme_mode::read_root_properties`], once, on mount.
-//! This makes `ThemeBuilder` a *reader* of the persisted mode signal after
-//! all -- it still never calls that signal's setter, so it cannot change
-//! the app's persisted mode, only learn it. A *separate*, ordinary effect
-//! keeps `appearance` synced to the persisted mode on every *later* change
-//! too (so a mode-toggle flip while `ThemeBuilder` stays mounted still
-//! switches which of `light`/`dark` is active), but that resync never
-//! re-reads the DOM -- seeing why requires understanding why the read is
-//! one-shot in the first place:
+//! This makes `ThemeBuilder` a *reader* of the persisted mode signal, and --
+//! unlike the fully one-way relationship this component has with a
+//! `theme-switcher`'s palette state -- also a *writer* of it: its own
+//! `ThemeAppearanceControl` dropdown calls the persisted mode's setter too
+//! (mapped straight to `ThemeMode::Light`/`Dark`, skipping `System`, which
+//! this dropdown has no representation for), not just `selection`'s local
+//! `appearance` field. Without this, picking "Light" here would only ever
+//! change `ThemeBuilder`'s own inline overrides -- which its `use_drop`
+//! cleanup removes the instant it unmounts -- while the real, persisted
+//! mode stayed on whatever it was before, so closing the dialog (or
+//! navigating away) would silently snap the appearance back to what
+//! `mode-toggle` had it set to, discarding the choice the instant the
+//! editor closed. A *separate*, ordinary effect keeps `appearance` synced
+//! to the persisted mode on every *later* change too (so a `mode-toggle`
+//! flip while `ThemeBuilder` stays mounted still switches which of
+//! `light`/`dark` is active), but that resync never re-reads the DOM --
+//! seeing why requires understanding why the read is one-shot in the first
+//! place:
 //!
 //! Reading on every mode change (not just once) was tried first and
 //! reverted. `read_root_properties` used to clear its own previously-applied
@@ -98,7 +108,7 @@
 use dioxus::prelude::*;
 
 use adico_primitives::theme_mode::{
-    ResolvedTheme, apply_root_properties, clear_root_properties, read_root_properties,
+    ResolvedTheme, ThemeMode, apply_root_properties, clear_root_properties, read_root_properties,
     use_persisted_theme_mode,
 };
 
@@ -863,14 +873,22 @@ fn next_palette_index(state: &mut u64) -> usize {
 /// edited tokens live to the document root via [`apply_root_properties`], so
 /// it composes with `mode-toggle`/`theme-switcher` on the same mechanism.
 ///
-/// Unlike `mode-toggle`, `ThemeBuilder` never *writes* the persisted
-/// `theme_mode` global signal -- it owns its own light/dark appearance
-/// selection once mounted (the `ThemeAppearanceControl` dropdown below edits
-/// it directly), since it's an editing surface a consumer mounts
-/// occasionally (for example behind a settings dialog), not an always-active
-/// mode switch. It does *read* that signal, once on mount and again on any
-/// later change, purely to seed/re-sync which appearance it opens showing
-/// (see the module doc comment's "Hydrates from the live theme" section).
+/// `ThemeBuilder` owns its own light/dark appearance selection once mounted
+/// (the `ThemeAppearanceControl` dropdown below edits `selection.appearance`
+/// directly, for its own live preview and CSS export), since it's an editing
+/// surface a consumer mounts occasionally (for example behind a settings
+/// dialog), not an always-active mode switch like `mode-toggle`. But that
+/// dropdown *also* writes the real persisted `theme_mode` signal (mapped to
+/// `ThemeMode::Light`/`Dark`), the same signal `mode-toggle` drives --
+/// without that, the choice would only ever live in this component's own
+/// inline overrides, which get removed the instant it unmounts, so closing
+/// the dialog would silently revert the appearance to whatever the persisted
+/// mode still said. This component also *reads* that signal, once on mount
+/// and again on any later change, to seed/re-sync which appearance it opens
+/// showing (see the module doc comment's "Hydrates from the live theme"
+/// section) -- so it ends up both a reader and a writer, unlike its
+/// strictly one-way relationship with a `theme-switcher`'s own palette
+/// state, which this component never touches at all.
 ///
 /// Deliberately has no `radius` prop: every `rounded-md` in this file is
 /// internal preview-swatch/mockup chrome inside the editor's own control
@@ -885,7 +903,7 @@ pub fn ThemeBuilder(
 ) -> Element {
     let mut selection = use_signal(ThemeSelection::default);
     let mut hydrated = use_signal(|| false);
-    let (mode, _set_mode) = use_persisted_theme_mode();
+    let (mode, set_mode) = use_persisted_theme_mode();
 
     // Keeps `appearance` synced to the persisted mode on every later change
     // too (no DOM read here -- just which of `light`/`dark` is "active"),
@@ -985,7 +1003,14 @@ pub fn ThemeBuilder(
             class: cn(&["space-y-3", class.as_deref().unwrap_or_default()]),
             ThemeAppearanceControl {
                 value: current.appearance,
-                on_change: move |appearance| selection.write().appearance = appearance,
+                on_change: move |appearance: ThemeAppearance| {
+                    selection.write().appearance = appearance;
+                    set_mode
+                        .call(match appearance {
+                            ThemeAppearance::Light => ThemeMode::Light,
+                            ThemeAppearance::Dark => ThemeMode::Dark,
+                        });
+                },
             }
             PaletteControl {
                 label: "Primary",

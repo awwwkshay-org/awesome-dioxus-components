@@ -87,6 +87,7 @@ pub mod collection;
 pub mod layer;
 pub mod listbox;
 pub mod move_interaction;
+pub mod persisted_state;
 pub mod pointer;
 pub mod portal;
 pub mod positioner;

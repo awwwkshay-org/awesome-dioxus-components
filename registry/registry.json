@@ -2279,7 +2279,7 @@
           "source": "ui/theme_switcher.rs",
           "targetRoot": "ui",
           "target": "theme_switcher.rs",
-          "checksum": "a356bc9a4f860a90e568ba9ca9432c8041cbdad2652dcd64aa029ce7aa122455"
+          "checksum": "2f3648304be6f9f054bdbb87def3b11b4b11c3e73d1ff47dc59d8e6f3ae90e01"
         }
       ],
       "registryDependencies": [
@@ -2315,7 +2315,7 @@
       ],
       "documentation": {
         "slug": "theme-switcher",
-        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA`-style per design.md §7b (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). One combined palette picker (a Select over the Slate/Blue/Violet/Emerald/Rose/Amber presets, each option previewed as three overlapping primary/secondary/accent swatches) that recolors all three semantic role groups' raw custom properties together as one coordinated choice, depending on the installed `select` registry item for the picker itself -- productizing the concept prototyped in apps/playground's advanced customization tray, which keeps its own full 28-token editor unchanged.",
+        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA`-style per design.md §7b (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). One combined palette picker (a Select over the Slate/Blue/Violet/Emerald/Rose/Amber presets, each option previewed as three overlapping primary/secondary/accent swatches) that recolors all three semantic role groups' raw custom properties together as one coordinated choice, depending on the installed `select` registry item for the picker itself -- productizing the concept prototyped in apps/playground's advanced customization tray, which keeps its own full 28-token editor unchanged. The selected preset persists across reloads via adico_primitives::persisted_state::use_persisted_global (localStorage on web, a preferences file on native), the same generic primitive theme_mode's own light/dark/system persistence is built on, so every mounted instance shares and survives the same choice.",
         "usage": "ThemeSwitcher {}",
         "accessibility": "Each role picker composes the installed `select` item's Select/SelectTrigger/SelectList/SelectOption parts, so it inherits that component's WAI-ARIA APG listbox-popup pattern, roving-focus keyboard navigation, and typeahead -- see `select`'s own documentation for the full contract.",
         "keyboard": "Inherited from the installed `select` item: Enter/Space/ArrowDown opens the trigger, Arrow keys move the roving highlight, Enter/Space selects, Escape closes."
@@ -2330,7 +2330,7 @@
           "source": "ui/theme_builder.rs",
           "targetRoot": "ui",
           "target": "theme_builder.rs",
-          "checksum": "86cf381d2d3a717b9380107217ff624468cec05a5518f7f7e20ff88f192fc821"
+          "checksum": "803b422dcc522ff03bda47af37ad81658eb41cbdad1388dcc8646a0d3280e459"
         }
       ],
       "registryDependencies": [
