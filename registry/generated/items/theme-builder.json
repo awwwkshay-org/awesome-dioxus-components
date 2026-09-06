@@ -7,11 +7,12 @@
       "source": "ui/theme_builder.rs",
       "targetRoot": "ui",
       "target": "theme_builder.rs",
-      "checksum": "803b422dcc522ff03bda47af37ad81658eb41cbdad1388dcc8646a0d3280e459"
+      "checksum": "bf5105dbb08d08da6eac3a6211aadc116296cccc0f76aca53a489d1e098cd347"
     }
   ],
   "registryDependencies": [
-    "cn"
+    "cn",
+    "copy-button"
   ],
   "cargoDependencies": [
     {
@@ -49,8 +50,8 @@
   ],
   "documentation": {
     "slug": "theme-builder",
-    "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per design.md §7d (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). Promotes apps/playground's advanced customization tray -- the full 28-semantic-token editor with independent light/dark values, a deterministic 'generate theme' action, and CSS export -- into a real, generic, installable component, since none of it is actually playground-specific in nature. Applies its edited tokens live through adico_primitives::theme_mode::apply_root_properties, the same document-root mechanism theme-switcher already uses for its 4 properties, so theme-builder composes with mode-toggle/theme-switcher on one mechanism. Renders its CSS export into a read-only, selectable textarea rather than calling the browser clipboard API directly, so it stays free of browser-interop details and needs no new cargo dependencies.",
-    "usage": "ThemeBuilderLauncher {}",
+    "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per design.md §7d (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). Promotes apps/playground's advanced customization tray -- the full 28-semantic-token editor with independent light/dark values, a deterministic 'generate theme' action, and CSS export -- into a real, generic, installable component, since none of it is actually playground-specific in nature. Applies its edited tokens live through adico_primitives::theme_mode::apply_root_properties, the same document-root mechanism theme-switcher already uses for its 4 properties, so theme-builder composes with mode-toggle/theme-switcher on one mechanism. Renders its CSS export into a read-only, selectable textarea. **2026-09-06:** the export now also has a working copy button, composing the new `copy-button` registry item rather than calling the browser clipboard API directly -- that keeps this file free of browser-interop details (the API call lives behind `adico-primitives`'s target-gated `clipboard` primitive) and needs no new cargo dependency of its own beyond the `copy-button` item's own existing ones. `registryDependencies` is now `[\"cn\", \"copy-button\"]`.",
+    "usage": "ThemeBuilder {}",
     "accessibility": "A styled composition around `theme_mode`'s `ThemeMode` primitive (`packages/adico-primitives/src/theme_mode.rs`); its editable token controls and CSS-export text area are plain form controls with native semantics, no custom ARIA widget roles.",
     "keyboard": "No custom keyboard layer; native form-control and button keyboard behavior throughout."
   },

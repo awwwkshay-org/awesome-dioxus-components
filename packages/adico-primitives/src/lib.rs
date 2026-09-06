@@ -75,6 +75,7 @@ pub mod switch;
 pub mod tabs;
 pub mod tag_group;
 pub mod theme_mode;
+pub mod time_picker;
 pub mod toast;
 pub mod toggle;
 pub mod toggle_group;
@@ -83,6 +84,7 @@ pub mod tooltip;
 pub mod typeahead;
 pub mod virtual_list;
 
+pub mod clipboard;
 pub mod collection;
 pub mod layer;
 pub mod listbox;
@@ -92,6 +94,7 @@ pub mod pointer;
 pub mod portal;
 pub mod positioner;
 pub mod scroll_lock;
+mod segment;
 pub mod selectable;
 pub mod selection;
 mod time;
@@ -508,9 +511,34 @@ impl ContentAlign {
 
 // `::time::` (crate-root-relative) disambiguates the external `time` crate
 // from this crate's own local `time` module (target-aware sleep support).
-pub(crate) trait LocalDateExt {
-    /// A small extension method function to get the local date with a fallback to UTC date if this fails
+//
+// `pub`, not `pub(crate)`: this resolves "now" in the local timezone of the
+// device running the UI, with an explicit UTC fallback where that cannot be
+// resolved (see the impl below) -- the same resolution every consumer of
+// "now" in this ecosystem should share, not just this crate's own
+// `date_picker` module. Playground code (a separate crate that only depends
+// on `adico-primitives`) needs this for the same reason `date_picker.rs`
+// already does.
+pub trait LocalDateExt {
+    /// Get the local date, falling back to the UTC date if the local offset
+    /// cannot be resolved (see the impl below for when that happens).
     fn now_local_date() -> ::time::Date;
+
+    /// Get the local time-of-day, falling back to the UTC time-of-day if the
+    /// local offset cannot be resolved. Confirmed empirically (see
+    /// `local_time_tests` below): the fallback is real on Linux/BSD native
+    /// builds, but not exercised on native macOS/Windows or in the browser
+    /// (`web` feature, resolved via `time/wasm-bindgen`), which both resolve
+    /// a true local offset.
+    fn now_local_time() -> ::time::Time;
+
+    /// Get the local date and time-of-day together, with the same
+    /// UTC-fallback behavior as [`now_local_date`](Self::now_local_date) and
+    /// [`now_local_time`](Self::now_local_time). Resolves the offset once,
+    /// so the date and time-of-day it returns are always from the same
+    /// instant -- unlike calling `now_local_date()` and `now_local_time()`
+    /// separately, which could observe a date rollover between the two calls.
+    fn now_local_datetime() -> ::time::PrimitiveDateTime;
 }
 
 impl LocalDateExt for ::time::OffsetDateTime {
@@ -518,5 +546,62 @@ impl LocalDateExt for ::time::OffsetDateTime {
         ::time::OffsetDateTime::now_local()
             .map(|x| x.date())
             .unwrap_or_else(|_| ::time::OffsetDateTime::now_utc().date())
+    }
+
+    fn now_local_time() -> ::time::Time {
+        ::time::OffsetDateTime::now_local()
+            .map(|x| x.time())
+            .unwrap_or_else(|_| ::time::OffsetDateTime::now_utc().time())
+    }
+
+    fn now_local_datetime() -> ::time::PrimitiveDateTime {
+        let now = ::time::OffsetDateTime::now_local()
+            .unwrap_or_else(|_| ::time::OffsetDateTime::now_utc());
+        ::time::PrimitiveDateTime::new(now.date(), now.time())
+    }
+}
+
+#[cfg(test)]
+mod local_time_tests {
+    // Empirical finding (not assumed): probed live via `cargo test -p
+    // adico-primitives` on this workspace's native macOS target, run under
+    // `cargo test`'s default multithreaded test harness. `time`'s
+    // `local-offset` feature is enabled (Cargo.toml), and on this platform
+    // `OffsetDateTime::now_local()` resolves `Ok` even in a multithreaded
+    // process -- `time` only refuses the OS offset (returning
+    // `Err(IndeterminateOffset)`) on Unix-family targets without the
+    // `unsound_local_offset` cfg; that restriction does not apply on this
+    // target. So on native macOS (and, by the same `time`-internal target
+    // gating, Windows), `now_local_date()`'s fallback branch is not
+    // exercised in practice -- callers get the true local date, not a UTC
+    // fallback. Linux/BSD native builds are the platform this fallback
+    // exists for. The browser/wasm path resolves through `time/wasm-bindgen`
+    // regardless (see the `web` Cargo feature) and is unaffected either way.
+    #[test]
+    fn now_local_resolves_on_this_native_target_rather_than_falling_back() {
+        assert!(
+            ::time::OffsetDateTime::now_local().is_ok(),
+            "expected native macOS to resolve a real local offset; if this fails, \
+             the platform gating documented above has changed and now_local_date()'s \
+             UTC fallback is reachable here too"
+        );
+    }
+
+    use super::LocalDateExt;
+
+    #[test]
+    fn now_local_time_and_datetime_agree_with_now_local_date() {
+        // All three resolve independently on this target (confirmed above:
+        // none hit the UTC-fallback branch here), so a datetime captured
+        // around the same instant should have a consistent date component
+        // and an hour-of-day matching a separately-resolved local time --
+        // this would drift apart if either resolved through a different
+        // offset (e.g. one silently falling back to UTC while the other
+        // didn't).
+        let date = ::time::OffsetDateTime::now_local_date();
+        let time = ::time::OffsetDateTime::now_local_time();
+        let datetime = ::time::OffsetDateTime::now_local_datetime();
+        assert_eq!(datetime.date(), date);
+        assert_eq!(datetime.time().hour(), time.hour());
     }
 }

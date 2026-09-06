@@ -1,0 +1,68 @@
+{
+  "name": "date-time-picker",
+  "type": "registry:ui",
+  "description": "A source-owned compositional date-and-time picker, composing the owned date-picker and time-picker items behind one trigger.",
+  "files": [
+    {
+      "source": "ui/date_time_picker.rs",
+      "targetRoot": "ui",
+      "target": "date_time_picker.rs",
+      "checksum": "07d8370cf705b30aa2bf38e6566fc4b28c75747f00c6d1ea39858c253d2628fa"
+    }
+  ],
+  "registryDependencies": [
+    "cn",
+    "date-picker",
+    "popover",
+    "time-picker"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "time",
+      "package": null,
+      "version": "=0.3.44",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": []
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "date_time_picker",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "date-time-picker",
+    "compositionNote": "Dioxus-only extra with no shadcn/base-ui/dioxus-components/dioxus-primitives equivalent -- classified `ADICO_ONLY_EXTRA`, no upstream counterpart in any catalog snapshot. Composes the installed `date-picker` and `time-picker` items: `DateTimePicker` nests a `TimePicker` inside a `DatePicker`, combining the two halves into one `time::PrimitiveDateTime` that is `Some` only once both a date and a time are set (buffering each half in its own signal so completing one before the other doesn't discard it). Manages its own single popover (`DateTimePickerPopover`, not either composed item's own popover) so one popup surface holds both the calendar and the time-selection UI. `DateTimePicker` itself provides the combined value to `DateTimePickerTrigger` (a registry-only display context), so `DateTimePickerPopover` takes no `value`/`is_12h`/`show_seconds` props of its own -- only `DateTimePicker` needs those. `DateTimePicker` also takes and forwards `time-picker`'s `view: TimePickerView` prop (`Digital` (default) | `Analog`) to its nested `TimePicker`, so `TimePickerBody` inside `DateTimePickerContent` renders the matching body without the consumer threading the choice separately. No shared roving-focus sequence between the date and time segments is needed: every segment renders a plain, unmanaged `tabindex=\"0\"`, so native browser Tab order already flows correctly from the date's segments into the time's regardless of which `CollectionState` registered each one.",
+    "usage": "DateTimePicker { selected_datetime: value(), on_value_change: move |v| value.set(v), view: view(),\n    DateTimePickerPopover { open: open(), on_open_change: move |v| open.set(v),\n        DateTimePickerTrigger {}\n        DateTimePickerContent {\n            DatePickerCalendar {}\n            TimePickerBody {}\n        }\n    }\n}",
+    "accessibility": "Composes `date-picker`'s spinbutton date segments and `time-picker`'s spinbutton/meridiem time segments and native-button columns/calendar cells under one popover; no additional ARIA pattern is introduced. `DateTimePickerTrigger` exposes the combined formatted value as its own accessible label text.",
+    "keyboard": "Composed entirely from `date-picker`'s and `time-picker`'s own keyboard behavior -- arrow keys increment/decrement the focused segment, Tab moves between segments and across the date/time boundary using native focus order."
+  },
+  "compatibility": null,
+  "provenance": null
+}

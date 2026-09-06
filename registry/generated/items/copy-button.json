@@ -1,0 +1,60 @@
+{
+  "name": "copy-button",
+  "type": "registry:ui",
+  "description": "A source-owned Dioxus-only Copy Button for Dioxus (no shadcn equivalent), backed by the owned adico primitive layer.",
+  "files": [
+    {
+      "source": "ui/copy_button.rs",
+      "targetRoot": "ui",
+      "target": "copy_button.rs",
+      "checksum": "3ff48075e1ba3a05f6c2e9b07284bc9d80b3fd0de41d432916fed66e3c7d16ea"
+    }
+  ],
+  "registryDependencies": [
+    "button",
+    "cn"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": [
+      "cn"
+    ]
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "copy_button",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "copy-button",
+    "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `ADICO_ONLY_EXTRA`, no upstream counterpart in any of statics/catalogs/{shadcn,base-ui,dioxus-components,dioxus-primitives}.json. Composes the installed `button` item for its surface and `adico-primitives`'s target-gated `clipboard::use_clipboard` hook for the actual copy -- the browser clipboard API call stays behind that primitive adapter (this repo's architecture rule), never called directly from this file. On the `web` target it copies via `navigator.clipboard.writeText`; every other target resolves to a failed status rather than pretending to succeed, since no native clipboard integration exists in this workspace yet.",
+    "usage": "CopyButton { value: value() }",
+    "accessibility": "No dedicated APG pattern for clipboard copying; renders a native `<button>` (via the installed `button` item) with an `aria-label` reflecting idle/copied/failed state, so the outcome of activating it is announced even though the visual change is only an icon swap.",
+    "keyboard": "Native button keyboard behavior only (Enter/Space activates); no custom keyboard layer."
+  },
+  "compatibility": null,
+  "provenance": null
+}

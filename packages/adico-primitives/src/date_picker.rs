@@ -15,28 +15,36 @@ use crate::{
     calendar::{
         AvailableRanges, CalendarProps, DateRange, RangeCalendarProps, weekday_abbreviation,
     },
-    collection::{CollectionState, collection_item, use_collection_provider, use_item},
     dioxus_core::Properties,
     popover::*,
-    use_unique_id,
+    segment::{NumericSegment, use_segment_field_provider},
 };
 
 use dioxus::prelude::*;
-use num_integer::Integer;
-use std::{fmt::Display, str::FromStr};
 use time::{Date, Month, OffsetDateTime, Weekday, macros::date};
 
+/// The number of segments a single date always lays out
+/// (year/separator/month/separator/day) -- the base every composed field
+/// that includes a date (a bare `DatePicker`, or a future `DateTimePicker`)
+/// derives its own segment-index offsets from, in one place, instead of each
+/// segment wrapper repeating its own offset literal.
+const DATE_SEGMENT_COUNT: usize = 3;
+
 /// The context provided by the [`DatePicker`] component to its children.
+///
+/// Deliberately does not carry `focus`/`disabled`/`read_only` -- those live
+/// on the shared [`SegmentFieldContext`] (provided alongside this one, see
+/// `DatePicker`'s body) so a future composed field can reuse segment
+/// behavior without also inheriting date-only concepts like
+/// `enabled_date_range`. Only the date-specific parts of the original
+/// context remain here.
 #[derive(Copy, Clone)]
 struct BaseDatePickerContext {
     // State
     open: Signal<bool>,
     on_open_change: Callback<bool>,
-    read_only: ReadSignal<bool>,
 
     // Configuration
-    disabled: ReadSignal<bool>,
-    focus: CollectionState,
     enabled_date_range: DateRange,
     available_ranges: Memo<AvailableRanges>,
 }
@@ -153,16 +161,13 @@ pub struct DatePickerProps {
 #[component]
 pub fn DatePicker(props: DatePickerProps) -> Element {
     let open = use_signal(|| false);
-    let focus = use_collection_provider(props.roving_loop);
+    use_segment_field_provider(props.roving_loop, props.disabled, props.read_only);
     let available_ranges = use_memo(move || AvailableRanges::new(&props.disabled_ranges.read()));
 
     // Create context provider for child components
     use_context_provider(|| BaseDatePickerContext {
         open,
         on_open_change: Callback::new(|_| {}),
-        read_only: props.read_only,
-        disabled: props.disabled,
-        focus,
         enabled_date_range: DateRange::new(props.min_date, props.max_date),
         available_ranges,
     });
@@ -288,7 +293,7 @@ pub struct DateRangePickerProps {
 #[component]
 pub fn DateRangePicker(props: DateRangePickerProps) -> Element {
     let open = use_signal(|| false);
-    let focus = use_collection_provider(props.roving_loop);
+    use_segment_field_provider(props.roving_loop, props.disabled, props.read_only);
 
     let available_ranges = use_memo(move || AvailableRanges::new(&props.disabled_ranges.read()));
 
@@ -296,9 +301,6 @@ pub fn DateRangePicker(props: DateRangePickerProps) -> Element {
     use_context_provider(|| BaseDatePickerContext {
         open,
         on_open_change: Callback::new(|_| {}),
-        read_only: props.read_only,
-        disabled: props.disabled,
-        focus,
         enabled_date_range: DateRange::new(props.min_date, props.max_date),
         available_ranges,
     });
@@ -411,9 +413,6 @@ pub fn DatePickerPopover(props: DatePickerPopoverProps) -> Element {
     use_context_provider(|| BaseDatePickerContext {
         open,
         on_open_change,
-        read_only: ctx.read_only,
-        disabled: ctx.disabled,
-        focus: ctx.focus,
         enabled_date_range: ctx.enabled_date_range,
         available_ranges: ctx.available_ranges,
     });
@@ -651,245 +650,11 @@ pub fn DateRangePickerCalendar(props: DatePickerCalendarProps<RangeCalendarProps
     }
 }
 
-// The props for the [`DateSegment`] component
-#[derive(Props, Clone, PartialEq)]
-struct DateSegmentProps<T: Clone + Integer + 'static> {
-    // The index of the segment
-    pub index: ReadSignal<usize>,
-
-    // The controlled value of the date picker
-    pub value: ReadSignal<Option<T>>,
-
-    // Default value
-    pub default: T,
-
-    // Callback when value changes
-    #[props(default)]
-    pub on_value_change: Callback<Option<T>>,
-
-    // The minimum value
-    pub min: ReadSignal<T>,
-
-    // The maximum value
-    pub max: ReadSignal<T>,
-
-    // Max field length
-    pub max_length: usize,
-
-    // Callback when display placeholder
-    pub on_format_placeholder: Callback<(), String>,
-
-    // Additional attributes for the value element
-    #[props(extends = GlobalAttributes)]
-    pub attributes: Vec<Attribute>,
-}
-
-#[component]
-fn DateSegment<T: Clone + Copy + Integer + FromStr + Display + 'static>(
-    props: DateSegmentProps<T>,
-) -> Element {
-    let mut text_value = use_signal(|| "".to_string());
-    use_effect(move || {
-        let text = match (props.value)() {
-            Some(value) => value.to_string(),
-            None => String::default(),
-        };
-        text_value.set(text);
-    });
-
-    let mut reset_value = use_signal(|| false);
-
-    // The formatted text for the segment
-    let display_value = use_memo(move || {
-        let value = (props.value)();
-        match value {
-            Some(value) => format!("{:0>width$}", value, width = props.max_length),
-            None => props
-                .on_format_placeholder
-                .call(())
-                .repeat(props.max_length),
-        }
-    });
-
-    let now_value = use_memo(move || (props.value)().unwrap_or(props.default));
-
-    let mut ctx = use_context::<BaseDatePickerContext>();
-
-    let mut set_value = move |text: String| {
-        if text.is_empty() {
-            props.on_value_change.call(None);
-            ctx.focus.focus_prev();
-            return;
-        }
-        let min = props.min.cloned();
-        let max = props.max.cloned();
-
-        let value = text.parse::<T>().map(|v| v.min(max)).ok();
-        if let Some(value) = value {
-            let inRange = value >= min && value <= max;
-
-            // If adding a new digit would exceed max, move to next segment
-            let newValue = (text + "0").parse::<T>().unwrap_or(value);
-            if inRange && newValue > max {
-                ctx.focus.focus_next();
-            }
-        };
-
-        props.on_value_change.call(value);
-    };
-    use_effect(move || {
-        // If this item is not focused, always keep the value clamped
-        if !ctx.focus.is_focused(props.index.cloned())
-            && let Some(value) = (props.value)()
-        {
-            let clamped_value = value.clamp(props.min.cloned(), props.max.cloned());
-            if clamped_value != value {
-                props.on_value_change.call(Some(clamped_value));
-            }
-        }
-    });
-
-    let roll_value = move |value: T| {
-        let min = props.min.cloned();
-        let max = props.max.cloned();
-        if value < min {
-            max
-        } else if value > max {
-            min
-        } else {
-            value
-        }
-    };
-
-    let handle_keydown = move |event: Event<KeyboardData>| {
-        if (ctx.disabled)() {
-            return;
-        }
-        let read_only = (ctx.read_only)();
-        let key = event.key();
-        match key {
-            Key::Character(actual_char) => {
-                if read_only {
-                    return;
-                }
-                // Don't block keyboard shortcuts
-                if event.modifiers().ctrl() || event.modifiers().meta() || event.modifiers().alt() {
-                    return;
-                }
-                if actual_char.parse::<T>().is_ok() {
-                    let mut text = text_value();
-                    if text.len() == props.max_length || reset_value() {
-                        text = String::default();
-                        reset_value.set(false);
-                    };
-                    text.push_str(&actual_char);
-                    set_value(text);
-                }
-                event.prevent_default();
-                event.stop_propagation();
-            }
-            Key::Backspace => {
-                if read_only {
-                    return;
-                }
-                let mut text = text_value();
-                if event.modifiers().ctrl() || event.modifiers().meta() {
-                    text.clear();
-                } else {
-                    text.pop();
-                }
-                set_value(text);
-            }
-            Key::Delete => {
-                if read_only {
-                    return;
-                }
-                let mut text = text_value();
-                text.remove(0);
-                set_value(text);
-            }
-            Key::ArrowLeft => {
-                ctx.focus.focus_prev();
-            }
-            Key::ArrowRight => {
-                ctx.focus.focus_next();
-            }
-            Key::Enter => {
-                ctx.focus.focus_next();
-                event.prevent_default();
-                event.stop_propagation();
-            }
-            Key::ArrowUp => {
-                if read_only {
-                    return;
-                }
-                let value = match (props.value)() {
-                    Some(mut value) => {
-                        value.inc();
-                        roll_value(value)
-                    }
-                    None => props.default,
-                };
-                props.on_value_change.call(Some(value));
-            }
-            Key::ArrowDown => {
-                if read_only {
-                    return;
-                }
-                let value = match (props.value)() {
-                    Some(mut value) => {
-                        value.dec();
-                        roll_value(value)
-                    }
-                    None => props.default,
-                };
-                props.on_value_change.call(Some(value));
-            }
-            _ => (),
-        }
-    };
-
-    let disabled = move || (ctx.disabled)();
-    let onmounted =
-        use_item(collection_item(ctx.focus, props.index).disabled(disabled)).onmounted();
-
-    let span_id = use_unique_id();
-    let id = use_memo(move || format!("span-{span_id}"));
-    let label_id = format!("{id}-label");
-
-    rsx! {
-        span {
-            id,
-            role: "spinbutton",
-            aria_valuemin: props.min.to_string(),
-            aria_valuemax: props.max.to_string(),
-            aria_valuenow: now_value.to_string(),
-            aria_labelledby: "{label_id}",
-            inputmode: "numeric",
-            contenteditable: !(ctx.read_only)(),
-            spellcheck: false,
-            tabindex: "0",
-            enterkeyhint: "next",
-            onkeydown: handle_keydown,
-            onmounted,
-            onfocus: move |_| {
-                reset_value.set(true);
-                ctx.focus.set_focus(Some(props.index.cloned()));
-                if (ctx.open)() {
-                    ctx.set_open(false);
-                }
-            },
-            "no-date": (props.value)().is_none(),
-            "data-disabled": (ctx.disabled)(),
-            ..props.attributes,
-            {display_value}
-        }
-    }
-}
-
 #[derive(Clone, Copy)]
 struct DateElementContext {
-    start_index: usize,
+    year_index: usize,
+    month_index: usize,
+    day_index: usize,
     year_value: Signal<Option<i32>>,
     month_value: Signal<Option<u8>>,
     day_value: Signal<Option<u8>>,
@@ -938,15 +703,15 @@ pub struct DatePickerSeparatorProps {
 #[component]
 pub fn DatePickerYearSegment(props: DatePickerYearSegmentProps) -> Element {
     let mut ctx = use_context::<DateElementContext>();
-    let base_ctx = use_context::<BaseDatePickerContext>();
+    let mut base_ctx = use_context::<BaseDatePickerContext>();
     let today = OffsetDateTime::now_local_date();
     let min_year = base_ctx.enabled_date_range.start().year();
     let max_year = base_ctx.enabled_date_range.end().year();
 
     rsx! {
-        DateSegment {
+        NumericSegment {
             aria_label: "year",
-            index: ctx.start_index,
+            index: ctx.year_index,
             value: ctx.year_value,
             default: today.year(),
             on_value_change: move |value: Option<i32>| ctx.year_value.set(value),
@@ -954,6 +719,11 @@ pub fn DatePickerYearSegment(props: DatePickerYearSegmentProps) -> Element {
             max: max_year,
             max_length: 4,
             on_format_placeholder: ctx.on_format_year_placeholder,
+            on_focus: move |_| {
+                if (base_ctx.open)() {
+                    base_ctx.set_open(false);
+                }
+            },
             attributes: props.attributes,
         }
     }
@@ -963,7 +733,7 @@ pub fn DatePickerYearSegment(props: DatePickerYearSegmentProps) -> Element {
 #[component]
 pub fn DatePickerMonthSegment(props: DatePickerMonthSegmentProps) -> Element {
     let mut ctx = use_context::<DateElementContext>();
-    let base_ctx = use_context::<BaseDatePickerContext>();
+    let mut base_ctx = use_context::<BaseDatePickerContext>();
     let today = OffsetDateTime::now_local_date();
     let min_date = base_ctx.enabled_date_range.start();
     let max_date = base_ctx.enabled_date_range.end();
@@ -979,9 +749,9 @@ pub fn DatePickerMonthSegment(props: DatePickerMonthSegmentProps) -> Element {
     };
 
     rsx! {
-        DateSegment {
+        NumericSegment {
             aria_label: "month",
-            index: ctx.start_index + 1usize,
+            index: ctx.month_index,
             value: ctx.month_value,
             default: today.month() as u8,
             on_value_change: move |value: Option<u8>| ctx.month_value.set(value),
@@ -989,6 +759,11 @@ pub fn DatePickerMonthSegment(props: DatePickerMonthSegmentProps) -> Element {
             max: max_month as u8,
             max_length: 2,
             on_format_placeholder: ctx.on_format_month_placeholder,
+            on_focus: move |_| {
+                if (base_ctx.open)() {
+                    base_ctx.set_open(false);
+                }
+            },
             attributes: props.attributes,
         }
     }
@@ -998,7 +773,7 @@ pub fn DatePickerMonthSegment(props: DatePickerMonthSegmentProps) -> Element {
 #[component]
 pub fn DatePickerDaySegment(props: DatePickerDaySegmentProps) -> Element {
     let mut ctx = use_context::<DateElementContext>();
-    let base_ctx = use_context::<BaseDatePickerContext>();
+    let mut base_ctx = use_context::<BaseDatePickerContext>();
     let today = OffsetDateTime::now_local_date();
     let min_date = base_ctx.enabled_date_range.start();
     let max_date = base_ctx.enabled_date_range.end();
@@ -1025,9 +800,9 @@ pub fn DatePickerDaySegment(props: DatePickerDaySegmentProps) -> Element {
     };
 
     rsx! {
-        DateSegment {
+        NumericSegment {
             aria_label: "day",
-            index: ctx.start_index + 2usize,
+            index: ctx.day_index,
             value: ctx.day_value,
             default: today.day(),
             on_value_change: move |value: Option<u8>| ctx.day_value.set(value),
@@ -1035,6 +810,11 @@ pub fn DatePickerDaySegment(props: DatePickerDaySegmentProps) -> Element {
             max: max_day,
             max_length: 2,
             on_format_placeholder: ctx.on_format_day_placeholder,
+            on_focus: move |_| {
+                if (base_ctx.open)() {
+                    base_ctx.set_open(false);
+                }
+            },
             attributes: props.attributes,
         }
     }
@@ -1180,8 +960,16 @@ fn DateElement(props: DateElementProps) -> Element {
         }
     });
 
+    // The one place a date's 3 segment offsets are computed from
+    // `start_index` -- every segment wrapper reads its own precomputed
+    // `*_index` field instead of repeating `start_index + <literal>` at each
+    // call site (see `DATE_SEGMENT_COUNT`'s doc comment for why this
+    // consolidation matters for a composed field like a future
+    // `DateTimePicker`).
     use_context_provider(|| DateElementContext {
-        start_index: props.start_index,
+        year_index: props.start_index,
+        month_index: props.start_index + 1,
+        day_index: props.start_index + 2,
         year_value,
         month_value,
         day_value,
@@ -1309,7 +1097,7 @@ pub fn DateRangePickerEndValue(props: DateRangePickerEndValueProps) -> Element {
 
     rsx! {
         DateElement {
-            start_index: 3,
+            start_index: DATE_SEGMENT_COUNT,
             selected_date: ctx.end_date,
             on_date_change: move |date| ctx.end_date.set(date),
             on_format_day_placeholder: ctx.on_format_day_placeholder,

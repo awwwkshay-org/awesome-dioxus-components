@@ -726,6 +726,15 @@ impl RegistryFileReader for ConfiguredRegistryReader {
             (RegistryLocation::Embedded { .. }, "ui/native_select.rs") => {
                 Ok(include_bytes!("../../../registry/ui/native_select.rs").to_vec())
             }
+            (RegistryLocation::Embedded { .. }, "ui/copy_button.rs") => {
+                Ok(include_bytes!("../../../registry/ui/copy_button.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/time_picker.rs") => {
+                Ok(include_bytes!("../../../registry/ui/time_picker.rs").to_vec())
+            }
+            (RegistryLocation::Embedded { .. }, "ui/date_time_picker.rs") => {
+                Ok(include_bytes!("../../../registry/ui/date_time_picker.rs").to_vec())
+            }
             (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
                 path: format!("{} from {}", source, item.location),
                 message: "this adico binary does not embed the requested registry source"
@@ -984,8 +993,10 @@ mod tests {
                 "@adico/combobox".to_string(),
                 "@adico/command".to_string(),
                 "@adico/context-menu".to_string(),
+                "@adico/copy-button".to_string(),
                 "@adico/data-table".to_string(),
                 "@adico/date-picker".to_string(),
+                "@adico/date-time-picker".to_string(),
                 "@adico/dialog".to_string(),
                 "@adico/drag-and-drop-list".to_string(),
                 "@adico/drawer".to_string(),
@@ -1024,6 +1035,7 @@ mod tests {
                 "@adico/textarea".to_string(),
                 "@adico/theme-builder".to_string(),
                 "@adico/theme-switcher".to_string(),
+                "@adico/time-picker".to_string(),
                 "@adico/toast".to_string(),
                 "@adico/toggle".to_string(),
                 "@adico/toggle-group".to_string(),

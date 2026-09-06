@@ -788,7 +788,7 @@
           "source": "ui/dropdown_menu.rs",
           "targetRoot": "ui",
           "target": "dropdown_menu.rs",
-          "checksum": "88d42f5c54ee9fe89d6a18b65584dddec978ee7f97fdf01e40c5c2c3fe8d93d7"
+          "checksum": "d8b210433afe7cddfbd954733f2b3fad4aed3cc93d2d20f7911ac0a9082ed3b9"
         }
       ],
       "cargoDependencies": [
@@ -893,7 +893,7 @@
           "source": "ui/menubar.rs",
           "targetRoot": "ui",
           "target": "menubar.rs",
-          "checksum": "e8358f7eaf803aad2f77a8ce9d6457647bc4f211feba9924ebc392adc8184ee0"
+          "checksum": "1ac7bcc3cd72db53f8ff24cb6ec30cdaca80232b6c103022de2fba20c4120471"
         }
       ],
       "registryDependencies": [
@@ -1053,7 +1053,7 @@
           "source": "ui/date_picker.rs",
           "targetRoot": "ui",
           "target": "date_picker.rs",
-          "checksum": "70e24290c1d2b79470a26d140e3f26cc32c18767a71423ba5ca699b0e49c1550"
+          "checksum": "6ccae927da40f1621783b535f127d332e62fddbe5a40c4a24f3039db922e5caa"
         }
       ],
       "cargoDependencies": [
@@ -1099,6 +1099,114 @@
       },
       "provenance": {
         "record": "provenance/records/adico-primitives-wave4-collection.json"
+      }
+    },
+    {
+      "name": "time-picker",
+      "type": "registry:ui",
+      "description": "A source-owned compositional time picker (segmented input, scrollable columns, and an analog clock dial), composing the owned time and popover primitives.",
+      "files": [
+        {
+          "source": "ui/time_picker.rs",
+          "targetRoot": "ui",
+          "target": "time_picker.rs",
+          "checksum": "f68da6c31df9a43cf6a6e60adc2ab8dd9467296c767b9de21e3f9d56c62e3a34"
+        }
+      ],
+      "cargoDependencies": [
+        {
+          "crate": "dioxus",
+          "version": "=0.7.9"
+        },
+        {
+          "crate": "adico-primitives",
+          "version": "=0.1.0",
+          "features": [
+            "web"
+          ]
+        },
+        {
+          "crate": "time",
+          "version": "=0.3.44"
+        }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true
+      },
+      "registryDependencies": [
+        "cn",
+        "native-select",
+        "popover",
+        "variants"
+      ],
+      "moduleExports": [
+        {
+          "targetRoot": "ui",
+          "module": "time_picker",
+          "reexport": true
+        }
+      ],
+      "documentation": {
+        "slug": "time-picker",
+        "compositionNote": "Dioxus-only extra with no shadcn/base-ui/dioxus-components/dioxus-primitives equivalent -- classified `ADICO_ONLY_EXTRA`, no upstream counterpart in any catalog snapshot. The copied façade composes the installed Popover and NativeSelect façades over the owned TimePicker primitive. The primitive retains segmented value state, 12h/24h and seconds-granularity configuration, roving-focus keyboard behavior, and ARIA. `TimePicker` takes a `view: TimePickerView` prop (`Digital` (default) | `Analog`) -- independent of `is_12h` -- read by `TimePickerBody`, which renders `TimePickerColumns` or `TimePickerClock` accordingly; both remain independently composable directly (as this item's own demo page does, showing both at once) for a consumer who wants to hardcode one specific view without a prop switch. Columns are plain native buttons (fully keyboard-operable); the dial has no WAI-ARIA analog-clock pattern to follow, so it is documented and defaulted as pointer-only enhancement, never the only way to set a value -- it renders a clock hand from the centre to the selected value and supports both dragging that hand around the face and click/tap-to-set. Both resolve the pointer event's own coordinates against the dial's measured rect, listening on the dial element itself (`onpointerdown`/`onpointermove`/`onpointerup`/`onpointerleave`) rather than adico-primitives's global document-level pointer-position registry, which its own source documents as unverified in a live browser -- so the drag needs no new primitive plumbing. The face is `touch-none select-none` so a drag turns the hand instead of selecting the hour labels or scrolling the page. When `is_12h` is set, both `TimePickerColumns` and `TimePickerClock` always render an AM/PM control -- the dial face itself has no AM/PM affordance (clicking it only sets the 1-12 position), so without one there'd be no way to choose which half of the day is meant when only the clock is shown. `TimePickerTrigger` takes a `compact: bool` prop (default `false`): the default labeled button spells out the formatted time and suits a standalone trigger, while `compact` renders the icon-only shape `date-picker`'s `DatePickerTrigger` always uses -- required when the trigger sits inside a `TimePickerInput` next to `TimePickerInputValue`, since that field already shows the value and the labeled default would otherwise render the same time twice inside a nested bordered box. `TimePickerColumns` also takes an opt-in `fill_height: bool` prop (default `false`) that swaps its default fixed `max-h-48` columns for `h-full`/`items-stretch`, so it can be grown (via the caller's own `class: \"flex-1 min-h-0\"`) to match a taller sibling's height -- e.g. `date-time-picker`'s calendar -- without collapsing to zero height in the common case where no such taller sibling exists.",
+        "usage": "TimePicker { selected_time: value(), on_value_change: move |v| value.set(v), view: view(),\n    TimePickerPopover { open: open(), on_open_change: move |v| open.set(v),\n        TimePickerTrigger {}\n        TimePickerContent {\n            TimePickerInput {}\n            TimePickerBody {}\n        }\n    }\n}",
+        "accessibility": "No dedicated APG \"Time Picker\" pattern exists; `TimePicker` renders a composite `role=\"group\"` field containing one `role=\"spinbutton\"` segment per hour/minute(/second), each with `aria-valuemin`/`aria-valuemax`/`aria-valuenow` (the same Spin Button pattern `date-picker` already uses), plus a non-numeric meridiem segment exposing `aria-valuetext` (\"AM\"/\"PM\") when displaying 12-hour time. `TimePickerColumns` is plain native `<button>`s, including its AM/PM pair. `TimePickerClock`'s dial (including its draggable hand) has no ARIA pattern and is `aria-hidden`; it is documented as pointer-only enhancement, never the only way to set a value (`packages/adico-primitives/src/time_picker.rs`) -- its AM/PM buttons (shown when `is_12h`) are plain native `<button>`s outside the `aria-hidden` dial, so they stay in the accessibility tree even though the dial itself doesn't.",
+        "keyboard": "Arrow keys increment/decrement the focused segment, matching `date-picker`'s segments; `TimePickerColumns`'s buttons (including AM/PM) use native button keyboard behavior. `TimePickerClock`'s dial and its draggable hand have no keyboard interaction -- its AM/PM buttons and the Hour/Minute select do, via native button/select behavior; use the segmented input or columns instead of the dial face itself for keyboard-only value entry."
+      }
+    },
+    {
+      "name": "date-time-picker",
+      "type": "registry:ui",
+      "description": "A source-owned compositional date-and-time picker, composing the owned date-picker and time-picker items behind one trigger.",
+      "files": [
+        {
+          "source": "ui/date_time_picker.rs",
+          "targetRoot": "ui",
+          "target": "date_time_picker.rs",
+          "checksum": "07d8370cf705b30aa2bf38e6566fc4b28c75747f00c6d1ea39858c253d2628fa"
+        }
+      ],
+      "cargoDependencies": [
+        {
+          "crate": "dioxus",
+          "version": "=0.7.9"
+        },
+        {
+          "crate": "adico-primitives",
+          "version": "=0.1.0",
+          "features": [
+            "web"
+          ]
+        },
+        {
+          "crate": "time",
+          "version": "=0.3.44"
+        }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true
+      },
+      "registryDependencies": [
+        "cn",
+        "date-picker",
+        "popover",
+        "time-picker"
+      ],
+      "moduleExports": [
+        {
+          "targetRoot": "ui",
+          "module": "date_time_picker",
+          "reexport": true
+        }
+      ],
+      "documentation": {
+        "slug": "date-time-picker",
+        "compositionNote": "Dioxus-only extra with no shadcn/base-ui/dioxus-components/dioxus-primitives equivalent -- classified `ADICO_ONLY_EXTRA`, no upstream counterpart in any catalog snapshot. Composes the installed `date-picker` and `time-picker` items: `DateTimePicker` nests a `TimePicker` inside a `DatePicker`, combining the two halves into one `time::PrimitiveDateTime` that is `Some` only once both a date and a time are set (buffering each half in its own signal so completing one before the other doesn't discard it). Manages its own single popover (`DateTimePickerPopover`, not either composed item's own popover) so one popup surface holds both the calendar and the time-selection UI. `DateTimePicker` itself provides the combined value to `DateTimePickerTrigger` (a registry-only display context), so `DateTimePickerPopover` takes no `value`/`is_12h`/`show_seconds` props of its own -- only `DateTimePicker` needs those. `DateTimePicker` also takes and forwards `time-picker`'s `view: TimePickerView` prop (`Digital` (default) | `Analog`) to its nested `TimePicker`, so `TimePickerBody` inside `DateTimePickerContent` renders the matching body without the consumer threading the choice separately. No shared roving-focus sequence between the date and time segments is needed: every segment renders a plain, unmanaged `tabindex=\"0\"`, so native browser Tab order already flows correctly from the date's segments into the time's regardless of which `CollectionState` registered each one.",
+        "usage": "DateTimePicker { selected_datetime: value(), on_value_change: move |v| value.set(v), view: view(),\n    DateTimePickerPopover { open: open(), on_open_change: move |v| open.set(v),\n        DateTimePickerTrigger {}\n        DateTimePickerContent {\n            DatePickerCalendar {}\n            TimePickerBody {}\n        }\n    }\n}",
+        "accessibility": "Composes `date-picker`'s spinbutton date segments and `time-picker`'s spinbutton/meridiem time segments and native-button columns/calendar cells under one popover; no additional ARIA pattern is introduced. `DateTimePickerTrigger` exposes the combined formatted value as its own accessible label text.",
+        "keyboard": "Composed entirely from `date-picker`'s and `time-picker`'s own keyboard behavior -- arrow keys increment/decrement the focused segment, Tab moves between segments and across the date/time boundary using native focus order."
       }
     },
     {
@@ -2067,11 +2175,14 @@
           "source": "ui/color_picker.rs",
           "targetRoot": "ui",
           "target": "color_picker.rs",
-          "checksum": "b26f0a46957c8187fcf6c04fec6126f431b5c53e90395f33ddc8cee17dd84541"
+          "checksum": "bfebb4b9db5d08a1f23ac944403b1d3b8ea6dd4dec5715e0147a581bfaff8b3d"
         }
       ],
       "registryDependencies": [
         "cn",
+        "copy-button",
+        "native-select",
+        "popover",
         "slider",
         "variants"
       ],
@@ -2108,13 +2219,64 @@
       ],
       "documentation": {
         "slug": "color-picker",
-        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. HSV saturation/value drag surface with keyboard arrow-key navigation and accessible per-axis range inputs (AreaThumbSaturationInput/AreaThumbValueInput). The M3 migration queue's dependency note said this item composes label/popover/slider; reading the actual upstream primitive source found it only depends on the already-owned move_interaction/pointer modules (reused unmodified from Wave 2's Slider import), not those three registry items -- a real correction recorded per the M1 lesson to verify against source, not the queue's one-line notes. Requires the `palette` crate directly (matching upstream's own public HSV color type in its props), same as any upstream consumer. **2026-09-02:** the 'not slider' half of that correction no longer holds -- this item now genuinely composes the `slider` registry item for a new `HueSlider` sub-component (task 5.3h: `ColorArea` only ever adjusted saturation/value within a fixed hue, with no control anywhere that changed hue itself; a user directly asked how to pick red and there was no way through the UI). `registryDependencies` is now `[\"cn\", \"slider\"]`. The original M3 finding about `move_interaction`/`pointer` is unaffected and still accurate -- only the slider composition premise changed, and only because new functionality was added, not because the earlier finding was wrong.",
-        "usage": "ColorPicker { color: color(), on_color_change: move |c| color.set(c),\n    ColorArea { AreaTrack { AreaThumb { AreaThumbSaturationInput {} AreaThumbValueInput {} } } }\n    HueSlider {}\n}",
+        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per statics/catalogs/dioxus-components.json and tracked in statics/component_compatibility.json, not shadcn parity. HSV saturation/value drag surface with keyboard arrow-key navigation and accessible per-axis range inputs (AreaThumbSaturationInput/AreaThumbValueInput). The M3 migration queue's dependency note said this item composes label/popover/slider; reading the actual upstream primitive source found it only depends on the already-owned move_interaction/pointer modules (reused unmodified from Wave 2's Slider import), not those three registry items -- a real correction recorded per the M1 lesson to verify against source, not the queue's one-line notes. Requires the `palette` crate directly (matching upstream's own public HSV color type in its props), same as any upstream consumer. **2026-09-02:** the 'not slider' half of that correction no longer holds -- this item now genuinely composes the `slider` registry item for a new `HueSlider` sub-component (task 5.3h: `ColorArea` only ever adjusted saturation/value within a fixed hue, with no control anywhere that changed hue itself; a user directly asked how to pick red and there was no way through the UI). `registryDependencies` is now `[\"cn\", \"slider\"]`. The original M3 finding about `move_interaction`/`pointer` is unaffected and still accurate -- only the slider composition premise changed, and only because new functionality was added, not because the earlier finding was wrong. **2026-09-06:** the item now also genuinely composes `popover` -- `ColorPickerPopover`/`ColorPickerTrigger`/`ColorPickerSwatch` let a consumer put the picker behind a trigger that shows the currently selected color, following the same `popover_root`-injection pattern `date-picker` already uses. `registryDependencies` is now `[\"cn\", \"popover\", \"slider\", \"variants\"]`. The always-visible composition below remains fully supported and unchanged; the trigger composition is additive. **2026-09-06 (2):** the item now also genuinely composes `native-select` and `copy-button` for a new `ColorPickerFields` part -- a compact HEX/RGB/HSL format-select plus matching editable field(s), staying in sync with the same `ColorPickerContext` `ColorArea`/`HueSlider`/`ColorPickerSwatch` already read and write, with a `CopyButton` for the currently displayed value. Composable and additive: a `ColorPicker` composed without `ColorPickerFields` is unaffected. `registryDependencies` is now `[\"cn\", \"copy-button\", \"native-select\", \"popover\", \"slider\", \"variants\"]`.",
+        "usage": "ColorPicker { color: color(), on_color_change: move |c| color.set(c),\n    ColorArea { AreaTrack { AreaThumb { AreaThumbSaturationInput {} AreaThumbValueInput {} } } }\n    HueSlider {}\n}\n\n// Behind a trigger that shows the current color, with format fields:\nColorPicker { color: color(), on_color_change: move |c| color.set(c),\n    ColorPickerPopover { open: open(), on_open_change: move |v| open.set(v),\n        ColorPickerTrigger {}\n        PopoverContent { class: \"w-auto p-0\",\n            ColorArea { AreaTrack { AreaThumb { AreaThumbSaturationInput {} AreaThumbValueInput {} } } }\n            HueSlider {}\n            ColorPickerFields {}\n        }\n    }\n}",
         "accessibility": "No dedicated APG \"Color Picker\" pattern exists; this follows the closest guidance -- the Slider pattern applied per axis. `ColorPicker`/`ColorArea` are `role=\"group\"`; each saturation/value axis input is a native `type=\"range\"` with a human-readable `aria-valuetext` (e.g. \"Saturation 62%, vibrant orange\") and `aria-orientation` (`packages/adico-primitives/src/color_picker.rs`).",
         "keyboard": "`AreaThumb` is the two-dimensional drag surface and keyboard entry point, handing focus to whichever axis input the keypress moved; each axis then responds to its own arrow keys like an ordinary range input."
       },
       "provenance": {
         "record": "provenance/records/adico-primitives-wave5-extras.json"
+      }
+    },
+    {
+      "name": "copy-button",
+      "type": "registry:ui",
+      "description": "A source-owned Dioxus-only Copy Button for Dioxus (no shadcn equivalent), backed by the owned adico primitive layer.",
+      "files": [
+        {
+          "source": "ui/copy_button.rs",
+          "targetRoot": "ui",
+          "target": "copy_button.rs",
+          "checksum": "3ff48075e1ba3a05f6c2e9b07284bc9d80b3fd0de41d432916fed66e3c7d16ea"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "cn"
+      ],
+      "cargoDependencies": [
+        {
+          "crate": "dioxus",
+          "version": "=0.7.9"
+        },
+        {
+          "crate": "adico-primitives",
+          "version": "=0.1.0",
+          "features": [
+            "web"
+          ]
+        }
+      ],
+      "style": {
+        "semanticTokens": true,
+        "radiusToken": true,
+        "utilities": [
+          "cn"
+        ]
+      },
+      "moduleExports": [
+        {
+          "targetRoot": "ui",
+          "module": "copy_button",
+          "reexport": true
+        }
+      ],
+      "documentation": {
+        "slug": "copy-button",
+        "compositionNote": "Dioxus Components extra with no shadcn equivalent -- classified `ADICO_ONLY_EXTRA`, no upstream counterpart in any of statics/catalogs/{shadcn,base-ui,dioxus-components,dioxus-primitives}.json. Composes the installed `button` item for its surface and `adico-primitives`'s target-gated `clipboard::use_clipboard` hook for the actual copy -- the browser clipboard API call stays behind that primitive adapter (this repo's architecture rule), never called directly from this file. On the `web` target it copies via `navigator.clipboard.writeText`; every other target resolves to a failed status rather than pretending to succeed, since no native clipboard integration exists in this workspace yet.",
+        "usage": "CopyButton { value: value() }",
+        "accessibility": "No dedicated APG pattern for clipboard copying; renders a native `<button>` (via the installed `button` item) with an `aria-label` reflecting idle/copied/failed state, so the outcome of activating it is announced even though the visual change is only an icon swap.",
+        "keyboard": "Native button keyboard behavior only (Enter/Space activates); no custom keyboard layer."
       }
     },
     {
@@ -2330,11 +2492,12 @@
           "source": "ui/theme_builder.rs",
           "targetRoot": "ui",
           "target": "theme_builder.rs",
-          "checksum": "803b422dcc522ff03bda47af37ad81658eb41cbdad1388dcc8646a0d3280e459"
+          "checksum": "bf5105dbb08d08da6eac3a6211aadc116296cccc0f76aca53a489d1e098cd347"
         }
       ],
       "registryDependencies": [
-        "cn"
+        "cn",
+        "copy-button"
       ],
       "cargoDependencies": [
         {
@@ -2365,8 +2528,8 @@
       ],
       "documentation": {
         "slug": "theme-builder",
-        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per design.md §7d (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). Promotes apps/playground's advanced customization tray -- the full 28-semantic-token editor with independent light/dark values, a deterministic 'generate theme' action, and CSS export -- into a real, generic, installable component, since none of it is actually playground-specific in nature. Applies its edited tokens live through adico_primitives::theme_mode::apply_root_properties, the same document-root mechanism theme-switcher already uses for its 4 properties, so theme-builder composes with mode-toggle/theme-switcher on one mechanism. Renders its CSS export into a read-only, selectable textarea rather than calling the browser clipboard API directly, so it stays free of browser-interop details and needs no new cargo dependencies.",
-        "usage": "ThemeBuilderLauncher {}",
+        "compositionNote": "Dioxus-only extra with no shadcn equivalent -- classified `EXISTING_DIOXUS_EXTRA` per design.md §7d (no shadcn/dioxus-components catalog counterpart in statics/component_compatibility.json). Promotes apps/playground's advanced customization tray -- the full 28-semantic-token editor with independent light/dark values, a deterministic 'generate theme' action, and CSS export -- into a real, generic, installable component, since none of it is actually playground-specific in nature. Applies its edited tokens live through adico_primitives::theme_mode::apply_root_properties, the same document-root mechanism theme-switcher already uses for its 4 properties, so theme-builder composes with mode-toggle/theme-switcher on one mechanism. Renders its CSS export into a read-only, selectable textarea. **2026-09-06:** the export now also has a working copy button, composing the new `copy-button` registry item rather than calling the browser clipboard API directly -- that keeps this file free of browser-interop details (the API call lives behind `adico-primitives`'s target-gated `clipboard` primitive) and needs no new cargo dependency of its own beyond the `copy-button` item's own existing ones. `registryDependencies` is now `[\"cn\", \"copy-button\"]`.",
+        "usage": "ThemeBuilder {}",
         "accessibility": "A styled composition around `theme_mode`'s `ThemeMode` primitive (`packages/adico-primitives/src/theme_mode.rs`); its editable token controls and CSS-export text area are plain form controls with native semantics, no custom ARIA widget roles.",
         "keyboard": "No custom keyboard layer; native form-control and button keyboard behavior throughout."
       }
@@ -2832,7 +2995,7 @@
           "source": "ui/navigation_menu.rs",
           "targetRoot": "ui",
           "target": "navigation_menu.rs",
-          "checksum": "e730aaa685a779caff97e6ddf24143c23371a0b411cae3f14f86b7dea8fd58f0"
+          "checksum": "52eb9903d01b017392131085e725f4080d87f2f51cdff8d2b3dd8bf8e0486355"
         }
       ],
       "registryDependencies": [

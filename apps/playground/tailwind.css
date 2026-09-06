@@ -361,21 +361,3 @@
   --tw-exit-translate-x: --value(--translate-*, [percentage], [length]);
 }
 /* adico:theme:end */
-
-.adico-date-picker-popover {
-  position: absolute !important;
-  z-index: 1000 !important;
-  top: calc(100% + 0.5rem) !important;
-  left: 50% !important;
-  width: max-content !important;
-  max-width: calc(100vw - 2rem);
-  transform: translateX(-50%);
-  border: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-.playground-date-picker-popover-root {
-  position: relative;
-}

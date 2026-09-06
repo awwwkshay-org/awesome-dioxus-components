@@ -112,6 +112,7 @@ use adico_primitives::theme_mode::{
     use_persisted_theme_mode,
 };
 
+use super::copy_button::CopyButton;
 use crate::adico_lib::cn::cn;
 
 /// Which appearance `ThemeBuilder` is currently editing/previewing. This is
@@ -1066,8 +1067,11 @@ pub fn ThemeBuilder(
                     }
                 }
             }
-            label { class: "grid gap-1 text-xs",
-                span { class: "font-medium text-foreground", "{export_label}" }
+            div { class: "grid gap-1 text-xs",
+                div { class: "flex items-center justify-between",
+                    span { class: "font-medium text-foreground", "{export_label}" }
+                    CopyButton { value: css_export.clone() }
+                }
                 textarea {
                     class: "h-40 w-full rounded-md border border-input bg-background p-2 font-mono text-[11px] text-foreground",
                     readonly: true,

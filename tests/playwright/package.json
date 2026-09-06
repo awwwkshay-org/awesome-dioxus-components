@@ -18,7 +18,9 @@
     "test:mode-toggle": "playwright test mode-toggle.spec.ts",
     "test:playground-enriched": "playwright test playground-enriched-demos.spec.ts",
     "test:theme-switcher": "playwright test theme-switcher.spec.ts",
-    "test:fullstack": "playwright test fullstack.spec.ts"
+    "test:fullstack": "playwright test fullstack.spec.ts",
+    "test:time-picker": "playwright test time-picker.spec.ts",
+    "test:playground-time-picker": "playwright test playground-time-picker.spec.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

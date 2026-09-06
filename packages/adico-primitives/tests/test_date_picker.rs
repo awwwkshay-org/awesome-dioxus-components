@@ -159,6 +159,29 @@ fn the_default_date_input_composes_three_spinbutton_segments_and_hidden_separato
     assert_eq!(html.matches(r#"aria-hidden="true""#).count(), 2, "{html}");
 }
 
+// Regression guard for the segment/segment.rs extraction (task 3.4 of
+// `add-time-picker-components`): `DateElementContext`'s year/month/day
+// indices are now computed once from `start_index` instead of each segment
+// wrapper repeating its own `+1`/`+2` literal, and `DateRangePickerEndValue`
+// derives its `start_index` from the `DATE_SEGMENT_COUNT` constant instead
+// of a bare `3`. This asserts the derivation still reduces to the same
+// layout `DateRangePicker` had before that refactor: 6 spinbutton segments
+// total (3 per date), 5 hidden separators (2 internal to each date, 1
+// between them). It does not independently verify keyboard focus actually
+// crosses from the start date's last segment into the end date's first
+// segment in order -- this SSR-based harness has no way to observe which
+// segment currently holds simulated focus (no visible DOM state reflects
+// it); that would need a real-browser Playwright check.
+#[test]
+fn date_range_picker_composes_six_spinbutton_segments_with_derived_indices() {
+    let html = render(ControlledDateRangePicker);
+    assert_eq!(html.matches(r#"role="spinbutton""#).count(), 6, "{html}");
+    assert_eq!(html.matches(r#"aria-label="year""#).count(), 2, "{html}");
+    assert_eq!(html.matches(r#"aria-label="month""#).count(), 2, "{html}");
+    assert_eq!(html.matches(r#"aria-label="day""#).count(), 2, "{html}");
+    assert_eq!(html.matches(r#"aria-hidden="true""#).count(), 5, "{html}");
+}
+
 #[test]
 fn the_year_segment_reports_its_current_value_via_aria_valuenow() {
     let html = render(ControlledDatePicker);

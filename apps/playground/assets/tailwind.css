@@ -42,6 +42,7 @@
     --radius-lg: var(--radius);
     --radius-xl: calc(var(--radius) * 1.4);
     --radius-2xl: calc(var(--radius) * 1.8);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
     --animate-spin: spin 1s linear infinite;
     --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -371,9 +372,6 @@
   .z-\[100\] {
     z-index: 100;
   }
-  .z-\[1000\] {
-    z-index: 1000;
-  }
   .order-first {
     order: -9999;
   }
@@ -439,9 +437,6 @@
   }
   .-mt-4 {
     margin-top: calc(var(--spacing) * -4);
-  }
-  .mt-1 {
-    margin-top: calc(var(--spacing) * 1);
   }
   .mt-2 {
     margin-top: calc(var(--spacing) * 2);
@@ -512,6 +507,10 @@
   .aspect-square {
     aspect-ratio: 1 / 1;
   }
+  .size-1\.5 {
+    width: calc(var(--spacing) * 1.5);
+    height: calc(var(--spacing) * 1.5);
+  }
   .size-2 {
     width: calc(var(--spacing) * 2);
     height: calc(var(--spacing) * 2);
@@ -559,6 +558,10 @@
   .size-48 {
     width: calc(var(--spacing) * 48);
     height: calc(var(--spacing) * 48);
+  }
+  .size-56 {
+    width: calc(var(--spacing) * 56);
+    height: calc(var(--spacing) * 56);
   }
   .size-full {
     width: 100%;
@@ -642,6 +645,9 @@
   .h-svh {
     height: 100svh;
   }
+  .max-h-48 {
+    max-height: calc(var(--spacing) * 48);
+  }
   .max-h-72 {
     max-height: calc(var(--spacing) * 72);
   }
@@ -698,6 +704,15 @@
   }
   .w-10 {
     width: calc(var(--spacing) * 10);
+  }
+  .w-14 {
+    width: calc(var(--spacing) * 14);
+  }
+  .w-20 {
+    width: calc(var(--spacing) * 20);
+  }
+  .w-24 {
+    width: calc(var(--spacing) * 24);
   }
   .w-40 {
     width: calc(var(--spacing) * 40);
@@ -980,6 +995,9 @@
   .gap-0 {
     gap: calc(var(--spacing) * 0);
   }
+  .gap-0\.5 {
+    gap: calc(var(--spacing) * 0.5);
+  }
   .gap-1 {
     gap: calc(var(--spacing) * 1);
   }
@@ -1182,6 +1200,12 @@
   .border-border {
     border-color: var(--color-border);
   }
+  .border-border\/50 {
+    border-color: color-mix(in srgb, hsl(var(--border)) 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-border) 50%, transparent);
+    }
+  }
   .border-destructive\/50 {
     border-color: color-mix(in srgb, hsl(var(--destructive)) 50%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -1240,6 +1264,12 @@
     background-color: color-mix(in srgb, hsl(var(--muted)) 20%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in oklab, var(--color-muted) 20%, transparent);
+    }
+  }
+  .bg-muted\/30 {
+    background-color: color-mix(in srgb, hsl(var(--muted)) 30%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-muted) 30%, transparent);
     }
   }
   .bg-muted\/50 {
@@ -1692,6 +1722,10 @@
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
+  .duration-150 {
+    --tw-duration: 150ms;
+    transition-duration: 150ms;
+  }
   .duration-200 {
     --tw-duration: 200ms;
     transition-duration: 200ms;
@@ -1703,6 +1737,10 @@
   .ease-linear {
     --tw-ease: linear;
     transition-timing-function: linear;
+  }
+  .ease-out {
+    --tw-ease: var(--ease-out);
+    transition-timing-function: var(--ease-out);
   }
   .fade-in-0 {
     --tw-enter-opacity: calc(0 / 100);
@@ -1719,6 +1757,9 @@
   .zoom-in-95 {
     --tw-enter-scale: calc(95 * 1%);
     --tw-enter-scale: 0.95;
+  }
+  .\[scrollbar-width\:thin\] {
+    scrollbar-width: thin;
   }
   .zoom-in {
     --tw-enter-scale: 0;
@@ -1781,6 +1822,16 @@
   }
   .group-data-\[state\=open\]\/date-picker\:rotate-180 {
     &:is(:where(.group\/date-picker)[data-state="open"] *) {
+      rotate: 180deg;
+    }
+  }
+  .group-data-\[state\=open\]\/date-time-picker\:rotate-180 {
+    &:is(:where(.group\/date-time-picker)[data-state="open"] *) {
+      rotate: 180deg;
+    }
+  }
+  .group-data-\[state\=open\]\/time-picker\:rotate-180 {
+    &:is(:where(.group\/time-picker)[data-state="open"] *) {
       rotate: 180deg;
     }
   }
@@ -2989,6 +3040,11 @@
       background-color: var(--color-accent);
     }
   }
+  .\[\&_\[role\=spinbutton\]\[data-empty\=true\]\]\:text-muted-foreground {
+    & [role=spinbutton][data-empty=true] {
+      color: var(--color-muted-foreground);
+    }
+  }
   .\[\&_\[role\=spinbutton\]\[no-date\=true\]\]\:text-muted-foreground {
     & [role=spinbutton][no-date=true] {
       color: var(--color-muted-foreground);
@@ -3486,22 +3542,6 @@
   syntax: "*";
   inherits: false;
   initial-value: 0;
-}
-.adico-date-picker-popover {
-  position: absolute !important;
-  z-index: 1000 !important;
-  top: calc(100% + 0.5rem) !important;
-  left: 50% !important;
-  width: max-content !important;
-  max-width: calc(100vw - 2rem);
-  transform: translateX(-50%);
-  border: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-.playground-date-picker-popover-root {
-  position: relative;
 }
 @property --tw-translate-x {
   syntax: "*";

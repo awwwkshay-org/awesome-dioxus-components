@@ -1,0 +1,68 @@
+{
+  "name": "time-picker",
+  "type": "registry:ui",
+  "description": "A source-owned compositional time picker (segmented input, scrollable columns, and an analog clock dial), composing the owned time and popover primitives.",
+  "files": [
+    {
+      "source": "ui/time_picker.rs",
+      "targetRoot": "ui",
+      "target": "time_picker.rs",
+      "checksum": "f68da6c31df9a43cf6a6e60adc2ab8dd9467296c767b9de21e3f9d56c62e3a34"
+    }
+  ],
+  "registryDependencies": [
+    "cn",
+    "native-select",
+    "popover",
+    "variants"
+  ],
+  "cargoDependencies": [
+    {
+      "crate": "dioxus",
+      "package": null,
+      "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "time",
+      "package": null,
+      "version": "=0.3.44",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    }
+  ],
+  "style": {
+    "semanticTokens": true,
+    "radiusToken": true,
+    "utilities": []
+  },
+  "moduleExports": [
+    {
+      "targetRoot": "ui",
+      "module": "time_picker",
+      "reexport": true
+    }
+  ],
+  "documentation": {
+    "slug": "time-picker",
+    "compositionNote": "Dioxus-only extra with no shadcn/base-ui/dioxus-components/dioxus-primitives equivalent -- classified `ADICO_ONLY_EXTRA`, no upstream counterpart in any catalog snapshot. The copied façade composes the installed Popover and NativeSelect façades over the owned TimePicker primitive. The primitive retains segmented value state, 12h/24h and seconds-granularity configuration, roving-focus keyboard behavior, and ARIA. `TimePicker` takes a `view: TimePickerView` prop (`Digital` (default) | `Analog`) -- independent of `is_12h` -- read by `TimePickerBody`, which renders `TimePickerColumns` or `TimePickerClock` accordingly; both remain independently composable directly (as this item's own demo page does, showing both at once) for a consumer who wants to hardcode one specific view without a prop switch. Columns are plain native buttons (fully keyboard-operable); the dial has no WAI-ARIA analog-clock pattern to follow, so it is documented and defaulted as pointer-only enhancement, never the only way to set a value -- it renders a clock hand from the centre to the selected value and supports both dragging that hand around the face and click/tap-to-set. Both resolve the pointer event's own coordinates against the dial's measured rect, listening on the dial element itself (`onpointerdown`/`onpointermove`/`onpointerup`/`onpointerleave`) rather than adico-primitives's global document-level pointer-position registry, which its own source documents as unverified in a live browser -- so the drag needs no new primitive plumbing. The face is `touch-none select-none` so a drag turns the hand instead of selecting the hour labels or scrolling the page. When `is_12h` is set, both `TimePickerColumns` and `TimePickerClock` always render an AM/PM control -- the dial face itself has no AM/PM affordance (clicking it only sets the 1-12 position), so without one there'd be no way to choose which half of the day is meant when only the clock is shown. `TimePickerTrigger` takes a `compact: bool` prop (default `false`): the default labeled button spells out the formatted time and suits a standalone trigger, while `compact` renders the icon-only shape `date-picker`'s `DatePickerTrigger` always uses -- required when the trigger sits inside a `TimePickerInput` next to `TimePickerInputValue`, since that field already shows the value and the labeled default would otherwise render the same time twice inside a nested bordered box. `TimePickerColumns` also takes an opt-in `fill_height: bool` prop (default `false`) that swaps its default fixed `max-h-48` columns for `h-full`/`items-stretch`, so it can be grown (via the caller's own `class: \"flex-1 min-h-0\"`) to match a taller sibling's height -- e.g. `date-time-picker`'s calendar -- without collapsing to zero height in the common case where no such taller sibling exists.",
+    "usage": "TimePicker { selected_time: value(), on_value_change: move |v| value.set(v), view: view(),\n    TimePickerPopover { open: open(), on_open_change: move |v| open.set(v),\n        TimePickerTrigger {}\n        TimePickerContent {\n            TimePickerInput {}\n            TimePickerBody {}\n        }\n    }\n}",
+    "accessibility": "No dedicated APG \"Time Picker\" pattern exists; `TimePicker` renders a composite `role=\"group\"` field containing one `role=\"spinbutton\"` segment per hour/minute(/second), each with `aria-valuemin`/`aria-valuemax`/`aria-valuenow` (the same Spin Button pattern `date-picker` already uses), plus a non-numeric meridiem segment exposing `aria-valuetext` (\"AM\"/\"PM\") when displaying 12-hour time. `TimePickerColumns` is plain native `<button>`s, including its AM/PM pair. `TimePickerClock`'s dial (including its draggable hand) has no ARIA pattern and is `aria-hidden`; it is documented as pointer-only enhancement, never the only way to set a value (`packages/adico-primitives/src/time_picker.rs`) -- its AM/PM buttons (shown when `is_12h`) are plain native `<button>`s outside the `aria-hidden` dial, so they stay in the accessibility tree even though the dial itself doesn't.",
+    "keyboard": "Arrow keys increment/decrement the focused segment, matching `date-picker`'s segments; `TimePickerColumns`'s buttons (including AM/PM) use native button keyboard behavior. `TimePickerClock`'s dial and its draggable hand have no keyboard interaction -- its AM/PM buttons and the Hour/Minute select do, via native button/select behavior; use the segmented input or columns instead of the dial face itself for keyboard-only value entry."
+  },
+  "compatibility": null,
+  "provenance": null
+}

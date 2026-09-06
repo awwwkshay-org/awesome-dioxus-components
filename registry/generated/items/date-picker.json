@@ -7,7 +7,7 @@
       "source": "ui/date_picker.rs",
       "targetRoot": "ui",
       "target": "date_picker.rs",
-      "checksum": "70e24290c1d2b79470a26d140e3f26cc32c18767a71423ba5ca699b0e49c1550"
+      "checksum": "6ccae927da40f1621783b535f127d332e62fddbe5a40c4a24f3039db922e5caa"
     }
   ],
   "registryDependencies": [

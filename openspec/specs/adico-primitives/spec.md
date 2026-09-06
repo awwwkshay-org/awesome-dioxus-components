@@ -158,3 +158,115 @@ the consuming application to mount a provider component.
   same persisted setting
 - **THEN** both observe one live, shared value, and a change from either one
   is immediately observed by the other with no reload needed
+
+### Requirement: Segmented numeric/enum field input is a shared, reusable primitive
+Segment-by-segment keyboard-editable field input (roving focus across
+segments, digit-typing with auto-advance on overflow, arrow-key increment/
+decrement with wraparound, clamp-on-blur, and per-segment `role="spinbutton"`
+ARIA with `aria-valuemin`/`aria-valuemax`/`aria-valuenow` for numeric segments
+and `aria-valuetext` for non-numeric segments) SHALL be exposed as a shared
+primitive usable by more than one composed field (at minimum, date segments
+and time segments), rather than living as private, date-specific code inside
+a single component module. A field composing multiple segments SHALL compute
+each segment's position from the number of segments actually present rather
+than a hardcoded per-field-kind constant, so composed fields of different
+shapes (a single date, a date range, a combined date-and-time value) each lay
+out correctly.
+
+#### Scenario: A non-date field reuses the segment primitive
+- **WHEN** a time field composes hour and minute segments using the shared
+  segment primitive
+- **THEN** it gets the same auto-advance, wraparound, and keyboard navigation
+  behavior `DatePicker`'s day/month/year segments already have, without
+  reimplementing that behavior
+
+#### Scenario: A non-numeric segment is composed
+- **WHEN** a field composes a segment whose value is not itself a number (for
+  example, an AM/PM meridiem indicator)
+- **THEN** the segment still participates in the same roving-focus and
+  keyboard-navigation sequence as its numeric siblings, and exposes
+  `aria-valuetext` rather than a numeric `aria-valuenow`
+
+#### Scenario: A combined date-and-time field lays out correctly
+- **WHEN** a field composes date segments and time segments together (for
+  example, a `DateTimePicker`)
+- **THEN** each segment's roving-focus position is correct regardless of how
+  many date segments or time segments (including an optional seconds segment
+  or meridiem segment) are present, and the existing `DateRangePicker`'s
+  two-date layout is unaffected
+
+### Requirement: Local-time resolution is a public primitive with an explicit fallback
+`adico-primitives` SHALL expose a public API for resolving the current time
+(not only the current date) in the local timezone of the device running the
+UI, following the same resolve-with-fallback shape as the crate's existing
+local-date resolution: resolve the true local offset where the platform
+supports it, and fall back to UTC, explicitly and documented, where it does
+not (for example, a non-wasm target without a sound OS-provided offset). This
+API SHALL be usable by code outside `adico-primitives` itself (registry
+components and consuming applications), not restricted to crate-internal
+callers.
+
+#### Scenario: A consumer needs the current local time
+- **WHEN** a registry component or consuming application needs "now" in the
+  device's local timezone (for example, a time picker's default value)
+- **THEN** it can call a public `adico-primitives` API for it rather than
+  hand-rolling `time`'s local-offset resolution and fallback itself
+
+#### Scenario: Local offset cannot be resolved
+- **WHEN** the running platform cannot supply a sound local UTC offset
+- **THEN** the API returns UTC rather than panicking or returning an error the
+  caller must separately handle, and this fallback behavior is documented at
+  the call site
+
+### Requirement: Clipboard copy is a target-gated shared primitive
+`adico-primitives` SHALL expose a hook that copies a given text value to the
+system clipboard, resolving to a status (idle, copied, or failed) rather than
+a bare boolean, so a consumer can render a confirmation without maintaining
+its own timer. On the `web` target it SHALL use the browser clipboard API. On
+every other target it SHALL resolve to a failed status rather than silently
+appearing to succeed, since no native clipboard integration exists in this
+crate. Browser-interop details (the actual clipboard API call) SHALL stay
+inside this primitive, never called directly from registry UI source.
+
+#### Scenario: A web consumer copies text
+- **WHEN** a `web`-target consumer calls the clipboard hook's copy function
+  with a text value
+- **THEN** the value is written to the system clipboard and the hook's status
+  resolves to "copied"
+
+#### Scenario: Clipboard access is denied or unsupported
+- **WHEN** the browser denies clipboard permission, or the running target has
+  no clipboard integration
+- **THEN** the hook's status resolves to "failed", not "copied" and not a
+  silent no-op
+
+#### Scenario: Status is transient
+- **WHEN** a copy attempt resolves to "copied" or "failed"
+- **THEN** the status returns to "idle" after a short, fixed delay without
+  the consumer needing to manage that timing itself
+
+### Requirement: The OTP field primitive supports masked slot rendering
+The OTP field primitive root SHALL accept a reactive boolean `mask` input,
+defaulting to off. While enabled, each slot input SHALL render as a
+password-type input so entered characters are visually obscured; while
+disabled, slots SHALL render as plain text inputs. Masking SHALL be purely
+presentational: the field's value model, per-slot editing behavior, focus
+movement, and value-change/value-complete callbacks SHALL be identical in
+both modes, and toggling the flag SHALL NOT clear or reorder entered
+characters. The primitive's documentation SHALL no longer list masking as an
+out-of-scope feature.
+
+#### Scenario: Masked slots render as password inputs
+- **WHEN** the root's `mask` input is true and the field is rendered
+- **THEN** every slot input carries the password input type instead of the
+  text input type
+
+#### Scenario: Toggling mask preserves state
+- **WHEN** a field holds entered characters and `mask` is toggled
+- **THEN** the field's value, filled-slot positions, and active-slot focus
+  are unchanged; only the visual rendering of the characters differs
+
+#### Scenario: Callbacks are mode-independent
+- **WHEN** a user completes entry while masking is enabled
+- **THEN** the value-complete callback fires with the same plain-text value
+  it would report with masking disabled

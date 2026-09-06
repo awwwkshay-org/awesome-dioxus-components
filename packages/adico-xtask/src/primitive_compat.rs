@@ -396,6 +396,8 @@ const ADICO_ONLY_EXTRAS: &[(&str, &str)] = &[
     ("AspectRatio", "aspect_ratio.rs"),
     ("Label", "label.rs"),
     ("ThemeMode", "theme_mode.rs"),
+    ("Clipboard", "clipboard.rs"),
+    ("TimePicker", "time_picker.rs"),
 ];
 
 #[derive(Serialize)]

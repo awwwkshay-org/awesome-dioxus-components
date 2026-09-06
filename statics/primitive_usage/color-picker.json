@@ -1,6 +1,7 @@
 {
   "classification": "delegated",
   "primitiveModules": [
-    "color_picker"
+    "color_picker",
+    "popover"
   ]
 }

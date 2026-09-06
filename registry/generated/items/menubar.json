@@ -7,7 +7,7 @@
       "source": "ui/menubar.rs",
       "targetRoot": "ui",
       "target": "menubar.rs",
-      "checksum": "e8358f7eaf803aad2f77a8ce9d6457647bc4f211feba9924ebc392adc8184ee0"
+      "checksum": "1ac7bcc3cd72db53f8ff24cb6ec30cdaca80232b6c103022de2fba20c4120471"
     }
   ],
   "registryDependencies": [

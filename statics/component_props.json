@@ -1158,6 +1158,75 @@
         "type": "Element"
       }
     ],
+    "ColorPickerFields": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      }
+    ],
+    "ColorPickerPopover": [
+      {
+        "name": "is_modal",
+        "type": "ReadSignal<bool>",
+        "default": "ReadSignal::new(Signal::new(true))"
+      },
+      {
+        "name": "open",
+        "type": "ReadSignal<Option<bool>>"
+      },
+      {
+        "name": "default_open",
+        "type": "bool",
+        "default": "default()"
+      },
+      {
+        "name": "on_open_change",
+        "type": "Callback<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "popover_root",
+        "type": "fn(PopoverRootProps) ->Element",
+        "default": "PopoverRoot"
+      }
+    ],
+    "ColorPickerSwatch": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      }
+    ],
+    "ColorPickerTrigger": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Option<Element>",
+        "default": "default()"
+      }
+    ],
     "HueSlider": [
       {
         "name": "class",
@@ -1667,6 +1736,23 @@
       }
     ]
   },
+  "copy_button": {
+    "CopyButton": [
+      {
+        "name": "value",
+        "type": "ReadSignal<String>"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      }
+    ]
+  },
   "data_table": {
     "DataTable": [
       {
@@ -1967,6 +2053,124 @@
       {
         "name": "children",
         "type": "Element"
+      }
+    ]
+  },
+  "date_time_picker": {
+    "DateTimePicker": [
+      {
+        "name": "on_value_change",
+        "type": "Callback<Option<PrimitiveDateTime>>",
+        "default": "default()"
+      },
+      {
+        "name": "selected_datetime",
+        "type": "ReadSignal<Option<PrimitiveDateTime>>",
+        "default": "default()"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "read_only",
+        "type": "ReadSignal<bool>",
+        "default": "ReadSignal::new(Signal::new(false))"
+      },
+      {
+        "name": "is_12h",
+        "type": "ReadSignal<bool>",
+        "default": "ReadSignal::new(Signal::new(false))"
+      },
+      {
+        "name": "show_seconds",
+        "type": "ReadSignal<bool>",
+        "default": "ReadSignal::new(Signal::new(false))"
+      },
+      {
+        "name": "view",
+        "type": "ReadSignal<TimePickerView>",
+        "default": "ReadSignal::new(Signal::new(TimePickerView::Digital))"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "DateTimePickerContent": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "DateTimePickerPopover": [
+      {
+        "name": "is_modal",
+        "type": "ReadSignal<bool>",
+        "default": "ReadSignal::new(Signal::new(true))"
+      },
+      {
+        "name": "open",
+        "type": "ReadSignal<Option<bool>>"
+      },
+      {
+        "name": "default_open",
+        "type": "bool",
+        "default": "default()"
+      },
+      {
+        "name": "on_open_change",
+        "type": "Callback<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "popover_root",
+        "type": "fn(PopoverRootProps) ->Element",
+        "default": "PopoverRoot"
+      }
+    ],
+    "DateTimePickerTrigger": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Option<Element>",
+        "default": "default()"
       }
     ]
   },
@@ -5292,6 +5496,198 @@
       {
         "name": "show_label",
         "type": "bool"
+      }
+    ]
+  },
+  "time_picker": {
+    "TimePicker": [
+      {
+        "name": "on_value_change",
+        "type": "Callback<Option<Time>>",
+        "default": "default()"
+      },
+      {
+        "name": "selected_time",
+        "type": "ReadSignal<Option<Time>>",
+        "default": "default()"
+      },
+      {
+        "name": "disabled",
+        "type": "ReadSignal<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "read_only",
+        "type": "ReadSignal<bool>",
+        "default": "ReadSignal::new(Signal::new(false))"
+      },
+      {
+        "name": "is_12h",
+        "type": "ReadSignal<bool>",
+        "default": "ReadSignal::new(Signal::new(false))"
+      },
+      {
+        "name": "show_seconds",
+        "type": "ReadSignal<bool>",
+        "default": "ReadSignal::new(Signal::new(false))"
+      },
+      {
+        "name": "roving_loop",
+        "type": "ReadSignal<bool>",
+        "default": "ReadSignal::new(Signal::new(false))"
+      },
+      {
+        "name": "view",
+        "type": "ReadSignal<TimePickerView>",
+        "default": "ReadSignal::new(Signal::new(TimePickerView::Digital))"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "TimePickerBody": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "fill_height",
+        "type": "bool",
+        "default": "default()"
+      }
+    ],
+    "TimePickerClock": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      }
+    ],
+    "TimePickerColumns": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "fill_height",
+        "type": "bool",
+        "default": "default()"
+      }
+    ],
+    "TimePickerContent": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      }
+    ],
+    "TimePickerInput": [
+      {
+        "name": "radius",
+        "type": "Radius",
+        "default": "Radius::Md"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Option<Element>",
+        "default": "default()"
+      }
+    ],
+    "TimePickerInputValue": [
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "children",
+        "type": "Option<Element>",
+        "default": "default()"
+      }
+    ],
+    "TimePickerPopover": [
+      {
+        "name": "is_modal",
+        "type": "ReadSignal<bool>",
+        "default": "ReadSignal::new(Signal::new(true))"
+      },
+      {
+        "name": "open",
+        "type": "ReadSignal<Option<bool>>"
+      },
+      {
+        "name": "default_open",
+        "type": "bool",
+        "default": "default()"
+      },
+      {
+        "name": "on_open_change",
+        "type": "Callback<bool>",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Element"
+      },
+      {
+        "name": "popover_root",
+        "type": "fn(PopoverRootProps) ->Element",
+        "default": "PopoverRoot"
+      }
+    ],
+    "TimePickerTrigger": [
+      {
+        "name": "compact",
+        "type": "bool",
+        "default": "default()"
+      },
+      {
+        "name": "class",
+        "type": "Option<String>",
+        "default": "default()"
+      },
+      {
+        "name": "attributes",
+        "type": "Vec<Attribute>"
+      },
+      {
+        "name": "children",
+        "type": "Option<Element>",
+        "default": "default()"
       }
     ]
   },

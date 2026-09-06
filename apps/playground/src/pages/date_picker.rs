@@ -27,7 +27,6 @@ pub fn DatePickerPage() -> Element {
                 disabled: disabled(),
                 read_only: read_only(),
                 components::ui::DatePickerPopover {
-                    class: "playground-date-picker-popover-root",
                     open: popover_state().open,
                     default_open: popover_state().default_open,
                     components::ui::DatePickerInput {

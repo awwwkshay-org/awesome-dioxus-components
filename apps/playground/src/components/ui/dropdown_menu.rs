@@ -92,8 +92,9 @@ pub fn DropdownMenuTrigger(
     rsx! { PrimitiveDropdownMenuTrigger { class, attributes, {children} } }
 }
 
-/// An opaque, layered menu surface. It is absolutely positioned beneath its
-/// root, avoiding both layout shift and transparent popups.
+/// An opaque, layered menu surface. It is positioned beneath its trigger by
+/// the shared `Positioner` primitive (`position: fixed`, computed viewport
+/// coordinates), not by CSS `absolute`/`top-full` positioning classes.
 #[component]
 pub fn DropdownMenuContent(
     children: Element,
@@ -108,7 +109,7 @@ pub fn DropdownMenuContent(
     #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "absolute left-0 top-full z-50 mt-1 min-w-40 overflow-hidden bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        "z-50 min-w-40 overflow-hidden bg-popover p-1 text-popover-foreground shadow-md outline-none",
         radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
@@ -407,8 +408,10 @@ mod tests {
 
     #[test]
     fn content_is_layered_and_opaque() {
-        let class = cn(&["absolute left-0 top-full z-50 bg-popover"]);
-        assert!(class.contains("absolute"));
+        // Positioning is `Positioner`'s inline `position: fixed`, not a CSS
+        // `absolute`/`top-full` class -- see `DropdownMenuContent`'s own
+        // class string and doc comment.
+        let class = cn(&["z-50 bg-popover"]);
         assert!(class.contains("z-50"));
         assert!(class.contains("bg-popover"));
     }

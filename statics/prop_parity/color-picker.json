@@ -49,6 +49,40 @@
           ]
         },
         {
+          "id": "popover",
+          "props": [
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "trigger",
+          "props": [
+            {
+              "name": "label",
+              "status": "missing"
+            },
+            {
+              "name": "attributes",
+              "status": "present"
+            },
+            {
+              "name": "children",
+              "status": "present"
+            }
+          ]
+        },
+        {
+          "id": "swatch",
+          "unresolved": "no matching `swatch` part on axis `dioxus-components`'s `color-picker` entry"
+        },
+        {
           "id": "color-area",
           "unresolved": "no matching `color-area` part on axis `dioxus-components`'s `color-picker` entry"
         },
@@ -71,6 +105,10 @@
         {
           "id": "area-thumb-value-input",
           "unresolved": "no matching `area-thumb-value-input` part on axis `dioxus-components`'s `color-picker` entry"
+        },
+        {
+          "id": "fields",
+          "unresolved": "no matching `fields` part on axis `dioxus-components`'s `color-picker` entry"
         }
       ]
     },
@@ -80,6 +118,18 @@
         {
           "id": "root",
           "unresolved": "no matching `root` part on axis `dioxus-primitives`'s `color-picker` entry"
+        },
+        {
+          "id": "popover",
+          "unresolved": "no matching `popover` part on axis `dioxus-primitives`'s `color-picker` entry"
+        },
+        {
+          "id": "trigger",
+          "unresolved": "no matching `trigger` part on axis `dioxus-primitives`'s `color-picker` entry"
+        },
+        {
+          "id": "swatch",
+          "unresolved": "no matching `swatch` part on axis `dioxus-primitives`'s `color-picker` entry"
         },
         {
           "id": "color-area",
@@ -104,6 +154,10 @@
         {
           "id": "area-thumb-value-input",
           "unresolved": "no matching `area-thumb-value-input` part on axis `dioxus-primitives`'s `color-picker` entry"
+        },
+        {
+          "id": "fields",
+          "unresolved": "no matching `fields` part on axis `dioxus-primitives`'s `color-picker` entry"
         }
       ]
     },

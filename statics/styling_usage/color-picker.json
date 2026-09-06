@@ -1,6 +1,11 @@
 {
   "tailwindOnly": true,
-  "styleException": [],
+  "styleException": [
+    {
+      "description": "ColorPickerSwatch's background-color inline style",
+      "reason": "The swatch fill is the currently selected color, a runtime Hsv value with no fixed set of possibilities -- Tailwind only emits classes it can see statically in a consuming project's own source, so an arbitrary runtime color cannot be expressed as a static class."
+    }
+  ],
   "tokenCompliant": false,
   "colorException": [
     {

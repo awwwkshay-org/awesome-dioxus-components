@@ -238,7 +238,7 @@ pub struct DatePickerContentProps {
 #[component]
 pub fn DatePickerContent(props: DatePickerContentProps) -> Element {
     let class = cn(&[
-        "adico-date-picker-popover z-[1000] w-auto border-0 bg-transparent p-0 shadow-none",
+        "w-auto border-0 bg-transparent p-0 shadow-none",
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! { PopoverContent { class, {props.children} } }

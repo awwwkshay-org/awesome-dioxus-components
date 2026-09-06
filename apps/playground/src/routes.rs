@@ -11,14 +11,15 @@ use crate::pages::{
     AccordionPage, AlertDialogPage, AlertPage, AspectRatioPage, AttachmentPage, AvatarPage,
     BadgePage, BreadcrumbPage, BubblePage, ButtonGroupPage, ButtonPage, CalendarPage, CardPage,
     CarouselPage, CheckboxPage, CollapsiblePage, ColorPickerPage, ComboboxPage, CommandPage,
-    ContextMenuPage, DataTablePage, DatePickerPage, DialogPage, DragAndDropListPage, DrawerPage,
-    DropdownMenuPage, EmptyPage, Home, HoverCardPage, InputGroupPage, InputOTPPage, InputPage,
-    ItemPage, KbdPage, LabelPage, MarkerPage, MenubarPage, MessagePage, MessageScrollerPage,
-    ModeTogglePage, NativeSelectPage, NavigationMenuPage, PaginationPage, PopoverPage,
-    ProgressPage, RadioGroupPage, ResizablePage, ScrollAreaPage, SelectPage, SheetPage,
-    SidebarPage, SkeletonPage, SliderPage, SpinnerPage, SwitchPage, TablePage, TabsPage,
-    TagGroupPage, TextareaPage, ThemeBuilderPage, ThemeSwitcherPage, ToastPage, ToggleGroupPage,
-    TogglePage, ToolbarPage, TooltipPage, VirtualListPage,
+    ContextMenuPage, DataTablePage, DatePickerPage, DateTimePickerPage, DialogPage,
+    DragAndDropListPage, DrawerPage, DropdownMenuPage, EmptyPage, Home, HoverCardPage,
+    InputGroupPage, InputOTPPage, InputPage, ItemPage, KbdPage, LabelPage, MarkerPage, MenubarPage,
+    MessagePage, MessageScrollerPage, ModeTogglePage, NativeSelectPage, NavigationMenuPage,
+    PaginationPage, PopoverPage, ProgressPage, RadioGroupPage, ResizablePage, ScrollAreaPage,
+    SelectPage, SheetPage, SidebarPage, SkeletonPage, SliderPage, SpinnerPage, SwitchPage,
+    TablePage, TabsPage, TagGroupPage, TextareaPage, ThemeBuilderPage, ThemeSwitcherPage,
+    TimePickerPage, ToastPage, ToggleGroupPage, TogglePage, ToolbarPage, TooltipPage,
+    VirtualListPage,
 };
 
 const PLAYGROUND_LOGO: Asset = asset!("/assets/web/android-chrome-192x192.png");
@@ -70,6 +71,10 @@ pub enum Route {
     CalendarPage {},
     #[route("/date-picker")]
     DatePickerPage {},
+    #[route("/time-picker")]
+    TimePickerPage {},
+    #[route("/date-time-picker")]
+    DateTimePickerPage {},
     #[route("/sidebar")]
     SidebarPage {},
     #[route("/accordion")]
@@ -188,6 +193,7 @@ pub fn nav_items() -> Vec<(&'static str, Route)> {
         ("ContextMenu", Route::ContextMenuPage {}),
         ("DataTable", Route::DataTablePage {}),
         ("DatePicker", Route::DatePickerPage {}),
+        ("DateTimePicker", Route::DateTimePickerPage {}),
         ("Dialog", Route::DialogPage {}),
         ("DragAndDropList", Route::DragAndDropListPage {}),
         ("Drawer", Route::DrawerPage {}),
@@ -226,6 +232,7 @@ pub fn nav_items() -> Vec<(&'static str, Route)> {
         ("Textarea", Route::TextareaPage {}),
         ("ThemeBuilder", Route::ThemeBuilderPage {}),
         ("ThemeSwitcher", Route::ThemeSwitcherPage {}),
+        ("TimePicker", Route::TimePickerPage {}),
         ("Toast", Route::ToastPage {}),
         ("Toggle", Route::TogglePage {}),
         ("ToggleGroup", Route::ToggleGroupPage {}),

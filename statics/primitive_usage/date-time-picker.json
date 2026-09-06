@@ -1,0 +1,8 @@
+{
+  "classification": "delegated",
+  "primitiveModules": [
+    "icons",
+    "popover",
+    "time_picker"
+  ]
+}

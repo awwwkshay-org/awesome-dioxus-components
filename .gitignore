@@ -257,3 +257,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Playwright run artifacts when the suite is invoked from the repo root
+# (tests/playwright/.gitignore already covers the in-directory case).
+test-results/

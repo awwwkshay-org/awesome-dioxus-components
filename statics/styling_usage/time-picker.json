@@ -1,0 +1,31 @@
+{
+  "tailwindOnly": false,
+  "styleException": [
+    {
+      "description": "TimePickerClock's dial label positions (style: \"left: {left}%; top: {top}%;\") and its clock hand's rotation (style: \"...transform: rotate({hand_degrees}deg);\") at time_picker.rs",
+      "reason": "Each hour/minute label's position and the hand's angle are computed at runtime from the selected value's angle (dial_label_position / hand_degrees); Tailwind has no static utility for an arbitrary runtime percentage offset or rotation, matching resizable.rs's and theme_builder.rs's identical precedent for computed runtime placement."
+    }
+  ],
+  "tokenCompliant": true,
+  "colorException": [],
+  "radiusException": [
+    {
+      "part": "trigger",
+      "reason": "TimePickerTrigger is a small disclosure button, not the field's own surface -- matches DatePickerTrigger's identical exception."
+    },
+    {
+      "part": "input-value",
+      "reason": "the [role=spinbutton] descendant selector is an arbitrary-variant selector targeting nested spinbuttons radius can't reach -- matches DatePickerInputValue's identical exception."
+    },
+    {
+      "part": "columns",
+      "reason": "TimePickerColumns's option buttons are a fixed circular/pill affordance distinct from the field's own surface, unrelated to TimePickerInput's radius prop."
+    },
+    {
+      "part": "clock",
+      "reason": "TimePickerClock's dial face, hour/minute labels, and center dot are a fixed circular analog-clock affordance with no connection to TimePickerInput's radius prop."
+    }
+  ],
+  "inspiredBy": [],
+  "inspirationNote": "No shadcn/base-ui/dioxus-components/dioxus-primitives equivalent -- classified ADICO_ONLY_EXTRA, no upstream comparison possible."
+}

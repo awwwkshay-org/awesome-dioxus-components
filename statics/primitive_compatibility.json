@@ -45,6 +45,14 @@
       {
         "adico_primitive_file": "packages/adico-primitives/src/theme_mode.rs",
         "name": "ThemeMode"
+      },
+      {
+        "adico_primitive_file": "packages/adico-primitives/src/clipboard.rs",
+        "name": "Clipboard"
+      },
+      {
+        "adico_primitive_file": "packages/adico-primitives/src/time_picker.rs",
+        "name": "TimePicker"
       }
     ],
     "components": [
@@ -3781,7 +3789,7 @@
       "source": "https://base-ui.com/react/components"
     },
     "summary": {
-      "adico_only_extras": 11,
+      "adico_only_extras": 13,
       "components_built": 34,
       "components_not_started": 0,
       "components_partial": 3,
@@ -3826,6 +3834,7 @@
     "adico_only_extras": [
       "autocomplete",
       "checkbox_group",
+      "clipboard",
       "command",
       "direction",
       "field",
@@ -3843,8 +3852,10 @@
       "positioner",
       "preview_card",
       "scroll_lock",
+      "segment",
       "theme_mode",
       "time",
+      "time_picker",
       "typeahead"
     ],
     "modules": [
@@ -5346,9 +5357,7 @@
         ],
         "adico_hooks_defined": [],
         "adico_hooks_used": [
-          "use_collection_provider",
-          "use_item",
-          "use_unique_id"
+          "use_segment_field_provider"
         ],
         "adico_primitive_file": "packages/adico-primitives/src/date_picker.rs",
         "adico_props": {
@@ -7942,7 +7951,7 @@
       "source": "https://github.com/DioxusLabs/dioxus-components/tree/bf007c15d0cf4d04d3181cc46cf12325aa773955/primitives/src"
     },
     "summary": {
-      "adico_only_extras": 22,
+      "adico_only_extras": 25,
       "built": 40,
       "not_started": 2,
       "total_modules": 42

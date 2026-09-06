@@ -116,6 +116,18 @@ impl MoveInteraction {
         self.rect.cloned()
     }
 
+    /// The absolute client-space position of the currently active pointer,
+    /// if a drag is in progress. Unlike [`pointer_move`](Self::pointer_move)'s
+    /// delta-since-last-frame, this is what a control needs when a pointer
+    /// position must be interpreted absolutely relative to the element (for
+    /// example, a clock dial converting "where is the pointer relative to
+    /// the dial's center" into an angle) rather than accumulated onto a
+    /// starting value.
+    pub fn pointer_position(&self) -> Option<ClientPoint> {
+        let id = (self.active_pointer_id)()?;
+        pointer::pointer_position(id)
+    }
+
     pub async fn set_mounted(&mut self, mounted: Rc<MountedData>) {
         if let Ok(rect) = mounted.get_client_rect().await {
             self.rect.set(Some(rect));

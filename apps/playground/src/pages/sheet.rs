@@ -1,12 +1,13 @@
 use dioxus::prelude::*;
 
 use crate::components;
-use crate::components::controls::SelectControl;
+use crate::components::controls::{BoolControl, SelectControl};
 use crate::components::demo::Demo;
 use crate::generated::controls::{SheetContentControls, SheetContentDemoState};
 
 #[component]
 pub fn SheetPage() -> Element {
+    let mut open = use_signal(|| false);
     let side = use_signal(|| components::ui::SheetSide::Right);
     let mut marketing_emails = use_signal(|| false);
     // `SheetContent`'s own real default is `show_close_button: true`; see
@@ -18,6 +19,7 @@ pub fn SheetPage() -> Element {
         Demo {
             name: "Sheet",
             controls: rsx! {
+                BoolControl { label: "Open", value: open }
                 SelectControl {
                     label: "Side",
                     value: side,
@@ -31,6 +33,8 @@ pub fn SheetPage() -> Element {
                 SheetContentControls { state: content_state }
             },
             components::ui::Sheet {
+                open: open(),
+                on_open_change: move |value| open.set(value),
                 components::ui::SheetTrigger { "Open sheet" }
                 components::ui::SheetOverlay {}
                 components::ui::SheetContent { side: side(), show_close_button: content_state().show_close_button,

@@ -82,7 +82,7 @@ pub fn MenubarContent(
     #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "absolute z-50 min-w-[12rem] overflow-hidden border bg-popover p-1 text-popover-foreground shadow-md data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+        "z-50 min-w-[12rem] overflow-hidden border bg-popover p-1 text-popover-foreground shadow-md data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
         radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
