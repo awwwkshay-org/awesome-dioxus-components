@@ -138,9 +138,22 @@ pub fn Demo(
                     }
                     ui::CardContent { class: "min-h-0 flex-1 overflow-y-auto p-4",
                         if let Some(controls) = controls {
-                            div { class: "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3", {controls} }
+                            // `CardContent`'s own base class is `p-6 pt-0`
+                            // (`ui/card.rs`) -- `cn()` is a plain space-joiner,
+                            // not a tailwind-merge-style conflict resolver, so
+                            // this `CardContent`'s `p-4` override above does
+                            // NOT reliably win the cascade against the base
+                            // class on any axis (which utility wins between
+                            // two same-specificity classes depends on
+                            // Tailwind's internal generation order in
+                            // tailwind.css, not source/call order); `pt-0`
+                            // reliably wins, leaving zero visible gap above
+                            // the first control group. `mt-4` sidesteps the
+                            // conflict entirely by using a property
+                            // (margin) the base class never touches.
+                            div { class: "mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3", {controls} }
                         } else {
-                            p { class: "text-sm text-muted-foreground", "This component has no live props in the playground yet." }
+                            p { class: "mt-4 text-sm text-muted-foreground", "This component has no live props in the playground yet." }
                         }
                     }
                 }
