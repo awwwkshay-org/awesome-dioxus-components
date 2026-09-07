@@ -10,7 +10,7 @@ pub fn ThemeSwitcherPage() -> Element {
     let state = use_signal(|| ThemeSwitcherDemoState { show_label: true });
     rsx! {
         Demo {
-            name: "ThemeSwitcher",
+            name: "Theme Switcher",
             controls: rsx! {
                 ThemeSwitcherControls { state }
             },

@@ -15,7 +15,7 @@ pub fn ColorPickerPage() -> Element {
     let popover_state = use_signal(ColorPickerPopoverDemoState::default);
     rsx! {
         Demo {
-            name: "ColorPicker",
+            name: "Color Picker",
             controls: rsx! {
                 ColorPickerPopoverControls { state: popover_state }
             },

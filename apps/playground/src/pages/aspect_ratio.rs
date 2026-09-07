@@ -9,7 +9,7 @@ pub fn AspectRatioPage() -> Element {
     let ratio = use_signal(|| 16.0 / 9.0);
     rsx! {
         Demo {
-            name: "AspectRatio",
+            name: "Aspect Ratio",
             controls: rsx! {
                 SelectControl {
                     label: "Ratio",

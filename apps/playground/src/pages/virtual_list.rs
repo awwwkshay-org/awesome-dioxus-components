@@ -7,7 +7,7 @@ use crate::components::demo::Demo;
 pub fn VirtualListPage() -> Element {
     rsx! {
         Demo {
-            name: "VirtualList",
+            name: "Virtual List",
             components::ui::VirtualList {
                 count: 1000usize,
                 estimate_size: |_idx| 32,

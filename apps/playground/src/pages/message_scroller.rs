@@ -41,7 +41,7 @@ pub fn MessageScrollerPage() -> Element {
     });
     rsx! {
         Demo {
-            name: "MessageScroller",
+            name: "Message Scroller",
             controls: rsx! {
                 MessageScrollerControls { state }
             },

@@ -14,7 +14,7 @@ pub fn InputGroupPage() -> Element {
     });
     let button_state = use_signal(InputGroupButtonDemoState::default);
     rsx! {
-        Demo { name: "InputGroup",
+        Demo { name: "Input Group",
             controls: rsx! {
                 InputGroupAddonControls { state: addon_state }
                 InputGroupButtonControls { state: button_state }

@@ -15,7 +15,7 @@ pub fn AlertDialogPage() -> Element {
     let action_state = use_signal(AlertDialogActionDemoState::default);
     rsx! {
         Demo {
-            name: "AlertDialog",
+            name: "Alert Dialog",
             controls: rsx! {
                 BoolControl { label: "Open", value: open }
                 AlertDialogContentControls { state: content_state }

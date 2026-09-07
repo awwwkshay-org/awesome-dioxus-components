@@ -24,7 +24,7 @@ pub fn DropdownMenuPage() -> Element {
     let align = use_signal(|| ContentAlign::Start);
     rsx! {
         Demo {
-            name: "DropdownMenu",
+            name: "Dropdown Menu",
             controls: rsx! {
                 BoolControl { label: "Disabled", value: disabled }
                 DropdownMenuControls { state: menu_state }

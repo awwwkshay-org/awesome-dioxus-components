@@ -23,7 +23,7 @@ pub fn TimePickerPage() -> Element {
     let popover_state = use_signal(TimePickerPopoverDemoState::default);
     rsx! {
         Demo {
-            name: "TimePicker",
+            name: "Time Picker",
             controls: rsx! {
                 BoolControl { label: "Disabled", value: disabled }
                 BoolControl { label: "Read only", value: read_only }

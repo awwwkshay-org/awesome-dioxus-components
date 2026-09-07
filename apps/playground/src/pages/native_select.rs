@@ -8,7 +8,7 @@ use crate::generated::controls::{NativeSelectControls, NativeSelectDemoState};
 pub fn NativeSelectPage() -> Element {
     let state = use_signal(NativeSelectDemoState::default);
     rsx! {
-        Demo { name: "NativeSelect",
+        Demo { name: "Native Select",
             controls: rsx! {
                 NativeSelectControls { state }
             },

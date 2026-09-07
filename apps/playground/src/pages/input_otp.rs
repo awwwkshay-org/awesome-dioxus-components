@@ -18,7 +18,7 @@ pub fn InputOTPPage() -> Element {
     let half = length() / 2;
     rsx! {
         Demo {
-            name: "InputOTP",
+            name: "Input OTP",
             controls: rsx! {
                 InputOTPControls { state }
                 components::controls::SelectControl::<usize> {

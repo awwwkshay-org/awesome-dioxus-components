@@ -16,7 +16,7 @@ pub fn ContextMenuPage() -> Element {
     let item_state = use_signal(ContextMenuItemDemoState::default);
     rsx! {
         Demo {
-            name: "ContextMenu",
+            name: "Context Menu",
             controls: rsx! {
                 BoolControl { label: "Disabled", value: disabled }
                 OptionalBoolControl { label: "Open state", value: open }

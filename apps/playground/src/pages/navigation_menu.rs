@@ -20,7 +20,7 @@ pub fn NavigationMenuPage() -> Element {
     let align = use_signal(|| ContentAlign::Start);
     rsx! {
         Demo {
-            name: "NavigationMenu",
+            name: "Navigation Menu",
             controls: rsx! {
                 NavigationMenuContentControls { state: content_state }
                 NavigationMenuLinkControls { state: link_state }

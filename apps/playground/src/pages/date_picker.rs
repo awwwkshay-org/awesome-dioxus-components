@@ -15,7 +15,7 @@ pub fn DatePickerPage() -> Element {
     let popover_state = use_signal(DatePickerPopoverDemoState::default);
     rsx! {
         Demo {
-            name: "DatePicker",
+            name: "Date Picker",
             controls: rsx! {
                 BoolControl { label: "Disabled", value: disabled }
                 BoolControl { label: "Read only", value: read_only }

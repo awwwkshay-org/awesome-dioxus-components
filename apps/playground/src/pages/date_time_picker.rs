@@ -47,7 +47,7 @@ pub fn DateTimePickerPage() -> Element {
     });
     rsx! {
         Demo {
-            name: "DateTimePicker",
+            name: "Date Time Picker",
             controls: rsx! {
                 BoolControl { label: "Disabled", value: disabled }
                 BoolControl { label: "Read only", value: read_only }

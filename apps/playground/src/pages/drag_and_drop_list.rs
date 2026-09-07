@@ -20,7 +20,7 @@ pub fn DragAndDropListPage() -> Element {
         .to_vec();
     rsx! {
         Demo {
-            name: "DragAndDropList",
+            name: "Drag And Drop List",
             controls: rsx! {
                 DragAndDropListItemsControls { state }
             },

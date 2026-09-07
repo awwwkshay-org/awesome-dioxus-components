@@ -7,7 +7,7 @@ use crate::components::demo::Demo;
 pub fn ModeTogglePage() -> Element {
     rsx! {
         Demo {
-            name: "ModeToggle",
+            name: "Mode Toggle",
             components::ui::ModeToggle {}
         }
     }

@@ -8,7 +8,7 @@ pub fn RadioGroupPage() -> Element {
     let mut value = use_signal(|| "blue".to_string());
     rsx! {
         Demo {
-            name: "RadioGroup",
+            name: "Radio Group",
             components::ui::RadioGroup {
                 value: Some(value()),
                 on_value_change: move |v| value.set(v),

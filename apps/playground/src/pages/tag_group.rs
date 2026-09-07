@@ -8,7 +8,7 @@ pub fn TagGroupPage() -> Element {
     let mut value = use_signal(|| Some("rust".to_string()));
     rsx! {
         Demo {
-            name: "TagGroup",
+            name: "Tag Group",
             components::ui::TagGroup::<String> {
                 value: ReadSignal::from(value),
                 on_value_change: move |v| value.set(v),

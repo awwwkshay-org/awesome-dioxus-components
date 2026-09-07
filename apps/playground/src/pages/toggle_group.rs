@@ -12,7 +12,7 @@ pub fn ToggleGroupPage() -> Element {
     let state = use_signal(ToggleItemDemoState::default);
     rsx! {
         Demo {
-            name: "ToggleGroup",
+            name: "Toggle Group",
             controls: rsx! {
                 ToggleItemControls { state }
             },

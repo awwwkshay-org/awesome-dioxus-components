@@ -7,7 +7,7 @@ use crate::components::theme_builder_launcher::ThemeBuilderLauncher;
 pub fn ThemeBuilderPage() -> Element {
     rsx! {
         Demo {
-            name: "ThemeBuilder",
+            name: "Theme Builder",
             ThemeBuilderLauncher {}
         }
     }

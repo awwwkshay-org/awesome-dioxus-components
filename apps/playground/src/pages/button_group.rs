@@ -8,7 +8,7 @@ use crate::generated::controls::{ButtonGroupControls, ButtonGroupDemoState};
 pub fn ButtonGroupPage() -> Element {
     let state = use_signal(ButtonGroupDemoState::default);
     rsx! {
-        Demo { name: "ButtonGroup",
+        Demo { name: "Button Group",
             controls: rsx! {
                 ButtonGroupControls { state }
             },

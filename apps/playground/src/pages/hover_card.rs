@@ -17,7 +17,7 @@ pub fn HoverCardPage() -> Element {
     let align = use_signal(|| ContentAlign::Center);
     rsx! {
         Demo {
-            name: "HoverCard",
+            name: "Hover Card",
             controls: rsx! {
                 BoolControl { label: "Disabled", value: disabled }
                 OptionalBoolControl { label: "Open state", value: open }
