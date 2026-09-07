@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, SelectControl, TextControl};
+use crate::components::controls::{BoolControl, ControlGroup, SelectControl, TextControl};
 use crate::components::ui::NativeSelectSize;
 
 /// Generated from `NativeSelectSize`'s declared variants.
@@ -45,10 +45,12 @@ pub fn NativeSelectControls(mut state: Signal<NativeSelectDemoState>) -> Element
         });
     });
     rsx! {
+        ControlGroup { part: "Native Select",
         SelectControl { label: "Size", value: size, options: NATIVE_SELECT_SIZE_OPTIONS }
         BoolControl { label: "Disabled", value: disabled }
         BoolControl { label: "Required", value: required }
         BoolControl { label: "Invalid", value: invalid }
+        }
     }
 }
 
@@ -67,7 +69,9 @@ pub fn NativeSelectOptionControls(mut state: Signal<NativeSelectOptionDemoState>
         });
     });
     rsx! {
+        ControlGroup { part: "Native Select Option",
         BoolControl { label: "Disabled", value: disabled }
+        }
     }
 }
 
@@ -84,6 +88,8 @@ pub fn NativeSelectOptGroupControls(mut state: Signal<NativeSelectOptGroupDemoSt
         state.set(NativeSelectOptGroupDemoState { label: label() });
     });
     rsx! {
+        ControlGroup { part: "Native Select Opt Group",
         TextControl { label: "Label", value: label }
+        }
     }
 }

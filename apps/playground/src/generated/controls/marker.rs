@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::SelectControl;
+use crate::components::controls::{ControlGroup, SelectControl};
 use crate::components::ui::MarkerVariant;
 
 /// Generated from `MarkerVariant`'s declared variants.
@@ -36,6 +36,26 @@ pub fn MarkerControls(mut state: Signal<MarkerDemoState>) -> Element {
         state.set(MarkerDemoState { variant: variant() });
     });
     rsx! {
+        ControlGroup { part: "Marker",
         SelectControl { label: "Variant", value: variant, options: MARKER_VARIANT_OPTIONS }
+        }
+    }
+}
+
+#[component]
+pub fn MarkerIconControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Marker Icon",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn MarkerContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Marker Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

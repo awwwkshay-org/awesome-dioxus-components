@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, OptionalBoolControl, SelectControl};
+use crate::components::controls::{BoolControl, ControlGroup, OptionalBoolControl, SelectControl};
 use crate::components::ui::SelectTriggerSize;
 
 /// Generated from `SelectTriggerSize`'s declared variants.
@@ -34,7 +34,9 @@ pub fn SelectControls(mut state: Signal<SelectDemoState>) -> Element {
         state.set(SelectDemoState { open: open() });
     });
     rsx! {
+        ControlGroup { part: "Select",
         OptionalBoolControl { label: "Open", value: open }
+        }
     }
 }
 
@@ -51,7 +53,9 @@ pub fn SelectMultiControls(mut state: Signal<SelectMultiDemoState>) -> Element {
         state.set(SelectMultiDemoState { open: open() });
     });
     rsx! {
+        ControlGroup { part: "Select Multi",
         OptionalBoolControl { label: "Open", value: open }
+        }
     }
 }
 
@@ -73,7 +77,63 @@ pub fn SelectTriggerControls(mut state: Signal<SelectTriggerDemoState>) -> Eleme
         });
     });
     rsx! {
+        ControlGroup { part: "Select Trigger",
         SelectControl { label: "Size", value: size, options: SELECT_TRIGGER_SIZE_OPTIONS }
         BoolControl { label: "Aria Invalid", value: aria_invalid }
+        }
+    }
+}
+
+#[component]
+pub fn SelectOptionControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Select Option",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SelectValueControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Select Value",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SelectListControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Select List",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SelectGroupControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Select Group",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SelectGroupLabelControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Select Group Label",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SelectItemIndicatorControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Select Item Indicator",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

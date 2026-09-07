@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, SelectControl};
+use crate::components::controls::{BoolControl, ControlGroup, SelectControl};
 use crate::components::ui::{Skeleton, SkeletonVariant};
 
 /// Generated from `SkeletonVariant`'s declared variants.
@@ -39,8 +39,10 @@ pub fn SkeletonControls(mut state: Signal<SkeletonDemoState>) -> Element {
         });
     });
     rsx! {
+        ControlGroup { part: "Skeleton",
         SelectControl { label: "Variant", value: variant, options: SKELETON_VARIANT_OPTIONS }
         BoolControl { label: "Decorative", value: decorative }
+        }
     }
 }
 

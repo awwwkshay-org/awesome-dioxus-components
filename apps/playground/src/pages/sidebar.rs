@@ -4,8 +4,11 @@ use dioxus::prelude::*;
 use crate::components;
 use crate::components::demo::Demo;
 use crate::generated::controls::{
-    SidebarControls, SidebarDemoState, SidebarMenuButtonControls, SidebarMenuButtonDemoState,
-    SidebarProviderControls, SidebarProviderDemoState,
+    SidebarContentControls, SidebarControls, SidebarDemoState, SidebarFooterControls,
+    SidebarGroupContentControls, SidebarGroupControls, SidebarGroupLabelControls,
+    SidebarHeaderControls, SidebarMenuButtonControls, SidebarMenuButtonDemoState,
+    SidebarMenuControls, SidebarMenuItemControls, SidebarProviderControls,
+    SidebarProviderDemoState, SidebarRailControls, SidebarTriggerControls,
 };
 
 /// A dashboard-style sidebar: a "Platform" group (with icons), a separator,
@@ -39,6 +42,16 @@ pub fn SidebarPage() -> Element {
             controls: rsx! {
                 SidebarControls { state: sidebar_state }
                 SidebarProviderControls { state: provider_state }
+                SidebarTriggerControls {}
+                SidebarRailControls {}
+                SidebarHeaderControls {}
+                SidebarContentControls {}
+                SidebarFooterControls {}
+                SidebarGroupControls {}
+                SidebarGroupLabelControls {}
+                SidebarGroupContentControls {}
+                SidebarMenuControls {}
+                SidebarMenuItemControls {}
                 SidebarMenuButtonControls { state: menu_button_state }
             },
             // The rounded/border/height framing lives on this outer div, not

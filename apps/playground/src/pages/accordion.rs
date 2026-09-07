@@ -1,9 +1,12 @@
 use dioxus::prelude::*;
 
 use crate::components;
-use crate::components::controls::BoolControl;
+use crate::components::controls::{BoolControl, ControlGroup};
 use crate::components::demo::Demo;
-use crate::generated::controls::{AccordionItemControls, AccordionItemDemoState};
+use crate::generated::controls::{
+    AccordionContentControls, AccordionControls, AccordionItemControls, AccordionItemDemoState,
+    AccordionMultiControls, AccordionTriggerControls,
+};
 
 #[component]
 pub fn AccordionPage() -> Element {
@@ -19,8 +22,14 @@ pub fn AccordionPage() -> Element {
             name: "Accordion",
             wide: true,
             controls: rsx! {
-                BoolControl { label: "Allow multiple open", value: allow_multiple_open }
+                ControlGroup { part: "Accordion",
+                    BoolControl { label: "Allow multiple open", value: allow_multiple_open }
+                }
+                AccordionControls {}
+                AccordionMultiControls {}
                 AccordionItemControls { state: item_one_state }
+                AccordionTriggerControls {}
+                AccordionContentControls {}
             },
             if allow_multiple_open() {
                 components::ui::AccordionMulti {

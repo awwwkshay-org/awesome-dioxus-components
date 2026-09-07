@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, SelectControl};
+use crate::components::controls::{BoolControl, ControlGroup, SelectControl};
 use crate::components::ui::ContextMenuItemVariant;
 
 /// Generated from `ContextMenuItemVariant`'s declared variants.
@@ -20,6 +20,24 @@ const _: () = {
         }
     }
 };
+
+#[component]
+pub fn ContextMenuTriggerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Context Menu Trigger",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn ContextMenuContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Context Menu Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
 
 /// Generated demo state for [`ContextMenuItem`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -39,8 +57,19 @@ pub fn ContextMenuItemControls(mut state: Signal<ContextMenuItemDemoState>) -> E
         });
     });
     rsx! {
+        ControlGroup { part: "Context Menu Item",
         BoolControl { label: "Inset", value: inset }
         SelectControl { label: "Variant", value: variant, options: CONTEXT_MENU_ITEM_VARIANT_OPTIONS }
+        }
+    }
+}
+
+#[component]
+pub fn ContextMenuGroupControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Context Menu Group",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -57,6 +86,35 @@ pub fn ContextMenuLabelControls(mut state: Signal<ContextMenuLabelDemoState>) ->
         state.set(ContextMenuLabelDemoState { inset: inset() });
     });
     rsx! {
+        ControlGroup { part: "Context Menu Label",
         BoolControl { label: "Inset", value: inset }
+        }
+    }
+}
+
+#[component]
+pub fn ContextMenuSeparatorControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Context Menu Separator",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn ContextMenuShortcutControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Context Menu Shortcut",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn ContextMenuControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Context Menu",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

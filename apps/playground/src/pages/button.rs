@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::components;
-use crate::components::controls::{BoolControl, SelectControl, TextControl};
+use crate::components::controls::{BoolControl, ControlGroup, SelectControl, TextControl};
 use crate::components::demo::Demo;
 use crate::generated::controls::{ButtonControls, ButtonDemoState};
 
@@ -24,22 +24,24 @@ pub fn ButtonPage() -> Element {
             name: "Button",
             controls: rsx! {
                 ButtonControls { state }
-                BoolControl { label: "Disabled", value: disabled }
-                SelectControl {
-                    label: "Native type",
-                    value: button_type,
-                    options: &[("Button", "button"), ("Submit", "submit"), ("Reset", "reset")],
+                ControlGroup { part: "Button",
+                    BoolControl { label: "Disabled", value: disabled }
+                    SelectControl {
+                        label: "Native type",
+                        value: button_type,
+                        options: &[("Button", "button"), ("Submit", "submit"), ("Reset", "reset")],
+                    }
+                    SelectControl {
+                        label: "Children",
+                        value: content,
+                        options: &[
+                            ("Text", ButtonContent::Text),
+                            ("Icon only", ButtonContent::Icon),
+                            ("Icon and text", ButtonContent::IconAndText),
+                        ],
+                    }
+                    TextControl { label: "Text", value: label }
                 }
-                SelectControl {
-                    label: "Children",
-                    value: content,
-                    options: &[
-                        ("Text", ButtonContent::Text),
-                        ("Icon only", ButtonContent::Icon),
-                        ("Icon and text", ButtonContent::IconAndText),
-                    ],
-                }
-                TextControl { label: "Text", value: label }
             },
             components::ui::Button {
                 variant: state().variant,

@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::SelectControl;
+use crate::components::controls::{ControlGroup, SelectControl};
 use crate::components::ui::EmptyMediaVariant;
 
 /// Generated from `EmptyMediaVariant`'s declared variants.
@@ -21,6 +21,24 @@ const _: () = {
     }
 };
 
+#[component]
+pub fn EmptyControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Empty",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn EmptyHeaderControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Empty Header",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
 /// Generated demo state for [`EmptyMedia`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
 pub struct EmptyMediaDemoState {
@@ -34,6 +52,35 @@ pub fn EmptyMediaControls(mut state: Signal<EmptyMediaDemoState>) -> Element {
         state.set(EmptyMediaDemoState { variant: variant() });
     });
     rsx! {
+        ControlGroup { part: "Empty Media",
         SelectControl { label: "Variant", value: variant, options: EMPTY_MEDIA_VARIANT_OPTIONS }
+        }
+    }
+}
+
+#[component]
+pub fn EmptyTitleControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Empty Title",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn EmptyDescriptionControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Empty Description",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn EmptyContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Empty Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, SelectControl, TextControl};
+use crate::components::controls::{BoolControl, ControlGroup, SelectControl, TextControl};
 use crate::components::ui::InputGroupAlign;
 
 /// Generated from `InputGroupAlign`'s declared variants.
@@ -25,6 +25,15 @@ const _: () = {
     }
 };
 
+#[component]
+pub fn InputGroupControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Input Group",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
 /// Generated demo state for [`InputGroupAddon`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
 pub struct InputGroupAddonDemoState {
@@ -38,7 +47,9 @@ pub fn InputGroupAddonControls(mut state: Signal<InputGroupAddonDemoState>) -> E
         state.set(InputGroupAddonDemoState { align: align() });
     });
     rsx! {
+        ControlGroup { part: "Input Group Addon",
         SelectControl { label: "Align", value: align, options: INPUT_GROUP_ALIGN_OPTIONS }
+        }
     }
 }
 
@@ -55,7 +66,18 @@ pub fn InputGroupButtonControls(mut state: Signal<InputGroupButtonDemoState>) ->
         state.set(InputGroupButtonDemoState { loading: loading() });
     });
     rsx! {
+        ControlGroup { part: "Input Group Button",
         BoolControl { label: "Loading", value: loading }
+        }
+    }
+}
+
+#[component]
+pub fn InputGroupTextControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Input Group Text",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -80,9 +102,11 @@ pub fn InputGroupInputControls(mut state: Signal<InputGroupInputDemoState>) -> E
         });
     });
     rsx! {
+        ControlGroup { part: "Input Group Input",
         TextControl { label: "Type", value: r#type }
         BoolControl { label: "Disabled", value: disabled }
         BoolControl { label: "Invalid", value: invalid }
+        }
     }
 }
 
@@ -104,7 +128,9 @@ pub fn InputGroupTextareaControls(mut state: Signal<InputGroupTextareaDemoState>
         });
     });
     rsx! {
+        ControlGroup { part: "Input Group Textarea",
         BoolControl { label: "Disabled", value: disabled }
         BoolControl { label: "Invalid", value: invalid }
+        }
     }
 }

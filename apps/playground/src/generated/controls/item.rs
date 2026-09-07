@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, SelectControl};
+use crate::components::controls::{BoolControl, ControlGroup, SelectControl};
 use crate::components::ui::{ItemMediaVariant, ItemSize, ItemVariant};
 
 /// Generated from `ItemMediaVariant`'s declared variants.
@@ -55,6 +55,15 @@ const _: () = {
     }
 };
 
+#[component]
+pub fn ItemGroupControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Item Group",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
 /// Generated demo state for [`Item`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
 pub struct ItemDemoState {
@@ -76,9 +85,11 @@ pub fn ItemControls(mut state: Signal<ItemDemoState>) -> Element {
         });
     });
     rsx! {
+        ControlGroup { part: "Item",
         SelectControl { label: "Variant", value: variant, options: ITEM_VARIANT_OPTIONS }
         SelectControl { label: "Size", value: size, options: ITEM_SIZE_OPTIONS }
         BoolControl { label: "Disabled", value: disabled }
+        }
     }
 }
 
@@ -95,6 +106,71 @@ pub fn ItemMediaControls(mut state: Signal<ItemMediaDemoState>) -> Element {
         state.set(ItemMediaDemoState { variant: variant() });
     });
     rsx! {
+        ControlGroup { part: "Item Media",
         SelectControl { label: "Variant", value: variant, options: ITEM_MEDIA_VARIANT_OPTIONS }
+        }
+    }
+}
+
+#[component]
+pub fn ItemContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Item Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn ItemTitleControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Item Title",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn ItemDescriptionControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Item Description",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn ItemActionsControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Item Actions",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn ItemHeaderControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Item Header",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn ItemFooterControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Item Footer",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn ItemSeparatorControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Item Separator",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

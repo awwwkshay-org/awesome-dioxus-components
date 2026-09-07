@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::NumberControl;
+use crate::components::controls::{ControlGroup, NumberControl};
 
 /// Generated demo state for [`MessageScroller`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -20,6 +20,44 @@ pub fn MessageScrollerControls(mut state: Signal<MessageScrollerDemoState>) -> E
         });
     });
     rsx! {
+        ControlGroup { part: "Message Scroller",
         NumberControl { label: "Bottom Threshold", value: bottom_threshold }
+        }
+    }
+}
+
+#[component]
+pub fn MessageScrollerViewportControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Message Scroller Viewport",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn MessageScrollerContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Message Scroller Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn MessageScrollerItemControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Message Scroller Item",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn MessageScrollerButtonControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Message Scroller Button",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

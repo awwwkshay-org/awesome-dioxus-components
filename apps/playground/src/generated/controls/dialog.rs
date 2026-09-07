@@ -3,7 +3,25 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::BoolControl;
+use crate::components::controls::{BoolControl, ControlGroup};
+
+#[component]
+pub fn DialogTriggerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Dialog Trigger",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DialogOverlayControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Dialog Overlay",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
 
 /// Generated demo state for [`DialogContent`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -20,6 +38,71 @@ pub fn DialogContentControls(mut state: Signal<DialogContentDemoState>) -> Eleme
         });
     });
     rsx! {
+        ControlGroup { part: "Dialog Content",
         BoolControl { label: "Show Close Button", value: show_close_button }
+        }
+    }
+}
+
+#[component]
+pub fn DialogHeaderControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Dialog Header",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DialogFooterControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Dialog Footer",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DialogCloseControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Dialog Close",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DialogPrimitiveContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Dialog Primitive Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DialogDescriptionControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Dialog Description",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DialogControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Dialog",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DialogTitleControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Dialog Title",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

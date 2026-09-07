@@ -3,7 +3,16 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, OptionalBoolControl};
+use crate::components::controls::{BoolControl, ControlGroup, OptionalBoolControl};
+
+#[component]
+pub fn TimePickerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Time Picker",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
 
 /// Generated demo state for [`TimePickerPopover`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -23,8 +32,10 @@ pub fn TimePickerPopoverControls(mut state: Signal<TimePickerPopoverDemoState>) 
         });
     });
     rsx! {
+        ControlGroup { part: "Time Picker Popover",
         OptionalBoolControl { label: "Open", value: open }
         BoolControl { label: "Default Open", value: default_open }
+        }
     }
 }
 
@@ -41,7 +52,36 @@ pub fn TimePickerTriggerControls(mut state: Signal<TimePickerTriggerDemoState>) 
         state.set(TimePickerTriggerDemoState { compact: compact() });
     });
     rsx! {
+        ControlGroup { part: "Time Picker Trigger",
         BoolControl { label: "Compact", value: compact }
+        }
+    }
+}
+
+#[component]
+pub fn TimePickerContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Time Picker Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn TimePickerInputValueControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Time Picker Input Value",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn TimePickerInputControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Time Picker Input",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -60,7 +100,18 @@ pub fn TimePickerColumnsControls(mut state: Signal<TimePickerColumnsDemoState>) 
         });
     });
     rsx! {
+        ControlGroup { part: "Time Picker Columns",
         BoolControl { label: "Fill Height", value: fill_height }
+        }
+    }
+}
+
+#[component]
+pub fn TimePickerClockControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Time Picker Clock",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -79,6 +130,44 @@ pub fn TimePickerBodyControls(mut state: Signal<TimePickerBodyDemoState>) -> Ele
         });
     });
     rsx! {
+        ControlGroup { part: "Time Picker Body",
         BoolControl { label: "Fill Height", value: fill_height }
+        }
+    }
+}
+
+#[component]
+pub fn TimePickerHourSegmentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Time Picker Hour Segment",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn TimePickerMeridiemSegmentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Time Picker Meridiem Segment",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn TimePickerMinuteSegmentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Time Picker Minute Segment",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn TimePickerSecondSegmentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Time Picker Second Segment",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

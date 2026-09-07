@@ -3,7 +3,79 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, OptionalBoolControl, TextControl};
+use crate::components::controls::{BoolControl, ControlGroup, OptionalBoolControl, TextControl};
+
+#[component]
+pub fn CommandControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Command",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn CommandInputControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Command Input",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn CommandListControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Command List",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn CommandEmptyControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Command Empty",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn CommandGroupControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Command Group",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn CommandSeparatorControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Command Separator",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn CommandItemControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Command Item",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn CommandShortcutControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Command Shortcut",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
 
 /// Generated demo state for [`CommandDialog`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -29,9 +101,11 @@ pub fn CommandDialogControls(mut state: Signal<CommandDialogDemoState>) -> Eleme
         });
     });
     rsx! {
+        ControlGroup { part: "Command Dialog",
         OptionalBoolControl { label: "Open", value: open }
         TextControl { label: "Title", value: title }
         TextControl { label: "Description", value: description }
         BoolControl { label: "Show Close Button", value: show_close_button }
+        }
     }
 }

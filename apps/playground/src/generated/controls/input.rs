@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, TextControl};
+use crate::components::controls::{BoolControl, ControlGroup, TextControl};
 use crate::components::ui::Input;
 
 /// Generated demo state for [`Input`], one field per controllable prop.
@@ -33,11 +33,13 @@ pub fn InputControls(mut state: Signal<InputDemoState>) -> Element {
         });
     });
     rsx! {
+        ControlGroup { part: "Input",
         TextControl { label: "Type", value: r#type }
         BoolControl { label: "Disabled", value: disabled }
         BoolControl { label: "Readonly", value: readonly }
         BoolControl { label: "Required", value: required }
         BoolControl { label: "Invalid", value: invalid }
+        }
     }
 }
 

@@ -2,7 +2,7 @@ use adico_primitives::ContentAlign;
 use dioxus::prelude::*;
 
 use crate::components;
-use crate::components::controls::{BoolControl, OptionalBoolControl, SelectControl};
+use crate::components::controls::{BoolControl, ControlGroup, OptionalBoolControl, SelectControl};
 use crate::components::demo::Demo;
 use crate::generated::controls::{SelectTriggerControls, SelectTriggerDemoState};
 
@@ -20,28 +20,36 @@ pub fn SelectPage() -> Element {
         Demo {
             name: "Select",
             controls: rsx! {
-                BoolControl { label: "Disabled", value: disabled }
-                BoolControl { label: "Multi-select", value: multiple }
-                SelectTriggerControls { state: trigger_state }
-                SelectControl {
-                    label: "Align",
-                    value: align,
-                    options: &[
-                        ("Start", ContentAlign::Start),
-                        ("Center", ContentAlign::Center),
-                        ("End", ContentAlign::End),
-                    ],
-                }
-                if !multiple() {
-                    SelectControl {
-                        label: "Value",
-                        value,
-                        options: &[("None", None), ("Apple", Some("apple")), ("Banana", Some("banana"))],
+                ControlGroup { part: "Select",
+                    BoolControl { label: "Disabled", value: disabled }
+                    BoolControl { label: "Multi-select", value: multiple }
+                    if !multiple() {
+                        SelectControl {
+                            label: "Value",
+                            value,
+                            options: &[
+                                ("None", None),
+                                ("Apple", Some("apple")),
+                                ("Banana", Some("banana")),
+                            ],
+                        }
+                    } else {
+                        p { class: "self-end pb-2 text-sm text-muted-foreground", "Choose one or more options in the preview." }
                     }
-                } else {
-                    p { class: "self-end pb-2 text-sm text-muted-foreground", "Choose one or more options in the preview." }
+                    OptionalBoolControl { label: "Open state", value: open }
                 }
-                OptionalBoolControl { label: "Open state", value: open }
+                SelectTriggerControls { state: trigger_state }
+                ControlGroup { part: "Select List",
+                    SelectControl {
+                        label: "Align",
+                        value: align,
+                        options: &[
+                            ("Start", ContentAlign::Start),
+                            ("Center", ContentAlign::Center),
+                            ("End", ContentAlign::End),
+                        ],
+                    }
+                }
             },
             if multiple() {
                 components::ui::SelectMulti::<String> {

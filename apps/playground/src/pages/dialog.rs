@@ -1,9 +1,13 @@
 use dioxus::prelude::*;
 
 use crate::components;
-use crate::components::controls::BoolControl;
+use crate::components::controls::{BoolControl, ControlGroup};
 use crate::components::demo::Demo;
-use crate::generated::controls::{DialogContentControls, DialogContentDemoState};
+use crate::generated::controls::{
+    DialogCloseControls, DialogContentControls, DialogContentDemoState, DialogControls,
+    DialogDescriptionControls, DialogFooterControls, DialogHeaderControls, DialogOverlayControls,
+    DialogTitleControls, DialogTriggerControls,
+};
 
 #[component]
 pub fn DialogPage() -> Element {
@@ -21,8 +25,18 @@ pub fn DialogPage() -> Element {
         Demo {
             name: "Dialog",
             controls: rsx! {
-                BoolControl { label: "Open", value: open }
+                ControlGroup { part: "Dialog",
+                    BoolControl { label: "Open", value: open }
+                }
+                DialogControls {}
+                DialogTriggerControls {}
+                DialogOverlayControls {}
                 DialogContentControls { state: content_state }
+                DialogHeaderControls {}
+                DialogTitleControls {}
+                DialogDescriptionControls {}
+                DialogFooterControls {}
+                DialogCloseControls {}
             },
             components::ui::Dialog {
                 open: open(),

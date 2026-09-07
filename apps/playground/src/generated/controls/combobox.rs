@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::OptionalBoolControl;
+use crate::components::controls::{ControlGroup, OptionalBoolControl};
 
 /// Generated demo state for [`Combobox`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -18,7 +18,27 @@ pub fn ComboboxControls(mut state: Signal<ComboboxDemoState>) -> Element {
         state.set(ComboboxDemoState { open: open() });
     });
     rsx! {
+        ControlGroup { part: "Combobox",
         OptionalBoolControl { label: "Open", value: open }
+        }
+    }
+}
+
+#[component]
+pub fn ComboboxOptionControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Combobox Option",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn ComboboxEmptyControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Combobox Empty",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -35,6 +55,35 @@ pub fn ComboboxMultiControls(mut state: Signal<ComboboxMultiDemoState>) -> Eleme
         state.set(ComboboxMultiDemoState { open: open() });
     });
     rsx! {
+        ControlGroup { part: "Combobox Multi",
         OptionalBoolControl { label: "Open", value: open }
+        }
+    }
+}
+
+#[component]
+pub fn ComboboxInputControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Combobox Input",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn ComboboxListControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Combobox List",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn ComboboxItemIndicatorControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Combobox Item Indicator",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

@@ -3,7 +3,25 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::BoolControl;
+use crate::components::controls::{BoolControl, ControlGroup};
+
+#[component]
+pub fn DrawerTriggerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Drawer Trigger",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DrawerOverlayControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Drawer Overlay",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
 
 /// Generated demo state for [`DrawerContent`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -20,6 +38,62 @@ pub fn DrawerContentControls(mut state: Signal<DrawerContentDemoState>) -> Eleme
         });
     });
     rsx! {
+        ControlGroup { part: "Drawer Content",
         BoolControl { label: "Show Close Button", value: show_close_button }
+        }
+    }
+}
+
+#[component]
+pub fn DrawerCloseControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Drawer Close",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DrawerHeaderControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Drawer Header",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DrawerFooterControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Drawer Footer",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DrawerDescriptionControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Drawer Description",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DrawerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Drawer",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DrawerTitleControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Drawer Title",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

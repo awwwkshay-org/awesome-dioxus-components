@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::BoolControl;
+use crate::components::controls::{BoolControl, ControlGroup};
 use crate::components::ui::ThemeSwitcher;
 
 /// Generated demo state for [`ThemeSwitcher`], one field per controllable prop.
@@ -21,7 +21,9 @@ pub fn ThemeSwitcherControls(mut state: Signal<ThemeSwitcherDemoState>) -> Eleme
         });
     });
     rsx! {
+        ControlGroup { part: "Theme Switcher",
         BoolControl { label: "Show Label", value: show_label }
+        }
     }
 }
 

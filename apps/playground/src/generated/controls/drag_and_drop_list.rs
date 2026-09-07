@@ -3,7 +3,16 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{NumberControl, TextControl};
+use crate::components::controls::{ControlGroup, NumberControl, TextControl};
+
+#[component]
+pub fn DragAndDropListControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Drag And Drop List",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
 
 /// Generated demo state for [`DragAndDropListItems`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -20,7 +29,9 @@ pub fn DragAndDropListItemsControls(mut state: Signal<DragAndDropListItemsDemoSt
         });
     });
     rsx! {
+        ControlGroup { part: "Drag And Drop List Items",
         TextControl { label: "Aria Label", value: aria_label }
+        }
     }
 }
 
@@ -39,7 +50,9 @@ pub fn DragAndDropListItemControls(mut state: Signal<DragAndDropListItemDemoStat
         });
     });
     rsx! {
+        ControlGroup { part: "Drag And Drop List Item",
         NumberControl { label: "Index", value: index }
+        }
     }
 }
 
@@ -60,6 +73,26 @@ pub fn DragAndDropDropIndicatorControls(
         });
     });
     rsx! {
+        ControlGroup { part: "Drag And Drop Drop Indicator",
         NumberControl { label: "Index", value: index }
+        }
+    }
+}
+
+#[component]
+pub fn DragAndDropInstructionsControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Drag And Drop Instructions",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DragAndDropLiveRegionControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Drag And Drop Live Region",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

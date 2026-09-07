@@ -130,7 +130,7 @@ fn is_numeric_type(type_name: &str) -> bool {
 
 /// Converts a snake_case field identifier into a Title Case label
 /// (`default_open` -> `Default Open`) -- the field-name analog of
-/// `humanize_variant_label`, for a generated `<Comp>Controls`' per-field
+/// `humanize_pascal_case_label`, for a generated `<Comp>Controls`' per-field
 /// control labels.
 pub fn humanize_field_label(field_name: &str) -> String {
     field_name
@@ -149,11 +149,14 @@ pub fn humanize_field_label(field_name: &str) -> String {
         .join(" ")
 }
 
-/// Converts a PascalCase variant identifier into space-separated words for
-/// use as a control's option label (`IconXs` -> `Icon Xs`). Deliberately
-/// mechanical -- see `design.md`'s "labels are derived from the identifier,
-/// not doc comments" decision.
-pub fn humanize_variant_label(ident: &str) -> String {
+/// Converts a PascalCase identifier into space-separated Title Case words
+/// (`IconXs` -> `Icon Xs`). Deliberately mechanical -- see `design.md`'s
+/// "labels are derived from the identifier, not doc comments" decision. Used
+/// for two distinct display labels that both start from a PascalCase
+/// identifier: an enum variant's option label, and a component's
+/// `ControlGroup` group label (e.g. `AccordionItem` -> `Accordion Item`) --
+/// the algorithm has no variant-specific logic, so one function serves both.
+pub fn humanize_pascal_case_label(ident: &str) -> String {
     let mut label = String::with_capacity(ident.len() + 4);
     let chars: Vec<char> = ident.chars().collect();
     for (index, &ch) in chars.iter().enumerate() {
@@ -356,6 +359,10 @@ fn render_controls_component(component_name: &str, fields: &[QualifyingField]) -
     }
     body.push_str("        });\n    });\n");
     body.push_str("    rsx! {\n");
+    let group_label = humanize_pascal_case_label(component_name);
+    body.push_str(&format!(
+        "        ControlGroup {{ part: \"{group_label}\",\n"
+    ));
     for field in fields {
         let label = humanize_field_label(field.name);
         let name = local_signal_name(field.name);
@@ -389,8 +396,22 @@ fn render_controls_component(component_name: &str, fields: &[QualifyingField]) -
             PropShape::Skipped(_) => unreachable!("qualifying_fields already filtered Skipped"),
         }
     }
-    body.push_str("    }\n}\n\n");
+    body.push_str("        }\n    }\n}\n\n");
     body
+}
+
+/// Renders `#[component] pub fn <Comp>Controls() -> Element` for a component
+/// with no controllable props at all -- an explicit, labeled empty-state
+/// group instead of skipping the component entirely (see design.md's "every
+/// discovered component gets a ControlGroup" decision). No `DemoState`
+/// struct is generated to pair with it: there is nothing for one to hold,
+/// and a `Signal<...>` parameter bound to an empty struct would be unused
+/// under this workspace's `-D warnings` baseline.
+fn render_empty_controls_component(component_name: &str) -> String {
+    let group_label = humanize_pascal_case_label(component_name);
+    format!(
+        "#[component]\npub fn {component_name}Controls() -> Element {{\n    rsx! {{\n        ControlGroup {{ part: \"{group_label}\",\n            p {{ class: \"text-sm text-muted-foreground\", \"No adjustable props.\" }}\n        }}\n    }}\n}}\n\n"
+    )
 }
 
 /// Renders `#[component] pub fn <Comp>Preview(state: <Comp>DemoState, [children: Element])
@@ -439,16 +460,11 @@ fn render_component_file(
     let enum_names = qualifying_enum_names(introspection);
 
     // Single-root, non-generic detection (design.md's D3): exactly one
-    // locally-visible component. A component whose only public surface is a
-    // bare `pub use` re-export of a primitive (e.g. `AspectRatio`,
-    // `ScrollArea`, `VirtualList`) is invisible to `introspection.components`
-    // entirely (this tool only reads syntax literally present in the given
-    // file, never follows a re-export across the crate boundary into
-    // `adico-primitives`) -- such an item's `components` count is 0, not 1,
-    // so it never qualifies here and gets no generated file at all, the
-    // same outcome as any other item with zero qualifying props. This is a
-    // known, accepted gap, not a bug: see this change's own task 2.3 "Done"
-    // note for the three named items it affects.
+    // locally-visible component. Note this is unaffected by re-export
+    // resolution: a multi-part item's re-exported root (e.g. `Accordion`)
+    // simply becomes one more entry in `introspection.components` alongside
+    // its locally-defined siblings, so `sole_root` still correctly stays
+    // `None` for it.
     let sole_root = match introspection.components.as_slice() {
         [only] if !introspection.generic.contains(only) => Some(only.as_str()),
         _ => None,
@@ -460,8 +476,19 @@ fn render_component_file(
     for component_name in &introspection.components {
         let fields = qualifying_fields(component_name, introspection);
         if fields.is_empty() {
+            // No controllable props -- including every resolved re-exported
+            // component, whose real props live in `adico-primitives` and
+            // aren't extracted by this generator (a separate, out-of-scope
+            // prop-coverage gap). Still gets a labeled, empty-state group
+            // rather than being skipped -- see design.md's "every discovered
+            // component gets a ControlGroup" decision. No `Preview` either,
+            // matching this item's own pre-existing behavior for any
+            // zero-field component.
+            used_controls.insert("ControlGroup");
+            demo_sections.push_str(&render_empty_controls_component(component_name));
             continue;
         }
+        used_controls.insert("ControlGroup");
         for field in &fields {
             used_controls.insert(match &field.shape {
                 PropShape::Bool => "BoolControl",
@@ -529,7 +556,7 @@ fn render_component_file(
             "pub const {const_name}: &[(&str, {enum_name})] = &[\n"
         ));
         for variant in &info.variants {
-            let label = humanize_variant_label(variant);
+            let label = humanize_pascal_case_label(variant);
             body.push_str(&format!("    (\"{label}\", {enum_name}::{variant}),\n"));
         }
         body.push_str("];\n\n");
@@ -603,8 +630,29 @@ struct ItemPlan {
     skipped: Vec<(String, &'static str)>,
 }
 
-fn plan_item(item_stem: &str, source_path: &Path) -> Result<ItemPlan, String> {
-    let introspection = introspect_file(source_path);
+/// Merges newly discovered, resolved re-exported component names into
+/// `components`, skipping a name already present -- defensive: shouldn't
+/// happen in practice (a locally-defined component and a re-export would
+/// have to share a name), but guards against emitting the same generated
+/// item twice.
+fn merge_resolved_components(components: &mut Vec<String>, resolved: Vec<String>) {
+    for name in resolved {
+        if !components.contains(&name) {
+            components.push(name);
+        }
+    }
+}
+
+fn plan_item(item_stem: &str, source_path: &Path, root: &Path) -> Result<ItemPlan, String> {
+    let mut introspection = introspect_file(source_path);
+    let primitives_src_dir = root.join("packages/adico-primitives/src");
+    let resolved = crate::rust_introspect::resolve_reexported_components(
+        &introspection.primitive_reexports,
+        &primitives_src_dir,
+    )
+    .map_err(|unresolved| format!("{item_stem}: {unresolved}"))?;
+    merge_resolved_components(&mut introspection.components, resolved);
+
     let mut skipped = Vec::new();
     for fields in introspection.props.values() {
         for field in fields {
@@ -677,7 +725,7 @@ pub fn sync(root: &Path) -> Result<(), String> {
 
     let mut generated_stems = Vec::new();
     for (stem, path) in &items {
-        let plan = plan_item(stem, path)?;
+        let plan = plan_item(stem, path, root)?;
         for (prop_name, reason) in &plan.skipped {
             println!("{stem}: skipped `{prop_name}` ({reason})");
         }
@@ -717,7 +765,7 @@ pub fn check(root: &Path) -> Result<(), String> {
     let mut expected_stems = Vec::new();
 
     for (stem, path) in &items {
-        let plan = plan_item(stem, path)?;
+        let plan = plan_item(stem, path, root)?;
         let file_path = dir.join(format!("{stem}.rs"));
         let on_disk = fs::read_to_string(&file_path).ok();
         match (&plan.generated_content, &on_disk) {
@@ -788,7 +836,7 @@ pub fn diff(root: &Path) -> Result<(), String> {
     let mut changed = 0usize;
 
     for (stem, path) in &items {
-        let plan = plan_item(stem, path)?;
+        let plan = plan_item(stem, path, root)?;
         for (prop_name, reason) in &plan.skipped {
             println!("{stem}: skipped `{prop_name}` ({reason})");
         }
@@ -933,19 +981,19 @@ mod tests {
 
     #[test]
     fn humanizes_a_single_word_identifier() {
-        assert_eq!(humanize_variant_label("Default"), "Default");
-        assert_eq!(humanize_variant_label("Destructive"), "Destructive");
+        assert_eq!(humanize_pascal_case_label("Default"), "Default");
+        assert_eq!(humanize_pascal_case_label("Destructive"), "Destructive");
     }
 
     #[test]
     fn humanizes_a_two_word_pascal_case_identifier() {
-        assert_eq!(humanize_variant_label("IconLarge"), "Icon Large");
+        assert_eq!(humanize_pascal_case_label("IconLarge"), "Icon Large");
     }
 
     #[test]
     fn humanizes_an_identifier_with_an_acronym_like_run() {
-        assert_eq!(humanize_variant_label("IconXs"), "Icon Xs");
-        assert_eq!(humanize_variant_label("IconSm"), "Icon Sm");
+        assert_eq!(humanize_pascal_case_label("IconXs"), "Icon Xs");
+        assert_eq!(humanize_pascal_case_label("IconSm"), "Icon Sm");
     }
 
     #[test]
@@ -961,5 +1009,84 @@ mod tests {
         // outer `state: Signal<...>` parameter.
         assert_eq!(local_signal_name("state"), "state_field");
         assert_eq!(local_signal_name("variant"), "variant");
+    }
+
+    #[test]
+    fn a_generated_controls_panel_body_is_wrapped_in_a_humanized_control_group_label() {
+        let fields = vec![QualifyingField {
+            name: "index",
+            shape: PropShape::Number,
+            type_name: "usize",
+        }];
+        let body = render_controls_component("AccordionItem", &fields);
+        assert!(body.contains("ControlGroup { part: \"Accordion Item\","));
+        assert!(!body.contains("\"AccordionItem\""));
+        assert!(body.contains("pub fn AccordionItemControls"));
+        assert!(body.contains("NumberControl { label: \"Index\", value: index }"));
+    }
+
+    #[test]
+    fn a_zero_field_component_emits_an_empty_state_control_group_with_a_humanized_label() {
+        let body = render_empty_controls_component("AccordionTrigger");
+        assert!(body.contains("pub fn AccordionTriggerControls() -> Element"));
+        assert!(body.contains("ControlGroup { part: \"Accordion Trigger\","));
+        assert!(!body.contains("\"AccordionTrigger\""));
+        assert!(body.contains("No adjustable props."));
+        assert!(!body.contains("DemoState"));
+    }
+
+    /// A single-leaf-control file (only `NumberControl`, as `accordion.rs`
+    /// has today) must still grow its `use crate::components::controls`
+    /// line to include `ControlGroup` alongside it, in the braced form --
+    /// see design.md's "import-set safety" decision (verified against the
+    /// generator's own emitter, which always writes the braced form
+    /// regardless of count and lets `rustfmt` -- not this code -- decide
+    /// whether to unbrace a single name in the final committed output).
+    #[test]
+    fn a_single_leaf_control_file_grows_its_import_line_to_include_control_group() {
+        let mut introspection = crate::rust_introspect::FileIntrospection {
+            components: vec!["AccordionItem".to_string()],
+            ..Default::default()
+        };
+        introspection.props.insert(
+            "AccordionItem".to_string(),
+            vec![crate::rust_introspect::PropField {
+                name: "index".to_string(),
+                type_name: "usize".to_string(),
+                default: None,
+            }],
+        );
+        let body =
+            render_component_file("accordion", &introspection).expect("has a qualifying field");
+        assert!(
+            body.contains("use crate::components::controls::{ControlGroup, NumberControl};"),
+            "unexpected import line in:\n{body}"
+        );
+    }
+
+    #[test]
+    fn a_component_with_no_qualifying_fields_still_produces_a_file_with_an_empty_state_group() {
+        let introspection = crate::rust_introspect::FileIntrospection {
+            components: vec!["AccordionTrigger".to_string()],
+            ..Default::default()
+        };
+        let body = render_component_file("accordion", &introspection)
+            .expect("zero-field components are no longer skipped");
+        assert!(body.contains("use crate::components::controls::{ControlGroup};"));
+        assert!(body.contains("pub fn AccordionTriggerControls() -> Element"));
+        assert!(body.contains("No adjustable props."));
+    }
+
+    #[test]
+    fn merge_resolved_components_grows_the_list_and_skips_duplicates() {
+        let mut components = vec!["AccordionItem".to_string()];
+        merge_resolved_components(
+            &mut components,
+            vec!["Accordion".to_string(), "AccordionItem".to_string()],
+        );
+        assert_eq!(
+            components,
+            vec!["AccordionItem".to_string(), "Accordion".to_string()]
+        );
     }
 }

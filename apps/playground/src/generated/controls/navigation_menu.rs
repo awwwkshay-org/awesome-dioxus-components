@@ -3,7 +3,43 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::BoolControl;
+use crate::components::controls::{BoolControl, ControlGroup};
+
+#[component]
+pub fn NavigationMenuControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Navigation Menu",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn NavigationMenuListControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Navigation Menu List",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn NavigationMenuItemControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Navigation Menu Item",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn NavigationMenuTriggerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Navigation Menu Trigger",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
 
 /// Generated demo state for [`NavigationMenuContent`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -20,7 +56,9 @@ pub fn NavigationMenuContentControls(mut state: Signal<NavigationMenuContentDemo
         });
     });
     rsx! {
+        ControlGroup { part: "Navigation Menu Content",
         BoolControl { label: "Force Mount", value: force_mount }
+        }
     }
 }
 
@@ -39,6 +77,8 @@ pub fn NavigationMenuLinkControls(mut state: Signal<NavigationMenuLinkDemoState>
         });
     });
     rsx! {
+        ControlGroup { part: "Navigation Menu Link",
         BoolControl { label: "Close On Click", value: close_on_click }
+        }
     }
 }

@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::BoolControl;
+use crate::components::controls::{BoolControl, ControlGroup};
 
 /// Generated demo state for [`ToolbarButton`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -18,7 +18,9 @@ pub fn ToolbarButtonControls(mut state: Signal<ToolbarButtonDemoState>) -> Eleme
         state.set(ToolbarButtonDemoState { loading: loading() });
     });
     rsx! {
+        ControlGroup { part: "Toolbar Button",
         BoolControl { label: "Loading", value: loading }
+        }
     }
 }
 
@@ -40,7 +42,18 @@ pub fn ToolbarSeparatorControls(mut state: Signal<ToolbarSeparatorDemoState>) ->
         });
     });
     rsx! {
+        ControlGroup { part: "Toolbar Separator",
         BoolControl { label: "Horizontal", value: horizontal }
         BoolControl { label: "Decorative", value: decorative }
+        }
+    }
+}
+
+#[component]
+pub fn ToolbarControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Toolbar",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

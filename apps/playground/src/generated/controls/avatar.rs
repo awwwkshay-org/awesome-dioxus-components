@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{SelectControl, TextControl};
+use crate::components::controls::{ControlGroup, SelectControl, TextControl};
 use crate::components::ui::AvatarSize;
 
 /// Generated from `AvatarSize`'s declared variants.
@@ -36,7 +36,9 @@ pub fn AvatarControls(mut state: Signal<AvatarDemoState>) -> Element {
         state.set(AvatarDemoState { size: size() });
     });
     rsx! {
+        ControlGroup { part: "Avatar",
         SelectControl { label: "Size", value: size, options: AVATAR_SIZE_OPTIONS }
+        }
     }
 }
 
@@ -53,6 +55,17 @@ pub fn AvatarImageControls(mut state: Signal<AvatarImageDemoState>) -> Element {
         state.set(AvatarImageDemoState { src: src() });
     });
     rsx! {
+        ControlGroup { part: "Avatar Image",
         TextControl { label: "Src", value: src }
+        }
+    }
+}
+
+#[component]
+pub fn AvatarFallbackControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Avatar Fallback",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

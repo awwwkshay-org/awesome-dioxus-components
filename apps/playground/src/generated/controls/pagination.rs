@@ -3,7 +3,34 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::BoolControl;
+use crate::components::controls::{BoolControl, ControlGroup};
+
+#[component]
+pub fn PaginationControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Pagination",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn PaginationContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Pagination Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn PaginationItemControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Pagination Item",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
 
 /// Generated demo state for [`PaginationLink`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -23,8 +50,10 @@ pub fn PaginationLinkControls(mut state: Signal<PaginationLinkDemoState>) -> Ele
         });
     });
     rsx! {
+        ControlGroup { part: "Pagination Link",
         BoolControl { label: "Is Active", value: is_active }
         BoolControl { label: "Loading", value: loading }
+        }
     }
 }
 
@@ -41,7 +70,9 @@ pub fn PaginationPreviousControls(mut state: Signal<PaginationPreviousDemoState>
         state.set(PaginationPreviousDemoState { compact: compact() });
     });
     rsx! {
+        ControlGroup { part: "Pagination Previous",
         BoolControl { label: "Compact", value: compact }
+        }
     }
 }
 
@@ -58,6 +89,17 @@ pub fn PaginationNextControls(mut state: Signal<PaginationNextDemoState>) -> Ele
         state.set(PaginationNextDemoState { compact: compact() });
     });
     rsx! {
+        ControlGroup { part: "Pagination Next",
         BoolControl { label: "Compact", value: compact }
+        }
+    }
+}
+
+#[component]
+pub fn PaginationEllipsisControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Pagination Ellipsis",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

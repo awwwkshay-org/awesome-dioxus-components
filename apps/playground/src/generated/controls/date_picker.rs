@@ -3,7 +3,16 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, OptionalBoolControl};
+use crate::components::controls::{BoolControl, ControlGroup, OptionalBoolControl};
+
+#[component]
+pub fn DatePickerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Picker",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
 
 /// Generated demo state for [`DatePickerPopover`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -23,7 +32,144 @@ pub fn DatePickerPopoverControls(mut state: Signal<DatePickerPopoverDemoState>) 
         });
     });
     rsx! {
+        ControlGroup { part: "Date Picker Popover",
         OptionalBoolControl { label: "Open", value: open }
         BoolControl { label: "Default Open", value: default_open }
+        }
+    }
+}
+
+#[component]
+pub fn DatePickerInputControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Picker Input",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DatePickerInputValueControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Picker Input Value",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DatePickerTriggerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Picker Trigger",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DatePickerContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Picker Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DateRangePickerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Range Picker",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DatePickerCalendarControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Picker Calendar",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DatePickerDaySegmentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Picker Day Segment",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DatePickerMonthSegmentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Picker Month Segment",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DatePickerSeparatorControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Picker Separator",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DatePickerYearSegmentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Picker Year Segment",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DateRangePickerCalendarControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Range Picker Calendar",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DateRangePickerEndValueControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Range Picker End Value",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DateRangePickerInputControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Range Picker Input",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DateRangePickerInputValueControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Range Picker Input Value",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DateRangePickerStartValueControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Range Picker Start Value",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

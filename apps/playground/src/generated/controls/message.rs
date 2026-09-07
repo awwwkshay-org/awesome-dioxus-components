@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::SelectControl;
+use crate::components::controls::{ControlGroup, SelectControl};
 use crate::components::ui::MessageAlign;
 
 /// Generated from `MessageAlign`'s declared variants.
@@ -32,6 +32,53 @@ pub fn MessageControls(mut state: Signal<MessageDemoState>) -> Element {
         state.set(MessageDemoState { align: align() });
     });
     rsx! {
+        ControlGroup { part: "Message",
         SelectControl { label: "Align", value: align, options: MESSAGE_ALIGN_OPTIONS }
+        }
+    }
+}
+
+#[component]
+pub fn MessageGroupControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Message Group",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn MessageAvatarControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Message Avatar",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn MessageHeaderControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Message Header",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn MessageContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Message Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn MessageFooterControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Message Footer",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

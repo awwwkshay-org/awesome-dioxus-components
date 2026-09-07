@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::BoolControl;
+use crate::components::controls::{BoolControl, ControlGroup};
 use crate::components::ui::Textarea;
 
 /// Generated demo state for [`Textarea`], one field per controllable prop.
@@ -30,10 +30,12 @@ pub fn TextareaControls(mut state: Signal<TextareaDemoState>) -> Element {
         });
     });
     rsx! {
+        ControlGroup { part: "Textarea",
         BoolControl { label: "Disabled", value: disabled }
         BoolControl { label: "Readonly", value: readonly }
         BoolControl { label: "Required", value: required }
         BoolControl { label: "Invalid", value: invalid }
+        }
     }
 }
 

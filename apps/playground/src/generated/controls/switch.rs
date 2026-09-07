@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, OptionalBoolControl, SelectControl};
+use crate::components::controls::{BoolControl, ControlGroup, OptionalBoolControl, SelectControl};
 use crate::components::ui::{Switch, SwitchSize};
 
 /// Generated from `SwitchSize`'s declared variants.
@@ -40,9 +40,11 @@ pub fn SwitchControls(mut state: Signal<SwitchDemoState>) -> Element {
         });
     });
     rsx! {
+        ControlGroup { part: "Switch",
         OptionalBoolControl { label: "Checked", value: checked }
         BoolControl { label: "Default Checked", value: default_checked }
         SelectControl { label: "Size", value: size, options: SWITCH_SIZE_OPTIONS }
+        }
     }
 }
 

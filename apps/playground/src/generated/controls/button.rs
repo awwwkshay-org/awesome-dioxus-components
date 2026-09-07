@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, SelectControl};
+use crate::components::controls::{BoolControl, ControlGroup, SelectControl};
 use crate::components::ui::{Button, ButtonSize, ButtonVariant};
 
 /// Generated from `ButtonSize`'s declared variants.
@@ -77,9 +77,11 @@ pub fn ButtonControls(mut state: Signal<ButtonDemoState>) -> Element {
         });
     });
     rsx! {
+        ControlGroup { part: "Button",
         SelectControl { label: "Variant", value: variant, options: BUTTON_VARIANT_OPTIONS }
         SelectControl { label: "Size", value: size, options: BUTTON_SIZE_OPTIONS }
         BoolControl { label: "Loading", value: loading }
+        }
     }
 }
 

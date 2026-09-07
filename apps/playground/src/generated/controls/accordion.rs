@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::NumberControl;
+use crate::components::controls::{ControlGroup, NumberControl};
 
 /// Generated demo state for [`AccordionItem`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -20,6 +20,44 @@ pub fn AccordionItemControls(mut state: Signal<AccordionItemDemoState>) -> Eleme
         });
     });
     rsx! {
+        ControlGroup { part: "Accordion Item",
         NumberControl { label: "Index", value: index }
+        }
+    }
+}
+
+#[component]
+pub fn AccordionTriggerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Accordion Trigger",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn AccordionContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Accordion Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn AccordionControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Accordion",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn AccordionMultiControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Accordion Multi",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

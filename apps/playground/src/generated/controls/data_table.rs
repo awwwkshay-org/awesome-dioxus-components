@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, NumberControl};
+use crate::components::controls::{BoolControl, ControlGroup, NumberControl};
 
 /// Generated demo state for [`DataTable`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -23,7 +23,18 @@ pub fn DataTableControls(mut state: Signal<DataTableDemoState>) -> Element {
         });
     });
     rsx! {
+        ControlGroup { part: "Data Table",
         NumberControl { label: "Page Size", value: page_size }
         BoolControl { label: "Loading", value: loading }
+        }
+    }
+}
+
+#[component]
+pub fn DataTableRowActionsControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Data Table Row Actions",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

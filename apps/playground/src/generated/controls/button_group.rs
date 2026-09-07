@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, SelectControl};
+use crate::components::controls::{BoolControl, ControlGroup, SelectControl};
 use crate::components::ui::ButtonGroupOrientation;
 
 /// Generated from `ButtonGroupOrientation`'s declared variants.
@@ -36,7 +36,18 @@ pub fn ButtonGroupControls(mut state: Signal<ButtonGroupDemoState>) -> Element {
         });
     });
     rsx! {
+        ControlGroup { part: "Button Group",
         SelectControl { label: "Orientation", value: orientation, options: BUTTON_GROUP_ORIENTATION_OPTIONS }
+        }
+    }
+}
+
+#[component]
+pub fn ButtonGroupTextControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Button Group Text",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -55,6 +66,8 @@ pub fn ButtonGroupSeparatorControls(mut state: Signal<ButtonGroupSeparatorDemoSt
         });
     });
     rsx! {
+        ControlGroup { part: "Button Group Separator",
         BoolControl { label: "Horizontal", value: horizontal }
+        }
     }
 }

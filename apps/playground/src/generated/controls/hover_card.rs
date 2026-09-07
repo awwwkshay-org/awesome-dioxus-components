@@ -3,7 +3,16 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::BoolControl;
+use crate::components::controls::{BoolControl, ControlGroup};
+
+#[component]
+pub fn HoverCardTriggerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Hover Card Trigger",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
 
 /// Generated demo state for [`HoverCardContent`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -20,6 +29,17 @@ pub fn HoverCardContentControls(mut state: Signal<HoverCardContentDemoState>) ->
         });
     });
     rsx! {
+        ControlGroup { part: "Hover Card Content",
         BoolControl { label: "Force Mount", value: force_mount }
+        }
+    }
+}
+
+#[component]
+pub fn HoverCardControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Hover Card",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

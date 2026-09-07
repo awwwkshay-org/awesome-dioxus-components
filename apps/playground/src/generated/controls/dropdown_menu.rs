@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, OptionalBoolControl, SelectControl};
+use crate::components::controls::{BoolControl, ControlGroup, OptionalBoolControl, SelectControl};
 use crate::components::ui::DropdownMenuItemVariant;
 
 /// Generated from `DropdownMenuItemVariant`'s declared variants.
@@ -39,8 +39,28 @@ pub fn DropdownMenuControls(mut state: Signal<DropdownMenuDemoState>) -> Element
         });
     });
     rsx! {
+        ControlGroup { part: "Dropdown Menu",
         OptionalBoolControl { label: "Open", value: open }
         BoolControl { label: "Default Open", value: default_open }
+        }
+    }
+}
+
+#[component]
+pub fn DropdownMenuTriggerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Dropdown Menu Trigger",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DropdownMenuContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Dropdown Menu Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -62,8 +82,19 @@ pub fn DropdownMenuItemControls(mut state: Signal<DropdownMenuItemDemoState>) ->
         });
     });
     rsx! {
+        ControlGroup { part: "Dropdown Menu Item",
         BoolControl { label: "Inset", value: inset }
         SelectControl { label: "Variant", value: variant, options: DROPDOWN_MENU_ITEM_VARIANT_OPTIONS }
+        }
+    }
+}
+
+#[component]
+pub fn DropdownMenuGroupControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Dropdown Menu Group",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -80,7 +111,27 @@ pub fn DropdownMenuLabelControls(mut state: Signal<DropdownMenuLabelDemoState>) 
         state.set(DropdownMenuLabelDemoState { inset: inset() });
     });
     rsx! {
+        ControlGroup { part: "Dropdown Menu Label",
         BoolControl { label: "Inset", value: inset }
+        }
+    }
+}
+
+#[component]
+pub fn DropdownMenuSeparatorControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Dropdown Menu Separator",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DropdownMenuShortcutControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Dropdown Menu Shortcut",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -104,8 +155,28 @@ pub fn DropdownMenuCheckboxItemControls(
         });
     });
     rsx! {
+        ControlGroup { part: "Dropdown Menu Checkbox Item",
         OptionalBoolControl { label: "Checked", value: checked }
         BoolControl { label: "Default Checked", value: default_checked }
+        }
+    }
+}
+
+#[component]
+pub fn DropdownMenuRadioGroupControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Dropdown Menu Radio Group",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DropdownMenuRadioItemControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Dropdown Menu Radio Item",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -127,8 +198,10 @@ pub fn DropdownMenuSubControls(mut state: Signal<DropdownMenuSubDemoState>) -> E
         });
     });
     rsx! {
+        ControlGroup { part: "Dropdown Menu Sub",
         OptionalBoolControl { label: "Open", value: open }
         BoolControl { label: "Default Open", value: default_open }
+        }
     }
 }
 
@@ -147,6 +220,17 @@ pub fn DropdownMenuSubTriggerControls(
         state.set(DropdownMenuSubTriggerDemoState { inset: inset() });
     });
     rsx! {
+        ControlGroup { part: "Dropdown Menu Sub Trigger",
         BoolControl { label: "Inset", value: inset }
+        }
+    }
+}
+
+#[component]
+pub fn DropdownMenuSubContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Dropdown Menu Sub Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, SelectControl, TextControl};
+use crate::components::controls::{BoolControl, ControlGroup, SelectControl, TextControl};
 use crate::components::ui::MenubarItemVariant;
 
 /// Generated from `MenubarItemVariant`'s declared variants.
@@ -20,6 +20,33 @@ const _: () = {
         }
     }
 };
+
+#[component]
+pub fn MenubarControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Menubar",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn MenubarTriggerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Menubar Trigger",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn MenubarContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Menubar Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
 
 /// Generated demo state for [`MenubarItem`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -42,9 +69,20 @@ pub fn MenubarItemControls(mut state: Signal<MenubarItemDemoState>) -> Element {
         });
     });
     rsx! {
+        ControlGroup { part: "Menubar Item",
         TextControl { label: "Value", value: value }
         BoolControl { label: "Inset", value: inset }
         SelectControl { label: "Variant", value: variant, options: MENUBAR_ITEM_VARIANT_OPTIONS }
+        }
+    }
+}
+
+#[component]
+pub fn MenubarGroupControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Menubar Group",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -61,6 +99,35 @@ pub fn MenubarLabelControls(mut state: Signal<MenubarLabelDemoState>) -> Element
         state.set(MenubarLabelDemoState { inset: inset() });
     });
     rsx! {
+        ControlGroup { part: "Menubar Label",
         BoolControl { label: "Inset", value: inset }
+        }
+    }
+}
+
+#[component]
+pub fn MenubarSeparatorControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Menubar Separator",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn MenubarShortcutControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Menubar Shortcut",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn MenubarMenuControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Menubar Menu",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, OptionalBoolControl, SelectControl};
+use crate::components::controls::{BoolControl, ControlGroup, OptionalBoolControl, SelectControl};
 use crate::components::ui::{Toggle, ToggleSize, ToggleVariant};
 
 /// Generated from `ToggleSize`'s declared variants.
@@ -62,10 +62,12 @@ pub fn ToggleControls(mut state: Signal<ToggleDemoState>) -> Element {
         });
     });
     rsx! {
+        ControlGroup { part: "Toggle",
         OptionalBoolControl { label: "Pressed", value: pressed }
         BoolControl { label: "Default Pressed", value: default_pressed }
         SelectControl { label: "Size", value: size, options: TOGGLE_SIZE_OPTIONS }
         SelectControl { label: "Variant", value: variant, options: TOGGLE_VARIANT_OPTIONS }
+        }
     }
 }
 

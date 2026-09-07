@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, SelectControl};
+use crate::components::controls::{BoolControl, ControlGroup, SelectControl};
 use crate::components::ui::AlertDialogContentSize;
 
 /// Generated from `AlertDialogContentSize`'s declared variants.
@@ -21,6 +21,24 @@ const _: () = {
     }
 };
 
+#[component]
+pub fn AlertDialogTriggerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Alert Dialog Trigger",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn AlertDialogOverlayControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Alert Dialog Overlay",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
 /// Generated demo state for [`AlertDialogContent`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
 pub struct AlertDialogContentDemoState {
@@ -34,7 +52,27 @@ pub fn AlertDialogContentControls(mut state: Signal<AlertDialogContentDemoState>
         state.set(AlertDialogContentDemoState { size: size() });
     });
     rsx! {
+        ControlGroup { part: "Alert Dialog Content",
         SelectControl { label: "Size", value: size, options: ALERT_DIALOG_CONTENT_SIZE_OPTIONS }
+        }
+    }
+}
+
+#[component]
+pub fn AlertDialogHeaderControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Alert Dialog Header",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn AlertDialogActionsControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Alert Dialog Actions",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -51,6 +89,44 @@ pub fn AlertDialogActionControls(mut state: Signal<AlertDialogActionDemoState>) 
         state.set(AlertDialogActionDemoState { loading: loading() });
     });
     rsx! {
+        ControlGroup { part: "Alert Dialog Action",
         BoolControl { label: "Loading", value: loading }
+        }
+    }
+}
+
+#[component]
+pub fn AlertDialogCancelControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Alert Dialog Cancel",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn AlertDialogDescriptionControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Alert Dialog Description",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn AlertDialogControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Alert Dialog",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn AlertDialogTitleControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Alert Dialog Title",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

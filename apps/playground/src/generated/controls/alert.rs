@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::SelectControl;
+use crate::components::controls::{ControlGroup, SelectControl};
 use crate::components::ui::AlertVariant;
 
 /// Generated from `AlertVariant`'s declared variants.
@@ -34,6 +34,26 @@ pub fn AlertControls(mut state: Signal<AlertDemoState>) -> Element {
         state.set(AlertDemoState { variant: variant() });
     });
     rsx! {
+        ControlGroup { part: "Alert",
         SelectControl { label: "Variant", value: variant, options: ALERT_VARIANT_OPTIONS }
+        }
+    }
+}
+
+#[component]
+pub fn AlertTitleControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Alert Title",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn AlertDescriptionControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Alert Description",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

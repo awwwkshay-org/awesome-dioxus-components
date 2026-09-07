@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{SelectControl, TextControl};
+use crate::components::controls::{ControlGroup, SelectControl, TextControl};
 use crate::components::ui::TabsVariant;
 
 /// Generated from `TabsVariant`'s declared variants.
@@ -34,7 +34,9 @@ pub fn TabListControls(mut state: Signal<TabListDemoState>) -> Element {
         state.set(TabListDemoState { variant: variant() });
     });
     rsx! {
+        ControlGroup { part: "Tab List",
         SelectControl { label: "Variant", value: variant, options: TABS_VARIANT_OPTIONS }
+        }
     }
 }
 
@@ -51,7 +53,9 @@ pub fn TabTriggerControls(mut state: Signal<TabTriggerDemoState>) -> Element {
         state.set(TabTriggerDemoState { value: value() });
     });
     rsx! {
+        ControlGroup { part: "Tab Trigger",
         TextControl { label: "Value", value: value }
+        }
     }
 }
 
@@ -68,6 +72,17 @@ pub fn TabContentControls(mut state: Signal<TabContentDemoState>) -> Element {
         state.set(TabContentDemoState { value: value() });
     });
     rsx! {
+        ControlGroup { part: "Tab Content",
         TextControl { label: "Value", value: value }
+        }
+    }
+}
+
+#[component]
+pub fn TabsControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Tabs",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

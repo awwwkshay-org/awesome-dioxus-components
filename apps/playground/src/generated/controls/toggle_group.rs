@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::SelectControl;
+use crate::components::controls::{ControlGroup, SelectControl};
 use crate::components::ui::{ToggleItemSize, ToggleItemVariant};
 
 /// Generated from `ToggleItemSize`'s declared variants.
@@ -38,6 +38,15 @@ const _: () = {
     }
 };
 
+#[component]
+pub fn ToggleGroupControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Toggle Group",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
 /// Generated demo state for [`ToggleItem`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
 pub struct ToggleItemDemoState {
@@ -56,7 +65,9 @@ pub fn ToggleItemControls(mut state: Signal<ToggleItemDemoState>) -> Element {
         });
     });
     rsx! {
+        ControlGroup { part: "Toggle Item",
         SelectControl { label: "Size", value: size, options: TOGGLE_ITEM_SIZE_OPTIONS }
         SelectControl { label: "Variant", value: variant, options: TOGGLE_ITEM_VARIANT_OPTIONS }
+        }
     }
 }

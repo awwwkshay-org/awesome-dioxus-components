@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{SelectControl, TextControl};
+use crate::components::controls::{ControlGroup, SelectControl, TextControl};
 use crate::components::ui::{
     AttachmentMediaVariant, AttachmentOrientation, AttachmentSize, AttachmentState,
 };
@@ -97,9 +97,29 @@ pub fn AttachmentControls(mut state: Signal<AttachmentDemoState>) -> Element {
         });
     });
     rsx! {
+        ControlGroup { part: "Attachment",
         SelectControl { label: "State", value: state_field, options: ATTACHMENT_STATE_OPTIONS }
         SelectControl { label: "Size", value: size, options: ATTACHMENT_SIZE_OPTIONS }
         SelectControl { label: "Orientation", value: orientation, options: ATTACHMENT_ORIENTATION_OPTIONS }
+        }
+    }
+}
+
+#[component]
+pub fn AttachmentGroupControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Attachment Group",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn AttachmentTriggerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Attachment Trigger",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -116,7 +136,45 @@ pub fn AttachmentMediaControls(mut state: Signal<AttachmentMediaDemoState>) -> E
         state.set(AttachmentMediaDemoState { variant: variant() });
     });
     rsx! {
+        ControlGroup { part: "Attachment Media",
         SelectControl { label: "Variant", value: variant, options: ATTACHMENT_MEDIA_VARIANT_OPTIONS }
+        }
+    }
+}
+
+#[component]
+pub fn AttachmentContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Attachment Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn AttachmentTitleControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Attachment Title",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn AttachmentDescriptionControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Attachment Description",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn AttachmentActionsControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Attachment Actions",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -135,6 +193,8 @@ pub fn AttachmentActionControls(mut state: Signal<AttachmentActionDemoState>) ->
         });
     });
     rsx! {
+        ControlGroup { part: "Attachment Action",
         TextControl { label: "Aria Label", value: aria_label }
+        }
     }
 }

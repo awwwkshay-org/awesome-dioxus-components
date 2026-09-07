@@ -3,7 +3,16 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, NumberControl};
+use crate::components::controls::{BoolControl, ControlGroup, NumberControl};
+
+#[component]
+pub fn ResizablePanelGroupControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Resizable Panel Group",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
 
 /// Generated demo state for [`ResizablePanel`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -26,9 +35,11 @@ pub fn ResizablePanelControls(mut state: Signal<ResizablePanelDemoState>) -> Ele
         });
     });
     rsx! {
+        ControlGroup { part: "Resizable Panel",
         NumberControl { label: "Default Size", value: default_size }
         NumberControl { label: "Min Size", value: min_size }
         NumberControl { label: "Max Size", value: max_size }
+        }
     }
 }
 
@@ -47,6 +58,8 @@ pub fn ResizableHandleControls(mut state: Signal<ResizableHandleDemoState>) -> E
         });
     });
     rsx! {
+        ControlGroup { part: "Resizable Handle",
         BoolControl { label: "With Handle", value: with_handle }
+        }
     }
 }

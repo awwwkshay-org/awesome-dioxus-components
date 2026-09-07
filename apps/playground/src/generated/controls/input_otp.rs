@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::TextControl;
+use crate::components::controls::{ControlGroup, TextControl};
 
 /// Generated demo state for [`InputOTP`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -20,6 +20,35 @@ pub fn InputOTPControls(mut state: Signal<InputOTPDemoState>) -> Element {
         });
     });
     rsx! {
+        ControlGroup { part: "Input OTP",
         TextControl { label: "Default Value", value: default_value }
+        }
+    }
+}
+
+#[component]
+pub fn InputOTPGroupControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Input OTP Group",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn InputOTPSlotControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Input OTP Slot",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn InputOTPSeparatorControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Input OTP Separator",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

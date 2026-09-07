@@ -3,7 +3,16 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, OptionalBoolControl};
+use crate::components::controls::{BoolControl, ControlGroup, OptionalBoolControl};
+
+#[component]
+pub fn DateTimePickerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Time Picker",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
 
 /// Generated demo state for [`DateTimePickerPopover`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -23,7 +32,27 @@ pub fn DateTimePickerPopoverControls(mut state: Signal<DateTimePickerPopoverDemo
         });
     });
     rsx! {
+        ControlGroup { part: "Date Time Picker Popover",
         OptionalBoolControl { label: "Open", value: open }
         BoolControl { label: "Default Open", value: default_open }
+        }
+    }
+}
+
+#[component]
+pub fn DateTimePickerTriggerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Time Picker Trigger",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn DateTimePickerContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Date Time Picker Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

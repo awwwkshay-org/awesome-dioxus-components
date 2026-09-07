@@ -3,7 +3,25 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::BoolControl;
+use crate::components::controls::{BoolControl, ControlGroup};
+
+#[component]
+pub fn SheetTriggerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sheet Trigger",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SheetOverlayControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sheet Overlay",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
 
 /// Generated demo state for [`SheetContent`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -20,6 +38,62 @@ pub fn SheetContentControls(mut state: Signal<SheetContentDemoState>) -> Element
         });
     });
     rsx! {
+        ControlGroup { part: "Sheet Content",
         BoolControl { label: "Show Close Button", value: show_close_button }
+        }
+    }
+}
+
+#[component]
+pub fn SheetCloseControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sheet Close",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SheetHeaderControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sheet Header",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SheetFooterControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sheet Footer",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SheetDescriptionControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sheet Description",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SheetControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sheet",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SheetTitleControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sheet Title",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

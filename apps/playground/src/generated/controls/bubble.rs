@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::SelectControl;
+use crate::components::controls::{ControlGroup, SelectControl};
 use crate::components::ui::{BubbleAlign, BubbleReactionsSide, BubbleVariant};
 
 /// Generated from `BubbleAlign`'s declared variants.
@@ -72,7 +72,18 @@ pub fn BubbleControls(mut state: Signal<BubbleDemoState>) -> Element {
         state.set(BubbleDemoState { align: align() });
     });
     rsx! {
+        ControlGroup { part: "Bubble",
         SelectControl { label: "Align", value: align, options: BUBBLE_ALIGN_OPTIONS }
+        }
+    }
+}
+
+#[component]
+pub fn BubbleGroupControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Bubble Group",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -94,8 +105,10 @@ pub fn BubbleContentControls(mut state: Signal<BubbleContentDemoState>) -> Eleme
         });
     });
     rsx! {
+        ControlGroup { part: "Bubble Content",
         SelectControl { label: "Align", value: align, options: BUBBLE_ALIGN_OPTIONS }
         SelectControl { label: "Variant", value: variant, options: BUBBLE_VARIANT_OPTIONS }
+        }
     }
 }
 
@@ -117,7 +130,9 @@ pub fn BubbleReactionsControls(mut state: Signal<BubbleReactionsDemoState>) -> E
         });
     });
     rsx! {
+        ControlGroup { part: "Bubble Reactions",
         SelectControl { label: "Align", value: align, options: BUBBLE_ALIGN_OPTIONS }
         SelectControl { label: "Side", value: side, options: BUBBLE_REACTIONS_SIDE_OPTIONS }
+        }
     }
 }

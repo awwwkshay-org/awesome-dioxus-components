@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, OptionalBoolControl, SelectControl};
+use crate::components::controls::{BoolControl, ControlGroup, OptionalBoolControl, SelectControl};
 use crate::components::ui::{
     SidebarCollapsible, SidebarMenuButtonSize, SidebarMenuButtonVariant, SidebarSide,
     SidebarVariant,
@@ -106,8 +106,10 @@ pub fn SidebarProviderControls(mut state: Signal<SidebarProviderDemoState>) -> E
         });
     });
     rsx! {
+        ControlGroup { part: "Sidebar Provider",
         OptionalBoolControl { label: "Open", value: open }
         BoolControl { label: "Default Open", value: default_open }
+        }
     }
 }
 
@@ -132,9 +134,29 @@ pub fn SidebarControls(mut state: Signal<SidebarDemoState>) -> Element {
         });
     });
     rsx! {
+        ControlGroup { part: "Sidebar",
         SelectControl { label: "Side", value: side, options: SIDEBAR_SIDE_OPTIONS }
         SelectControl { label: "Collapsible", value: collapsible, options: SIDEBAR_COLLAPSIBLE_OPTIONS }
         SelectControl { label: "Variant", value: variant, options: SIDEBAR_VARIANT_OPTIONS }
+        }
+    }
+}
+
+#[component]
+pub fn SidebarTriggerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sidebar Trigger",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SidebarRailControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sidebar Rail",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -151,7 +173,36 @@ pub fn SidebarInsetControls(mut state: Signal<SidebarInsetDemoState>) -> Element
         state.set(SidebarInsetDemoState { variant: variant() });
     });
     rsx! {
+        ControlGroup { part: "Sidebar Inset",
         SelectControl { label: "Variant", value: variant, options: SIDEBAR_VARIANT_OPTIONS }
+        }
+    }
+}
+
+#[component]
+pub fn SidebarHeaderControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sidebar Header",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SidebarContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sidebar Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SidebarFooterControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sidebar Footer",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -173,8 +224,55 @@ pub fn SidebarSeparatorControls(mut state: Signal<SidebarSeparatorDemoState>) ->
         });
     });
     rsx! {
+        ControlGroup { part: "Sidebar Separator",
         BoolControl { label: "Horizontal", value: horizontal }
         BoolControl { label: "Decorative", value: decorative }
+        }
+    }
+}
+
+#[component]
+pub fn SidebarGroupControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sidebar Group",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SidebarGroupLabelControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sidebar Group Label",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SidebarGroupContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sidebar Group Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SidebarMenuControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sidebar Menu",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn SidebarMenuItemControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Sidebar Menu Item",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }
 
@@ -205,10 +303,12 @@ pub fn SidebarMenuButtonControls(mut state: Signal<SidebarMenuButtonDemoState>) 
         });
     });
     rsx! {
+        ControlGroup { part: "Sidebar Menu Button",
         BoolControl { label: "Is Active", value: is_active }
         BoolControl { label: "Disabled", value: disabled }
         SelectControl { label: "Variant", value: variant, options: SIDEBAR_MENU_BUTTON_VARIANT_OPTIONS }
         SelectControl { label: "Size", value: size, options: SIDEBAR_MENU_BUTTON_SIZE_OPTIONS }
         BoolControl { label: "Loading", value: loading }
+        }
     }
 }

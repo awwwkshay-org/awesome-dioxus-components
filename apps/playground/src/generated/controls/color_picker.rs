@@ -3,7 +3,16 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::{BoolControl, OptionalBoolControl};
+use crate::components::controls::{BoolControl, ControlGroup, OptionalBoolControl};
+
+#[component]
+pub fn ColorPickerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Color Picker",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
 
 /// Generated demo state for [`ColorPickerPopover`], one field per controllable prop.
 #[derive(Clone, Default, PartialEq)]
@@ -23,7 +32,90 @@ pub fn ColorPickerPopoverControls(mut state: Signal<ColorPickerPopoverDemoState>
         });
     });
     rsx! {
+        ControlGroup { part: "Color Picker Popover",
         OptionalBoolControl { label: "Open", value: open }
         BoolControl { label: "Default Open", value: default_open }
+        }
+    }
+}
+
+#[component]
+pub fn ColorPickerTriggerControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Color Picker Trigger",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn ColorPickerSwatchControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Color Picker Swatch",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn ColorAreaControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Color Area",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn AreaTrackControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Area Track",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn AreaThumbControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Area Thumb",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn HueSliderControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Hue Slider",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn AreaThumbSaturationInputControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Area Thumb Saturation Input",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn AreaThumbValueInputControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Area Thumb Value Input",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
+pub fn ColorPickerFieldsControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Color Picker Fields",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
     }
 }

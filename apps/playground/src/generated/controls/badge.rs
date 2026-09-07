@@ -3,7 +3,7 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::SelectControl;
+use crate::components::controls::{ControlGroup, SelectControl};
 use crate::components::ui::{Badge, BadgeVariant};
 
 /// Generated from `BadgeVariant`'s declared variants.
@@ -44,7 +44,9 @@ pub fn BadgeControls(mut state: Signal<BadgeDemoState>) -> Element {
         state.set(BadgeDemoState { variant: variant() });
     });
     rsx! {
+        ControlGroup { part: "Badge",
         SelectControl { label: "Variant", value: variant, options: BADGE_VARIANT_OPTIONS }
+        }
     }
 }
 
