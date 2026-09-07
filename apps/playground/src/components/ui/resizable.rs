@@ -34,6 +34,7 @@
 //! handle widths (a handful of pixels) this is a negligible, common
 //! simplification, not a chased sub-pixel precision goal.
 
+use adico_primitives::icons::GripVertical;
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
@@ -286,6 +287,62 @@ pub fn ResizableHandle(
         axis_class,
         class.as_deref().unwrap_or_default(),
     ]);
+    // Follows upstream shadcn/ui's own `resizable.tsx` `ResizableHandle`
+    // mechanism (verified against its current source): the grip's own box
+    // stays a fixed size, never swapped -- upstream instead rotates the
+    // whole box 90deg (`[&[aria-orientation=horizontal]>div]:rotate-90`)
+    // when the handle's `aria-orientation` is `horizontal`, which in this
+    // component's own mapping (below) is exactly `ResizableDirection::Vertical`
+    // (a horizontal line, e.g. the playground's preview/controls split).
+    // An earlier version of this fix swapped the box's own `h-*`/`w-*`
+    // classes per direction instead of rotating -- functionally similar,
+    // but it left the box looking like a bare rounded rectangle rather
+    // than a recognizable drag handle, since it had no grip icon inside
+    // (found live from user feedback comparing it directly against
+    // upstream's own reference rendering). Rotating a single fixed-size
+    // box, with upstream's own `GripVertical` icon inside rotating along
+    // with it, is both the simpler implementation and the one that
+    // actually looks like upstream's handle.
+    //
+    // `shrink-0` is required, not cosmetic: the handle div above is itself
+    // `display: flex` on whichever axis `axis_class` constrains to 1px (its
+    // own main axis for `Horizontal`, i.e. `w-px`). Without `shrink-0`, the
+    // grip's default `flex-shrink: 1` + `min-width: auto` lets the flex
+    // algorithm crush it down toward that 1px constraint on the SAME axis
+    // -- confirmed live via `getComputedStyle`, the `Horizontal` grip
+    // rendered at 2px wide instead of its coded 12px (`w-3`). `Vertical`'s
+    // 1px constraint (`h-px`) lands on the handle's cross axis instead
+    // (`align-items: center` only centers there, never shrinks), so it
+    // never exhibited this -- an orientation-dependent bug is exactly the
+    // kind that's easy to miss testing only one direction.
+    //
+    // The grip's fill is `bg-foreground` (this theme's near-white text
+    // color), not `bg-border` like the line it sits on. The original
+    // `border bg-border` combination had two dark tokens meeting: plain
+    // `border` carries no explicit color utility, so its outline resolves
+    // via `currentColor` to this element's inherited (near-white)
+    // foreground text color, while `bg-border` fills with the theme's dark
+    // slate `--color-border` token -- the SAME dark token the line
+    // underneath is filled with. Wherever the grip's edge coincided with
+    // the line (its bottom edge on a horizontal line, found live via a
+    // zoomed screenshot), the dark fill blended into the equally-dark line
+    // right behind it and only the near-white outline stayed visible,
+    // leaving an open-bottomed "bracket" instead of a solid chip.
+    // `bg-background` (the theme's own near-black page background) was
+    // tried next and made it worse, not better -- confirmed live -- since
+    // it's dark too and blends into the surrounding dark canvas instead of
+    // the line. `bg-foreground` fills with the SAME near-white the border
+    // outline already resolves to, so the whole chip renders as one
+    // consistently visible solid piece regardless of what's behind any
+    // given edge; `border` is dropped since a same-color outline on a
+    // same-color fill is a no-op.
+    let grip_class = cn(&[
+        "z-10 flex h-3 w-2 shrink-0 items-center justify-center rounded-xs bg-foreground",
+        match direction {
+            ResizableDirection::Horizontal => "",
+            ResizableDirection::Vertical => "rotate-90",
+        },
+    ]);
 
     let onpointerdown = move |event: Event<PointerData>| {
         event.prevent_default();
@@ -343,7 +400,16 @@ pub fn ResizableHandle(
             onpointerdown,
             onkeydown,
             if with_handle {
-                div { class: "z-10 flex h-4 w-3 items-center justify-center rounded-xs border bg-border" }
+                div { class: "{grip_class}",
+                    // `GripVertical`'s stroke is `currentColor`; this
+                    // element's own inherited text color is this theme's
+                    // near-white foreground (the same shade `bg-foreground`
+                    // fills the chip with above), so without an explicit
+                    // `text-background` override the glyph would be an
+                    // invisible near-white-on-near-white mark. `size-1.5`
+                    // keeps it smaller than the chip's own 8px short axis.
+                    GripVertical { class: "size-1.5 shrink-0 text-background" }
+                }
             }
         }
     }

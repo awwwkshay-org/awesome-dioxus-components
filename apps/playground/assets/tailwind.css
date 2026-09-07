@@ -577,6 +577,9 @@
   .h-2 {
     height: calc(var(--spacing) * 2);
   }
+  .h-3 {
+    height: calc(var(--spacing) * 3);
+  }
   .h-3\.5 {
     height: calc(var(--spacing) * 3.5);
   }
@@ -681,6 +684,9 @@
   }
   .w-1\.5 {
     width: calc(var(--spacing) * 1.5);
+  }
+  .w-2 {
+    width: calc(var(--spacing) * 2);
   }
   .w-3 {
     width: calc(var(--spacing) * 3);
@@ -826,6 +832,9 @@
   .flex-1 {
     flex: 1;
   }
+  .flex-shrink {
+    flex-shrink: 1;
+  }
   .shrink {
     flex-shrink: 1;
   }
@@ -867,6 +876,9 @@
   .translate-y-1\/2 {
     --tw-translate-y: calc(1/2 * 100%);
     translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+  .rotate-90 {
+    rotate: 90deg;
   }
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
@@ -1255,6 +1267,9 @@
   .bg-emerald-600 {
     background-color: var(--color-emerald-600);
   }
+  .bg-foreground {
+    background-color: var(--color-foreground);
+  }
   .bg-input {
     background-color: var(--color-input);
   }
@@ -1540,6 +1555,9 @@
   }
   .text-accent-foreground {
     color: var(--color-accent-foreground);
+  }
+  .text-background {
+    color: var(--color-background);
   }
   .text-card-foreground {
     color: var(--color-card-foreground);
@@ -3405,6 +3423,11 @@
         border-bottom-style: var(--tw-border-style);
         border-bottom-width: 0px;
       }
+    }
+  }
+  .\[\&\[aria-orientation\=horizontal\]\>div\]\:rotate-90 {
+    &[aria-orientation=horizontal]>div {
+      rotate: 90deg;
     }
   }
   .\[\&\[data-open\=true\]\>svg\]\:rotate-180 {

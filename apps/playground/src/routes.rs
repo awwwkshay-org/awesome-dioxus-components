@@ -248,12 +248,27 @@ pub fn Layout() -> Element {
     let current_route = use_route::<Route>();
 
     rsx! {
-        components::ui::SidebarProvider { class: "h-full",
-            components::ui::Sidebar {
+        components::ui::ResizablePanelGroup {
+            direction: components::ui::ResizableDirection::Horizontal,
+            class: "h-full w-full",
+            components::ui::ResizablePanel {
+                index: 0usize,
+                default_size: 18.0,
+                min_size: 12.0,
+                max_size: 30.0,
+                class: "flex h-full min-w-0 flex-col",
                 components::ui::SidebarHeader {
-                    Link { class: "flex shrink-0 items-center gap-2 text-lg font-bold", to: Route::Home {},
-                        img { class: "size-8 rounded-md", src: PLAYGROUND_LOGO, alt: "adico logo" }
-                        span { "adico playground" }
+                    // `Link`'s own `shrink-0` (harmless under the old fixed
+                    // 16rem `Sidebar`, which never got narrow enough for it
+                    // to matter) actively fights a resizable nav column: it
+                    // stops this row from shrinking at all, so "adico
+                    // playground" is forced to wrap instead of truncating
+                    // once the column is dragged narrow. `min-w-0` +
+                    // wrapping the text in its own `truncate` span lets the
+                    // row shrink and elide instead.
+                    Link { class: "flex min-w-0 items-center gap-2 text-lg font-bold", to: Route::Home {},
+                        img { class: "size-8 shrink-0 rounded-md", src: PLAYGROUND_LOGO, alt: "adico logo" }
+                        span { class: "min-w-0 truncate", "adico playground" }
                     }
                 }
                 components::ui::SidebarContent {
@@ -266,7 +281,22 @@ pub fn Layout() -> Element {
                                             onclick: move |_| { navigator.push(route.clone()); },
                                             components::ui::SidebarMenuButton {
                                                 is_active: current_route == route,
-                                                "{label}"
+                                                // `SidebarMenuButton` passes
+                                                // its children straight
+                                                // through with no
+                                                // truncation handling of its
+                                                // own (its own root button
+                                                // has `overflow-hidden` but
+                                                // not `whitespace-nowrap`,
+                                                // so a bare text child still
+                                                // wraps rather than eliding)
+                                                // -- wrapping the label in
+                                                // its own `min-w-0 truncate`
+                                                // span here is this
+                                                // playground's own
+                                                // composition choice, not a
+                                                // registry change.
+                                                span { class: "min-w-0 flex-1 truncate", "{label}" }
                                             }
                                         }
                                     }
@@ -282,12 +312,14 @@ pub fn Layout() -> Element {
                     }
                     ThemeBuilderLauncher {}
                 }
-                components::ui::SidebarRail {}
             }
-            components::ui::SidebarInset {
-                div { class: "flex items-center gap-2 border-b border-border p-3",
-                    components::ui::SidebarTrigger { "☰" }
-                }
+            components::ui::ResizableHandle { handle_index: 0usize, with_handle: true }
+            components::ui::ResizablePanel {
+                index: 1usize,
+                default_size: 82.0,
+                min_size: 70.0,
+                max_size: 88.0,
+                class: "flex h-full min-h-0 flex-col",
                 div { class: "min-h-0 flex-1 overflow-y-auto p-3 lg:p-6",
                     Outlet::<Route> {}
                 }

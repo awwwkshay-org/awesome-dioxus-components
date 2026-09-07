@@ -1,13 +1,13 @@
 {
   "name": "resizable",
   "type": "registry:ui",
-  "description": "A source-owned draggable panel-group splitter for Dioxus with no dedicated primitive dependency.",
+  "description": "A source-owned draggable panel-group splitter for Dioxus with no dedicated primitive behavior.",
   "files": [
     {
       "source": "ui/resizable.rs",
       "targetRoot": "ui",
       "target": "resizable.rs",
-      "checksum": "b3b1bc7edd0473fc23e3c8a608cf733c812cae828cd15e843ddcc58311501a7f"
+      "checksum": "ca8316de185b4e0bcc78b4bc44e24d59324bc689f76bc3608a8e9339e0603a4c"
     }
   ],
   "registryDependencies": [
@@ -18,6 +18,14 @@
       "crate": "dioxus",
       "package": null,
       "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
       "features": [],
       "defaultFeatures": true,
       "target": null

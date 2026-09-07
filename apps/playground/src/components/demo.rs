@@ -92,68 +92,85 @@ pub fn Demo(
                     "Center"
                 }
             }
-            div { class: "mt-3 grid min-h-0 flex-1 gap-3", style: "grid-template-rows: minmax(0, 3fr) minmax(0, 1fr);",
-                div {
-                    class: "relative z-20 grid min-h-0 cursor-grab place-items-center overflow-visible rounded-lg border border-border bg-muted/20 p-6",
-                    style: "background-image: linear-gradient(hsl(var(--border) / 0.08) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border) / 0.08) 1px, transparent 1px); background-size: 2rem 2rem;",
-                    onpointerdown: move |event: Event<PointerData>| {
-                        let point = event.client_coordinates();
-                        pan.set(
-                            Some(PanStart {
-                                pointer: (point.x, point.y),
-                                offset: *offset.peek(),
-                            }),
-                        );
-                    },
+            ui::ResizablePanelGroup {
+                direction: ui::ResizableDirection::Vertical,
+                class: "mt-3 min-h-0 flex-1 gap-3",
+                ui::ResizablePanel {
+                    index: 0usize,
+                    default_size: 70.0,
+                    min_size: 40.0,
+                    max_size: 85.0,
+                    class: "flex min-h-0 flex-col",
                     div {
-                        class: "text-card-foreground",
-                        style: wrapper_style,
-                        // Pan starts only from the canvas background: a drag
-                        // beginning on the demoed component must reach the
-                        // component, not move it around.
+                        class: "relative z-20 grid min-h-0 flex-1 cursor-grab place-items-center overflow-visible rounded-lg border border-border bg-muted/20 p-6",
+                        style: "background-image: linear-gradient(hsl(var(--border) / 0.08) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border) / 0.08) 1px, transparent 1px); background-size: 2rem 2rem;",
                         onpointerdown: move |event: Event<PointerData>| {
-                            event.stop_propagation();
+                            let point = event.client_coordinates();
+                            pan.set(
+                                Some(PanStart {
+                                    pointer: (point.x, point.y),
+                                    offset: *offset.peek(),
+                                }),
+                            );
                         },
-                        {children}
-                    }
-                    if let Some(start) = *pan.read() {
                         div {
-                            class: "fixed inset-0 z-[100] cursor-grabbing select-none",
-                            onpointermove: move |event: Event<PointerData>| {
-                                let point = event.client_coordinates();
-                                offset
-                                    .set((
-                                        start.offset.0 + (point.x - start.pointer.0),
-                                        start.offset.1 + (point.y - start.pointer.1),
-                                    ));
+                            class: "text-card-foreground",
+                            style: wrapper_style,
+                            // Pan starts only from the canvas background: a drag
+                            // beginning on the demoed component must reach the
+                            // component, not move it around.
+                            onpointerdown: move |event: Event<PointerData>| {
+                                event.stop_propagation();
                             },
-                            onpointerup: move |_| pan.set(None),
-                            onpointercancel: move |_| pan.set(None),
+                            {children}
+                        }
+                        if let Some(start) = *pan.read() {
+                            div {
+                                class: "fixed inset-0 z-[100] cursor-grabbing select-none",
+                                onpointermove: move |event: Event<PointerData>| {
+                                    let point = event.client_coordinates();
+                                    offset
+                                        .set((
+                                            start.offset.0 + (point.x - start.pointer.0),
+                                            start.offset.1 + (point.y - start.pointer.1),
+                                        ));
+                                },
+                                onpointerup: move |_| pan.set(None),
+                                onpointercancel: move |_| pan.set(None),
+                            }
                         }
                     }
                 }
-                ui::Card { class: "z-10 flex min-h-0 flex-col border-border p-0 shadow-none",
-                    ui::CardHeader { class: "shrink-0 gap-0 border-b border-border px-4 py-2",
-                        ui::CardTitle { class: "text-sm", "Component controls" }
-                    }
-                    ui::CardContent { class: "min-h-0 flex-1 overflow-y-auto p-4",
-                        if let Some(controls) = controls {
-                            // `CardContent`'s own base class is `p-6 pt-0`
-                            // (`ui/card.rs`) -- `cn()` is a plain space-joiner,
-                            // not a tailwind-merge-style conflict resolver, so
-                            // this `CardContent`'s `p-4` override above does
-                            // NOT reliably win the cascade against the base
-                            // class on any axis (which utility wins between
-                            // two same-specificity classes depends on
-                            // Tailwind's internal generation order in
-                            // tailwind.css, not source/call order); `pt-0`
-                            // reliably wins, leaving zero visible gap above
-                            // the first control group. `mt-4` sidesteps the
-                            // conflict entirely by using a property
-                            // (margin) the base class never touches.
-                            div { class: "mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3", {controls} }
-                        } else {
-                            p { class: "mt-4 text-sm text-muted-foreground", "This component has no live props in the playground yet." }
+                ui::ResizableHandle { handle_index: 0usize, with_handle: true }
+                ui::ResizablePanel {
+                    index: 1usize,
+                    default_size: 30.0,
+                    min_size: 15.0,
+                    max_size: 60.0,
+                    class: "flex min-h-0 flex-col",
+                    ui::Card { class: "z-10 flex min-h-0 flex-1 flex-col border-border p-0 shadow-none",
+                        ui::CardHeader { class: "shrink-0 gap-0 border-b border-border px-4 py-2",
+                            ui::CardTitle { class: "text-sm", "Component controls" }
+                        }
+                        ui::CardContent { class: "min-h-0 flex-1 overflow-y-auto p-4",
+                            if let Some(controls) = controls {
+                                // `CardContent`'s own base class is `p-6 pt-0`
+                                // (`ui/card.rs`) -- `cn()` is a plain space-joiner,
+                                // not a tailwind-merge-style conflict resolver, so
+                                // this `CardContent`'s `p-4` override above does
+                                // NOT reliably win the cascade against the base
+                                // class on any axis (which utility wins between
+                                // two same-specificity classes depends on
+                                // Tailwind's internal generation order in
+                                // tailwind.css, not source/call order); `pt-0`
+                                // reliably wins, leaving zero visible gap above
+                                // the first control group. `mt-4` sidesteps the
+                                // conflict entirely by using a property
+                                // (margin) the base class never touches.
+                                div { class: "mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3", {controls} }
+                            } else {
+                                p { class: "mt-4 text-sm text-muted-foreground", "This component has no live props in the playground yet." }
+                            }
                         }
                     }
                 }
