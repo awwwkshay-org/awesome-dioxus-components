@@ -3285,7 +3285,7 @@
           "source": "ui/bubble.rs",
           "targetRoot": "ui",
           "target": "bubble.rs",
-          "checksum": "dbf1c728017eca68953dcf36ab7dc723223db60bc3673bcc0321bcde7ddb3a62"
+          "checksum": "28a41a6b324caa5dd3d025b9b90e8434117998eb1a8d4ad72f83c0d6c4a4533c"
         }
       ],
       "registryDependencies": [

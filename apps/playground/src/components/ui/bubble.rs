@@ -53,6 +53,18 @@ pub struct BubbleProps {
 }
 
 /// A single aligned message-bubble row.
+///
+/// The outer row spans the full available width so `justify-start`/
+/// `justify-end` can push a narrower bubble to either edge of a wider chat
+/// column. [`BubbleReactions`] anchors with `position: absolute` against the
+/// nearest `relative` ancestor, so that ancestor can't be this full-width
+/// row itself -- its box extends past the bubble's own rendered edge
+/// whenever the row is wider than the bubble (the normal case), stranding
+/// `left-0`/`right-0` at the row's edge instead of the bubble's. The inner
+/// `relative inline-flex` wrapper hugs exactly [`BubbleContent`]'s own
+/// rendered box (an absolutely-positioned `BubbleReactions` contributes no
+/// width to it), so [`BubbleReactions`] anchors to the bubble's real edge
+/// regardless of the row's width or of `align` differing between the two.
 #[component]
 pub fn Bubble(props: BubbleProps) -> Element {
     let justify = match props.align {
@@ -60,12 +72,14 @@ pub fn Bubble(props: BubbleProps) -> Element {
         BubbleAlign::End => "justify-end",
     };
     let class = cn(&[
-        "relative flex w-full",
+        "flex w-full",
         justify,
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        div { class, ..props.attributes, {props.children} }
+        div { class, ..props.attributes,
+            div { class: "relative inline-flex flex-col", {props.children} }
+        }
     }
 }
 
