@@ -89,15 +89,7 @@ impl SelectableContext {
     pub fn selected_texts(&self) -> Vec<String> {
         let values = self.values.read();
         let options = self.options.read();
-        values
-            .iter()
-            .filter_map(|value| {
-                options
-                    .iter()
-                    .find(|option| &option.value == value)
-                    .map(|option| option.text_value.clone())
-            })
-            .collect()
+        selection::selected_texts(values.iter(), &options)
     }
 
     pub fn is_selected(&self, value: &RcPartialEqValue) -> bool {
@@ -204,22 +196,23 @@ pub fn use_single_selectable_value<T: Clone + PartialEq + 'static>(
     on_change: Callback<Option<T>>,
     component_name: &'static str,
 ) -> (Memo<Vec<RcPartialEqValue>>, Callback<RcPartialEqValue>) {
-    let mut internal_value: Signal<Option<T>> = use_signal(|| default_value.clone());
-    let value = use_memo(move || match controlled_value {
-        Some(value) => value.cloned(),
-        None => internal_value.cloned(),
-    });
+    // The get/set state itself is the "optionally-controlled optional value"
+    // pattern shared with `accordion::Accordion` and `menu::MenuRadioGroup`
+    // (see `crate::use_optionally_controlled`'s doc comment); the
+    // `RcPartialEqValue` type-erasure/panic-on-mismatch layer below is
+    // specific to this listbox-selection composition, not shared.
+    let (value, set_value) =
+        crate::use_optionally_controlled(controlled_value, default_value, on_change);
     let values = use_memo(move || value().map(RcPartialEqValue::new).into_iter().collect());
-    let set_value = use_callback(move |incoming: RcPartialEqValue| {
+    let set_option_value = use_callback(move |incoming: RcPartialEqValue| {
         let value = incoming
             .as_ref::<T>()
             .unwrap_or_else(|| panic!("{component_name} and option value types must match"))
             .clone();
-        internal_value.set(Some(value.clone()));
-        on_change.call(Some(value));
+        set_value.call(Some(value));
     });
 
-    (values, set_value)
+    (values, set_option_value)
 }
 
 pub fn use_selectable_root(
@@ -314,14 +307,12 @@ pub fn pointer_select_commit(
     if disabled || event.trigger_button() != Some(MouseButton::Primary) {
         return false;
     }
-    let Some((x0, y0)) = down_pos.take() else {
+    let Some(start) = down_pos.take() else {
         return false;
     };
     if event.pointer_type() == "touch" {
         let p = event.client_coordinates();
-        let dx = p.x - x0;
-        let dy = p.y - y0;
-        if dx * dx + dy * dy > 25.0 {
+        if crate::gesture::moved_past_threshold(start, (p.x, p.y), 25.0) {
             return false;
         }
     }

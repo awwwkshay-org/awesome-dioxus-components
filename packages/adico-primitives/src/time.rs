@@ -6,11 +6,11 @@
 use std::time::Duration;
 
 #[cfg(target_family = "wasm")]
-pub(crate) async fn sleep(duration: Duration) {
+pub async fn sleep(duration: Duration) {
     gloo_timers::future::sleep(duration).await;
 }
 
 #[cfg(not(target_family = "wasm"))]
-pub(crate) async fn sleep(duration: Duration) {
+pub async fn sleep(duration: Duration) {
     tokio::time::sleep(duration).await;
 }

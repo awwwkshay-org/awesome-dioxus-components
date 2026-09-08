@@ -19,15 +19,42 @@
 //! no [`crate::menu::MenuContext`] counterpart to adapt onto -- forcing
 //! shared rendering code here would need that adapter without saving any of
 //! the actual APG-mandated behavior, which is this module's own already.
+//!
+//! `MenubarContent` previously rendered a plain `div` with no placement
+//! logic of its own at all, leaving anchoring entirely to the consumer's own
+//! CSS (`registry/ui/menubar.rs`'s styled facade sets no `absolute`/`fixed`
+//! utility classes either) -- no collision handling, no scroll/resize
+//! follow. `openspec/changes/deduplicate-primitives` (D11) migrates it onto
+//! the shared [`crate::positioner::Positioner`] every other anchored-content
+//! primitive in this crate already composes, anchored to a newly-added
+//! per-`MenubarMenu` `trigger_id`. `Positioner` renders inline (a
+//! `position: fixed`-styled `div`, not a DOM portal), so this module's
+//! existing `MenubarMenu`-level `onkeydown` (wrapping both the trigger and
+//! the content) keeps working completely unchanged -- keydown events
+//! dispatched inside the now-`Positioner`-wrapped content still bubble up
+//! through the normal DOM tree to that same handler.
+//!
+//! **This migration ships gated, on its own branch, separate from the rest
+//! of `deduplicate-primitives`.** menubar's exception to the shared
+//! `Positioner` requirement was originally earned by a live measurement this
+//! change's own automation environment cannot reproduce
+//! (`document.hidden` stays permanently `true` there, suppressing the
+//! `IntersectionObserver`/`ResizeObserver`/`scroll` dispatch the check
+//! depends on) -- see `openspec/specs/adico-primitives/spec.md`'s menubar
+//! Correction. It does not merge until a human runs `dx serve` in a real
+//! foreground browser, opens a menubar menu, scrolls its containing region,
+//! and confirms the trigger and content move by the same delta.
 
 use dioxus::prelude::*;
 
 use crate::{
+    ContentAlign, ContentSide,
     collection::{
         CollectionPlacement, CollectionState, collection_item, use_collection_provider,
         use_deferred_collection_focus, use_item,
     },
     direction::use_direction,
+    positioner::Positioner,
     use_animated_open, use_escape_key, use_id_or, use_unique_id,
 };
 
@@ -138,6 +165,14 @@ struct MenubarMenuContext {
     is_open: Memo<bool>,
     disabled: ReadSignal<bool>,
     initial_focus: Signal<Option<CollectionPlacement>>,
+    /// The trigger's own id, so [`MenubarContent`] (task D11,
+    /// `openspec/changes/deduplicate-primitives`) can anchor a
+    /// [`crate::positioner::Positioner`] to it. `Positioner` renders inline
+    /// (a `position: fixed`-styled `div` still in its normal place in the
+    /// component tree, not portaled elsewhere), so [`MenubarMenu`]'s own
+    /// wrapping `onkeydown` continues to see every keydown bubbling up from
+    /// inside it unchanged.
+    trigger_id: Signal<String>,
 }
 
 impl MenubarMenuContext {
@@ -187,6 +222,7 @@ pub fn MenubarMenu(props: MenubarMenuProps) -> Element {
     let focus = use_collection_provider(ctx.focus.loop_signal());
     let initial_focus = use_signal(|| None);
     let disabled = move || (ctx.disabled)() || (props.disabled)();
+    let trigger_id = use_unique_id();
 
     let mut menu_ctx = use_context_provider(|| MenubarMenuContext {
         index: props.index,
@@ -194,6 +230,7 @@ pub fn MenubarMenu(props: MenubarMenuProps) -> Element {
         is_open,
         disabled: props.disabled,
         initial_focus,
+        trigger_id,
     });
 
     // `use_escape_key` (rather than the previous bare
@@ -300,6 +337,7 @@ pub fn MenubarTrigger(props: MenubarTriggerProps) -> Element {
 
     rsx! {
         button {
+            id: menu_ctx.trigger_id,
             onmounted,
             onpointerup: move |_| {
                 if !disabled() {
@@ -335,6 +373,17 @@ pub fn MenubarTrigger(props: MenubarTriggerProps) -> Element {
 pub struct MenubarContentProps {
     /// The id of the content element.
     pub id: ReadSignal<Option<String>>,
+    /// Side of the trigger to place the content. Defaults to `Bottom` (a
+    /// menubar dropdown opening below its trigger), matching
+    /// [`crate::menu::MenuContentProps::side`]'s own default for the
+    /// equivalent top-level-trigger case.
+    #[props(default = ContentSide::Bottom)]
+    pub side: ContentSide,
+    /// Alignment of the content relative to the trigger. Defaults to
+    /// `Start`, matching [`crate::menu::MenuContentProps::align`]'s own
+    /// default.
+    #[props(default = ContentAlign::Start)]
+    pub align: ContentAlign,
     /// Additional attributes to apply to the content element.
     #[props(extends = GlobalAttributes)]
     pub attributes: Vec<Attribute>,
@@ -362,13 +411,39 @@ pub fn MenubarContent(props: MenubarContentProps) -> Element {
     let render = use_animated_open(id, menu_ctx.is_open);
     use_deferred_collection_focus(menu_ctx.focus, menu_ctx.initial_focus, render);
 
+    // `"data-state"` is a custom (non-`GlobalAttributes`-identifier) key,
+    // which can't mix with a `..spread` on a *component* call the way it can
+    // on a plain html element -- build it into the merged attribute list by
+    // hand instead, matching `menu.rs`'s `MenuContent`/`hover_card.rs`'s
+    // `HoverCardContent` (D11, `openspec/changes/deduplicate-primitives`:
+    // this component previously built its own `div` directly with plain CSS
+    // placement left entirely to the consumer's stylesheet; it now composes
+    // the shared `Positioner` the same way every other anchored-content
+    // primitive in this crate does, gaining real collision-aware placement
+    // and scroll/resize-follow instead).
+    let mut merged_attributes = vec![dioxus_core::Attribute::new(
+        "data-state",
+        if (menu_ctx.is_open)() {
+            "open"
+        } else {
+            "closed"
+        },
+        None,
+        false,
+    )];
+    merged_attributes.extend(props.attributes);
+
     rsx! {
         if render() {
-            div {
-                id,
+            Positioner {
+                id: Some(id()),
+                anchor_id: menu_ctx.trigger_id,
+                side: props.side,
+                align: props.align,
+                offset: 4.0,
                 role: "menu",
-                "data-state": if (menu_ctx.is_open)() { "open" } else { "closed" },
-                ..props.attributes,
+                attributes: merged_attributes,
+
                 {props.children}
             }
         }

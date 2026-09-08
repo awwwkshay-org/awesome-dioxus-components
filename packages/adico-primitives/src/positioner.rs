@@ -13,19 +13,33 @@
 //! doesn't have room; the cross axis is clamped to stay in the viewport
 //! rather than flipping `align`, matching Floating UI's `shift` behavior).
 //!
-//! **Scope note:** this only computes a position once, from rects the caller
+//! **Scope note:** an initial position is computed from rects the caller
 //! measured (e.g. via `MountedData::get_client_rect()` in an `onmounted`
 //! callback — a one-shot, non-eval measurement already used elsewhere in
 //! this crate, such as `move_interaction.rs`). See [`crate::use_outside_dismiss`]'s
 //! doc comment for why the historical claim that a long-lived, repeatedly-
 //! firing `document::eval` listener "does not work" in this Dioxus web
 //! runtime was retracted (2026-09-03: live Chrome verification found the
-//! pattern works, and the provenance record originally cited for the claim
-//! does not exist in this repository's history). Continuous repositioning
-//! via ResizeObserver/IntersectionObserver/MutationObserver bridges was
-//! deferred pending that correction; see task 7.5c in
-//! `openspec/changes/build-adico-component-ecosystem/tasks.md` for current
-//! status.
+//! pattern works; see that doc comment for the corrected account of the
+//! provenance record originally cited for the claim). Continuous
+//! repositioning after that initial measurement is implemented below via
+//! `use_reposition_bridge`, which wires a `MutationObserver`, a
+//! capture-phase `document` `scroll` listener, a `window` `resize` listener,
+//! and anchor/floating-element `IntersectionObserver`s into one coalesced
+//! recompute (see task 7.5c in
+//! `openspec/changes/archive/2026-09-05-build-adico-component-ecosystem/tasks.md`
+//! for the implementation notes). Its `MutationObserver` path was
+//! live-verified end-to-end (an anchor-relative CSS mutation produced an
+//! exact, pixel-matching reposition, reproduced twice). Its
+//! `IntersectionObserver`/`ResizeObserver`/`scroll` dispatch paths were
+//! confirmed only to *register* (spied via instrumented
+//! `addEventListener`), never fire-tested end-to-end: the verification
+//! session's browser tab ran with `document.hidden` permanently `true`,
+//! which Chrome throttles those callbacks under, and this was not
+//! re-attempted in a foregrounded tab. Do not treat the scroll/resize/
+//! intersection paths as live-verified until that gap is closed — see
+//! `openspec/specs/adico-primitives/spec.md`'s menubar Correction
+//! (2026-09-07) for a consumer this specifically blocks.
 
 use std::rc::Rc;
 

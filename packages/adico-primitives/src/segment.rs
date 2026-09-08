@@ -32,7 +32,7 @@ use std::str::FromStr;
 /// popover-open state) so both date and time segments -- and any future
 /// segmented field -- can share it.
 #[derive(Copy, Clone)]
-pub(crate) struct SegmentFieldContext {
+pub struct SegmentFieldContext {
     pub focus: CollectionState,
     pub disabled: ReadSignal<bool>,
     pub read_only: ReadSignal<bool>,
@@ -42,7 +42,7 @@ pub(crate) struct SegmentFieldContext {
 /// rooted at this component, returning it so the caller can also read
 /// `focus`/`disabled`/`read_only` for its own purposes (e.g. a picker root
 /// that also needs `focus` for a calendar grid).
-pub(crate) fn use_segment_field_provider(
+pub fn use_segment_field_provider(
     roving_loop: ReadSignal<bool>,
     disabled: ReadSignal<bool>,
     read_only: ReadSignal<bool>,
@@ -57,7 +57,7 @@ pub(crate) fn use_segment_field_provider(
 
 /// The props for [`NumericSegment`].
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct NumericSegmentProps<T: Clone + Integer + 'static> {
+pub struct NumericSegmentProps<T: Clone + Integer + 'static> {
     /// The index of this segment within its enclosing field's roving-focus
     /// sequence.
     pub index: ReadSignal<usize>,
@@ -107,7 +107,7 @@ pub(crate) struct NumericSegmentProps<T: Clone + Integer + 'static> {
 }
 
 #[component]
-pub(crate) fn NumericSegment<T: Clone + Copy + Integer + FromStr + Display + 'static>(
+pub fn NumericSegment<T: Clone + Copy + Integer + FromStr + Display + 'static>(
     props: NumericSegmentProps<T>,
 ) -> Element {
     let mut text_value = use_signal(|| "".to_string());
@@ -323,7 +323,7 @@ pub(crate) fn NumericSegment<T: Clone + Copy + Integer + FromStr + Display + 'st
 
 /// The props for [`MeridiemSegment`].
 #[derive(Props, Clone, PartialEq)]
-pub(crate) struct MeridiemSegmentProps {
+pub struct MeridiemSegmentProps {
     /// The index of this segment within its enclosing field's roving-focus
     /// sequence.
     pub index: ReadSignal<usize>,
@@ -352,7 +352,7 @@ pub(crate) struct MeridiemSegmentProps {
 /// instead of a numeric ARIA value, since there is nothing numeric to
 /// announce.
 #[component]
-pub(crate) fn MeridiemSegment(props: MeridiemSegmentProps) -> Element {
+pub fn MeridiemSegment(props: MeridiemSegmentProps) -> Element {
     let mut ctx = use_context::<SegmentFieldContext>();
 
     let is_pm = use_memo(move || (props.value)().unwrap_or(false));

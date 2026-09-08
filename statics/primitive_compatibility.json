@@ -68,9 +68,11 @@
         "adico_hooks_used": [
           "use_animated_open",
           "use_collection_provider",
+          "use_controlled",
           "use_direction",
           "use_id_or",
           "use_item",
+          "use_optionally_controlled",
           "use_unique_id"
         ],
         "adico_primitive_file": "packages/adico-primitives/src/accordion.rs",
@@ -1352,9 +1354,10 @@
           "use_collection_provider",
           "use_controlled",
           "use_effect_cleanup",
+          "use_escape_key",
+          "use_hover_intent",
           "use_id_or",
           "use_item",
-          "use_layer",
           "use_typeahead",
           "use_unique_id"
         ],
@@ -1668,6 +1671,16 @@
               "type": "ReadSignal<Option<String>>"
             },
             {
+              "default": "ContentSide::Bottom",
+              "name": "side",
+              "type": "ContentSide"
+            },
+            {
+              "default": "ContentAlign::Start",
+              "name": "align",
+              "type": "ContentAlign"
+            },
+            {
               "name": "attributes",
               "type": "Vec<Attribute>"
             },
@@ -1860,6 +1873,7 @@
         "adico_hooks_used": [
           "use_animated_open",
           "use_collection_provider",
+          "use_hover_intent",
           "use_item"
         ],
         "adico_primitive_file": "packages/adico-primitives/src/navigation_menu.rs",
@@ -2321,12 +2335,7 @@
           "PreviewCardContent"
         ],
         "adico_hooks_defined": [],
-        "adico_hooks_used": [
-          "use_animated_open",
-          "use_controlled",
-          "use_id_or",
-          "use_unique_id"
-        ],
+        "adico_hooks_used": [],
         "adico_primitive_file": "packages/adico-primitives/src/preview_card.rs",
         "adico_props": {
           "PreviewCardContentProps": [
@@ -3699,6 +3708,7 @@
         "adico_hooks_used": [
           "use_animated_open",
           "use_controlled",
+          "use_escape_key",
           "use_id_or",
           "use_unique_id"
         ],
@@ -3841,6 +3851,7 @@
       "fieldset",
       "form",
       "gesture",
+      "hover_intent",
       "layer",
       "menu",
       "message_scroller",
@@ -3871,9 +3882,11 @@
         "adico_hooks_used": [
           "use_animated_open",
           "use_collection_provider",
+          "use_controlled",
           "use_direction",
           "use_id_or",
           "use_item",
+          "use_optionally_controlled",
           "use_unique_id"
         ],
         "adico_primitive_file": "packages/adico-primitives/src/accordion.rs",
@@ -5902,6 +5915,7 @@
         "adico_hooks_used": [
           "use_animated_open",
           "use_controlled",
+          "use_hover_intent",
           "use_id_or",
           "use_unique_id"
         ],
@@ -5927,6 +5941,11 @@
               "default": "true",
               "name": "force_mount",
               "type": "bool"
+            },
+            {
+              "default": "Some(\"tooltip\")",
+              "name": "role",
+              "type": "Option<& 'static str>"
             },
             {
               "name": "attributes",
@@ -5956,6 +5975,16 @@
               "default": "default()",
               "name": "disabled",
               "type": "ReadSignal<bool>"
+            },
+            {
+              "default": "ReadSignal::new(Signal::new(0))",
+              "name": "delay_ms",
+              "type": "ReadSignal<u64>"
+            },
+            {
+              "default": "ReadSignal::new(Signal::new(0))",
+              "name": "close_delay_ms",
+              "type": "ReadSignal<u64>"
             },
             {
               "name": "attributes",
@@ -6065,6 +6094,16 @@
             {
               "name": "id",
               "type": "ReadSignal<Option<String>>"
+            },
+            {
+              "default": "ContentSide::Bottom",
+              "name": "side",
+              "type": "ContentSide"
+            },
+            {
+              "default": "ContentAlign::Start",
+              "name": "align",
+              "type": "ContentAlign"
             },
             {
               "name": "attributes",
@@ -7822,6 +7861,7 @@
         "adico_hooks_used": [
           "use_animated_open",
           "use_controlled",
+          "use_escape_key",
           "use_id_or",
           "use_unique_id"
         ],
@@ -7951,12 +7991,12 @@
       "source": "https://github.com/DioxusLabs/dioxus-components/tree/bf007c15d0cf4d04d3181cc46cf12325aa773955/primitives/src"
     },
     "summary": {
-      "adico_only_extras": 25,
+      "adico_only_extras": 26,
       "built": 40,
       "not_started": 2,
       "total_modules": 42
     }
   },
   "generator": "cargo xtask primitive-compat sync",
-  "synced_at": "2026-09-06"
+  "synced_at": "2026-09-08"
 }

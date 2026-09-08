@@ -196,6 +196,12 @@ pub fn ToastProvider(props: ToastProviderProps) -> Element {
         )| {
             // Generate a unique ID for the toast
             // Use a static atomic counter to ensure unique IDs
+            //
+            // Deliberately a separate counter from `lib.rs`'s `use_unique_id`
+            // (see `openspec/changes/deduplicate-primitives` design.md, D6):
+            // this one produces a bare `usize` toast key, not an
+            // ARIA-relationship string, so it isn't a second implementation
+            // of the same behavior -- documented rather than merged.
             use std::sync::atomic::{AtomicUsize, Ordering};
             static NEXT_ID: AtomicUsize = AtomicUsize::new(0);
 

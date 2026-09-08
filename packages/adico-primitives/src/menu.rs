@@ -48,13 +48,13 @@ use std::time::Duration;
 use dioxus::prelude::*;
 
 use crate::collection::{CollectionState, collection_item, use_collection_provider, use_item};
-use crate::layer::use_layer;
+use crate::hover_intent::use_hover_intent;
 use crate::positioner::Positioner;
 use crate::selection::{OptionState, RcPartialEqValue};
 use crate::typeahead::{Typeahead, use_typeahead};
 use crate::{
-    ContentAlign, ContentSide, use_animated_open, use_controlled, use_effect_cleanup, use_id_or,
-    use_unique_id,
+    ContentAlign, ContentSide, use_animated_open, use_controlled, use_effect_cleanup,
+    use_escape_key, use_id_or, use_unique_id,
 };
 
 #[derive(Clone, Copy)]
@@ -83,7 +83,9 @@ struct MenuContext {
     is_submenu: bool,
     hover_open_delay_ms: ReadSignal<u64>,
     hover_close_delay_ms: ReadSignal<u64>,
-    hover_generation: Signal<u64>,
+    /// The shared hover-intent primitive (`openspec/changes/deduplicate-primitives`,
+    /// D1/task 6.3) backing [`Self::request_hover_open`].
+    hover: crate::hover_intent::HoverIntent<bool>,
 }
 
 impl MenuContext {
@@ -118,25 +120,12 @@ impl MenuContext {
     /// hover delay; a still-pending request is superseded (not applied) if a
     /// newer request for the same scope arrives before it fires.
     fn request_hover_open(&self, open: bool) {
-        let mut generation = self.hover_generation;
-        let this_generation = generation() + 1;
-        generation.set(this_generation);
-
         let delay = if open {
             (self.hover_open_delay_ms)()
         } else {
             (self.hover_close_delay_ms)()
         };
-        let set_open = self.set_open;
-        let hover_generation = self.hover_generation;
-        spawn(async move {
-            if delay > 0 {
-                crate::time::sleep(Duration::from_millis(delay)).await;
-            }
-            if hover_generation() == this_generation {
-                set_open.call(open);
-            }
-        });
+        self.hover.request(open, delay);
     }
 }
 
@@ -210,6 +199,7 @@ pub fn Menu(props: MenuProps) -> Element {
     let trigger_id = use_unique_id();
     let focus = use_collection_provider(props.roving_loop);
     let typeahead = use_typeahead(props.typeahead_timeout);
+    let hover = use_hover_intent::<bool>(Callback::new(move |v| set_open.call(v)));
     let mut ctx = use_context_provider(|| MenuContext {
         open,
         set_open,
@@ -224,7 +214,7 @@ pub fn Menu(props: MenuProps) -> Element {
         // nearest `MenuSubmenuRoot`'s own context instead.
         hover_open_delay_ms: ReadSignal::new(Signal::new(0)),
         hover_close_delay_ms: ReadSignal::new(Signal::new(0)),
-        hover_generation: Signal::new(0),
+        hover,
     });
 
     use_effect(move || {
@@ -234,13 +224,24 @@ pub fn Menu(props: MenuProps) -> Element {
         }
     });
 
+    // `use_escape_key` (rather than the previous bare `ctx.set_open.call(false)`)
+    // gates Escape on this root menu's own `open` being the shared layer
+    // stack's topmost -- without it, a root menu closed itself on Escape even
+    // while a *different*, later-opened overlay (a dialog opened from a menu
+    // item, say) was the one the user actually meant to dismiss. Composed as a
+    // closure call inside the existing match (matching `menubar.rs`'s
+    // identical `on_escape_key` pattern), not as this element's whole
+    // `onkeydown`, because that handler also owns Enter/Arrow*/Home/End/
+    // typeahead on the same element.
+    let mut on_escape_key = use_escape_key(open, move || ctx.set_open.call(false));
+
     let handle_keydown = move |event: Event<KeyboardData>| {
         if disabled() {
             return;
         }
         match event.key() {
             Key::Enter => ctx.set_open.call(!(ctx.open)()),
-            Key::Escape => ctx.set_open.call(false),
+            Key::Escape => on_escape_key(event.clone()),
             Key::ArrowDown => ctx.focus.focus_next(),
             Key::ArrowUp => {
                 if open() {
@@ -622,15 +623,24 @@ pub struct MenuRadioGroupProps<T: Clone + PartialEq + 'static> {
 /// Must be used inside a [`Menu`].
 #[component]
 pub fn MenuRadioGroup<T: Clone + PartialEq + 'static>(props: MenuRadioGroupProps<T>) -> Element {
-    let mut internal_value: Signal<Option<T>> = use_signal(|| props.default_value.clone());
-    let value = use_memo(move || match props.value {
-        Some(controlled) => controlled.cloned(),
-        None => internal_value.cloned(),
-    });
-    let set_value = use_callback(move |v: T| {
-        internal_value.set(Some(v.clone()));
-        props.on_value_change.call(v);
-    });
+    // The "optionally-controlled optional value" pattern shared with
+    // `accordion::Accordion` and `selectable::use_single_selectable_value`
+    // (see `crate::use_optionally_controlled`'s doc comment, which this
+    // props doc already cross-referenced before that function existed to
+    // name it once). `on_value_change` is adapted from `Callback<T>` to
+    // `Callback<Option<T>>` since a radio group's own setter below never
+    // clears -- it always supplies `Some(_)`.
+    let on_value_change = props.on_value_change;
+    let (value, set_optional_value) = crate::use_optionally_controlled(
+        props.value,
+        props.default_value.clone(),
+        Callback::new(move |v: Option<T>| {
+            if let Some(v) = v {
+                on_value_change.call(v);
+            }
+        }),
+    );
+    let set_value = use_callback(move |v: T| set_optional_value.call(Some(v)));
     use_context_provider(|| MenuRadioGroupContext { value, set_value });
 
     rsx! {
@@ -763,6 +773,10 @@ pub fn MenuGroupLabel(
 /// # MenuSeparator
 ///
 /// A visual divider between menu items or groups.
+///
+/// Delegates its markup to the shared [`crate::separator::Separator`] primitive
+/// (see `openspec/changes/deduplicate-primitives`, task 3.2) rather than
+/// hardcoding the same `role`/`aria-orientation` markup independently.
 #[component]
 pub fn MenuSeparator(
     /// Additional attributes for the separator element.
@@ -770,11 +784,7 @@ pub fn MenuSeparator(
     attributes: Vec<Attribute>,
 ) -> Element {
     rsx! {
-        div {
-            role: "separator",
-            "aria-orientation": "horizontal",
-            ..attributes,
-        }
+        crate::separator::Separator { horizontal: true, attributes }
     }
 }
 
@@ -842,8 +852,8 @@ pub fn MenuSubmenuRoot(props: MenuSubmenuRootProps) -> Element {
     let disabled = move || (parent_ctx.disabled)() || (props.disabled)();
     let trigger_id = use_unique_id();
     let focus = use_collection_provider(ReadSignal::new(Signal::new(true)));
-    let layer = use_layer(open);
     let typeahead = use_typeahead(props.typeahead_timeout);
+    let hover = use_hover_intent::<bool>(Callback::new(move |v| set_open.call(v)));
 
     let ctx = use_context_provider(|| MenuContext {
         open,
@@ -856,11 +866,20 @@ pub fn MenuSubmenuRoot(props: MenuSubmenuRootProps) -> Element {
         is_submenu: true,
         hover_open_delay_ms: props.open_delay_ms,
         hover_close_delay_ms: props.close_delay_ms,
-        hover_generation: Signal::new(0),
+        hover,
     });
 
     let item = use_item(collection_item(parent_ctx.focus, props.index).disabled(disabled));
     let focused = move || item.focused();
+
+    // `use_escape_key` (rather than the previous hand-rolled `Key::Escape if
+    // open() && layer.is_topmost()` arm, which re-derived this hook's exact
+    // condition -- including its own separate `use_layer(open)` call, now
+    // removed as redundant since `use_escape_key` registers its own) also
+    // calls `prevent_default`, which the hand-rolled version did not --
+    // verified this doesn't regress submenu key handling, since this
+    // element's own div carries no meaningful default keydown action.
+    let mut on_escape_key = use_escape_key(open, move || set_open.call(false));
 
     let handle_keydown = move |event: Event<KeyboardData>| {
         if disabled() {
@@ -877,10 +896,13 @@ pub fn MenuSubmenuRoot(props: MenuSubmenuRootProps) -> Element {
                     event.stop_propagation();
                 }
             }
-            Key::Escape if open() && layer.is_topmost() => {
-                set_open.call(false);
-                event.stop_propagation();
-            }
+            // No explicit `event.stop_propagation()` here (unlike the arms
+            // above): `use_escape_key`'s own body already calls it on the
+            // cloned event, but only when it actually acts (`open() &&
+            // layer.is_topmost()`) -- adding an unconditional one here would
+            // stop propagation even when this submenu didn't handle the key,
+            // a behavior change beyond what this consolidation should make.
+            Key::Escape => on_escape_key(event.clone()),
             Key::Character(text) if open() && text != " " => {
                 let code = event.code().to_string();
                 ctx.handle_typeahead_character(&text, &code);

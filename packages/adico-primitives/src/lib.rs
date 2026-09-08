@@ -55,6 +55,7 @@ pub mod fieldset;
 pub mod form;
 pub mod gesture;
 pub mod hover_card;
+pub mod hover_intent;
 pub mod label;
 pub mod menu;
 pub mod menubar;
@@ -94,15 +95,22 @@ pub mod pointer;
 pub mod portal;
 pub mod positioner;
 pub mod scroll_lock;
-mod segment;
+pub mod segment;
 pub mod selectable;
 pub mod selection;
-mod time;
+pub mod time;
 
 #[cfg(any(feature = "web", feature = "native"))]
 const FOCUS_TRAP_JS: Asset = asset!("/src/js/focus-trap.js");
 
 /// Generate a runtime-unique identifier suitable for ARIA relationships.
+///
+/// This is the crate's canonical id generator, but not its only monotonic
+/// counter: `toast.rs`'s own `NEXT_ID` produces bare `usize` toast keys (not
+/// ARIA-shaped strings) and `portal.rs`'s uses a `GlobalSignal<usize>`, a
+/// different mechanism entirely. See `openspec/changes/deduplicate-primitives`
+/// design.md (D6) for why those two are documented rather than merged into
+/// this one: they don't implement the same behavior this function does.
 pub fn use_unique_id() -> Signal<String> {
     static NEXT_ID: AtomicUsize = AtomicUsize::new(0);
 
@@ -159,6 +167,54 @@ pub fn use_controlled<T: Clone + PartialEq + 'static>(
     let mut internal_value = use_signal(|| prop.cloned().unwrap_or(default));
     let value = use_memo(move || prop.cloned().unwrap_or_else(&*internal_value));
     let set_value = use_callback(move |value: T| {
+        internal_value.set(value.clone());
+        on_change.call(value);
+    });
+    (value, set_value)
+}
+
+/// Like [`use_controlled`], but for a prop whose *value itself* is
+/// `Option<T>` and where "controlled, but currently nothing selected" must
+/// stay distinguishable from "not controlled at all" — `use_controlled`'s
+/// single-level `Option` can't represent that: a controlled `prop` reading
+/// `None` there always falls back to `default`, which is exactly wrong for
+/// (for example) a controlled, deliberately-cleared select.
+///
+/// So instead of a `ReadSignal<Option<T>>` that is always present, this
+/// takes the *caller's own* optionality: `controlled: None` means no
+/// controlling signal was ever wired (falls back to `default`/internal
+/// state, same as `use_controlled`); `controlled: Some(signal)` means one
+/// was, and `signal`'s value is honored exactly as read — including a
+/// `None` reading — with no fallback to `default` at all.
+///
+/// The setter's argument type is `Option<T>`, not `T` — [`accordion::Accordion`]
+/// (the one consumer that needs it) can set the value to `None` directly
+/// (collapsing a `collapsible` item), unlike `use_controlled`'s always-present
+/// `T`. [`menu::MenuRadioGroup`] and [`selectable::use_single_selectable_value`]
+/// never need that and simply always call it with `Some(_)`.
+///
+/// Three primitives independently hand-wrote this exact pattern before it
+/// was extracted here: `Accordion`'s `value`,
+/// [`selectable::use_single_selectable_value`], and
+/// [`menu::MenuRadioGroup`]'s `value` (whose own prop doc already named this
+/// as "matching `use_single_selectable_value`'s ... convention", years
+/// before this function existed to name it once). See
+/// `openspec/changes/deduplicate-primitives` design.md's corrected D7 for
+/// why this is a separate primitive from `use_controlled` rather than a
+/// consolidation onto it — routing these three through `use_controlled`
+/// directly would silently change a controlled-and-cleared value into a
+/// fallback to `default`, a real behavior regression, not a refactor.
+pub fn use_optionally_controlled<T: Clone + PartialEq + 'static>(
+    controlled: Option<ReadSignal<Option<T>>>,
+    default: Option<T>,
+    on_change: Callback<Option<T>>,
+) -> (Memo<Option<T>>, Callback<Option<T>>) {
+    let mut internal_value: Signal<Option<T>> = use_signal(|| default);
+    let value = use_memo(move || match controlled {
+        Some(signal) => signal.cloned(),
+        None => internal_value.cloned(),
+    });
+    let set_value = use_callback(move |value: Option<T>| {
         internal_value.set(value.clone());
         on_change.call(value);
     });
@@ -272,8 +328,16 @@ fn use_global_keydown_listener(_key: &'static str, _on_keydown: impl FnMut() + C
 /// "known defect on `web`" — that this hook's long-lived `document::eval`
 /// listener never registers, citing a provenance record
 /// (`provenance/records/adico-primitives-wave3-overlays.json`) as evidence.
-/// That record does not exist anywhere in this repository's git history —
-/// the citation was never backed by a real file. Live-verified this session
+///
+/// **Correction (2026-09-07) to the correction above:** the prior paragraph
+/// stated that cited record "does not exist anywhere in this repository's
+/// git history — the citation was never backed by a real file." That is
+/// false: `git log --all --name-status -- provenance/records/adico-primitives-wave3-overlays.json`
+/// shows the file was added, modified five times, and deleted as part of
+/// task 2.3's own closing commit — it was real, and gone from the working
+/// tree (not from history) by the time of this correction. The live-Chrome
+/// verification below, and the conclusion it supports, stand independently
+/// of that misstatement and are unaffected. Live-verified this session
 /// via `dx serve` + real (non-synthetic) Chrome interaction, instrumenting
 /// `Document.prototype.addEventListener` as a spy: the listener registers on
 /// every mount (confirmed across repeated open/close cycles, i.e. the

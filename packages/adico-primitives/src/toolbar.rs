@@ -10,6 +10,7 @@ use crate::collection::{
     CollectionState, Orientation, collection_item, use_collection_provider, use_item,
 };
 use crate::direction::use_direction;
+use crate::separator::Separator;
 use dioxus::prelude::*;
 
 #[derive(Clone, Copy)]
@@ -279,17 +280,16 @@ pub fn ToolbarSeparator(props: ToolbarSeparatorProps) -> Element {
     // If horizontal is explicitly set, use that, otherwise invert the toolbar orientation
     let horizontal = props.horizontal.unwrap_or(!(ctx.horizontal)());
 
-    let orientation = match horizontal {
-        true => "horizontal",
-        false => "vertical",
-    };
-
+    // Delegates its markup to the shared `Separator` primitive (see
+    // `openspec/changes/deduplicate-primitives`, task 3.1) -- this component's own
+    // value is deriving `horizontal` from the toolbar's orientation and carrying no
+    // `children`, not the `role`/`aria-orientation`/`data-orientation` markup itself,
+    // which was previously duplicated byte-for-byte from `separator::Separator`.
     rsx! {
-        div {
-            role: if !props.decorative { "separator" } else { "none" },
-            aria_orientation: if !props.decorative { orientation },
-            "data-orientation": orientation,
-            ..props.attributes,
+        Separator {
+            horizontal,
+            decorative: props.decorative,
+            attributes: props.attributes,
         }
     }
 }

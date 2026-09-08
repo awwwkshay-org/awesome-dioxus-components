@@ -5,11 +5,40 @@
 
 use adico_primitives::accordion::{Accordion, AccordionContent, AccordionItem, AccordionTrigger};
 use dioxus::prelude::*;
+use dioxus_core::{Event, Mutation};
+use dioxus_html::{
+    EventData, SerializedHtmlEventConverter, SerializedMouseData, set_event_converter,
+};
 
 fn render(root: fn() -> Element) -> String {
     let mut dom = VirtualDom::new(root);
     dom.rebuild_in_place();
     dioxus_ssr::render(&dom)
+}
+
+/// Simulates a real click on the first `onclick`-listening element in `dom`
+/// and returns the freshly re-rendered HTML. Used below to exercise
+/// `Accordion`'s toggle logic dynamically (open/collapse via
+/// `crate::use_optionally_controlled`), not just its first-render output --
+/// see `openspec/changes/deduplicate-primitives`, task 4.2.
+fn click_first(dom: &mut VirtualDom) -> String {
+    let edits = dom.rebuild_to_vec();
+    let id = edits
+        .edits
+        .iter()
+        .find_map(|edit| match edit {
+            Mutation::NewEventListener { name, id } if name == "click" => Some(*id),
+            _ => None,
+        })
+        .expect("a click listener");
+    set_event_converter(Box::new(SerializedHtmlEventConverter));
+    let event = Event::new(
+        EventData::Mouse(SerializedMouseData::default()).into_any(),
+        true,
+    );
+    dom.runtime().handle_event("click", event, id);
+    dom.render_immediate_to_vec();
+    dioxus_ssr::render(dom)
 }
 
 #[component]
@@ -87,6 +116,77 @@ fn the_default_value_s_content_renders_its_children() {
     let html = render(TwoItemAccordion);
     assert!(html.contains("First content"), "{html}");
     assert!(!html.contains("Second content"), "{html}");
+}
+
+#[component]
+fn ControlledAndClearedAccordion() -> Element {
+    rsx! {
+        Accordion {
+            value: Some(ReadSignal::new(Signal::new(None))),
+            default_value: "item-1".to_string(),
+            AccordionItem { value: "item-1".to_string(), index: 0usize,
+                AccordionTrigger { "First" }
+                AccordionContent { "First content" }
+            }
+        }
+    }
+}
+
+/// Regression test for `crate::use_optionally_controlled`'s central design
+/// decision (see `openspec/changes/deduplicate-primitives` design.md's
+/// corrected D7): a *controlled* accordion whose value signal reads `None`
+/// must render nothing open, not silently fall back to `default_value` the
+/// way `use_controlled` would. `default_value: "item-1"` is set specifically
+/// so a wrong (use_controlled-style) fallback would make this test fail.
+#[test]
+fn a_controlled_accordion_with_no_value_selected_ignores_default_value() {
+    let html = render(ControlledAndClearedAccordion);
+    assert!(html.contains("aria-expanded=false"), "{html}");
+    assert!(!html.contains("First content"), "{html}");
+}
+
+#[component]
+fn NoDefaultAccordion() -> Element {
+    rsx! {
+        Accordion {
+            AccordionItem { value: "item-1".to_string(), index: 0usize,
+                AccordionTrigger { "First" }
+                AccordionContent { "First content" }
+            }
+        }
+    }
+}
+
+#[test]
+fn clicking_an_uncontrolled_trigger_opens_its_item() {
+    let mut dom = VirtualDom::new(NoDefaultAccordion);
+    let html = click_first(&mut dom);
+    assert!(html.contains("aria-expanded=true"), "{html}");
+    assert!(html.contains(r#"data-state="open""#), "{html}");
+    // Same SSR-fallback-only gate as `the_default_value_s_content_renders_its_children`
+    // above: this item starts *closed*, so its content only mounts once
+    // `use_animated_open`'s content-mounted signal flips -- on the real
+    // `web`/`native` path that happens from inside a `use_effect` that a
+    // synthetic click-and-`render_immediate_to_vec()` dispatch does not drive
+    // to completion. `clicking_an_uncontrolled_open_item_s_trigger_collapses_it_when_collapsible`
+    // below doesn't need this gate: that item starts already open (mounted at
+    // initial render), so its content exists before the click closes it.
+    #[cfg(not(any(feature = "web", feature = "native")))]
+    assert!(html.contains("First content"), "{html}");
+}
+
+#[test]
+fn clicking_an_uncontrolled_open_item_s_trigger_collapses_it_when_collapsible() {
+    // `TwoItemAccordion`'s `default_value: "item-1"` starts item-1 open, and
+    // `Accordion::collapsible` defaults to `true` -- clicking its own trigger
+    // again should collapse it to nothing open, exercising the `None` branch
+    // of `Accordion`'s toggle logic (the one `use_optionally_controlled`'s
+    // `Option<T>`-valued setter exists to support).
+    let mut dom = VirtualDom::new(TwoItemAccordion);
+    let html = click_first(&mut dom);
+    assert!(html.contains("aria-expanded=false"), "{html}");
+    assert!(html.contains(r#"data-state="closed""#), "{html}");
+    assert!(!html.contains("First content"), "{html}");
 }
 
 #[component]

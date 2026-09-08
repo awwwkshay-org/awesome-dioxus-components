@@ -44,6 +44,13 @@ struct PortalCtx {
 }
 
 /// Create a portal.
+///
+/// Deliberately a separate counter from `lib.rs`'s `use_unique_id` (see
+/// `openspec/changes/deduplicate-primitives` design.md, D6): a
+/// `GlobalSignal<usize>` is a different mechanism from `use_unique_id`'s
+/// `AtomicUsize`, needed here because portal ids are read reactively across
+/// components rather than generated once per hook call -- documented rather
+/// than merged.
 pub fn use_portal() -> PortalId {
     static NEXT_ID: GlobalSignal<usize> = Signal::global(|| 0);
 

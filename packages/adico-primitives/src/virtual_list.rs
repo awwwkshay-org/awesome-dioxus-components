@@ -12,8 +12,9 @@
 // real browser testing (Playwright, not just compile checks) found upstream's long-lived
 // `document::eval` scroll subscription never registers in this Dioxus 0.7.9/0.7.10 web
 // runtime, matching the exact defect class already recorded for
-// `use_global_escape_listener`/`use_outside_dismiss` in this change's own layer.rs/positioner.rs
-// investigations (Popover's/Select's Escape and positioning both hit variants of it) — so
+// `use_escape_key`/`use_outside_dismiss` (renamed from `use_global_escape_listener`) in this
+// change's own layer.rs/positioner.rs investigations (Popover's/Select's Escape and
+// positioning both hit variants of it) — so
 // VirtualList rendered zero items, `viewport_size` never leaving its initial `0`. Following
 // the same fix pattern used elsewhere in this crate (a native, reliably-firing Dioxus event
 // instead of root-causing the interpreter-level registration failure), this module replaces

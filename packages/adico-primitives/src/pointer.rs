@@ -15,6 +15,16 @@
 // `slider`/`color_picker` does not track position on `web` today. Not re-investigated here;
 // see `gesture.rs`'s doc comment for why a fix is out of scope for a small task (no drop-in
 // native-Dioxus-event substitute for a *global*, not per-element, pointer tracker).
+//
+// **Note (2026-09-07):** the blanket claim above — that a long-lived, repeatedly-firing
+// `document::eval` listener "never registers" in this runtime — was later found not to hold
+// in general: `lib.rs`'s `use_outside_dismiss` doc comment records a 2026-09-03 live-Chrome
+// verification of the *identical* long-lived-listener pattern working correctly and
+// repeatedly. This file's own claim was never independently re-verified against that
+// finding (it concerns a different listener — a global `window`-level pointer tracker, not
+// `use_outside_dismiss`'s `document`-level one), so its "plausible, not independently
+// re-confirmed" status is unchanged, but it should no longer be read as corroborated by a
+// crate-wide defect that turned out not to generalize.
 
 //! A global pointer-position registry.
 //!

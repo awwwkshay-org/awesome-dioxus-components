@@ -23,20 +23,43 @@
 use dioxus::prelude::*;
 
 use crate::{
-    ContentAlign, ContentSide, positioner::Positioner, use_animated_open, use_controlled,
-    use_id_or, use_unique_id,
+    ContentAlign, ContentSide, hover_intent::HoverIntent, hover_intent::use_hover_intent,
+    positioner::Positioner, use_animated_open, use_controlled, use_id_or, use_unique_id,
 };
 
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 struct HoverCardCtx {
     // State
     open: Memo<bool>,
-    set_open: Callback<bool>,
     disabled: ReadSignal<bool>,
+    delay_ms: ReadSignal<u64>,
+    close_delay_ms: ReadSignal<u64>,
+    /// The shared hover-intent primitive (`openspec/changes/deduplicate-primitives`,
+    /// D1/D2, task 7.1) backing [`Self::request_open`]. Both configured delays
+    /// default to `0`, at which `hover_intent::HoverIntent::request` still resolves
+    /// through a spawned task rather than applying in the same frame -- an
+    /// unobservable-in-practice, but real, difference from this component's own
+    /// previous direct `set_open.call(..)` in `HoverCardTrigger`/
+    /// `HoverCardContent`'s mouse/focus handlers (see design.md's D2 section).
+    hover: HoverIntent<bool>,
 
     // ARIA attributes
     content_id: Signal<String>,
     trigger_id: Signal<String>,
+}
+
+impl HoverCardCtx {
+    /// Requests opening (or closing) after this card's configured delay,
+    /// canceling a still-pending earlier request for this same card. Delay
+    /// selection mirrors `menu.rs`'s `MenuContext::request_hover_open`.
+    fn request_open(&self, open: bool) {
+        let delay = if open {
+            (self.delay_ms)()
+        } else {
+            (self.close_delay_ms)()
+        };
+        self.hover.request(open, delay);
+    }
 }
 
 /// The props for the [`HoverCard`] component
@@ -56,6 +79,20 @@ pub struct HoverCardProps {
     /// Whether the hover card is disabled
     #[props(default)]
     pub disabled: ReadSignal<bool>,
+
+    /// Milliseconds to wait after the pointer enters the trigger before
+    /// opening. Defaults to `0`, preserving this component's own historical
+    /// instant-open behavior (unlike [`crate::preview_card::PreviewCard`]'s
+    /// facade, which supplies `600`).
+    #[props(default = ReadSignal::new(Signal::new(0)))]
+    pub delay_ms: ReadSignal<u64>,
+
+    /// Milliseconds to wait after the pointer leaves the trigger (or
+    /// content) before closing. Defaults to `0`, preserving this
+    /// component's own historical instant-close behavior (unlike
+    /// [`crate::preview_card::PreviewCard`]'s facade, which supplies `300`).
+    #[props(default = ReadSignal::new(Signal::new(0)))]
+    pub close_delay_ms: ReadSignal<u64>,
 
     /// Additional attributes for the hover card
     #[props(extends = GlobalAttributes)]
@@ -109,11 +146,14 @@ pub fn HoverCard(props: HoverCardProps) -> Element {
     // Generate a unique ID for the hover card content
     let content_id = use_unique_id();
     let trigger_id = use_unique_id();
+    let hover = use_hover_intent::<bool>(Callback::new(move |v| set_open.call(v)));
 
     use_context_provider(|| HoverCardCtx {
         open,
-        set_open,
         disabled: props.disabled,
+        delay_ms: props.delay_ms,
+        close_delay_ms: props.close_delay_ms,
+        hover,
         content_id,
         trigger_id,
     });
@@ -160,13 +200,13 @@ pub fn HoverCardTrigger(props: HoverCardTriggerProps) -> Element {
     // Handle mouse events
     let open_event = move || {
         if !(ctx.disabled)() {
-            ctx.set_open.call(true);
+            ctx.request_open(true);
         }
     };
 
     let close_event = move || {
         if !(ctx.disabled)() {
-            ctx.set_open.call(false);
+            ctx.request_open(false);
         }
     };
 
@@ -212,6 +252,15 @@ pub struct HoverCardContentProps {
     #[props(default = true)]
     pub force_mount: bool,
 
+    /// The ARIA role applied to the positioned content. Defaults to
+    /// `Some("tooltip")`, this component's own historical behavior.
+    /// [`crate::preview_card::PreviewCardContent`]'s facade passes `None`
+    /// (`openspec/changes/deduplicate-primitives`, D2): its content is rich
+    /// and potentially interactive, which the ARIA tooltip role's own spec
+    /// discourages.
+    #[props(default = Some("tooltip"))]
+    pub role: Option<&'static str>,
+
     /// Additional attributes for the hover card content
     #[props(extends = GlobalAttributes)]
     pub attributes: Vec<Attribute>,
@@ -248,13 +297,13 @@ pub fn HoverCardContent(props: HoverCardContentProps) -> Element {
     // Handle mouse events to keep the hover card open when hovered
     let handle_mouse_enter = move |_: Event<MouseData>| {
         if !(ctx.disabled)() {
-            ctx.set_open.call(true);
+            ctx.request_open(true);
         }
     };
 
     let handle_mouse_leave = move |_: Event<MouseData>| {
         if !(ctx.disabled)() {
-            ctx.set_open.call(false);
+            ctx.request_open(false);
         }
     };
 
@@ -263,13 +312,20 @@ pub fn HoverCardContent(props: HoverCardContentProps) -> Element {
     // `"data-state"` is a custom (non-`GlobalAttributes`-identifier) key,
     // which can't mix with a `..spread` on a *component* call the way it can
     // on a plain html element — build it into the merged attribute list by
-    // hand instead (matching `popover.rs`'s identical fix).
+    // hand instead (matching `popover.rs`'s identical fix). `role` is folded
+    // in the same way (rather than passed as a `Positioner { role: .. }`
+    // field, which the `extends = GlobalAttributes` sugar would otherwise
+    // capture unconditionally) so it can be omitted entirely when
+    // `props.role` is `None`.
     let mut merged_attributes = vec![dioxus_core::Attribute::new(
         "data-state",
         if is_open { "open" } else { "closed" },
         None,
         false,
     )];
+    if let Some(role) = props.role {
+        merged_attributes.push(dioxus_core::Attribute::new("role", role, None, false));
+    }
     merged_attributes.extend(props.attributes);
 
     rsx! {
@@ -280,7 +336,6 @@ pub fn HoverCardContent(props: HoverCardContentProps) -> Element {
                 side: props.side,
                 align: props.align,
                 offset: 4.0,
-                role: "tooltip",
                 attributes: merged_attributes,
 
                 // Mouse events to keep the hover card open when hovered

@@ -14,12 +14,15 @@
 // 2. Menubar opens/closes only on click (hover only *switches* an already-open menu, per its own
 //    `MenubarTrigger::onmouseenter` guard); a navigation menu's primary activation is hover, with
 //    an open delay so moving the pointer across a plain link row doesn't flash every dropdown.
-//    `NavigationMenuCtx::request_open` (a debounced-by-generation-counter delay, the same
-//    technique `preview_card.rs` uses for its own open/close delays, not shared code between the
-//    two files -- two call sites isn't yet a pattern this crate's own "don't add abstractions
-//    beyond what's needed" convention says to extract) applies `delay_ms` only when *nothing* is
-//    currently open; once one item is open, hovering a sibling trigger switches immediately with
-//    no delay, matching real navigation-menu feel and Base UI's own behavior.
+//    `NavigationMenuCtx::request_open` applies `delay_ms` only when *nothing* is currently open;
+//    once one item is open, hovering a sibling trigger switches immediately with no delay,
+//    matching real navigation-menu feel and Base UI's own behavior. The debounced-by-
+//    generation-counter delay mechanics themselves are the shared `crate::hover_intent` primitive
+//    (`openspec/changes/deduplicate-primitives`, D1) -- this used to be "the same technique
+//    `preview_card.rs` uses ... not shared code", copied independently in three files; it no
+//    longer is. `request_open` keeps only the delay-*selection* logic above, which stays local
+//    since it reads this context's own ambient `open_index` state, not something the shared
+//    primitive can express generically.
 //
 // Deliberately NOT built (documented, not silently dropped): `NavigationMenuViewport`'s actual
 // Base UI behavior -- a single shared popup region that animates its width/height/position while
@@ -39,13 +42,12 @@
 //! [Disclosure Navigation](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/) shape applied
 //! to a roving-focus top-level item row.
 
-use std::time::Duration;
-
 use dioxus::prelude::*;
 
 use crate::{
     ContentAlign, ContentSide,
     collection::{CollectionState, collection_item, use_collection_provider, use_item},
+    hover_intent::{HoverIntent, use_hover_intent},
     positioner::Positioner,
     use_animated_open,
 };
@@ -57,7 +59,9 @@ struct NavigationMenuCtx {
     disabled: ReadSignal<bool>,
     delay_ms: ReadSignal<u64>,
     close_delay_ms: ReadSignal<u64>,
-    request_generation: Signal<u64>,
+    /// The shared hover-intent primitive (`openspec/changes/deduplicate-primitives`,
+    /// D1/task 6.4) backing [`Self::request_open`].
+    hover: HoverIntent<Option<usize>>,
     focus: CollectionState,
 }
 
@@ -67,29 +71,36 @@ impl NavigationMenuCtx {
     /// already-open-adjacent triggers, which applies immediately (no
     /// delay), matching real navigation-menu hover feel.
     fn request_open(&self, index: Option<usize>) {
-        let mut generation = self.request_generation;
-        let this_generation = generation() + 1;
-        generation.set(this_generation);
+        let delay = resolve_open_request_delay(
+            index,
+            (self.open_index)(),
+            (self.delay_ms)(),
+            (self.close_delay_ms)(),
+        );
+        self.hover.request(index, delay);
+    }
+}
 
-        let switching_between_open_items = index.is_some() && (self.open_index)().is_some();
-        let delay = if switching_between_open_items {
-            0
-        } else if index.is_some() {
-            (self.delay_ms)()
-        } else {
-            (self.close_delay_ms)()
-        };
-
-        let set_open_index = self.set_open_index;
-        let request_generation = self.request_generation;
-        spawn(async move {
-            if delay > 0 {
-                crate::time::sleep(Duration::from_millis(delay)).await;
-            }
-            if request_generation() == this_generation {
-                set_open_index.call(index);
-            }
-        });
+/// The pure delay-selection decision `request_open` makes, extracted so it is
+/// directly unit-testable without needing a live Dioxus runtime or a real
+/// timer (`hover_intent`'s own async supersede mechanics are tested
+/// separately, in `tests/test_hover_intent.rs`): switching directly from one
+/// already-open item to a sibling applies zero delay regardless of the
+/// configured `delay_ms`/`close_delay_ms`, matching real navigation-menu
+/// hover feel and Base UI's own behavior.
+fn resolve_open_request_delay(
+    requested_index: Option<usize>,
+    currently_open_index: Option<usize>,
+    delay_ms: u64,
+    close_delay_ms: u64,
+) -> u64 {
+    let switching_between_open_items = requested_index.is_some() && currently_open_index.is_some();
+    if switching_between_open_items {
+        0
+    } else if requested_index.is_some() {
+        delay_ms
+    } else {
+        close_delay_ms
     }
 }
 
@@ -171,6 +182,8 @@ pub fn NavigationMenuRoot(props: NavigationMenuRootProps) -> Element {
     let mut open_index = use_signal(|| None);
     let set_open_index = use_callback(move |index| open_index.set(index));
     let focus = use_collection_provider(props.roving_loop);
+    let hover =
+        use_hover_intent::<Option<usize>>(Callback::new(move |index| set_open_index.call(index)));
 
     use_context_provider(|| NavigationMenuCtx {
         open_index,
@@ -178,7 +191,7 @@ pub fn NavigationMenuRoot(props: NavigationMenuRootProps) -> Element {
         disabled: props.disabled,
         delay_ms: props.delay_ms,
         close_delay_ms: props.close_delay_ms,
-        request_generation: Signal::new(0),
+        hover,
         focus,
     });
 
@@ -550,5 +563,31 @@ mod tests {
         dom.rebuild_in_place();
         let html = dioxus_ssr::render(&dom);
         assert!(html.contains(r#"aria-current="page""#), "{html}");
+    }
+
+    /// Regression coverage for task 6.4 (`openspec/changes/deduplicate-primitives`):
+    /// before this change, this decision lived inline inside `request_open`'s
+    /// generation/spawn body, untestable without driving a real (or paused)
+    /// async timer -- a harness this crate's own `test_toast.rs` documents a
+    /// real, failed attempt at building. Extracted as a pure function, it is
+    /// directly testable: switching between two already-open items must
+    /// resolve to zero delay regardless of how large `delay_ms`/`close_delay_ms`
+    /// are configured.
+    #[test]
+    fn switching_between_open_items_ignores_the_configured_delay() {
+        assert_eq!(
+            resolve_open_request_delay(Some(1), Some(0), 99_999, 99_999),
+            0
+        );
+    }
+
+    #[test]
+    fn opening_when_nothing_else_is_open_uses_the_configured_open_delay() {
+        assert_eq!(resolve_open_request_delay(Some(0), None, 200, 150), 200);
+    }
+
+    #[test]
+    fn closing_uses_the_configured_close_delay() {
+        assert_eq!(resolve_open_request_delay(None, Some(0), 200, 150), 150);
     }
 }

@@ -39,7 +39,9 @@ use crate::collection::{
     CollectionState, Orientation, collection_item, use_collection_provider, use_item,
 };
 use crate::direction::use_direction;
-use crate::{use_animated_open, use_id_or, use_unique_id};
+use crate::{
+    use_animated_open, use_controlled, use_id_or, use_optionally_controlled, use_unique_id,
+};
 use dioxus::prelude::*;
 
 /// Internal accordion context, shared by [`Accordion`] and [`AccordionMulti`].
@@ -187,23 +189,27 @@ pub struct AccordionProps {
 /// - `data-disabled`: Indicates if the accordion is disabled. values are `true` or `false`.
 #[component]
 pub fn Accordion(props: AccordionProps) -> Element {
-    let mut internal_value: Signal<Option<String>> = use_signal(|| props.default_value.clone());
-    let open_value = use_memo(move || match props.value {
-        Some(value) => value.cloned(),
-        None => internal_value.cloned(),
-    });
+    // The "optionally-controlled optional value" pattern shared with
+    // `menu::MenuRadioGroup` and `selectable::use_single_selectable_value`
+    // (see `crate::use_optionally_controlled`'s doc comment) provides the
+    // raw open-value get/set, including `on_value_change` dispatch;
+    // `collapsible`'s toggle-vs-collapse logic below layers on top of it,
+    // same as before.
+    let (open_value, set_open_value) = use_optionally_controlled(
+        props.value,
+        props.default_value.clone(),
+        props.on_value_change,
+    );
     let open_values = use_memo(move || open_value().into_iter().collect::<Vec<_>>());
 
     let collapsible = props.collapsible;
-    let on_value_change = props.on_value_change;
     let toggle = use_callback(move |value: String| {
         let next = if open_value().as_deref() == Some(value.as_str()) {
             if collapsible() { None } else { open_value() }
         } else {
             Some(value)
         };
-        internal_value.set(next.clone());
-        on_value_change.call(next);
+        set_open_value.call(next);
     });
 
     let focus = use_collection_provider(ReadSignal::new(Signal::new(true)));
@@ -278,13 +284,18 @@ pub struct AccordionMultiProps {
 /// - `data-disabled`: Indicates if the accordion is disabled. values are `true` or `false`.
 #[component]
 pub fn AccordionMulti(props: AccordionMultiProps) -> Element {
-    let mut internal_values: Signal<Vec<String>> = use_signal(|| props.default_values.clone());
-    let open_values = use_memo(move || match props.values.cloned() {
-        Some(values) => values,
-        None => internal_values.cloned(),
-    });
+    // `Vec<String>` already has a native "nothing open" representation
+    // (`vec![]`), so unlike `Accordion`'s single-value `value` above, there
+    // is no "controlled but ambiguous" state to preserve here -- this is a
+    // genuine, behavior-identical duplicate of `use_controlled`, not an
+    // instance of the tri-state pattern `use_optionally_controlled` exists
+    // for. See `openspec/changes/deduplicate-primitives` design.md (D7).
+    let (open_values, set_open_values) = use_controlled(
+        props.values,
+        props.default_values.clone(),
+        props.on_values_change,
+    );
 
-    let on_values_change = props.on_values_change;
     let toggle = use_callback(move |value: String| {
         let mut current = open_values();
         if let Some(pos) = current.iter().position(|v| v == &value) {
@@ -292,8 +303,7 @@ pub fn AccordionMulti(props: AccordionMultiProps) -> Element {
         } else {
             current.push(value);
         }
-        internal_values.set(current.clone());
-        on_values_change.call(current);
+        set_open_values.call(current);
     });
 
     let focus = use_collection_provider(ReadSignal::new(Signal::new(true)));

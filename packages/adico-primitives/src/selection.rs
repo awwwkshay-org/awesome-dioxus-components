@@ -84,11 +84,15 @@ pub fn option_text_value<T: 'static>(
 }
 
 /// Display text for selected values in selection order.
-pub fn selected_text<'a>(
+/// The display text for every value in `values` that has a matching
+/// registered option, in `values`' own order. A value with no matching
+/// option (not yet registered, or already removed) is simply omitted, not
+/// represented as an empty string.
+pub fn selected_texts<'a>(
     values: impl IntoIterator<Item = &'a RcPartialEqValue>,
     options: &[OptionState],
-) -> Option<String> {
-    let parts: Vec<String> = values
+) -> Vec<String> {
+    values
         .into_iter()
         .filter_map(|value| {
             options
@@ -96,8 +100,16 @@ pub fn selected_text<'a>(
                 .find(|option| &option.value == value)
                 .map(|option| option.text_value.clone())
         })
-        .collect();
+        .collect()
+}
 
+/// [`selected_texts`], joined into one display string (`", "`-separated), or
+/// `None` if no value in `values` has a matching registered option.
+pub fn selected_text<'a>(
+    values: impl IntoIterator<Item = &'a RcPartialEqValue>,
+    options: &[OptionState],
+) -> Option<String> {
+    let parts = selected_texts(values, options);
     (!parts.is_empty()).then(|| parts.join(", "))
 }
 

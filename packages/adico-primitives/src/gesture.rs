@@ -38,6 +38,17 @@
 //! already-shipped, partially browser-verified components — too invasive to
 //! attempt blind. Recorded as a follow-up, not silently left implicit.
 //!
+//! **Note (2026-09-07):** the paragraph above treats
+//! `provenance/records/adico-primitives-wave3-overlays.json`'s claim that
+//! long-lived `document::eval` listeners never register as live corroboration.
+//! That blanket claim was later found not to generalize: `lib.rs`'s
+//! `use_outside_dismiss` doc comment records a 2026-09-03 live-Chrome
+//! verification of the *identical* listener pattern working correctly and
+//! repeatedly. This file's own "plausible, but unconfirmed" status for
+//! `pointer.rs`'s specific global listener was never independently re-checked
+//! against that finding, so it remains exactly as uncertain as before — no
+//! more, but also no less, corroborated than it was.
+//!
 //! This primitive itself — the long-press timer and the shared drift-check
 //! math — has no dependency on `pointer.rs`'s registry or any long-lived
 //! `document::eval` listener: it only uses this crate's own target-aware

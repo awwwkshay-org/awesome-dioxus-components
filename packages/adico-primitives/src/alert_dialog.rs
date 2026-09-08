@@ -36,6 +36,18 @@
 // offer a context-aware `AlertDialogTrigger`, nested inside `AlertDialogRoot`
 // like `DialogTrigger` already is, instead of the upstream doctest's
 // external sibling button.
+//
+// **Note (2026-09-07):** the paragraph above cites
+// `provenance/records/adico-primitives-wave3-overlays.json`'s claim that
+// `document::eval`-backed long-lived listeners never register as
+// corroboration for this file's own `dx serve` repro. That blanket claim was
+// later found not to generalize: `lib.rs`'s `use_outside_dismiss` doc comment
+// records a 2026-09-03 live-Chrome verification of the identical listener
+// pattern working correctly and repeatedly. This does not retract this
+// file's own direct real-browser finding (Escape not closing the dialog via
+// `use_global_escape_listener`) or the fix already applied for it above —
+// only the corroborating citation, which should no longer be read as
+// evidence of a crate-wide defect.
 
 //! Defines the [`AlertDialogRoot`] component and its sub-components.
 

@@ -17,7 +17,7 @@ use dioxus::prelude::*;
 
 use crate::{
     ContentAlign, ContentSide, positioner::Positioner, use_animated_open, use_controlled,
-    use_id_or, use_unique_id,
+    use_escape_key, use_id_or, use_unique_id,
 };
 
 #[derive(Clone, Copy)]
@@ -192,13 +192,13 @@ pub fn TooltipTrigger(props: TooltipTriggerProps) -> Element {
         }
     };
 
-    // Handle keyboard events
-    let handle_keydown = move |event: Event<KeyboardData>| {
-        if event.key() == Key::Escape && (ctx.open)() {
-            event.prevent_default();
-            ctx.set_open.call(false);
-        }
-    };
+    // Handle keyboard events. Routed through the shared `use_escape_key` (see
+    // `openspec/changes/deduplicate-primitives`, task 5.3) rather than a
+    // hand-rolled `Key::Escape` check: the hand-rolled version had no
+    // dismissal-layer check at all, so an open tooltip nested under another
+    // open overlay (e.g. a `Dialog`) would incorrectly close on an Escape
+    // meant for that outer overlay -- a real bug this fix also closes.
+    let handle_keydown = use_escape_key(ctx.open, move || ctx.set_open.call(false));
 
     rsx! {
         div {

@@ -333,10 +333,14 @@ pub struct CommandSeparatorProps {
 /// # CommandSeparator
 ///
 /// A visual divider between groups of items.
+///
+/// Delegates its markup to the shared [`crate::separator::Separator`] primitive
+/// (see `openspec/changes/deduplicate-primitives`, task 3.2) rather than
+/// hardcoding the same `role`/`aria-orientation` markup independently.
 #[component]
 pub fn CommandSeparator(props: CommandSeparatorProps) -> Element {
     rsx! {
-        div { role: "separator", "aria-orientation": "horizontal", ..props.attributes }
+        crate::separator::Separator { horizontal: true, attributes: props.attributes }
     }
 }
 
