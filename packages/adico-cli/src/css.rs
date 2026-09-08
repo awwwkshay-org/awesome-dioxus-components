@@ -281,6 +281,33 @@ const ANIMATION_UTILITIES_CSS: &str = r#"
 }
 "#;
 
+/// `ScrollArea` scrollbar coloring (`registry/ui/scroll_area.rs`, backed by
+/// `adico_primitives::scroll_area`), which otherwise renders with the
+/// browser's default scrollbar -- low contrast against a dark `--background`
+/// and invisible against a light one. Thumb/track are `color-mix`ed from
+/// `--foreground`/`--background` rather than `--primary`/`--accent`, so
+/// contrast survives both a light/dark swap (the two tokens flip) and a
+/// warm/cool preset swap (presets only ever rewrite the primary/accent role
+/// groups -- see `theme_switcher.rs`'s `Preset::apply*`, never these two).
+/// Standard `scrollbar-color` only, deliberately no `::-webkit-scrollbar`
+/// pseudo-elements: in Chromium, any matching webkit scrollbar pseudo pulls
+/// that scroller out of standardized scrollbar mode entirely, which would
+/// override `ScrollType::Hidden`'s `scrollbar-width: none` inline style and
+/// make its scrollbar reappear.
+const SCROLLBAR_CSS: &str = "
+.dx-scroll-area-auto-hide,
+.dx-scroll-area-always-show {
+  scrollbar-color: color-mix(in srgb, hsl(var(--foreground)) 50%, hsl(var(--background)))
+    color-mix(in srgb, hsl(var(--foreground)) 8%, hsl(var(--background)));
+}
+
+.dx-scroll-area-auto-hide:hover,
+.dx-scroll-area-always-show:hover {
+  scrollbar-color: color-mix(in srgb, hsl(var(--foreground)) 65%, hsl(var(--background)))
+    color-mix(in srgb, hsl(var(--foreground)) 8%, hsl(var(--background)));
+}
+";
+
 /// A reviewable CSS file update that never touches content outside markers.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct CssThemePlan {
@@ -543,6 +570,7 @@ fn theme_region() -> String {
 \x20 --sidebar-ring: 217.2 91.2% 59.8%;\n\
 }}\n\
 {ANIMATION_UTILITIES_CSS}\
+{SCROLLBAR_CSS}\
 {THEME_REGION_END}\n"
     )
 }
@@ -661,6 +689,30 @@ mod tests {
                 .expect("repeated install should plan")
                 .has_changes()
         );
+        fs::remove_dir_all(&project_root).expect("temporary directory should be removable");
+    }
+
+    #[test]
+    fn installs_foreground_derived_scrollbar_colors_for_scroll_area() {
+        let path = temporary_css_path();
+        let project_root = path
+            .ancestors()
+            .nth(2)
+            .expect("temporary root should exist")
+            .to_path_buf();
+        let plan = plan_theme_install(&path, &project_root).expect("theme should plan");
+        plan.apply().expect("theme should apply");
+        let created = fs::read_to_string(&path).expect("created CSS should be readable");
+        for selector in [
+            ".dx-scroll-area-auto-hide",
+            ".dx-scroll-area-always-show",
+            ".dx-scroll-area-auto-hide:hover",
+            ".dx-scroll-area-always-show:hover",
+        ] {
+            assert!(created.contains(selector), "missing {selector}");
+        }
+        assert!(created.contains("scrollbar-color: color-mix(in srgb, hsl(var(--foreground))"));
+        assert!(!created.contains("::-webkit-scrollbar"));
         fs::remove_dir_all(&project_root).expect("temporary directory should be removable");
     }
 

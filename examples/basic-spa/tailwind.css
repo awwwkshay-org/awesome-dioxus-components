@@ -360,4 +360,16 @@
   --tw-exit-translate-x: calc(--value(ratio) * 100%);
   --tw-exit-translate-x: --value(--translate-*, [percentage], [length]);
 }
+
+.dx-scroll-area-auto-hide,
+.dx-scroll-area-always-show {
+  scrollbar-color: color-mix(in srgb, hsl(var(--foreground)) 50%, hsl(var(--background)))
+    color-mix(in srgb, hsl(var(--foreground)) 8%, hsl(var(--background)));
+}
+
+.dx-scroll-area-auto-hide:hover,
+.dx-scroll-area-always-show:hover {
+  scrollbar-color: color-mix(in srgb, hsl(var(--foreground)) 65%, hsl(var(--background)))
+    color-mix(in srgb, hsl(var(--foreground)) 8%, hsl(var(--background)));
+}
 /* adico:theme:end */
