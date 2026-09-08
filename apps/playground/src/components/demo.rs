@@ -98,8 +98,8 @@ pub fn Demo(
                 ui::ResizablePanel {
                     index: 0usize,
                     default_size: 70.0,
-                    min_size: 40.0,
-                    max_size: 85.0,
+                    min_size: 60.0,
+                    max_size: 80.0,
                     class: "flex min-h-0 flex-col",
                     div {
                         class: "relative z-20 grid min-h-0 flex-1 cursor-grab place-items-center overflow-visible rounded-lg border border-border bg-muted/20 p-6",
@@ -145,8 +145,8 @@ pub fn Demo(
                 ui::ResizablePanel {
                     index: 1usize,
                     default_size: 30.0,
-                    min_size: 15.0,
-                    max_size: 60.0,
+                    min_size: 20.0,
+                    max_size: 40.0,
                     class: "flex min-h-0 flex-col",
                     ui::Card { class: "z-10 flex min-h-0 flex-1 flex-col border-border p-0 shadow-none",
                         ui::CardHeader { class: "shrink-0 gap-0 border-b border-border px-4 py-2",

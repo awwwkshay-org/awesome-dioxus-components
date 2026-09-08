@@ -153,7 +153,7 @@
     },
     {
       "address": "@adico/cn",
-      "manifestDigest": "5ae1a7a94e46d8fff7d7057a17a87baf0975a56d75c0a9489908d046931fdb28",
+      "manifestDigest": "0807c76b2ba2a41abff8d5a86c2fc008dd355234d1245d26daaa47b4d3adf85e",
       "files": [
         {
           "path": "src/adico_lib/cn.rs",
@@ -483,11 +483,11 @@
     },
     {
       "address": "@adico/resizable",
-      "manifestDigest": "ba01a4a99dbff68d715a0e683f4630e611b0847a1edadbe82d5b65104931041d",
+      "manifestDigest": "0807c76b2ba2a41abff8d5a86c2fc008dd355234d1245d26daaa47b4d3adf85e",
       "files": [
         {
           "path": "src/components/ui/resizable.rs",
-          "checksum": "b3b1bc7edd0473fc23e3c8a608cf733c812cae828cd15e843ddcc58311501a7f"
+          "checksum": "c68bc0ba4d6cc910abb250d17858228f0b618087f685e3340fddc18ba4e0885e"
         }
       ]
     },

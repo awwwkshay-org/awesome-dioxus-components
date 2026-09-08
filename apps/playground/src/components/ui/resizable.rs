@@ -72,7 +72,7 @@ struct DragState {
 struct ResizableContext {
     direction: ResizableDirection,
     container_size: Signal<f64>,
-    panels: Signal<Vec<PanelConstraints>>,
+    panels: Signal<Vec<Option<PanelConstraints>>>,
     drag: Signal<Option<DragState>>,
 }
 
@@ -94,16 +94,16 @@ fn clamp_delta(wanted: f64, prev: PanelConstraints, next: PanelConstraints) -> f
 /// small pointer moves don't accumulate clamping error; the keyboard handler
 /// passes each panel's own current size for a plain incremental step).
 fn resize_pair_from(
-    panels: &mut [PanelConstraints],
+    panels: &mut [Option<PanelConstraints>],
     handle_index: usize,
     base_prev: f64,
     base_next: f64,
     wanted: f64,
 ) {
-    let Some(prev) = panels.get(handle_index).copied() else {
+    let Some(prev) = panels.get(handle_index).copied().flatten() else {
         return;
     };
-    let Some(next) = panels.get(handle_index + 1).copied() else {
+    let Some(next) = panels.get(handle_index + 1).copied().flatten() else {
         return;
     };
     let actual = clamp_delta(
@@ -117,10 +117,10 @@ fn resize_pair_from(
             ..next
         },
     );
-    if let Some(entry) = panels.get_mut(handle_index) {
+    if let Some(entry) = panels.get_mut(handle_index).and_then(Option::as_mut) {
         entry.size = base_prev + actual;
     }
-    if let Some(entry) = panels.get_mut(handle_index + 1) {
+    if let Some(entry) = panels.get_mut(handle_index + 1).and_then(Option::as_mut) {
         entry.size = base_next - actual;
     }
 }
@@ -236,26 +236,48 @@ pub fn ResizablePanel(
 ) -> Element {
     let ctx: ResizableContext = use_context();
     let idx = index.cloned();
+    // Each panel must seed *only* its own index, unconditionally, the first
+    // time it mounts -- regardless of which sibling panel's effect happens
+    // to resolve first. The previous version instead grew the shared vec
+    // with `Vec::resize(idx + 1, own_constraints)`, which clones its fill
+    // value into *every* newly created slot: if panel 1 mounted first,
+    // `resize(2, {30,15,60})` wrote index 0 *and* index 1 with panel 1's own
+    // constraints. A `panels.len() <= idx` guard then made this permanent --
+    // once the vec was long enough, panel 0's own effect could never
+    // overwrite it. Seeding into an `Option` slot, written unconditionally
+    // outside any length check, makes the outcome independent of mount
+    // order: growth only ever fills new slots with `None`, never with real
+    // data borrowed from another panel.
+    // `peek()` deliberately: it doesn't subscribe this effect to `panels`,
+    // so a later drag write never re-queues this effect. Confirmed against
+    // `dioxus-hooks` 0.7.9's own `use_effect` source that this still fires
+    // reliably once after first render regardless of what the callback
+    // reads (`use_hook` unconditionally calls `queue_effect_for_next_render`
+    // once at hook creation) -- a subscription is what causes *re-runs*,
+    // not what makes the *first* run happen.
     use_effect(move || {
         let mut panels = ctx.panels;
-        panels.with_mut(|panels| {
-            if panels.len() <= idx {
-                panels.resize(
-                    idx + 1,
-                    PanelConstraints {
-                        size: default_size,
-                        min: min_size,
-                        max: max_size,
-                    },
-                );
-            }
-        });
+        let already_seeded = panels.peek().get(idx).is_some_and(Option::is_some);
+        if !already_seeded {
+            panels.with_mut(|panels| {
+                if panels.len() <= idx {
+                    panels.resize(idx + 1, None);
+                }
+                panels[idx] = Some(PanelConstraints {
+                    size: default_size,
+                    min: min_size,
+                    max: max_size,
+                });
+            });
+        }
     });
 
     let size = ctx
         .panels
         .read()
         .get(idx)
+        .copied()
+        .flatten()
         .map(|panel| panel.size)
         .unwrap_or(default_size);
     let class = cn(&[
@@ -287,9 +309,26 @@ pub fn ResizableHandle(
         ResizableDirection::Horizontal => "w-px cursor-col-resize",
         ResizableDirection::Vertical => "h-px w-full cursor-row-resize",
     };
+    // The visible divider stays a 1px line, but a 1px pointer hit target is
+    // nearly impossible to grab. Follows upstream shadcn/ui's own
+    // `resizable.tsx` mechanism (verified against its current source): an
+    // absolutely positioned `::after` pseudo-element widens the actual hit
+    // area to 4px (`w-1`/`h-1`), centered on the line via
+    // `-translate-x-1/2`/`-translate-y-1/2`. It adds no layout box of its
+    // own (the handle's existing `relative` makes it position relative to
+    // the handle, not the page), so it changes nothing visually.
+    let hit_area_class = match direction {
+        ResizableDirection::Horizontal => {
+            "after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2"
+        }
+        ResizableDirection::Vertical => {
+            "after:absolute after:inset-x-0 after:top-1/2 after:h-1 after:-translate-y-1/2"
+        }
+    };
     let class = cn(&[
         "relative flex shrink-0 items-center justify-center bg-border outline-none focus-visible:ring-2 focus-visible:ring-ring",
         axis_class,
+        hit_area_class,
         class.as_deref().unwrap_or_default(),
     ]);
     // Follows upstream shadcn/ui's own `resizable.tsx` `ResizableHandle`
@@ -352,8 +391,10 @@ pub fn ResizableHandle(
     let onpointerdown = move |event: Event<PointerData>| {
         event.prevent_default();
         let panels = ctx.panels.peek();
-        let (Some(prev), Some(next)) = (panels.get(idx).copied(), panels.get(idx + 1).copied())
-        else {
+        let (Some(prev), Some(next)) = (
+            panels.get(idx).copied().flatten(),
+            panels.get(idx + 1).copied().flatten(),
+        ) else {
             return;
         };
         drop(panels);
@@ -385,8 +426,10 @@ pub fn ResizableHandle(
             -KEYBOARD_STEP_PERCENT
         };
         ctx.panels.with_mut(|panels| {
-            let (Some(prev), Some(next)) = (panels.get(idx).copied(), panels.get(idx + 1).copied())
-            else {
+            let (Some(prev), Some(next)) = (
+                panels.get(idx).copied().flatten(),
+                panels.get(idx + 1).copied().flatten(),
+            ) else {
                 return;
             };
             resize_pair_from(panels, idx, prev.size, next.size, step);

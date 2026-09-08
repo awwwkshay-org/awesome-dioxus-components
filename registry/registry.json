@@ -3202,7 +3202,7 @@
           "source": "ui/resizable.rs",
           "targetRoot": "ui",
           "target": "resizable.rs",
-          "checksum": "936a823a1b08364caad740ca4ae5296bc7b93ff0e060d7a8c82cfd27cd2b2fc6"
+          "checksum": "c68bc0ba4d6cc910abb250d17858228f0b618087f685e3340fddc18ba4e0885e"
         }
       ],
       "registryDependencies": [
