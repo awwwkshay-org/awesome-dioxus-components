@@ -1,4 +1,4 @@
-# adico playground
+# Adico Playground
 
 Interactive explorer for every component currently migrated into the adico
 registry, installed the same way a real consumer would install them: via
@@ -38,6 +38,7 @@ wire the following two steps automatically — do them by hand once per app:
 
 1. Add a project-root `tailwind.css` (compile *input*, not the generated
    output) containing at minimum:
+
    ```css
    @import "tailwindcss";
    @source "./src";
@@ -45,14 +46,17 @@ wire the following two steps automatically — do them by hand once per app:
    ...
    /* adico:theme:end */
    ```
+
    `dx serve`/`dx build` auto-detects this file and compiles it into
    `assets/tailwind.css` (generated output — never hand-edit that file).
 2. Link the compiled stylesheet and enable the Dioxus `document` feature:
+
    ```rust
    const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
    // in your root component:
    document::Stylesheet { href: TAILWIND_CSS }
    ```
+
    ```toml
    dioxus = { version = "=0.7.9", features = ["document", ...] }
    ```

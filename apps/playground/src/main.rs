@@ -27,7 +27,7 @@ fn main() {
 #[component]
 fn App() -> Element {
     rsx! {
-        document::Title { "adico playground" }
+        document::Title { "Adico Playground" }
         document::Stylesheet { href: TAILWIND_CSS }
         document::Link { rel: "manifest", href: WEB_MANIFEST }
         document::Link { rel: "shortcut icon", r#type: "image/x-icon", href: FAVICON }
