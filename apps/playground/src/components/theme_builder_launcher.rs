@@ -14,7 +14,7 @@ pub fn ThemeBuilderLauncher() -> Element {
         ui::Dialog {
             ui::DialogTrigger { class: "w-full justify-start", "Customize theme" }
             ui::DialogOverlay {}
-            ui::DialogContent { class: "max-h-[calc(100svh-2rem)] max-w-md overflow-y-auto p-5 sm:p-6",
+            ui::DialogContent { class: "max-w-md p-5 sm:p-6",
                 ui::DialogHeader {
                     ui::DialogTitle { "Theme builder" }
                     ui::DialogDescription { "Edit every semantic theme token live, generate a random theme, or copy the CSS export." }

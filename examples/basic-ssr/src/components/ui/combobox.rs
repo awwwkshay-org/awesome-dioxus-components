@@ -8,6 +8,7 @@ use dioxus::prelude::*;
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
 use adico_primitives::icons::{ChevronDown, ChevronUp};
+use adico_primitives::scroll_area::scroll_area_visibility_class;
 
 use adico_primitives::combobox::{
     Combobox as PrimitiveCombobox, ComboboxInput as PrimitiveComboboxInput,
@@ -250,6 +251,9 @@ pub fn ComboboxList(
     let class = cn(&[
         "z-50 max-h-72 min-w-48 overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
         radius.class(),
+        // See `select.rs`'s `SelectList`: same `Positioner`-routed list, same
+        // native-scrollbar-fallback-only theming for the same reason.
+        scroll_area_visibility_class(false),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

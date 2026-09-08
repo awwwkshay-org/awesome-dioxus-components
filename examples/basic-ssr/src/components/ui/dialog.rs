@@ -9,6 +9,7 @@ pub use adico_primitives::dialog::{
     DialogContent as DialogPrimitiveContent, DialogDescription, DialogRoot as Dialog, DialogTitle,
 };
 use adico_primitives::icons::X;
+use adico_primitives::scroll_area::scroll_area_visibility_class;
 
 /// Opens the surrounding [`Dialog`] with the installed [`Button`] component.
 ///
@@ -76,16 +77,31 @@ pub fn DialogContent(
     #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "fixed left-1/2 top-1/2 z-[51] grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 border bg-background p-6 text-foreground shadow-lg",
+        // `max-h-[calc(100svh-2rem)]` + `min-h-0` cap the dialog to the viewport with
+        // a small margin (matches the exact cap the playground's theme-builder
+        // launcher previously had to apply caller-side to work around this gap --
+        // that workaround is removed now that it's redundant, see `theme_builder_launcher.rs`).
+        // Not anchored via `Positioner` (a centered modal has no anchor element), so
+        // this is a fixed viewport-relative cap, not `--adico-positioner-available-size`.
+        "fixed left-1/2 top-1/2 z-[51] grid max-h-[calc(100svh-2rem)] w-full max-w-lg min-h-0 -translate-x-1/2 -translate-y-1/2 border bg-background p-6 text-foreground shadow-lg",
         radius.class(),
         class.as_deref().unwrap_or_default(),
+    ]);
+    // `flex flex-col gap-4` on the scrolling body preserves the vertical spacing
+    // between `DialogTitle`/`DialogDescription`/caller content that the outer
+    // container's own `gap-4` used to provide directly between its grid items --
+    // wrapping them in this one body div for scrolling would otherwise collapse
+    // that spacing to zero.
+    let body_class = cn(&[
+        "flex min-h-0 flex-col gap-4 overflow-y-auto",
+        scroll_area_visibility_class(false),
     ]);
     rsx! {
         DialogPrimitiveContent {
             id,
             class,
             attributes,
-            {children}
+            div { class: body_class, {children} }
             if show_close_button {
                 DialogClose { class: "absolute right-4 top-4" }
             }

@@ -11,6 +11,7 @@ use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
 use adico_primitives::ContentAlign;
 use adico_primitives::icons::{ChevronDown, ChevronUp};
+use adico_primitives::scroll_area::scroll_area_visibility_class;
 
 use adico_primitives::select::{
     Select as PrimitiveSelect, SelectList as PrimitiveSelectList,
@@ -240,6 +241,13 @@ pub fn SelectList(
     let class = cn(&[
         "z-50 max-h-72 min-w-32 overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
         radius.class(),
+        // Themed via the shared scroll-area contract's native-scrollbar fallback layer
+        // (`scrollbar-color`, see `packages/adico-cli/src/css.rs`'s `SCROLLBAR_CSS`) --
+        // not the full custom overlay thumb, since this list renders through
+        // `Positioner`, which has no `onscroll`/`onresize` passthrough today (adding it
+        // would mean plumbing new props through a primitive shared by 10+ anchored
+        // components, out of scope for this adoption).
+        scroll_area_visibility_class(false),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

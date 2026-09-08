@@ -10,6 +10,7 @@ pub use adico_primitives::dialog::{
     DialogDescription as SheetDescription, DialogRoot as Sheet, DialogTitle as SheetTitle,
 };
 use adico_primitives::icons::X;
+use adico_primitives::scroll_area::scroll_area_visibility_class;
 
 /// The viewport edge a [`Sheet`] slides in from.
 #[derive(Clone, Copy, PartialEq, Eq, Default)]
@@ -105,14 +106,23 @@ pub fn SheetContent(
 ) -> Element {
     let side = side.unwrap_or_default();
     let class = cn(&[
-        "fixed z-[51] gap-4 bg-background p-6 text-foreground shadow-lg transition ease-in-out",
+        // `max-h-[100svh]` + `min-h-0`: `Right`/`Left` already cap height via
+        // `SheetSide::class()`'s own `h-full`, but `Top`/`Bottom` previously had no
+        // height constraint at all -- content could grow past the viewport with no
+        // scroll escape. Uniform across all four sides; harmless where `h-full`
+        // already applies.
+        "fixed z-[51] max-h-[100svh] min-h-0 bg-background p-6 text-foreground shadow-lg transition ease-in-out",
         side.class(),
         class.as_deref().unwrap_or_default(),
+    ]);
+    let body_class = cn(&[
+        "flex min-h-0 flex-col gap-4 overflow-y-auto",
+        scroll_area_visibility_class(false),
     ]);
     rsx! {
         DialogPrimitiveContent {
             class,
-            {children}
+            div { class: body_class, {children} }
             if show_close_button {
                 SheetClose { class: "absolute right-4 top-4" }
             }

@@ -35,6 +35,7 @@
 //! simplification, not a chased sub-pixel precision goal.
 
 use adico_primitives::icons::GripVertical;
+use adico_primitives::scroll_area::scroll_area_visibility_class;
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
@@ -257,7 +258,11 @@ pub fn ResizablePanel(
         .get(idx)
         .map(|panel| panel.size)
         .unwrap_or(default_size);
-    let class = cn(&["overflow-auto", class.as_deref().unwrap_or_default()]);
+    let class = cn(&[
+        "overflow-auto",
+        scroll_area_visibility_class(false),
+        class.as_deref().unwrap_or_default(),
+    ]);
 
     rsx! {
         div { class, style: "flex: 0 0 {size}%;", {children} }

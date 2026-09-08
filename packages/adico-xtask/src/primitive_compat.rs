@@ -266,7 +266,7 @@ const UPSTREAM_COMPONENTS: &[ComponentEntry] = &[
         status: Status::Built,
         adico_file: Some("scroll_area.rs"),
         adico_registry_item: Some("scroll-area"),
-        notes: "Native-overflow/CSS toggle, not a custom-styled scrollbar-thumb sub-component.",
+        notes: "Native-overflow viewport (`ScrollAreaViewport`) plus custom overlay scrollbar parts (`ScrollAreaScrollbar`/`ScrollAreaThumb`/`ScrollAreaCorner`), matching Base UI's own scrollbar-thumb sub-component shape -- not a bare CSS overflow toggle with no thumb, as this note previously (and, before that change, accurately) said.",
     },
     ComponentEntry {
         name: "Select",

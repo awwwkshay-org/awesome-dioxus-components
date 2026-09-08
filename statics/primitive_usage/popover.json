@@ -1,6 +1,7 @@
 {
   "classification": "delegated",
   "primitiveModules": [
-    "popover"
+    "popover",
+    "scroll_area"
   ]
 }

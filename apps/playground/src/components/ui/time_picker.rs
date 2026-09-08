@@ -14,6 +14,7 @@ use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
 use adico_primitives::icons::ChevronDown;
 use adico_primitives::popover::{PopoverRoot, PopoverRootProps};
+use adico_primitives::scroll_area::scroll_area_visibility_class;
 use adico_primitives::time_picker::{
     TimePicker as PrimitiveTimePicker, TimePickerInputValue as PrimitiveTimePickerInputValue,
     format_time, from_display_hour, to_display_hour,
@@ -383,6 +384,11 @@ pub fn TimePickerColumns(props: TimePickerColumnsProps) -> Element {
 
     let column_class = cn(&[
         "flex w-14 flex-col gap-0.5 overflow-y-auto p-1 [scrollbar-width:thin]",
+        // `scrollbar-color` (this class) and `scrollbar-width: thin` (the Tailwind
+        // arbitrary-value class above) are independent CSS properties and compose
+        // cleanly -- the column keeps its intentionally slim native scrollbar, now
+        // themed to match every other scroll surface.
+        scroll_area_visibility_class(false),
         if props.fill_height {
             "h-full"
         } else {

@@ -7,7 +7,7 @@
       "source": "ui/sheet.rs",
       "targetRoot": "ui",
       "target": "sheet.rs",
-      "checksum": "654e3af6cdf61dc7e64223ab4f41ecfb9442ce4e5783087a3eca2eafca3f6e81"
+      "checksum": "e39bde457a7921b70d9658bf5ef023188fb7b1702d1eb3ff102dc90f5aa3347e"
     }
   ],
   "registryDependencies": [
@@ -50,7 +50,7 @@
   ],
   "documentation": {
     "slug": "sheet",
-    "compositionNote": "Composes the owned dialog primitive directly (SheetTitle/SheetDescription/Sheet re-export the Dialog primitive's parts); the styled wrapper only adds the slide-in side variant and positioning.",
+    "compositionNote": "Composes the owned dialog primitive directly (SheetTitle/SheetDescription/Sheet re-export the Dialog primitive's parts); the styled wrapper only adds the slide-in side variant and positioning. SheetContent caps its height to the viewport and scrolls its body internally rather than clipping overflowing content.",
     "usage": "Sheet { open: open(), on_open_change: move |v| open.set(v),\n    SheetTrigger { \"Open sheet\" }\n    SheetOverlay {}\n    SheetContent {\n        SheetHeader { SheetTitle { \"Title\" } }\n        SheetFooter { SheetClose { \"Close\" } }\n    }\n}",
     "accessibility": "Composes `packages/adico-primitives/src/dialog.rs` directly (the same `role=\"dialog\"`/`aria-modal=\"true\"`/focus-trap behavior as `Dialog`), styled as an edge-anchored panel instead of a centered modal.",
     "keyboard": "Same as `Dialog`: Escape closes it, plus the registry facade's manual backdrop `onclick` workaround for the same `use_outside_dismiss` web defect."

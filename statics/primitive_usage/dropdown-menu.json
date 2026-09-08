@@ -3,6 +3,7 @@
   "primitiveModules": [
     "dropdown_menu",
     "icons",
-    "menu"
+    "menu",
+    "scroll_area"
   ]
 }

@@ -13,6 +13,7 @@ use adico_primitives::command::{
 use super::dialog::{Dialog, DialogContent, DialogDescription, DialogTitle};
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
+use adico_primitives::scroll_area::scroll_area_visibility_class;
 
 /// The root of a command palette: an always-visible, query-filtered,
 /// roving-focus list of actions.
@@ -51,6 +52,11 @@ pub fn CommandInput(placeholder: Option<String>, class: Option<String>) -> Eleme
 pub fn CommandList(children: Element, class: Option<String>) -> Element {
     let class = cn(&[
         "max-h-[300px] overflow-y-auto overflow-x-hidden p-1",
+        // Native-scrollbar-fallback theming only, matching `Select`/`Combobox`'s own
+        // scope decision (see `select.rs`'s `SelectList`) -- kept uniform across all
+        // three listbox-style surfaces rather than giving only this one a custom
+        // overlay thumb.
+        scroll_area_visibility_class(false),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

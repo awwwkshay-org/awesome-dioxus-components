@@ -56,6 +56,13 @@ use crate::{ContentAlign, ContentSide, use_unique_id};
 pub struct Position {
     pub x: f64,
     pub y: f64,
+    /// The space (in pixels) available between the anchor's edge and the viewport edge
+    /// on `side` -- the same figure `resolve_side`'s flip decision is already made
+    /// from, published here rather than recomputed by a caller. For `Top`/`Bottom`,
+    /// this is vertical space (a sensible `max-height`); for `Left`/`Right`, horizontal
+    /// space (a sensible `max-width`). A consumer capping content height/width to avoid
+    /// clipping past the viewport edge should use this instead of a hardcoded guess.
+    pub available_size: f64,
     pub side: ContentSide,
     pub align: ContentAlign,
 }
@@ -102,7 +109,14 @@ pub fn compute_position(
             clamp_cross(y, floating_height, viewport_height, collision_padding),
         ),
     };
-    Position { x, y, side, align }
+    let available_size = space_for_side(anchor, viewport_width, viewport_height, side);
+    Position {
+        x,
+        y,
+        available_size,
+        side,
+        align,
+    }
 }
 
 /// The space available between `anchor`'s edge and the viewport edge on the
@@ -553,8 +567,8 @@ pub fn Positioner(props: PositionerProps) -> Element {
         // (popover, hover-card, tooltip, select, combobox) opened logically
         // (correct ARIA, correct computed left/top) but stayed invisible.
         Some(p) => format!(
-            "position: fixed; left: {}px; top: {}px; visibility: visible;",
-            p.x, p.y
+            "position: fixed; left: {}px; top: {}px; visibility: visible; --adico-positioner-available-size: {}px;",
+            p.x, p.y, p.available_size
         ),
         None => "position: fixed; visibility: hidden;".to_string(),
     };
@@ -665,6 +679,51 @@ mod tests {
         assert_eq!(position.side, ContentSide::Bottom);
         assert_eq!(position.x, 100.0);
         assert_eq!(position.y, 100.0 + 20.0 + 8.0);
+        // Space below the anchor: viewport height minus the anchor's bottom edge.
+        assert_eq!(position.available_size, VIEWPORT_HEIGHT - (100.0 + 20.0));
+    }
+
+    #[test]
+    fn available_size_reflects_the_side_actually_used_after_a_flip() {
+        // Same geometry as `flips_to_bottom_when_top_has_no_room`: preferred `Top` has
+        // only 10px of room, but the box needs 200px, so it flips to `Bottom`.
+        // `available_size` must report the space on the *resolved* side (`Bottom`,
+        // 600 - 30 = 570px), not the originally preferred side's 10px.
+        let anchor = rect(100.0, 10.0, 50.0, 20.0);
+        let position = compute_position(
+            anchor,
+            120.0,
+            200.0,
+            VIEWPORT_WIDTH,
+            VIEWPORT_HEIGHT,
+            ContentSide::Top,
+            ContentAlign::Start,
+            8.0,
+            8.0,
+        );
+
+        assert_eq!(position.side, ContentSide::Bottom);
+        assert_eq!(position.available_size, VIEWPORT_HEIGHT - (10.0 + 20.0));
+    }
+
+    #[test]
+    fn available_size_is_horizontal_space_for_a_left_right_placement() {
+        let anchor = rect(400.0, 100.0, 40.0, 20.0);
+        let position = compute_position(
+            anchor,
+            60.0,
+            30.0,
+            VIEWPORT_WIDTH,
+            VIEWPORT_HEIGHT,
+            ContentSide::Right,
+            ContentAlign::Start,
+            5.0,
+            8.0,
+        );
+
+        assert_eq!(position.side, ContentSide::Right);
+        // Space to the right of the anchor's right edge.
+        assert_eq!(position.available_size, VIEWPORT_WIDTH - (400.0 + 40.0));
     }
 
     #[test]
@@ -791,6 +850,7 @@ mod tests {
         let position = Position {
             x: 270.0,
             y: 128.0,
+            available_size: 0.0,
             side: ContentSide::Bottom,
             align: ContentAlign::Center,
         };
@@ -809,6 +869,7 @@ mod tests {
         let position = Position {
             x: 592.0,
             y: 128.0,
+            available_size: 0.0,
             side: ContentSide::Bottom,
             align: ContentAlign::End,
         };

@@ -7,7 +7,7 @@
       "source": "ui/popover.rs",
       "targetRoot": "ui",
       "target": "popover.rs",
-      "checksum": "d2771f1a9f56b68d89dfc0fafa996d12d713ea45f76a1c54fee3a7b9d30e982e"
+      "checksum": "4748eabcf53be2ea39338f33a19c8113289c3d6a95d452ea61be898f3c5ad463"
     }
   ],
   "registryDependencies": [
@@ -50,7 +50,7 @@
   ],
   "documentation": {
     "slug": "popover",
-    "compositionNote": "The public copied API remains compositional; focus trapping, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives (reusing the same use_focus_trap/FocusTrapScript internals as dialog).",
+    "compositionNote": "The public copied API remains compositional; focus trapping, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives (reusing the same use_focus_trap/FocusTrapScript internals as dialog). PopoverContent caps its height to the positioner's available space and scrolls internally rather than clipping overflowing content.",
     "usage": "Popover { open: open(), on_open_change: move |v| open.set(v),\n    PopoverTrigger { \"Open popover\" }\n    PopoverContent { \"Popover content\" }\n}",
     "accessibility": "Follows the closest APG guidance -- the Dialog pattern -- applied conditionally: `PopoverContent` renders `role=\"dialog\"` with `aria-modal=\"true\"` and focus-trapping only when `is_modal` is set (the default); otherwise it is a non-modal disclosure (`packages/adico-primitives/src/popover.rs`).",
     "keyboard": "Escape closes it and (when modal) focus is trapped inside; outside-click dismissal shares the confirmed, unfixed `document::eval` persistent-listener defect this session directly reproduced (see tasks.md 7.4f) -- verified working via `use_scroll_lock`-style fire-and-forget evals only, not this pattern."

@@ -45,6 +45,11 @@ use std::rc::Rc;
 use dioxus::html::geometry::euclid::Vector2D;
 use dioxus::prelude::*;
 
+use crate::scroll_area::{
+    provide_scroll_area_context, scroll_area_viewport_onmounted, scroll_area_viewport_onresize,
+    scroll_area_viewport_onscroll, scroll_area_visibility_class, use_scroll_area_context,
+};
+
 /// Default distance (in pixels) from the true bottom edge within which the
 /// viewport is still considered "pinned to bottom".
 pub const DEFAULT_BOTTOM_THRESHOLD: f64 = 48.0;
@@ -152,6 +157,13 @@ pub fn MessageScroller(props: MessageScrollerProps) -> Element {
         programmatic_scroll: use_signal(|| false),
     };
     use_context_provider(|| ctx);
+    // Provided unconditionally (harmless, unused if no descendant reads it) so a
+    // consumer opting `MessageScrollerViewport` into the shared scroll-area contract
+    // (`with_scroll_area: true`, see that component's doc comment) has a
+    // `ScrollAreaContext` available, and can render `ScrollAreaScrollbar` as a sibling
+    // of the viewport within this root's own children -- the in-place adoption shape,
+    // not a new wrapper element this primitive would otherwise need to introduce.
+    provide_scroll_area_context();
 
     rsx! {
         div { ..props.attributes, {props.children} }
@@ -161,6 +173,23 @@ pub fn MessageScroller(props: MessageScrollerProps) -> Element {
 /// The props for the [`MessageScrollerViewport`] component.
 #[derive(Props, Clone, PartialEq)]
 pub struct MessageScrollerViewportProps {
+    /// Opts into the shared scroll-area contract (themed overlay scrollbar support,
+    /// see `adico_primitives::scroll_area`): merges its `onmounted`/`onscroll`/
+    /// `onresize` tracking into this element's own, and merges `class` with the
+    /// internal visibility class instead of routing it through `attributes`. Defaults
+    /// to `false`, preserving this primitive's original fully headless behavior --
+    /// this is deliberately opt-in, not automatic, so a consumer of
+    /// `adico-primitives` directly (not through this ecosystem's own themed registry
+    /// facade) never has scroll-area styling opinions forced on them.
+    #[props(default)]
+    pub with_scroll_area: bool,
+
+    /// Extra classes, merged with the internal visibility class when
+    /// `with_scroll_area` is `true`. Has no effect when `with_scroll_area` is `false`
+    /// (pass a class through `attributes` instead, as before).
+    #[props(default)]
+    pub class: Option<String>,
+
     /// Additional attributes to apply to the viewport element. Callers own
     /// the scroll container's `overflow`/height styling (this primitive is
     /// headless).
@@ -177,7 +206,7 @@ pub struct MessageScrollerViewportProps {
 pub fn MessageScrollerViewport(props: MessageScrollerViewportProps) -> Element {
     let mut ctx: MessageScrollerContext = use_context();
 
-    let onmounted = move |event: Event<MountedData>| {
+    let mut onmounted = move |event: Event<MountedData>| {
         let handle = event.data();
         ctx.viewport_ref.set(Some(handle.clone()));
         spawn(async move {
@@ -190,7 +219,7 @@ pub fn MessageScrollerViewport(props: MessageScrollerViewportProps) -> Element {
         });
     };
 
-    let onscroll = move |event: Event<ScrollData>| {
+    let mut onscroll = move |event: Event<ScrollData>| {
         let data = event.data();
         ctx.scroll_offset.set(data.scroll_top().max(0.0));
         if data.client_height() > 0 {
@@ -205,8 +234,49 @@ pub fn MessageScrollerViewport(props: MessageScrollerViewportProps) -> Element {
         }
     };
 
+    if !props.with_scroll_area {
+        return rsx! {
+            div { onmounted, onscroll, ..props.attributes, {props.children} }
+        };
+    }
+
+    // In-place adoption shape (design.md D2): this element is already instrumented
+    // (the `onmounted`/`onscroll` above), so the scroll-area contract is merged onto
+    // it directly rather than wrapping it in a new `ScrollAreaViewport` node, which
+    // would duplicate scroll-position tracking across two competing sources of truth.
+    let scroll_area_ctx = use_scroll_area_context();
+    let mut scroll_area_onmounted = scroll_area_viewport_onmounted(scroll_area_ctx);
+    let mut scroll_area_onscroll = scroll_area_viewport_onscroll(scroll_area_ctx);
+    let mut scroll_area_onresize = scroll_area_viewport_onresize(scroll_area_ctx);
+
+    let merged_onmounted = move |event: Event<MountedData>| {
+        onmounted(event.clone());
+        scroll_area_onmounted(event);
+    };
+    let merged_onscroll = move |event: Event<ScrollData>| {
+        onscroll(event.clone());
+        scroll_area_onscroll(event);
+    };
+    let onresize = move |event: Event<ResizeData>| {
+        scroll_area_onresize(event);
+    };
+
+    let visibility_class = scroll_area_visibility_class(false);
+    let merged_class = match props.class.as_deref() {
+        Some(extra) if !extra.is_empty() => format!("{visibility_class} {extra}"),
+        _ => visibility_class.to_string(),
+    };
+
     rsx! {
-        div { onmounted, onscroll, ..props.attributes, {props.children} }
+        div {
+            class: "{merged_class}",
+            style: "scrollbar-width: none;",
+            onmounted: merged_onmounted,
+            onscroll: merged_onscroll,
+            onresize,
+            ..props.attributes,
+            {props.children}
+        }
     }
 }
 

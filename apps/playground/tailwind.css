@@ -367,9 +367,68 @@
     color-mix(in srgb, hsl(var(--foreground)) 8%, hsl(var(--background)));
 }
 
+.dx-scroll-area-always-show {
+  scrollbar-gutter: stable;
+}
+
 .dx-scroll-area-auto-hide:hover,
 .dx-scroll-area-always-show:hover {
   scrollbar-color: color-mix(in srgb, hsl(var(--foreground)) 65%, hsl(var(--background)))
     color-mix(in srgb, hsl(var(--foreground)) 8%, hsl(var(--background)));
+}
+
+.dx-scroll-area-scrollbar {
+  position: absolute;
+  background: color-mix(in srgb, hsl(var(--foreground)) 8%, hsl(var(--background)));
+  touch-action: none;
+  user-select: none;
+  z-index: 10;
+}
+
+.dx-scroll-area-scrollbar[data-orientation='vertical'] {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 10px;
+  padding: 2px;
+}
+
+.dx-scroll-area-scrollbar[data-orientation='horizontal'] {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 10px;
+  padding: 2px;
+}
+
+.dx-scroll-area-thumb {
+  position: absolute;
+  border-radius: 9999px;
+  background: color-mix(in srgb, hsl(var(--foreground)) 50%, hsl(var(--background)));
+  cursor: pointer;
+}
+
+.dx-scroll-area-thumb:hover {
+  background: color-mix(in srgb, hsl(var(--foreground)) 65%, hsl(var(--background)));
+}
+
+.dx-scroll-area-thumb[data-orientation='vertical'] {
+  left: 2px;
+  right: 2px;
+}
+
+.dx-scroll-area-thumb[data-orientation='horizontal'] {
+  top: 2px;
+  bottom: 2px;
+}
+
+.dx-scroll-area-corner {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 10px;
+  height: 10px;
+  background: color-mix(in srgb, hsl(var(--foreground)) 8%, hsl(var(--background)));
+  z-index: 10;
 }
 /* adico:theme:end */

@@ -1,6 +1,7 @@
 {
   "classification": "delegated",
   "primitiveModules": [
-    "alert_dialog"
+    "alert_dialog",
+    "scroll_area"
   ]
 }

@@ -23,6 +23,7 @@ use adico_primitives::{ContentAlign, ContentSide};
 
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
+use adico_primitives::scroll_area::scroll_area_visibility_class;
 
 /// The shared item visual base, kept identical across [`DropdownMenuItem`],
 /// [`DropdownMenuCheckboxItem`], [`DropdownMenuRadioItem`], and
@@ -109,8 +110,14 @@ pub fn DropdownMenuContent(
     #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "z-50 min-w-40 overflow-hidden bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        // `max-h` caps at the positioner's own measured available space
+        // (`--adico-positioner-available-size`, set on this same element by
+        // `Positioner`) rather than a hardcoded viewport fraction, so the menu
+        // scrolls instead of clipping when content exceeds whatever room is
+        // actually available on its placed side.
+        "z-50 min-w-40 max-h-[var(--adico-positioner-available-size)] overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
         radius.class(),
+        scroll_area_visibility_class(false),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! { PrimitiveDropdownMenuContent { id, class, align, attributes, {children} } }
@@ -393,8 +400,9 @@ pub fn DropdownMenuSubContent(
     children: Element,
 ) -> Element {
     let class = cn(&[
-        "z-50 min-w-32 overflow-hidden bg-popover p-1 text-popover-foreground shadow-lg",
+        "z-50 min-w-32 max-h-[var(--adico-positioner-available-size)] overflow-y-auto bg-popover p-1 text-popover-foreground shadow-lg",
         radius.class(),
+        scroll_area_visibility_class(false),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

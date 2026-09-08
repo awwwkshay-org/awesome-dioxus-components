@@ -2,6 +2,7 @@
   "classification": "delegated",
   "primitiveModules": [
     "combobox",
-    "icons"
+    "icons",
+    "scroll_area"
   ]
 }

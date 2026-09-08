@@ -7,7 +7,7 @@
       "source": "ui/resizable.rs",
       "targetRoot": "ui",
       "target": "resizable.rs",
-      "checksum": "ca8316de185b4e0bcc78b4bc44e24d59324bc689f76bc3608a8e9339e0603a4c"
+      "checksum": "936a823a1b08364caad740ca4ae5296bc7b93ff0e060d7a8c82cfd27cd2b2fc6"
     }
   ],
   "registryDependencies": [

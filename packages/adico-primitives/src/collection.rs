@@ -428,6 +428,16 @@ impl CollectionState {
         }
     }
 
+    // Also scrolls the newly focused item into view: this collection backs every
+    // roving-tabindex consumer with a scrollable container (Select, Combobox, Command,
+    // DropdownMenu, Menubar, ContextMenu among them), and none of them previously had
+    // any scroll-into-view mechanism -- keyboard navigation past the visible edge of a
+    // `max-h-*`/`overflow-y-auto` list simply moved focus off-screen with no way back
+    // short of a mouse scroll. `ScrollLogicalPosition::Nearest` on both axes minimizes
+    // the scroll distance (a no-op if the item is already fully visible) rather than
+    // re-centering or re-aligning an already-visible item; `ScrollBehavior::Instant`
+    // rather than `Smooth` because this fires on every single arrow-key step, and an
+    // animated scroll per keystroke would visibly lag behind rapid navigation.
     fn control_mount_focus(&self, index: usize, controlled_ref: Signal<Option<Rc<MountedData>>>) {
         let controlled_ref = controlled_ref();
         if self.is_focused(index)
@@ -436,6 +446,13 @@ impl CollectionState {
         {
             spawn(async move {
                 let _ = md.set_focus(true).await;
+                let _ = md
+                    .scroll_to_with_options(ScrollToOptions {
+                        behavior: ScrollBehavior::Instant,
+                        vertical: ScrollLogicalPosition::Nearest,
+                        horizontal: ScrollLogicalPosition::Nearest,
+                    })
+                    .await;
             });
         }
     }

@@ -2574,9 +2574,16 @@
       },
       {
         "adico_components": [
-          "ScrollArea"
+          "ScrollAreaViewport",
+          "ScrollArea",
+          "ScrollAreaScrollbar",
+          "ScrollAreaThumb",
+          "ScrollAreaCorner"
         ],
-        "adico_hooks_defined": [],
+        "adico_hooks_defined": [
+          "use_scroll_area_context",
+          "use_scroll_area_scroll_to"
+        ],
         "adico_hooks_used": [],
         "adico_primitive_file": "packages/adico-primitives/src/scroll_area.rs",
         "adico_props": {
@@ -2597,6 +2604,83 @@
               "type": "ReadSignal<ScrollType>"
             },
             {
+              "default": "default()",
+              "name": "cross_axis_overflow",
+              "type": "ReadSignal<CrossAxisOverflow>"
+            },
+            {
+              "default": "default()",
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "default": "default()",
+              "name": "style",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ScrollAreaScrollbarProps": [
+            {
+              "name": "orientation",
+              "type": "ScrollbarOrientation"
+            },
+            {
+              "default": "default()",
+              "name": "class",
+              "type": "Option<String>"
+            }
+          ],
+          "ScrollAreaThumb": [
+            {
+              "name": "orientation",
+              "type": "ScrollbarOrientation"
+            }
+          ],
+          "ScrollAreaViewportProps": [
+            {
+              "default": "default()",
+              "name": "direction",
+              "type": "ReadSignal<ScrollDirection>"
+            },
+            {
+              "default": "default()",
+              "name": "always_show_scrollbars",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "default": "default()",
+              "name": "scroll_type",
+              "type": "ReadSignal<ScrollType>"
+            },
+            {
+              "default": "default()",
+              "name": "cross_axis_overflow",
+              "type": "ReadSignal<CrossAxisOverflow>"
+            },
+            {
+              "default": "true",
+              "name": "hide_native_scrollbar",
+              "type": "bool"
+            },
+            {
+              "default": "default()",
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "default": "default()",
+              "name": "style",
+              "type": "Option<String>"
+            },
+            {
               "name": "attributes",
               "type": "Vec<Attribute>"
             },
@@ -2608,7 +2692,7 @@
         },
         "adico_registry_item": "scroll-area",
         "name": "Scroll Area",
-        "notes": "Native-overflow/CSS toggle, not a custom-styled scrollbar-thumb sub-component.",
+        "notes": "Native-overflow viewport (`ScrollAreaViewport`) plus custom overlay scrollbar parts (`ScrollAreaScrollbar`/`ScrollAreaThumb`/`ScrollAreaCorner`), matching Base UI's own scrollbar-thumb sub-component shape -- not a bare CSS overflow toggle with no thumb, as this note previously (and, before that change, accurately) said.",
         "status": "built"
       },
       {
@@ -6517,9 +6601,16 @@
       },
       {
         "adico_components": [
-          "ScrollArea"
+          "ScrollAreaViewport",
+          "ScrollArea",
+          "ScrollAreaScrollbar",
+          "ScrollAreaThumb",
+          "ScrollAreaCorner"
         ],
-        "adico_hooks_defined": [],
+        "adico_hooks_defined": [
+          "use_scroll_area_context",
+          "use_scroll_area_scroll_to"
+        ],
         "adico_hooks_used": [],
         "adico_primitive_file": "packages/adico-primitives/src/scroll_area.rs",
         "adico_props": {
@@ -6538,6 +6629,83 @@
               "default": "default()",
               "name": "scroll_type",
               "type": "ReadSignal<ScrollType>"
+            },
+            {
+              "default": "default()",
+              "name": "cross_axis_overflow",
+              "type": "ReadSignal<CrossAxisOverflow>"
+            },
+            {
+              "default": "default()",
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "default": "default()",
+              "name": "style",
+              "type": "Option<String>"
+            },
+            {
+              "name": "attributes",
+              "type": "Vec<Attribute>"
+            },
+            {
+              "name": "children",
+              "type": "Element"
+            }
+          ],
+          "ScrollAreaScrollbarProps": [
+            {
+              "name": "orientation",
+              "type": "ScrollbarOrientation"
+            },
+            {
+              "default": "default()",
+              "name": "class",
+              "type": "Option<String>"
+            }
+          ],
+          "ScrollAreaThumb": [
+            {
+              "name": "orientation",
+              "type": "ScrollbarOrientation"
+            }
+          ],
+          "ScrollAreaViewportProps": [
+            {
+              "default": "default()",
+              "name": "direction",
+              "type": "ReadSignal<ScrollDirection>"
+            },
+            {
+              "default": "default()",
+              "name": "always_show_scrollbars",
+              "type": "ReadSignal<bool>"
+            },
+            {
+              "default": "default()",
+              "name": "scroll_type",
+              "type": "ReadSignal<ScrollType>"
+            },
+            {
+              "default": "default()",
+              "name": "cross_axis_overflow",
+              "type": "ReadSignal<CrossAxisOverflow>"
+            },
+            {
+              "default": "true",
+              "name": "hide_native_scrollbar",
+              "type": "bool"
+            },
+            {
+              "default": "default()",
+              "name": "class",
+              "type": "Option<String>"
+            },
+            {
+              "default": "default()",
+              "name": "style",
+              "type": "Option<String>"
             },
             {
               "name": "attributes",
@@ -7971,6 +8139,11 @@
             {
               "name": "render_item",
               "type": "Callback<usize, Element>"
+            },
+            {
+              "default": "default()",
+              "name": "class",
+              "type": "Option<String>"
             },
             {
               "name": "attributes",

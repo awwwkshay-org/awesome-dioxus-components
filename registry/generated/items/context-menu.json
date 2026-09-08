@@ -7,7 +7,7 @@
       "source": "ui/context_menu.rs",
       "targetRoot": "ui",
       "target": "context_menu.rs",
-      "checksum": "a70a7673133d78b9e51fe71fc2bdc437bbf891e33b8cb2b695d987872c906564"
+      "checksum": "8f355ef4f1c7fd8cef101cf8de84bb0e7671ac5159d2d95063153d9f1017b26d"
     }
   ],
   "registryDependencies": [
@@ -50,7 +50,7 @@
   ],
   "documentation": {
     "slug": "context-menu",
-    "compositionNote": "The public copied API remains compositional; right-click/long-press detection, positioning, roving-focus keyboard navigation, and ARIA wiring remain inside adico-primitives.",
+    "compositionNote": "The public copied API remains compositional; right-click/long-press detection, positioning, roving-focus keyboard navigation, and ARIA wiring remain inside adico-primitives. ContextMenuContent caps its height (no Positioner available-space signal at this anchor) and scrolls internally rather than clipping overflowing items.",
     "usage": "ContextMenu {\n    ContextMenuTrigger { \"Right click here\" }\n    ContextMenuContent {\n        ContextMenuItem { index: 0usize, value: \"edit\".to_string(), on_select: move |_| {}, \"Edit\" }\n    }\n}",
     "accessibility": "No dedicated APG \"Context Menu\" pattern exists; `ContextMenuContent` implements the generic Menu pattern (`role=\"menu\"`/`role=\"menuitem\"`) opened by right-click or (touch/pen) long-press, with click-point `position: fixed` placement and Safari viewport correction (`packages/adico-primitives/src/context_menu.rs`). Deliberately independent of the shared `menu` primitive -- it owns placement/scroll-suppression/outside-dismiss concerns `menu::MenuContent` has no props for.",
     "keyboard": "Standard menu keyboard navigation (arrow keys move among items, Enter/Space activates); outside-click dismissal shares the same unfixed `document::eval` persistent-listener defect as this crate's other overlays -- confirmed via live instrumentation, see this change's tasks.md 7.4f note."

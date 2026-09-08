@@ -1,5 +1,8 @@
 {
-  "classification": "presentational",
-  "primitiveModules": [],
-  "reason": "Static table markup; no interactive behavior."
+  "classification": "exception",
+  "primitiveModules": [
+    "scroll_area"
+  ],
+  "reason": "Its `scroll_area` import is purely decorative theming (`scroll_area_visibility_class`, a pure function returning a CSS class name for the shared scrollbar contract) applied to the horizontal-scroll wrapper -- the table itself stays static markup, matching upstream's own non-interactive implementation, with no interactive behavior (keyboard handling, focus management, scroll locking, controlled state) delegated to a primitive.",
+  "followUp": "If Table ever needs real interactive behavior (e.g. sortable columns, roving-focus cell navigation), reclassify as `delegated` at that point rather than folding it into this decorative-only exception."
 }

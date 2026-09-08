@@ -1,6 +1,7 @@
 {
   "classification": "delegated",
   "primitiveModules": [
-    "command"
+    "command",
+    "scroll_area"
   ]
 }

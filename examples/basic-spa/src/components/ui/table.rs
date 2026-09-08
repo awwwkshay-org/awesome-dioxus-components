@@ -2,6 +2,8 @@
 
 use dioxus::prelude::*;
 
+use adico_primitives::scroll_area::scroll_area_visibility_class;
+
 use crate::adico_lib::cn::cn;
 
 /// The scroll-container-wrapped `<table>` root.
@@ -11,8 +13,12 @@ pub fn Table(class: Option<String>, children: Element) -> Element {
         "w-full caption-bottom text-sm",
         class.as_deref().unwrap_or_default(),
     ]);
+    let wrapper_class = cn(&[
+        "relative w-full overflow-x-auto",
+        scroll_area_visibility_class(false),
+    ]);
     rsx! {
-        div { class: "relative w-full overflow-x-auto",
+        div { class: wrapper_class,
             table { class, {children} }
         }
     }

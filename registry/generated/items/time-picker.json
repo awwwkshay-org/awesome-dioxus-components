@@ -7,7 +7,7 @@
       "source": "ui/time_picker.rs",
       "targetRoot": "ui",
       "target": "time_picker.rs",
-      "checksum": "f68da6c31df9a43cf6a6e60adc2ab8dd9467296c767b9de21e3f9d56c62e3a34"
+      "checksum": "95618ea51c49f36c4a8c6823905be2c9f8390602c5a1815c115ecd05ca2b2535"
     }
   ],
   "registryDependencies": [

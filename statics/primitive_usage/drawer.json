@@ -2,6 +2,7 @@
   "classification": "delegated",
   "primitiveModules": [
     "dialog",
-    "icons"
+    "icons",
+    "scroll_area"
   ]
 }

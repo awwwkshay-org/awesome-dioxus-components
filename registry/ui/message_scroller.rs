@@ -73,7 +73,11 @@ pub struct MessageScrollerViewportProps {
     pub children: Element,
 }
 
-/// The scrollable viewport.
+/// The scrollable viewport. Opts into the shared scroll-area contract
+/// (`with_scroll_area: true`) so its native scrollbar is themed consistently with
+/// every other scroll surface -- the primitive itself merges this class with its own
+/// visibility class, so `class` here stays exactly the caller-facing extras, not the
+/// full merged string.
 #[component]
 pub fn MessageScrollerViewport(props: MessageScrollerViewportProps) -> Element {
     let class = cn(&[
@@ -81,7 +85,12 @@ pub fn MessageScrollerViewport(props: MessageScrollerViewportProps) -> Element {
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
-        MessageScrollerViewportPrimitive { class, attributes: props.attributes, {props.children} }
+        MessageScrollerViewportPrimitive {
+            with_scroll_area: true,
+            class,
+            attributes: props.attributes,
+            {props.children}
+        }
     }
 }
 

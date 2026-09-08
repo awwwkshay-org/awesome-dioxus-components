@@ -281,19 +281,41 @@ const ANIMATION_UTILITIES_CSS: &str = r#"
 }
 "#;
 
-/// `ScrollArea` scrollbar coloring (`registry/ui/scroll_area.rs`, backed by
-/// `adico_primitives::scroll_area`), which otherwise renders with the
-/// browser's default scrollbar -- low contrast against a dark `--background`
-/// and invisible against a light one. Thumb/track are `color-mix`ed from
-/// `--foreground`/`--background` rather than `--primary`/`--accent`, so
-/// contrast survives both a light/dark swap (the two tokens flip) and a
-/// warm/cool preset swap (presets only ever rewrite the primary/accent role
-/// groups -- see `theme_switcher.rs`'s `Preset::apply*`, never these two).
-/// Standard `scrollbar-color` only, deliberately no `::-webkit-scrollbar`
-/// pseudo-elements: in Chromium, any matching webkit scrollbar pseudo pulls
-/// that scroller out of standardized scrollbar mode entirely, which would
-/// override `ScrollType::Hidden`'s `scrollbar-width: none` inline style and
-/// make its scrollbar reappear.
+/// `ScrollArea` scrollbar theming (`registry/ui/scroll_area.rs`, backed by
+/// `adico_primitives::scroll_area`), in two layers:
+///
+/// 1. **Native-scrollbar `scrollbar-color`** (`.dx-scroll-area-auto-hide`/
+///    `.dx-scroll-area-always-show`) -- the original fix, still load-bearing as a
+///    fallback wherever a real native scrollbar is genuinely shown: a standalone
+///    `ScrollAreaViewport` with `hide_native_scrollbar: false` (the in-place
+///    adoption shape can choose this), or any engine where `scrollbar-width: none`
+///    has no effect. Thumb/track are `color-mix`ed from `--foreground`/
+///    `--background` rather than `--primary`/`--accent`, so contrast survives both
+///    a light/dark swap (the two tokens flip) and a warm/cool preset swap (presets
+///    only ever rewrite the primary/accent role groups -- see `theme_switcher.rs`'s
+///    `Preset::apply*`, never these two). Standard `scrollbar-color` only,
+///    deliberately no `::-webkit-scrollbar` pseudo-elements: in Chromium, any
+///    matching webkit scrollbar pseudo pulls that scroller out of standardized
+///    scrollbar mode entirely, which would override `scrollbar-width: none` (now a
+///    real style declaration, not merely an inert same-named HTML attribute -- see
+///    `scroll_area.rs`'s doc comment) and make the native scrollbar reappear
+///    underneath the overlay thumb below.
+///
+///    `.dx-scroll-area-always-show` additionally reserves gutter space via
+///    `scrollbar-gutter: stable`, which `.dx-scroll-area-auto-hide` does not -- this
+///    is the one property distinguishing the two classes; previously both classes
+///    carried identical rules and `always_show_scrollbars` had no observable effect
+///    at all.
+///
+/// 2. **Overlay scrollbar** (`.dx-scroll-area-scrollbar`/`.dx-scroll-area-thumb`/
+///    `.dx-scroll-area-corner`) -- the primary visual in every engine where
+///    `scrollbar-width: none` does hide the native scrollbar (`ScrollArea`'s
+///    wrapper form, and `ScrollAreaViewport` used with its `hide_native_scrollbar`
+///    default of `true`), rendered by `adico_primitives::scroll_area`'s
+///    `ScrollAreaScrollbar`/`ScrollAreaThumb`/`ScrollAreaCorner`. Track/thumb reuse
+///    the same `--foreground`/`--background` `color-mix` percentages as the native
+///    fallback above, so the two layers are visually indistinguishable wherever
+///    both could theoretically apply.
 const SCROLLBAR_CSS: &str = "
 .dx-scroll-area-auto-hide,
 .dx-scroll-area-always-show {
@@ -301,10 +323,69 @@ const SCROLLBAR_CSS: &str = "
     color-mix(in srgb, hsl(var(--foreground)) 8%, hsl(var(--background)));
 }
 
+.dx-scroll-area-always-show {
+  scrollbar-gutter: stable;
+}
+
 .dx-scroll-area-auto-hide:hover,
 .dx-scroll-area-always-show:hover {
   scrollbar-color: color-mix(in srgb, hsl(var(--foreground)) 65%, hsl(var(--background)))
     color-mix(in srgb, hsl(var(--foreground)) 8%, hsl(var(--background)));
+}
+
+.dx-scroll-area-scrollbar {
+  position: absolute;
+  background: color-mix(in srgb, hsl(var(--foreground)) 8%, hsl(var(--background)));
+  touch-action: none;
+  user-select: none;
+  z-index: 10;
+}
+
+.dx-scroll-area-scrollbar[data-orientation='vertical'] {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 10px;
+  padding: 2px;
+}
+
+.dx-scroll-area-scrollbar[data-orientation='horizontal'] {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 10px;
+  padding: 2px;
+}
+
+.dx-scroll-area-thumb {
+  position: absolute;
+  border-radius: 9999px;
+  background: color-mix(in srgb, hsl(var(--foreground)) 50%, hsl(var(--background)));
+  cursor: pointer;
+}
+
+.dx-scroll-area-thumb:hover {
+  background: color-mix(in srgb, hsl(var(--foreground)) 65%, hsl(var(--background)));
+}
+
+.dx-scroll-area-thumb[data-orientation='vertical'] {
+  left: 2px;
+  right: 2px;
+}
+
+.dx-scroll-area-thumb[data-orientation='horizontal'] {
+  top: 2px;
+  bottom: 2px;
+}
+
+.dx-scroll-area-corner {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 10px;
+  height: 10px;
+  background: color-mix(in srgb, hsl(var(--foreground)) 8%, hsl(var(--background)));
+  z-index: 10;
 }
 ";
 
@@ -713,6 +794,23 @@ mod tests {
         }
         assert!(created.contains("scrollbar-color: color-mix(in srgb, hsl(var(--foreground))"));
         assert!(!created.contains("::-webkit-scrollbar"));
+        // `always_show_scrollbars` must produce visually distinct CSS from the default
+        // auto-hide behavior, not merely a differently-named class with identical rules.
+        assert!(created.contains("scrollbar-gutter: stable"));
+        // Overlay scrollbar parts (`ScrollAreaScrollbar`/`ScrollAreaThumb`/`ScrollAreaCorner`)
+        // must also be themed, not just the native-scrollbar fallback above.
+        for selector in [
+            ".dx-scroll-area-scrollbar",
+            ".dx-scroll-area-scrollbar[data-orientation='vertical']",
+            ".dx-scroll-area-scrollbar[data-orientation='horizontal']",
+            ".dx-scroll-area-thumb",
+            ".dx-scroll-area-thumb:hover",
+            ".dx-scroll-area-thumb[data-orientation='vertical']",
+            ".dx-scroll-area-thumb[data-orientation='horizontal']",
+            ".dx-scroll-area-corner",
+        ] {
+            assert!(created.contains(selector), "missing {selector}");
+        }
         fs::remove_dir_all(&project_root).expect("temporary directory should be removable");
     }
 

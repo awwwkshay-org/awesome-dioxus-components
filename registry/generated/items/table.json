@@ -7,7 +7,7 @@
       "source": "ui/table.rs",
       "targetRoot": "ui",
       "target": "table.rs",
-      "checksum": "971b130d99a2a842f15c13e41904d24d780eeae34c9141c84ae67045ee2e087c"
+      "checksum": "0313b4d3dfa09f0aaaf18191f07b6dce2fbf18a0551a62548e2dbefa56c05b5a"
     }
   ],
   "registryDependencies": [
@@ -18,6 +18,14 @@
       "crate": "dioxus",
       "package": null,
       "version": "=0.7.9",
+      "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
       "features": [],
       "defaultFeatures": true,
       "target": null
@@ -39,7 +47,7 @@
   ],
   "documentation": {
     "slug": "table",
-    "compositionNote": "Purely presentational (Table/TableHeader/TableBody/TableFooter/TableRow/TableHead/TableCell/TableCaption), matching upstream's own non-interactive implementation. Table wraps the real <table> in a relative/overflow-x-auto scroll container, matching upstream's horizontal-scroll behavior for wide tables.",
+    "compositionNote": "Purely presentational (Table/TableHeader/TableBody/TableFooter/TableRow/TableHead/TableCell/TableCaption), matching upstream's own non-interactive implementation. Table wraps the real <table> in a relative/overflow-x-auto scroll container, matching upstream's horizontal-scroll behavior for wide tables -- the wrapper now carries the shared ScrollArea visibility class so its scrollbar is themed like every other scroll surface.",
     "usage": "Table {\n    TableHeader { TableRow { TableHead { \"Name\" } } }\n    TableBody { TableRow { TableCell { \"adico\" } } }\n}",
     "accessibility": "Plain native `<table>` markup with semantic `<thead>`/`<tbody>`/`<tfoot>`/`<th>`/`<td>` (`registry/ui/table.rs`); `TableRow`'s classes include a `[role=checkbox]` hook for a selection-column pattern, but selection state itself is caller-composed.",
     "keyboard": "No component-specific keyboard handling; native table semantics only (no roving-focus cell navigation)."

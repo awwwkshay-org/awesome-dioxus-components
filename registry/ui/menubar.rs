@@ -21,6 +21,7 @@ use adico_primitives::menubar::{
 
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
+use adico_primitives::scroll_area::scroll_area_visibility_class;
 
 /// The horizontal bar containing one or more [`MenubarMenu`] entries.
 #[component]
@@ -82,8 +83,9 @@ pub fn MenubarContent(
     #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "z-50 min-w-[12rem] overflow-hidden border bg-popover p-1 text-popover-foreground shadow-md data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+        "z-50 min-w-[12rem] max-h-[var(--adico-positioner-available-size)] overflow-y-auto border bg-popover p-1 text-popover-foreground shadow-md data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
         radius.class(),
+        scroll_area_visibility_class(false),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

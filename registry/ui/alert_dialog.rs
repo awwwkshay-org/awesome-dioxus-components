@@ -15,6 +15,7 @@ use adico_primitives::alert_dialog::{
 pub use adico_primitives::alert_dialog::{
     AlertDialogDescription, AlertDialogRoot as AlertDialog, AlertDialogTitle,
 };
+use adico_primitives::scroll_area::scroll_area_visibility_class;
 
 /// Opens the surrounding [`AlertDialog`] with the installed [`Button`]
 /// component. Nested inside [`AlertDialog`] (matching `Dialog`'s
@@ -95,17 +96,24 @@ pub fn AlertDialogContent(
     #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "fixed left-1/2 top-1/2 z-[51] grid w-full -translate-x-1/2 -translate-y-1/2 gap-4 border bg-background p-6 text-foreground shadow-lg",
+        // See `dialog.rs`'s `DialogContent` for the identical `max-h`/`min-h-0`/
+        // scrolling-body reasoning -- an `AlertDialog` is also a centered modal with
+        // no anchor element, so it uses the same fixed viewport-relative cap.
+        "fixed left-1/2 top-1/2 z-[51] grid max-h-[calc(100svh-2rem)] w-full min-h-0 -translate-x-1/2 -translate-y-1/2 border bg-background p-6 text-foreground shadow-lg",
         size.class(),
         radius.class(),
         class.as_deref().unwrap_or_default(),
+    ]);
+    let body_class = cn(&[
+        "flex min-h-0 flex-col gap-4 overflow-y-auto",
+        scroll_area_visibility_class(false),
     ]);
     rsx! {
         AlertDialogContentPrimitive {
             id,
             class,
             attributes,
-            {children}
+            div { class: body_class, {children} }
         }
     }
 }

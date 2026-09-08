@@ -7,7 +7,7 @@
       "source": "ui/hover_card.rs",
       "targetRoot": "ui",
       "target": "hover_card.rs",
-      "checksum": "a60ef80ebd7c89f4614888b7cd404e926f9e4a3509fe7168581a4406ca9b8dd7"
+      "checksum": "4da3c66f4d3529e5ebe2f09c033e7ec5f36a191350b9a5dee89d47f1314c7c70"
     }
   ],
   "registryDependencies": [
@@ -50,7 +50,7 @@
   ],
   "documentation": {
     "slug": "hover-card",
-    "compositionNote": "The public copied API remains compositional; hover/focus handling and ARIA wiring remain inside adico-primitives.",
+    "compositionNote": "The public copied API remains compositional; hover/focus handling and ARIA wiring remain inside adico-primitives. HoverCardContent caps its height to the positioner's available space and scrolls internally rather than clipping overflowing content.",
     "usage": "HoverCard { open: open(), on_open_change: move |v| open.set(v),\n    HoverCardTrigger { \"@username\" }\n    HoverCardContent { \"Profile preview\" }\n}",
     "accessibility": "Follows the closest APG guidance -- the Tooltip pattern's hover/focus-triggered, `aria-describedby`-linked disclosure -- while deliberately diverging where a card needs richer behavior a plain tooltip does not: `HoverCardContent` accepts focusable interactive children and stays open while the pointer is over the content itself (`packages/adico-primitives/src/hover_card.rs`).",
     "keyboard": "Opens on hover or focus of the trigger, closes on Escape or moving away from both trigger and content. Note: `force_mount` does not actually keep closed content mounted on any target -- a known, documented primitive defect, not something a consumer should rely on."

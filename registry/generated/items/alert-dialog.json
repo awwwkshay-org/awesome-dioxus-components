@@ -7,7 +7,7 @@
       "source": "ui/alert_dialog.rs",
       "targetRoot": "ui",
       "target": "alert_dialog.rs",
-      "checksum": "98ded58c40ba6a9c75b42f1656548ea311f3b548827a09aef0b319a9a146dfa4"
+      "checksum": "17452f1fa19f00e8a61125041ef981732ab346a5431f6503377664c867f7b844"
     }
   ],
   "registryDependencies": [
@@ -52,7 +52,7 @@
   ],
   "documentation": {
     "slug": "alert-dialog",
-    "compositionNote": "The public copied API remains compositional; focus-trap handling is delegated to the same shared internals the installed Dialog uses. AlertDialogTrigger (composing the installed Button, matching DialogTrigger) is nested inside AlertDialog so the root-level Escape handler reliably receives keyboard events; Escape is handled on AlertDialogRoot itself, the same working position DialogRoot uses. Unlike Dialog, no outside-dismiss listener is installed, matching the WAI-ARIA alertdialog pattern's requirement that only an explicit action can close it.",
+    "compositionNote": "The public copied API remains compositional; focus-trap handling is delegated to the same shared internals the installed Dialog uses. AlertDialogTrigger (composing the installed Button, matching DialogTrigger) is nested inside AlertDialog so the root-level Escape handler reliably receives keyboard events; Escape is handled on AlertDialogRoot itself, the same working position DialogRoot uses. Unlike Dialog, no outside-dismiss listener is installed, matching the WAI-ARIA alertdialog pattern's requirement that only an explicit action can close it. AlertDialogContent likewise caps its height to the viewport and scrolls its body internally rather than clipping overflowing content.",
     "usage": "AlertDialog { open: open(), on_open_change: move |v| open.set(v),\n    AlertDialogTrigger { \"Delete item\" }\n    AlertDialogContent {\n        AlertDialogTitle { \"Are you sure?\" }\n        AlertDialogDescription { \"This cannot be undone.\" }\n        AlertDialogActions {\n            AlertDialogCancel { \"Cancel\" }\n            AlertDialogAction { \"Delete\" }\n        }\n    }\n}",
     "accessibility": "`AlertDialogContent` is `role=\"alertdialog\"` with `aria-modal=\"true\"`, labelled by its title and described by its description, and traps focus while open (`packages/adico-primitives/src/alert_dialog.rs`). Unlike `dialog`, it is deliberately not dismissible by an outside click, matching the WAI-ARIA APG Alert Dialog pattern's requirement for an explicit response.",
     "keyboard": "Escape closes it via a native `onkeydown` handler on `AlertDialogRoot` itself (moved there after live testing found a content-scoped listener never received the keydown while focus stayed on the trigger)."

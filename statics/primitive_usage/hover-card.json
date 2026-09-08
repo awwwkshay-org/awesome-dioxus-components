@@ -1,6 +1,7 @@
 {
   "classification": "delegated",
   "primitiveModules": [
-    "hover_card"
+    "hover_card",
+    "scroll_area"
   ]
 }

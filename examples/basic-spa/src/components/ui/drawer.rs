@@ -26,6 +26,7 @@ pub use adico_primitives::dialog::{
     DialogDescription as DrawerDescription, DialogRoot as Drawer, DialogTitle as DrawerTitle,
 };
 use adico_primitives::icons::X;
+use adico_primitives::scroll_area::scroll_area_visibility_class;
 
 /// The viewport edge a [`Drawer`] slides in from.
 #[derive(Clone, Copy, PartialEq, Eq, Default)]
@@ -131,9 +132,17 @@ pub fn DrawerContent(
 ) -> Element {
     let direction = direction.unwrap_or_default();
     let class = cn(&[
-        "fixed z-[51] flex flex-col gap-4 bg-background p-6 text-foreground shadow-lg transition ease-in-out",
+        // `min-h-0` lets this flex container's children actually shrink below their
+        // content size -- without it, the inner scroll body below can't be capped by
+        // this element's own `max-h-[80vh]` (`DrawerDirection::class()`'s `Bottom`
+        // case) and instead grows the whole drawer past the viewport.
+        "fixed z-[51] flex min-h-0 flex-col gap-4 bg-background p-6 text-foreground shadow-lg transition ease-in-out",
         direction.class(),
         class.as_deref().unwrap_or_default(),
+    ]);
+    let body_class = cn(&[
+        "min-h-0 flex-1 overflow-y-auto",
+        scroll_area_visibility_class(false),
     ]);
     rsx! {
         DialogPrimitiveContent {
@@ -141,7 +150,10 @@ pub fn DrawerContent(
             if direction.shows_handle() {
                 div { class: "mx-auto mt-4 h-2 w-[100px] shrink-0 rounded-full bg-muted", "aria-hidden": "true" }
             }
-            {children}
+            // Only the body scrolls -- the handle bar above and the close button
+            // (rendered after, `position: absolute` so it's unaffected either way)
+            // stay put rather than scrolling away with long content.
+            div { class: body_class, {children} }
             if show_close_button {
                 DrawerClose { class: "absolute right-4 top-4" }
             }

@@ -19,7 +19,10 @@
 
 use dioxus::prelude::*;
 
-use adico_primitives::{separator::Separator as SeparatorPrimitive, use_controlled};
+use adico_primitives::{
+    scroll_area::scroll_area_visibility_class, separator::Separator as SeparatorPrimitive,
+    use_controlled,
+};
 
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
@@ -354,6 +357,7 @@ pub fn SidebarContent(
 ) -> Element {
     let class = cn(&[
         "flex min-h-0 flex-1 flex-col gap-2 overflow-auto p-2",
+        scroll_area_visibility_class(false),
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

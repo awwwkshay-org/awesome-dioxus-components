@@ -14,9 +14,11 @@
           "hooks_used": [
             "use_animated_open",
             "use_collection_provider",
+            "use_controlled",
             "use_direction",
             "use_id_or",
             "use_item",
+            "use_optionally_controlled",
             "use_unique_id"
           ],
           "modules": [
@@ -335,17 +337,25 @@
             "AlertDialogDescription",
             "AlertDialogActions",
             "AlertDialogAction",
-            "AlertDialogCancel"
+            "AlertDialogCancel",
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner"
           ],
           "hooks_used": [
             "use_escape_key",
             "use_focus_trap",
             "use_id_or",
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to",
             "use_scroll_lock",
             "use_unique_id"
           ],
           "modules": [
-            "alert_dialog"
+            "alert_dialog",
+            "scroll_area"
           ],
           "props": {
             "AlertDialogActionProps": [
@@ -447,6 +457,108 @@
               }
             ],
             "AlertDialogTitleProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
               {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
@@ -2820,7 +2932,12 @@
             "ComboboxList",
             "ComboboxOption",
             "ComboboxItemIndicator",
-            "ComboboxEmpty"
+            "ComboboxEmpty",
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner"
           ],
           "hooks_used": [
             "use_controlled",
@@ -2830,6 +2947,8 @@
             "use_item",
             "use_listbox_container",
             "use_outside_dismiss",
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to",
             "use_selectable_option",
             "use_selectable_root",
             "use_single_selectable_value",
@@ -2837,7 +2956,8 @@
           ],
           "modules": [
             "combobox",
-            "icons"
+            "icons",
+            "scroll_area"
           ],
           "props": {
             "ComboboxEmptyProps": [
@@ -3075,6 +3195,108 @@
                 "default": "Callback::new(|(q, t) :(String, String) | default_combobox_filter(& q, & t))",
                 "name": "filter",
                 "type": "Callback<(String, String), bool>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
               },
               {
                 "name": "attributes",
@@ -3350,7 +3572,12 @@
             "CommandGroup",
             "CommandSeparator",
             "CommandItem",
-            "CommandEmpty"
+            "CommandEmpty",
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner"
           ],
           "hooks_used": [
             "use_collection_provider",
@@ -3358,10 +3585,13 @@
             "use_effect_cleanup",
             "use_id_or",
             "use_item",
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to",
             "use_unique_id"
           ],
           "modules": [
-            "command"
+            "command",
+            "scroll_area"
           ],
           "props": {
             "CommandEmptyProps": [
@@ -3497,6 +3727,108 @@
               {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
+              }
+            ],
+            "ScrollAreaProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
               }
             ]
           }
@@ -3674,7 +4006,12 @@
             "MenuGroupLabel",
             "MenuSeparator",
             "MenuSubmenuRoot",
-            "MenuSubmenuTrigger"
+            "MenuSubmenuTrigger",
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner"
           ],
           "hooks_used": [
             "use_animated_open",
@@ -3682,17 +4019,20 @@
             "use_controlled",
             "use_effect_cleanup",
             "use_escape_key",
+            "use_hover_intent",
             "use_id_or",
             "use_item",
-            "use_layer",
             "use_long_press",
             "use_outside_dismiss",
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to",
             "use_typeahead",
             "use_unique_id"
           ],
           "modules": [
             "context_menu",
-            "menu"
+            "menu",
+            "scroll_area"
           ],
           "props": {
             "ContextMenuContentProps": [
@@ -4047,6 +4387,108 @@
               }
             ],
             "MenuTriggerProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
               {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
@@ -5851,7 +6293,12 @@
             "DialogRoot",
             "DialogContent",
             "DialogTitle",
-            "DialogDescription"
+            "DialogDescription",
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner"
           ],
           "hooks_used": [
             "use_animated_open",
@@ -5860,12 +6307,15 @@
             "use_focus_trap",
             "use_id_or",
             "use_outside_dismiss",
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to",
             "use_scroll_lock",
             "use_unique_id"
           ],
           "modules": [
             "dialog",
-            "icons"
+            "icons",
+            "scroll_area"
           ],
           "props": {
             "DialogContentProps": [
@@ -5938,6 +6388,108 @@
               {
                 "name": "id",
                 "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
               },
               {
                 "name": "attributes",
@@ -6271,7 +6823,12 @@
             "DialogRoot",
             "DialogContent",
             "DialogTitle",
-            "DialogDescription"
+            "DialogDescription",
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner"
           ],
           "hooks_used": [
             "use_animated_open",
@@ -6280,12 +6837,15 @@
             "use_focus_trap",
             "use_id_or",
             "use_outside_dismiss",
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to",
             "use_scroll_lock",
             "use_unique_id"
           ],
           "modules": [
             "dialog",
-            "icons"
+            "icons",
+            "scroll_area"
           ],
           "props": {
             "DialogContentProps": [
@@ -6358,6 +6918,108 @@
               {
                 "name": "id",
                 "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
               },
               {
                 "name": "attributes",
@@ -6478,23 +7140,32 @@
             "MenuGroupLabel",
             "MenuSeparator",
             "MenuSubmenuRoot",
-            "MenuSubmenuTrigger"
+            "MenuSubmenuTrigger",
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner"
           ],
           "hooks_used": [
             "use_animated_open",
             "use_collection_provider",
             "use_controlled",
             "use_effect_cleanup",
+            "use_escape_key",
+            "use_hover_intent",
             "use_id_or",
             "use_item",
-            "use_layer",
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to",
             "use_typeahead",
             "use_unique_id"
           ],
           "modules": [
             "dropdown_menu",
             "icons",
-            "menu"
+            "menu",
+            "scroll_area"
           ],
           "props": {
             "MenuCheckboxItemProps": [
@@ -6763,6 +7434,108 @@
               }
             ],
             "MenuTriggerProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
               {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
@@ -7232,16 +8005,25 @@
           "components": [
             "HoverCard",
             "HoverCardTrigger",
-            "HoverCardContent"
+            "HoverCardContent",
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner"
           ],
           "hooks_used": [
             "use_animated_open",
             "use_controlled",
+            "use_hover_intent",
             "use_id_or",
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to",
             "use_unique_id"
           ],
           "modules": [
-            "hover_card"
+            "hover_card",
+            "scroll_area"
           ],
           "props": {
             "HoverCardContentProps": [
@@ -7264,6 +8046,11 @@
                 "default": "true",
                 "name": "force_mount",
                 "type": "bool"
+              },
+              {
+                "default": "Some(\"tooltip\")",
+                "name": "role",
+                "type": "Option<& 'static str>"
               },
               {
                 "name": "attributes",
@@ -7295,6 +8082,16 @@
                 "type": "ReadSignal<bool>"
               },
               {
+                "default": "ReadSignal::new(Signal::new(0))",
+                "name": "delay_ms",
+                "type": "ReadSignal<u64>"
+              },
+              {
+                "default": "ReadSignal::new(Signal::new(0))",
+                "name": "close_delay_ms",
+                "type": "ReadSignal<u64>"
+              },
+              {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
               },
@@ -7308,6 +8105,108 @@
                 "default": "default()",
                 "name": "id",
                 "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
               },
               {
                 "name": "attributes",
@@ -8188,7 +9087,12 @@
             "MenubarMenu",
             "MenubarTrigger",
             "MenubarContent",
-            "MenubarItem"
+            "MenubarItem",
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner"
           ],
           "hooks_used": [
             "use_animated_open",
@@ -8198,15 +9102,18 @@
             "use_direction",
             "use_effect_cleanup",
             "use_escape_key",
+            "use_hover_intent",
             "use_id_or",
             "use_item",
-            "use_layer",
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to",
             "use_typeahead",
             "use_unique_id"
           ],
           "modules": [
             "menu",
-            "menubar"
+            "menubar",
+            "scroll_area"
           ],
           "props": {
             "MenuCheckboxItemProps": [
@@ -8490,6 +9397,16 @@
                 "type": "ReadSignal<Option<String>>"
               },
               {
+                "default": "ContentSide::Bottom",
+                "name": "side",
+                "type": "ContentSide"
+              },
+              {
+                "default": "ContentAlign::Start",
+                "name": "align",
+                "type": "ContentAlign"
+              },
+              {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
               },
@@ -8566,6 +9483,108 @@
               }
             ],
             "MenubarTriggerProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
               {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
@@ -8863,7 +9882,8 @@
           ],
           "hooks_used": [
             "use_message_scroller_pinned_to_bottom",
-            "use_message_scroller_scroll_to_bottom"
+            "use_message_scroller_scroll_to_bottom",
+            "use_scroll_area_context"
           ],
           "modules": [
             "message_scroller"
@@ -8895,6 +9915,16 @@
               }
             ],
             "MessageScrollerViewportProps": [
+              {
+                "default": "default()",
+                "name": "with_scroll_area",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
               {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
@@ -9149,16 +10179,25 @@
             "NavigationMenuItem",
             "NavigationMenuTrigger",
             "NavigationMenuContent",
-            "NavigationMenuLink"
+            "NavigationMenuLink",
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner"
           ],
           "hooks_used": [
             "use_animated_open",
             "use_collection_provider",
-            "use_item"
+            "use_hover_intent",
+            "use_item",
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to"
           ],
           "modules": [
             "icons",
-            "navigation_menu"
+            "navigation_menu",
+            "scroll_area"
           ],
           "props": {
             "NavigationMenuContentProps": [
@@ -9266,6 +10305,108 @@
               }
             ],
             "NavigationMenuTriggerProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
               {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
@@ -9621,7 +10762,12 @@
             "PopoverRoot",
             "PopoverContent",
             "PopoverContentRendered",
-            "PopoverTrigger"
+            "PopoverTrigger",
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner"
           ],
           "hooks_used": [
             "use_animated_open",
@@ -9630,10 +10776,13 @@
             "use_focus_trap",
             "use_id_or",
             "use_outside_dismiss",
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to",
             "use_unique_id"
           ],
           "modules": [
-            "popover"
+            "popover",
+            "scroll_area"
           ],
           "props": {
             "PopoverContentProps": [
@@ -9725,6 +10874,108 @@
               }
             ],
             "PopoverTriggerProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
               {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
@@ -10022,10 +11273,125 @@
       },
       {
         "adico_primitive": {
-          "components": [],
-          "hooks_used": [],
-          "modules": [],
-          "props": {}
+          "components": [
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner"
+          ],
+          "hooks_used": [
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to"
+          ],
+          "modules": [
+            "icons",
+            "scroll_area"
+          ],
+          "props": {
+            "ScrollAreaProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
         },
         "name": "resizable",
         "registry_facade": {
@@ -10099,9 +11465,16 @@
       {
         "adico_primitive": {
           "components": [
-            "ScrollArea"
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner"
           ],
-          "hooks_used": [],
+          "hooks_used": [
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to"
+          ],
           "modules": [
             "scroll_area"
           ],
@@ -10121,6 +11494,83 @@
                 "default": "default()",
                 "name": "scroll_type",
                 "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
               },
               {
                 "name": "attributes",
@@ -10146,6 +11596,11 @@
       {
         "adico_primitive": {
           "components": [
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner",
             "Select",
             "SelectMulti",
             "SelectTrigger",
@@ -10164,6 +11619,8 @@
             "use_item",
             "use_listbox_container",
             "use_outside_dismiss",
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to",
             "use_selectable_option",
             "use_selectable_root",
             "use_single_selectable_value",
@@ -10172,9 +11629,112 @@
           ],
           "modules": [
             "icons",
+            "scroll_area",
             "select"
           ],
           "props": {
+            "ScrollAreaProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
             "SelectGroupLabelProps": [
               {
                 "name": "id",
@@ -10669,7 +12229,12 @@
             "DialogRoot",
             "DialogContent",
             "DialogTitle",
-            "DialogDescription"
+            "DialogDescription",
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner"
           ],
           "hooks_used": [
             "use_animated_open",
@@ -10678,12 +12243,15 @@
             "use_focus_trap",
             "use_id_or",
             "use_outside_dismiss",
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to",
             "use_scroll_lock",
             "use_unique_id"
           ],
           "modules": [
             "dialog",
-            "icons"
+            "icons",
+            "scroll_area"
           ],
           "props": {
             "DialogContentProps": [
@@ -10756,6 +12324,108 @@
               {
                 "name": "id",
                 "type": "ReadSignal<Option<String>>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
               },
               {
                 "name": "attributes",
@@ -10877,13 +12547,124 @@
       {
         "adico_primitive": {
           "components": [
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner",
             "Separator"
           ],
-          "hooks_used": [],
+          "hooks_used": [
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to"
+          ],
           "modules": [
+            "scroll_area",
             "separator"
           ],
           "props": {
+            "ScrollAreaProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
             "SeparatorProps": [
               {
                 "default": "true",
@@ -11689,10 +13470,124 @@
       },
       {
         "adico_primitive": {
-          "components": [],
-          "hooks_used": [],
-          "modules": [],
-          "props": {}
+          "components": [
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner"
+          ],
+          "hooks_used": [
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to"
+          ],
+          "modules": [
+            "scroll_area"
+          ],
+          "props": {
+            "ScrollAreaProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ]
+          }
         },
         "name": "table",
         "registry_facade": {
@@ -12577,6 +14472,11 @@
             "PopoverContent",
             "PopoverContentRendered",
             "PopoverTrigger",
+            "ScrollAreaViewport",
+            "ScrollArea",
+            "ScrollAreaScrollbar",
+            "ScrollAreaThumb",
+            "ScrollAreaCorner",
             "TimePicker",
             "TimePickerHourSegment",
             "TimePickerMinuteSegment",
@@ -12594,12 +14494,15 @@
             "use_id_or",
             "use_move_interaction",
             "use_outside_dismiss",
+            "use_scroll_area_context",
+            "use_scroll_area_scroll_to",
             "use_segment_field_provider",
             "use_unique_id"
           ],
           "modules": [
             "icons",
             "popover",
+            "scroll_area",
             "time_picker"
           ],
           "props": {
@@ -12692,6 +14595,108 @@
               }
             ],
             "PopoverTriggerProps": [
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ScrollAreaScrollbarProps": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "ScrollAreaThumb": [
+              {
+                "name": "orientation",
+                "type": "ScrollbarOrientation"
+              }
+            ],
+            "ScrollAreaViewportProps": [
+              {
+                "default": "default()",
+                "name": "direction",
+                "type": "ReadSignal<ScrollDirection>"
+              },
+              {
+                "default": "default()",
+                "name": "always_show_scrollbars",
+                "type": "ReadSignal<bool>"
+              },
+              {
+                "default": "default()",
+                "name": "scroll_type",
+                "type": "ReadSignal<ScrollType>"
+              },
+              {
+                "default": "default()",
+                "name": "cross_axis_overflow",
+                "type": "ReadSignal<CrossAxisOverflow>"
+              },
+              {
+                "default": "true",
+                "name": "hide_native_scrollbar",
+                "type": "bool"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "default": "default()",
+                "name": "style",
+                "type": "Option<String>"
+              },
               {
                 "name": "attributes",
                 "type": "Vec<Attribute>"
@@ -13697,6 +15702,7 @@
           "hooks_used": [
             "use_animated_open",
             "use_controlled",
+            "use_escape_key",
             "use_id_or",
             "use_unique_id"
           ],
@@ -13864,6 +15870,11 @@
               {
                 "name": "render_item",
                 "type": "Callback<usize, Element>"
+              },
+              {
+                "default": "default()",
+                "name": "class",
+                "type": "Option<String>"
               },
               {
                 "name": "attributes",
@@ -14445,5 +16456,5 @@
       "total_upstream_components": 61
     }
   },
-  "synced_at": "2026-09-06"
+  "synced_at": "2026-09-08"
 }

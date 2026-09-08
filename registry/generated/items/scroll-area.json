@@ -43,10 +43,10 @@
   ],
   "documentation": {
     "slug": "scroll-area",
-    "compositionNote": "A pure re-export of the owned ScrollArea primitive: pure CSS overflow/scrollbar-width styling with no visual language to compose, matching upstream's own unstyled behavior.",
+    "compositionNote": "A pure re-export of the owned ScrollArea primitive: ScrollArea composes a native-overflow viewport with an overlay Scrollbar/Thumb/Corner (kept unmeasured/hidden until first client-side measurement, so SSR and hydration render a usable scroller with no flash or jump), matching upstream's own unstyled behavior -- caller `class`/`style` land on the outer root, and the viewport always fills it.",
     "usage": "ScrollArea { style: \"height: 12em;\",\n    div { \"Long scrollable content...\" }\n}",
     "accessibility": "No ARIA role applies -- a scrollable container is not itself a widget (`packages/adico-primitives/src/scroll_area.rs`); its spec is pure CSS overflow/scrollbar-width composition.",
-    "keyboard": "No component-specific keyboard handling; native scroll keys (arrow keys, Page Up/Down, Space) work once the scrollable region has focus, same as any native overflow container."
+    "keyboard": "No component-specific keyboard handling of its own; native scroll keys (arrow keys, Page Up/Down, Space) work once the scrollable viewport has focus. Keyboard-navigating primitives (Select, Combobox, Command, and every roving-focus list) call scroll_to_with_options themselves to keep the active item in view -- that behavior lives in adico-primitives::collection, not in ScrollArea."
   },
   "compatibility": null,
   "provenance": {

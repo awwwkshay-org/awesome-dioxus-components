@@ -7,7 +7,7 @@
       "source": "ui/message_scroller.rs",
       "targetRoot": "ui",
       "target": "message_scroller.rs",
-      "checksum": "3639bb9bb5776050e367318ac59189bc2bb57eeec1346e02024972e52cc36b60"
+      "checksum": "1a556981ea85ade2dd775647123d7a65c478fcadad5a0416c671aac311049811"
     }
   ],
   "registryDependencies": [

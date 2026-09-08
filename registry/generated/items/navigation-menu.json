@@ -7,7 +7,7 @@
       "source": "ui/navigation_menu.rs",
       "targetRoot": "ui",
       "target": "navigation_menu.rs",
-      "checksum": "52eb9903d01b017392131085e725f4080d87f2f51cdff8d2b3dd8bf8e0486355"
+      "checksum": "3c98711e1b8fab8a7f35fe7cdaae2f5a1dce14c86da0259d2f97da68628fc664"
     }
   ],
   "registryDependencies": [
@@ -50,7 +50,7 @@
   ],
   "documentation": {
     "slug": "navigation-menu",
-    "compositionNote": "The copied facade styles adico-primitives::navigation_menu directly; roving-focus top-level items, hover-intent opening (with immediate switching between already-open siblings), and Positioner-anchored content all remain inside adico-primitives.",
+    "compositionNote": "The copied facade styles adico-primitives::navigation_menu directly; roving-focus top-level items, hover-intent opening (with immediate switching between already-open siblings), and Positioner-anchored content all remain inside adico-primitives. NavigationMenuContent caps its height to the positioner's available space and scrolls internally rather than clipping overflowing content.",
     "usage": "NavigationMenu {\n    NavigationMenuList {\n        NavigationMenuItem { index: 0usize,\n            NavigationMenuTrigger { \"Products\" }\n            NavigationMenuContent {\n                NavigationMenuLink { href: \"/widgets\", \"Widgets\" }\n            }\n        }\n    }\n}",
     "accessibility": "NavigationMenuTrigger is aria-expanded/aria-controls-wired to its NavigationMenuContent; NavigationMenuContent renders role=\"region\" via Positioner (packages/adico-primitives/src/navigation_menu.rs).",
     "keyboard": "ArrowLeft/ArrowRight move the roving highlight across top-level items; Home/End jump to the first/last. Note: no cross-sibling coordination between two different open top-level submenus yet -- a named, documented primitive limitation, not this facade's own gap."

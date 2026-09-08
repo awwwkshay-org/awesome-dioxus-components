@@ -164,7 +164,7 @@
           "source": "ui/dialog.rs",
           "targetRoot": "ui",
           "target": "dialog.rs",
-          "checksum": "3afac6316923fe84049032ab57394aa72033c2eca29e8d41db6499574ec71143"
+          "checksum": "9c9151ab642598c2699a684a09ab01c18b8816b2009f05df676102e3a8b8e666"
         }
       ],
       "registryDependencies": [
@@ -201,7 +201,7 @@
       ],
       "documentation": {
         "slug": "dialog",
-        "compositionNote": "The public copied API remains compositional; focus management, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives.",
+        "compositionNote": "The public copied API remains compositional; focus management, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives. DialogContent caps its height to the viewport and scrolls its body internally, keeping header/footer chrome fixed, rather than clipping overflowing content.",
         "usage": "Dialog { open: open(), on_open_change: move |v| open.set(v),\n    DialogTrigger { \"Open dialog\" }\n    DialogOverlay {}\n    DialogContent {\n        DialogHeader { DialogTitle { \"Title\" } DialogDescription { \"Description\" } }\n        DialogFooter { DialogClose { \"Close\" } }\n    }\n}",
         "accessibility": "`DialogContent` is `role=\"dialog\"` with `aria-modal=\"true\"`, labelled by its title and described by its description, and traps focus while open (`packages/adico-primitives/src/dialog.rs`). Unlike `alert-dialog`, it is dismissible by an outside click as well as Escape.",
         "keyboard": "Escape closes the dialog; the registry facade also wires a manual backdrop `onclick` handler as a documented workaround for `use_outside_dismiss`'s non-functional web listener registration."
@@ -219,7 +219,7 @@
           "source": "ui/select.rs",
           "targetRoot": "ui",
           "target": "select.rs",
-          "checksum": "b7e94fb76d03646dc35f45af0093590db737d2f7ce532c85de47b39631341083"
+          "checksum": "16bf3d403ff188031776d3463eb15c00cd07d59b4be49ccc3b4dd93a322be476"
         }
       ],
       "cargoDependencies": [
@@ -572,7 +572,7 @@
           "source": "ui/sheet.rs",
           "targetRoot": "ui",
           "target": "sheet.rs",
-          "checksum": "654e3af6cdf61dc7e64223ab4f41ecfb9442ce4e5783087a3eca2eafca3f6e81"
+          "checksum": "e39bde457a7921b70d9658bf5ef023188fb7b1702d1eb3ff102dc90f5aa3347e"
         }
       ],
       "registryDependencies": [
@@ -608,7 +608,7 @@
       ],
       "documentation": {
         "slug": "sheet",
-        "compositionNote": "Composes the owned dialog primitive directly (SheetTitle/SheetDescription/Sheet re-export the Dialog primitive's parts); the styled wrapper only adds the slide-in side variant and positioning.",
+        "compositionNote": "Composes the owned dialog primitive directly (SheetTitle/SheetDescription/Sheet re-export the Dialog primitive's parts); the styled wrapper only adds the slide-in side variant and positioning. SheetContent caps its height to the viewport and scrolls its body internally rather than clipping overflowing content.",
         "usage": "Sheet { open: open(), on_open_change: move |v| open.set(v),\n    SheetTrigger { \"Open sheet\" }\n    SheetOverlay {}\n    SheetContent {\n        SheetHeader { SheetTitle { \"Title\" } }\n        SheetFooter { SheetClose { \"Close\" } }\n    }\n}",
         "accessibility": "Composes `packages/adico-primitives/src/dialog.rs` directly (the same `role=\"dialog\"`/`aria-modal=\"true\"`/focus-trap behavior as `Dialog`), styled as an edge-anchored panel instead of a centered modal.",
         "keyboard": "Same as `Dialog`: Escape closes it, plus the registry facade's manual backdrop `onclick` workaround for the same `use_outside_dismiss` web defect."
@@ -680,7 +680,7 @@
           "source": "ui/popover.rs",
           "targetRoot": "ui",
           "target": "popover.rs",
-          "checksum": "d2771f1a9f56b68d89dfc0fafa996d12d713ea45f76a1c54fee3a7b9d30e982e"
+          "checksum": "4748eabcf53be2ea39338f33a19c8113289c3d6a95d452ea61be898f3c5ad463"
         }
       ],
       "registryDependencies": [
@@ -716,7 +716,7 @@
       ],
       "documentation": {
         "slug": "popover",
-        "compositionNote": "The public copied API remains compositional; focus trapping, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives (reusing the same use_focus_trap/FocusTrapScript internals as dialog).",
+        "compositionNote": "The public copied API remains compositional; focus trapping, Escape, outside dismissal, and ARIA wiring remain inside adico-primitives (reusing the same use_focus_trap/FocusTrapScript internals as dialog). PopoverContent caps its height to the positioner's available space and scrolls internally rather than clipping overflowing content.",
         "usage": "Popover { open: open(), on_open_change: move |v| open.set(v),\n    PopoverTrigger { \"Open popover\" }\n    PopoverContent { \"Popover content\" }\n}",
         "accessibility": "Follows the closest APG guidance -- the Dialog pattern -- applied conditionally: `PopoverContent` renders `role=\"dialog\"` with `aria-modal=\"true\"` and focus-trapping only when `is_modal` is set (the default); otherwise it is a non-modal disclosure (`packages/adico-primitives/src/popover.rs`).",
         "keyboard": "Escape closes it and (when modal) focus is trapped inside; outside-click dismissal shares the confirmed, unfixed `document::eval` persistent-listener defect this session directly reproduced (see tasks.md 7.4f) -- verified working via `use_scroll_lock`-style fire-and-forget evals only, not this pattern."
@@ -734,7 +734,7 @@
           "source": "ui/hover_card.rs",
           "targetRoot": "ui",
           "target": "hover_card.rs",
-          "checksum": "a60ef80ebd7c89f4614888b7cd404e926f9e4a3509fe7168581a4406ca9b8dd7"
+          "checksum": "4da3c66f4d3529e5ebe2f09c033e7ec5f36a191350b9a5dee89d47f1314c7c70"
         }
       ],
       "registryDependencies": [
@@ -770,7 +770,7 @@
       ],
       "documentation": {
         "slug": "hover-card",
-        "compositionNote": "The public copied API remains compositional; hover/focus handling and ARIA wiring remain inside adico-primitives.",
+        "compositionNote": "The public copied API remains compositional; hover/focus handling and ARIA wiring remain inside adico-primitives. HoverCardContent caps its height to the positioner's available space and scrolls internally rather than clipping overflowing content.",
         "usage": "HoverCard { open: open(), on_open_change: move |v| open.set(v),\n    HoverCardTrigger { \"@username\" }\n    HoverCardContent { \"Profile preview\" }\n}",
         "accessibility": "Follows the closest APG guidance -- the Tooltip pattern's hover/focus-triggered, `aria-describedby`-linked disclosure -- while deliberately diverging where a card needs richer behavior a plain tooltip does not: `HoverCardContent` accepts focusable interactive children and stays open while the pointer is over the content itself (`packages/adico-primitives/src/hover_card.rs`).",
         "keyboard": "Opens on hover or focus of the trigger, closes on Escape or moving away from both trigger and content. Note: `force_mount` does not actually keep closed content mounted on any target -- a known, documented primitive defect, not something a consumer should rely on."
@@ -788,7 +788,7 @@
           "source": "ui/dropdown_menu.rs",
           "targetRoot": "ui",
           "target": "dropdown_menu.rs",
-          "checksum": "d8b210433afe7cddfbd954733f2b3fad4aed3cc93d2d20f7911ac0a9082ed3b9"
+          "checksum": "c4fcbd8c779b88442c5132db9b57935270926055c402718cda053def85ff50c6"
         }
       ],
       "cargoDependencies": [
@@ -821,7 +821,7 @@
       ],
       "documentation": {
         "slug": "dropdown-menu",
-        "compositionNote": "The copied façade re-exports the owned DropdownMenu parts unstyled, matching select's approach: DropdownMenuItem is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains roving-focus keyboard and ARIA behavior.",
+        "compositionNote": "The copied façade re-exports the owned DropdownMenu parts unstyled, matching select's approach: DropdownMenuItem is generic, so applications style each primitive part directly with Dioxus class attributes while the runtime retains roving-focus keyboard and ARIA behavior. DropdownMenuContent and DropdownMenuSubContent cap their height to the positioner's available space and scroll internally (via the shared ScrollArea visibility class) rather than clipping overflowing items.",
         "usage": "DropdownMenu {\n    DropdownMenuTrigger { \"Open menu\" }\n    DropdownMenuContent {\n        DropdownMenuItem { index: 0usize, value: \"edit\".to_string(), on_select: move |_| {}, \"Edit\" }\n    }\n}",
         "accessibility": "`DropdownMenu`/`DropdownMenuTrigger`/`DropdownMenuContent`/`DropdownMenuItem` are direct re-exports of the shared `menu::Menu`/`MenuTrigger`/`MenuContent`/`MenuItem` primitive (`packages/adico-primitives/src/menu.rs`), matching Base UI's own anatomy where `Menu` *is* the dropdown menu -- `role=\"menu\"`/`role=\"menuitem\"` content on a roving-focus/dismissable-layer stack shared with `dialog`/`popover`.",
         "keyboard": "Arrow keys navigate items, Enter/Space activates the focused item, `ArrowRight`/`ArrowLeft` open/close submenus (`MenuSubmenuTrigger`); submenu hover-intent delay is not implemented, only click and arrow-key open/close."
@@ -839,7 +839,7 @@
           "source": "ui/context_menu.rs",
           "targetRoot": "ui",
           "target": "context_menu.rs",
-          "checksum": "a70a7673133d78b9e51fe71fc2bdc437bbf891e33b8cb2b695d987872c906564"
+          "checksum": "8f355ef4f1c7fd8cef101cf8de84bb0e7671ac5159d2d95063153d9f1017b26d"
         }
       ],
       "registryDependencies": [
@@ -875,7 +875,7 @@
       ],
       "documentation": {
         "slug": "context-menu",
-        "compositionNote": "The public copied API remains compositional; right-click/long-press detection, positioning, roving-focus keyboard navigation, and ARIA wiring remain inside adico-primitives.",
+        "compositionNote": "The public copied API remains compositional; right-click/long-press detection, positioning, roving-focus keyboard navigation, and ARIA wiring remain inside adico-primitives. ContextMenuContent caps its height (no Positioner available-space signal at this anchor) and scrolls internally rather than clipping overflowing items.",
         "usage": "ContextMenu {\n    ContextMenuTrigger { \"Right click here\" }\n    ContextMenuContent {\n        ContextMenuItem { index: 0usize, value: \"edit\".to_string(), on_select: move |_| {}, \"Edit\" }\n    }\n}",
         "accessibility": "No dedicated APG \"Context Menu\" pattern exists; `ContextMenuContent` implements the generic Menu pattern (`role=\"menu\"`/`role=\"menuitem\"`) opened by right-click or (touch/pen) long-press, with click-point `position: fixed` placement and Safari viewport correction (`packages/adico-primitives/src/context_menu.rs`). Deliberately independent of the shared `menu` primitive -- it owns placement/scroll-suppression/outside-dismiss concerns `menu::MenuContent` has no props for.",
         "keyboard": "Standard menu keyboard navigation (arrow keys move among items, Enter/Space activates); outside-click dismissal shares the same unfixed `document::eval` persistent-listener defect as this crate's other overlays -- confirmed via live instrumentation, see this change's tasks.md 7.4f note."
@@ -893,7 +893,7 @@
           "source": "ui/menubar.rs",
           "targetRoot": "ui",
           "target": "menubar.rs",
-          "checksum": "1ac7bcc3cd72db53f8ff24cb6ec30cdaca80232b6c103022de2fba20c4120471"
+          "checksum": "8ce7b71be2cec2e7c8f624827e0dc83d20ee16440e616a9f5c1a6624e59d95ac"
         }
       ],
       "registryDependencies": [
@@ -929,7 +929,7 @@
       ],
       "documentation": {
         "slug": "menubar",
-        "compositionNote": "The public copied API remains compositional; coordinated multi-menu roving-focus keyboard navigation and ARIA wiring remain inside adico-primitives.",
+        "compositionNote": "The public copied API remains compositional; coordinated multi-menu roving-focus keyboard navigation and ARIA wiring remain inside adico-primitives. MenubarContent caps its height to the positioner's available space and scrolls internally rather than clipping overflowing items.",
         "usage": "Menubar {\n    MenubarMenu { index: 0usize,\n        MenubarTrigger { \"File\" }\n        MenubarContent {\n            MenubarItem { index: 0usize, value: \"new\".to_string(), on_select: move |_| {}, \"New\" }\n        }\n    }\n}",
         "accessibility": "`role=\"menubar\"` roving-focus container of `role=\"menu\"` menus, each opened by a `role=\"menuitem\"` trigger, per the WAI-ARIA APG Menubar pattern (`packages/adico-primitives/src/menubar.rs`). Deliberately independent of the shared `menu` primitive -- Base UI's own `Menubar` shares only a roving-focus container with `Menu`, not `Content`/`Item`.",
         "keyboard": "Only one menu is open at a time; `ArrowLeft`/`ArrowRight` move focus between menu triggers (open or not); Enter/Space/ArrowDown open the focused menu."
@@ -947,7 +947,7 @@
           "source": "ui/combobox.rs",
           "targetRoot": "ui",
           "target": "combobox.rs",
-          "checksum": "67885d3edba9639ab4b14028fdaf2d3ca158e111e90d6d9bcfa9379a398e2141"
+          "checksum": "2bb9157411587ebc543698a476bee5efcd63c508e4717b6338adbf2c8038df15"
         }
       ],
       "cargoDependencies": [
@@ -1110,7 +1110,7 @@
           "source": "ui/time_picker.rs",
           "targetRoot": "ui",
           "target": "time_picker.rs",
-          "checksum": "f68da6c31df9a43cf6a6e60adc2ab8dd9467296c767b9de21e3f9d56c62e3a34"
+          "checksum": "95618ea51c49f36c4a8c6823905be2c9f8390602c5a1815c115ecd05ca2b2535"
         }
       ],
       "cargoDependencies": [
@@ -1164,7 +1164,7 @@
           "source": "ui/date_time_picker.rs",
           "targetRoot": "ui",
           "target": "date_time_picker.rs",
-          "checksum": "07d8370cf705b30aa2bf38e6566fc4b28c75747f00c6d1ea39858c253d2628fa"
+          "checksum": "e9f1dbbcffb472495af168bdc9f2d1bdeaea51e0c545ce3280303f2ed09c7a2e"
         }
       ],
       "cargoDependencies": [
@@ -1218,7 +1218,7 @@
           "source": "ui/sidebar.rs",
           "targetRoot": "ui",
           "target": "sidebar.rs",
-          "checksum": "7907f7dd39502c34b906145029f7e91c2d7debc6efae6ebd6a3aab248238aaf1"
+          "checksum": "984ed4882f5b864d6e9f7746595af041d33a16e13c295515a097918a3f0a5b0c"
         }
       ],
       "registryDependencies": [
@@ -1897,10 +1897,10 @@
       ],
       "documentation": {
         "slug": "scroll-area",
-        "compositionNote": "A pure re-export of the owned ScrollArea primitive: pure CSS overflow/scrollbar-width styling with no visual language to compose, matching upstream's own unstyled behavior.",
+        "compositionNote": "A pure re-export of the owned ScrollArea primitive: ScrollArea composes a native-overflow viewport with an overlay Scrollbar/Thumb/Corner (kept unmeasured/hidden until first client-side measurement, so SSR and hydration render a usable scroller with no flash or jump), matching upstream's own unstyled behavior -- caller `class`/`style` land on the outer root, and the viewport always fills it.",
         "usage": "ScrollArea { style: \"height: 12em;\",\n    div { \"Long scrollable content...\" }\n}",
         "accessibility": "No ARIA role applies -- a scrollable container is not itself a widget (`packages/adico-primitives/src/scroll_area.rs`); its spec is pure CSS overflow/scrollbar-width composition.",
-        "keyboard": "No component-specific keyboard handling; native scroll keys (arrow keys, Page Up/Down, Space) work once the scrollable region has focus, same as any native overflow container."
+        "keyboard": "No component-specific keyboard handling of its own; native scroll keys (arrow keys, Page Up/Down, Space) work once the scrollable viewport has focus. Keyboard-navigating primitives (Select, Combobox, Command, and every roving-focus list) call scroll_to_with_options themselves to keep the active item in view -- that behavior lives in adico-primitives::collection, not in ScrollArea."
       },
       "provenance": {
         "record": "provenance/records/adico-primitives-wave2-risk.json"
@@ -1915,7 +1915,7 @@
           "source": "ui/alert_dialog.rs",
           "targetRoot": "ui",
           "target": "alert_dialog.rs",
-          "checksum": "98ded58c40ba6a9c75b42f1656548ea311f3b548827a09aef0b319a9a146dfa4"
+          "checksum": "17452f1fa19f00e8a61125041ef981732ab346a5431f6503377664c867f7b844"
         }
       ],
       "registryDependencies": [
@@ -1953,7 +1953,7 @@
       ],
       "documentation": {
         "slug": "alert-dialog",
-        "compositionNote": "The public copied API remains compositional; focus-trap handling is delegated to the same shared internals the installed Dialog uses. AlertDialogTrigger (composing the installed Button, matching DialogTrigger) is nested inside AlertDialog so the root-level Escape handler reliably receives keyboard events; Escape is handled on AlertDialogRoot itself, the same working position DialogRoot uses. Unlike Dialog, no outside-dismiss listener is installed, matching the WAI-ARIA alertdialog pattern's requirement that only an explicit action can close it.",
+        "compositionNote": "The public copied API remains compositional; focus-trap handling is delegated to the same shared internals the installed Dialog uses. AlertDialogTrigger (composing the installed Button, matching DialogTrigger) is nested inside AlertDialog so the root-level Escape handler reliably receives keyboard events; Escape is handled on AlertDialogRoot itself, the same working position DialogRoot uses. Unlike Dialog, no outside-dismiss listener is installed, matching the WAI-ARIA alertdialog pattern's requirement that only an explicit action can close it. AlertDialogContent likewise caps its height to the viewport and scrolls its body internally rather than clipping overflowing content.",
         "usage": "AlertDialog { open: open(), on_open_change: move |v| open.set(v),\n    AlertDialogTrigger { \"Delete item\" }\n    AlertDialogContent {\n        AlertDialogTitle { \"Are you sure?\" }\n        AlertDialogDescription { \"This cannot be undone.\" }\n        AlertDialogActions {\n            AlertDialogCancel { \"Cancel\" }\n            AlertDialogAction { \"Delete\" }\n        }\n    }\n}",
         "accessibility": "`AlertDialogContent` is `role=\"alertdialog\"` with `aria-modal=\"true\"`, labelled by its title and described by its description, and traps focus while open (`packages/adico-primitives/src/alert_dialog.rs`). Unlike `dialog`, it is deliberately not dismissible by an outside click, matching the WAI-ARIA APG Alert Dialog pattern's requirement for an explicit response.",
         "keyboard": "Escape closes it via a native `onkeydown` handler on `AlertDialogRoot` itself (moved there after live testing found a content-scoped listener never received the keydown while focus stayed on the trigger)."
@@ -2759,7 +2759,7 @@
           "source": "ui/table.rs",
           "targetRoot": "ui",
           "target": "table.rs",
-          "checksum": "971b130d99a2a842f15c13e41904d24d780eeae34c9141c84ae67045ee2e087c"
+          "checksum": "0313b4d3dfa09f0aaaf18191f07b6dce2fbf18a0551a62548e2dbefa56c05b5a"
         }
       ],
       "registryDependencies": [
@@ -2769,6 +2769,10 @@
         {
           "crate": "dioxus",
           "version": "=0.7.9"
+        },
+        {
+          "crate": "adico-primitives",
+          "version": "=0.1.0"
         }
       ],
       "style": {
@@ -2787,7 +2791,7 @@
       ],
       "documentation": {
         "slug": "table",
-        "compositionNote": "Purely presentational (Table/TableHeader/TableBody/TableFooter/TableRow/TableHead/TableCell/TableCaption), matching upstream's own non-interactive implementation. Table wraps the real <table> in a relative/overflow-x-auto scroll container, matching upstream's horizontal-scroll behavior for wide tables.",
+        "compositionNote": "Purely presentational (Table/TableHeader/TableBody/TableFooter/TableRow/TableHead/TableCell/TableCaption), matching upstream's own non-interactive implementation. Table wraps the real <table> in a relative/overflow-x-auto scroll container, matching upstream's horizontal-scroll behavior for wide tables -- the wrapper now carries the shared ScrollArea visibility class so its scrollbar is themed like every other scroll surface.",
         "usage": "Table {\n    TableHeader { TableRow { TableHead { \"Name\" } } }\n    TableBody { TableRow { TableCell { \"adico\" } } }\n}",
         "accessibility": "Plain native `<table>` markup with semantic `<thead>`/`<tbody>`/`<tfoot>`/`<th>`/`<td>` (`registry/ui/table.rs`); `TableRow`'s classes include a `[role=checkbox]` hook for a selection-column pattern, but selection state itself is caller-composed.",
         "keyboard": "No component-specific keyboard handling; native table semantics only (no roving-focus cell navigation)."
@@ -2943,7 +2947,7 @@
           "source": "ui/command.rs",
           "targetRoot": "ui",
           "target": "command.rs",
-          "checksum": "cab89addc9a09e113e1a3d9a217771278fd0f6c972b0418f78258e3afddb3ac4"
+          "checksum": "9f38ac282ed59a71808e4b80a81ea35faa7fcc4f65163afa4180618f9f51288e"
         }
       ],
       "registryDependencies": [
@@ -2995,7 +2999,7 @@
           "source": "ui/navigation_menu.rs",
           "targetRoot": "ui",
           "target": "navigation_menu.rs",
-          "checksum": "52eb9903d01b017392131085e725f4080d87f2f51cdff8d2b3dd8bf8e0486355"
+          "checksum": "3c98711e1b8fab8a7f35fe7cdaae2f5a1dce14c86da0259d2f97da68628fc664"
         }
       ],
       "registryDependencies": [
@@ -3031,7 +3035,7 @@
       ],
       "documentation": {
         "slug": "navigation-menu",
-        "compositionNote": "The copied facade styles adico-primitives::navigation_menu directly; roving-focus top-level items, hover-intent opening (with immediate switching between already-open siblings), and Positioner-anchored content all remain inside adico-primitives.",
+        "compositionNote": "The copied facade styles adico-primitives::navigation_menu directly; roving-focus top-level items, hover-intent opening (with immediate switching between already-open siblings), and Positioner-anchored content all remain inside adico-primitives. NavigationMenuContent caps its height to the positioner's available space and scrolls internally rather than clipping overflowing content.",
         "usage": "NavigationMenu {\n    NavigationMenuList {\n        NavigationMenuItem { index: 0usize,\n            NavigationMenuTrigger { \"Products\" }\n            NavigationMenuContent {\n                NavigationMenuLink { href: \"/widgets\", \"Widgets\" }\n            }\n        }\n    }\n}",
         "accessibility": "NavigationMenuTrigger is aria-expanded/aria-controls-wired to its NavigationMenuContent; NavigationMenuContent renders role=\"region\" via Positioner (packages/adico-primitives/src/navigation_menu.rs).",
         "keyboard": "ArrowLeft/ArrowRight move the roving highlight across top-level items; Home/End jump to the first/last. Note: no cross-sibling coordination between two different open top-level submenus yet -- a named, documented primitive limitation, not this facade's own gap."
@@ -3046,7 +3050,7 @@
           "source": "ui/drawer.rs",
           "targetRoot": "ui",
           "target": "drawer.rs",
-          "checksum": "6eba76b697f6443b649aa7e5f73eccb12997fb8f4b0dc2127631ac0addb15e6d"
+          "checksum": "7bec92f14b5d89dbb8dd0595804328295f5a53a3cad01fe89f11419c4b9b2e27"
         }
       ],
       "registryDependencies": [
@@ -3082,7 +3086,7 @@
       ],
       "documentation": {
         "slug": "drawer",
-        "compositionNote": "Composes the owned dialog primitive directly (DrawerTitle/DrawerDescription/Drawer re-export the Dialog primitive's parts), styled as an edge-anchored panel with a visual grab handle on Top/Bottom directions. Deliberately does not implement drag-to-dismiss (upstream shadcn's `drawer` wraps `vaul`, a real drag gesture library) -- see this file's own module doc comment and the M7 task audit (openspec/changes/build-adico-component-ecosystem/tasks.md, task 8.1) for why: a real drag gesture depends on adico-primitives' pointer.rs global pointer-position registry, a documented, unconfirmed-in-browser defect on web.",
+        "compositionNote": "Composes the owned dialog primitive directly (DrawerTitle/DrawerDescription/Drawer re-export the Dialog primitive's parts), styled as an edge-anchored panel with a visual grab handle on Top/Bottom directions. Deliberately does not implement drag-to-dismiss (upstream shadcn's `drawer` wraps `vaul`, a real drag gesture library) -- see this file's own module doc comment and the M7 task audit (openspec/changes/build-adico-component-ecosystem/tasks.md, task 8.1) for why: a real drag gesture depends on adico-primitives' pointer.rs global pointer-position registry, a documented, unconfirmed-in-browser defect on web. DrawerContent caps its height and scrolls its body internally (below the optional grab handle) rather than clipping overflowing content.",
         "usage": "Drawer { open: open(), on_open_change: move |v| open.set(v),\n    DrawerTrigger { \"Open drawer\" }\n    DrawerOverlay {}\n    DrawerContent {\n        DrawerHeader { DrawerTitle { \"Title\" } }\n        DrawerFooter { DrawerClose { \"Close\" } }\n    }\n}",
         "accessibility": "Composes `packages/adico-primitives/src/dialog.rs` directly (the same `role=\"dialog\"`/`aria-modal=\"true\"`/focus-trap behavior as `Dialog`), styled as an edge-anchored panel instead of a centered modal.",
         "keyboard": "Same as `Dialog`: Escape closes it, plus the registry facade's manual backdrop `onclick` workaround for the same `use_outside_dismiss` web defect. No drag-to-dismiss gesture -- see compositionNote."
@@ -3198,7 +3202,7 @@
           "source": "ui/resizable.rs",
           "targetRoot": "ui",
           "target": "resizable.rs",
-          "checksum": "ca8316de185b4e0bcc78b4bc44e24d59324bc689f76bc3608a8e9339e0603a4c"
+          "checksum": "936a823a1b08364caad740ca4ae5296bc7b93ff0e060d7a8c82cfd27cd2b2fc6"
         }
       ],
       "registryDependencies": [
@@ -3376,7 +3380,7 @@
           "source": "ui/message_scroller.rs",
           "targetRoot": "ui",
           "target": "message_scroller.rs",
-          "checksum": "3639bb9bb5776050e367318ac59189bc2bb57eeec1346e02024972e52cc36b60"
+          "checksum": "1a556981ea85ade2dd775647123d7a65c478fcadad5a0416c671aac311049811"
         }
       ],
       "registryDependencies": [

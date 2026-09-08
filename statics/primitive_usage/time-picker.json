@@ -3,6 +3,7 @@
   "primitiveModules": [
     "icons",
     "popover",
+    "scroll_area",
     "time_picker"
   ]
 }

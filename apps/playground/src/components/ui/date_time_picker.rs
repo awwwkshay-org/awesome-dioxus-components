@@ -251,8 +251,15 @@ pub struct DateTimePickerContentProps {
 /// equivalent role.
 #[component]
 pub fn DateTimePickerContent(props: DateTimePickerContentProps) -> Element {
+    // `!` overrides win regardless of Tailwind's compiled rule order (`cn` is a plain
+    // join, not a tailwind-merge dedupe -- see `registry/lib/cn.rs`), which matters here:
+    // `PopoverContent`'s base `w-72`/`overflow-y-auto` must lose. `overflow-y-auto` alone
+    // forces `overflow-x` to compute `auto` too (CSS Overflow §3), which would clip the
+    // `sm:flex-row` calendar+time-columns row that's deliberately wider than `w-72` -- the
+    // time column already owns its own internal scroll (`time_picker.rs`'s
+    // `scroll_area_visibility_class`), so this popover doesn't need an outer scroll cap.
     let class = cn(&[
-        "flex flex-col gap-3 border-0 bg-transparent p-0 shadow-none sm:flex-row",
+        "flex w-auto! max-h-none! flex-col gap-3 overflow-visible! border-0 bg-transparent p-0 shadow-none sm:flex-row",
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! { PopoverContent { class, {props.children} } }

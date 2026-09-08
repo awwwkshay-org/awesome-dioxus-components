@@ -7,7 +7,7 @@
       "source": "ui/command.rs",
       "targetRoot": "ui",
       "target": "command.rs",
-      "checksum": "cab89addc9a09e113e1a3d9a217771278fd0f6c972b0418f78258e3afddb3ac4"
+      "checksum": "9f38ac282ed59a71808e4b80a81ea35faa7fcc4f65163afa4180618f9f51288e"
     }
   ],
   "registryDependencies": [

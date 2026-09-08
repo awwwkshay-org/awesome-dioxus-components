@@ -42,6 +42,8 @@ use std::time::Duration;
 use dioxus::html::geometry::euclid::Vector2D;
 use dioxus::prelude::*;
 
+use crate::scroll_area::scroll_area_visibility_class;
+
 /// A unique key for identifying items in the virtualizer. `pub` only for
 /// `packages/adico-primitives/tests/`; not part of the intended public API.
 pub type Key = usize;
@@ -404,6 +406,15 @@ pub struct VirtualListProps {
     pub estimate_size: Option<Callback<usize, u32>>,
     /// Renders a single item by its absolute index.
     pub render_item: Callback<usize, Element>,
+    /// Extra classes, appended after (never replacing) the internal visibility class
+    /// (`dx-scroll-area-auto-hide`) that the shared scroll-area contract's themed
+    /// scrollbar CSS is keyed on -- `VirtualList` has no registry facade to opt this in
+    /// through (unlike `MessageScrollerViewport`'s `with_scroll_area`), so it carries
+    /// the visibility class unconditionally, themed only via the native-scrollbar
+    /// `scrollbar-color` fallback layer (no overlay thumb -- this component has no
+    /// natural sibling slot a caller could render `ScrollAreaScrollbar` into).
+    #[props(default)]
+    pub class: Option<String>,
     /// Additional attributes to apply to the container element.
     #[props(extends = GlobalAttributes)]
     pub attributes: Vec<Attribute>,
@@ -454,8 +465,11 @@ pub struct VirtualListProps {
 ///
 /// ## Styling
 ///
-/// The [`VirtualList`] component renders a container `div` with the class `dx-virtual-list-container`.
-/// All user-provided `attributes` are spread onto the container element.
+/// The [`VirtualList`] component renders a container `div` carrying the shared
+/// scroll-area visibility class (`dx-scroll-area-auto-hide`), themed via the native
+/// `scrollbar-color` fallback layer (see `packages/adico-cli/src/css.rs`'s
+/// `SCROLLBAR_CSS`). Pass `class` to add your own classes alongside it; all other
+/// user-provided `attributes` are spread onto the container element.
 #[component]
 pub fn VirtualList(props: VirtualListProps) -> Element {
     let VirtualListProps {
@@ -463,8 +477,15 @@ pub fn VirtualList(props: VirtualListProps) -> Element {
         buffer,
         estimate_size,
         render_item,
+        class,
         attributes,
     } = props;
+
+    let visibility_class = scroll_area_visibility_class(false);
+    let merged_class = match class.as_deref() {
+        Some(extra) if !extra.is_empty() => format!("{visibility_class} {extra}"),
+        _ => visibility_class.to_string(),
+    };
 
     let container_id = crate::use_unique_id();
     let mut container_handle: Signal<Option<Rc<MountedData>>> = use_signal(|| None);
@@ -598,6 +619,7 @@ pub fn VirtualList(props: VirtualListProps) -> Element {
     rsx! {
         div {
             id: container_id,
+            class: "{merged_class}",
             role: "list",
             tabindex: "0",
             onmounted,

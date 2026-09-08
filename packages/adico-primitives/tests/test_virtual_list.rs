@@ -9,12 +9,54 @@
 //! prior inline suite.
 
 use adico_primitives::virtual_list::{
-    VirtualItem, VirtualizerState, VirtualizerStateStoreExt, compute_measurements,
+    VirtualItem, VirtualList, VirtualizerState, VirtualizerStateStoreExt, compute_measurements,
     default_range_extractor, find_nearest_binary_search, get_total_size, get_virtual_items,
     resize_item, set_scroll_offset,
 };
 use dioxus::prelude::*;
 use std::collections::HashMap;
+
+fn render(root: fn() -> Element) -> String {
+    let mut dom = VirtualDom::new(root);
+    dom.rebuild_in_place();
+    dioxus_ssr::render(&dom)
+}
+
+#[component]
+fn DefaultVirtualList() -> Element {
+    rsx! {
+        VirtualList {
+            count: 10usize,
+            render_item: move |idx: usize| rsx! { div { key: "{idx}", "Row {idx}" } },
+        }
+    }
+}
+
+#[test]
+fn container_carries_the_shared_scroll_area_visibility_class() {
+    let html = render(DefaultVirtualList);
+    assert!(html.contains("dx-scroll-area-auto-hide"), "{html}");
+}
+
+#[component]
+fn VirtualListWithCallerClass() -> Element {
+    rsx! {
+        VirtualList {
+            count: 10usize,
+            class: "caller-class",
+            render_item: move |idx: usize| rsx! { div { key: "{idx}", "Row {idx}" } },
+        }
+    }
+}
+
+#[test]
+fn caller_supplied_class_is_merged_with_the_visibility_class_not_replacing_it() {
+    let html = render(VirtualListWithCallerClass);
+    assert!(
+        html.contains(r#"class="dx-scroll-area-auto-hide caller-class""#),
+        "{html}"
+    );
+}
 
 fn item(index: usize, start: u32, size: u32) -> VirtualItem {
     VirtualItem::new(index, index, start, size)
