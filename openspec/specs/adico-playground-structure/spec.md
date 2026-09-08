@@ -84,13 +84,25 @@ entry.
 ### Requirement: Playground shell composes real registry components, not app-specific reimplementations
 `apps/playground`'s navigation shell and theme controls SHALL be composed
 from installed registry components (`sidebar`, `mode-toggle`,
-`theme-switcher`, `theme-builder`) rather than hand-rolled, app-specific
-reimplementations of the same behavior. Any playground-specific wiring
-needed to compose these components (e.g. a launcher that opens a dialog
-containing an installed component) SHALL live under
+`theme-switcher`, `theme-builder`, `resizable`) rather than hand-rolled,
+app-specific reimplementations of the same behavior. Any playground-specific
+wiring needed to compose these components (e.g. a launcher that opens a
+dialog containing an installed component) SHALL live under
 `apps/playground/src/components/`, SHALL NOT duplicate a registry
 component's own logic, and SHALL NOT require any change to
 `registry/ui/*.rs` to exist.
+
+The navigation shell's nav column SHALL be composed from `sidebar`'s
+structural sub-components (`SidebarHeader`, `SidebarContent`,
+`SidebarGroup`, `SidebarGroupContent`, `SidebarMenu`, `SidebarMenuItem`,
+`SidebarMenuButton`, `SidebarFooter`) rather than the top-level `Sidebar`/
+`SidebarProvider` orchestration components, since the latter's width is
+controlled by fixed CSS variables with no way to cooperate with a
+drag-resize handle; the nav column's sizing is instead composed from the
+installed `resizable` component (see "The preview/controls split and the
+nav/content split are user-resizable", below). This is not a departure from
+this requirement — the nav column still renders no hand-rolled
+reimplementation of any of these sub-components' own behavior.
 
 #### Scenario: A new theme or navigation need arises in playground
 - **WHEN** playground needs new theme-editing or navigation behavior
@@ -108,6 +120,13 @@ component's own logic, and SHALL NOT require any change to
   genuinely unneeded and stop installing it) — not a state to leave
   indefinitely, since it signals playground has drifted from the
   components it's meant to demonstrate
+
+#### Scenario: The nav column's sizing mechanism is located
+- **WHEN** a maintainer looks for what controls the left nav column's
+  width in `Layout`
+- **THEN** it is the installed `resizable` component's `ResizablePanel`,
+  not `Sidebar`'s own CSS-variable-driven width, and not a
+  playground-specific width calculation
 
 ### Requirement: Registry components are never modified solely for playground's convenience
 A confirmed rendering or behavioral defect in a registry component,
@@ -265,3 +284,104 @@ omit that panel rather than invent a demo element for it.
   of the page's realistic composition
 - **THEN** the page omits that panel and renders only the realistic
   composition — no placeholder element is added to host the panel's bindings
+
+### Requirement: A page's controls are grouped by the component that declares them
+A playground page's "Component controls" panel SHALL present every control —
+whether rendered by a generated `<Component>Controls` panel or hand-written
+directly on the page — grouped under a label naming the exact component whose
+prop that control edits, rendered as space-separated Title Case (e.g. a
+hand-written group for `SelectList` SHALL be labeled "Select List", not
+"SelectList"). A control SHALL NOT appear ungrouped, or grouped under a
+component that does not actually declare the prop it edits, so that a viewer
+can never infer that a subcomponent's prop belongs to its parent component or
+to an unrelated sibling.
+
+#### Scenario: A hand-written control for a subcomponent is grouped correctly
+- **WHEN** a page hand-writes a control for a prop declared on a subcomponent
+  (for example `SelectList`'s `align`)
+- **THEN** that control is grouped under a label naming that subcomponent,
+  rendered as "Select List" (not the unspaced `SelectList`), not under the
+  root component's group and not left ungrouped
+
+#### Scenario: A demo-scenario control that is not a real prop
+- **WHEN** a page includes a control that toggles between two sibling root
+  compositions rather than editing a real prop (for example Accordion's
+  "Allow multiple open" switch between `Accordion` and `AccordionMulti`, or
+  Select's "Multi-select" switch between `Select` and `SelectMulti`)
+- **THEN** that control is grouped under the root component's own group,
+  not given a separate unlabeled group and not merged into a subcomponent's
+  group
+
+#### Scenario: A multi-part page's controls read as distinct components
+- **WHEN** a user views a converted multi-part component's page (for example
+  `/select`, `/accordion`, `/sidebar`, `/dialog`)
+- **THEN** the control panel's groups correspond one-to-one with the real
+  components in that composition, and no group's label implies a component
+  accepts a prop it does not declare
+
+#### Scenario: A component has both a generated panel and page-level hand-written controls
+- **WHEN** a page hand-writes a control for a component (for example
+  Accordion's "Allow multiple open" demo-scenario toggle, grouped under
+  `Accordion`) and that same component also has its own generated panel
+  (once `Accordion` is discovered as a re-exported component)
+- **THEN** the page MAY render these as two separate groups both labeled with
+  that component's name, rather than merging them into one — every control
+  under either group still correctly names the component it belongs to, so
+  this is not a violation of "grouped by the component that declares them"
+
+#### Scenario: A page is not required to display every component its registry file exposes
+- **WHEN** a registry file exposes a component (locally or via a resolved
+  re-export) that the page's own composition never renders (for example
+  `select.rs`'s re-exported `SelectGroup`, which the `/select` page never
+  composes)
+- **THEN** the page is not required to render a group for it — this
+  requirement governs how a control that IS shown must be grouped, not which
+  of a file's available components a page must display; the existing
+  requirement that a page renders only its real composition and omits a
+  generated panel with no realistic binding target still governs that
+  question
+
+### Requirement: The preview/controls split and the nav/content split are user-resizable
+The shared demo preview/controls split (`Demo`) and the shared nav/content
+split (`Layout`) SHALL each be composed from the installed `resizable`
+registry component (`ResizablePanelGroup`/`ResizablePanel`/
+`ResizableHandle`), letting a user drag to adjust the relative size of each
+pair. Each split's two sides SHALL enforce a minimum and maximum size so
+neither side can be dragged to zero or to fully consume the other. Resized
+sizes are NOT required to persist across a full page reload. Because
+`Layout` is a persistent router layout (mounted once, not re-mounted by
+in-app navigation) while `Demo` is re-mounted fresh by every page
+navigation, the nav/content split's resized size MAY persist across
+in-app navigation within the same session, while the preview/controls
+split's resized size is reset by every page navigation — neither behavior
+is a defect.
+
+#### Scenario: A user resizes the preview/controls split
+- **WHEN** a user drags the handle between the live component preview and
+  the "Component controls" panel
+- **THEN** the two areas' relative heights change accordingly, within their
+  configured minimum/maximum bounds, on every playground page
+
+#### Scenario: A user resizes the nav/content split
+- **WHEN** a user drags the handle between the left navigation column and
+  the main content area
+- **THEN** the two areas' relative widths change accordingly, within their
+  configured minimum/maximum bounds
+
+#### Scenario: A resize handle is dragged to its bound
+- **WHEN** a user drags a resize handle past its configured minimum or
+  maximum size for either side
+- **THEN** that side's size stops at the configured bound rather than
+  shrinking to zero or growing to consume all available space
+
+#### Scenario: A full page reload resets both splits
+- **WHEN** a user resizes either split and then reloads the browser page
+- **THEN** both splits render at their original default sizes
+
+#### Scenario: In-app navigation may preserve the nav/content split but not the preview/controls split
+- **WHEN** a user resizes the nav/content split, then clicks a different
+  nav item without reloading the browser
+- **THEN** the nav/content split MAY keep its resized size (`Layout` is not
+  re-mounted by in-app navigation), while the new page's preview/controls
+  split renders at its own default sizes (`Demo` is re-mounted fresh per
+  page) — neither outcome is a defect
