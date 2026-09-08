@@ -436,14 +436,14 @@
   .my-1 {
     margin-block: calc(var(--spacing) * 1);
   }
+  .my-3 {
+    margin-block: calc(var(--spacing) * 3);
+  }
   .-mt-4 {
     margin-top: calc(var(--spacing) * -4);
   }
   .mt-2 {
     margin-top: calc(var(--spacing) * 2);
-  }
-  .mt-3 {
-    margin-top: calc(var(--spacing) * 3);
   }
   .mt-4 {
     margin-top: calc(var(--spacing) * 4);
@@ -3573,6 +3573,18 @@
   syntax: "*";
   inherits: false;
   initial-value: 0;
+}
+.dx-scroll-area-auto-hide, .dx-scroll-area-always-show {
+  scrollbar-color: hsl(var(--foreground)) hsl(var(--foreground));
+  @supports (color: color-mix(in lab, red, red)) {
+    scrollbar-color: color-mix(in srgb, hsl(var(--foreground)) 50%, hsl(var(--background))) color-mix(in srgb, hsl(var(--foreground)) 8%, hsl(var(--background)));
+  }
+}
+.dx-scroll-area-auto-hide:hover, .dx-scroll-area-always-show:hover {
+  scrollbar-color: hsl(var(--foreground)) hsl(var(--foreground));
+  @supports (color: color-mix(in lab, red, red)) {
+    scrollbar-color: color-mix(in srgb, hsl(var(--foreground)) 65%, hsl(var(--background))) color-mix(in srgb, hsl(var(--foreground)) 8%, hsl(var(--background)));
+  }
 }
 @property --tw-translate-x {
   syntax: "*";

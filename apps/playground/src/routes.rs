@@ -268,7 +268,7 @@ pub fn Layout() -> Element {
                     // row shrink and elide instead.
                     Link { class: "flex min-w-0 items-center gap-2 text-lg font-bold", to: Route::Home {},
                         img { class: "size-8 shrink-0 rounded-md", src: PLAYGROUND_LOGO, alt: "adico logo" }
-                        span { class: "min-w-0 truncate", "adico playground" }
+                        span { class: "min-w-0 truncate", "Adico Playground" }
                     }
                 }
                 components::ui::SidebarContent {

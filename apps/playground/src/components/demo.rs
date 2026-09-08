@@ -94,7 +94,7 @@ pub fn Demo(
             }
             ui::ResizablePanelGroup {
                 direction: ui::ResizableDirection::Vertical,
-                class: "mt-3 min-h-0 flex-1 gap-3",
+                class: "my-3 min-h-0 flex-1 gap-3",
                 ui::ResizablePanel {
                     index: 0usize,
                     default_size: 70.0,
