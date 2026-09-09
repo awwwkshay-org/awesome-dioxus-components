@@ -86,6 +86,13 @@ since.
   layer has anything to test against yet. Recorded as a **permanent**
   `unmeasurable (no test harness exists)` status for the M3 migrated set,
   not a temporary gap this milestone owes a fix for.
+  **Superseded for `responsive` (2026-09):** `make-registry-components-mobile-first`
+  built the viewport/breakpoint fixture system this entry says didn't exist
+  (`tests/playwright/responsive.spec.ts`/`responsive-desktop.spec.ts` against
+  `apps/playground`'s `/responsive/...` routes) and swept all 69
+  `registry/ui/*.rs` components to a passing mobile-first baseline. `rtl`
+  remains permanently unmeasurable as described above; only `responsive`'s
+  status changed.
 - **Desktop rendering/interaction validation.** Compilation is exercised
   (primitive-layer `feature = "native"` gates exist and compile), but no
   desktop fixture exists to test rendering/interaction against

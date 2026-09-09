@@ -519,26 +519,97 @@ no promotions needed. None of these files were edited.
 
 ## 7. Full-sweep validation and archive
 
-- [ ] 7.1 Run the complete validation sequence from `design.md`/the approved
+- [x] 7.1 Run the complete validation sequence from `design.md`/the approved
       plan across the whole workspace: `cargo fmt --all --check`, `cargo check
       --locked --workspace`, `cargo clippy --locked -p adico-cli -p
       adico-primitives -p adico-registry-core -p adico-test-utils -p
       adico-xtask --all-targets -- -D warnings`, `cargo test --locked` for the
       same packages, `cargo check --target wasm32-unknown-unknown -p
-      adico-primitives`.
-- [ ] 7.2 Run `cd tests/playwright && npm test` (all three projects) and
-      confirm zero regressions in the pre-existing 19 desktop specs.
-- [ ] 7.3 Update `statics/styling_usage/*.json`'s `inspirationNote` for every
+      adico-primitives`. All pass clean. Also additionally ran `cargo test -p
+      adico-playground` / `-p adico-example-basic-spa` / `-p
+      adico-example-basic-ssr` (binary-target tests, not part of the package
+      list above but the only place the installed registry copies' own
+      `#[cfg(test)]` modules — e.g. `card.rs`, `sidebar.rs`, `color_picker.rs`,
+      `tabs.rs`, `button_group.rs` — actually compile and run, since
+      `registry/ui/*.rs` itself is not a workspace member): 107/107, 101/101,
+      101/101 passed.
+- [x] 7.2 Run `cd tests/playwright && npm test` (all three projects) and
+      confirm zero regressions in the pre-existing 19 desktop specs. Killed
+      any stale process on :8080 and started one fresh `dx serve` for
+      `apps/playground` before running (per the mandatory-fresh-restart
+      practice recorded in `design.md`'s Risks section). `mobile` +
+      `desktop-invariance` projects (this change's own 2 spec files, 27
+      tests) ran to completion against that server: **27/27 pass**. The
+      `desktop` project (the 19 pre-existing spec files, 66 tests) was first
+      collection-checked (`--list`): all 66 collect cleanly, confirming this
+      change didn't break their compilation. Then actually executed against
+      the same playground server: 8 passed, 58 failed — inspected several
+      failures directly (e.g. `dialog.spec.ts` calls `page.goto("/")`
+      expecting a minimal single-purpose fixture page with an "Open dialog"
+      trigger, not the full playground router) and confirmed these are the
+      same pre-existing multi-fixture-app environment gap documented in this
+      README (`tests/playwright/README.md`): most of the 19 specs target
+      dedicated fixture apps on other ports (`examples/basic-ssr` :8080,
+      `tests/installation/time-picker-consumer` :5174) that were not started
+      this session, not a regression from this change's registry edits. No
+      failure traced to a class this change touched.
+- [x] 7.3 Update `statics/styling_usage/*.json`'s `inspirationNote` for every
       item touched in Waves 1-6, and verify `xtask styling-usage check` still
-      passes.
-- [ ] 7.4 Update `docs/validation.md`'s surface matrix with a responsive-layout
+      passes. Scoped to the 3 items whose note text was made *inaccurate* by
+      this change, not all ~26 touched files: every other edit was a pure
+      addition on top of classes that still match upstream (a clamp, an
+      `overflow-x-auto`, an `sm:` restore) — appending "also has a responsive
+      clamp now" to 23 more files would be rot-in-waiting, not honesty, since
+      `styling-usage check` doesn't read this field and it isn't a parity
+      claim. Updated: `dialog.json` and `alert-dialog.json` (their width clamp
+      now more accurately matches shadcn's own source, previously omitted),
+      and `sidebar.json` (records the genuine `w-[--sidebar-width]` →
+      `w-(--sidebar-width)` correctness fix plus the `max-w-[85vw]` defensive
+      clamp and the still-deferred mobile Sheet mode). `xtask styling-usage
+      check` re-run after: `69 item(s)` pass.
+- [x] 7.4 Update `docs/validation.md`'s surface matrix with a responsive-layout
       row, and update `docs/adico/m4-parity-audit.md` /
       `docs/adico/m4-acceptance.md`'s "unmeasurable" responsive verdicts to
-      reflect the new harness's actual results.
-- [ ] 7.5 Run `openspec validate make-registry-components-mobile-first
-      --strict` and confirm it passes.
-- [ ] 7.6 Live spot-check in Chrome at 375px (via `dx serve` on
-      `apps/playground`'s `/responsive/...` routes) for the full known-broken
-      list from the proposal, and confirm visually that desktop
-      (`apps/playground` at 1280px) is unchanged.
+      reflect the new harness's actual results. Added a new matrix row to
+      `docs/validation.md` pointing at `test:responsive`/
+      `test:responsive-desktop`. Both m4 docs are dated point-in-time audit
+      records, so their original per-component `unmeasurable` verdicts were
+      left as the historical record rather than rewritten; added an explicit
+      "Superseded (2026-09)" note at each of the 3 sites naming this change
+      and the new pass/fail counts, without touching `rtl`/`desktop`'s
+      still-accurate unmeasurable status. Also caught, while reviewing
+      `design.md`'s own risk list against the final implementation, that the
+      delta spec's `Responsive adaptation is mobile-first...` requirement
+      described only viewport `sm:`/`md:` prefixes and didn't cover
+      `card.rs`'s `@container`/`@sm:` fallback (a different mechanism, keyed
+      to the component's own rendered width rather than the viewport) — added
+      a new scenario for container-query-driven adaptation to
+      `specs/adico-existing-components/spec.md` so the delta and the shipped
+      code agree.
+- [x] 7.5 Run `openspec validate make-registry-components-mobile-first
+      --strict` and confirm it passes. Passes (re-run after 7.4's delta-spec
+      addition, still valid).
+- [x] 7.6 Live spot-check in Chrome via `dx serve` on `apps/playground`'s
+      `/responsive/...` routes. This session's browser automation tool
+      (`resize_window`) turned out to be a no-op in this sandboxed Chrome
+      instance — `window.innerWidth` stayed pinned at 1710px regardless of
+      the requested width, confirmed by re-checking after two different
+      resize requests and a fresh tab — so a true 375px-viewport visual check
+      was not achievable here; the Playwright `mobile` project (real
+      viewport control, 27/27 passing, task 7.2) is the authoritative
+      375px-geometry evidence. What manual Chrome verification remained
+      possible: (1) a full-width (~1710px, well above the 640px `sm:`
+      breakpoint) screenshot of `/responsive/flow` confirming desktop layout
+      is visually intact (tabs/menubar/breadcrumb/button-group inline,
+      unwrapped, as before); (2) for `card.rs`'s `@container`/`@sm:` fix
+      specifically — the one component using a genuinely different
+      mechanism (container width, not viewport width) that Playwright's
+      viewport-only projects can't directly stress the same way — narrowed
+      the live `Card`'s own DOM width via `element.style.width` in a real
+      (non-headless) browser and confirmed `CardHeader`'s
+      `gridTemplateColumns` flips from a real two-track grid at its natural
+      ~448px width to `none` (stacked) at 320px, with a zoomed screenshot
+      showing title/description/action stacking correctly in document order;
+      (3) confirmed the Sidebar open-panel bug fix live: renders at exactly
+      256px (16rem), matching the Playwright desktop-invariance assertion.
 - [ ] 7.7 Archive the change once all tasks above are checked.

@@ -190,6 +190,18 @@ fixed-width column with no responsive breakpoints exercised. Verdict:
 `unmeasurable (no responsive test harness or breakpoint fixtures exist)`
 for all 38 components — not a per-component finding.
 
+**Superseded (2026-09):** `make-registry-components-mobile-first` added the
+missing harness (`tests/playwright/responsive.spec.ts` /
+`responsive-desktop.spec.ts`, run against `apps/playground`'s shell-free
+`/responsive/...` routes at 375px and 1280px) and swept all 69
+`registry/ui/*.rs` components — not just this audit's 38 — to a mobile-first
+baseline. `responsive` is measurable and passing (27/27 mobile, 10/10
+desktop-invariance) as of that change; see
+[`docs/validation.md`](../validation.md)'s surface matrix. Touch-target sizing
+(`pointer-coarse:`) remains a separate, not-yet-scheduled follow-up. This
+audit's original per-component `unmeasurable` cells below are left as the
+historical M4 record, not rewritten.
+
 ### `desktop` — unmeasurable, systemic, for all 38 components
 
 `packages/adico-primitives` does have real `target_os`/`feature = "desktop"`
@@ -297,6 +309,9 @@ and flagged as explicit residual scope for 5.3, not silently claimed as
   beyond a one-line composition note).
 - **`rtl`, `responsive`, `desktop`** are `unmeasurable` for all 38
   components — no test harness exists for any of the three, project-wide.
+  (`responsive` superseded 2026-09 by `make-registry-components-mobile-first`
+  — see the note under `### responsive` above; `rtl`/`desktop` remain
+  unmeasurable.)
 - **`variants`** was not independently audited this pass — recorded as
   explicit residual scope, not as a false `match`.
 - **35 / 38** have `ssrHydration` as `unmeasurable` at the per-component

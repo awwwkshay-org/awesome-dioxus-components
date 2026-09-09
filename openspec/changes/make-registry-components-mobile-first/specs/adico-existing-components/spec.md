@@ -48,6 +48,18 @@ prefixed utility (e.g. `sm:text-center`) to express its narrow-viewport layout.
   and the ≥640px behavior is expressed with an `sm:` (or `md:`, where a second
   step is genuinely needed) prefix — never the reverse
 
+#### Scenario: A component's layout must respond to its own rendered width, not the viewport
+- **WHEN** a component is reusable enough to be embedded at a width unrelated
+  to the viewport (for example a `Card` placed in a narrow sidebar on a wide
+  desktop screen), and Tailwind cannot compile a viewport-prefixed form of the
+  needed selector at all (verified by its absence from the compiled
+  stylesheet, not merely assumed)
+- **THEN** the component MAY use a `@container` query and its `@sm:`-style
+  container variant instead of a viewport breakpoint, provided the container
+  query's unprefixed/base classes still express the narrow layout and the
+  `@sm:`-and-up form still restores the exact value the component rendered at
+  that container width before this requirement existed
+
 ### Requirement: Sidebar's mobile presentation remains deferred, with a defensive clamp
 Sidebar's viewport-driven mobile Sheet mode SHALL remain deferred, since it
 depends on a JavaScript viewport-detection primitive this project does not yet

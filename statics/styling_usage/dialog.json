@@ -13,5 +13,5 @@
     "shadcn",
     "dioxus-components"
   ],
-  "inspirationNote": "Overlay opacity corrected from bg-black/80 to bg-black/50 to match shadcn's actual current new-york-v4 source (previously miscited). Content/header classes otherwise match. dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
+  "inspirationNote": "Overlay opacity corrected from bg-black/80 to bg-black/50 to match shadcn's actual current new-york-v4 source (previously miscited). Content/header classes otherwise match, including DialogContent's width now carrying the same max-w-[calc(100%-2rem)] sm:max-w-lg mobile-first clamp shadcn's own source ships (make-registry-components-mobile-first). dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
 }

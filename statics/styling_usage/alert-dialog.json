@@ -22,5 +22,5 @@
     "shadcn",
     "dioxus-components"
   ],
-  "inspirationNote": "Overlay opacity corrected from bg-black/80 to bg-black/50 to match shadcn's actual current new-york-v4 source (previously miscited); core content/header/footer structure matches, though shadcn v4 also added an optional media/grid layout adico doesn't replicate (out of scope). dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
+  "inspirationNote": "Overlay opacity corrected from bg-black/80 to bg-black/50 to match shadcn's actual current new-york-v4 source (previously miscited); core content/header/footer structure matches, though shadcn v4 also added an optional media/grid layout adico doesn't replicate (out of scope). AlertDialogContent's width now carries the same max-w-[calc(100%-2rem)] mobile-first clamp as Dialog, with both content-size arms restoring their sm:max-w-lg/sm:max-w-sm at the same breakpoint shadcn's own source uses (make-registry-components-mobile-first). dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
 }
