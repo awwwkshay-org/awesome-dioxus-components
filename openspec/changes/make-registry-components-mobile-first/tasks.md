@@ -612,4 +612,4 @@ no promotions needed. None of these files were edited.
       showing title/description/action stacking correctly in document order;
       (3) confirmed the Sidebar open-panel bug fix live: renders at exactly
       256px (16rem), matching the Playwright desktop-invariance assertion.
-- [ ] 7.7 Archive the change once all tasks above are checked.
+- [x] 7.7 Archive the change once all tasks above are checked.
