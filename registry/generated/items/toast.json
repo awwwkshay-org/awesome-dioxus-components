@@ -7,7 +7,7 @@
       "source": "ui/toast.rs",
       "targetRoot": "ui",
       "target": "toast.rs",
-      "checksum": "93d8341fa85cfcee77f067cfd254c5b9d0391ed44ab39a66b82f15cc4a0cbab2"
+      "checksum": "9f9e9d6e22a72ef21dfe82babd8d97c9503cbcb531ba32991893580bf19de09d"
     }
   ],
   "registryDependencies": [

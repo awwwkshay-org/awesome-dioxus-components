@@ -7,6 +7,7 @@ mod playground_controls;
 mod primitive_compat;
 mod primitive_usage;
 mod prop_parity;
+mod registry_checksums;
 mod registry_introspect;
 mod rust_introspect;
 mod styling_usage;
@@ -86,6 +87,19 @@ fn main() {
                 eprintln!("registry validation failed: {error}");
                 std::process::exit(1);
             }
+        }
+        [command, subcommand, flag]
+            if command == "registry" && subcommand == "checksums" && flag == "--write" =>
+        {
+            if let Err(error) = repository_root().and_then(|root| registry_checksums::write(&root))
+            {
+                eprintln!("registry checksums --write failed: {error}");
+                std::process::exit(1);
+            }
+        }
+        [command, subcommand] if command == "registry" && subcommand == "checksums" => {
+            eprintln!("usage: cargo xtask registry checksums --write");
+            std::process::exit(2);
         }
         [command, subcommand, flag, source]
             if command == "registry" && subcommand == "validate" && flag == "--source" =>
@@ -198,7 +212,7 @@ fn main() {
         }
         _ => {
             eprintln!(
-                "usage:\n  cargo xtask provenance check\n  cargo xtask registry build\n  cargo xtask registry validate [--source <registry-directory-or-manifest>]\n  cargo xtask catalog fetch <axis|all> [--revision <sha>]\n  cargo xtask primitive-compat sync|check|diff\n  cargo xtask component-compat sync|check\n  cargo xtask primitive-usage sync|check|diff\n  cargo xtask styling-usage sync|check|diff\n  cargo xtask playground-controls sync|check|diff\n  cargo xtask prop-parity sync|check|diff\n  cargo xtask component-props sync|check|diff"
+                "usage:\n  cargo xtask provenance check\n  cargo xtask registry build\n  cargo xtask registry validate [--source <registry-directory-or-manifest>]\n  cargo xtask registry checksums --write\n  cargo xtask catalog fetch <axis|all> [--revision <sha>]\n  cargo xtask primitive-compat sync|check|diff\n  cargo xtask component-compat sync|check\n  cargo xtask primitive-usage sync|check|diff\n  cargo xtask styling-usage sync|check|diff\n  cargo xtask playground-controls sync|check|diff\n  cargo xtask prop-parity sync|check|diff\n  cargo xtask component-props sync|check|diff"
             );
             std::process::exit(2);
         }

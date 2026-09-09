@@ -83,7 +83,12 @@ pub fn DialogContent(
         // that workaround is removed now that it's redundant, see `theme_builder_launcher.rs`).
         // Not anchored via `Positioner` (a centered modal has no anchor element), so
         // this is a fixed viewport-relative cap, not `--adico-positioner-available-size`.
-        "fixed left-1/2 top-1/2 z-[51] grid max-h-[calc(100svh-2rem)] w-full max-w-lg min-h-0 -translate-x-1/2 -translate-y-1/2 border bg-background p-6 text-foreground shadow-lg",
+        // `max-w-[calc(100%-2rem)]` is the width-axis analog of the height cap above:
+        // below `sm` it keeps a 1rem gutter on each side of the `fixed`, `w-full`
+        // element; at `sm` and up `max-w-lg` (this rule's own base value before
+        // this comment existed) wins by Tailwind's own stylesheet-order rule for
+        // breakpoint variants, restoring the exact original desktop width.
+        "fixed left-1/2 top-1/2 z-[51] grid max-h-[calc(100svh-2rem)] w-full max-w-[calc(100%-2rem)] min-h-0 -translate-x-1/2 -translate-y-1/2 border bg-background p-6 text-foreground shadow-lg sm:max-w-lg",
         radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);

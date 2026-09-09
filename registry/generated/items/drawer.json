@@ -7,7 +7,7 @@
       "source": "ui/drawer.rs",
       "targetRoot": "ui",
       "target": "drawer.rs",
-      "checksum": "7bec92f14b5d89dbb8dd0595804328295f5a53a3cad01fe89f11419c4b9b2e27"
+      "checksum": "dc743ce5ceac44312958b477acbdb01acc6d5ef37ea0adc573f315c6ab46a3db"
     }
   ],
   "registryDependencies": [

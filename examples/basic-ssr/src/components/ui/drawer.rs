@@ -49,7 +49,7 @@ impl DrawerDirection {
                 "inset-x-0 top-0 rounded-b-[10px] border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top"
             }
             DrawerDirection::Bottom => {
-                "inset-x-0 bottom-0 mt-24 max-h-[80vh] rounded-t-[10px] border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom"
+                "inset-x-0 bottom-0 mt-24 max-h-[80svh] rounded-t-[10px] border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom"
             }
             DrawerDirection::Left => {
                 "inset-y-0 left-0 h-full w-3/4 rounded-r-[10px] border-r sm:max-w-sm data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left"

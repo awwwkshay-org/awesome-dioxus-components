@@ -164,7 +164,7 @@
           "source": "ui/dialog.rs",
           "targetRoot": "ui",
           "target": "dialog.rs",
-          "checksum": "9c9151ab642598c2699a684a09ab01c18b8816b2009f05df676102e3a8b8e666"
+          "checksum": "d396d50deb5358936ff1286f5816ab3cc4b55e623ff96a0b3210be3d9e59135f"
         }
       ],
       "registryDependencies": [
@@ -1922,7 +1922,7 @@
           "source": "ui/alert_dialog.rs",
           "targetRoot": "ui",
           "target": "alert_dialog.rs",
-          "checksum": "17452f1fa19f00e8a61125041ef981732ab346a5431f6503377664c867f7b844"
+          "checksum": "71705067133757abf05f117ab6f1f4f79f1c2e950af0e59b490e1989308a8790"
         }
       ],
       "registryDependencies": [
@@ -1978,7 +1978,7 @@
           "source": "ui/toast.rs",
           "targetRoot": "ui",
           "target": "toast.rs",
-          "checksum": "93d8341fa85cfcee77f067cfd254c5b9d0391ed44ab39a66b82f15cc4a0cbab2"
+          "checksum": "9f9e9d6e22a72ef21dfe82babd8d97c9503cbcb531ba32991893580bf19de09d"
         }
       ],
       "registryDependencies": [
@@ -3057,7 +3057,7 @@
           "source": "ui/drawer.rs",
           "targetRoot": "ui",
           "target": "drawer.rs",
-          "checksum": "7bec92f14b5d89dbb8dd0595804328295f5a53a3cad01fe89f11419c4b9b2e27"
+          "checksum": "dc743ce5ceac44312958b477acbdb01acc6d5ef37ea0adc573f315c6ab46a3db"
         }
       ],
       "registryDependencies": [

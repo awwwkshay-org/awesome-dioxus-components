@@ -21,7 +21,9 @@
     "test:fullstack": "playwright test fullstack.spec.ts",
     "test:time-picker": "playwright test time-picker.spec.ts",
     "test:playground-time-picker": "playwright test playground-time-picker.spec.ts",
-    "test:playground-resizable-split": "playwright test playground-resizable-split.spec.ts"
+    "test:playground-resizable-split": "playwright test playground-resizable-split.spec.ts",
+    "test:responsive": "playwright test --project=mobile",
+    "test:responsive-desktop": "playwright test --project=desktop-invariance"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

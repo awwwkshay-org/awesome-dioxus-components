@@ -15,11 +15,11 @@ use crate::pages::{
     DragAndDropListPage, DrawerPage, DropdownMenuPage, EmptyPage, Home, HoverCardPage,
     InputGroupPage, InputOTPPage, InputPage, ItemPage, KbdPage, LabelPage, MarkerPage, MenubarPage,
     MessagePage, MessageScrollerPage, ModeTogglePage, NativeSelectPage, NavigationMenuPage,
-    PaginationPage, PopoverPage, ProgressPage, RadioGroupPage, ResizablePage, ScrollAreaPage,
-    SelectPage, SheetPage, SidebarPage, SkeletonPage, SliderPage, SpinnerPage, SwitchPage,
-    TablePage, TabsPage, TagGroupPage, TextareaPage, ThemeBuilderPage, ThemeSwitcherPage,
-    TimePickerPage, ToastPage, ToggleGroupPage, TogglePage, ToolbarPage, TooltipPage,
-    VirtualListPage,
+    PaginationPage, PopoverPage, ProgressPage, RadioGroupPage, ResizablePage, ResponsiveFlowPage,
+    ResponsiveOverlayPage, ScrollAreaPage, SelectPage, SheetPage, SidebarPage, SkeletonPage,
+    SliderPage, SpinnerPage, SwitchPage, TablePage, TabsPage, TagGroupPage, TextareaPage,
+    ThemeBuilderPage, ThemeSwitcherPage, TimePickerPage, ToastPage, ToggleGroupPage, TogglePage,
+    ToolbarPage, TooltipPage, VirtualListPage,
 };
 
 const PLAYGROUND_LOGO: Asset = asset!("/assets/web/android-chrome-192x192.png");
@@ -165,6 +165,16 @@ pub enum Route {
     MessageScrollerPage {},
     #[route("/theme-builder")]
     ThemeBuilderPage {},
+    // Shell-free viewport-harness routes: intentionally NOT nested under
+    // `Layout` (see `pages/responsive_flow.rs`'s module doc) so the
+    // automated responsive test suite measures real browser-viewport
+    // geometry, not the shell's own fixed-percentage panels. Not part of
+    // `nav_items()` -- these are harness fixtures, not browsable pages.
+    #[end_layout]
+    #[route("/responsive/flow")]
+    ResponsiveFlowPage {},
+    #[route("/responsive/overlay?:case")]
+    ResponsiveOverlayPage { case: String },
 }
 
 /// One flat list, alphabetical ascending by displayed label — no thematic

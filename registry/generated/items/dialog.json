@@ -7,7 +7,7 @@
       "source": "ui/dialog.rs",
       "targetRoot": "ui",
       "target": "dialog.rs",
-      "checksum": "9c9151ab642598c2699a684a09ab01c18b8816b2009f05df676102e3a8b8e666"
+      "checksum": "d396d50deb5358936ff1286f5816ab3cc4b55e623ff96a0b3210be3d9e59135f"
     }
   ],
   "registryDependencies": [

@@ -338,6 +338,9 @@
   .left-3 {
     left: calc(var(--spacing) * 3);
   }
+  .left-4 {
+    left: calc(var(--spacing) * 4);
+  }
   .left-6 {
     left: calc(var(--spacing) * 6);
   }
@@ -598,6 +601,9 @@
   .max-h-72 {
     max-height: calc(var(--spacing) * 72);
   }
+  .max-h-\[80svh\] {
+    max-height: 80svh;
+  }
   .max-h-\[80vh\] {
     max-height: 80vh;
   }
@@ -615,9 +621,6 @@
   }
   .max-h-\[var\(--adico-positioner-available-size\)\] {
     max-height: var(--adico-positioner-available-size);
-  }
-  .max-h-screen {
-    max-height: 100vh;
   }
   .min-h-0 {
     min-height: calc(var(--spacing) * 0);
@@ -697,6 +700,9 @@
   .w-\[100px\] {
     width: 100px;
   }
+  .w-\[calc\(100\%-2rem\)\] {
+    width: calc(100% - 2rem);
+  }
   .w-auto {
     width: auto;
   }
@@ -714,6 +720,9 @@
   }
   .max-w-\[80\%\] {
     max-width: 80%;
+  }
+  .max-w-\[calc\(100\%-2rem\)\] {
+    max-width: calc(100% - 2rem);
   }
   .max-w-lg {
     max-width: var(--container-lg);
@@ -3000,9 +3009,19 @@
       margin-top: calc(var(--spacing) * 0);
     }
   }
+  .sm\:w-full {
+    @media (width >= 40rem) {
+      width: 100%;
+    }
+  }
   .sm\:max-w-\[420px\] {
     @media (width >= 40rem) {
       max-width: 420px;
+    }
+  }
+  .sm\:max-w-lg {
+    @media (width >= 40rem) {
+      max-width: var(--container-lg);
     }
   }
   .sm\:max-w-sm {

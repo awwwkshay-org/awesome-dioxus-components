@@ -77,10 +77,15 @@ pub enum AlertDialogContentSize {
 }
 
 impl AlertDialogContentSize {
+    // Both arms are `sm:`-prefixed: the base `max-w-[calc(100%-2rem)]` on
+    // `AlertDialogContent`'s own class (below) is the narrow-viewport gutter
+    // clamp shared by every size; these restore each size's original
+    // desktop-only value at `sm` and up, matching `dialog.rs`'s identical
+    // width-axis treatment.
     fn class(self) -> &'static str {
         match self {
-            Self::Default => "max-w-lg",
-            Self::Sm => "max-w-sm",
+            Self::Default => "sm:max-w-lg",
+            Self::Sm => "sm:max-w-sm",
         }
     }
 }
@@ -99,7 +104,9 @@ pub fn AlertDialogContent(
         // See `dialog.rs`'s `DialogContent` for the identical `max-h`/`min-h-0`/
         // scrolling-body reasoning -- an `AlertDialog` is also a centered modal with
         // no anchor element, so it uses the same fixed viewport-relative cap.
-        "fixed left-1/2 top-1/2 z-[51] grid max-h-[calc(100svh-2rem)] w-full min-h-0 -translate-x-1/2 -translate-y-1/2 border bg-background p-6 text-foreground shadow-lg",
+        // `max-w-[calc(100%-2rem)]` is the shared narrow-viewport gutter clamp for
+        // every size; `size.class()` restores each size's own value at `sm` and up.
+        "fixed left-1/2 top-1/2 z-[51] grid max-h-[calc(100svh-2rem)] w-full max-w-[calc(100%-2rem)] min-h-0 -translate-x-1/2 -translate-y-1/2 border bg-background p-6 text-foreground shadow-lg",
         size.class(),
         radius.class(),
         class.as_deref().unwrap_or_default(),

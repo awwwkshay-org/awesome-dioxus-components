@@ -97,7 +97,14 @@ pub fn ToastProvider(
     // directly, so target it as a descendant instead of modifying the
     // primitive.
     let class = cn(&[
-        "fixed bottom-4 right-4 z-[100] max-h-screen w-full sm:max-w-[420px] \
+        // `right-4` with no `left-4`/`inset-x` means a `w-full` base would
+        // overflow off the LEFT edge below `sm` (its left edge sits at
+        // `-right_offset`, i.e. -16px, since a `fixed` box's width is
+        // measured from its right-pinned edge, not the viewport's left
+        // edge). `w-[calc(100%-2rem)]` keeps a symmetric 1rem gutter
+        // instead; `sm:w-full` restores today's exact desktop behavior
+        // (uncapped width, still bounded by the existing `sm:max-w-[420px]`).
+        "fixed bottom-4 right-4 z-[100] max-h-[100svh] w-[calc(100%-2rem)] sm:w-full sm:max-w-[420px] \
          [&>ol]:flex [&>ol]:flex-col [&>ol]:gap-2",
     ]);
     rsx! {
