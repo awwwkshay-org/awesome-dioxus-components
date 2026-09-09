@@ -107,7 +107,7 @@
           "source": "ui/data_table.rs",
           "targetRoot": "ui",
           "target": "data_table.rs",
-          "checksum": "5038205d4ad44ba1dff3714692be6463b24162d5c54ea0328f71a850e5da1dce"
+          "checksum": "f16e1070811fc6f8567fceefe95e87859f77ea7827f0b8d12b1664c2be94165a"
         }
       ],
       "registryDependencies": [
@@ -453,7 +453,7 @@
           "source": "ui/pagination.rs",
           "targetRoot": "ui",
           "target": "pagination.rs",
-          "checksum": "318389bfb014572ef61f2f5b44f4bb1d668d2b6fa4db7d42e3a486fdfbd6e0a9"
+          "checksum": "501129db6483e647e1817b84c20dd8b642885b23363ff11bf879602f03ffa631"
         }
       ],
       "registryDependencies": [
@@ -900,7 +900,7 @@
           "source": "ui/menubar.rs",
           "targetRoot": "ui",
           "target": "menubar.rs",
-          "checksum": "04eabbaab1c955278ede1ef47364c6ee0040b4bd3beb0ac0e2f4fc8831da8548"
+          "checksum": "6cbc19a47ff4a3afcbd9217ae70ecc921a3d78c0e6576115c32ed9011a381837"
         }
       ],
       "registryDependencies": [
@@ -1775,7 +1775,7 @@
           "source": "ui/tabs.rs",
           "targetRoot": "ui",
           "target": "tabs.rs",
-          "checksum": "a636070927ec590e0bf30b20a6ddb643161272cc8fd40689b9a267692e365850"
+          "checksum": "cfb1c4cfdc9254b3ea31a30dea65afe916bc2f3feb7e972a7ad09fafe8d97c33"
         }
       ],
       "registryDependencies": [
@@ -1826,7 +1826,7 @@
           "source": "ui/toggle_group.rs",
           "targetRoot": "ui",
           "target": "toggle_group.rs",
-          "checksum": "64bc12ec1b9c23d077b0359bacad6c373f421b2cdf309e65fa81c3114b315d81"
+          "checksum": "1fa05d4bc9ba4c6ffc52248a2f1083ea26cb3eef046f8507090c673823f2d2f1"
         }
       ],
       "registryDependencies": [
@@ -2813,7 +2813,7 @@
           "source": "ui/button_group.rs",
           "targetRoot": "ui",
           "target": "button_group.rs",
-          "checksum": "eb7f932bef197a75a40e1d587f0dd877a7104e2eb5ffcf36b28fcb6f6c753454"
+          "checksum": "7322f0d45a6a7881d0d8b13ab4b5ff88fd6343b1dc348c88cc93469d02df8b81"
         }
       ],
       "registryDependencies": [
@@ -3006,7 +3006,7 @@
           "source": "ui/navigation_menu.rs",
           "targetRoot": "ui",
           "target": "navigation_menu.rs",
-          "checksum": "94deca714ff3c743d79ba851cc44c07d46802ec5f7e3602dc94c3bfc0fac06f8"
+          "checksum": "7b650e590e5d7af37fcd4a3ed891fb313ae40c2f53d92ffe64553baf4722643c"
         }
       ],
       "registryDependencies": [
@@ -3159,7 +3159,7 @@
           "source": "ui/input_otp.rs",
           "targetRoot": "ui",
           "target": "input_otp.rs",
-          "checksum": "e0508223906f4e9c53507750964ee1cb1cea11c005bbab354925e230449f8630"
+          "checksum": "564f5b3e0a12abe6efc1ee01a540f38f0f20f79884f803a610d5fabe094954d1"
         }
       ],
       "registryDependencies": [

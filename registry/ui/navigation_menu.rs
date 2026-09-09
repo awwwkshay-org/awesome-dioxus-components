@@ -37,7 +37,16 @@ pub fn NavigationMenu(
     #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "relative z-10 flex max-w-max flex-1 items-center justify-center",
+        // `max-w-[min(max-content,100%)]` replaces the old bare `max-w-max`
+        // (R4): a single utility, not two competing `max-w-*` classes --
+        // `cn()` is a plain join with no conflict resolution, so two
+        // same-property utilities would just have one silently win by
+        // stylesheet order, not combine. This still shrinks to content width
+        // when content is narrower than the container (today's desktop
+        // behavior), but never grows past the container's own width, so
+        // `NavigationMenuList`'s `overflow-x-auto` below has a bounded box
+        // to scroll within instead of the root just growing unbounded.
+        "relative z-10 flex max-w-[min(max-content,100%)] flex-1 items-center justify-center",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -60,7 +69,10 @@ pub fn NavigationMenuList(
     #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "group flex flex-1 list-none items-center justify-center gap-1",
+        // `overflow-x-auto` (R4): scrolls instead of forcing the root wider
+        // than its own now-bounded `max-w-[min(max-content,100%)]` when the
+        // trigger row doesn't fit.
+        "group flex flex-1 list-none items-center justify-center gap-1 overflow-x-auto",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

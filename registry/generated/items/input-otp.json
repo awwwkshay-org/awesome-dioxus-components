@@ -7,7 +7,7 @@
       "source": "ui/input_otp.rs",
       "targetRoot": "ui",
       "target": "input_otp.rs",
-      "checksum": "e0508223906f4e9c53507750964ee1cb1cea11c005bbab354925e230449f8630"
+      "checksum": "564f5b3e0a12abe6efc1ee01a540f38f0f20f79884f803a610d5fabe094954d1"
     }
   ],
   "registryDependencies": [

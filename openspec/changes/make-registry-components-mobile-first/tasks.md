@@ -254,33 +254,107 @@ Each wave's close-out is exactly one CLI rebuild plus three `adico add
 
 ## 4. Horizontal-flex containers (R4) — 12 components
 
-- [ ] 4.1 `tabs.rs`: add `overflow-x-auto` to `TabsList`, drop `flex-1` from
+- [x] 4.1 `tabs.rs`: add `overflow-x-auto` to `TabsList`, drop `flex-1` from
       `TabsTrigger` below `sm`; verify via the `/responsive/flow` 5-tab
       fixture that the list scrolls rather than clips, and unchanged desktop
-      layout for a 2-tab case.
-- [ ] 4.2 `menubar.rs`: add `overflow-x-auto` to the root; verify with the
-      File/Edit/View/Window/Help fixture.
-- [ ] 4.3 `navigation_menu.rs`: same treatment on `NavigationMenuList`.
-- [ ] 4.4 `toolbar.rs`: decide and apply whether the (currently unstyled) root
+      layout for a 2-tab case. Done: `TabList` gets `w-full overflow-x-auto`
+      (needed the explicit `w-full` too — an `inline-flex` with no width just
+      grows to fit content instead of scrolling within bounds).
+      `TabTrigger`'s `flex-1` → `shrink-0 sm:flex-1`. Verified: 5 real tabs
+      scroll horizontally at 375px; desktop shows all 5 at equal width,
+      unchanged (`responsive-desktop.spec.ts` confirms `overflowX: "auto"`
+      but `scrollWidth === clientWidth`, i.e. no visible desktop change).
+- [x] 4.2 `menubar.rs`: add `overflow-x-auto` to the root; verify with the
+      File/Edit/View/Window/Help fixture. Done: also needed `w-full` (same
+      reasoning as tabs — items here are naturally-sized, not `flex-1`, so no
+      trigger-level change needed).
+- [x] 4.3 `navigation_menu.rs`: same treatment on `NavigationMenuList`. Done,
+      plus the root's `max-w-max` became `max-w-[min(max-content,100%)]` (a
+      **caught-and-fixed authoring mistake**: my first attempt appended a
+      second `max-w-full` alongside the existing `max-w-max` in the same
+      class string — two same-property utilities don't combine via `cn()`'s
+      plain join, only one wins by stylesheet order, which is exactly the R8
+      hazard this rule set exists to prevent. Corrected to one arbitrary-value
+      utility expressing the actual intent: shrink to content, capped at the
+      container's width).
+- [x] 4.4 `toolbar.rs`: decide and apply whether the (currently unstyled) root
       gains a default wrap/scroll class, given it's a bare primitive
-      re-export; record the decision either way.
-- [ ] 4.5 `button_group.rs`: switch to the existing vertical variant (already
+      re-export; record the decision either way. **Decision: `n/a`, no
+      change.** `Toolbar` is a bare re-export with zero registry-authored
+      classes — giving it default wrap/scroll behavior now would be a new
+      behavioral opinion imposed on every consumer, not a narrow-viewport
+      restoration of an existing default (there is no existing default).
+      That would violate the sweep's own "every override restores today's
+      value" safety property. Layout stays 100% consumer-supplied, as designed.
+- [x] 4.5 `button_group.rs`: switch to the existing vertical variant (already
       at line ~27) at a breakpoint rather than writing new CSS; verify a
-      4-5-button group below `sm`.
-- [ ] 4.6 `toggle_group.rs`: audit; apply R4 if it shares `button_group`'s
-      no-wrap risk.
-- [ ] 4.7 `pagination.rs`: audit; apply `flex-wrap` if needed for many page
-      links.
-- [ ] 4.8 `breadcrumb.rs`✓: verify existing `flex-wrap break-words sm:gap-2.5`
-      needs no change; record the verdict.
-- [ ] 4.9 `input_group.rs`: audit for horizontal-flex overflow risk.
-- [ ] 4.10 `input_otp.rs`: audit; a fixed-width digit row is the likely risk —
-      apply R3/R4 as appropriate.
-- [ ] 4.11 `tag_group.rs`: audit for wrap behavior with many tags.
-- [ ] 4.12 `data_table.rs`: add `flex-wrap` to the toolbar row (line ~255) and
+      4-5-button group below `sm`. **Decision changed after investigation**:
+      `ButtonGroupOrientation::class()` weaves horizontal/vertical through
+      every corner-radius arbitrary-variant selector — a true breakpoint
+      auto-flip would mean duplicating that whole selector system with `sm:`
+      prefixes, a much larger and riskier change than this fix warrants.
+      Applied `max-w-full overflow-x-auto` instead (R4 option 3): scrolls a
+      too-wide joined group, preserving its border-joining look untouched.
+- [x] 4.6 `toggle_group.rs`: audit; apply R4 if it shares `button_group`'s
+      no-wrap risk. Different risk profile confirmed: items here have no
+      corner-joining (independent, gapped toggle buttons) — applied
+      `max-w-full flex-wrap` (R4 option 2), safe for this pattern.
+- [x] 4.7 `pagination.rs`: audit; apply `flex-wrap` if needed for many page
+      links. Done: `PaginationContent`'s `ul` gets `max-w-full flex-wrap`
+      (no corner-joining between page-link pills, safe to wrap).
+- [x] 4.8 `breadcrumb.rs`✓: verify existing `flex-wrap break-words sm:gap-2.5`
+      needs no change; record the verdict. Verified — no change needed.
+- [x] 4.9 `input_group.rs`: audit for horizontal-flex overflow risk. Verdict
+      `n/a`: root is already `w-full` (bounded by its parent, unlike
+      Tabs/Menubar/NavigationMenu which had no width bound at all), so it's
+      already viewport-safe by construction.
+- [x] 4.10 `input_otp.rs`: audit; a fixed-width digit row is the likely risk —
+      apply R3/R4 as appropriate. Measured: a typical 4-6 digit code
+      (6×36px slots + gaps ≈ 256px) already fits comfortably under 343px: no
+      real risk for the common case. Applied `max-w-full overflow-x-auto` to
+      `InputOTPGroup` defensively for unusually long codes (8+ digits,
+      ~344px+) — scrolling, not wrapping, since breaking a single code
+      across two rows would be a broken reading order.
+- [x] 4.11 `tag_group.rs`: audit for wrap behavior with many tags. Verdict
+      `n/a` — `TagList` already has `flex flex-wrap items-center gap-1.5`, no
+      change needed.
+- [x] 4.12 `data_table.rs`: add `flex-wrap` to the toolbar row (line ~255) and
       pagination footer (line ~376); verify with the full-toolbar fixture at
-      375px.
-- [ ] 4.13 Wave close-out: same cycle as 1.6 for all Wave 4 items.
+      375px. Toolbar row (`~255`) verdict `n/a` on closer inspection — it
+      wraps a single `Input` with its own `max-w-sm`, no multi-item overflow
+      risk. Pagination footer (`~376`) got `flex-wrap` as planned (selection
+      count, page count, and pagination controls have no corner-joining).
+- [x] 4.13 Wave close-out: same cycle as 1.6 for all Wave 4 items (8 files
+      actually edited: tabs, menubar, navigation_menu, button_group,
+      toggle_group, pagination, input_otp, data_table). 8 checksums updated
+      (exactly matching), registry build/validate/styling-usage check pass,
+      CLI rebuilt, reinstalled into all 3 apps (confirmed via git status).
+      **Found and fixed two real bugs in the harness itself during
+      verification** (not registry source bugs): (1) `assertNoHorizontalOverflow`
+      used `document.querySelector("[data-responsive-case]")` — singular,
+      always the *first* match regardless of which section a test intended
+      to check, so the "data table" test was silently checking the "tabs"
+      section instead. Fixed by accepting an explicit `scopeSelector` per
+      call. (2) Widening that default scope to `body` (to fix the
+      whole-page walk) swept in `dx serve`'s own devtools reconnect/toast
+      notification, injected directly into `document.body` outside the
+      app's DOM — a false failure unrelated to any component. Fixed by
+      giving `responsive_flow.rs` a stable `#responsive-flow-root` wrapper
+      id and scoping the whole-page test to that specifically, never `body`.
+      (3) The walker also needed to stop descending into legitimately
+      horizontally-scrollable containers (e.g. the now-`overflow-x-auto`
+      `TabsList`) — children clipped by their own scroll container are not
+      page overflow, and flagging them was a false positive on exactly the
+      fix this wave shipped. All three are recorded in
+      `responsive.spec.ts`'s own comments. Final mobile result: **26/27
+      passing** (only `card`, the untouched Wave 5 target, fails — exactly
+      expected). Desktop-invariance: **10/10**, including the intentionally
+      updated tabs assertion (`overflowX: "auto"` now, but visually
+      unaffected — desktop fits all 5 tabs with no scrolling needed).
+      `cargo fmt`/`check --workspace`/`clippy -D warnings`/`styling-usage
+      check` all clean. Restarted `dx serve` fresh (killed stale/conflicting
+      processes on port 8080 first) before verification per established
+      practice.
 
 ## 5. Fixed dimensions and grids (R3/R5/R6) — 12 components
 

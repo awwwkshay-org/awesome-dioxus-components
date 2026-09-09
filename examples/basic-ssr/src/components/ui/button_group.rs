@@ -46,7 +46,14 @@ pub fn ButtonGroup(
     children: Element,
 ) -> Element {
     let class = cn(&[
-        "flex w-fit items-stretch has-[>[data-slot=button-group]]:gap-2 [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1",
+        // `max-w-full overflow-x-auto` (R4): scrolls a too-wide row instead
+        // of growing past the viewport. Not a breakpoint-driven orientation
+        // flip -- `ButtonGroupOrientation::class()` weaves horizontal/vertical
+        // through every corner-radius arbitrary-variant selector below, so
+        // auto-flipping it responsively would mean duplicating that whole
+        // system with `sm:` prefixes; scrolling preserves the joined-border
+        // look with no risk to that logic.
+        "flex w-fit max-w-full items-stretch overflow-x-auto has-[>[data-slot=button-group]]:gap-2 [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1",
         orientation.class(),
         class.as_deref().unwrap_or_default(),
     ]);

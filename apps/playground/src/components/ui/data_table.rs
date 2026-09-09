@@ -373,7 +373,11 @@ pub fn DataTable<T: Clone + PartialEq + 'static>(props: DataTableProps<T>) -> El
                     }
                 }
             }
-            div { class: "flex items-center justify-end gap-4 py-2",
+            // `flex-wrap` (R4): the selection-count text, page-count text, and
+            // pagination controls are independent informational items with no
+            // corner-joining between them, so wrapping to a second line at
+            // narrow widths is visually safe.
+            div { class: "flex flex-wrap items-center justify-end gap-4 py-2",
                 div { class: "flex-1 text-sm text-muted-foreground",
                     "{selected().len()} of {total_rows()} row(s) selected."
                 }

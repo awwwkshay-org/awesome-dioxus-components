@@ -94,18 +94,24 @@ test("card header grid keeps two tracks at desktop", async ({ page }) => {
   expect(trackCount).toBe(2); // has-[[data-slot=card-action]]:grid-cols-[1fr_auto]
 });
 
-test("tabs list has no overflow handling at desktop (today's baseline)", async ({ page }) => {
+test("tabs list scrolls rather than clips, but is visually unaffected at desktop", async ({ page }) => {
   await page.goto("/responsive/flow");
-  const overflowX = await page.evaluate(() => {
+  const result = await page.evaluate(() => {
     const el = document.querySelector('[data-responsive-case="tabs"] [role="tablist"]') as HTMLElement | null;
-    return el ? getComputedStyle(el).overflowX : null;
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    return {
+      overflowX: getComputedStyle(el).overflowX,
+      scrolls: el.scrollWidth > el.clientWidth,
+      width: Math.round(r.width)
+    };
   });
-  // Wave 4 adds `overflow-x-auto` to TabsList -- that wave's own commit
-  // updates this assertion to "auto" once it lands, since the change is
-  // intentional (a narrow-viewport fix that also affects the desktop
-  // computed style property, though not desktop's visible layout since
-  // desktop has room for all 5 tabs without scrolling).
-  expect(overflowX).toBe("visible");
+  // Wave 4 added `overflow-x-auto` to TabsList (was "visible") -- an
+  // intentional computed-style change, not a regression: at desktop all 5
+  // tabs fit without scrolling (scrollWidth === clientWidth), so the visible
+  // layout is unchanged even though the CSS property differs.
+  expect(result?.overflowX).toBe("auto");
+  expect(result?.scrolls, "5 tabs should fit without scrolling at desktop width").toBe(false);
 });
 
 test("sidebar open width -- KNOWN BROKEN, Wave 5 fixes this independently of mobile-first", async ({ page }) => {

@@ -32,7 +32,10 @@ pub fn ToggleGroup(
     children: Element,
 ) -> Element {
     let class = cn(&[
-        "flex items-center gap-1",
+        // `max-w-full flex-wrap` (R4): items are independent, gapped toggle
+        // buttons with no corner-joining between them (unlike
+        // `button_group.rs`), so wrapping to a second row is visually safe.
+        "flex max-w-full flex-wrap items-center gap-1",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

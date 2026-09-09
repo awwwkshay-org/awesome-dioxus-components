@@ -7,7 +7,7 @@
       "source": "ui/data_table.rs",
       "targetRoot": "ui",
       "target": "data_table.rs",
-      "checksum": "5038205d4ad44ba1dff3714692be6463b24162d5c54ea0328f71a850e5da1dce"
+      "checksum": "f16e1070811fc6f8567fceefe95e87859f77ea7827f0b8d12b1664c2be94165a"
     }
   ],
   "registryDependencies": [

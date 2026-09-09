@@ -20,7 +20,7 @@ use crate::components;
 #[component]
 pub fn ResponsiveFlowPage() -> Element {
     rsx! {
-        div { class: "flex flex-col gap-8 p-4",
+        div { id: "responsive-flow-root", class: "flex flex-col gap-8 p-4",
             section { "data-responsive-case": "tabs",
                 components::ui::Tabs {
                     value: Some("overview".to_string()),

@@ -73,7 +73,15 @@ pub fn InputOTP(
 /// [`InputOTPSeparator`] into visually distinct groups, e.g. 3 + 3).
 #[component]
 pub fn InputOTPGroup(children: Element, class: Option<String>) -> Element {
-    let class = cn(&["flex items-center", class.as_deref().unwrap_or_default()]);
+    // `max-w-full overflow-x-auto` (R4): each slot is a fixed `w-9` (36px),
+    // so a typical 4-6 digit code always fits, but an unusually long code
+    // (8+ digits) scrolls instead of forcing the page wider -- scrolling
+    // rather than wrapping, since breaking a single code across two rows
+    // would be a broken reading order.
+    let class = cn(&[
+        "flex max-w-full items-center overflow-x-auto",
+        class.as_deref().unwrap_or_default(),
+    ]);
     rsx! {
         div { class, {children} }
     }

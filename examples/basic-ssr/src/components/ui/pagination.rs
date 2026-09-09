@@ -36,7 +36,11 @@ pub fn PaginationContent(
     #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "flex flex-row items-center gap-1",
+        // `max-w-full flex-wrap` (R4): page-link pills have no corner-joining
+        // between them, so wrapping to a second row when there are many
+        // links is visually safe (the parent `Pagination` root is already
+        // `w-full`-bounded).
+        "flex max-w-full flex-row flex-wrap items-center gap-1",
         class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

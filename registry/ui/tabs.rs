@@ -58,7 +58,12 @@ pub fn TabList(
         TabsVariant::Line => "",
     };
     let class = cn(&[
-        "inline-flex items-center justify-center text-muted-foreground",
+        // `w-full overflow-x-auto` so a row of triggers wider than its
+        // container scrolls horizontally instead of silently growing past
+        // it (R4): without an explicit width, an `inline-flex` row just
+        // grows to fit its children's content-driven minimum size. Paired
+        // with `TabTrigger`'s `shrink-0 sm:flex-1` below `sm`.
+        "inline-flex w-full items-center justify-center overflow-x-auto text-muted-foreground",
         variant_class,
         radius_class,
         class.as_deref().unwrap_or_default(),
@@ -96,7 +101,11 @@ pub fn TabTrigger(
         }
     };
     let class = cn(&[
-        "inline-flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap px-2 py-1 text-sm font-medium transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50",
+        // `shrink-0 sm:flex-1` (R4): below `sm`, triggers size to their own
+        // content instead of being crushed to fit, so `TabList`'s
+        // `overflow-x-auto` has real content width to scroll; `sm:flex-1`
+        // restores today's exact equal-width desktop behavior.
+        "inline-flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap px-2 py-1 text-sm font-medium transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 sm:flex-1",
         variant_class,
         class.as_deref().unwrap_or_default(),
     ]);

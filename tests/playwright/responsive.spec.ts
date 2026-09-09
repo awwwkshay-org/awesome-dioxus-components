@@ -28,25 +28,52 @@ const OVERLAY_CASES = [
   "time-picker"
 ];
 
-async function assertNoHorizontalOverflow(page: Page, viewportWidth: number) {
-  const offenders = await page.evaluate((width) => {
+// Default scope is `[data-responsive-case]` (the first match) rather than
+// `body`: `dx serve` injects its own devtools reconnect/hot-reload toast
+// directly into `document.body`, outside the app's own DOM -- scoping to
+// `body` sweeps that unrelated UI into the walk. Callers that need to check
+// every in-flow case on one page pass an explicit wrapper selector instead
+// (see `responsive-flow-root` below), never `body`.
+async function assertNoHorizontalOverflow(page: Page, viewportWidth: number, scopeSelector = "[data-responsive-case]") {
+  const offenders = await page.evaluate(
+    ({ width, scopeSelector }) => {
     const found: string[] = [];
-    const root = document.querySelector("[data-responsive-case]");
+    const root = document.querySelector(scopeSelector);
     if (!root) return found;
-    const elements = root.querySelectorAll<HTMLElement>("*");
-    for (const el of Array.from(elements)) {
-      if (el.getAttribute("aria-hidden") === "true") continue;
+
+    // A horizontally-scrollable container (e.g. TabsList) legitimately has
+    // children positioned outside the viewport -- they're clipped by the
+    // container's own `overflow-x: auto`, not spilling onto the page. Check
+    // the scroll container itself for viewport bounds, but don't descend
+    // into it: its children being individually "outside the viewport" is
+    // the intended behavior of a horizontal scroller, not an overflow bug.
+    function isHorizontalScrollContainer(el: HTMLElement): boolean {
+      const style = getComputedStyle(el);
+      return (
+        (style.overflowX === "auto" || style.overflowX === "scroll") &&
+        el.scrollWidth > el.clientWidth
+      );
+    }
+
+    function walk(el: HTMLElement) {
+      if (el.getAttribute("aria-hidden") === "true") return;
       const rect = el.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) continue;
-      if (rect.right > width + 1 || rect.left < -1) {
+      if (rect.width > 0 && rect.height > 0 && (rect.right > width + 1 || rect.left < -1)) {
         found.push(
           `${el.tagName.toLowerCase()}${el.className ? "." + String(el.className).split(" ").join(".") : ""} ` +
             `(left=${rect.left.toFixed(1)}, right=${rect.right.toFixed(1)}, viewport=${width})`
         );
       }
+      if (isHorizontalScrollContainer(el)) return; // don't flag clipped, scrollable children
+      for (const child of Array.from(el.children)) {
+        walk(child as HTMLElement);
+      }
     }
+    walk(root as HTMLElement);
     return found;
-  }, viewportWidth);
+    },
+    { width: viewportWidth, scopeSelector }
+  );
 
   expect(offenders, `overflowing element(s): ${offenders.join(" | ")}`).toEqual([]);
 }
@@ -55,7 +82,7 @@ test.describe("in-flow components at 375px", () => {
   test("no rendered element extends past the viewport", async ({ page }) => {
     await page.goto("/responsive/flow");
     await page.waitForTimeout(300); // let mount-time transitions settle
-    await assertNoHorizontalOverflow(page, 375);
+    await assertNoHorizontalOverflow(page, 375, "#responsive-flow-root");
   });
 
   test("tabs list exposes horizontal scroll rather than clipping", async ({ page }) => {
@@ -71,7 +98,7 @@ test.describe("in-flow components at 375px", () => {
     await page.goto("/responsive/flow");
     const table = page.locator('[data-responsive-case="data-table"]');
     await expect(table.getByText(/of 7 row/)).toBeVisible();
-    await assertNoHorizontalOverflow(page, 375);
+    await assertNoHorizontalOverflow(page, 375, '[data-responsive-case="data-table"]');
   });
 
   test("card renders a single column at 375px", async ({ page }) => {

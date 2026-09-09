@@ -40,7 +40,10 @@ pub fn Menubar(
     #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "flex h-9 items-center gap-1 border bg-background p-1",
+        // `w-full overflow-x-auto` (R4): without an explicit width, a `flex`
+        // row just grows to fit its children instead of scrolling within
+        // its own bounds -- same reasoning as `TabList`'s identical fix.
+        "flex h-9 w-full items-center gap-1 overflow-x-auto border bg-background p-1",
         radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
