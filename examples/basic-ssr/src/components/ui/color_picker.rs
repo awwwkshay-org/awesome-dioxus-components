@@ -118,7 +118,9 @@ pub struct ColorPickerContentProps {
 #[component]
 pub fn ColorPickerContent(props: ColorPickerContentProps) -> Element {
     let class = cn(&[
-        "flex w-64 flex-col gap-3",
+        // Same viewport-relative gutter clamp as `popover.rs`'s own base
+        // class (Wave 2) -- inert above ~343px since `w-64` already fits.
+        "flex w-64 max-w-[calc(100%-2rem)] flex-col gap-3",
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -554,7 +556,7 @@ mod tests {
 
     #[test]
     fn color_picker_content_gives_its_children_a_shared_column_width() {
-        let class = cn(&["flex w-64 flex-col gap-3", ""]);
+        let class = cn(&["flex w-64 max-w-[calc(100%-2rem)] flex-col gap-3", ""]);
         assert!(class.contains("flex-col"));
         assert!(class.contains("gap-3"));
         assert!(class.contains("w-64"));

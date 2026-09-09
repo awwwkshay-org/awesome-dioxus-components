@@ -1117,7 +1117,7 @@
           "source": "ui/time_picker.rs",
           "targetRoot": "ui",
           "target": "time_picker.rs",
-          "checksum": "95618ea51c49f36c4a8c6823905be2c9f8390602c5a1815c115ecd05ca2b2535"
+          "checksum": "a0fe367b052604a56bac267eb96d6ec62157f03e52a225f912c0b5f74a6b1b6c"
         }
       ],
       "cargoDependencies": [
@@ -2182,7 +2182,7 @@
           "source": "ui/color_picker.rs",
           "targetRoot": "ui",
           "target": "color_picker.rs",
-          "checksum": "61fc045574af3ad29249f20ad87c2e26936e073086c9115e8404045dc5043604"
+          "checksum": "ccc9a84b89b9ed6b741de174d63db2d089203a0b70370fefcfdd08dc48b9deff"
         }
       ],
       "registryDependencies": [
@@ -2954,7 +2954,7 @@
           "source": "ui/command.rs",
           "targetRoot": "ui",
           "target": "command.rs",
-          "checksum": "9f38ac282ed59a71808e4b80a81ea35faa7fcc4f65163afa4180618f9f51288e"
+          "checksum": "ac1628bddb4327fb604d1c5509433110cabb1a8e9309bbd422a01ec528d51f2c"
         }
       ],
       "registryDependencies": [

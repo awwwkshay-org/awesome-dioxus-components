@@ -193,26 +193,64 @@ Each wave's close-out is exactly one CLI rebuild plus three `adico add
 
 ## 3. Composers over Wave 1/2 base classes (R8) — 8 components
 
-- [ ] 3.1 `command.rs`: relax `max-h-[300px]` to `max-h-[min(300px,60svh)]`;
+- [x] 3.1 `command.rs`: relax `max-h-[300px]` to `max-h-[min(300px,60svh)]`;
       confirm `CommandDialog` inherits Wave 1's `dialog.rs` fix with no
-      further change needed.
-- [ ] 3.2 `date_picker.rs`: verify its `w-auto` override of Popover's width
+      further change needed. Done; confirmed via code (composes
+      `DialogContent` directly, no width override).
+- [x] 3.2 `date_picker.rs`: verify its `w-auto` override of Popover's width
       (already `!`-free since it fully replaces rather than fights the base
       class) composes correctly with Wave 2's popover fix; apply R3 to
-      whatever width the calendar inside it now presents.
-- [ ] 3.3 `date_time_picker.rs`✓: verify existing `sm:flex-row` pattern needs
-      no change; record the verdict.
-- [ ] 3.4 `time_picker.rs`: apply R3 to the `size-56` analog dial (fluid
+      whatever width the calendar inside it now presents. Verified live in
+      Chrome + via `getComputedStyle`: `width: 320px` (auto, from
+      CalendarView's content) and `max-width: calc(100% - 32px)` both apply
+      simultaneously with no conflict (different CSS properties) — no source
+      edit needed. `date_picker.rs` itself unmodified.
+- [x] 3.3 `date_time_picker.rs`✓: verify existing `sm:flex-row` pattern needs
+      no change; record the verdict. Verified — no change needed.
+- [x] 3.4 `time_picker.rs`: apply R3 to the `size-56` analog dial (fluid
       escape, e.g. `size-56 max-w-[calc(100%-2rem)]` inside its own
       container) and verify it still renders as a circle (`aspect-square` or
-      equivalent) at every size.
-- [ ] 3.5 `color_picker.rs`: audit the saturation square/hue bar/hex-field
-      layout for fixed widths per R3; apply the fluid escape.
-- [ ] 3.6 `theme_builder.rs`: audit beyond its existing `sm:grid-cols-2`;
-      apply R6 if any additional grid needs collapsing.
-- [ ] 3.7 `theme_switcher.rs`: audit; record verdict.
-- [ ] 3.8 `mode_toggle.rs`: audit; record verdict.
-- [ ] 3.9 Wave close-out: same cycle as 1.6 for all Wave 3 items.
+      equivalent) at every size. Done: `size-56` → `aspect-square w-full
+      max-w-56` (identical 224px circle wherever parent ≥224px, true today;
+      shrinks as a circle, not an oval, if ever narrower). Verified no
+      hardcoded pixel assumptions elsewhere in the file (size is measured
+      dynamically). Live-checked in Chrome: renders as a perfect circle with
+      evenly-spaced hour labels.
+- [x] 3.5 `color_picker.rs`: audit the saturation square/hue bar/hex-field
+      layout for fixed widths per R3; apply the fluid escape. Done:
+      `ColorPickerContent`'s `w-64` (composes over `PopoverContent`, an R8
+      site) gets the same Form C clamp as Wave 2's `popover.rs`/`hover_card.rs`
+      — `w-64 max-w-[calc(100%-2rem)]`. Updated the mirroring unit test
+      literal for consistency. Saturation square/hue bar/hex fields
+      themselves already fluid (`w-full`/`flex-1`), no other edit needed.
+- [x] 3.6 `theme_builder.rs`: audit beyond its existing `sm:grid-cols-2`;
+      apply R6 if any additional grid needs collapsing. Audited the two
+      other `grid-cols-3` instances (palette swatch picker, active-role
+      preview) — verdict `n/a`: these are compact chip/swatch grids (short
+      `text-[10px]` labels, ~100px per cell), not content-dense two-column
+      layouts; 3 columns fits comfortably at any realistic width and
+      collapsing to 1 column would look worse, not better. R6 doesn't apply
+      to this UI pattern.
+- [x] 3.7 `theme_switcher.rs`: audit; record verdict. Its `SelectList {
+      class: "w-56", ... }` composes over `select.rs`'s `SelectList`, whose
+      base already gained Wave 2's `max-w-[calc(100%-2rem)]` clamp — the
+      `w-56` override (a different property, `width`, vs. the base's
+      `min-width`/`max-width`) is automatically protected. `n/a`, no edit.
+- [x] 3.8 `mode_toggle.rs`: audit; record verdict. Composes
+      `DropdownMenuContent` directly with no width override — inherits Wave
+      2's fix automatically. `n/a`, no edit.
+- [x] 3.9 Wave close-out: same cycle as 1.6 for all Wave 3 items. Done: 3
+      checksums updated (command/time_picker/color_picker — the only 3 files
+      actually edited), registry build/validate/styling-usage check pass,
+      CLI rebuilt, `adico add command time-picker color-picker --replace`
+      into all 3 apps (confirmed via git status). Restarted `dx serve`
+      fully clean (killed two stale/conflicting processes found on port
+      8080 from earlier waves' restarts, freed the port, started one single
+      instance) before verification per the Wave 2 lesson. Mobile: 23/27
+      passing, same 4 expected Wave 4/5 failures, unchanged. Desktop
+      -invariance: 10/10. Targeted command/time-picker overlay cases: 2/2
+      passing. `cargo fmt --all --check`/`check --workspace`/`clippy -D
+      warnings` all clean.
 
 ## 4. Horizontal-flex containers (R4) — 12 components
 

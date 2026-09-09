@@ -696,7 +696,12 @@ pub fn TimePickerClock(props: TimePickerClockProps) -> Element {
                 // stops a touch drag from scrolling the page instead of
                 // turning the hand -- both are required for the drag to feel
                 // like a dial rather than a text selection.
-                class: "relative size-56 shrink-0 cursor-pointer touch-none select-none rounded-full border border-input bg-muted/30",
+                // `w-full max-w-56 aspect-square` instead of a fixed `size-56`:
+                // identical 224px circle wherever the parent is >= 224px wide
+                // (true today), but shrinks -- staying a circle via
+                // `aspect-square` rather than becoming an oval -- if ever
+                // placed in a narrower container.
+                class: "relative aspect-square w-full max-w-56 shrink-0 cursor-pointer touch-none select-none rounded-full border border-input bg-muted/30",
                 role: "presentation",
                 "aria-hidden": "true",
                 // Only the dial's own size is measured, never its position --

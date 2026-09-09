@@ -51,7 +51,11 @@ pub fn CommandInput(placeholder: Option<String>, class: Option<String>) -> Eleme
 #[component]
 pub fn CommandList(children: Element, class: Option<String>) -> Element {
     let class = cn(&[
-        "max-h-[300px] overflow-y-auto overflow-x-hidden p-1",
+        // `min(300px,60svh)` keeps today's 300px cap on tall/desktop
+        // viewports but shrinks it on short mobile viewports instead of
+        // ignoring available height entirely (R5: viewport-relative caps use
+        // `svh`, not a bare pixel value).
+        "max-h-[min(300px,60svh)] overflow-y-auto overflow-x-hidden p-1",
         // Native-scrollbar-fallback theming only, matching `Select`/`Combobox`'s own
         // scope decision (see `select.rs`'s `SelectList`) -- kept uniform across all
         // three listbox-style surfaces rather than giving only this one a custom

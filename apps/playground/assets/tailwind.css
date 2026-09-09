@@ -677,14 +677,14 @@
   .max-h-\[100svh\] {
     max-height: 100svh;
   }
-  .max-h-\[300px\] {
-    max-height: 300px;
-  }
   .max-h-\[calc\(100svh-2rem\)\] {
     max-height: calc(100svh - 2rem);
   }
   .max-h-\[min\(24rem\,90vh\)\] {
     max-height: min(24rem, 90vh);
+  }
+  .max-h-\[min\(300px\,60svh\)\] {
+    max-height: min(300px, 60svh);
   }
   .max-h-\[var\(--adico-positioner-available-size\)\] {
     max-height: var(--adico-positioner-available-size);
@@ -811,6 +811,9 @@
   }
   .w-screen {
     width: 100vw;
+  }
+  .max-w-56 {
+    max-width: calc(var(--spacing) * 56);
   }
   .max-w-\[80\%\] {
     max-width: 80%;
