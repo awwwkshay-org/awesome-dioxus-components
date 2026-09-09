@@ -7,7 +7,7 @@
       "source": "ui/color_picker.rs",
       "targetRoot": "ui",
       "target": "color_picker.rs",
-      "checksum": "bfebb4b9db5d08a1f23ac944403b1d3b8ea6dd4dec5715e0147a581bfaff8b3d"
+      "checksum": "61fc045574af3ad29249f20ad87c2e26936e073086c9115e8404045dc5043604"
     }
   ],
   "registryDependencies": [

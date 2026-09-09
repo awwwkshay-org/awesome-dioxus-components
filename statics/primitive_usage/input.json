@@ -1,5 +1,7 @@
 {
-  "classification": "presentational",
-  "primitiveModules": [],
-  "reason": "Native <input> styling only; no controlled state or primitive import beyond what the consumer wires up."
+  "classification": "delegated",
+  "primitiveModules": [
+    "icons"
+  ],
+  "reason": "When `type` is \"password\", the field owns a small reveal-toggle state (`use_signal`) and renders the shared `Eye`/`EyeOff` icons; every other `type` still renders a bare styled `<input>` with no controlled state."
 }

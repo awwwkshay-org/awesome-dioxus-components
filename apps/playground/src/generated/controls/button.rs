@@ -35,10 +35,9 @@ const _: () = {
 
 /// Generated from `ButtonVariant`'s declared variants.
 pub const BUTTON_VARIANT_OPTIONS: &[(&str, ButtonVariant)] = &[
-    ("Default", ButtonVariant::Default),
-    ("Destructive", ButtonVariant::Destructive),
-    ("Outline", ButtonVariant::Outline),
+    ("Primary", ButtonVariant::Primary),
     ("Secondary", ButtonVariant::Secondary),
+    ("Outline", ButtonVariant::Outline),
     ("Ghost", ButtonVariant::Ghost),
     ("Link", ButtonVariant::Link),
 ];
@@ -46,10 +45,9 @@ pub const BUTTON_VARIANT_OPTIONS: &[(&str, ButtonVariant)] = &[
 const _: () = {
     fn _exhaustive(value: ButtonVariant) {
         match value {
-            ButtonVariant::Default => {}
-            ButtonVariant::Destructive => {}
-            ButtonVariant::Outline => {}
+            ButtonVariant::Primary => {}
             ButtonVariant::Secondary => {}
+            ButtonVariant::Outline => {}
             ButtonVariant::Ghost => {}
             ButtonVariant::Link => {}
         }

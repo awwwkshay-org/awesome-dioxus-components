@@ -62,6 +62,10 @@
           ]
         },
         {
+          "id": "content",
+          "unresolved": "no matching `content` part on axis `dioxus-components`'s `color-picker` entry"
+        },
+        {
           "id": "trigger",
           "props": [
             {
@@ -122,6 +126,10 @@
         {
           "id": "popover",
           "unresolved": "no matching `popover` part on axis `dioxus-primitives`'s `color-picker` entry"
+        },
+        {
+          "id": "content",
+          "unresolved": "no matching `content` part on axis `dioxus-primitives`'s `color-picker` entry"
         },
         {
           "id": "trigger",

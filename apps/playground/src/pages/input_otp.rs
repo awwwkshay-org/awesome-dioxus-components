@@ -1,16 +1,14 @@
-use adico_primitives::icons::{Eye, EyeOff};
 use dioxus::prelude::*;
 
 use crate::components;
 use crate::components::demo::Demo;
-use crate::components::ui::button::{ButtonSize, ButtonVariant};
 use crate::generated::controls::{InputOTPControls, InputOTPDemoState};
 
 #[component]
 pub fn InputOTPPage() -> Element {
     let state = use_signal(InputOTPDemoState::default);
     let mut value = use_signal(String::new);
-    let mut masked = use_signal(|| false);
+    let masked = use_signal(|| true);
     // `length: ReadSignal<usize>` is generator-skipped (Signal-typed), so the
     // slot count is a hand-rolled page control — the `sheet.rs` precedent
     // for generator-skipped shapes.
@@ -52,17 +50,7 @@ pub fn InputOTPPage() -> Element {
                         }
                     }
                 }
-                components::ui::Button {
-                    variant: ButtonVariant::Ghost,
-                    size: ButtonSize::Icon,
-                    aria_label: if masked() { "Show code" } else { "Hide code" },
-                    onclick: move |_| masked.toggle(),
-                    if masked() {
-                        EyeOff { class: "size-4" }
-                    } else {
-                        Eye { class: "size-4" }
-                    }
-                }
+                components::ui::InputOTPRevealToggle { mask: masked }
             }
         }
     }

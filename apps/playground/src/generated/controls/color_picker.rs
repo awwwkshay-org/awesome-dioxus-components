@@ -40,6 +40,15 @@ pub fn ColorPickerPopoverControls(mut state: Signal<ColorPickerPopoverDemoState>
 }
 
 #[component]
+pub fn ColorPickerContentControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Color Picker Content",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}
+
+#[component]
 pub fn ColorPickerTriggerControls() -> Element {
     rsx! {
         ControlGroup { part: "Color Picker Trigger",

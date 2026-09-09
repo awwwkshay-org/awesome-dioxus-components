@@ -75,25 +75,31 @@ test("installed InputOTP masks and unmasks entered digits without losing them", 
   const count = await slots.count();
   expect(count).toBeGreaterThanOrEqual(4);
 
+  // Masked by default (fix-component-defects-and-tone-variants): entry
+  // starts obscured, with an explicit reveal toggle rather than plain text.
+  for (let i = 0; i < count; i++) {
+    await expect(slots.nth(i)).toHaveAttribute("type", "password");
+  }
+
   await slots.first().click();
   await page.keyboard.type("12");
   await expect(slots.nth(0)).toHaveValue("1");
   await expect(slots.nth(1)).toHaveValue("2");
   for (let i = 0; i < count; i++) {
-    await expect(slots.nth(i)).toHaveAttribute("type", "text");
+    await expect(slots.nth(i)).toHaveAttribute("type", "password");
   }
 
-  await page.getByRole("button", { name: "Hide code" }).click();
+  await page.getByRole("button", { name: "Show code" }).click();
   for (let i = 0; i < count; i++) {
-    await expect(slots.nth(i)).toHaveAttribute("type", "password");
+    await expect(slots.nth(i)).toHaveAttribute("type", "text");
   }
   // Masking is presentational only: the entered characters survive.
   await expect(slots.nth(0)).toHaveValue("1");
   await expect(slots.nth(1)).toHaveValue("2");
 
-  await page.getByRole("button", { name: "Show code" }).click();
+  await page.getByRole("button", { name: "Hide code" }).click();
   for (let i = 0; i < count; i++) {
-    await expect(slots.nth(i)).toHaveAttribute("type", "text");
+    await expect(slots.nth(i)).toHaveAttribute("type", "password");
   }
   await expect(slots.nth(0)).toHaveValue("1");
   await expect(slots.nth(1)).toHaveValue("2");

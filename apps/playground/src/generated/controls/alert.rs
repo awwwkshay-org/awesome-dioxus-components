@@ -10,6 +10,9 @@ use crate::components::ui::AlertVariant;
 pub const ALERT_VARIANT_OPTIONS: &[(&str, AlertVariant)] = &[
     ("Default", AlertVariant::Default),
     ("Destructive", AlertVariant::Destructive),
+    ("Success", AlertVariant::Success),
+    ("Warning", AlertVariant::Warning),
+    ("Info", AlertVariant::Info),
 ];
 
 const _: () = {
@@ -17,6 +20,9 @@ const _: () = {
         match value {
             AlertVariant::Default => {}
             AlertVariant::Destructive => {}
+            AlertVariant::Success => {}
+            AlertVariant::Warning => {}
+            AlertVariant::Info => {}
         }
     }
 };

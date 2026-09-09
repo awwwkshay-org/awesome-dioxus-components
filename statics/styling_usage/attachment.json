@@ -1,8 +1,13 @@
 {
   "tailwindOnly": true,
   "styleException": [],
-  "tokenCompliant": true,
-  "colorException": [],
+  "tokenCompliant": false,
+  "colorException": [
+    {
+      "value": "text-emerald-600 dark:text-emerald-500 (complete-status CircleCheck icon)",
+      "reason": "Pre-existing hardcode discovered when `fix-component-defects-and-tone-variants` extended this checker's non-token-color detection to cover the emerald/amber prefixes (previously absent, which is also why `badge.rs`'s and `toast.rs`'s own emerald/amber hardcodes went uncaught before that change fixed them). Out of scope for that change -- attachment.rs is not one of the components it touches -- recorded here rather than silently fixed or silently ignored; a future change should consider rerouting this to the theme's `--success` token."
+    }
+  ],
   "radiusException": [
     {
       "part": "trigger",

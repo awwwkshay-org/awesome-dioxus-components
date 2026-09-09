@@ -9,42 +9,46 @@
 use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
-use crate::adico_lib::variants::Radius;
+use crate::adico_lib::variants::{Radius, Tone};
 use crate::components::ui::spinner::Spinner;
 
-/// The semantic visual treatment for a [`Button`].
+/// The shape/structure of a [`Button`], independent of its [`Tone`] color
+/// (`ButtonProps::color`). `Destructive` is not a shape -- reach the same
+/// look via `variant: Primary, color: Tone::Error`.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum ButtonVariant {
-    /// Primary action styling.
+    /// Filled, solid surface.
     #[default]
-    Default,
-    /// Destructive action styling.
-    Destructive,
-    /// Bordered neutral styling.
-    Outline,
-    /// Secondary filled styling.
+    Primary,
+    /// Muted filled surface.
     Secondary,
-    /// Low-emphasis transparent styling.
+    /// Bordered, unfilled surface.
+    Outline,
+    /// Transparent-until-hover surface.
     Ghost,
     /// Inline semantic-link styling, while remaining a native button.
     Link,
 }
 
 impl ButtonVariant {
-    fn class(self) -> &'static str {
+    /// Structural classes this shape owns beyond its color, factored out of
+    /// [`Tone`]'s shared per-shape methods so `Button`'s exact pre-existing
+    /// look survives at `color: Tone::Default` (see `registry/lib/variants.rs`).
+    fn shape_extra_class(self) -> &'static str {
         match self {
-            Self::Default => "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
-            Self::Destructive => {
-                "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40"
-            }
-            Self::Outline => {
-                "border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground"
-            }
-            Self::Secondary => {
-                "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80"
-            }
-            Self::Ghost => "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-            Self::Link => "h-auto px-0 py-0 text-primary underline-offset-4 hover:underline",
+            Self::Primary | Self::Secondary | Self::Outline => "shadow-xs",
+            Self::Ghost => "dark:hover:bg-accent/50",
+            Self::Link => "h-auto px-0 py-0",
+        }
+    }
+
+    fn color_class(self, color: Tone) -> &'static str {
+        match self {
+            Self::Primary => color.solid_class(),
+            Self::Secondary => color.soft_class(),
+            Self::Outline => color.outline_class(),
+            Self::Ghost => color.ghost_class(),
+            Self::Link => color.link_class(),
         }
     }
 }
@@ -90,9 +94,13 @@ impl ButtonSize {
 /// Props for [`Button`].
 #[derive(Props, Clone, PartialEq)]
 pub struct ButtonProps {
-    /// Semantic visual variant.
+    /// Shape/structure of the button, independent of `color`.
     #[props(default)]
     pub variant: ButtonVariant,
+    /// Semantic color, independent of `variant`. `Tone::Default` renders
+    /// `variant`'s exact pre-existing look; any other value recolors it.
+    #[props(default)]
+    pub color: Tone,
     /// Visual size.
     #[props(default)]
     pub size: ButtonSize,
@@ -132,7 +140,9 @@ pub struct ButtonProps {
 pub fn Button(props: ButtonProps) -> Element {
     let class = cn(&[
         "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap text-sm font-medium outline-none transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
-        props.variant.class(),
+        props.variant.shape_extra_class(),
+        props.variant.color_class(props.color),
+        props.color.focus_ring_class(),
         props.size.class(),
         props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
@@ -163,17 +173,59 @@ mod tests {
     use super::*;
 
     #[test]
-    fn every_public_variant_has_a_distinct_semantic_class() {
-        assert!(ButtonVariant::Default.class().contains("bg-primary"));
+    fn every_shape_has_a_distinct_default_color_class() {
         assert!(
-            ButtonVariant::Destructive
-                .class()
-                .contains("bg-destructive")
+            ButtonVariant::Primary
+                .color_class(Tone::Default)
+                .contains("bg-primary")
         );
-        assert!(ButtonVariant::Outline.class().contains("border"));
-        assert!(ButtonVariant::Secondary.class().contains("bg-secondary"));
-        assert!(ButtonVariant::Ghost.class().contains("hover:bg-accent"));
-        assert!(ButtonVariant::Link.class().contains("underline"));
+        assert!(
+            ButtonVariant::Outline
+                .color_class(Tone::Default)
+                .contains("border")
+        );
+        assert!(
+            ButtonVariant::Secondary
+                .color_class(Tone::Default)
+                .contains("bg-secondary")
+        );
+        assert!(
+            ButtonVariant::Ghost
+                .color_class(Tone::Default)
+                .contains("hover:bg-accent")
+        );
+        assert!(
+            ButtonVariant::Link
+                .color_class(Tone::Default)
+                .contains("underline")
+        );
+    }
+
+    #[test]
+    fn every_shape_recolors_with_a_non_default_tone() {
+        for variant in [
+            ButtonVariant::Primary,
+            ButtonVariant::Secondary,
+            ButtonVariant::Outline,
+            ButtonVariant::Ghost,
+            ButtonVariant::Link,
+        ] {
+            assert!(variant.color_class(Tone::Success).contains("success"));
+            assert!(variant.color_class(Tone::Warning).contains("warning"));
+            assert!(variant.color_class(Tone::Error).contains("destructive"));
+            assert!(variant.color_class(Tone::Info).contains("info"));
+        }
+    }
+
+    #[test]
+    fn removed_destructive_shape_is_reachable_via_color() {
+        // variant: Primary, color: Error must match the old `Destructive`
+        // shape's look (modulo `text-white` -> `text-destructive-foreground`,
+        // both resolving to the same near-white color).
+        let class = ButtonVariant::Primary.color_class(Tone::Error);
+        assert!(class.contains("bg-destructive"));
+        assert!(class.contains("text-destructive-foreground"));
+        assert!(class.contains("hover:bg-destructive/90"));
     }
 
     #[test]

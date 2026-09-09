@@ -7,7 +7,7 @@
       "source": "ui/button.rs",
       "targetRoot": "ui",
       "target": "button.rs",
-      "checksum": "bc3b73c1f6cc3c5c3f62d2d914b6b2756ae33ad1ceca58c3f925da1faf318a1e"
+      "checksum": "1c7c9e6c52ab7d98a11685fc6078c8ca7ef9c2d5b70dc891ba84d97958cf3fa4"
     }
   ],
   "registryDependencies": [
@@ -41,8 +41,8 @@
   ],
   "documentation": {
     "slug": "button",
-    "compositionNote": "Use caller-composed children for text, icons, and icon-plus-text content. `ButtonVariant` and `ButtonSize` mirror the current shadcn visual contract; native Dioxus button/global attributes and events are forwarded.",
-    "usage": "Button { variant: ButtonVariant::Default, onclick: move |_| {}, \"Save\" }",
+    "compositionNote": "Use caller-composed children for text, icons, and icon-plus-text content. `ButtonVariant` is a shape-only axis (Primary/Secondary/Outline/Ghost/Link) orthogonal to a separate `color: Tone` prop (Default/Success/Warning/Error/Info) -- upstream shadcn's Destructive is reached via `color: Tone::Error` on any shape rather than as its own shape value. `ButtonSize` mirrors the current shadcn visual contract; native Dioxus button/global attributes and events are forwarded.",
+    "usage": "Button { variant: ButtonVariant::Primary, onclick: move |_| {}, \"Save\" }",
     "accessibility": "A native `<button>`; visible content is caller-composed through `children`, so text-only, icon-only, and icon-plus-text buttons all use the same accessible native control (`registry/ui/button.rs`). Icon-only usage should include an explicit `aria-label`.",
     "keyboard": "No component-specific keyboard handling beyond native button activation (Enter/Space)."
   },

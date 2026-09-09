@@ -13,6 +13,7 @@
 
 use dioxus::prelude::*;
 
+use adico_primitives::icons::{Eye, EyeOff};
 use adico_primitives::otp_field::{
     OtpFieldInput as OtpFieldPrimitiveInput, OtpFieldRoot as OtpFieldPrimitiveRoot,
     OtpFieldSeparator as OtpFieldPrimitiveSeparator,
@@ -38,8 +39,10 @@ pub fn InputOTP(
     #[props(default)] read_only: ReadSignal<bool>,
     /// Visually obscures each entered character (password-style slots).
     /// Purely presentational: the value and its callbacks are identical in
-    /// both modes, and toggling never clears entered characters.
-    #[props(default)]
+    /// both modes, and toggling never clears entered characters. Defaults to
+    /// masked, so an OTP field is masked-by-default with an explicit reveal
+    /// (see [`InputOTPRevealToggle`]) rather than plain-by-default.
+    #[props(default = ReadSignal::new(Signal::new(true)))]
     mask: ReadSignal<bool>,
     #[props(default)] name: ReadSignal<String>,
     class: Option<String>,
@@ -97,5 +100,48 @@ pub fn InputOTPSeparator() -> Element {
         OtpFieldPrimitiveSeparator {
             span { class: "text-muted-foreground", "-" }
         }
+    }
+}
+
+/// Toggles an [`InputOTP`]'s masked state. Compose alongside `InputOTP`,
+/// passing the same `Signal<bool>` to both this part's `mask` prop and
+/// `InputOTP`'s own `mask` prop, so activating the toggle flips the field
+/// between masked and plain rendering without altering the entered value.
+#[component]
+pub fn InputOTPRevealToggle(
+    mut mask: Signal<bool>,
+    #[props(default)] class: Option<String>,
+) -> Element {
+    let class = cn(&[
+        "inline-flex size-9 shrink-0 items-center justify-center text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50",
+        class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        button {
+            r#type: "button",
+            class,
+            aria_label: if mask() { "Show code" } else { "Hide code" },
+            onclick: move |_| mask.toggle(),
+            if mask() {
+                EyeOff { class: "size-4" }
+            } else {
+                Eye { class: "size-4" }
+            }
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn reveal_toggle_base_class_is_icon_sized_and_focusable() {
+        let class = cn(&[
+            "inline-flex size-9 shrink-0 items-center justify-center text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50",
+            "",
+        ]);
+        assert!(class.contains("size-9"));
+        assert!(class.contains("focus-visible:ring-2"));
     }
 }

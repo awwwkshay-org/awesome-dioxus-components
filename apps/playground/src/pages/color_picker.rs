@@ -26,7 +26,7 @@ pub fn ColorPickerPage() -> Element {
                     open: popover_state().open,
                     default_open: popover_state().default_open,
                     components::ui::ColorPickerTrigger {}
-                    components::ui::PopoverContent { class: "w-auto p-4",
+                    components::ui::ColorPickerContent {
                         components::ui::ColorArea {
                             components::ui::AreaTrack {
                                 components::ui::AreaThumb {

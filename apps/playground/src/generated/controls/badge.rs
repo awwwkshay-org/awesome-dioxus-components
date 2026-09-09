@@ -8,25 +8,21 @@ use crate::components::ui::{Badge, BadgeVariant};
 
 /// Generated from `BadgeVariant`'s declared variants.
 pub const BADGE_VARIANT_OPTIONS: &[(&str, BadgeVariant)] = &[
-    ("Default", BadgeVariant::Default),
+    ("Primary", BadgeVariant::Primary),
     ("Secondary", BadgeVariant::Secondary),
-    ("Destructive", BadgeVariant::Destructive),
     ("Outline", BadgeVariant::Outline),
     ("Ghost", BadgeVariant::Ghost),
     ("Link", BadgeVariant::Link),
-    ("Verified", BadgeVariant::Verified),
 ];
 
 const _: () = {
     fn _exhaustive(value: BadgeVariant) {
         match value {
-            BadgeVariant::Default => {}
+            BadgeVariant::Primary => {}
             BadgeVariant::Secondary => {}
-            BadgeVariant::Destructive => {}
             BadgeVariant::Outline => {}
             BadgeVariant::Ghost => {}
             BadgeVariant::Link => {}
-            BadgeVariant::Verified => {}
         }
     }
 };

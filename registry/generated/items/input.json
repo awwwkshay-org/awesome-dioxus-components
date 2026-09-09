@@ -7,7 +7,7 @@
       "source": "ui/input.rs",
       "targetRoot": "ui",
       "target": "input.rs",
-      "checksum": "edb23b9ba5f8d90cb0135782e0024c66da3330c30b6b257e2ac3094abcc51e3d"
+      "checksum": "030b924c7ede444a75de0a9d8d11084ee5d19fafe25238a37ef18ceef56fcefb"
     }
   ],
   "registryDependencies": [
@@ -20,6 +20,16 @@
       "package": null,
       "version": "=0.7.9",
       "features": [],
+      "defaultFeatures": true,
+      "target": null
+    },
+    {
+      "crate": "adico-primitives",
+      "package": null,
+      "version": "=0.1.0",
+      "features": [
+        "web"
+      ],
       "defaultFeatures": true,
       "target": null
     }

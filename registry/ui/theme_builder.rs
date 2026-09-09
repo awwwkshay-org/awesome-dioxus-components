@@ -1,7 +1,7 @@
 //! Source-owned Dioxus-only theme customization builder for Dioxus (no
 //! shadcn equivalent), backed by the owned adico primitive layer.
 //!
-//! Productizes the full 28-semantic-token editor, independent light/dark
+//! Productizes the full 34-semantic-token editor, independent light/dark
 //! values, deterministic "generate theme," and CSS export prototyped in
 //! `apps/playground/src/theme.rs`'s advanced customization tray. Unlike
 //! `theme-switcher` (which only distills the primary-color preset concept),
@@ -331,6 +331,12 @@ enum ThemeToken {
     AccentForeground,
     Destructive,
     DestructiveForeground,
+    Success,
+    SuccessForeground,
+    Warning,
+    WarningForeground,
+    Info,
+    InfoForeground,
     Border,
     Input,
     Ring,
@@ -364,6 +370,12 @@ impl ThemeToken {
             Self::AccentForeground => "--accent-foreground",
             Self::Destructive => "--destructive",
             Self::DestructiveForeground => "--destructive-foreground",
+            Self::Success => "--success",
+            Self::SuccessForeground => "--success-foreground",
+            Self::Warning => "--warning",
+            Self::WarningForeground => "--warning-foreground",
+            Self::Info => "--info",
+            Self::InfoForeground => "--info-foreground",
             Self::Border => "--border",
             Self::Input => "--input",
             Self::Ring => "--ring",
@@ -403,6 +415,12 @@ const ROLE_TOKENS: &[ThemeToken] = &[
     ThemeToken::AccentForeground,
     ThemeToken::Destructive,
     ThemeToken::DestructiveForeground,
+    ThemeToken::Success,
+    ThemeToken::SuccessForeground,
+    ThemeToken::Warning,
+    ThemeToken::WarningForeground,
+    ThemeToken::Info,
+    ThemeToken::InfoForeground,
 ];
 const STRUCTURAL_TOKENS: &[ThemeToken] = &[
     ThemeToken::Border,
@@ -494,6 +512,12 @@ pub struct ThemeVariables {
     pub accent_foreground: String,
     pub destructive: String,
     pub destructive_foreground: String,
+    pub success: String,
+    pub success_foreground: String,
+    pub warning: String,
+    pub warning_foreground: String,
+    pub info: String,
+    pub info_foreground: String,
     pub border: String,
     pub input: String,
     pub ring: String,
@@ -527,6 +551,12 @@ impl ThemeVariables {
             accent_foreground: "222.2 47.4% 11.2%".into(),
             destructive: "0 84.2% 60.2%".into(),
             destructive_foreground: "210 40% 98%".into(),
+            success: "142 76% 36%".into(),
+            success_foreground: "210 40% 98%".into(),
+            warning: "38 92% 50%".into(),
+            warning_foreground: "20 14.3% 4.1%".into(),
+            info: "199 89% 48%".into(),
+            info_foreground: "210 40% 98%".into(),
             border: "214.3 31.8% 91.4%".into(),
             input: "214.3 31.8% 91.4%".into(),
             ring: "222.2 84% 4.9%".into(),
@@ -560,6 +590,12 @@ impl ThemeVariables {
             accent_foreground: "210 40% 98%".into(),
             destructive: "0 62.8% 30.6%".into(),
             destructive_foreground: "210 40% 98%".into(),
+            success: "142 70% 30%".into(),
+            success_foreground: "210 40% 98%".into(),
+            warning: "38 85% 40%".into(),
+            warning_foreground: "210 40% 98%".into(),
+            info: "199 80% 40%".into(),
+            info_foreground: "210 40% 98%".into(),
             border: "217.2 32.6% 17.5%".into(),
             input: "217.2 32.6% 17.5%".into(),
             ring: "212.7 26.8% 83.9%".into(),
@@ -593,6 +629,12 @@ impl ThemeVariables {
             ThemeToken::AccentForeground => &self.accent_foreground,
             ThemeToken::Destructive => &self.destructive,
             ThemeToken::DestructiveForeground => &self.destructive_foreground,
+            ThemeToken::Success => &self.success,
+            ThemeToken::SuccessForeground => &self.success_foreground,
+            ThemeToken::Warning => &self.warning,
+            ThemeToken::WarningForeground => &self.warning_foreground,
+            ThemeToken::Info => &self.info,
+            ThemeToken::InfoForeground => &self.info_foreground,
             ThemeToken::Border => &self.border,
             ThemeToken::Input => &self.input,
             ThemeToken::Ring => &self.ring,
@@ -626,6 +668,12 @@ impl ThemeVariables {
             ThemeToken::AccentForeground => self.accent_foreground = value,
             ThemeToken::Destructive => self.destructive = value,
             ThemeToken::DestructiveForeground => self.destructive_foreground = value,
+            ThemeToken::Success => self.success = value,
+            ThemeToken::SuccessForeground => self.success_foreground = value,
+            ThemeToken::Warning => self.warning = value,
+            ThemeToken::WarningForeground => self.warning_foreground = value,
+            ThemeToken::Info => self.info = value,
+            ThemeToken::InfoForeground => self.info_foreground = value,
             ThemeToken::Border => self.border = value,
             ThemeToken::Input => self.input = value,
             ThemeToken::Ring => self.ring = value,
@@ -644,7 +692,7 @@ impl ThemeVariables {
     /// The token pairs [`apply_root_properties`]/[`read_root_properties`]
     /// need to apply or read back this appearance on the document root.
     ///
-    /// Deliberately only the 28 raw `--foo` custom properties, **not** the
+    /// Deliberately only the 34 raw `--foo` custom properties, **not** the
     /// `--color-foo` Tailwind aliases the installed `@theme` block derives
     /// from them (`--color-primary: hsl(var(--primary))`, etc.): `var()`
     /// lookups are live, so setting `--primary` here already updates
@@ -675,6 +723,12 @@ impl ThemeVariables {
                 "--destructive-foreground",
                 self.destructive_foreground.clone(),
             ),
+            ("--success", self.success.clone()),
+            ("--success-foreground", self.success_foreground.clone()),
+            ("--warning", self.warning.clone()),
+            ("--warning-foreground", self.warning_foreground.clone()),
+            ("--info", self.info.clone()),
+            ("--info-foreground", self.info_foreground.clone()),
             ("--border", self.border.clone()),
             ("--input", self.input.clone()),
             ("--ring", self.ring.clone()),
@@ -717,6 +771,12 @@ impl ThemeVariables {
                 "--destructive-foreground",
                 self.destructive_foreground.as_str(),
             ),
+            ("--success", self.success.as_str()),
+            ("--success-foreground", self.success_foreground.as_str()),
+            ("--warning", self.warning.as_str()),
+            ("--warning-foreground", self.warning_foreground.as_str()),
+            ("--info", self.info.as_str()),
+            ("--info-foreground", self.info_foreground.as_str()),
             ("--border", self.border.as_str()),
             ("--input", self.input.as_str()),
             ("--ring", self.ring.as_str()),
@@ -868,7 +928,7 @@ fn next_palette_index(state: &mut u64) -> usize {
     ((*state >> 32) as usize) % Palette::ALL.len()
 }
 
-/// A self-contained theme customization builder: a full 28-semantic-token
+/// A self-contained theme customization builder: a full 34-semantic-token
 /// editor with independent light/dark values, palette presets, a
 /// deterministic "generate theme" action, and a CSS export. Applies its
 /// edited tokens live to the document root via [`apply_root_properties`], so
@@ -1326,6 +1386,9 @@ mod tests {
                             "--secondary",
                             "--accent",
                             "--destructive",
+                            "--success",
+                            "--warning",
+                            "--info",
                             "--border",
                             "--input",
                             "--ring",

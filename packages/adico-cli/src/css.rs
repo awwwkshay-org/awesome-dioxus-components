@@ -555,6 +555,12 @@ fn theme_region() -> String {
 \x20 --color-accent-foreground: hsl(var(--accent-foreground));\n\
 \x20 --color-destructive: hsl(var(--destructive));\n\
 \x20 --color-destructive-foreground: hsl(var(--destructive-foreground));\n\
+\x20 --color-success: hsl(var(--success));\n\
+\x20 --color-success-foreground: hsl(var(--success-foreground));\n\
+\x20 --color-warning: hsl(var(--warning));\n\
+\x20 --color-warning-foreground: hsl(var(--warning-foreground));\n\
+\x20 --color-info: hsl(var(--info));\n\
+\x20 --color-info-foreground: hsl(var(--info-foreground));\n\
 \x20 --color-border: hsl(var(--border));\n\
 \x20 --color-input: hsl(var(--input));\n\
 \x20 --color-ring: hsl(var(--ring));\n\
@@ -597,6 +603,12 @@ fn theme_region() -> String {
 \x20 --accent-foreground: 222.2 47.4% 11.2%;\n\
 \x20 --destructive: 0 84.2% 60.2%;\n\
 \x20 --destructive-foreground: 210 40% 98%;\n\
+\x20 --success: 142 76% 36%;\n\
+\x20 --success-foreground: 210 40% 98%;\n\
+\x20 --warning: 38 92% 50%;\n\
+\x20 --warning-foreground: 20 14.3% 4.1%;\n\
+\x20 --info: 199 89% 48%;\n\
+\x20 --info-foreground: 210 40% 98%;\n\
 \x20 --border: 214.3 31.8% 91.4%;\n\
 \x20 --input: 214.3 31.8% 91.4%;\n\
 \x20 --ring: 222.2 84% 4.9%;\n\
@@ -633,6 +645,12 @@ fn theme_region() -> String {
 \x20 --accent-foreground: 210 40% 98%;\n\
 \x20 --destructive: 0 62.8% 30.6%;\n\
 \x20 --destructive-foreground: 210 40% 98%;\n\
+\x20 --success: 142 70% 30%;\n\
+\x20 --success-foreground: 210 40% 98%;\n\
+\x20 --warning: 38 85% 40%;\n\
+\x20 --warning-foreground: 210 40% 98%;\n\
+\x20 --info: 199 80% 40%;\n\
+\x20 --info-foreground: 210 40% 98%;\n\
 \x20 --border: 217.2 32.6% 17.5%;\n\
 \x20 --input: 217.2 32.6% 17.5%;\n\
 \x20 --ring: 212.7 26.8% 83.9%;\n\
@@ -754,6 +772,22 @@ mod tests {
         }
         assert!(updated.contains("--sidebar: "));
         assert!(!updated.contains("--sidebar-background"));
+        for tone_token in [
+            "--success",
+            "--success-foreground",
+            "--warning",
+            "--warning-foreground",
+            "--info",
+            "--info-foreground",
+            "--color-success",
+            "--color-success-foreground",
+            "--color-warning",
+            "--color-warning-foreground",
+            "--color-info",
+            "--color-info-foreground",
+        ] {
+            assert!(updated.contains(tone_token), "missing {tone_token}");
+        }
         for radius_alias in [
             "--radius-sm",
             "--radius-md",

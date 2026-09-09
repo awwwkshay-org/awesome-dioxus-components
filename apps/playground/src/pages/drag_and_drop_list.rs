@@ -27,18 +27,31 @@ pub fn DragAndDropListPage() -> Element {
             components::ui::DragAndDropList { items, class: "w-full max-w-sm",
                 components::ui::DragAndDropInstructions {}
                 components::ui::DragAndDropListItems { aria_label: state().aria_label,
-                    for item in components::ui::use_drag_and_drop_list_items() {
-                        Fragment { key: "{item.key}",
-                            components::ui::DragAndDropDropIndicator { index: item.index, position: "before" }
-                            components::ui::DragAndDropListItem { index: item.index, item_key: item.key.clone(),
-                                GripVertical { class: "size-4 shrink-0 cursor-grab text-muted-foreground" }
-                                {item.children}
-                            }
-                            components::ui::DragAndDropDropIndicator { index: item.index, position: "after" }
-                        }
-                    }
+                    DragAndDropListRows {}
                 }
                 components::ui::DragAndDropLiveRegion {}
+            }
+        }
+    }
+}
+
+/// The sortable rows, split into their own component so
+/// `use_drag_and_drop_list_items()` runs in a scope descended from
+/// `DragAndDropList`'s context provider. Calling that hook directly inside
+/// `DragAndDropListPage`'s body would run it in the page's own scope — an
+/// *ancestor* of the provider, not a descendant — which panics, since
+/// `consume_context` only walks upward from where it's called.
+#[component]
+fn DragAndDropListRows() -> Element {
+    rsx! {
+        for item in components::ui::use_drag_and_drop_list_items() {
+            Fragment { key: "{item.key}",
+                components::ui::DragAndDropDropIndicator { index: item.index, position: "before" }
+                components::ui::DragAndDropListItem { index: item.index, item_key: item.key.clone(),
+                    GripVertical { class: "size-4 shrink-0 cursor-grab text-muted-foreground" }
+                    {item.children}
+                }
+                components::ui::DragAndDropDropIndicator { index: item.index, position: "after" }
             }
         }
     }

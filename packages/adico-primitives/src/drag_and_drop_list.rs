@@ -445,9 +445,15 @@ pub fn use_drag_and_drop_list_items() -> Vec<DragAndDropListRenderItem> {
 #[component]
 pub fn DragAndDropListItems(props: DragAndDropListItemsProps) -> Element {
     let mut ctx: DragAndDropContext = use_context();
+    // Called unconditionally (not inside the `unwrap_or_else` below) so this
+    // component's hook count stays stable whether or not a caller passes
+    // explicit children -- calling it only inside the default-children branch
+    // would violate the Rules of Hooks if `props.children` ever toggled
+    // between `None` and `Some` across renders of the same instance.
+    let default_items = use_drag_and_drop_list_items();
     let children = props.children.unwrap_or_else(|| {
         rsx! {
-            for item in use_drag_and_drop_list_items() {
+            for item in default_items {
                 Fragment {
                     key: "{item.key}",
                     DragAndDropDropIndicator {

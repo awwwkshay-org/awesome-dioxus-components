@@ -13,11 +13,11 @@
     },
     {
       "address": "@adico/alert",
-      "manifestDigest": "ba01a4a99dbff68d715a0e683f4630e611b0847a1edadbe82d5b65104931041d",
+      "manifestDigest": "b309cf4815e3d42a0d8574c619b67db66fc1f8e7cc80134e1783ee9b86de78f9",
       "files": [
         {
           "path": "src/components/ui/alert.rs",
-          "checksum": "c94e992d01049bc54d9cf446fda160ab0861eb445e503ae09a093e601693d1e9"
+          "checksum": "7f302bf1ff41d268430aca79510f8896f01d2d4630ed8f41a48895d64863e86a"
         }
       ]
     },
@@ -53,21 +53,21 @@
     },
     {
       "address": "@adico/avatar",
-      "manifestDigest": "ba01a4a99dbff68d715a0e683f4630e611b0847a1edadbe82d5b65104931041d",
+      "manifestDigest": "b309cf4815e3d42a0d8574c619b67db66fc1f8e7cc80134e1783ee9b86de78f9",
       "files": [
         {
           "path": "src/components/ui/avatar.rs",
-          "checksum": "773d210344dc42c7689ff929789312c43e106f50270b4a0436d7f09334b9a2e4"
+          "checksum": "058108897d262d7743f17881c37e093ea90b82028c280cfd3dea1b5ec79ed0f3"
         }
       ]
     },
     {
       "address": "@adico/badge",
-      "manifestDigest": "ba01a4a99dbff68d715a0e683f4630e611b0847a1edadbe82d5b65104931041d",
+      "manifestDigest": "56a682418397d65530f33c632a6c1a490eeff206793bf9c8fe83bfc5b585febf",
       "files": [
         {
           "path": "src/components/ui/badge.rs",
-          "checksum": "c883f55a2fba6629e9771615b3b3c0fede3caf19649a780ac899beb9ab389b25"
+          "checksum": "fc49100155715a980299931bd3f3ca356d6502a32f07d764e3d996832475d283"
         }
       ]
     },
@@ -93,11 +93,11 @@
     },
     {
       "address": "@adico/button",
-      "manifestDigest": "caaa2c9919c520338748808c52a09263d3fb609c191d59a20e99ae2698a47b5d",
+      "manifestDigest": "56a682418397d65530f33c632a6c1a490eeff206793bf9c8fe83bfc5b585febf",
       "files": [
         {
           "path": "src/components/ui/button.rs",
-          "checksum": "bc3b73c1f6cc3c5c3f62d2d914b6b2756ae33ad1ceca58c3f925da1faf318a1e"
+          "checksum": "1c7c9e6c52ab7d98a11685fc6078c8ca7ef9c2d5b70dc891ba84d97958cf3fa4"
         }
       ]
     },
@@ -153,7 +153,7 @@
     },
     {
       "address": "@adico/cn",
-      "manifestDigest": "0807c76b2ba2a41abff8d5a86c2fc008dd355234d1245d26daaa47b4d3adf85e",
+      "manifestDigest": "56a682418397d65530f33c632a6c1a490eeff206793bf9c8fe83bfc5b585febf",
       "files": [
         {
           "path": "src/adico_lib/cn.rs",
@@ -173,11 +173,11 @@
     },
     {
       "address": "@adico/color-picker",
-      "manifestDigest": "caaa2c9919c520338748808c52a09263d3fb609c191d59a20e99ae2698a47b5d",
+      "manifestDigest": "4a6a9b9e5a51c867fc51c2c49cc41a45c4ccd19580a25603b416ca4e008a0a0b",
       "files": [
         {
           "path": "src/components/ui/color_picker.rs",
-          "checksum": "bfebb4b9db5d08a1f23ac944403b1d3b8ea6dd4dec5715e0147a581bfaff8b3d"
+          "checksum": "61fc045574af3ad29249f20ad87c2e26936e073086c9115e8404045dc5043604"
         }
       ]
     },
@@ -213,7 +213,7 @@
     },
     {
       "address": "@adico/copy-button",
-      "manifestDigest": "caaa2c9919c520338748808c52a09263d3fb609c191d59a20e99ae2698a47b5d",
+      "manifestDigest": "b309cf4815e3d42a0d8574c619b67db66fc1f8e7cc80134e1783ee9b86de78f9",
       "files": [
         {
           "path": "src/components/ui/copy_button.rs",
@@ -313,11 +313,11 @@
     },
     {
       "address": "@adico/input",
-      "manifestDigest": "ba01a4a99dbff68d715a0e683f4630e611b0847a1edadbe82d5b65104931041d",
+      "manifestDigest": "8865f3c2cc769a007082a84cac5e3b2cd90848a41071dbaa4df4c8ec899aee34",
       "files": [
         {
           "path": "src/components/ui/input.rs",
-          "checksum": "edb23b9ba5f8d90cb0135782e0024c66da3330c30b6b257e2ac3094abcc51e3d"
+          "checksum": "030b924c7ede444a75de0a9d8d11084ee5d19fafe25238a37ef18ceef56fcefb"
         }
       ]
     },
@@ -333,11 +333,11 @@
     },
     {
       "address": "@adico/input-otp",
-      "manifestDigest": "ba01a4a99dbff68d715a0e683f4630e611b0847a1edadbe82d5b65104931041d",
+      "manifestDigest": "b309cf4815e3d42a0d8574c619b67db66fc1f8e7cc80134e1783ee9b86de78f9",
       "files": [
         {
           "path": "src/components/ui/input_otp.rs",
-          "checksum": "6774ec365219f98cfdd75fa41279fcd844a0e14d158821d659c1388df39916b2"
+          "checksum": "e0508223906f4e9c53507750964ee1cb1cea11c005bbab354925e230449f8630"
         }
       ]
     },
@@ -423,7 +423,7 @@
     },
     {
       "address": "@adico/native-select",
-      "manifestDigest": "5ae1a7a94e46d8fff7d7057a17a87baf0975a56d75c0a9489908d046931fdb28",
+      "manifestDigest": "4a6a9b9e5a51c867fc51c2c49cc41a45c4ccd19580a25603b416ca4e008a0a0b",
       "files": [
         {
           "path": "src/components/ui/native_select.rs",
@@ -453,11 +453,11 @@
     },
     {
       "address": "@adico/popover",
-      "manifestDigest": "5ae1a7a94e46d8fff7d7057a17a87baf0975a56d75c0a9489908d046931fdb28",
+      "manifestDigest": "4a6a9b9e5a51c867fc51c2c49cc41a45c4ccd19580a25603b416ca4e008a0a0b",
       "files": [
         {
           "path": "src/components/ui/popover.rs",
-          "checksum": "d2771f1a9f56b68d89dfc0fafa996d12d713ea45f76a1c54fee3a7b9d30e982e"
+          "checksum": "4748eabcf53be2ea39338f33a19c8113289c3d6a95d452ea61be898f3c5ad463"
         }
       ]
     },
@@ -543,7 +543,7 @@
     },
     {
       "address": "@adico/slider",
-      "manifestDigest": "caaa2c9919c520338748808c52a09263d3fb609c191d59a20e99ae2698a47b5d",
+      "manifestDigest": "4a6a9b9e5a51c867fc51c2c49cc41a45c4ccd19580a25603b416ca4e008a0a0b",
       "files": [
         {
           "path": "src/components/ui/slider.rs",
@@ -553,7 +553,7 @@
     },
     {
       "address": "@adico/spinner",
-      "manifestDigest": "caaa2c9919c520338748808c52a09263d3fb609c191d59a20e99ae2698a47b5d",
+      "manifestDigest": "56a682418397d65530f33c632a6c1a490eeff206793bf9c8fe83bfc5b585febf",
       "files": [
         {
           "path": "src/components/ui/spinner.rs",
@@ -593,11 +593,11 @@
     },
     {
       "address": "@adico/tag-group",
-      "manifestDigest": "ba01a4a99dbff68d715a0e683f4630e611b0847a1edadbe82d5b65104931041d",
+      "manifestDigest": "56a682418397d65530f33c632a6c1a490eeff206793bf9c8fe83bfc5b585febf",
       "files": [
         {
           "path": "src/components/ui/tag_group.rs",
-          "checksum": "ba180eaf98c34e2d35c1f62d8bdff436fb82887bbeac6e4a5b8903a87381c5be"
+          "checksum": "674170332993f6be16eef1a004bf0a16a8c7ffac3d84f446f91d19fe5d5235ff"
         }
       ]
     },
@@ -613,11 +613,11 @@
     },
     {
       "address": "@adico/theme-builder",
-      "manifestDigest": "caaa2c9919c520338748808c52a09263d3fb609c191d59a20e99ae2698a47b5d",
+      "manifestDigest": "b309cf4815e3d42a0d8574c619b67db66fc1f8e7cc80134e1783ee9b86de78f9",
       "files": [
         {
           "path": "src/components/ui/theme_builder.rs",
-          "checksum": "bf5105dbb08d08da6eac3a6211aadc116296cccc0f76aca53a489d1e098cd347"
+          "checksum": "25ad49080e4edd2c147f1b0f3419a23682ec7e223fdc30a06411453717c795fd"
         }
       ]
     },
@@ -643,11 +643,11 @@
     },
     {
       "address": "@adico/toast",
-      "manifestDigest": "ba01a4a99dbff68d715a0e683f4630e611b0847a1edadbe82d5b65104931041d",
+      "manifestDigest": "b309cf4815e3d42a0d8574c619b67db66fc1f8e7cc80134e1783ee9b86de78f9",
       "files": [
         {
           "path": "src/components/ui/toast.rs",
-          "checksum": "2363d13a06a807ff16d02e6e42f8ac2839c9396f7c738a793727ddb2cdef6c8b"
+          "checksum": "93d8341fa85cfcee77f067cfd254c5b9d0391ed44ab39a66b82f15cc4a0cbab2"
         }
       ]
     },
@@ -693,11 +693,11 @@
     },
     {
       "address": "@adico/variants",
-      "manifestDigest": "5ae1a7a94e46d8fff7d7057a17a87baf0975a56d75c0a9489908d046931fdb28",
+      "manifestDigest": "56a682418397d65530f33c632a6c1a490eeff206793bf9c8fe83bfc5b585febf",
       "files": [
         {
           "path": "src/adico_lib/variants.rs",
-          "checksum": "dffee6b8e50ff1123a837a4636595adae01d1cd0093d05b7573381d07043ff1b"
+          "checksum": "2135f707266337a8269d12781b10421db366bf4037db71bcb177dde21484709e"
         }
       ]
     },

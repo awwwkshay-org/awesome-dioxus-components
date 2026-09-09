@@ -1,6 +1,7 @@
 {
   "classification": "delegated",
   "primitiveModules": [
+    "icons",
     "otp_field"
   ]
 }

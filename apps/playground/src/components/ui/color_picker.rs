@@ -17,7 +17,7 @@ use adico_primitives::popover::{PopoverRoot, PopoverRootProps};
 
 use super::copy_button::CopyButton;
 use super::native_select::{NativeSelect, NativeSelectOption, NativeSelectSize};
-use super::popover::PopoverTrigger;
+use super::popover::{PopoverContent, PopoverTrigger};
 use super::slider::{Slider, SliderThumb, SliderTrack};
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
@@ -99,6 +99,34 @@ pub fn ColorPickerPopover(props: ColorPickerPopoverProps) -> Element {
 }
 
 #[derive(Props, Clone, PartialEq)]
+pub struct ColorPickerContentProps {
+    #[props(default)]
+    pub class: Option<String>,
+    #[props(extends = GlobalAttributes)]
+    pub attributes: Vec<Attribute>,
+    pub children: Element,
+}
+
+/// Popup shell for a [`ColorPicker`]'s controls, composing the installed
+/// `Popover`'s own `PopoverContent`. Gives [`ColorArea`], [`HueSlider`], and
+/// [`ColorPickerFields`] a shared column layout with consistent spacing and a
+/// fixed shared width, rather than leaving their arrangement (and, for
+/// `ColorArea`, its width) to whatever container a consumer happens to place
+/// them in -- without it, a fixed-width `ColorArea` next to a `w-full`
+/// `HueSlider` and a wider `ColorPickerFields` row render at three different
+/// widths with no spacing between them.
+#[component]
+pub fn ColorPickerContent(props: ColorPickerContentProps) -> Element {
+    let class = cn(&[
+        "flex w-64 flex-col gap-3",
+        props.class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        PopoverContent { class, attributes: props.attributes, {props.children} }
+    }
+}
+
+#[derive(Props, Clone, PartialEq)]
 pub struct ColorPickerTriggerProps {
     #[props(default)]
     pub class: Option<String>,
@@ -167,7 +195,7 @@ pub fn ColorArea(
     children: Element,
 ) -> Element {
     let class = cn(&[
-        "relative size-48 touch-none border border-input",
+        "relative aspect-square w-full touch-none border border-input",
         radius.class(),
         class.as_deref().unwrap_or_default(),
     ]);
@@ -522,5 +550,24 @@ mod tests {
         let gradient = "linear-gradient(to_right,red,yellow,lime,cyan,blue,magenta,red)";
         assert!(gradient.starts_with("linear-gradient(to_right,red,"));
         assert!(gradient.ends_with(",red)"));
+    }
+
+    #[test]
+    fn color_picker_content_gives_its_children_a_shared_column_width() {
+        let class = cn(&["flex w-64 flex-col gap-3", ""]);
+        assert!(class.contains("flex-col"));
+        assert!(class.contains("gap-3"));
+        assert!(class.contains("w-64"));
+    }
+
+    #[test]
+    fn color_area_tracks_its_container_width_instead_of_a_fixed_size() {
+        let class = cn(&[
+            "relative aspect-square w-full touch-none border border-input",
+            "",
+        ]);
+        assert!(class.contains("aspect-square"));
+        assert!(class.contains("w-full"));
+        assert!(!class.contains("size-48"));
     }
 }

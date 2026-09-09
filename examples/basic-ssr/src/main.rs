@@ -72,11 +72,15 @@ fn App() -> Element {
             }
 
             section { class: "flex flex-wrap items-center gap-3",
-                components::ui::Button { variant: components::ui::ButtonVariant::Default, "Primary" }
+                components::ui::Button { variant: components::ui::ButtonVariant::Primary, "Primary" }
                 components::ui::Button { variant: components::ui::ButtonVariant::Secondary, "Secondary" }
                 components::ui::Button { variant: components::ui::ButtonVariant::Outline, "Outline" }
                 components::ui::Button { variant: components::ui::ButtonVariant::Ghost, "Ghost" }
-                components::ui::Button { variant: components::ui::ButtonVariant::Destructive, "Destructive" }
+                components::ui::Button {
+                    variant: components::ui::ButtonVariant::Primary,
+                    color: adico_lib::variants::Tone::Error,
+                    "Destructive"
+                }
                 components::ui::Badge { "New" }
                 components::ui::Badge { class: "bg-secondary text-secondary-foreground", "Secondary" }
             }

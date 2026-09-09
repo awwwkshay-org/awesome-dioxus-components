@@ -1,17 +1,12 @@
 {
   "tailwindOnly": true,
   "styleException": [],
-  "tokenCompliant": false,
-  "colorException": [
-    {
-      "value": "bg-emerald-600 text-white dark:bg-emerald-500 dark:hover:bg-emerald-500/80 (Verified variant)",
-      "reason": "The Verified variant deliberately uses a fixed, palette-independent success green so the checkmark badge reads consistently across every theme; an adico-specific addition with no shadcn or dioxus-components equivalent."
-    }
-  ],
+  "tokenCompliant": true,
+  "colorException": [],
   "radiusException": [],
   "inspiredBy": [
     "shadcn",
     "dioxus-components"
   ],
-  "inspirationNote": "Destructive variant uses the token text-destructive-foreground where shadcn's own source hardcodes text-white -- adico is more token-compliant here, not a gap. Verified variant (emerald/white) has no shadcn or dioxus-components equivalent, already recorded in colorException. dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
+  "inspirationNote": "Destructive variant uses the token text-destructive-foreground where shadcn's own source hardcodes text-white -- adico is more token-compliant here, not a gap. Verified variant previously hardcoded a fixed emerald so the checkmark badge would read consistently across every theme; `fix-component-defects-and-tone-variants` reverses that call now that a real `--success` theme token exists -- a badge variant refusing to theme while every other variant does was judged worse than the green shifting slightly across palettes, and the inconsistency was itself confusing. Verified now tracks `--success` like Destructive already tracks `--destructive`. dioxus-components uses CSS modules (external style.css files), not Tailwind, so no Tailwind class-level comparison is possible there."
 }

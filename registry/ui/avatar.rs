@@ -35,7 +35,31 @@ impl AvatarSize {
             Self::Lg => "size-12",
         }
     }
+
+    /// The fallback initials' text size at this avatar size. `Default` maps
+    /// to `text-sm`, matching the ambient ~ text size the fallback rendered
+    /// at before this axis existed, so existing usage's fallback text is
+    /// unchanged.
+    fn fallback_text_class(self) -> &'static str {
+        match self {
+            Self::Sm => "text-xs",
+            Self::Default => "text-sm",
+            Self::Lg => "text-base",
+        }
+    }
 }
+
+/// Shares [`Avatar`]'s `size` with a composed [`AvatarFallback`] so the
+/// fallback's initials scale with the circle. `Avatar` and `AvatarFallback`
+/// otherwise deliberately share no context (see [`AvatarProps::radius`]'s
+/// doc comment) -- this context exists only for the text-size axis, which,
+/// unlike `radius`, has no reason a caller would ever want to set
+/// independently of the root's `size`. Wraps a `Signal` (rather than a plain
+/// `AvatarSize`) and is kept in sync below on every render: `use_context_provider`
+/// only runs its init closure once, so a plain value would go stale if a
+/// caller changes `size` on an already-mounted `Avatar`.
+#[derive(Clone, Copy, PartialEq)]
+struct AvatarSizeContext(Signal<AvatarSize>);
 
 /// Props for [`Avatar`].
 #[derive(Props, Clone, PartialEq)]
@@ -75,6 +99,10 @@ pub struct AvatarProps {
 /// visual language.
 #[component]
 pub fn Avatar(props: AvatarProps) -> Element {
+    let mut size_ctx = use_context_provider(|| AvatarSizeContext(Signal::new(props.size)));
+    if *size_ctx.0.peek() != props.size {
+        size_ctx.0.set(props.size);
+    }
     let class = cn(&[
         "relative flex shrink-0 overflow-hidden",
         props.size.class(),
@@ -152,8 +180,15 @@ pub struct AvatarFallbackProps {
 /// The styled fallback shown while loading or on error/empty state.
 #[component]
 pub fn AvatarFallback(props: AvatarFallbackProps) -> Element {
+    // Falls back to `AvatarSize::Default`'s text size when used outside an
+    // `Avatar` (this part's doc says it must be composed inside one, but
+    // reading a missing context should never panic).
+    let size = try_consume_context::<AvatarSizeContext>()
+        .map(|ctx| (ctx.0)())
+        .unwrap_or_default();
     let class = cn(&[
         "flex size-full items-center justify-center bg-muted text-muted-foreground",
+        size.fallback_text_class(),
         props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
@@ -187,5 +222,20 @@ mod tests {
             "",
         ]);
         assert!(class.contains("bg-muted"));
+    }
+
+    #[test]
+    fn every_size_maps_to_a_proportionally_scaled_fallback_text_size() {
+        assert_eq!(AvatarSize::Sm.fallback_text_class(), "text-xs");
+        assert_eq!(AvatarSize::Default.fallback_text_class(), "text-sm");
+        assert_eq!(AvatarSize::Lg.fallback_text_class(), "text-base");
+    }
+
+    #[test]
+    fn default_size_keeps_the_historical_fallback_text_size() {
+        // `Default`'s fallback text size must stay `text-sm`, matching the
+        // ambient size it rendered at before this axis existed, so no
+        // existing `Avatar` usage's fallback text changes size silently.
+        assert_eq!(AvatarSize::default().fallback_text_class(), "text-sm");
     }
 }

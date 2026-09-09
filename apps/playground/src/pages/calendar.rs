@@ -96,7 +96,13 @@ pub fn CalendarPage() -> Element {
                     open: popover_open(),
                     on_open_change: move |value| popover_open.set(value),
                     components::ui::PopoverTrigger { "{trigger_label()}" }
-                    components::ui::PopoverContent { class: "w-auto p-0",
+                    // `CalendarView` already owns its own `border bg-popover p-3`
+                    // surface (see `registry/ui/calendar.rs`), so the popover
+                    // frame is stripped here rather than only its padding --
+                    // otherwise two borders and two backgrounds nest, leaving a
+                    // visible seam. Matches `DatePickerContent`'s existing
+                    // plain-utility pattern (`registry/ui/date_picker.rs`).
+                    components::ui::PopoverContent { class: "w-auto border-0 bg-transparent p-0 shadow-none",
                         CalendarDemoBody {
                             selected_date: selected_date(),
                             on_date_change: move |date| selected_date.set(date),

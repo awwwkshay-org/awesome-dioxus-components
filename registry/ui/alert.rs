@@ -13,6 +13,12 @@ pub enum AlertVariant {
     Default,
     /// Destructive or error alert.
     Destructive,
+    /// Positive/success alert.
+    Success,
+    /// Cautionary alert.
+    Warning,
+    /// Informational alert.
+    Info,
 }
 
 impl AlertVariant {
@@ -20,6 +26,9 @@ impl AlertVariant {
         match self {
             Self::Default => "bg-card text-card-foreground",
             Self::Destructive => "bg-card text-destructive [&>svg]:text-current",
+            Self::Success => "bg-card text-success [&>svg]:text-current",
+            Self::Warning => "bg-card text-warning [&>svg]:text-current",
+            Self::Info => "bg-card text-info [&>svg]:text-current",
         }
     }
 }
@@ -96,5 +105,12 @@ mod tests {
                 .class()
                 .contains("text-destructive")
         );
+    }
+
+    #[test]
+    fn every_new_tone_variant_uses_its_matching_theme_token() {
+        assert!(AlertVariant::Success.class().contains("text-success"));
+        assert!(AlertVariant::Warning.class().contains("text-warning"));
+        assert!(AlertVariant::Info.class().contains("text-info"));
     }
 }

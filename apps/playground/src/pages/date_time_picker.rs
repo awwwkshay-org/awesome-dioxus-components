@@ -40,7 +40,17 @@ pub fn DateTimePickerPage() -> Element {
     // a small height mismatch, a documented trade-off rather than a silent
     // one.
     let mut calendar_height = use_signal(|| None::<f64>);
+    // Only `Digital`'s `TimePickerColumns` participates in this
+    // height-matching scheme (see `TimePickerBody`'s own doc: `fill_height`
+    // "has no effect for `Analog`" -- `TimePickerClock` is a fixed-size dial
+    // with no comparable height-matching concept). Imposing the calendar's
+    // height on the panel in `Analog` view shrinks the clock card below its
+    // rigid content height instead, which then spills out of
+    // `DateTimePickerContent`'s `overflow-visible!` surface.
     let time_panel_style = use_memo(move || {
+        if view() != TimePickerView::Digital {
+            return String::new();
+        }
         calendar_height()
             .map(|height| format!("height: {height}px;"))
             .unwrap_or_default()

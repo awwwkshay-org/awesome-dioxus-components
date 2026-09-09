@@ -52,3 +52,12 @@ pub fn InputOTPSeparatorControls() -> Element {
         }
     }
 }
+
+#[component]
+pub fn InputOTPRevealToggleControls() -> Element {
+    rsx! {
+        ControlGroup { part: "Input OTP Reveal Toggle",
+            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        }
+    }
+}

@@ -42,6 +42,10 @@
         {
           "id": "input-o-t-p-separator",
           "unresolved": "no prop data available for this entry"
+        },
+        {
+          "id": "input-o-t-p-reveal-toggle",
+          "unresolved": "no matching `input-o-t-p-reveal-toggle` part on axis `shadcn`'s `input-otp` entry"
         }
       ]
     }

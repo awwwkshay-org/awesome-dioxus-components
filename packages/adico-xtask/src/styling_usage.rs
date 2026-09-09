@@ -55,6 +55,19 @@ const DEFAULT_PALETTE_PREFIXES: &[&str] = &[
     "bg-green-",
     "text-green-",
     "border-green-",
+    // Added by `fix-component-defects-and-tone-variants`: neither prefix was
+    // in this list before, so `badge.rs`'s `emerald-600` Verified hardcode
+    // and `toast.rs`'s `emerald-500`/`amber-500` type-color hardcodes were
+    // never actually caught by this check -- `badge.json`'s colorException
+    // was recorded by hand, not detected. Both hardcodes are now removed in
+    // favor of the theme's `--success`/`--warning` tokens; these entries
+    // close the gap that let them go unflagged in the first place.
+    "bg-emerald-",
+    "text-emerald-",
+    "border-emerald-",
+    "bg-amber-",
+    "text-amber-",
+    "border-amber-",
 ];
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]

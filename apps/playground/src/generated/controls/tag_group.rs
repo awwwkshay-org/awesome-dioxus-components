@@ -3,7 +3,29 @@
 
 use dioxus::prelude::*;
 
-use crate::components::controls::ControlGroup;
+use crate::components::controls::{ControlGroup, SelectControl};
+use crate::components::ui::TagOptionVariant;
+
+/// Generated from `TagOptionVariant`'s declared variants.
+pub const TAG_OPTION_VARIANT_OPTIONS: &[(&str, TagOptionVariant)] = &[
+    ("Primary", TagOptionVariant::Primary),
+    ("Secondary", TagOptionVariant::Secondary),
+    ("Outline", TagOptionVariant::Outline),
+    ("Ghost", TagOptionVariant::Ghost),
+    ("Link", TagOptionVariant::Link),
+];
+
+const _: () = {
+    fn _exhaustive(value: TagOptionVariant) {
+        match value {
+            TagOptionVariant::Primary => {}
+            TagOptionVariant::Secondary => {}
+            TagOptionVariant::Outline => {}
+            TagOptionVariant::Ghost => {}
+            TagOptionVariant::Link => {}
+        }
+    }
+};
 
 #[component]
 pub fn TagGroupControls() -> Element {
@@ -41,11 +63,21 @@ pub fn TagListControls() -> Element {
     }
 }
 
+/// Generated demo state for [`TagOption`], one field per controllable prop.
+#[derive(Clone, Default, PartialEq)]
+pub struct TagOptionDemoState {
+    pub variant: TagOptionVariant,
+}
+
 #[component]
-pub fn TagOptionControls() -> Element {
+pub fn TagOptionControls(mut state: Signal<TagOptionDemoState>) -> Element {
+    let variant = use_signal(|| state().variant);
+    use_effect(move || {
+        state.set(TagOptionDemoState { variant: variant() });
+    });
     rsx! {
         ControlGroup { part: "Tag Option",
-            p { class: "text-sm text-muted-foreground", "No adjustable props." }
+        SelectControl { label: "Variant", value: variant, options: TAG_OPTION_VARIANT_OPTIONS }
         }
     }
 }

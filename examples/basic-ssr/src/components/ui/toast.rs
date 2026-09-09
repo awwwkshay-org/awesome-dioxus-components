@@ -42,7 +42,7 @@ pub fn Toast(props: ToastProps) -> Element {
     // second time alongside the merged one computed below.
     let class = cn(&[
         "group pointer-events-auto relative flex w-full items-start gap-3 overflow-hidden rounded-md border bg-background p-4 pr-8 text-foreground shadow-lg \
-         data-[type=success]:border-emerald-500/50 data-[type=error]:border-destructive/50 data-[type=warning]:border-amber-500/50",
+         data-[type=success]:border-success/50 data-[type=error]:border-destructive/50 data-[type=warning]:border-warning/50 data-[type=info]:border-info/50",
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {
@@ -126,5 +126,20 @@ mod tests {
     fn stacked_toasts_are_spaced_via_the_nested_list_not_the_region_wrapper() {
         let class = cn(&["[&>ol]:flex [&>ol]:flex-col [&>ol]:gap-2"]);
         assert!(class.contains("[&>ol]:gap-2"));
+    }
+
+    #[test]
+    fn every_toast_type_has_a_theme_token_backed_border() {
+        // Reverses previously hardcoded emerald/amber colors and adds the
+        // previously-missing `info` styling.
+        let class = cn(&[
+            "data-[type=success]:border-success/50 data-[type=error]:border-destructive/50 data-[type=warning]:border-warning/50 data-[type=info]:border-info/50",
+        ]);
+        assert!(class.contains("data-[type=success]:border-success/50"));
+        assert!(class.contains("data-[type=error]:border-destructive/50"));
+        assert!(class.contains("data-[type=warning]:border-warning/50"));
+        assert!(class.contains("data-[type=info]:border-info/50"));
+        assert!(!class.contains("emerald"));
+        assert!(!class.contains("amber"));
     }
 }
