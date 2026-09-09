@@ -250,7 +250,10 @@ The registry SHALL provide a `date-time-picker` item exporting a
 `DateTimePicker` that composes the existing `date-picker` and new
 `time-picker` items behind a single trigger showing the full formatted
 date-and-time value, reusing each component's existing calendar and
-time-selection surfaces rather than reimplementing them.
+time-selection surfaces rather than reimplementing them. When the composed
+time-selection surface uses `TimePickerView::Analog`, its rendered dial SHALL
+fit entirely within the popup's bounds, without overflowing its bordered
+content area.
 
 #### Scenario: A consumer picks both a date and a time
 - **WHEN** a user opens `DateTimePicker`'s popup
@@ -263,6 +266,11 @@ time-selection surfaces rather than reimplementing them.
 - **THEN** the date and time segments behave as one continuous
   keyboard-navigable sequence, correctly laid out regardless of whether a
   seconds segment or a 12-hour meridiem segment is present
+
+#### Scenario: The analog clock fits its popup surface
+- **WHEN** a user opens `DateTimePicker` with `TimePickerView::Analog`
+- **THEN** the analog dial renders entirely inside the popup's bordered
+  content area, with no part of the dial spilling outside it
 
 ### Requirement: CopyButton copies a given text value with visible confirmation
 The registry SHALL provide a `copy-button` item exporting `CopyButton`,
@@ -330,9 +338,13 @@ The `color-picker` registry item SHALL export a popover composition
 installed `popover` item) whose trigger renders a swatch reflecting the
 currently selected color, following the same styled-popover-root injection
 pattern `date-picker` already uses to let a consumer or the playground swap in
-a custom popover root. The existing flat `ColorPicker`/`ColorArea`/
-`AreaTrack`/`AreaThumb`/`HueSlider` composition SHALL remain available
-unchanged for consumers who want the picker always visible.
+a custom popover root. `ColorPickerContent` SHALL lay out `ColorArea`,
+`HueSlider`, and `ColorPickerFields` with consistent spacing between them and
+consistent width across all three, rather than leaving their arrangement to
+whatever container a consumer places them in. The existing flat
+`ColorPicker`/`ColorArea`/`AreaTrack`/`AreaThumb`/`HueSlider` composition
+SHALL remain available unchanged for consumers who want the picker always
+visible.
 
 #### Scenario: A consumer composes ColorPicker behind a trigger
 - **WHEN** a consumer renders `ColorPickerTrigger` inside `ColorPickerPopover`
@@ -349,6 +361,10 @@ unchanged for consumers who want the picker always visible.
 - **WHEN** an assistive-technology user reaches the trigger
 - **THEN** it is labeled with the color's name (as returned by the existing
   `color_name` helper), not only conveyed through its visual fill
+
+#### Scenario: ColorArea, HueSlider, and ColorPickerFields render with consistent width and spacing
+- **WHEN** a consumer composes `ColorArea`, `HueSlider`, and `ColorPickerFields` inside `ColorPickerContent`
+- **THEN** the three parts render at a consistent width relative to one another and with visible spacing between them, rather than a narrower saturation square abutting a wider hue bar and fields row
 
 ### Requirement: Menu components expose grouping, label, separator, and shortcut composition parts
 The `dropdown-menu`, `context-menu`, and `menubar` registry items SHALL each
@@ -426,11 +442,14 @@ document-level pointer registry.
 
 ### Requirement: Input OTP can mask entered values
 The `input-otp` registry item SHALL accept a reactive `mask` input on its
-root. While masking is enabled, every slot SHALL render its entered character
-as a password-style obscured value; while disabled, slots SHALL render the
-plain character. Toggling masking SHALL NOT clear or alter the entered value,
-and value-change/value-complete callbacks SHALL behave identically in both
-modes.
+root, defaulting to `true`. While masking is enabled, every slot SHALL render
+its entered character as a password-style obscured value; while disabled,
+slots SHALL render the plain character. Toggling masking SHALL NOT clear or
+alter the entered value, and value-change/value-complete callbacks SHALL
+behave identically in both modes. The `input-otp` registry item SHALL export
+a reveal-toggle part that flips `mask` between its two states, so a consumer
+gets masked-by-default entry with an explicit reveal affordance without
+hand-building the toggle.
 
 #### Scenario: Masking hides entered digits
 - **WHEN** a consumer sets `mask` to true on an OTP field containing entered
@@ -442,6 +461,17 @@ modes.
 - **WHEN** `mask` transitions from true to false
 - **THEN** the same entered characters render as plain text without any
   change to the value or caret/focus behavior
+
+#### Scenario: Masking is on by default
+- **WHEN** a consumer renders `InputOTP` without explicitly setting `mask`
+- **THEN** entered characters render obscured, matching `mask`'s default of
+  `true`
+
+#### Scenario: A consumer composes the reveal toggle
+- **WHEN** a consumer composes `input-otp`'s reveal-toggle part alongside
+  `InputOTP`
+- **THEN** activating it flips the field between masked and plain rendering,
+  identically to setting `mask` directly
 
 ### Requirement: Textarea shows a character counter when a maximum length is set
 When the `textarea` registry item's `max_length` prop is set, it SHALL render
@@ -522,3 +552,87 @@ caller-side workarounds.
   `DialogContent` to work around missing built-in scrolling
 - **THEN** that workaround is no longer necessary, since `DialogContent` scrolls by
   default
+
+### Requirement: A shared Tone vocabulary backs every semantic color in the registry
+`registry/lib/variants.rs` SHALL export a `Tone` enum (`Default`, `Success`,
+`Warning`, `Error`, `Info`) alongside the existing `Radius`. `Tone::Error`
+SHALL resolve to the same `--destructive` theme token as before this
+vocabulary existed — only the Rust-facing name changes. `Tone` SHALL expose,
+for each value, the color-driven Tailwind classes for each of five shape
+families (a filled/"solid" surface, a tinted/"soft" surface, an outlined
+surface, a text-only/"ghost" surface, and a link-styled surface), with
+`Tone::Default` reproducing the exact pre-existing class for each shape
+family so selecting the default color changes nothing visually. `alert` and
+`toast` SHALL continue to reference these same underlying tokens (directly,
+or through `Tone`) for their own tone presentation, but SHALL NOT be required
+to adopt the shape/color split described in the next requirement.
+
+#### Scenario: Selecting the default color changes nothing
+- **WHEN** a consumer selects any shape on `Button`, `Badge`, or `TagOption` with `color: Tone::Default` (the default)
+- **THEN** the rendered classes are identical to that shape's classes before this vocabulary existed
+
+#### Scenario: A component gains a success, warning, error, or info color
+- **WHEN** a consumer selects `color: Tone::Success`, `Warning`, `Error`, or `Info` on `Button`, `Badge`, or `TagOption`
+- **THEN** the component renders using that shape family's classes for that `Tone` value, consistent across all three components
+
+### Requirement: Button, Badge, and TagOption expose an orthogonal shape and color prop
+The `button`, `badge`, and `tag-group` registry items' `ButtonVariant`,
+`BadgeVariant`, and (new) `TagOptionVariant` enums SHALL each expose exactly
+`Primary`, `Secondary`, `Outline`, `Ghost`, and `Link` as their shape values.
+`Destructive` (on `Button`/`Badge`) and `Verified` (on `Badge`) SHALL NOT
+exist as shape values — the same visual results are reached via `color:
+Tone::Error` and `color: Tone::Success` respectively, on any shape. Each of
+these three items SHALL additionally expose a `color: Tone` prop (default
+`Tone::Default`), independent of the shape prop. On `TagOption`, the shape
+and color props SHALL affect only the tag's *selected*-state appearance; its
+resting (unselected) appearance SHALL remain the existing neutral surface
+regardless of shape or color. `Kbd`, `TagGroup`, and `TagGroupMulti` SHALL
+NOT gain a shape or color prop from this requirement.
+
+#### Scenario: A consumer reaches the removed Destructive look via color
+- **WHEN** a consumer renders `Button` or `Badge` with `variant: Primary, color: Tone::Error`
+- **THEN** the rendered classes match what `variant: Destructive` rendered before this change
+
+#### Scenario: A consumer reaches the removed Verified look via color
+- **WHEN** a consumer renders `Badge` with `variant: Primary, color: Tone::Success`
+- **THEN** the rendered classes match what `variant: Verified` rendered before this change
+
+#### Scenario: A selected tag's look follows its shape and color
+- **WHEN** a consumer selects a `TagOption` rendered with a non-default `variant` and/or `color`
+- **THEN** only the selected-state fill reflects that shape and color; the same `TagOption` unselected renders its unchanged neutral resting surface
+
+### Requirement: The adico theme provides success, warning, and info semantic tokens
+The adico-managed CSS theme region (generated by `packages/adico-cli/src/css.rs` into a consumer's `tailwind.css`) SHALL define `--success`, `--warning`, and `--info` custom properties, each paired with a `-foreground` counterpart, for both the light (`:root`) and dark (`.dark`) theme blocks, alongside the existing `--destructive`/`--destructive-foreground` pair. `ThemeBuilder`'s token editor SHALL expose all six as editable `ThemeToken` entries.
+
+#### Scenario: A newly initialized project has the new tokens
+- **WHEN** a consumer runs `adico init` (or refreshes their theme install)
+- **THEN** their `tailwind.css`'s adico-managed region defines `--success`, `--warning`, `--info` and their `-foreground` pairs in both the light and dark blocks
+
+#### Scenario: A user edits a new tone token in ThemeBuilder
+- **WHEN** a user opens `ThemeBuilder` and edits the Success, Warning, or Info token
+- **THEN** the edit updates the corresponding CSS custom property live, the same way editing `Destructive` already does
+
+### Requirement: Alert exposes the full semantic tone set
+The `alert` registry item's `AlertVariant` SHALL include `Success`, `Warning`, and `Info` variants alongside the existing `Default` and `Destructive`, each rendering with the corresponding `Tone` mapping's surface classes.
+
+#### Scenario: An alert renders each tone
+- **WHEN** a consumer renders `Alert` with `variant: AlertVariant::Success`, `Warning`, or `Info`
+- **THEN** the alert renders with that tone's semantic surface classes, consistent with `Badge`'s and `Toast`'s presentation of the same tone
+
+### Requirement: Avatar's size scales its whole presentation
+The `avatar` registry item's `AvatarSize` SHALL scale both the avatar's circular bounds (already true) and its fallback initials' text size, so a consumer changing `size` sees a proportionally scaled circle and a proportionally scaled fallback label together.
+
+#### Scenario: Changing size scales the fallback text with the circle
+- **WHEN** a consumer renders `Avatar { size }` composing `AvatarFallback` with initials, at `AvatarSize::Sm`, `Default`, and `Lg`
+- **THEN** the fallback's rendered text size scales alongside the circle's diameter at each size, rather than remaining a fixed size
+
+### Requirement: Input reveals a password value from within the component
+The `input` registry item's `Input` SHALL render a reveal-toggle control that shows or hides the entered value when its `r#type` prop is `"password"`, without requiring the consumer to compose a separate `InputGroup` and toggle button. For every other `r#type` value, `Input`'s rendered output SHALL be unchanged from its previous behavior.
+
+#### Scenario: A password input gets a reveal toggle
+- **WHEN** a consumer renders `Input { r#type: "password" }`
+- **THEN** the field renders with an eye/eye-off toggle control that switches the field between obscured and plain rendering of the entered value, without altering the value or callbacks
+
+#### Scenario: A non-password input is unaffected
+- **WHEN** a consumer renders `Input` with any `r#type` other than `"password"` (including the default `"text"`)
+- **THEN** the rendered output is unchanged — no reveal toggle and no additional wrapper beyond what was previously rendered
