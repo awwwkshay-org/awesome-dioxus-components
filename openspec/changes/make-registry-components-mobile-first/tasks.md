@@ -463,33 +463,59 @@ otherwise record `already-correct`/`n/a` explicitly. Promote any component
 that needs a real fix into the wave matching its category and re-review it
 there rather than folding a nontrivial change into this wave's close-out.
 
-- [ ] 6.1 `accordion.rs` — audit and record verdict.
-- [ ] 6.2 `alert.rs` — audit and record verdict (known candidate for a grid
-      fix per `design.md`'s Wave 6 risk note; check before assuming `n/a`).
-- [ ] 6.3 `aspect_ratio.rs` — audit and record verdict.
-- [ ] 6.4 `avatar.rs` — audit and record verdict.
-- [ ] 6.5 `badge.rs` — audit and record verdict.
-- [ ] 6.6 `button.rs` — audit and record verdict.
-- [ ] 6.7 `checkbox.rs` — audit and record verdict.
-- [ ] 6.8 `collapsible.rs` — audit and record verdict.
-- [ ] 6.9 `copy_button.rs` — audit and record verdict.
-- [ ] 6.10 `empty.rs` — audit its existing `md:p-12`; record verdict.
-- [ ] 6.11 `input.rs` — audit and record verdict.
-- [ ] 6.12 `item.rs` — audit and record verdict.
-- [ ] 6.13 `kbd.rs` — audit and record verdict.
-- [ ] 6.14 `label.rs` — audit and record verdict.
-- [ ] 6.15 `marker.rs` — audit and record verdict.
-- [ ] 6.16 `message.rs` — audit and record verdict.
-- [ ] 6.17 `progress.rs` — audit and record verdict.
-- [ ] 6.18 `radio_group.rs` — audit and record verdict.
-- [ ] 6.19 `skeleton.rs` — audit and record verdict.
-- [ ] 6.20 `slider.rs` — audit and record verdict.
-- [ ] 6.21 `spinner.rs` — audit and record verdict.
-- [ ] 6.22 `switch.rs` — audit and record verdict.
-- [ ] 6.23 `textarea.rs` — audit and record verdict.
-- [ ] 6.24 `toggle.rs` — audit and record verdict.
-- [ ] 6.25 Wave close-out: same cycle as 1.6 for any Wave 6 items that
+All 24 audited by systematic grep for fixed-dimension/grid/flex-without-bound
+patterns (the same failure categories every earlier wave's real fixes came
+from), followed by targeted reads of every hit. **Every one verified `n/a`** —
+no promotions needed. None of these files were edited.
+
+- [x] 6.1 `accordion.rs` — `n/a`. Trigger row is `flex w-full flex-1 ...`,
+      already bounded.
+- [x] 6.2 `alert.rs` — `n/a`, checked carefully per the flagged risk note.
+      Its `grid w-full grid-cols-[0_1fr] has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr]`
+      is an icon-gutter pattern (first column is 0 width unless an icon is
+      present), not a content-squeeze two-column layout like `card.rs`'s
+      title/description/action — genuinely a different pattern R6 doesn't
+      apply to, and already `w-full` bounded regardless.
+- [x] 6.3 `aspect_ratio.rs` — `n/a`, no width/height/grid classes at all.
+- [x] 6.4 `avatar.rs` — `n/a`, no width/height/grid classes (sizing already
+      handled by `AvatarSize`, unrelated to this sweep).
+- [x] 6.5 `badge.rs` — `n/a`, no width/height/grid classes.
+- [x] 6.6 `button.rs` — `n/a`, no width/height/grid classes.
+- [x] 6.7 `checkbox.rs` — `n/a`, no width/height/grid classes.
+- [x] 6.8 `collapsible.rs` — `n/a`, no width/height/grid classes.
+- [x] 6.9 `copy_button.rs` — `n/a`, no width/height/grid classes.
+- [x] 6.10 `empty.rs` — `n/a`. Existing `md:p-12` needs no change (padding
+      only); `max-w-sm` is already a clamp, not a fixed width — safe by
+      construction.
+- [x] 6.11 `input.rs` — `n/a`, no width/height/grid classes.
+- [x] 6.12 `item.rs` — `n/a`. Every flex row is either ancestor-bounded
+      (`w-full`/`flex-1`/`basis-full`) or a small icon/content row; no fixed
+      width anywhere in the file.
+- [x] 6.13 `kbd.rs` — `n/a`. `min-w-5` (20px) floor on an otherwise
+      `w-fit`-shrinking inline badge — tiny, no overflow risk at any width.
+- [x] 6.14 `label.rs` — `n/a`, no width/height/grid classes.
+- [x] 6.15 `marker.rs` — `n/a`, no width/height/grid classes.
+- [x] 6.16 `message.rs` — `n/a`. Both flex containers already use `min-w-0`,
+      the correct defensive pattern.
+- [x] 6.17 `progress.rs` — `n/a`, no width/height/grid classes.
+- [x] 6.18 `radio_group.rs` — `n/a`, no width/height/grid classes.
+- [x] 6.19 `skeleton.rs` — `n/a`, no width/height/grid classes.
+- [x] 6.20 `slider.rs` — `n/a`, no width/height/grid classes.
+- [x] 6.21 `spinner.rs` — `n/a`, no width/height/grid classes.
+- [x] 6.22 `switch.rs` — `n/a`. `h-[1.15rem] w-8` is an inherently small,
+      fixed-size form control (like a checkbox), not a layout container —
+      no viewport overflow risk at any width.
+- [x] 6.23 `textarea.rs` — `n/a`. `min-h-[60px] w-full` — already correctly
+      `w-full` bounded with a floor, not a cap; standard responsive pattern.
+- [x] 6.24 `toggle.rs` — `n/a`. `h-8/h-9 min-w-8/min-w-9` — same small
+      fixed-size form control category as `switch.rs`.
+- [x] 6.25 Wave close-out: same cycle as 1.6 for any Wave 6 items that
       received a real fix (if none did, skip the reinstall — nothing changed).
+      **No files edited — skipped reinstall/checksums/rebuild entirely**,
+      consistent with the task's own instruction. `git status` confirms zero
+      changes from this wave. No new failures possible since nothing changed;
+      the full mobile/desktop-invariance suite already stands at 27/27 and
+      10/10 from Wave 5 and remains valid.
 
 ## 7. Full-sweep validation and archive
 
