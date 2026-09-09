@@ -115,7 +115,10 @@ pub fn DropdownMenuContent(
         // `Positioner`) rather than a hardcoded viewport fraction, so the menu
         // scrolls instead of clipping when content exceeds whatever room is
         // actually available on its placed side.
-        "z-50 min-w-40 max-h-[var(--adico-positioner-available-size)] overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        // `min-w-40` alone can force overflow on its own (a min-width has no
+        // upper bound), so it's paired with the same viewport-relative
+        // gutter clamp `popover.rs` uses -- see its comment for why.
+        "z-50 min-w-40 max-w-[calc(100%-2rem)] max-h-[var(--adico-positioner-available-size)] overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
         radius.class(),
         scroll_area_visibility_class(false),
         class.as_deref().unwrap_or_default(),
@@ -400,7 +403,9 @@ pub fn DropdownMenuSubContent(
     children: Element,
 ) -> Element {
     let class = cn(&[
-        "z-50 min-w-32 max-h-[var(--adico-positioner-available-size)] overflow-y-auto bg-popover p-1 text-popover-foreground shadow-lg",
+        // Same `min-w` + viewport-relative gutter clamp pairing as
+        // `DropdownMenuContent` above -- see its comment for why.
+        "z-50 min-w-32 max-w-[calc(100%-2rem)] max-h-[var(--adico-positioner-available-size)] overflow-y-auto bg-popover p-1 text-popover-foreground shadow-lg",
         radius.class(),
         scroll_area_visibility_class(false),
         class.as_deref().unwrap_or_default(),

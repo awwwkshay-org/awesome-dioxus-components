@@ -145,26 +145,51 @@ Each wave's close-out is exactly one CLI rebuild plus three `adico add
 
 ## 2. Positioner-anchored surfaces (R2) — 8 components
 
-- [ ] 2.1 `popover.rs`: apply Form C — `w-72 max-w-[calc(100%-2rem)]`; verify
-      unchanged 288px width at desktop, clamped at 375px.
-- [ ] 2.2 `hover_card.rs`: same, `w-64 max-w-[calc(100%-2rem)]`.
-- [ ] 2.3 `tooltip.rs`: audit for a fixed width/`min-w`; apply Form C if
-      present, record `n/a` if not.
-- [ ] 2.4 `dropdown_menu.rs`: audit content `min-w-[…]`, pair with a
-      `max-w-[calc(100%-2rem)]` clamp per R2.
-- [ ] 2.5 `context_menu.rs`: same as 2.4.
-- [ ] 2.6 `select.rs`: audit trigger/content widths; apply R2's clamp to
-      content if it carries a fixed/min width.
-- [ ] 2.7 `combobox.rs`: same as 2.6.
-- [ ] 2.8 `native_select.rs`: audit; likely `n/a` (native `<select>` sizing is
-      browser-controlled) — record the verdict either way.
-- [ ] 2.9 `navigation_menu.rs` / `menubar.rs` content (`min-w-[12rem]`): pair
+- [x] 2.1 `popover.rs`: apply Form C — `w-72 max-w-[calc(100%-2rem)]`; verify
+      unchanged 288px width at desktop, clamped at 375px. Done, verified
+      10/10 desktop-invariance (288px unchanged).
+- [x] 2.2 `hover_card.rs`: same, `w-64 max-w-[calc(100%-2rem)]`. Done,
+      verified 256px unchanged at desktop.
+- [x] 2.3 `tooltip.rs`: audit for a fixed width/`min-w`; apply Form C if
+      present, record `n/a` if not. Verified `n/a` — no width/min-w class at
+      all; content is shrink-to-fit short text, no overflow risk.
+- [x] 2.4 `dropdown_menu.rs`: audit content `min-w-[…]`, pair with a
+      `max-w-[calc(100%-2rem)]` clamp per R2. Done — both `DropdownMenuContent`
+      (`min-w-40`) and `DropdownMenuSubContent` (`min-w-32`) fixed.
+- [x] 2.5 `context_menu.rs`: same as 2.4. Done — `min-w-[8rem]` had no max-w
+      at all (worse than dropdown_menu); paired with the clamp.
+- [x] 2.6 `select.rs`: audit trigger/content widths; apply R2's clamp to
+      content if it carries a fixed/min width. Done — content's `min-w-32`
+      clamped. Trigger's `w-full min-w-32` left alone (bounded by parent via
+      `w-full`, not a `fixed`/anchored overflow risk).
+- [x] 2.7 `combobox.rs`: same as 2.6. Done — content's `min-w-48` clamped.
+- [x] 2.8 `native_select.rs`: audit; likely `n/a` (native `<select>` sizing is
+      browser-controlled) — record the verdict either way. Verified `n/a` —
+      real `<select>`, no CSS-controlled popup exists to clamp.
+- [x] 2.9 `navigation_menu.rs` / `menubar.rs` content (`min-w-[12rem]`): pair
       with a `max-w-[calc(100%-2rem)]` clamp per R2 (root-level horizontal
-      overflow for these two is handled separately in Wave 4).
-- [ ] 2.10 Wave close-out: same cycle as 1.6 for all Wave 2 items, plus a live
+      overflow for these two is handled separately in Wave 4). Done for both
+      files' content classes; root-level R4 fix still pending for Wave 4.
+- [x] 2.10 Wave close-out: same cycle as 1.6 for all Wave 2 items, plus a live
       Chrome check at 375px per D3's risk note — confirm an anchored popover
       near a viewport edge repositions and does not get stuck
-      `visibility: hidden`.
+      `visibility: hidden`. Done: 8 checksums updated (exactly the 8 edited
+      files), registry build/validate/styling-usage check pass, CLI rebuilt,
+      reinstalled into all 3 apps (confirmed via git status). **Discovered a
+      real Playwright/dx-serve pitfall during verification**: running the
+      harness immediately after a reinstall against a long-lived `dx serve`
+      hot-reload session produced 8-9 spurious failures on already-fixed
+      Wave-1 components (dialog/alert-dialog/toast) — the live-patched tab
+      showed the correct state but a *fresh* page load (Playwright's own)
+      served a stale pre-rebuild bundle. Killing and restarting `dx serve`
+      fresh resolved it immediately (mobile 23/27 passing — only the
+      expected Wave 4/5 failures remain; desktop-invariance 10/10). **This
+      is now the required practice for every wave's verification**, not
+      just Chrome spot-checks: always restart `dx serve` before running the
+      harness post-reinstall, not just before manual checks. Live Chrome
+      check: popover's trigger sits at the extreme left edge of the
+      viewport; the popover renders fully visible, correctly positioned, no
+      stuck-hidden state.
 
 ## 3. Composers over Wave 1/2 base classes (R8) — 8 components
 

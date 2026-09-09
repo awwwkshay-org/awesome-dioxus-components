@@ -7,6 +7,7 @@ use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
+use adico_primitives::ContentAlign;
 use adico_primitives::icons::{ChevronDown, ChevronUp};
 use adico_primitives::scroll_area::scroll_area_visibility_class;
 
@@ -240,6 +241,9 @@ pub fn ComboboxList(
     /// Corner radius. See [`ComboboxInput::radius`]'s own doc comment.
     #[props(default = Radius::Md)]
     radius: Radius,
+    /// Alignment of the listbox relative to its input.
+    #[props(default = ContentAlign::Center)]
+    align: ContentAlign,
     class: Option<String>,
     #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
@@ -249,7 +253,9 @@ pub fn ComboboxList(
     // width baseline instead, matching `popover.rs`'s own fixed-width
     // precedent rather than trying to exactly match the input's width.
     let class = cn(&[
-        "z-50 max-h-72 min-w-48 overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        // `min-w-48` alone can force overflow on its own, so it's paired with
+        // the same viewport-relative gutter clamp `popover.rs` uses.
+        "z-50 max-h-72 min-w-48 max-w-[calc(100%-2rem)] overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
         radius.class(),
         // See `select.rs`'s `SelectList`: same `Positioner`-routed list, same
         // native-scrollbar-fallback-only theming for the same reason.
@@ -260,6 +266,7 @@ pub fn ComboboxList(
         PrimitiveComboboxList {
             id,
             aria_label,
+            align,
             class,
             attributes,
             {children}

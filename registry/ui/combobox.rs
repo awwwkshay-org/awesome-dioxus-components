@@ -253,7 +253,9 @@ pub fn ComboboxList(
     // width baseline instead, matching `popover.rs`'s own fixed-width
     // precedent rather than trying to exactly match the input's width.
     let class = cn(&[
-        "z-50 max-h-72 min-w-48 overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        // `min-w-48` alone can force overflow on its own, so it's paired with
+        // the same viewport-relative gutter clamp `popover.rs` uses.
+        "z-50 max-h-72 min-w-48 max-w-[calc(100%-2rem)] overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
         radius.class(),
         // See `select.rs`'s `SelectList`: same `Positioner`-routed list, same
         // native-scrollbar-fallback-only theming for the same reason.

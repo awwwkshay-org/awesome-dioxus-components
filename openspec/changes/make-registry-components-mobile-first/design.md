@@ -240,6 +240,14 @@ the fact against already-changed code (which would tautologically pass).
 - **[`sm:rounded-*` would trip `styling-usage check` with a misleading
   message]** → Prevented outright by design: no rule in this change ever
   proposes a responsive `rounded-*` class. Radius is owned by `radius.class()`.
+- **[A long-lived `dx serve` session can serve a fresh Playwright page load a
+  stale pre-rebuild bundle even after a full rebuild completes]** →
+  Discovered in Wave 2: an already-open browser tab correctly reflected a
+  hot-reload patch, but Playwright's fresh navigation to the same URL hit a
+  stale bundle, producing spurious failures on already-fixed Wave 1
+  components. Mitigation: restart `dx serve` fresh immediately before running
+  the harness after every wave's reinstall, not only before manual Chrome
+  spot-checks.
 - **[Wave 6's "audit-only" ~24 components may hide real work]** → Two
   components initially assumed trivial (`alert.rs`, `card.rs`) already
   surfaced a two-column grid needing a fix during investigation. Budget for

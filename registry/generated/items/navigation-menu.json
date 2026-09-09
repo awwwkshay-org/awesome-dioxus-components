@@ -7,7 +7,7 @@
       "source": "ui/navigation_menu.rs",
       "targetRoot": "ui",
       "target": "navigation_menu.rs",
-      "checksum": "3c98711e1b8fab8a7f35fe7cdaae2f5a1dce14c86da0259d2f97da68628fc664"
+      "checksum": "94deca714ff3c743d79ba851cc44c07d46802ec5f7e3602dc94c3bfc0fac06f8"
     }
   ],
   "registryDependencies": [

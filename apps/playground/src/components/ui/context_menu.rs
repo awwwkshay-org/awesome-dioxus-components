@@ -52,7 +52,10 @@ pub fn ContextMenuContent(
         // property exists to cap against. Falls back to a fixed, viewport-relative
         // cap (design.md's documented fallback) rather than clipping unbounded
         // content silently.
-        "z-50 min-w-[8rem] max-h-[min(24rem,90vh)] overflow-y-auto border bg-popover p-1 text-popover-foreground shadow-md data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+        // `min-w-[8rem]` alone can force overflow on its own (a min-width has
+        // no upper bound), so it's paired with the same viewport-relative
+        // gutter clamp `popover.rs` uses -- see its comment for why.
+        "z-50 min-w-[8rem] max-w-[calc(100%-2rem)] max-h-[min(24rem,90vh)] overflow-y-auto border bg-popover p-1 text-popover-foreground shadow-md data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
         radius.class(),
         scroll_area_visibility_class(false),
         class.as_deref().unwrap_or_default(),

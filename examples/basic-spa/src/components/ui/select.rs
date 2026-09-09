@@ -9,6 +9,7 @@ use dioxus::prelude::*;
 
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
+use adico_primitives::ContentAlign;
 use adico_primitives::icons::{ChevronDown, ChevronUp};
 use adico_primitives::scroll_area::scroll_area_visibility_class;
 
@@ -230,12 +231,17 @@ pub fn SelectList(
     /// Corner radius. See [`SelectTrigger::radius`]'s own doc comment.
     #[props(default = Radius::Md)]
     radius: Radius,
+    /// Alignment of the list relative to its trigger.
+    #[props(default = ContentAlign::Center)]
+    align: ContentAlign,
     class: Option<String>,
     aria_label: Option<String>,
     #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "z-50 max-h-72 min-w-32 overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        // `min-w-32` alone can force overflow on its own, so it's paired with
+        // the same viewport-relative gutter clamp `popover.rs` uses.
+        "z-50 max-h-72 min-w-32 max-w-[calc(100%-2rem)] overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
         radius.class(),
         // Themed via the shared scroll-area contract's native-scrollbar fallback layer
         // (`scrollbar-color`, see `packages/adico-cli/src/css.rs`'s `SCROLLBAR_CSS`) --
@@ -250,6 +256,7 @@ pub fn SelectList(
         PrimitiveSelectList {
             id,
             class,
+            align,
             aria_label,
             attributes,
             {children}

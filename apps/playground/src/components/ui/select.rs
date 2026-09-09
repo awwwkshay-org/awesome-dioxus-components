@@ -239,7 +239,9 @@ pub fn SelectList(
     #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
 ) -> Element {
     let class = cn(&[
-        "z-50 max-h-72 min-w-32 overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
+        // `min-w-32` alone can force overflow on its own, so it's paired with
+        // the same viewport-relative gutter clamp `popover.rs` uses.
+        "z-50 max-h-72 min-w-32 max-w-[calc(100%-2rem)] overflow-y-auto bg-popover p-1 text-popover-foreground shadow-md outline-none",
         radius.class(),
         // Themed via the shared scroll-area contract's native-scrollbar fallback layer
         // (`scrollbar-color`, see `packages/adico-cli/src/css.rs`'s `SCROLLBAR_CSS`) --

@@ -219,7 +219,7 @@
           "source": "ui/select.rs",
           "targetRoot": "ui",
           "target": "select.rs",
-          "checksum": "16bf3d403ff188031776d3463eb15c00cd07d59b4be49ccc3b4dd93a322be476"
+          "checksum": "a6937e8e88e473e55026b89323914ea6cccee2953cfda609d64bca12e56a4340"
         }
       ],
       "cargoDependencies": [
@@ -687,7 +687,7 @@
           "source": "ui/popover.rs",
           "targetRoot": "ui",
           "target": "popover.rs",
-          "checksum": "4748eabcf53be2ea39338f33a19c8113289c3d6a95d452ea61be898f3c5ad463"
+          "checksum": "c4aa4d2e64487aebced4b5e76c002b627d04aab9902b8e397a6bed54a83a97f3"
         }
       ],
       "registryDependencies": [
@@ -741,7 +741,7 @@
           "source": "ui/hover_card.rs",
           "targetRoot": "ui",
           "target": "hover_card.rs",
-          "checksum": "4da3c66f4d3529e5ebe2f09c033e7ec5f36a191350b9a5dee89d47f1314c7c70"
+          "checksum": "a16c45bbd74b6f565459d9fbf1d586a7c850cf79a09dd11cea2b4a4c5d784c52"
         }
       ],
       "registryDependencies": [
@@ -795,7 +795,7 @@
           "source": "ui/dropdown_menu.rs",
           "targetRoot": "ui",
           "target": "dropdown_menu.rs",
-          "checksum": "c4fcbd8c779b88442c5132db9b57935270926055c402718cda053def85ff50c6"
+          "checksum": "7291611cf102e823b60732fdf89c5236212160e0c75c7adbeae223f4a66c5b61"
         }
       ],
       "cargoDependencies": [
@@ -846,7 +846,7 @@
           "source": "ui/context_menu.rs",
           "targetRoot": "ui",
           "target": "context_menu.rs",
-          "checksum": "8f355ef4f1c7fd8cef101cf8de84bb0e7671ac5159d2d95063153d9f1017b26d"
+          "checksum": "ab843326434ae61019b7cfcc20765f585c40178e409e746d592b512f41080e0b"
         }
       ],
       "registryDependencies": [
@@ -900,7 +900,7 @@
           "source": "ui/menubar.rs",
           "targetRoot": "ui",
           "target": "menubar.rs",
-          "checksum": "8ce7b71be2cec2e7c8f624827e0dc83d20ee16440e616a9f5c1a6624e59d95ac"
+          "checksum": "04eabbaab1c955278ede1ef47364c6ee0040b4bd3beb0ac0e2f4fc8831da8548"
         }
       ],
       "registryDependencies": [
@@ -954,7 +954,7 @@
           "source": "ui/combobox.rs",
           "targetRoot": "ui",
           "target": "combobox.rs",
-          "checksum": "2bb9157411587ebc543698a476bee5efcd63c508e4717b6338adbf2c8038df15"
+          "checksum": "67c302ecb84bdf6e6a8cc13a7bbd7c472a03a76e2c903c69a2503d6b8a74bf8b"
         }
       ],
       "cargoDependencies": [
@@ -3006,7 +3006,7 @@
           "source": "ui/navigation_menu.rs",
           "targetRoot": "ui",
           "target": "navigation_menu.rs",
-          "checksum": "3c98711e1b8fab8a7f35fe7cdaae2f5a1dce14c86da0259d2f97da68628fc664"
+          "checksum": "94deca714ff3c743d79ba851cc44c07d46802ec5f7e3602dc94c3bfc0fac06f8"
         }
       ],
       "registryDependencies": [

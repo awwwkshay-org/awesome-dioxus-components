@@ -8,6 +8,16 @@ use adico_primitives::context_menu::{
     ContextMenuContent as ContextMenuPrimitiveContent, ContextMenuItem as ContextMenuPrimitiveItem,
     ContextMenuTrigger as ContextMenuPrimitiveTrigger,
 };
+// `MenuGroup`/`MenuGroupLabel`/`MenuSeparator` consume no menu context, so
+// they compose safely inside a `ContextMenuContent` even though the context
+// menu's own primitive scope is independent of `adico_primitives::menu`.
+// Checkbox/radio/submenu parts are deliberately NOT re-faced here: they
+// require the `MenuContext` only the dropdown-menu root provides and would
+// panic at runtime inside a context menu.
+use adico_primitives::menu::{
+    MenuGroup as PrimitiveMenuGroup, MenuGroupLabel as PrimitiveMenuGroupLabel,
+    MenuSeparator as PrimitiveMenuSeparator,
+};
 
 use crate::adico_lib::cn::cn;
 use crate::adico_lib::variants::Radius;
@@ -42,7 +52,10 @@ pub fn ContextMenuContent(
         // property exists to cap against. Falls back to a fixed, viewport-relative
         // cap (design.md's documented fallback) rather than clipping unbounded
         // content silently.
-        "z-50 min-w-[8rem] max-h-[min(24rem,90vh)] overflow-y-auto border bg-popover p-1 text-popover-foreground shadow-md data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+        // `min-w-[8rem]` alone can force overflow on its own (a min-width has
+        // no upper bound), so it's paired with the same viewport-relative
+        // gutter clamp `popover.rs` uses -- see its comment for why.
+        "z-50 min-w-[8rem] max-w-[calc(100%-2rem)] max-h-[min(24rem,90vh)] overflow-y-auto border bg-popover p-1 text-popover-foreground shadow-md data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
         radius.class(),
         scroll_area_visibility_class(false),
         class.as_deref().unwrap_or_default(),
@@ -102,5 +115,65 @@ pub fn ContextMenuItem(
             attributes,
             {children}
         }
+    }
+}
+
+/// A purely visual/ARIA grouping of related items — typically a
+/// [`ContextMenuLabel`] followed by [`ContextMenuItem`]s. Does not affect
+/// keyboard navigation ordering.
+#[component]
+pub fn ContextMenuGroup(
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+    children: Element,
+) -> Element {
+    let class = cn(&[class.as_deref().unwrap_or_default()]);
+    rsx! { PrimitiveMenuGroup { class, attributes, {children} } }
+}
+
+/// A non-interactive heading for a [`ContextMenuGroup`] (or a whole menu).
+#[component]
+pub fn ContextMenuLabel(
+    /// Indents the label to align with inset items, matching shadcn's own
+    /// boolean toggle.
+    #[props(default)]
+    inset: bool,
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+    children: Element,
+) -> Element {
+    let class = cn(&[
+        "px-2 py-1.5 text-sm font-semibold",
+        if inset { "pl-8" } else { "" },
+        class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! { PrimitiveMenuGroupLabel { class, attributes, {children} } }
+}
+
+/// A visual divider between menu items or groups.
+#[component]
+pub fn ContextMenuSeparator(
+    class: Option<String>,
+    #[props(extends = GlobalAttributes)] attributes: Vec<Attribute>,
+) -> Element {
+    let class = cn(&[
+        "-mx-1 my-1 h-px bg-border",
+        class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! { PrimitiveMenuSeparator { class, attributes } }
+}
+
+/// A trailing keyboard-shortcut hint (e.g. `⌘R`) for a menu item. Purely
+/// presentational — no primitive backs this and it registers no key binding,
+/// matching upstream shadcn's own `ContextMenuShortcut` (a styled `<span>`;
+/// same precedent as the `command` registry item's `CommandShortcut`).
+#[component]
+pub fn ContextMenuShortcut(children: Element, class: Option<String>) -> Element {
+    let class = cn(&[
+        "ml-auto text-xs tracking-widest text-muted-foreground",
+        class.as_deref().unwrap_or_default(),
+    ]);
+    rsx! {
+        span { class, {children} }
     }
 }
