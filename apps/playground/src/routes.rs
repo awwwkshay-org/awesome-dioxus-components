@@ -3,9 +3,11 @@
 //! this enum still declares every path explicitly even though each page's
 //! body now lives under `pages/` (see `pages/mod.rs`).
 
+use adico_primitives::icons;
 use dioxus::prelude::*;
 
 use crate::components;
+use crate::components::nav::NavList;
 use crate::components::theme_builder_launcher::ThemeBuilderLauncher;
 use crate::pages::{
     AccordionPage, AlertDialogPage, AlertPage, AspectRatioPage, AttachmentPage, AvatarPage,
@@ -256,82 +258,123 @@ pub fn nav_items() -> Vec<(&'static str, Route)> {
 pub fn Layout() -> Element {
     let navigator = use_navigator();
     let current_route = use_route::<Route>();
+    let mut mobile_nav_open = use_signal(|| false);
 
     rsx! {
-        components::ui::ResizablePanelGroup {
-            direction: components::ui::ResizableDirection::Horizontal,
-            class: "h-full w-full",
-            components::ui::ResizablePanel {
-                index: 0usize,
-                default_size: 18.0,
-                min_size: 12.0,
-                max_size: 30.0,
-                class: "flex h-full min-w-0 flex-col",
-                components::ui::SidebarHeader {
-                    // `Link`'s own `shrink-0` (harmless under the old fixed
-                    // 16rem `Sidebar`, which never got narrow enough for it
-                    // to matter) actively fights a resizable nav column: it
-                    // stops this row from shrinking at all, so "adico
-                    // playground" is forced to wrap instead of truncating
-                    // once the column is dragged narrow. `min-w-0` +
-                    // wrapping the text in its own `truncate` span lets the
-                    // row shrink and elide instead.
-                    Link { class: "flex min-w-0 items-center gap-2 text-lg font-bold", to: Route::Home {},
-                        img { class: "size-8 shrink-0 rounded-md", src: PLAYGROUND_LOGO, alt: "adico logo" }
-                        span { class: "min-w-0 truncate", "Adico Playground" }
+        div { class: "flex h-full w-full flex-col",
+            // Mobile-only (`< md`) top bar + nav overlay. No JS viewport
+            // detection: `flex md:hidden` on this bar and `hidden md:flex`
+            // on the `>= md` nav column below are the only thing selecting
+            // between them (registry/ui/sidebar.rs documents why a real
+            // `document::eval`-based viewport check doesn't work in this
+            // runtime). `mobile_nav_open` is only ever set by clicks (the
+            // hamburger trigger, a nav selection, or Sheet's own dismissal),
+            // never by measuring the viewport.
+            div { class: "flex items-center justify-between gap-2 border-b border-border p-3 md:hidden",
+                Link { class: "flex min-w-0 items-center gap-2 text-lg font-bold", to: Route::Home {},
+                    img { class: "size-8 shrink-0 rounded-md", src: PLAYGROUND_LOGO, alt: "adico logo" }
+                    span { class: "min-w-0 truncate", "Adico Playground" }
+                }
+                components::ui::Sheet {
+                    open: mobile_nav_open(),
+                    on_open_change: move |value| mobile_nav_open.set(value),
+                    components::ui::SheetTrigger {
+                        variant: components::ui::ButtonVariant::Ghost,
+                        size: components::ui::ButtonSize::Icon,
+                        aria_label: "Open navigation",
+                        icons::Menu { class: "size-5" }
+                    }
+                    components::ui::SheetOverlay {}
+                    components::ui::SheetContent {
+                        side: components::ui::SheetSide::Left,
+                        class: "flex w-3/4 max-w-xs flex-col gap-4 p-4",
+                        div { class: "min-h-0 flex-1 overflow-y-auto",
+                            NavList {
+                                current_route: current_route.clone(),
+                                onnavigate: move |route| {
+                                    mobile_nav_open.set(false);
+                                    navigator.push(route);
+                                },
+                            }
+                        }
+                        div { class: "flex shrink-0 flex-col gap-2 border-t border-border pt-4",
+                            div { class: "flex items-end gap-2",
+                                components::ui::ModeToggle {}
+                                components::ui::ThemeSwitcher { class: "flex-1", show_label: false }
+                            }
+                            ThemeBuilderLauncher {}
+                        }
                     }
                 }
-                components::ui::SidebarContent {
-                    components::ui::SidebarGroup {
-                        components::ui::SidebarGroupContent {
-                            components::ui::SidebarMenu {
-                                for (label , route) in nav_items() {
-                                    components::ui::SidebarMenuItem {
-                                        div {
-                                            onclick: move |_| { navigator.push(route.clone()); },
-                                            components::ui::SidebarMenuButton {
-                                                is_active: current_route == route,
-                                                // `SidebarMenuButton` passes
-                                                // its children straight
-                                                // through with no
-                                                // truncation handling of its
-                                                // own (its own root button
-                                                // has `overflow-hidden` but
-                                                // not `whitespace-nowrap`,
-                                                // so a bare text child still
-                                                // wraps rather than eliding)
-                                                // -- wrapping the label in
-                                                // its own `min-w-0 truncate`
-                                                // span here is this
-                                                // playground's own
-                                                // composition choice, not a
-                                                // registry change.
-                                                span { class: "min-w-0 flex-1 truncate", "{label}" }
-                                            }
-                                        }
+            }
+            // The one and only `Outlet` in this shell -- mounted exactly
+            // once so routed page state (and any positioner-portalled
+            // content a page renders) never exists in two places at once.
+            // Below `md` the nav column and its resize handle are
+            // `display:none` (freeing their row space) and the content
+            // panel's `max-md:flex-1!` overrides its own `flex: 0 0 {size}%`
+            // inline style (the resizable drag mechanism's own state) to
+            // fill the row -- at `>= md` neither `max-md:` class ever
+            // applies, so this tree renders byte-identical to before.
+            div { class: "min-h-0 flex-1",
+                components::ui::ResizablePanelGroup {
+                    direction: components::ui::ResizableDirection::Horizontal,
+                    class: "h-full w-full",
+                    components::ui::ResizablePanel {
+                        index: 0usize,
+                        default_size: 18.0,
+                        min_size: 12.0,
+                        max_size: 30.0,
+                        class: "hidden h-full min-w-0 flex-col md:flex",
+                        components::ui::SidebarHeader {
+                            // `Link`'s own `shrink-0` (harmless under the old fixed
+                            // 16rem `Sidebar`, which never got narrow enough for it
+                            // to matter) actively fights a resizable nav column: it
+                            // stops this row from shrinking at all, so "adico
+                            // playground" is forced to wrap instead of truncating
+                            // once the column is dragged narrow. `min-w-0` +
+                            // wrapping the text in its own `truncate` span lets the
+                            // row shrink and elide instead.
+                            Link { class: "flex min-w-0 items-center gap-2 text-lg font-bold", to: Route::Home {},
+                                img { class: "size-8 shrink-0 rounded-md", src: PLAYGROUND_LOGO, alt: "adico logo" }
+                                span { class: "min-w-0 truncate", "Adico Playground" }
+                            }
+                        }
+                        components::ui::SidebarContent {
+                            components::ui::SidebarGroup {
+                                components::ui::SidebarGroupContent {
+                                    NavList {
+                                        current_route: current_route.clone(),
+                                        onnavigate: move |route| {
+                                            navigator.push(route);
+                                        },
                                     }
                                 }
                             }
                         }
+                        components::ui::SidebarFooter {
+                            div { class: "flex items-end gap-2",
+                                components::ui::ModeToggle {}
+                                components::ui::ThemeSwitcher { class: "flex-1", show_label: false }
+                            }
+                            ThemeBuilderLauncher {}
+                        }
                     }
-                }
-                components::ui::SidebarFooter {
-                    div { class: "flex items-end gap-2",
-                        components::ui::ModeToggle {}
-                        components::ui::ThemeSwitcher { class: "flex-1", show_label: false }
+                    components::ui::ResizableHandle {
+                        handle_index: 0usize,
+                        with_handle: true,
+                        class: "hidden md:flex",
                     }
-                    ThemeBuilderLauncher {}
-                }
-            }
-            components::ui::ResizableHandle { handle_index: 0usize, with_handle: true }
-            components::ui::ResizablePanel {
-                index: 1usize,
-                default_size: 82.0,
-                min_size: 70.0,
-                max_size: 88.0,
-                class: "flex h-full min-h-0 flex-col",
-                div { class: "min-h-0 flex-1 overflow-y-auto p-3 lg:p-6",
-                    Outlet::<Route> {}
+                    components::ui::ResizablePanel {
+                        index: 1usize,
+                        default_size: 82.0,
+                        min_size: 70.0,
+                        max_size: 88.0,
+                        class: "flex h-full min-h-0 flex-col max-md:flex-1!",
+                        div { class: "min-h-0 flex-1 overflow-y-auto p-3 lg:p-6",
+                            Outlet::<Route> {}
+                        }
+                    }
                 }
             }
         }

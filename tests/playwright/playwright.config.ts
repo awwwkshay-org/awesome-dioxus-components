@@ -27,15 +27,18 @@ export default defineConfig({
     {
       // `make-registry-components-mobile-first`: asserts no registry
       // component overflows a 375px viewport. See responsive.spec.ts.
+      // `make-playground-shell-responsive` adds responsive-shell.spec.ts
+      // to this same project for the playground's own app shell.
       name: "mobile",
-      testMatch: /(^|\/)responsive\.spec\.ts$/,
+      testMatch: /(^|\/)(responsive|responsive-shell)\.spec\.ts$/,
       use: { ...baseUse, viewport: { width: 375, height: 812 } }
     },
     {
       // Companion to `mobile`: asserts today's desktop geometry is
-      // unchanged by the mobile-first sweep. See responsive-desktop.spec.ts.
+      // unchanged by the mobile-first sweep. See responsive-desktop.spec.ts
+      // and (for the app shell) responsive-desktop-shell.spec.ts.
       name: "desktop-invariance",
-      testMatch: /(^|\/)responsive-desktop\.spec\.ts$/,
+      testMatch: /(^|\/)responsive-desktop(-shell)?\.spec\.ts$/,
       use: { ...baseUse, viewport: { width: 1280, height: 800 } }
     }
   ]
