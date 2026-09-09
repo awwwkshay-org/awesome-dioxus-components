@@ -7,7 +7,7 @@
       "source": "ui/calendar.rs",
       "targetRoot": "ui",
       "target": "calendar.rs",
-      "checksum": "5f3c4188289335630cc873ee88d134c27dd0a8fad8fe3eeb41b6987bf8b53a5b"
+      "checksum": "bc789113f3312f08ffeb0e0d5d623cd15f7e1b25cbecc4b677694340148a8027"
     }
   ],
   "registryDependencies": [

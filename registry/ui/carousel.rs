@@ -171,11 +171,16 @@ pub fn CarouselContent(children: Element, class: Option<String>) -> Element {
         (CarouselOrientation::Horizontal, true) => {
             "flex snap-none overflow-x-auto -ml-4 cursor-grabbing select-none"
         }
+        // `max-h-[calc(100svh-2rem)]` (R3): defensive only -- inert on any
+        // portrait phone or desktop viewport (>=24rem tall with room to
+        // spare), but caps the fixed 384px snap-scroll window against
+        // genuinely short viewports (e.g. a landscape phone) instead of
+        // letting it exceed the available height.
         (CarouselOrientation::Vertical, false) => {
-            "flex h-[24rem] flex-col snap-y snap-mandatory overflow-y-auto -mt-4 cursor-grab"
+            "flex h-[24rem] max-h-[calc(100svh-2rem)] flex-col snap-y snap-mandatory overflow-y-auto -mt-4 cursor-grab"
         }
         (CarouselOrientation::Vertical, true) => {
-            "flex h-[24rem] flex-col snap-none overflow-y-auto -mt-4 cursor-grabbing select-none"
+            "flex h-[24rem] max-h-[calc(100svh-2rem)] flex-col snap-none overflow-y-auto -mt-4 cursor-grabbing select-none"
         }
     };
     let class = cn(&[

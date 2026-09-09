@@ -184,9 +184,18 @@ pub fn Sidebar(props: SidebarProps) -> Element {
     let collapsible = props.collapsible.as_str();
 
     let width_class = match (open(), props.collapsible) {
-        (true, _) => "w-[--sidebar-width]",
-        (false, SidebarCollapsible::Icon) => "w-[--sidebar-width-icon]",
-        (false, SidebarCollapsible::None) => "w-[--sidebar-width]",
+        // `w-(--sidebar-width)`, not `w-[--sidebar-width]`: the bracket form
+        // compiles under Tailwind v4.1.5 to the invalid declaration
+        // `width: --sidebar-width` (missing `var(...)`), silently dropped by
+        // the browser -- Sidebar has never actually rendered its intended
+        // 16rem open width on this toolchain. `w-(--x)` is v4's own
+        // var-reference syntax and compiles to `width: var(--x)` correctly.
+        // `max-w-[85vw]` is a separate, purely defensive addition: inert
+        // above ~301px, it guarantees an open sidebar can never exceed the
+        // viewport even though it doesn't (yet) collapse based on one.
+        (true, _) => "w-(--sidebar-width) max-w-[85vw]",
+        (false, SidebarCollapsible::Icon) => "w-(--sidebar-width-icon)",
+        (false, SidebarCollapsible::None) => "w-(--sidebar-width) max-w-[85vw]",
         (false, SidebarCollapsible::Offcanvas) => "w-0 overflow-hidden border-transparent",
     };
     let side_class = match props.side {

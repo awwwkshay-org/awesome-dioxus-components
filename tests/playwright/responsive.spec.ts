@@ -103,7 +103,14 @@ test.describe("in-flow components at 375px", () => {
 
   test("card renders a single column at 375px", async ({ page }) => {
     await page.goto("/responsive/flow");
-    const header = page.locator('[data-responsive-case="card"] > div').first();
+    // `CardHeader` renders a real `<header>` element, not a `<div>` -- a
+    // `> div` selector here never matched anything and silently timed out
+    // instead of asserting (a bug present since this spec was first
+    // written; caught only once Card's own fix made this test the last one
+    // still failing). `[class*="grid-cols-"]` is unambiguous: it's the one
+    // R6 class this wave's `@sm:has-[[data-slot=card-action]]:*` compound
+    // touches.
+    const header = page.locator('[data-responsive-case="card"] [class*="grid-cols-"]').first();
     const columns = await header.evaluate((el) => getComputedStyle(el).gridTemplateColumns);
     const trackCount = columns === "none" ? 1 : columns.trim().split(/\s+/).length;
     expect(trackCount, `card header grid should collapse to 1 column at 375px, got "${columns}"`).toBe(1);

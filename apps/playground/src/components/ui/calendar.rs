@@ -52,7 +52,15 @@ pub struct CalendarViewProps {
 #[component]
 pub fn CalendarView(props: CalendarViewProps) -> Element {
     let class = cn(&[
-        "h-[20rem] w-[18rem] border bg-popover p-3 text-popover-foreground shadow-sm",
+        // `w-full sm:w-[18rem]`, not `w-[18rem] max-w-[...]` (D2's flex-child
+        // rule): `CalendarView` is a flex child in `date_time_picker.rs`'s
+        // `sm:flex-row` layout, where `w-full` resolves against the flex
+        // container and would compete with siblings under a `max-w` form.
+        // `w-full sm:w-[18rem]` emits the byte-identical `width: 18rem` at
+        // >=640px regardless of siblings, and is equally correct in
+        // `date_picker.rs`'s block-flow popover (which strips width
+        // entirely via `w-auto` anyway, unaffected either way).
+        "h-[20rem] w-full sm:w-[18rem] border bg-popover p-3 text-popover-foreground shadow-sm",
         props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);

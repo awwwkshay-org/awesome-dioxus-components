@@ -1,17 +1,25 @@
 //! Source-owned shadcn-style Carousel for Dioxus, built directly on native
 //! CSS scroll-snap plus Dioxus's own per-element `MountedData::scroll`/
-//! `onscroll` -- deliberately not a drag/swipe gesture, and with no
-//! dependency on `adico-primitives`' `pointer.rs` global pointer-position
-//! registry, a documented, unconfirmed-in-browser defect on `web` (see
-//! `packages/adico-primitives/src/gesture.rs`'s own module doc comment).
-//! This is a named, deliberate scope reduction from upstream's
-//! `embla-carousel-react` (momentum drag, loop mode, autoplay plugins,
-//! `CarouselApi`/`setApi`, dot indicators) -- see the M7 task audit
-//! (`openspec/changes/build-adico-component-ecosystem/tasks.md`, task 8.1)
-//! for why. Registry-layer composition only, matching this repo's own
-//! precedent for `resizable`'s similarly reduced-primitive-need shape: no new
-//! `adico-primitives` module was needed for scroll-snap paging plus native
-//! `onscroll`-derived boundary state.
+//! `onscroll`, with pointer-drag paging layered on top.
+//!
+//! Drag uses per-element pointer events (`onpointerdown` on the track, then
+//! a transient full-screen overlay carrying `onpointermove`/`onpointerup`/
+//! `onpointercancel` -- the same containment pattern as `resizable.rs`) and
+//! has **no** dependency on `adico-primitives`' `pointer.rs` global
+//! pointer-position registry. An earlier revision of this module cited a
+//! "broken-on-web `document::eval` pattern" as the reason drag was omitted
+//! entirely; that claim was later retracted after live-browser verification
+//! (see `packages/adico-primitives/src/positioner.rs`'s 2026-09-03 note),
+//! and the per-element approach used here never depended on it either way.
+//! A mouse drag past 20% of the viewport pages one slide in the drag
+//! direction; a shorter drag snaps back. Touch input is left to the
+//! browser's own scroll-snap panning, which already pages natively.
+//!
+//! The remaining scope reduction from upstream's `embla-carousel-react` is
+//! still deliberate: momentum/velocity physics, loop mode, autoplay
+//! plugins, `CarouselApi`/`setApi`, and dot indicators are not built.
+//! Registry-layer composition only, matching this repo's own precedent for
+//! `resizable`'s similarly reduced-primitive-need shape.
 
 use std::rc::Rc;
 
@@ -26,6 +34,20 @@ use adico_primitives::icons::{ArrowLeft, ArrowRight};
 /// reached -- native smooth-scroll snapping rarely lands on an exact integer
 /// offset.
 const SCROLL_END_TOLERANCE: f64 = 1.0;
+
+/// A released drag whose distance along the scroll axis exceeds this
+/// fraction of the viewport pages one slide; anything shorter snaps back.
+const DRAG_PAGE_THRESHOLD: f64 = 0.2;
+
+/// An in-progress pointer drag on the track. `delta` is positive when the
+/// pointer moved backward along the axis (content dragged toward the next
+/// slide).
+#[derive(Clone, Copy, PartialEq)]
+struct CarouselDrag {
+    start_coord: f64,
+    start_offset: f64,
+    delta: f64,
+}
 
 /// The axis a [`Carousel`] pages along.
 #[derive(Clone, Copy, PartialEq, Eq, Default)]
@@ -44,6 +66,7 @@ struct CarouselContext {
     scroll_offset: Signal<f64>,
     viewport_size: Signal<f64>,
     content_size: Signal<f64>,
+    drag: Signal<Option<CarouselDrag>>,
 }
 
 impl CarouselContext {
@@ -58,19 +81,14 @@ impl CarouselContext {
         content > 0.0 && offset + viewport < content - SCROLL_END_TOLERANCE
     }
 
-    /// Pages one viewport's worth in `direction` (-1.0 previous, 1.0 next),
-    /// clamped to the scrollable range, and imperatively scrolls the
-    /// content element there. Writes `scroll_offset` optimistically -- the
+    /// Imperatively scrolls the content element to `target` along the
+    /// carousel's axis. Writes `scroll_offset` optimistically -- the
     /// content's own `onscroll` handler (below) then overwrites it with the
-    /// authoritative value as the smooth scroll actually progresses.
-    fn page(&mut self, direction: f64) {
+    /// authoritative value as the scroll actually progresses.
+    fn scroll_to(&mut self, target: f64, behavior: ScrollBehavior) {
         let Some(handle) = self.content_ref.peek().clone() else {
             return;
         };
-        let viewport = *self.viewport_size.peek();
-        let current = *self.scroll_offset.peek();
-        let max_offset = (*self.content_size.peek() - viewport).max(0.0);
-        let target = (current + direction * viewport).clamp(0.0, max_offset);
         self.scroll_offset.set(target);
         let orientation = self.orientation;
         spawn(async move {
@@ -78,8 +96,21 @@ impl CarouselContext {
                 CarouselOrientation::Horizontal => Vector2D::new(target, 0.0),
                 CarouselOrientation::Vertical => Vector2D::new(0.0, target),
             };
-            let _ = handle.scroll(coordinates, ScrollBehavior::Smooth).await;
+            let _ = handle.scroll(coordinates, behavior).await;
         });
+    }
+
+    fn max_offset(&self) -> f64 {
+        (*self.content_size.peek() - *self.viewport_size.peek()).max(0.0)
+    }
+
+    /// Pages one viewport's worth in `direction` (-1.0 previous, 1.0 next),
+    /// clamped to the scrollable range.
+    fn page(&mut self, direction: f64) {
+        let viewport = *self.viewport_size.peek();
+        let current = *self.scroll_offset.peek();
+        let target = (current + direction * viewport).clamp(0.0, self.max_offset());
+        self.scroll_to(target, ScrollBehavior::Smooth);
     }
 
     fn scroll_prev(&mut self) {
@@ -113,6 +144,7 @@ pub fn Carousel(
         scroll_offset: Signal::new(0.0),
         viewport_size: Signal::new(0.0),
         content_size: Signal::new(0.0),
+        drag: Signal::new(None),
     });
     let class = cn(&["relative", class.as_deref().unwrap_or_default()]);
     rsx! {
@@ -121,16 +153,34 @@ pub fn Carousel(
 }
 
 /// The scrollable, scroll-snapping track of items. Focus it and use the
-/// arrow keys matching its [`CarouselOrientation`] to page, or use
-/// [`CarouselPrevious`]/[`CarouselNext`].
+/// arrow keys matching its [`CarouselOrientation`] to page, drag it with the
+/// mouse, or use [`CarouselPrevious`]/[`CarouselNext`].
 #[component]
 pub fn CarouselContent(children: Element, class: Option<String>) -> Element {
     let mut ctx: CarouselContext = use_context();
     let orientation = ctx.orientation;
-    let axis_class = match orientation {
-        CarouselOrientation::Horizontal => "flex snap-x snap-mandatory overflow-x-auto -ml-4",
-        CarouselOrientation::Vertical => {
-            "flex h-[24rem] flex-col snap-y snap-mandatory overflow-y-auto -mt-4"
+    let dragging = ctx.drag.read().is_some();
+    // Snap must be fully off while dragging: `scroll-snap-type` would fight
+    // every instant reposition. Branching the whole axis class (rather than
+    // appending `snap-none`) avoids relying on stylesheet order to resolve
+    // two competing snap utilities.
+    let axis_class = match (orientation, dragging) {
+        (CarouselOrientation::Horizontal, false) => {
+            "flex snap-x snap-mandatory overflow-x-auto -ml-4 cursor-grab"
+        }
+        (CarouselOrientation::Horizontal, true) => {
+            "flex snap-none overflow-x-auto -ml-4 cursor-grabbing select-none"
+        }
+        // `max-h-[calc(100svh-2rem)]` (R3): defensive only -- inert on any
+        // portrait phone or desktop viewport (>=24rem tall with room to
+        // spare), but caps the fixed 384px snap-scroll window against
+        // genuinely short viewports (e.g. a landscape phone) instead of
+        // letting it exceed the available height.
+        (CarouselOrientation::Vertical, false) => {
+            "flex h-[24rem] max-h-[calc(100svh-2rem)] flex-col snap-y snap-mandatory overflow-y-auto -mt-4 cursor-grab"
+        }
+        (CarouselOrientation::Vertical, true) => {
+            "flex h-[24rem] max-h-[calc(100svh-2rem)] flex-col snap-none overflow-y-auto -mt-4 cursor-grabbing select-none"
         }
     };
     let class = cn(&[
@@ -197,6 +247,43 @@ pub fn CarouselContent(children: Element, class: Option<String>) -> Element {
         _ => {}
     };
 
+    // Mouse only: touch input already pans-and-snaps natively via the
+    // overflow scroll container, and fighting it with instant repositions
+    // would judder.
+    let onpointerdown = move |event: Event<PointerData>| {
+        if event.data().pointer_type() != "mouse" {
+            return;
+        }
+        let point = event.client_coordinates();
+        let start_coord = match orientation {
+            CarouselOrientation::Horizontal => point.x,
+            CarouselOrientation::Vertical => point.y,
+        };
+        ctx.drag.set(Some(CarouselDrag {
+            start_coord,
+            start_offset: *ctx.scroll_offset.peek(),
+            delta: 0.0,
+        }));
+    };
+
+    // Releasing (or losing) the pointer decides the page from the total
+    // drag distance: past the threshold pages one slide in the drag
+    // direction, anything shorter snaps back to where the drag began.
+    let mut release = move |drag: CarouselDrag| {
+        ctx.drag.set(None);
+        let viewport = *ctx.viewport_size.peek();
+        let max_offset = ctx.max_offset();
+        let threshold = viewport * DRAG_PAGE_THRESHOLD;
+        let target = if drag.delta > threshold {
+            (drag.start_offset + viewport).clamp(0.0, max_offset)
+        } else if drag.delta < -threshold {
+            (drag.start_offset - viewport).clamp(0.0, max_offset)
+        } else {
+            drag.start_offset
+        };
+        ctx.scroll_to(target, ScrollBehavior::Smooth);
+    };
+
     rsx! {
         div {
             class,
@@ -204,7 +291,26 @@ pub fn CarouselContent(children: Element, class: Option<String>) -> Element {
             onmounted,
             onscroll,
             onkeydown,
+            onpointerdown,
             {children}
+        }
+        if let Some(drag) = *ctx.drag.read() {
+            div {
+                class: "fixed inset-0 z-[100] cursor-grabbing select-none",
+                onpointermove: move |event: Event<PointerData>| {
+                    let point = event.client_coordinates();
+                    let current = match orientation {
+                        CarouselOrientation::Horizontal => point.x,
+                        CarouselOrientation::Vertical => point.y,
+                    };
+                    let delta = drag.start_coord - current;
+                    ctx.drag.set(Some(CarouselDrag { delta, ..drag }));
+                    let target = (drag.start_offset + delta).clamp(0.0, ctx.max_offset());
+                    ctx.scroll_to(target, ScrollBehavior::Instant);
+                },
+                onpointerup: move |_| release(drag),
+                onpointercancel: move |_| release(drag),
+            }
         }
     }
 }

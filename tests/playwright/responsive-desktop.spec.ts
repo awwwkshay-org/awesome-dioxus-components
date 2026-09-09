@@ -114,23 +114,19 @@ test("tabs list scrolls rather than clips, but is visually unaffected at desktop
   expect(result?.scrolls, "5 tabs should fit without scrolling at desktop width").toBe(false);
 });
 
-test("sidebar open width -- KNOWN BROKEN, Wave 5 fixes this independently of mobile-first", async ({ page }) => {
+test("sidebar open width is the intended 256px at desktop", async ({ page }) => {
   await page.goto("/responsive/flow");
   const width = await page.evaluate(() => {
     const el = document.querySelector('[data-responsive-case="sidebar"] aside');
     return el ? Math.round(el.getBoundingClientRect().width) : null;
   });
-  // `registry/ui/sidebar.rs`'s `w-[--sidebar-width]` compiles under Tailwind
-  // v4.1.5 to the INVALID declaration `width: --sidebar-width` (missing
-  // `var(...)`), which the browser drops -- so the open Sidebar currently
-  // renders at its shrink-to-fit content width (observed ~139-143px, not
-  // exactly reproducible since shrink-to-fit width is sub-pixel/font-metric
-  // sensitive), not the intended 16rem (256px). This is a genuine
-  // pre-existing defect, unrelated to viewport width, discovered while
-  // capturing this file's baseline. Wave 5 fixes it
-  // (`w-[--sidebar-width]` -> `w-(--sidebar-width)`) alongside its own
-  // `max-w-[85vw]` clamp on the same file -- at that point this assertion
-  // changes from "still broken" to `toBe(256)`, and that wave's commit
-  // updates it with this same explanation carried forward.
-  expect(width, "sidebar should still be shrink-to-fit width, not the intended 256px, until Wave 5's fix").toBeLessThan(200);
+  // Wave 5 fixed `registry/ui/sidebar.rs`'s `w-[--sidebar-width]` -- which
+  // compiled under Tailwind v4.1.5 to the INVALID declaration
+  // `width: --sidebar-width` (missing `var(...)`), silently dropped by the
+  // browser, so the open Sidebar rendered at its shrink-to-fit content width
+  // (~139-143px) instead of the intended 16rem -- to `w-(--sidebar-width)`,
+  // v4's own var-reference syntax. Confirmed fixed: this now measures the
+  // correct 256px. (This assertion originally read `toBeLessThan(200)` to
+  // record the pre-fix baseline; flipped here per that comment's own plan.)
+  expect(width).toBe(256);
 });

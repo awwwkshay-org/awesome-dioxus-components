@@ -25,7 +25,10 @@ pub struct CardProps {
 #[component]
 pub fn Card(props: CardProps) -> Element {
     let class = cn(&[
-        "w-full border bg-card text-card-foreground shadow-sm",
+        // `@container`: `CardHeader`'s two-column-with-action layout responds
+        // to the *card's own* rendered width, not the viewport (see
+        // `CardHeader`'s doc comment for why `sm:` doesn't work here).
+        "@container w-full border bg-card text-card-foreground shadow-sm",
         props.radius.class(),
         props.class.as_deref().unwrap_or_default(),
     ]);
@@ -48,7 +51,22 @@ pub struct CardHeaderProps {
 #[component]
 pub fn CardHeader(props: CardHeaderProps) -> Element {
     let class = cn(&[
-        "flex flex-col gap-1.5 p-6 has-[[data-slot=card-action]]:grid has-[[data-slot=card-action]]:grid-cols-[1fr_auto] has-[[data-slot=card-action]]:items-start",
+        // The `has-[[data-slot=card-action]]:*` compound moves behind `@sm:`
+        // (R6, container-query form): below a 384px-wide *card* (not
+        // viewport), it stays `flex flex-col` (its own unconditional base)
+        // -- title, description, and the action stack in document order --
+        // rather than forcing a cramped two-column grid. At `@sm` and up,
+        // this restores today's exact `grid grid-cols-[1fr_auto]` corner
+        // layout. A viewport `sm:` breakpoint was tried first and rejected:
+        // Tailwind v4.1.5 fails to compile `sm:has-[[data-slot=...]]:*`
+        // entirely (verified: 0 occurrences in the compiled stylesheet, vs.
+        // 6 for the unprefixed form) -- stacking a breakpoint variant in
+        // front of a `has-[[...]]` double-bracket selector breaks its
+        // parser. Container queries also don't have this problem AND are
+        // more correct for a reusable `Card`: its layout should respond to
+        // its own rendered width, not the viewport, since cards are commonly
+        // embedded in narrow columns even on a wide desktop screen.
+        "flex flex-col gap-1.5 p-6 @sm:has-[[data-slot=card-action]]:grid @sm:has-[[data-slot=card-action]]:grid-cols-[1fr_auto] @sm:has-[[data-slot=card-action]]:items-start",
         props.class.as_deref().unwrap_or_default(),
     ]);
     rsx! {

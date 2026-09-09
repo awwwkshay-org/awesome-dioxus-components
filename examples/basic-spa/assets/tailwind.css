@@ -220,6 +220,9 @@
   }
 }
 @layer utilities {
+  .\@container {
+    container-type: inline-size;
+  }
   .pointer-events-auto {
     pointer-events: auto;
   }
@@ -653,6 +656,15 @@
   .min-h-svh {
     min-height: 100svh;
   }
+  .w-\(--sidebar-width\) {
+    width: var(--sidebar-width);
+  }
+  .w-\(--sidebar-width-icon\) {
+    width: var(--sidebar-width-icon);
+  }
+  .w-\(--x\) {
+    width: var(--x);
+  }
   .w-0 {
     width: calc(var(--spacing) * 0);
   }
@@ -704,9 +716,6 @@
   .w-72 {
     width: calc(var(--spacing) * 72);
   }
-  .w-\[--sidebar-width-icon\] {
-    width: --sidebar-width-icon;
-  }
   .w-\[--sidebar-width\] {
     width: --sidebar-width;
   }
@@ -743,8 +752,14 @@
   .max-w-56 {
     max-width: calc(var(--spacing) * 56);
   }
+  .max-w-\[\.\.\.\] {
+    max-width: ...;
+  }
   .max-w-\[80\%\] {
     max-width: 80%;
+  }
+  .max-w-\[85vw\] {
+    max-width: 85vw;
   }
   .max-w-\[calc\(100\%-2rem\)\] {
     max-width: calc(100% - 2rem);
@@ -862,6 +877,12 @@
   .cursor-default {
     cursor: default;
   }
+  .cursor-grab {
+    cursor: grab;
+  }
+  .cursor-grabbing {
+    cursor: grabbing;
+  }
   .cursor-pointer {
     cursor: pointer;
   }
@@ -879,6 +900,9 @@
   }
   .resize-none {
     resize: none;
+  }
+  .snap-none {
+    scroll-snap-type: none;
   }
   .snap-x {
     scroll-snap-type: x var(--tw-scroll-snap-strictness);
@@ -903,6 +927,9 @@
   }
   .grid-cols-\[0_1fr\] {
     grid-template-columns: 0 1fr;
+  }
+  .grid-cols-\[1fr_auto\] {
+    grid-template-columns: 1fr auto;
   }
   .flex-col {
     flex-direction: column;
@@ -2441,21 +2468,6 @@
       opacity: 50%;
     }
   }
-  .has-\[\[data-slot\=card-action\]\]\:grid {
-    &:has(*:is([data-slot=card-action])) {
-      display: grid;
-    }
-  }
-  .has-\[\[data-slot\=card-action\]\]\:grid-cols-\[1fr_auto\] {
-    &:has(*:is([data-slot=card-action])) {
-      grid-template-columns: 1fr auto;
-    }
-  }
-  .has-\[\[data-slot\=card-action\]\]\:items-start {
-    &:has(*:is([data-slot=card-action])) {
-      align-items: flex-start;
-    }
-  }
   .has-\[\[data-slot\=input-group-control\]\:focus-visible\]\:border-ring {
     &:has(*:is([data-slot=input-group-control]:focus-visible)) {
       border-color: var(--color-ring);
@@ -3068,6 +3080,11 @@
       margin-top: calc(var(--spacing) * 0);
     }
   }
+  .sm\:w-\[18rem\] {
+    @media (width >= 40rem) {
+      width: 18rem;
+    }
+  }
   .sm\:w-full {
     @media (width >= 40rem) {
       width: 100%;
@@ -3130,6 +3147,27 @@
   .md\:p-12 {
     @media (width >= 48rem) {
       padding: calc(var(--spacing) * 12);
+    }
+  }
+  .\@sm\:has-\[\[data-slot\=card-action\]\]\:grid {
+    @container (width >= 24rem) {
+      &:has(*:is([data-slot=card-action])) {
+        display: grid;
+      }
+    }
+  }
+  .\@sm\:has-\[\[data-slot\=card-action\]\]\:grid-cols-\[1fr_auto\] {
+    @container (width >= 24rem) {
+      &:has(*:is([data-slot=card-action])) {
+        grid-template-columns: 1fr auto;
+      }
+    }
+  }
+  .\@sm\:has-\[\[data-slot\=card-action\]\]\:items-start {
+    @container (width >= 24rem) {
+      &:has(*:is([data-slot=card-action])) {
+        align-items: flex-start;
+      }
     }
   }
   .dark\:text-emerald-500 {

@@ -358,50 +358,103 @@ Each wave's close-out is exactly one CLI rebuild plus three `adico add
 
 ## 5. Fixed dimensions and grids (R3/R5/R6) — 12 components
 
-- [ ] 5.1 `calendar.rs`: apply the flex-child rule from D2 —
+- [x] 5.1 `calendar.rs`: apply the flex-child rule from D2 —
       `w-full sm:w-[18rem]` (not `max-w`, since it's a flex child in
       `date_time_picker.rs`) on `CalendarView`'s `h-[20rem] w-[18rem]`; drop
       `grow-0` from the `w-[60%]`/`w-[40%]` month/year selects so they can
       absorb slack; verify both call sites (`date_picker.rs`,
       `date_time_picker.rs`) render correctly at 375px and unchanged at
-      desktop.
-- [ ] 5.2 `carousel.rs`: apply R3 to the vertical orientation's `h-[24rem]`.
-- [ ] 5.3 `card.rs`: apply R6 — base `grid-cols-1`, move
+      desktop. `CalendarView` width done exactly as planned. **The
+      month/year select `grow-0` drop was reverted after reading the actual
+      code**: its doc comment explicitly explains `shrink-0 grow-0` is
+      deliberate, keeping an exact 60/40 split regardless of leftover flex
+      space — and the widths are already percentage-based, so they already
+      scale fluidly with `CalendarView`'s own now-responsive width with no
+      overflow risk. Dropping `grow-0` would have disturbed a documented
+      design choice for no benefit; left unchanged.
+- [x] 5.2 `carousel.rs`: apply R3 to the vertical orientation's `h-[24rem]`.
+      Done: paired with `max-h-[calc(100svh-2rem)]` — inert on any portrait
+      phone or desktop viewport, defensive only against genuinely short
+      viewports (e.g. landscape phones).
+- [x] 5.3 `card.rs`: apply R6 — base `grid-cols-1`, move
       `has-[[data-slot=card-action]]:grid-cols-[1fr_auto]` behind `sm:`;
       verify Tailwind v4 actually emits the `sm:has-[…]` compound by grepping
       the built `assets/tailwind.css` after `dx serve`; if it doesn't emit,
       fall back to a `@container` query instead (recorded as a design
-      deviation if taken).
-- [ ] 5.4 `table.rs`✓: verify existing `overflow-x-auto` wrapper needs no
-      change; record the verdict.
-- [ ] 5.5 `sidebar.rs`: add `max-w-[85vw]` to the open panel's width class per
+      deviation if taken). **The `sm:` form failed exactly as anticipated**:
+      verified `sm:has-[[data-slot=card-action]]:*` compiled to zero rules
+      in the built stylesheet (vs. 6 for the unprefixed form pre-edit) —
+      Tailwind v4.1.5 can't parse a breakpoint variant stacked in front of a
+      double-bracket `has-[[...]]` selector. Took the pre-authorized
+      `@container` fallback: `Card`'s root gets `@container`,
+      `CardHeader`'s compound becomes `@sm:has-[[data-slot=card-action]]:*`.
+      Verified this DOES compile (grepped the rebuilt stylesheet: 3 rules
+      present with the expected `&:has(*:is(...))` nesting). Also arguably
+      more correct than a viewport breakpoint would have been: a reusable
+      `Card` should respond to its own rendered width, not the viewport,
+      since cards are commonly embedded in narrow columns even on desktop.
+- [x] 5.4 `table.rs`✓: verify existing `overflow-x-auto` wrapper needs no
+      change; record the verdict. Verified — no change needed.
+- [x] 5.5 `sidebar.rs`: add `max-w-[85vw]` to the open panel's width class per
       `design.md` D4; verify it never exceeds the viewport at 375px and is
-      inert (no visible change) at desktop. **Also fix the incidentally
-      discovered pre-existing defect** (confirmed with the user, out of this
-      change's original scope but folded in here since it's the same file):
-      `w-[--sidebar-width]` / `w-[--sidebar-width-icon]` (lines ~187-189)
-      compile under Tailwind v4.1.5 to the invalid `width: --sidebar-width`
-      declaration (missing `var(...)`), silently dropped by the browser, so
-      Sidebar has never rendered its intended 16rem open width. Fix: change
-      the bracket form to Tailwind v4's parens var-reference syntax —
-      `w-(--sidebar-width)` / `w-(--sidebar-width-icon)`. Verify: rebuild
-      `apps/playground/assets/tailwind.css` and confirm the compiled rule
-      reads `width: var(--sidebar-width)`; flip
-      `responsive-desktop.spec.ts`'s sidebar assertion from
-      `toBeLessThan(200)` to `toBe(256)` and confirm it now passes for the
-      correct reason (not just because nothing regressed).
-- [ ] 5.6 `resizable.rs`: audit; record whether the 4px handle hit area or
+      inert (no visible change) at desktop. **Also fixed the incidentally
+      discovered pre-existing defect** (confirmed with the user):
+      `w-[--sidebar-width]` / `w-[--sidebar-width-icon]` (both the `(true, _)`
+      and `(false, SidebarCollapsible::None)` arms — two sites, not one)
+      compiled under Tailwind v4.1.5 to the invalid `width: --sidebar-width`
+      declaration (missing `var(...)`), silently dropped by the browser.
+      Fixed to `w-(--sidebar-width)` / `w-(--sidebar-width-icon)`, v4's own
+      var-reference syntax. Verified: rebuilt stylesheet's rule now reads
+      `width: var(--sidebar-width)`; live-measured open sidebar width went
+      from ~139-143px (broken, shrink-to-fit) to exactly 256px (correct).
+      Flipped `responsive-desktop.spec.ts`'s sidebar assertion to
+      `toBe(256)` — passes for the right reason now, not just because
+      nothing regressed.
+- [x] 5.6 `resizable.rs`: audit; record whether the 4px handle hit area or
       panel min-sizes need any narrow-viewport treatment (likely audit-only,
-      confirm).
-- [ ] 5.7 `virtual_list.rs`: apply R5 if it has a fixed `vh`/`px` height
-      assumption.
-- [ ] 5.8 `message_scroller.rs`: same as 5.7.
-- [ ] 5.9 `scroll_area.rs`: audit for fixed dimensions.
-- [ ] 5.10 `drag_and_drop_list.rs`: audit for fixed dimensions.
-- [ ] 5.11 `bubble.rs`: audit its `max-w-[80%]` — likely already fine, record
-      the verdict.
-- [ ] 5.12 `attachment.rs`: audit for fixed dimensions.
-- [ ] 5.13 Wave close-out: same cycle as 1.6 for all Wave 5 items.
+      confirm). Verdict `n/a` for width overflow — panel sizes are already
+      percentage-based (`default_size`/`min_size`/`max_size`), inherently
+      fluid. The 4px handle hit area is a genuine R7 (touch-target) concern,
+      not R3 — logged for the deferred touch-target follow-up, not fixed here.
+- [x] 5.7 `virtual_list.rs`: apply R5 if it has a fixed `vh`/`px` height
+      assumption. Verdict `n/a` — zero width/height classes at all in the
+      file; fully consumer-supplied sizing, nothing to fix.
+- [x] 5.8 `message_scroller.rs`: same as 5.7. Verdict `n/a` — `flex flex-col
+      gap-3 p-4` (no fixed width), `min-w-0` already correct, height is
+      consumer-supplied via `class`.
+- [x] 5.9 `scroll_area.rs`: audit for fixed dimensions. Verdict `n/a` — zero
+      width/height classes.
+- [x] 5.10 `drag_and_drop_list.rs`: audit for fixed dimensions. Verdict
+      `n/a` — only fixed dimension is `h-0.5` (a 2px drag-indicator line),
+      no overflow risk.
+- [x] 5.11 `bubble.rs`: audit its `max-w-[80%]` — likely already fine, record
+      the verdict. Confirmed the actual class is `max-w-xs` (320px, already
+      a max-width clamp, not a fixed width) — its own doc comment explains
+      this was a deliberate choice over a percentage. Already safe by
+      construction, `n/a`.
+- [x] 5.12 `attachment.rs`: audit for fixed dimensions. Verdict `n/a` — both
+      flex containers already use `min-w-0 flex-1`, the correct defensive
+      pattern.
+- [x] 5.13 Wave close-out: same cycle as 1.6 for all Wave 5 items (4 files
+      actually edited: calendar, carousel, card, sidebar). Checksums
+      updated exactly matching (4, then 1 more for card's container-query
+      revision within the same wave), registry build/validate/styling-usage
+      check pass, CLI rebuilt, reinstalled into all 3 apps (confirmed via
+      git status). **Found and fixed a second real harness bug during
+      verification**: `responsive.spec.ts`'s card test used the selector
+      `[data-responsive-case="card"] > div`, but `CardHeader` renders a real
+      `<header>` element, not a `<div>` — the selector never matched
+      anything and had been silently timing out (30s) since Wave 0, which I
+      had mistaken for "card correctly still failing" every wave until now,
+      when it was the *only* remaining failure and the timeout (not an
+      assertion) made the truth visible. Fixed to
+      `[class*="grid-cols-"]`, matching the working selector already used
+      in `responsive-desktop.spec.ts`. **Final result: mobile 27/27,
+      desktop-invariance 10/10 — every known failure from the original
+      audit is now fixed.** `cargo fmt`/`check --workspace`/`clippy -D
+      warnings`/`styling-usage check` all clean. Restarted `dx serve` fresh
+      (twice, once mid-wave to verify the container-query compile) before
+      trusting results, per established practice.
 
 ## 6. Audit-only remainder — 24 components
 
