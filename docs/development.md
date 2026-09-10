@@ -7,7 +7,7 @@ cargo fmt --all --check
 cargo check --locked --workspace
 cargo clippy --locked --workspace --all-targets -- -D warnings
 cargo test --locked --workspace
-openspec validate build-adico-component-ecosystem --strict
+openspec validate --all --strict
 ```
 
 The documentation, playground, and examples are intentionally Dioxus projects.
@@ -17,8 +17,8 @@ when the affected milestone provides the required fixtures; record skipped
 checks with their reason.
 
 Do not make consumer examples import `registry/` source using workspace paths.
-The installation fixtures must invoke the locally built `adico` executable once
-the CLI vertical slice is implemented.
+The installation fixtures invoke the locally built `adico` executable, same as
+a real consumer would.
 
 ## Maintainer workflows: registry, upstream catalogs, provenance, compat
 

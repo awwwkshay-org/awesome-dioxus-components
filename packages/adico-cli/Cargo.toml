@@ -2,8 +2,15 @@
 name = "adico-cli"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
 description = "Source-owned component installer for Dioxus applications"
+readme = "README.md"
+keywords = ["dioxus", "cli", "shadcn", "components", "ui"]
+categories = ["command-line-utilities", "development-tools"]
 
 [[bin]]
 name = "adico"

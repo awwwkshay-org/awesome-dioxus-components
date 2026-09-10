@@ -477,14 +477,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "awesome-dioxus-components-shared"
-version = "0.1.0"
-dependencies = [
- "serde",
- "uuid",
-]
-
-[[package]]
 name = "axum"
 version = "0.8.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6598,7 +6590,6 @@ version = "1.25.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f053576934f05a761a402421fbbe3d425d9366f75f978806a037b3ca481abecc"
 dependencies = [
- "getrandom 0.4.3",
  "js-sys",
  "serde_core",
  "wasm-bindgen",

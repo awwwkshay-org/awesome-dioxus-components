@@ -1,5 +1,0 @@
-name: adico
-
-# The Todo API/UI stack was retired. New service definitions belong to an
-# approved adico delivery change.
-services: {}

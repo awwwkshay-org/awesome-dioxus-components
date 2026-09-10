@@ -2,9 +2,15 @@
 name = "adico-primitives"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
 description = "Owned headless primitives for Awesome Dioxus Components"
 readme = "README.md"
+keywords = ["dioxus", "ui", "headless", "accessibility", "components"]
+categories = ["gui", "wasm"]
 
 [dependencies]
 # The runtime must not inherit the workspace's fullstack feature selection.

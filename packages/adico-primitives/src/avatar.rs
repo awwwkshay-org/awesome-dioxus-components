@@ -111,8 +111,8 @@ pub struct AvatarProps {
 ///         Avatar {
 ///             aria_label: "Basic avatar",
 ///             AvatarImage {
-///                 src: "https://avatars.githubusercontent.com/u/66571940?s=96&v=4",
-///                 alt: "ealmloff user avatar",
+///                 src: "https://example.com/avatar.png",
+///                 alt: "user avatar",
 ///             }
 ///             AvatarFallback { class: "dx-avatar-fallback", "EA" }
 ///         }
@@ -199,8 +199,8 @@ pub struct AvatarFallbackProps {
 ///         Avatar {
 ///             aria_label: "Basic avatar",
 ///             AvatarImage {
-///                 src: "https://avatars.githubusercontent.com/u/66571940?s=96&v=4",
-///                 alt: "ealmloff user avatar",
+///                 src: "https://example.com/avatar.png",
+///                 alt: "user avatar",
 ///             }
 ///             AvatarFallback { class: "dx-avatar-fallback", "EA" }
 ///         }
@@ -347,8 +347,8 @@ fn use_cached_image_load_reconciliation(
 ///         Avatar {
 ///             aria_label: "Basic avatar",
 ///             AvatarImage {
-///                 src: "https://avatars.githubusercontent.com/u/66571940?s=96&v=4",
-///                 alt: "ealmloff user avatar",
+///                 src: "https://example.com/avatar.png",
+///                 alt: "user avatar",
 ///             }
 ///             AvatarFallback { class: "dx-avatar-fallback", "EA" }
 ///         }

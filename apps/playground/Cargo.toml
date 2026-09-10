@@ -4,6 +4,7 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 description = "Component and primitive development playground for adico"
+publish = false
 
 [dependencies]
 # Explicit (not `dioxus.workspace = true`): `adico add`'s Cargo editor does

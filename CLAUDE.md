@@ -14,7 +14,7 @@ cargo fmt --all --check
 cargo check --locked --workspace
 cargo clippy --locked -p adico-cli -p adico-primitives -p adico-registry-core -p adico-test-utils -p adico-xtask --all-targets -- -D warnings
 cargo test --locked -p adico-cli -p adico-primitives -p adico-registry-core -p adico-test-utils -p adico-xtask
-openspec validate build-adico-component-ecosystem --strict
+openspec validate --all --strict
 ```
 
 Single test / single package:

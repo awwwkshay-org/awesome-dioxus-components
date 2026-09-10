@@ -35,7 +35,7 @@ committed snapshots and never touches the network.
 
 | Upstream | Intended use | License | Status |
 | --- | --- | --- | --- |
-| `DioxusLabs/dioxus-components` | Owned Dialog/Select primitive fork and future styled starting points | MIT OR Apache-2.0 | Dialog/Select closure imported from `bf007c15d0cf4d04d3181cc46cf12325aa773955`; see `provenance/records/adico-primitives-dialog-select.json`. |
+| `DioxusLabs/dioxus-components` | Catalog and behavior/parity reference | MIT OR Apache-2.0 | Dialog/Select was originally imported from `bf007c15d0cf4d04d3181cc46cf12325aa773955` and tracked under a provenance record; both primitives were fully re-authored from an independent behavioral spec in `2026-09-01-reauthor-primitives-from-independent-spec`, which removed that record along with the last forked source. Snapshot/reference only now; do not copy source without a new record. |
 | `shadcn-ui/ui` | Catalog and behavior/parity reference | MIT | Snapshot/reference only; do not copy source without a record. |
 
 Company-curated registry authors are responsible for provenance records and

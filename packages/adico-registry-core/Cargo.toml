@@ -2,8 +2,14 @@
 name = "adico-registry-core"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
 description = "Registry schema, validation, and installation planning for adico"
+keywords = ["dioxus", "registry", "shadcn", "components"]
+categories = ["development-tools"]
 
 [dependencies]
 reqwest = { workspace = true }
