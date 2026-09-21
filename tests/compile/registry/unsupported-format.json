@@ -1,0 +1,24 @@
+{
+  "formatVersion": 3,
+  "namespace": "@adico",
+  "name": "Awesome Dioxus Components",
+  "description": "A registry declaring a format version this build does not support.",
+  "compatibility": {
+    "cli": ">=0.1.0"
+  },
+  "items": [
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "description": "A source-owned button component.",
+      "files": [
+        {
+          "source": "ui/button.rs",
+          "targetRoot": "ui",
+          "target": "button.rs",
+          "checksum": "b9a4f3ed6bc83c6a1d02e9b5c33cb0db1a6f2d56214e78d5748f7ec901fe1a00"
+        }
+      ]
+    }
+  ]
+}

@@ -27,7 +27,8 @@ cargo test -p adico-registry-core -- --exact <test_name>
 `adico-xtask` commands (no npm/Node involved; run from repo root):
 
 ```sh
-cargo run -p adico-xtask -- registry build       # regenerate registry/generated/* from registry/ui|hooks|lib source
+cargo run -p adico-xtask -- registry build       # regenerate registry/generated/* (served tree, gitignored) and packages/adico-cli/embedded/registry.json (committed) from registry/ui|hooks|lib source
+cargo run -p adico-xtask -- registry build --check  # fail if regenerating embedded/registry.json would diff from the committed copy (CI-gated)
 cargo run -p adico-xtask -- registry validate     # check registry/generated/* isn't stale
 cargo run -p adico-xtask -- provenance check      # verify provenance/records/* against UPSTREAMS.md obligations
 cargo run -p adico-xtask -- catalog fetch <axis|all> [--revision <sha>]      # only network-touching command; refreshes statics/catalogs/<axis>.json (shadcn, base-ui, dioxus-components, dioxus-primitives)

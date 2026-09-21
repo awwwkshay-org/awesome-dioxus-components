@@ -8,9 +8,28 @@ use adico_cli::init::{InitOptions, plan_init};
 use adico_cli::project::discover_dioxus_project;
 use adico_registry_core::{
     ComponentsConfiguration, EmbeddedRegistry, LoadedRegistry, RegistryAddress, RegistryCatalog,
-    RegistryLocation, RegistryNamespace, RegistrySource, RegistrySourceLoader,
-    ResolvedRegistryItem,
+    RegistryError, RegistryFile, RegistryItem, RegistryLocation, RegistryNamespace, RegistrySource,
+    RegistrySourceLoader, ResolvedRegistryItem,
 };
+
+/// Where the official `@adico` registry was actually resolved from, for a
+/// project that configures it as `{"kind": "https"}` (`adico init`'s
+/// default since this change). Reported back to the user so an offline
+/// fallback is never silent -- see the `adico-cli-installation` spec's
+/// "Official registry resolution has a network-independent fallback"
+/// requirement.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum OfficialRegistrySource {
+    /// `@adico` isn't configured as `{"kind": "https"}` in this project
+    /// (e.g. explicit `{"kind": "embedded"}`, or not configured at all) --
+    /// no network attempt was made, and there's nothing to report.
+    NotApplicable,
+    /// Resolved live over the network.
+    Network,
+    /// The network attempt failed; resolved from the committed embedded
+    /// snapshot instead.
+    OfflineFallback,
+}
 
 fn main() {
     let arguments: Vec<_> = env::args().skip(1).collect();
@@ -34,10 +53,11 @@ fn run_list(arguments: &[String]) {
         Ok(namespace) => namespace,
         Err(error) => exit_command_error("list", 2, error),
     };
-    let (_, configuration, catalog) = match current_project_catalog() {
+    let (_, configuration, catalog, official_source) = match current_project_catalog() {
         Ok(result) => result,
         Err(error) => exit_command_error("list", 1, error),
     };
+    note_if_offline_fallback("list", official_source);
     let namespace = namespace.unwrap_or(configuration.default_registry);
     let items = match catalog.items_in(&namespace) {
         Ok(items) => items,
@@ -51,10 +71,11 @@ fn run_view(arguments: &[String]) {
         Ok(request) => request,
         Err(error) => exit_command_error("view", 2, error),
     };
-    let (_, configuration, catalog) = match current_project_catalog() {
+    let (_, configuration, catalog, official_source) = match current_project_catalog() {
         Ok(result) => result,
         Err(error) => exit_command_error("view", 1, error),
     };
+    note_if_offline_fallback("view", official_source);
     let plan = match catalog.resolve(&configuration.default_registry, &[request]) {
         Ok(plan) => plan,
         Err(error) => exit_command_error("view", 1, error.to_string()),
@@ -107,8 +128,15 @@ fn parse_view_options(arguments: &[String]) -> Result<RegistryAddress, String> {
     }
 }
 
-fn current_project_catalog() -> Result<(PathBuf, ComponentsConfiguration, RegistryCatalog), String>
-{
+fn current_project_catalog() -> Result<
+    (
+        PathBuf,
+        ComponentsConfiguration,
+        RegistryCatalog,
+        OfficialRegistrySource,
+    ),
+    String,
+> {
     let current = env::current_dir()
         .map_err(|error| format!("cannot determine current directory: {error}"))?;
     let project = discover_dioxus_project(&current).map_err(|error| error.to_string())?;
@@ -118,8 +146,8 @@ fn current_project_catalog() -> Result<(PathBuf, ComponentsConfiguration, Regist
         .expect("manifest has parent")
         .to_path_buf();
     let configuration = read_components_configuration(&root)?;
-    let (catalog, _) = configured_catalog(&root, &configuration)?;
-    Ok((root, configuration, catalog))
+    let (catalog, _, official_source) = configured_catalog(&root, &configuration)?;
+    Ok((root, configuration, catalog, official_source))
 }
 
 fn read_components_configuration(
@@ -337,6 +365,18 @@ fn build_css_best_effort(
     }
 }
 
+/// Reports when the official registry was resolved from its committed
+/// offline snapshot instead of the network, so a fallback is never silent
+/// -- see the `adico-cli-installation` spec's "Official registry resolution
+/// has a network-independent fallback" requirement.
+fn note_if_offline_fallback(command: &str, source: OfficialRegistrySource) {
+    if source == OfficialRegistrySource::OfflineFallback {
+        eprintln!(
+            "adico {command}: note: the official @adico registry could not be reached over the network; resolved from this binary's embedded offline snapshot instead."
+        );
+    }
+}
+
 /// Names the exact one-line fix when a consumer's entrypoint does not yet
 /// link the compiled stylesheet -- printed instead of silently reporting
 /// success while the project cannot render styled output.
@@ -386,13 +426,14 @@ fn run_add(arguments: &[String]) {
             std::process::exit(1);
         }
     };
-    let (catalog, reader) = match configured_catalog(root, &configuration) {
+    let (catalog, reader, official_source) = match configured_catalog(root, &configuration) {
         Ok(result) => result,
         Err(error) => {
             eprintln!("adico add: {error}");
             std::process::exit(1);
         }
     };
+    note_if_offline_fallback("add", official_source);
     let plan = match match request {
         AddRequest::Items(requests) => plan_component_add(
             &catalog,
@@ -477,10 +518,18 @@ fn parse_add_options(arguments: &[String]) -> Result<(AddRequest, bool, bool), S
 fn configured_catalog(
     project_root: &std::path::Path,
     configuration: &ComponentsConfiguration,
-) -> Result<(RegistryCatalog, ConfiguredRegistryReader), String> {
-    let official_manifest = include_bytes!("../../../registry/registry.json");
+) -> Result<
+    (
+        RegistryCatalog,
+        ConfiguredRegistryReader,
+        OfficialRegistrySource,
+    ),
+    String,
+> {
+    let official_manifest = include_bytes!("../embedded/registry.json");
     let loader = RegistrySourceLoader::new(EmbeddedRegistry::new(official_manifest, project_root));
     let mut catalog = RegistryCatalog::new();
+    let mut official_source = OfficialRegistrySource::NotApplicable;
     for (namespace, configured_source) in &configuration.registries {
         if matches!(configured_source, RegistrySource::Embedded) {
             let official = LoadedRegistry::from_embedded_manifest(
@@ -505,14 +554,41 @@ fn configured_catalog(
             },
             source => source.clone(),
         };
-        let registry = loader
-            .load(namespace, &source)
-            .map_err(|error| error.to_string())?;
+        // The official namespace, and only the official namespace, falls
+        // back to the committed embedded snapshot on a network failure --
+        // see design D7. An organization/third-party HTTPS registry that
+        // fails to resolve still fails with a clear network error, exactly
+        // as before: there is no embedded snapshot for a third-party
+        // registry, and silently swallowing that failure would be
+        // surprising.
+        let is_official_https = namespace.as_str() == RegistryNamespace::OFFICIAL
+            && matches!(source, RegistrySource::Https { .. });
+        let registry = match loader.load(namespace, &source) {
+            Ok(registry) => {
+                if is_official_https {
+                    official_source = OfficialRegistrySource::Network;
+                }
+                registry
+            }
+            Err(RegistryError::NetworkRequest { .. }) if is_official_https => {
+                official_source = OfficialRegistrySource::OfflineFallback;
+                LoadedRegistry::from_embedded_manifest(
+                    official_manifest,
+                    "embedded official registry (offline fallback)",
+                )
+                .map_err(|error| error.to_string())?
+            }
+            Err(error) => return Err(error.to_string()),
+        };
         catalog
             .insert(registry)
             .map_err(|error| error.to_string())?;
     }
-    Ok((catalog, ConfiguredRegistryReader { loader }))
+    Ok((
+        catalog,
+        ConfiguredRegistryReader { loader },
+        official_source,
+    ))
 }
 
 struct ConfiguredRegistryReader {
@@ -520,234 +596,33 @@ struct ConfiguredRegistryReader {
 }
 
 impl RegistryFileReader for ConfiguredRegistryReader {
-    fn read(&self, item: &ResolvedRegistryItem, source: &str) -> Result<Vec<u8>, AddError> {
-        match (&item.location, source) {
-            (RegistryLocation::Embedded { .. }, "lib/cn.rs") => {
-                Ok(include_bytes!("../../../registry/lib/cn.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "lib/variants.rs") => {
-                Ok(include_bytes!("../../../registry/lib/variants.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/button.rs") => {
-                Ok(include_bytes!("../../../registry/ui/button.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/dialog.rs") => {
-                Ok(include_bytes!("../../../registry/ui/dialog.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/select.rs") => {
-                Ok(include_bytes!("../../../registry/ui/select.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/badge.rs") => {
-                Ok(include_bytes!("../../../registry/ui/badge.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/card.rs") => {
-                Ok(include_bytes!("../../../registry/ui/card.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/input.rs") => {
-                Ok(include_bytes!("../../../registry/ui/input.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/item.rs") => {
-                Ok(include_bytes!("../../../registry/ui/item.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/pagination.rs") => {
-                Ok(include_bytes!("../../../registry/ui/pagination.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/skeleton.rs") => {
-                Ok(include_bytes!("../../../registry/ui/skeleton.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/textarea.rs") => {
-                Ok(include_bytes!("../../../registry/ui/textarea.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/sheet.rs") => {
-                Ok(include_bytes!("../../../registry/ui/sheet.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/tooltip.rs") => {
-                Ok(include_bytes!("../../../registry/ui/tooltip.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/popover.rs") => {
-                Ok(include_bytes!("../../../registry/ui/popover.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/hover_card.rs") => {
-                Ok(include_bytes!("../../../registry/ui/hover_card.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/dropdown_menu.rs") => {
-                Ok(include_bytes!("../../../registry/ui/dropdown_menu.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/context_menu.rs") => {
-                Ok(include_bytes!("../../../registry/ui/context_menu.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/menubar.rs") => {
-                Ok(include_bytes!("../../../registry/ui/menubar.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/combobox.rs") => {
-                Ok(include_bytes!("../../../registry/ui/combobox.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/command.rs") => {
-                Ok(include_bytes!("../../../registry/ui/command.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/navigation_menu.rs") => {
-                Ok(include_bytes!("../../../registry/ui/navigation_menu.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/drawer.rs") => {
-                Ok(include_bytes!("../../../registry/ui/drawer.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/carousel.rs") => {
-                Ok(include_bytes!("../../../registry/ui/carousel.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/input_otp.rs") => {
-                Ok(include_bytes!("../../../registry/ui/input_otp.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/resizable.rs") => {
-                Ok(include_bytes!("../../../registry/ui/resizable.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/data_table.rs") => {
-                Ok(include_bytes!("../../../registry/ui/data_table.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/attachment.rs") => {
-                Ok(include_bytes!("../../../registry/ui/attachment.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/bubble.rs") => {
-                Ok(include_bytes!("../../../registry/ui/bubble.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/marker.rs") => {
-                Ok(include_bytes!("../../../registry/ui/marker.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/message.rs") => {
-                Ok(include_bytes!("../../../registry/ui/message.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/message_scroller.rs") => {
-                Ok(include_bytes!("../../../registry/ui/message_scroller.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/calendar.rs") => {
-                Ok(include_bytes!("../../../registry/ui/calendar.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/date_picker.rs") => {
-                Ok(include_bytes!("../../../registry/ui/date_picker.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/sidebar.rs") => {
-                Ok(include_bytes!("../../../registry/ui/sidebar.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/aspect_ratio.rs") => {
-                Ok(include_bytes!("../../../registry/ui/aspect_ratio.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/label.rs") => {
-                Ok(include_bytes!("../../../registry/ui/label.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/progress.rs") => {
-                Ok(include_bytes!("../../../registry/ui/progress.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/avatar.rs") => {
-                Ok(include_bytes!("../../../registry/ui/avatar.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/checkbox.rs") => {
-                Ok(include_bytes!("../../../registry/ui/checkbox.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/collapsible.rs") => {
-                Ok(include_bytes!("../../../registry/ui/collapsible.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/switch.rs") => {
-                Ok(include_bytes!("../../../registry/ui/switch.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/toggle.rs") => {
-                Ok(include_bytes!("../../../registry/ui/toggle.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/accordion.rs") => {
-                Ok(include_bytes!("../../../registry/ui/accordion.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/radio_group.rs") => {
-                Ok(include_bytes!("../../../registry/ui/radio_group.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/tabs.rs") => {
-                Ok(include_bytes!("../../../registry/ui/tabs.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/toggle_group.rs") => {
-                Ok(include_bytes!("../../../registry/ui/toggle_group.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/scroll_area.rs") => {
-                Ok(include_bytes!("../../../registry/ui/scroll_area.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/alert_dialog.rs") => {
-                Ok(include_bytes!("../../../registry/ui/alert_dialog.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/toast.rs") => {
-                Ok(include_bytes!("../../../registry/ui/toast.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/slider.rs") => {
-                Ok(include_bytes!("../../../registry/ui/slider.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/toolbar.rs") => {
-                Ok(include_bytes!("../../../registry/ui/toolbar.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/virtual_list.rs") => {
-                Ok(include_bytes!("../../../registry/ui/virtual_list.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/tag_group.rs") => {
-                Ok(include_bytes!("../../../registry/ui/tag_group.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/drag_and_drop_list.rs") => {
-                Ok(include_bytes!("../../../registry/ui/drag_and_drop_list.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/color_picker.rs") => {
-                Ok(include_bytes!("../../../registry/ui/color_picker.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/mode_toggle.rs") => {
-                Ok(include_bytes!("../../../registry/ui/mode_toggle.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/theme_switcher.rs") => {
-                Ok(include_bytes!("../../../registry/ui/theme_switcher.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/theme_builder.rs") => {
-                Ok(include_bytes!("../../../registry/ui/theme_builder.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/alert.rs") => {
-                Ok(include_bytes!("../../../registry/ui/alert.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/empty.rs") => {
-                Ok(include_bytes!("../../../registry/ui/empty.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/kbd.rs") => {
-                Ok(include_bytes!("../../../registry/ui/kbd.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/spinner.rs") => {
-                Ok(include_bytes!("../../../registry/ui/spinner.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/breadcrumb.rs") => {
-                Ok(include_bytes!("../../../registry/ui/breadcrumb.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/table.rs") => {
-                Ok(include_bytes!("../../../registry/ui/table.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/button_group.rs") => {
-                Ok(include_bytes!("../../../registry/ui/button_group.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/input_group.rs") => {
-                Ok(include_bytes!("../../../registry/ui/input_group.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/native_select.rs") => {
-                Ok(include_bytes!("../../../registry/ui/native_select.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/copy_button.rs") => {
-                Ok(include_bytes!("../../../registry/ui/copy_button.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/time_picker.rs") => {
-                Ok(include_bytes!("../../../registry/ui/time_picker.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, "ui/date_time_picker.rs") => {
-                Ok(include_bytes!("../../../registry/ui/date_time_picker.rs").to_vec())
-            }
-            (RegistryLocation::Embedded { .. }, _) => Err(AddError::ReadFailed {
-                path: format!("{} from {}", source, item.location),
-                message: "this adico binary does not embed the requested registry source"
+    fn read(&self, item: &ResolvedRegistryItem, file: &RegistryFile) -> Result<Vec<u8>, AddError> {
+        if let Some(content) = &file.content {
+            return Ok(content.clone().into_bytes());
+        }
+        match &item.location {
+            RegistryLocation::Embedded { .. } => Err(AddError::ReadFailed {
+                path: format!("{} from {}", file.source, item.location),
+                message: "this adico binary's embedded registry has no content for this file"
                     .to_string(),
             }),
             _ => self
                 .loader
-                .read_resolved_source(item, source)
+                .read_resolved_source(item, file)
                 .map_err(|error| AddError::ReadFailed {
-                    path: format!("{} from {}", source, item.location),
+                    path: format!("{} from {}", file.source, item.location),
                     message: error.to_string(),
                 }),
         }
+    }
+
+    fn resolve_item(&self, item: &ResolvedRegistryItem) -> Result<RegistryItem, AddError> {
+        self.loader
+            .resolve_item_content(&item.location, item.format_version, &item.item)
+            .map_err(|error| AddError::ReadFailed {
+                path: format!("{} document from {}", item.address, item.location),
+                message: error.to_string(),
+            })
     }
 }
 
@@ -947,7 +822,8 @@ mod tests {
             ]),
             default_registry: company,
         };
-        let (catalog, _) = configured_catalog(&root, &configuration).expect("catalog should load");
+        let (catalog, _, _) =
+            configured_catalog(&root, &configuration).expect("catalog should load");
         let plan = catalog
             .resolve(
                 &configuration.default_registry,
@@ -1072,6 +948,68 @@ mod tests {
             "discovery must not create consumer configuration"
         );
         fs::remove_dir_all(root).expect("temporary project should be removable");
+    }
+
+    #[test]
+    fn configured_catalog_falls_back_to_embedded_when_official_https_is_unreachable() {
+        // Port 1 on loopback: no listener, so the connection is refused
+        // near-instantly with no DNS lookup involved -- a fast, offline-safe
+        // way to exercise a genuine `RegistryError::NetworkRequest` through
+        // the real `StaticHttpsClient`, without needing a mock transport or
+        // any actual network access. This is the same class of failure a
+        // user hits before `adico.awwwkshay.com` is deployed -- verified
+        // for real via a manual end-to-end run during implementation
+        // (`adico init` + `adico add button dialog` against the real,
+        // not-yet-live `OFFICIAL_REGISTRY_URL`, confirmed to fall back and
+        // install byte-identical files).
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("valid time")
+            .as_nanos();
+        let root = std::env::temp_dir().join(format!(
+            "adico-official-fallback-test-{}-{nonce}",
+            std::process::id()
+        ));
+        let configuration = ComponentsConfiguration {
+            schema: None,
+            version: 1,
+            style: "default".to_string(),
+            theme: ThemeConfiguration {
+                tokens: "shadcn".to_string(),
+                dark_mode: "class".to_string(),
+            },
+            paths: ComponentPaths {
+                components: "src/components".to_string(),
+                ui: "src/components/ui".to_string(),
+                lib: "src/adico_lib".to_string(),
+                hooks: "src/hooks".to_string(),
+            },
+            css: CssConfiguration {
+                entry: "assets/tailwind.css".to_string(),
+                framework: "tailwind".to_string(),
+            },
+            registries: BTreeMap::from([(
+                "@adico".parse().expect("valid namespace"),
+                RegistrySource::Https {
+                    url: "https://127.0.0.1:1/registry.json".to_string(),
+                },
+            )]),
+            default_registry: "@adico".parse().expect("valid namespace"),
+        };
+
+        let (catalog, _, official_source) =
+            configured_catalog(&root, &configuration).expect("fallback must still succeed");
+        assert_eq!(official_source, OfficialRegistrySource::OfflineFallback);
+        let plan = catalog
+            .resolve(
+                &configuration.default_registry,
+                &[RegistryAddress::parse("button").expect("valid request")],
+            )
+            .expect("button should resolve from the embedded fallback");
+        assert_eq!(
+            plan.items.last().unwrap().address.to_string(),
+            "@adico/button"
+        );
     }
 
     #[test]

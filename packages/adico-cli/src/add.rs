@@ -6,8 +6,9 @@ use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use adico_registry_core::{
-    ComponentsConfiguration, RegistryAddress, RegistryCatalog, RegistryError, RegistryInstallPlan,
-    RegistryItemAddress, ResolvedRegistryItem, TargetRoot, unify_cargo_dependencies,
+    ComponentsConfiguration, RegistryAddress, RegistryCatalog, RegistryError, RegistryFile,
+    RegistryInstallPlan, RegistryItem, RegistryItemAddress, ResolvedRegistryItem, TargetRoot,
+    unify_cargo_dependencies,
 };
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -19,8 +20,22 @@ use crate::modules::{ModuleExportRequest, ModuleUpdatePlan, plan_module_update};
 
 /// Source-byte boundary used by local, embedded, and HTTPS registry transports.
 pub trait RegistryFileReader {
-    /// Returns immutable authored bytes for an already resolved source path.
-    fn read(&self, item: &ResolvedRegistryItem, source: &str) -> Result<Vec<u8>, AddError>;
+    /// Returns immutable authored bytes for an already resolved file entry.
+    fn read(&self, item: &ResolvedRegistryItem, file: &RegistryFile) -> Result<Vec<u8>, AddError>;
+
+    /// Returns `item` with every file's content resolved, fetching a
+    /// per-item content-bearing document if the initially-resolved item
+    /// doesn't already carry it (format-2 registries split content into a
+    /// per-item document -- see design D4 of
+    /// `adopt-shadcn-style-registry-serving`). Called once per resolved
+    /// item, before reading any of its files.
+    ///
+    /// Default: returns the item unchanged, which is correct whenever the
+    /// resolved item already carries every file's content (format 1, or a
+    /// reader whose resolution doesn't split content out separately).
+    fn resolve_item(&self, item: &ResolvedRegistryItem) -> Result<RegistryItem, AddError> {
+        Ok(item.item.clone())
+    }
 }
 
 /// One registry source write that passed all checksum and conflict preconditions.
@@ -185,12 +200,13 @@ pub fn plan_source_install<R: RegistryFileReader>(
     let lock = read_lock(&lock_path)?;
     for resolved in &install.items {
         source_namespaces.push(resolved.address.namespace.to_string());
+        let resolved_item = reader.resolve_item(resolved)?;
         let mut locked_files = Vec::new();
-        for file in &resolved.item.files {
+        for file in &resolved_item.files {
             let path = project_root
                 .join(target_root_path(configuration, &file.target_root)?)
                 .join(&file.target);
-            let bytes = reader.read(resolved, &file.source)?;
+            let bytes = reader.read(resolved, file)?;
             let actual = checksum(&bytes);
             if actual != file.checksum {
                 return Err(AddError::RegistryChecksumMismatch {
@@ -654,12 +670,19 @@ mod tests {
     }
 
     impl RegistryFileReader for FixtureReader {
-        fn read(&self, item: &ResolvedRegistryItem, source: &str) -> Result<Vec<u8>, AddError> {
+        fn read(
+            &self,
+            item: &ResolvedRegistryItem,
+            file: &RegistryFile,
+        ) -> Result<Vec<u8>, AddError> {
+            if let Some(content) = &file.content {
+                return Ok(content.clone().into_bytes());
+            }
             self.files
-                .get(&(item.address.to_string(), source.to_string()))
+                .get(&(item.address.to_string(), file.source.clone()))
                 .cloned()
                 .ok_or_else(|| AddError::ReadFailed {
-                    path: source.to_string(),
+                    path: file.source.clone(),
                     message: "fixture source is absent".to_string(),
                 })
         }
@@ -681,7 +704,7 @@ mod tests {
 
     fn configuration() -> ComponentsConfiguration {
         ComponentsConfiguration {
-            schema: Some("https://adico.dev/schema/components.json/v1".to_string()),
+            schema: Some("https://adico.awwwkshay.com/schema/components.json/v1".to_string()),
             version: 1,
             style: "default".to_string(),
             theme: adico_registry_core::ThemeConfiguration {
@@ -728,6 +751,7 @@ mod tests {
                         target_root: TargetRoot::Ui,
                         target: format!("{item}.rs"),
                         checksum: digest,
+                        content: None,
                     }],
                     registry_dependencies: Vec::new(),
                     cargo_dependencies: Vec::new(),
@@ -746,6 +770,7 @@ mod tests {
                     cli: ">=0.1.0".to_string(),
                     runtime: None,
                 },
+                format_version: 1,
             }],
         }
     }

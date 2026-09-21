@@ -17,8 +17,22 @@ use sha2::{Digest, Sha256};
 use thiserror::Error;
 use url::Url;
 
-/// The registry format supported by this version of adico.
-pub const REGISTRY_FORMAT_VERSION: u32 = 1;
+/// The registry format this version of adico writes when generating output.
+///
+/// Format 2 is purely additive over format 1 -- it adds an optional inlined
+/// `content` field to `RegistryFile` (see [`RegistryFile::content`]) so a
+/// registry item can be distributed as a self-contained document. It does
+/// not remove or reinterpret anything format 1 declares. The hand-authored
+/// `registry/registry.json` stays format 1 forever; only generated output
+/// (the served tree and the CLI's embedded fallback payload) is format 2.
+pub const REGISTRY_FORMAT_VERSION: u32 = 2;
+
+/// Every registry format this version of adico can read.
+///
+/// A registry using any version in this set is fully interpretable --
+/// `RegistryManifest::validate` rejects only a version outside this set, not
+/// merely one older than [`REGISTRY_FORMAT_VERSION`].
+pub const SUPPORTED_REGISTRY_FORMAT_VERSIONS: &[u32] = &[1, 2];
 
 /// The CLI API version understood by this registry-core release.
 pub const ADICO_CLI_VERSION: &str = "0.1.0";
@@ -130,10 +144,10 @@ pub struct RegistryManifest {
 impl RegistryManifest {
     /// Validates invariants that JSON deserialization alone cannot express.
     pub fn validate(&self) -> Result<(), RegistryError> {
-        if self.format_version != REGISTRY_FORMAT_VERSION {
+        if !SUPPORTED_REGISTRY_FORMAT_VERSIONS.contains(&self.format_version) {
             return Err(RegistryError::UnsupportedFormat {
                 actual: self.format_version,
-                supported: REGISTRY_FORMAT_VERSION,
+                supported: SUPPORTED_REGISTRY_FORMAT_VERSIONS.to_vec(),
             });
         }
         let mut names = BTreeSet::new();
@@ -247,6 +261,17 @@ pub struct RegistryFile {
     pub target: String,
     /// SHA-256 checksum of the authored source content.
     pub checksum: String,
+    /// The file's complete content, inlined (format 2 only).
+    ///
+    /// Absent on every format-1 file entry, including the hand-authored
+    /// `registry/registry.json` (which never carries this field). Present
+    /// on generated format-2 output -- the served registry tree and the
+    /// CLI's embedded fallback payload -- so a file's bytes can be read
+    /// directly from the item document with no further fetch against
+    /// `source`. When absent, callers fall back to resolving `source`
+    /// exactly as a format-1 registry always has.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub content: Option<String>,
 }
 
 /// Consumer destination roots resolved through `components.json`.
@@ -712,6 +737,12 @@ pub struct ResolvedRegistryItem {
     pub manifest_digest: String,
     /// Compatibility declared by the registry that supplied the item.
     pub registry_compatibility: RegistryCompatibility,
+    /// Format version of the manifest this item was resolved from. Gates
+    /// whether [`RegistrySourceLoader::resolve_item_content`] may attempt a
+    /// per-item content document fetch (format 2 only) -- a format-1
+    /// registry has no such document, and every file is fetched
+    /// individually by its own `source` path instead.
+    pub format_version: u32,
 }
 
 /// A deterministic, dependency-first sequence of source-owned registry items.
@@ -816,6 +847,7 @@ impl RegistryCatalog {
                 location: registry.location.clone(),
                 manifest_digest: registry.manifest_digest.clone(),
                 registry_compatibility: registry.manifest.compatibility.clone(),
+                format_version: registry.manifest.format_version,
             })
             .collect())
     }
@@ -887,6 +919,7 @@ impl RegistryCatalog {
             location: registry.location.clone(),
             manifest_digest: registry.manifest_digest.clone(),
             registry_compatibility: registry.manifest.compatibility.clone(),
+            format_version: registry.manifest.format_version,
         });
         Ok(())
     }
@@ -1269,7 +1302,17 @@ impl<Client: RegistryHttpClient> RegistrySourceLoader<Client> {
         Ok(loaded)
     }
 
-    /// Validates a previously loaded registry and every source file it names.
+    /// Validates a previously loaded registry's structure: format support,
+    /// compatibility, dependency resolvability, target uniqueness, checksum
+    /// well-formedness, and dependency cycles. This needs only the already-
+    /// fetched manifest -- it never fetches a file's content, so its cost is
+    /// independent of the registry's size. `load` calls this automatically.
+    ///
+    /// This deliberately does NOT verify that a file's actual content
+    /// matches its declared checksum -- see [`Self::validate_all_content`]
+    /// for that, and the `adico-registry` spec's "Registry resolution cost
+    /// is proportional to requested items" requirement for why the two are
+    /// split.
     pub fn validate(&self, registry: &LoadedRegistry) -> Result<(), RegistryError> {
         registry.manifest.validate()?;
         validate_compatibility(
@@ -1310,7 +1353,7 @@ impl<Client: RegistryHttpClient> RegistrySourceLoader<Client> {
                 }
             }
             for file in &item.files {
-                let source = validated_relative_path(&file.source, "source")?;
+                validated_relative_path(&file.source, "source")?;
                 let target = validated_relative_path(&file.target, "target")?;
                 let target_intent = format!("{:?}:{}", file.target_root, target.display());
                 if !targets.insert(target_intent.clone()) {
@@ -1319,7 +1362,24 @@ impl<Client: RegistryHttpClient> RegistrySourceLoader<Client> {
                     });
                 }
                 validate_checksum(&file.checksum, &item.name, &file.source)?;
-                let actual = sha256_hex(&self.read_source(registry, &source)?);
+            }
+        }
+        validate_local_dependency_cycles(&registry.manifest, &names)
+    }
+
+    /// Verifies every file of every item against its declared checksum,
+    /// reading each file's actual content (inline when present, otherwise
+    /// fetched from its `source` path). Unlike [`Self::validate`], this
+    /// costs proportionally to the registry's total size, not just its
+    /// structure -- callers that only need the catalog (`adico list`,
+    /// `adico view`, dependency resolution) should not call this. It exists
+    /// for tooling that already pays for exhaustive local verification for
+    /// free, such as `cargo xtask registry validate` against the authored,
+    /// on-disk `registry/registry.json`.
+    pub fn validate_all_content(&self, registry: &LoadedRegistry) -> Result<(), RegistryError> {
+        for item in &registry.manifest.items {
+            for file in &item.files {
+                let actual = sha256_hex(&self.resolve_file_bytes(&registry.location, file)?);
                 if actual != file.checksum {
                     return Err(RegistryError::ChecksumMismatch {
                         item: item.name.clone(),
@@ -1330,7 +1390,87 @@ impl<Client: RegistryHttpClient> RegistrySourceLoader<Client> {
                 }
             }
         }
-        validate_local_dependency_cycles(&registry.manifest, &names)
+        Ok(())
+    }
+
+    /// Returns a file's bytes, preferring its inlined `content` (format 2)
+    /// with zero I/O, and falling back to resolving its `source` path
+    /// against `location` exactly as a format-1 registry always has.
+    fn resolve_file_bytes(
+        &self,
+        location: &RegistryLocation,
+        file: &RegistryFile,
+    ) -> Result<Vec<u8>, RegistryError> {
+        if let Some(content) = &file.content {
+            return Ok(content.clone().into_bytes());
+        }
+        let relative_path = validated_relative_path(&file.source, "source")?;
+        self.read_source_location(location, &relative_path)
+    }
+
+    /// Returns `item` with every file's content guaranteed populated when
+    /// `format_version` supports it, fetching a per-item content-bearing
+    /// document (`<location's source root>/<item.name>.json`) only when
+    /// `format_version >= 2` and `item` doesn't already carry inline content
+    /// for every one of its files. A format-1 item is always returned
+    /// unchanged -- it has no per-item document convention; its files are
+    /// fetched individually by their own `source` path, exactly as always.
+    ///
+    /// This is the mechanism that keeps `adico list`/`adico view`/dependency
+    /// resolution cheap (they only ever see the content-free index) while
+    /// `adico add` pays for content lazily, one document per resolved item
+    /// -- see design D4 and the "Registry resolution cost is proportional
+    /// to requested items" requirement. `item.name` is safe to use as a
+    /// bare path/URL segment: registry item names are validated elsewhere
+    /// (`validate_item_name`) to be `[a-z0-9-]+`, so this can never escape
+    /// `location`'s root.
+    pub fn resolve_item_content(
+        &self,
+        location: &RegistryLocation,
+        format_version: u32,
+        item: &RegistryItem,
+    ) -> Result<RegistryItem, RegistryError> {
+        if item.files.iter().all(|file| file.content.is_some()) {
+            return Ok(item.clone());
+        }
+        if format_version < 2 {
+            // Format 1 has no per-item content document convention -- every
+            // file is fetched individually by its own `source` path
+            // instead, exactly as it always has been (`resolve_file_bytes`).
+            // Without this check, a format-1 registry with no such document
+            // (e.g. an existing organization registry) would 404/fail here
+            // for every item, since its files never carry inline content.
+            return Ok(item.clone());
+        }
+        let bytes = match location {
+            // Embedded registries are a single already-loaded payload with
+            // no further document to fetch -- generated by `registry build`
+            // with every item's content already inlined (see design D4).
+            RegistryLocation::Embedded { .. } => return Ok(item.clone()),
+            RegistryLocation::Local { source_root, .. } => {
+                let path = source_root.join(format!("{}.json", item.name));
+                fs::read(&path).map_err(|error| RegistryError::UnreadableRegistryFile {
+                    registry_source: location.to_string(),
+                    path: path.display().to_string(),
+                    message: error.to_string(),
+                })?
+            }
+            RegistryLocation::Https { source_root, .. } => {
+                let url = source_root
+                    .join(&format!("{}.json", item.name))
+                    .map_err(|error| RegistryError::InvalidSourcePath {
+                        path: item.name.clone(),
+                        reason: format!("cannot resolve item document URL: {error}"),
+                    })?;
+                ensure_https_url(&url)?;
+                self.http.get(&url)?
+            }
+        };
+        serde_json::from_slice(&bytes).map_err(|error| RegistryError::MalformedItemDocument {
+            item: item.name.clone(),
+            registry_source: location.to_string(),
+            message: error.to_string(),
+        })
     }
 
     /// Reads a registry source file after its containing registry was loaded.
@@ -1342,17 +1482,18 @@ impl<Client: RegistryHttpClient> RegistrySourceLoader<Client> {
         self.read_source_location(&registry.location, relative_path)
     }
 
-    /// Reads a source file for a resolved item while retaining its registry
-    /// location. CLI installers use this after dependency resolution, so local
-    /// and static-HTTPS organization registries use the same checked source
-    /// path as validation.
+    /// Reads a resolved item's file, preferring its inlined `content`
+    /// (format 2) with zero I/O and falling back to resolving `source`
+    /// against the item's retained registry location exactly as a format-1
+    /// registry always has. CLI installers use this after dependency
+    /// resolution, so local and static-HTTPS organization registries use
+    /// the same checked source path as validation.
     pub fn read_resolved_source(
         &self,
         item: &ResolvedRegistryItem,
-        source: &str,
+        file: &RegistryFile,
     ) -> Result<Vec<u8>, RegistryError> {
-        let relative_path = validated_relative_path(source, "source")?;
-        self.read_source_location(&item.location, &relative_path)
+        self.resolve_file_bytes(&item.location, file)
     }
 
     fn read_source_location(
@@ -1682,12 +1823,12 @@ pub enum RegistryError {
         namespace: String,
     },
     /// The manifest format cannot be interpreted by this CLI/core version.
-    #[error("unsupported registry format {actual}; this build supports format {supported}")]
+    #[error("unsupported registry format {actual}; this build supports formats {supported:?}")]
     UnsupportedFormat {
         /// Registry format encountered.
         actual: u32,
-        /// Registry format supported by this build.
-        supported: u32,
+        /// Registry formats supported by this build.
+        supported: Vec<u32>,
     },
     /// An item name appears more than once in one manifest.
     #[error("duplicate registry item {0:?}")]
@@ -1783,6 +1924,16 @@ pub enum RegistryError {
     #[error("registry manifest from {registry_source} is malformed: {message}")]
     MalformedManifest {
         /// Source that supplied the manifest.
+        registry_source: String,
+        /// JSON/schema parsing reason.
+        message: String,
+    },
+    /// A per-item content-bearing document cannot be parsed.
+    #[error("registry item {item:?} document from {registry_source} is malformed: {message}")]
+    MalformedItemDocument {
+        /// Item whose document failed to parse.
+        item: String,
+        /// Source that supplied the item document.
         registry_source: String,
         /// JSON/schema parsing reason.
         message: String,
@@ -1935,10 +2086,16 @@ mod tests {
     #[derive(Default)]
     struct FixtureHttpClient {
         responses: BTreeMap<String, Vec<u8>>,
+        /// Every URL `get` was called with, in call order. Shared (`Rc`) so
+        /// a test can retain a handle after the client itself is moved into
+        /// a `RegistrySourceLoader`, and assert exactly how many (and
+        /// which) network requests a resolution actually issued.
+        calls: std::rc::Rc<std::cell::RefCell<Vec<String>>>,
     }
 
     impl RegistryHttpClient for FixtureHttpClient {
         fn get(&self, url: &Url) -> Result<Vec<u8>, RegistryError> {
+            self.calls.borrow_mut().push(url.to_string());
             self.responses
                 .get(url.as_str())
                 .cloned()
@@ -2095,6 +2252,7 @@ mod tests {
                         cli: ">=0.1.0".to_string(),
                         runtime: None,
                     },
+                    format_version: 1,
                 })
                 .collect(),
         }
@@ -2116,6 +2274,54 @@ mod tests {
         .expect("company fixture should deserialize");
         company.validate().expect("company fixture should validate");
         assert_eq!(company.namespace.as_str(), "@awwwkshay");
+    }
+
+    #[test]
+    fn format_2_manifest_with_inline_content_deserializes_and_validates() {
+        let format2: RegistryManifest = serde_json::from_str(include_str!(
+            "../../../tests/compile/registry/official-valid-format2.json"
+        ))
+        .expect("format-2 fixture should deserialize");
+        format2
+            .validate()
+            .expect("format-2 fixture should validate");
+        assert_eq!(
+            format2.items[0].files[0].content.as_deref(),
+            Some("pub fn button() {}\n")
+        );
+    }
+
+    #[test]
+    fn format_1_file_entry_has_no_content_key_when_serialized() {
+        let official: RegistryManifest = serde_json::from_str(include_str!(
+            "../../../tests/compile/registry/official-valid.json"
+        ))
+        .expect("official fixture should deserialize");
+        assert_eq!(official.items[0].files[0].content, None);
+        let serialized =
+            serde_json::to_string(&official.items[0].files[0]).expect("file entry serializes");
+        assert!(
+            !serialized.contains("content"),
+            "format-1 file entry must omit the content key entirely, got: {serialized}"
+        );
+    }
+
+    #[test]
+    fn unsupported_format_version_is_rejected_naming_actual_and_supported() {
+        let manifest: RegistryManifest = serde_json::from_str(include_str!(
+            "../../../tests/compile/registry/unsupported-format.json"
+        ))
+        .expect("fixture should deserialize despite its unsupported format_version");
+        let error = manifest
+            .validate()
+            .expect_err("format version 3 must be rejected");
+        match error {
+            RegistryError::UnsupportedFormat { actual, supported } => {
+                assert_eq!(actual, 3);
+                assert_eq!(supported, SUPPORTED_REGISTRY_FORMAT_VERSIONS.to_vec());
+            }
+            other => panic!("expected UnsupportedFormat, got {other:?}"),
+        }
     }
 
     #[test]
@@ -2342,9 +2548,13 @@ mod tests {
     #[test]
     fn negative_manifest_fixtures_fail_before_an_install_plan_exists() {
         let loader = fixture_loader();
+        // Checksum mismatches are a content-level concern verified by
+        // `validate_all_content`, not the structural `validate` that `load`
+        // calls automatically -- see the "Registry resolution cost is
+        // proportional to requested items" requirement.
         assert!(matches!(
             loader
-                .validate(&loaded_fixture("checksum-mismatch.json"))
+                .validate_all_content(&loaded_fixture("checksum-mismatch.json"))
                 .expect_err("checksum must fail"),
             RegistryError::ChecksumMismatch { .. }
         ));
@@ -2372,6 +2582,242 @@ mod tests {
                 .expect_err("incompatible CLI must fail"),
             RegistryError::IncompatibleVersion { .. }
         ));
+    }
+
+    #[test]
+    fn load_over_https_does_not_fetch_an_unrequested_items_files() {
+        // Two items, each with one file. Only the manifest response is
+        // registered with the fixture HTTP client -- neither file's URL is.
+        // If `load()` fetched every file's content (the old eager
+        // `validate` behavior), this would fail with `NetworkRequest`
+        // ("fixture response was not configured") for whichever file it
+        // tried first. Succeeding proves `load()` costs one request
+        // (the manifest) regardless of how many items/files it describes.
+        let manifest_url = "https://registry.awwwkshay.example/registry.json";
+        let manifest = json!({
+            "formatVersion": 1,
+            "namespace": "@adico",
+            "name": "Proportional-cost fixture",
+            "compatibility": { "cli": ">=0.1.0" },
+            "items": [
+                {
+                    "name": "alpha",
+                    "type": "registry:ui",
+                    "description": "alpha fixture item",
+                    "files": [{
+                        "source": "ui/alpha.rs",
+                        "targetRoot": "ui",
+                        "target": "alpha.rs",
+                        // Deliberately wrong -- proves this is never checked.
+                        "checksum": "0000000000000000000000000000000000000000000000000000000000000000"
+                    }]
+                },
+                {
+                    "name": "beta",
+                    "type": "registry:ui",
+                    "description": "beta fixture item",
+                    "files": [{
+                        "source": "ui/beta.rs",
+                        "targetRoot": "ui",
+                        "target": "beta.rs",
+                        "checksum": "0000000000000000000000000000000000000000000000000000000000000000"
+                    }]
+                }
+            ],
+        });
+        let mut client = FixtureHttpClient::default();
+        client.responses.insert(
+            manifest_url.to_string(),
+            serde_json::to_vec(&manifest).expect("fixture manifest serializes"),
+        );
+        let calls = client.calls.clone();
+        let loader = RegistrySourceLoader::with_client(
+            EmbeddedRegistry::new(
+                fixture_bytes("validation-source/registry.json"),
+                fixture_root(),
+            ),
+            client,
+        );
+
+        loader
+            .load(
+                &"@adico".parse().expect("valid namespace"),
+                &RegistrySource::Https {
+                    url: manifest_url.to_string(),
+                },
+            )
+            .expect("load must succeed without fetching either item's file");
+
+        // Exactly one request total -- the manifest -- regardless of how
+        // many items/files the manifest describes.
+        assert_eq!(calls.borrow().as_slice(), [manifest_url]);
+    }
+
+    #[test]
+    fn reading_a_file_with_inline_content_issues_no_network_request() {
+        // Deliberately register no responses at all -- any `get` call would
+        // fail with "fixture response was not configured", so succeeding
+        // proves inline `content` short-circuits the source-path fetch.
+        let loader = RegistrySourceLoader::with_client(
+            EmbeddedRegistry::new(
+                fixture_bytes("validation-source/registry.json"),
+                fixture_root(),
+            ),
+            FixtureHttpClient::default(),
+        );
+        let resolved = ResolvedRegistryItem {
+            address: RegistryItemAddress {
+                namespace: "@adico".parse().expect("valid namespace"),
+                item: "button".to_string(),
+            },
+            item: RegistryItem {
+                name: "button".to_string(),
+                item_type: RegistryItemType::Ui,
+                description: "content-preference fixture".to_string(),
+                files: Vec::new(),
+                registry_dependencies: Vec::new(),
+                cargo_dependencies: Vec::new(),
+                style: StyleRequirements::default(),
+                module_exports: Vec::new(),
+                documentation: None,
+                compatibility: None,
+                provenance: None,
+            },
+            location: RegistryLocation::Https {
+                manifest_url: Url::parse("https://registry.awwwkshay.example/index.json")
+                    .expect("valid url"),
+                source_root: Url::parse("https://registry.awwwkshay.example/").expect("valid url"),
+            },
+            manifest_digest: "fixture-manifest-digest".to_string(),
+            registry_compatibility: RegistryCompatibility {
+                cli: ">=0.1.0".to_string(),
+                runtime: None,
+            },
+            format_version: 2,
+        };
+        let file = RegistryFile {
+            source: "ui/button.rs".to_string(),
+            target_root: TargetRoot::Ui,
+            target: "button.rs".to_string(),
+            checksum: String::new(),
+            content: Some("pub fn button() {}\n".to_string()),
+        };
+
+        let bytes = loader
+            .read_resolved_source(&resolved, &file)
+            .expect("inline content should be returned without a fetch");
+        assert_eq!(bytes, b"pub fn button() {}\n");
+    }
+
+    fn content_free_button_item() -> RegistryItem {
+        RegistryItem {
+            name: "button".to_string(),
+            item_type: RegistryItemType::Ui,
+            description: "A validation fixture button.".to_string(),
+            files: vec![RegistryFile {
+                source: "ui/button.rs".to_string(),
+                target_root: TargetRoot::Ui,
+                target: "button.rs".to_string(),
+                checksum: "73058a07c2b84095985ca37efb4d42a7c11680a61dc27670d9b1ec4c64b63f2c"
+                    .to_string(),
+                content: None,
+            }],
+            registry_dependencies: Vec::new(),
+            cargo_dependencies: Vec::new(),
+            style: StyleRequirements::default(),
+            module_exports: Vec::new(),
+            documentation: None,
+            compatibility: None,
+            provenance: None,
+        }
+    }
+
+    #[test]
+    fn resolve_item_content_returns_embedded_items_unchanged_with_no_fetch() {
+        let loader = fixture_loader();
+        let item = content_free_button_item();
+        let location = RegistryLocation::Embedded {
+            label: "embedded fixture".to_string(),
+            source_root: fixture_root(),
+        };
+
+        let resolved = loader
+            .resolve_item_content(&location, 2, &item)
+            .expect("embedded items resolve without a fetch");
+        // Unchanged: still content-free, since Embedded never fetches.
+        assert_eq!(resolved.files[0].content, None);
+    }
+
+    #[test]
+    fn resolve_item_content_reads_a_local_per_item_document() {
+        let loader = fixture_loader();
+        let item = content_free_button_item();
+        let location = RegistryLocation::Local {
+            manifest_path: fixture_root().join("registry.json"),
+            source_root: fixture_root(),
+        };
+
+        let resolved = loader
+            .resolve_item_content(&location, 2, &item)
+            .expect("local per-item document should be read from disk");
+        assert_eq!(
+            resolved.files[0].content.as_deref(),
+            Some("pub const VALIDATION_BUTTON: &str = \"adico registry validation\";\n")
+        );
+    }
+
+    #[test]
+    fn resolve_item_content_fetches_exactly_one_https_document_for_the_item() {
+        let source_root = "https://registry.awwwkshay.example/r/";
+        let item_url = format!("{source_root}button.json");
+        let mut client = FixtureHttpClient::default();
+        client.responses.insert(
+            item_url.clone(),
+            fixture_bytes("validation-source/button.json"),
+        );
+        let calls = client.calls.clone();
+        let loader = RegistrySourceLoader::with_client(
+            EmbeddedRegistry::new(
+                fixture_bytes("validation-source/registry.json"),
+                fixture_root(),
+            ),
+            client,
+        );
+        let item = content_free_button_item();
+        let location = RegistryLocation::Https {
+            manifest_url: Url::parse("https://registry.awwwkshay.example/r/index.json")
+                .expect("valid url"),
+            source_root: Url::parse(source_root).expect("valid url"),
+        };
+
+        let resolved = loader
+            .resolve_item_content(&location, 2, &item)
+            .expect("https per-item document should be fetched");
+        assert_eq!(
+            resolved.files[0].content.as_deref(),
+            Some("pub const VALIDATION_BUTTON: &str = \"adico registry validation\";\n")
+        );
+        assert_eq!(calls.borrow().as_slice(), [item_url]);
+    }
+
+    #[test]
+    fn resolve_item_content_skips_the_fetch_when_content_is_already_inline() {
+        let loader = fixture_loader();
+        let mut item = content_free_button_item();
+        item.files[0].content = Some("already inline".to_string());
+        let location = RegistryLocation::Https {
+            manifest_url: Url::parse("https://registry.awwwkshay.example/r/index.json")
+                .expect("valid url"),
+            source_root: Url::parse("https://registry.awwwkshay.example/r/").expect("valid url"),
+        };
+
+        // `fixture_loader()`'s FixtureHttpClient has no responses registered
+        // at all, so a fetch attempt here would fail -- succeeding proves
+        // already-inline content short-circuits `resolve_item_content` too.
+        let resolved = loader
+            .resolve_item_content(&location, 2, &item)
+            .expect("already-inline content must not trigger a fetch");
+        assert_eq!(resolved.files[0].content.as_deref(), Some("already inline"));
     }
 
     #[test]

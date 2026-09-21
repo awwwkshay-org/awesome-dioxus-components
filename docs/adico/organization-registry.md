@@ -64,6 +64,27 @@ Notes specific to authoring your own registry, not the official one:
   `cargo check`/`cargo test` against the result, the same way this repo
   validates `@adico` itself against `tests/installation/*`.
 
+## 1a. Format 1 vs format 2: both are valid
+
+The manifest above uses `formatVersion: 1` -- each file entry is a pointer
+(`source`/`targetRoot`/`target`/`checksum`) and the CLI fetches the file's
+bytes separately (from local disk or over HTTPS) when it's actually needed.
+This is the simplest shape for a static-file-mirror registry and remains
+fully supported.
+
+A registry may instead use `formatVersion: 2`, where a file entry also
+carries its bytes inline as a `content` string (in addition to the pointer
+fields, which are still used for `target`/`targetRoot` placement and
+checksum verification). This is what this repo's own `@adico` registry
+serves and embeds -- it lets the installer resolve an item without a
+follow-up fetch for each of its files. An organization registry can adopt
+this shape the same way: populate `files[].content` with each file's exact
+source bytes when generating `registry.json` and any per-item documents.
+
+Both formats are read identically by the installer -- pick whichever suits
+your registry's build pipeline. `tests/installation/awwwkshay-consumer/`'s
+fixture registry uses format 1 and needs no changes to keep working.
+
 ## 2. Choose a location: local path or static HTTPS
 
 `RegistryLocation` (`packages/adico-registry-core/src/lib.rs`) supports three

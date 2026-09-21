@@ -38,3 +38,13 @@ lcov.info
 # Playwright run artifacts when the suite is invoked from the repo root
 # (tests/playwright/.gitignore already covers the in-directory case).
 test-results/
+
+# Generated shadcn-style served registry tree (`cargo xtask registry
+# build`): index.json + one content-bearing document per item. Never
+# committed -- inlining every registry item's Rust source as escaped JSON
+# strings would make every component-source diff unreadable and double
+# review noise. Regenerated fresh wherever the registry is actually served.
+# The CLI's own offline-fallback payload at
+# packages/adico-cli/embedded/registry.json is the one generated registry
+# artifact that IS committed (see docs/architecture.md).
+/registry/generated/

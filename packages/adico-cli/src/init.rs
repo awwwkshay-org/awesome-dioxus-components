@@ -32,9 +32,21 @@ impl Default for InitOptions {
         let official: RegistryNamespace = RegistryNamespace::OFFICIAL
             .parse()
             .expect("official namespace is valid");
+        // HTTPS-first, not embedded-only: the CLI falls back to its
+        // committed offline snapshot when the network is unavailable (see
+        // design D7 of `adopt-shadcn-style-registry-serving`), so this
+        // default keeps working offline while letting new components ship
+        // without a CLI release. A project that explicitly wants a
+        // guaranteed no-network default may still configure `@adico` as
+        // `{"kind": "embedded"}` itself; that meaning is unchanged.
         Self {
             default_registry: official.clone(),
-            registries: BTreeMap::from([(official, RegistrySource::Embedded)]),
+            registries: BTreeMap::from([(
+                official,
+                RegistrySource::Https {
+                    url: crate::OFFICIAL_REGISTRY_URL.to_string(),
+                },
+            )]),
         }
     }
 }
@@ -257,7 +269,7 @@ pub fn plan_init(start: &Path, options: &InitOptions) -> Result<InitPlan, InitEr
 
 fn default_configuration(options: InitOptions) -> ComponentsConfiguration {
     ComponentsConfiguration {
-        schema: Some("https://adico.dev/schema/components.json/v1".to_string()),
+        schema: Some("https://adico.awwwkshay.com/schema/components.json/v1".to_string()),
         version: 1,
         style: "default".to_string(),
         theme: ThemeConfiguration {
@@ -449,7 +461,7 @@ mod tests {
             configuration
                 .registries
                 .get(&"@adico".parse().expect("valid namespace")),
-            Some(RegistrySource::Embedded)
+            Some(RegistrySource::Https { url }) if url == crate::OFFICIAL_REGISTRY_URL
         ));
         assert_eq!(
             fs::read_to_string(project.root.join("keep-me.txt")).expect("sentinel should remain"),

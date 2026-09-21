@@ -35,16 +35,16 @@ pub(crate) fn now_utc() -> String {
     }
 }
 
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeSet;
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
 use adico_registry_core::{
-    EmbeddedRegistry, RegistryCompatibility, RegistryManifest, RegistryNamespace, RegistrySource,
+    EmbeddedRegistry, REGISTRY_FORMAT_VERSION, RegistryItem, RegistryManifest, RegistrySource,
     RegistrySourceLoader,
 };
 
@@ -54,17 +54,6 @@ struct ProvenanceRecord {
     id: String,
     revision: String,
     local_paths: Vec<String>,
-}
-
-#[derive(Debug, Serialize)]
-#[serde(rename_all = "camelCase")]
-struct GeneratedRegistryIndex {
-    format_version: u32,
-    namespace: RegistryNamespace,
-    name: String,
-    description: Option<String>,
-    compatibility: RegistryCompatibility,
-    items: BTreeMap<String, String>,
 }
 
 fn main() {
@@ -79,6 +68,14 @@ fn main() {
         [command, subcommand] if command == "registry" && subcommand == "build" => {
             if let Err(error) = build_registry() {
                 eprintln!("registry build failed: {error}");
+                std::process::exit(1);
+            }
+        }
+        [command, subcommand, flag]
+            if command == "registry" && subcommand == "build" && flag == "--check" =>
+        {
+            if let Err(error) = check_registry_build_drift() {
+                eprintln!("registry build --check failed: {error}");
                 std::process::exit(1);
             }
         }
@@ -260,8 +257,36 @@ fn run_compat(action: impl FnOnce(&Path) -> Result<(), String>) {
     }
 }
 
-fn build_registry() -> Result<(), String> {
-    let root = repository_root()?;
+/// Returns a clone of `item` with every file's `content` populated from its
+/// authored bytes under `source_root` (`registry/`). Used to produce both
+/// the served per-item documents and the CLI's embedded fallback payload --
+/// see design D4 of `adopt-shadcn-style-registry-serving`.
+fn content_bearing_item(source_root: &Path, item: &RegistryItem) -> Result<RegistryItem, String> {
+    let mut item = item.clone();
+    for file in &mut item.files {
+        let path = source_root.join(&file.source);
+        let content = fs::read_to_string(&path)
+            .map_err(|error| format!("cannot read {}: {error}", path.display()))?;
+        file.content = Some(content);
+    }
+    Ok(item)
+}
+
+/// Everything `cargo xtask registry build` computes from
+/// `registry/registry.json`, before any of it is written to disk. Shared by
+/// `build_registry` (writes it) and `check_registry_build_drift` (compares
+/// the embedded payload against what's already committed, without writing).
+struct RegistryBuildOutputs {
+    generated_root: PathBuf,
+    /// `(file name under generated_root, pretty-printed JSON + trailing newline)`,
+    /// one entry per item, plus a final `("index.json", ...)` entry.
+    served_tree: Vec<(String, String)>,
+    embedded_path: PathBuf,
+    embedded_payload: String,
+    item_count: usize,
+}
+
+fn compute_registry_build_outputs(root: &Path) -> Result<RegistryBuildOutputs, String> {
     let manifest_path = root.join("registry/registry.json");
     let contents = fs::read_to_string(&manifest_path)
         .map_err(|error| format!("cannot read {}: {error}", manifest_path.display()))?;
@@ -270,43 +295,122 @@ fn build_registry() -> Result<(), String> {
         contents.as_bytes(),
         RegistrySource::Embedded,
     )?;
+    let source_root = root.join("registry");
 
-    let generated_root = root.join("registry/generated");
-    let payload_root = generated_root.join("items");
-    fs::create_dir_all(&payload_root)
-        .map_err(|error| format!("cannot create {}: {error}", payload_root.display()))?;
-
-    let mut item_paths = BTreeMap::new();
     let mut items = manifest.items.clone();
     items.sort_by(|left, right| left.name.cmp(&right.name));
-    for item in items {
-        let relative_path = format!("items/{}.json", item.name);
-        let payload = serde_json::to_string_pretty(&item)
-            .map_err(|error| format!("cannot serialize item {}: {error}", item.name))?;
-        write_if_changed(
-            &generated_root.join(&relative_path),
-            &format!("{payload}\n"),
-        )?;
-        item_paths.insert(item.name, relative_path);
+    let mut content_bearing_items = Vec::with_capacity(items.len());
+    for item in &items {
+        content_bearing_items.push(content_bearing_item(&source_root, item)?);
     }
 
-    let index = GeneratedRegistryIndex {
-        format_version: manifest.format_version,
-        namespace: manifest.namespace,
-        name: manifest.name,
-        description: manifest.description,
-        compatibility: manifest.compatibility,
-        items: item_paths,
-    };
-    let item_count = index.items.len();
-    let index = serde_json::to_string_pretty(&index)
+    // Served tree: a content-free index (the full manifest, format 2) plus
+    // one content-bearing document per item, directly under the registry
+    // root (`<item-name>.json`, not nested under `items/`) -- matching the
+    // shadcn-style `/r/<name>.json` shape. Not committed to git; it is
+    // regenerated fresh wherever the registry is actually served (a
+    // separate, dependent infrastructure change). `.gitignore`d.
+    let mut served_tree = Vec::with_capacity(content_bearing_items.len() + 1);
+    for item in &content_bearing_items {
+        let payload = serde_json::to_string_pretty(item)
+            .map_err(|error| format!("cannot serialize item {}: {error}", item.name))?;
+        served_tree.push((format!("{}.json", item.name), format!("{payload}\n")));
+    }
+
+    let mut index_manifest = manifest.clone();
+    index_manifest.format_version = REGISTRY_FORMAT_VERSION;
+    index_manifest.items = items;
+    let item_count = index_manifest.items.len();
+    let index = serde_json::to_string_pretty(&index_manifest)
         .map_err(|error| format!("cannot serialize generated registry index: {error}"))?;
-    let index_path = generated_root.join("index.json");
-    write_if_changed(&index_path, &format!("{index}\n"))?;
-    println!(
-        "registry build passed: {} item payload(s) at {}",
+    served_tree.push(("index.json".to_string(), format!("{index}\n")));
+
+    // CLI embedded fallback payload: one committed, content-bearing
+    // manifest replacing the previous 72 `include_bytes!` arms with one
+    // (design D1/D4). Committed because a crates.io build packages only
+    // `adico-cli`'s own crate directory and cannot invoke this command.
+    let mut embedded_manifest = manifest;
+    embedded_manifest.format_version = REGISTRY_FORMAT_VERSION;
+    embedded_manifest.items = content_bearing_items;
+    let embedded_payload = serde_json::to_string_pretty(&embedded_manifest)
+        .map_err(|error| format!("cannot serialize embedded registry payload: {error}"))?;
+
+    Ok(RegistryBuildOutputs {
+        generated_root: root.join("registry/generated"),
+        served_tree,
+        embedded_path: root.join("packages/adico-cli/embedded/registry.json"),
+        embedded_payload: format!("{embedded_payload}\n"),
         item_count,
-        generated_root.display()
+    })
+}
+
+fn build_registry() -> Result<(), String> {
+    let root = repository_root()?;
+    let outputs = compute_registry_build_outputs(&root)?;
+
+    // Remove and recreate rather than writing over the existing tree: a
+    // renamed or removed item must not leave an orphaned, stale document
+    // behind (this previously left a whole stale `items/` subdirectory from
+    // the pre-D4 layout in place indefinitely).
+    if outputs.generated_root.is_dir() {
+        fs::remove_dir_all(&outputs.generated_root).map_err(|error| {
+            format!(
+                "cannot remove {}: {error}",
+                outputs.generated_root.display()
+            )
+        })?;
+    }
+    fs::create_dir_all(&outputs.generated_root).map_err(|error| {
+        format!(
+            "cannot create {}: {error}",
+            outputs.generated_root.display()
+        )
+    })?;
+    for (name, payload) in &outputs.served_tree {
+        write_if_changed(&outputs.generated_root.join(name), payload)?;
+    }
+
+    if let Some(parent) = outputs.embedded_path.parent() {
+        fs::create_dir_all(parent)
+            .map_err(|error| format!("cannot create {}: {error}", parent.display()))?;
+    }
+    write_if_changed(&outputs.embedded_path, &outputs.embedded_payload)?;
+
+    println!(
+        "registry build passed: {} item payload(s) at {} and {}",
+        outputs.item_count,
+        outputs.generated_root.display(),
+        outputs.embedded_path.display()
+    );
+    Ok(())
+}
+
+/// Fails if the committed `packages/adico-cli/embedded/registry.json`
+/// disagrees with a fresh regeneration from `registry/registry.json`,
+/// without writing anything. This is the CI-gated drift check that closes
+/// the exact gap that let a prior generated-payload drift incident (22 of
+/// 43 payloads silently missing) go undetected -- see design D8.
+fn check_registry_build_drift() -> Result<(), String> {
+    check_registry_build_drift_at(&repository_root()?)
+}
+
+fn check_registry_build_drift_at(root: &Path) -> Result<(), String> {
+    let outputs = compute_registry_build_outputs(root)?;
+    let committed = fs::read_to_string(&outputs.embedded_path).map_err(|error| {
+        format!(
+            "cannot read {}: {error} (has `cargo xtask registry build` ever been run and committed?)",
+            outputs.embedded_path.display()
+        )
+    })?;
+    if committed != outputs.embedded_payload {
+        return Err(format!(
+            "{} is stale relative to registry/registry.json -- run `cargo xtask registry build` and commit the result",
+            outputs.embedded_path.display()
+        ));
+    }
+    println!(
+        "registry build --check passed: {} matches a fresh regeneration",
+        outputs.embedded_path.display()
     );
     Ok(())
 }
@@ -409,10 +513,20 @@ fn load_registry_manifest(
         official_manifest.to_vec(),
         official_root,
     ));
-    loader
+    let loaded = loader
         .load(&declared.namespace, &source)
-        .map(|loaded| loaded.manifest)
-        .map_err(|error| error.to_string())
+        .map_err(|error| error.to_string())?;
+    // `load` only performs the structural validation that's cheap against a
+    // potentially remote/large registry (see design D3 of
+    // `adopt-shadcn-style-registry-serving`); xtask always validates a
+    // local, free-to-read source, so it explicitly pays for the exhaustive
+    // checksum verification `load` no longer does automatically. Without
+    // this call, a tampered checksum in `registry/registry.json` would pass
+    // `registry validate` silently.
+    loader
+        .validate_all_content(&loaded)
+        .map_err(|error| error.to_string())?;
+    Ok(loaded.manifest)
 }
 
 pub(crate) fn write_if_changed(path: &Path, contents: &str) -> Result<(), String> {
@@ -535,4 +649,138 @@ fn collect_imported_paths(
         }
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn checksum_mismatch_source_fixture(manifest_name: &str) -> PathBuf {
+        repository_root()
+            .expect("repository root should resolve in test context")
+            .join("tests/compile/registry/checksum-mismatch-source")
+            .join(manifest_name)
+    }
+
+    #[test]
+    fn registry_validate_still_catches_a_tampered_checksum() {
+        // Regression test: `validate_registry`/`load_registry_manifest`
+        // used to catch this because the old, eager `RegistrySourceLoader
+        // ::validate` checksummed every file. That loop moved to
+        // `validate_all_content` (design D3) to make runtime CLI resolution
+        // proportional to requested items -- but `registry validate` always
+        // reads a local, free-to-check source, so it must explicitly keep
+        // calling `validate_all_content` or a tampered checksum would pass
+        // silently. This was caught manually during implementation by
+        // deliberately corrupting `registry/registry.json` and observing
+        // `registry validate` wrongly pass; this test pins the fix.
+        let correct = validate_registry(Some(&checksum_mismatch_source_fixture("registry.json")));
+        assert!(
+            correct.is_ok(),
+            "correctly checksummed fixture should validate: {correct:?}"
+        );
+
+        let tampered = validate_registry(Some(&checksum_mismatch_source_fixture(
+            "registry-tampered.json",
+        )));
+        let error = tampered.expect_err("tampered checksum must fail validation");
+        assert!(
+            error.contains("checksum mismatch"),
+            "expected a checksum-mismatch error, got: {error}"
+        );
+    }
+
+    fn temporary_registry_build_root() -> PathBuf {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("valid system time")
+            .as_nanos();
+        let root = std::env::temp_dir().join(format!(
+            "adico-xtask-registry-build-test-{}-{nonce}",
+            std::process::id()
+        ));
+        fs::create_dir_all(root.join("registry/ui")).expect("fixture registry dir should exist");
+        fs::write(
+            root.join("registry/ui/button.rs"),
+            "pub const DRIFT_TEST_BUTTON: &str = \"xtask registry build drift fixture\";\n",
+        )
+        .expect("fixture source file should be writable");
+        let checksum = {
+            use sha2::{Digest, Sha256};
+            let mut hasher = Sha256::new();
+            hasher.update(
+                fs::read(root.join("registry/ui/button.rs")).expect("fixture file should exist"),
+            );
+            hasher
+                .finalize()
+                .iter()
+                .map(|byte| format!("{byte:02x}"))
+                .collect::<String>()
+        };
+        let manifest = serde_json::json!({
+            "formatVersion": 1,
+            "namespace": "@adico",
+            "name": "xtask registry build drift fixture",
+            "compatibility": { "cli": ">=0.1.0" },
+            "items": [{
+                "name": "button",
+                "type": "registry:ui",
+                "description": "Drift-check fixture button.",
+                "files": [{
+                    "source": "ui/button.rs",
+                    "targetRoot": "ui",
+                    "target": "button.rs",
+                    "checksum": checksum
+                }]
+            }]
+        });
+        fs::write(
+            root.join("registry/registry.json"),
+            serde_json::to_string_pretty(&manifest).expect("fixture manifest should serialize"),
+        )
+        .expect("fixture manifest should be writable");
+        root
+    }
+
+    #[test]
+    fn registry_build_check_detects_a_stale_committed_embedded_payload() {
+        let root = temporary_registry_build_root();
+
+        // No committed embedded payload yet -- the check must fail loudly
+        // (not silently pass), naming that it's never been built.
+        let missing = check_registry_build_drift_at(&root);
+        assert!(
+            missing.is_err(),
+            "check must fail when no embedded payload has ever been committed"
+        );
+
+        // Build once for real, then check again -- must now pass.
+        let outputs = compute_registry_build_outputs(&root).expect("fixture registry should build");
+        fs::create_dir_all(
+            outputs
+                .embedded_path
+                .parent()
+                .expect("embedded path has a parent"),
+        )
+        .expect("embedded directory should be created");
+        fs::write(&outputs.embedded_path, &outputs.embedded_payload)
+            .expect("embedded payload should be written");
+        assert!(
+            check_registry_build_drift_at(&root).is_ok(),
+            "check must pass immediately after a real build"
+        );
+
+        // Tamper with the committed payload without rebuilding -- this is
+        // exactly the prior drift incident (22/43 payloads silently
+        // missing): the check must catch it, not pass silently.
+        fs::write(&outputs.embedded_path, "{}").expect("tampered payload should be writable");
+        let drifted = check_registry_build_drift_at(&root);
+        let error = drifted.expect_err("a hand-edited/stale embedded payload must be rejected");
+        assert!(
+            error.contains("is stale"),
+            "expected a staleness error, got: {error}"
+        );
+
+        fs::remove_dir_all(&root).ok();
+    }
 }

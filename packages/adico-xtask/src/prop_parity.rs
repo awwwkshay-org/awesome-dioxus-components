@@ -1998,6 +1998,7 @@ mod tests {
             target_root: adico_registry_core::TargetRoot::Ui,
             target: source.to_string(),
             checksum: String::new(),
+            content: None,
         }
     }
 

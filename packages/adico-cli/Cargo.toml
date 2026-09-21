@@ -17,7 +17,7 @@ name = "adico"
 path = "src/main.rs"
 
 [dependencies]
-adico-registry-core = { path = "../adico-registry-core" }
+adico-registry-core = { path = "../adico-registry-core", version = "0.1.0" }
 dirs = { workspace = true }
 reqwest = { workspace = true }
 serde = { workspace = true }

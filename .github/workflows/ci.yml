@@ -70,6 +70,9 @@ jobs:
       - name: Validate registry payloads aren't stale
         run: cargo run -p adico-xtask -- registry validate
 
+      - name: Check the CLI's embedded registry payload isn't stale
+        run: cargo run -p adico-xtask -- registry build --check
+
       - name: Check provenance records
         run: cargo run -p adico-xtask -- provenance check
 

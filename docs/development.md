@@ -23,16 +23,25 @@ a real consumer would.
 ## Maintainer workflows: registry, upstream catalogs, provenance, compat
 
 Normal CI runs entirely offline against the snapshots and generated files
-already checked into the repository (`registry/generated/`,
+already checked into the repository (`packages/adico-cli/embedded/registry.json`,
 `statics/catalogs/*.json`, `statics/primitive_compatibility.json`,
 `statics/component_compatibility.json`, `statics/primitive_usage/*.json`,
 `statics/styling_usage/*.json`) -- none of the commands below need network
 access except the one explicitly marked otherwise, and CI never runs that one.
 
 - **Registry generation** -- after adding or editing a `registry/ui/*.rs`
-  item or its `registry/registry.json` entry: `cargo run -p adico-xtask --
-  registry build` regenerates `registry/generated/*` from source; `cargo run
-  -p adico-xtask -- registry validate` (CI-gated) fails if it's stale.
+  item or its `registry/registry.json` entry, `cargo run -p adico-xtask --
+  registry build` regenerates two artifacts: the served tree at
+  `registry/generated/` (format 2, `index.json` plus one content-bearing
+  `<item-name>.json` per item -- gitignored, not committed, this is what the
+  official HTTPS registry serves) and the committed
+  `packages/adico-cli/embedded/registry.json` (also format 2, every item's
+  file content populated inline -- this is what the CLI embeds as its
+  offline fallback in place of the old 72-arm `include_bytes!` match).
+  `cargo run -p adico-xtask -- registry validate` (CI-gated) fails if the
+  served tree is stale; `cargo run -p adico-xtask -- registry build --check`
+  (CI-gated) fails if regenerating the embedded payload would produce a diff
+  from the committed copy.
 - **Upstream catalog refresh** (the only network-touching command in this
   list; run only on explicit maintainer request, never in CI): `cargo run -p
   adico-xtask -- catalog fetch <shadcn|base-ui|dioxus-components|dioxus-primitives|all>

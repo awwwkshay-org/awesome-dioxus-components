@@ -1,0 +1,21 @@
+{
+  "formatVersion": 1,
+  "namespace": "@adico",
+  "name": "xtask registry-validate regression fixture (tampered)",
+  "compatibility": { "cli": ">=0.1.0" },
+  "items": [
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "description": "A deliberately wrong-checksummed fixture item.",
+      "files": [
+        {
+          "source": "ui/button.rs",
+          "targetRoot": "ui",
+          "target": "button.rs",
+          "checksum": "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ]
+    }
+  ]
+}
