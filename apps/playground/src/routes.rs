@@ -13,7 +13,7 @@ use crate::pages::{
     AccordionPage, AlertDialogPage, AlertPage, AspectRatioPage, AttachmentPage, AvatarPage,
     BadgePage, BreadcrumbPage, BubblePage, ButtonGroupPage, ButtonPage, CalendarPage, CardPage,
     CarouselPage, CheckboxPage, CollapsiblePage, ColorPickerPage, ComboboxPage, CommandPage,
-    ContextMenuPage, DataTablePage, DatePickerPage, DateTimePickerPage, DialogPage,
+    ContextMenuPage, CopyButtonPage, DataTablePage, DatePickerPage, DateTimePickerPage, DialogPage,
     DragAndDropListPage, DrawerPage, DropdownMenuPage, EmptyPage, Home, HoverCardPage,
     InputGroupPage, InputOTPPage, InputPage, ItemPage, KbdPage, LabelPage, MarkerPage, MenubarPage,
     MessagePage, MessageScrollerPage, ModeTogglePage, NativeSelectPage, NavigationMenuPage,
@@ -157,6 +157,8 @@ pub enum Route {
     AttachmentPage {},
     #[route("/bubble")]
     BubblePage {},
+    #[route("/copy-button")]
+    CopyButtonPage {},
     #[route("/data-table")]
     DataTablePage {},
     #[route("/marker")]
@@ -203,6 +205,7 @@ pub fn nav_items() -> Vec<(&'static str, Route)> {
         ("Combobox", Route::ComboboxPage {}),
         ("Command", Route::CommandPage {}),
         ("Context Menu", Route::ContextMenuPage {}),
+        ("Copy Button", Route::CopyButtonPage {}),
         ("Data Table", Route::DataTablePage {}),
         ("Date Picker", Route::DatePickerPage {}),
         ("Date Time Picker", Route::DateTimePickerPage {}),
