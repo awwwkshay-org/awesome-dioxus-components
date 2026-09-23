@@ -10,6 +10,8 @@ per-crate changelogs if their release cadences diverge.
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-09-23
+
 ### Added
 
 - 69 registry components and 67 headless primitives across the `@adico`
@@ -22,4 +24,5 @@ per-crate changelogs if their release cadences diverge.
 
 - Relicensed to dual `MIT OR Apache-2.0`.
 
-[Unreleased]: https://github.com/awwwkshay-org/awesome-dioxus-components/commits/main
+[Unreleased]: https://github.com/awwwkshay-org/awesome-dioxus-components/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/awwwkshay-org/awesome-dioxus-components/releases/tag/v0.1.0
