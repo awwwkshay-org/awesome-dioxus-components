@@ -70,11 +70,10 @@ pub fn Textarea(props: TextareaProps) -> Element {
             .map(|v| v.chars().count())
             .unwrap_or(0)
     });
-    let shown_count = props
-        .value
-        .as_deref()
-        .map(|v| v.chars().count())
-        .unwrap_or_else(|| typed_count());
+    let shown_count = match props.value.as_deref() {
+        Some(v) => v.chars().count(),
+        None => typed_count(),
+    };
 
     let class = cn(&[
         TEXTAREA_BASE_CLASS,

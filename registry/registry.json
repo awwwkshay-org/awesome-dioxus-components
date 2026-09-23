@@ -107,7 +107,7 @@
           "source": "ui/data_table.rs",
           "targetRoot": "ui",
           "target": "data_table.rs",
-          "checksum": "f16e1070811fc6f8567fceefe95e87859f77ea7827f0b8d12b1664c2be94165a"
+          "checksum": "7ace7a60987b7c7cf20df36ab1db34ae99a216ee6ccbbaf8296f4bdfd9736eea"
         }
       ],
       "registryDependencies": [
@@ -535,7 +535,7 @@
           "source": "ui/textarea.rs",
           "targetRoot": "ui",
           "target": "textarea.rs",
-          "checksum": "85020b646f54742ea018b53c04bb9d529c189fed6a4f24137008b3239b3531cc"
+          "checksum": "4aa264e231459d3e5a8bff53ab1a0ab5fabeaa6aed778cd65d3c268e70bcb7e2"
         }
       ],
       "registryDependencies": [

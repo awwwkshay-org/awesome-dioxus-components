@@ -172,18 +172,17 @@ pub fn DataTable<T: Clone + PartialEq + 'static>(props: DataTableProps<T>) -> El
             }
         }
 
-        if let Some((sort_id, direction)) = sort() {
-            if let Some(column) = columns.iter().find(|column| column.id == sort_id) {
-                if let Some(sort_key) = column.sort_key {
-                    rows.sort_by(|a, b| {
-                        let ordering = sort_key.call(a.clone()).cmp(&sort_key.call(b.clone()));
-                        match direction {
-                            SortDirection::Ascending => ordering,
-                            SortDirection::Descending => ordering.reverse(),
-                        }
-                    });
+        if let Some((sort_id, direction)) = sort()
+            && let Some(column) = columns.iter().find(|column| column.id == sort_id)
+            && let Some(sort_key) = column.sort_key
+        {
+            rows.sort_by(|a, b| {
+                let ordering = sort_key.call(a.clone()).cmp(&sort_key.call(b.clone()));
+                match direction {
+                    SortDirection::Ascending => ordering,
+                    SortDirection::Descending => ordering.reverse(),
                 }
-            }
+            });
         }
 
         rows
