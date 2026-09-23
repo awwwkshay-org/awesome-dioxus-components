@@ -83,7 +83,7 @@ jobs:
           mkdir "${staging}"
           cp "target/${{ matrix.target }}/release/adico.exe" "${staging}/adico.exe"
           7z a "${archive}" "./${staging}/adico.exe"
-          shasum -a 256 "${archive}" > "${archive}.sha256"
+          sha256sum "${archive}" > "${archive}.sha256"
 
       - uses: actions/upload-artifact@v7
         with:
