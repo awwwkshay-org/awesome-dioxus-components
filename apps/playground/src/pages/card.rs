@@ -1,8 +1,12 @@
 use dioxus::prelude::*;
 
 use crate::components;
-use crate::components::controls::{BoolControl, TextControl};
+use crate::components::controls::{BoolControl, ControlGroup, TextControl};
 use crate::components::demo::Demo;
+use crate::generated::controls::{
+    CardActionControls, CardContentControls, CardControls, CardDescriptionControls,
+    CardFooterControls, CardHeaderControls, CardTitleControls,
+};
 
 /// A login-style card exercising every part the installed `card` item
 /// exports — including `CardAction`, the header's top-right action slot.
@@ -16,9 +20,18 @@ pub fn CardPage() -> Element {
         Demo {
             name: "Card",
             controls: rsx! {
-                TextControl { label: "Title", value: title }
-                TextControl { label: "Description", value: description }
-                BoolControl { label: "Show actions", value: show_footer }
+                ControlGroup { part: "Card",
+                    TextControl { label: "Title", value: title }
+                    TextControl { label: "Description", value: description }
+                    BoolControl { label: "Show actions", value: show_footer }
+                }
+                CardControls {}
+                CardHeaderControls {}
+                CardTitleControls {}
+                CardDescriptionControls {}
+                CardActionControls {}
+                CardContentControls {}
+                CardFooterControls {}
             },
             components::ui::Card { class: "max-w-md",
                 components::ui::CardHeader {

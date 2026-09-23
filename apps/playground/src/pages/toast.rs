@@ -2,12 +2,16 @@ use dioxus::prelude::*;
 
 use crate::components;
 use crate::components::demo::Demo;
+use crate::generated::controls::ToastProviderControls;
 
 #[component]
 pub fn ToastPage() -> Element {
     rsx! {
         Demo {
             name: "Toast",
+            controls: rsx! {
+                ToastProviderControls {}
+            },
             components::ui::ToastProvider {
                 ToastButton {}
             }

@@ -2,8 +2,9 @@ use adico_primitives::ContentAlign;
 use dioxus::prelude::*;
 
 use crate::components;
-use crate::components::controls::{BoolControl, OptionalBoolControl, SelectControl};
+use crate::components::controls::{BoolControl, ControlGroup, OptionalBoolControl, SelectControl};
 use crate::components::demo::Demo;
+use crate::generated::controls::{TooltipContentControls, TooltipControls, TooltipTriggerControls};
 
 #[component]
 pub fn TooltipPage() -> Element {
@@ -14,17 +15,22 @@ pub fn TooltipPage() -> Element {
         Demo {
             name: "Tooltip",
             controls: rsx! {
-                BoolControl { label: "Disabled", value: disabled }
-                OptionalBoolControl { label: "Open state", value: open }
-                SelectControl {
-                    label: "Align",
-                    value: align,
-                    options: &[
-                        ("Start", ContentAlign::Start),
-                        ("Center", ContentAlign::Center),
-                        ("End", ContentAlign::End),
-                    ],
+                ControlGroup { part: "Tooltip",
+                    BoolControl { label: "Disabled", value: disabled }
+                    OptionalBoolControl { label: "Open state", value: open }
+                    SelectControl {
+                        label: "Align",
+                        value: align,
+                        options: &[
+                            ("Start", ContentAlign::Start),
+                            ("Center", ContentAlign::Center),
+                            ("End", ContentAlign::End),
+                        ],
+                    }
                 }
+                TooltipControls {}
+                TooltipTriggerControls {}
+                TooltipContentControls {}
             },
             components::ui::Tooltip { open: open, disabled: disabled(),
                 components::ui::TooltipTrigger { "Hover me" }

@@ -2,8 +2,9 @@ use adico_primitives::ContentAlign;
 use dioxus::prelude::*;
 
 use crate::components;
-use crate::components::controls::{BoolControl, SelectControl};
+use crate::components::controls::{BoolControl, ControlGroup, SelectControl};
 use crate::components::demo::Demo;
+use crate::generated::controls::{PopoverContentControls, PopoverControls, PopoverTriggerControls};
 
 #[component]
 pub fn PopoverPage() -> Element {
@@ -13,16 +14,21 @@ pub fn PopoverPage() -> Element {
         Demo {
             name: "Popover",
             controls: rsx! {
-                BoolControl { label: "Open", value: open }
-                SelectControl {
-                    label: "Align",
-                    value: align,
-                    options: &[
-                        ("Start", ContentAlign::Start),
-                        ("Center", ContentAlign::Center),
-                        ("End", ContentAlign::End),
-                    ],
+                ControlGroup { part: "Popover",
+                    BoolControl { label: "Open", value: open }
+                    SelectControl {
+                        label: "Align",
+                        value: align,
+                        options: &[
+                            ("Start", ContentAlign::Start),
+                            ("Center", ContentAlign::Center),
+                            ("End", ContentAlign::End),
+                        ],
+                    }
                 }
+                PopoverControls {}
+                PopoverTriggerControls {}
+                PopoverContentControls {}
             },
             components::ui::Popover {
                 open: open(),

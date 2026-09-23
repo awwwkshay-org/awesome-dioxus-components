@@ -2,6 +2,7 @@ use dioxus::prelude::*;
 
 use crate::components;
 use crate::components::demo::Demo;
+use crate::generated::controls::{RadioGroupControls, RadioItemControls};
 
 #[component]
 pub fn RadioGroupPage() -> Element {
@@ -9,6 +10,10 @@ pub fn RadioGroupPage() -> Element {
     rsx! {
         Demo {
             name: "Radio Group",
+            controls: rsx! {
+                RadioGroupControls {}
+                RadioItemControls {}
+            },
             components::ui::RadioGroup {
                 value: Some(value()),
                 on_value_change: move |v| value.set(v),

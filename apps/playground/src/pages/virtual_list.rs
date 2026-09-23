@@ -2,12 +2,16 @@ use dioxus::prelude::*;
 
 use crate::components;
 use crate::components::demo::Demo;
+use crate::generated::controls::VirtualListControls;
 
 #[component]
 pub fn VirtualListPage() -> Element {
     rsx! {
         Demo {
             name: "Virtual List",
+            controls: rsx! {
+                VirtualListControls {}
+            },
             components::ui::VirtualList {
                 count: 1000usize,
                 estimate_size: |_idx| 32,

@@ -2,6 +2,10 @@ use dioxus::prelude::*;
 
 use crate::components;
 use crate::components::demo::Demo;
+use crate::generated::controls::{
+    CarouselContentControls, CarouselControls, CarouselItemControls, CarouselNextControls,
+    CarouselPreviousControls,
+};
 
 /// Offline "photo" slides: a CSS-gradient backdrop, a large glyph, and a
 /// caption per slide — no network images, per the playground's offline
@@ -43,6 +47,11 @@ pub fn CarouselPage() -> Element {
                 p { class: "self-end pb-2 text-sm text-muted-foreground",
                     "Drag a slide with the mouse, focus the track and use the arrow keys, or use the paging buttons."
                 }
+                CarouselControls {}
+                CarouselContentControls {}
+                CarouselItemControls {}
+                CarouselPreviousControls {}
+                CarouselNextControls {}
             },
             components::ui::Carousel { class: "w-full max-w-xs",
                 components::ui::CarouselContent {

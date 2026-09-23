@@ -2,6 +2,7 @@ use dioxus::prelude::*;
 
 use crate::components;
 use crate::components::demo::Demo;
+use crate::generated::controls::CheckboxControls;
 
 #[component]
 pub fn CheckboxPage() -> Element {
@@ -9,6 +10,9 @@ pub fn CheckboxPage() -> Element {
     rsx! {
         Demo {
             name: "Checkbox",
+            controls: rsx! {
+                CheckboxControls {}
+            },
             components::ui::Checkbox {
                 checked: checked(),
                 on_checked_change: move |value| checked.set(value),

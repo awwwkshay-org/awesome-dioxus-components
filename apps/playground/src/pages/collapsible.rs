@@ -2,6 +2,9 @@ use dioxus::prelude::*;
 
 use crate::components;
 use crate::components::demo::Demo;
+use crate::generated::controls::{
+    CollapsibleContentControls, CollapsibleControls, CollapsibleTriggerControls,
+};
 
 /// A realistic "show more" composition: two starred repositories always
 /// visible, three more revealed by the trigger — the canonical shadcn
@@ -12,6 +15,11 @@ pub fn CollapsiblePage() -> Element {
     rsx! {
         Demo {
             name: "Collapsible",
+            controls: rsx! {
+                CollapsibleControls {}
+                CollapsibleTriggerControls {}
+                CollapsibleContentControls {}
+            },
             components::ui::Collapsible {
                 open: open(),
                 on_open_change: move |value| open.set(value),

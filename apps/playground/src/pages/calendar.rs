@@ -4,8 +4,15 @@ use dioxus::prelude::*;
 use time::{Date, Weekday};
 
 use crate::components;
-use crate::components::controls::{BoolControl, SelectControl};
+use crate::components::controls::{BoolControl, ControlGroup, SelectControl};
 use crate::components::demo::Demo;
+use crate::generated::controls::{
+    CalendarControls, CalendarGridControls, CalendarHeaderControls, CalendarNavigationControls,
+    CalendarNextMonthButtonControls, CalendarPreviousMonthButtonControls,
+    CalendarSelectMonthControls, CalendarSelectMonthSelectControls,
+    CalendarSelectMonthValueControls, CalendarSelectYearControls, CalendarSelectYearSelectControls,
+    CalendarSelectYearValueControls, CalendarViewControls,
+};
 
 /// The `CalendarView` subtree shared by both the flat, always-visible
 /// calendar and the popover-wrapped instance below -- written once so the
@@ -80,13 +87,28 @@ pub fn CalendarPage() -> Element {
         Demo {
             name: "Calendar",
             controls: rsx! {
-                BoolControl { label: "Disabled", value: disabled }
-                BoolControl { label: "Popover open", value: popover_open }
-                SelectControl {
-                    label: "First day of week",
-                    value: first_day_of_week,
-                    options: &[("Sunday", Weekday::Sunday), ("Monday", Weekday::Monday)],
+                ControlGroup { part: "Calendar",
+                    BoolControl { label: "Disabled", value: disabled }
+                    BoolControl { label: "Popover open", value: popover_open }
+                    SelectControl {
+                        label: "First day of week",
+                        value: first_day_of_week,
+                        options: &[("Sunday", Weekday::Sunday), ("Monday", Weekday::Monday)],
+                    }
                 }
+                CalendarControls {}
+                CalendarViewControls {}
+                CalendarHeaderControls {}
+                CalendarNavigationControls {}
+                CalendarPreviousMonthButtonControls {}
+                CalendarSelectMonthControls {}
+                CalendarSelectMonthSelectControls {}
+                CalendarSelectMonthValueControls {}
+                CalendarSelectYearControls {}
+                CalendarSelectYearSelectControls {}
+                CalendarSelectYearValueControls {}
+                CalendarNextMonthButtonControls {}
+                CalendarGridControls {}
             },
             div { class: "flex w-full flex-col items-center gap-4",
                 // Trigger + popover: shows the selected date, opens the same
