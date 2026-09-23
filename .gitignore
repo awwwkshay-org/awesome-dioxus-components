@@ -32,6 +32,10 @@ lcov.info
 *.tmp
 *.bak
 
+# Python bytecode cache (.github/scripts/*.py)
+__pycache__/
+*.pyc
+
 # Understand anything
 .ua
 

@@ -11,8 +11,18 @@ themselves live in [`registry/`](../../registry/).
 
 ## Install
 
-`adico` hasn't had its first tagged release yet, so `cargo install adico-cli`
-and the Homebrew tap aren't live. Until then, build it from this repository:
+**Homebrew (macOS/Linux):**
+
+```sh
+brew install awwwkshay-org/tap/adico
+```
+
+**Prebuilt binary:** download the archive for your platform from the
+[latest release](https://github.com/awwwkshay-org/awesome-dioxus-components/releases/latest)
+(macOS arm64/x64, Linux arm64/x64, Windows x64) and verify it against the
+published `.sha256` checksum.
+
+**From source**, against this repository:
 
 ```sh
 cargo install --git https://github.com/awwwkshay-org/awesome-dioxus-components \
@@ -25,9 +35,9 @@ or from a local clone:
 cargo install --path packages/adico-cli --locked
 ```
 
-Once `v0.1.0` ships, this section will list `cargo install adico-cli`,
-prebuilt GitHub release binaries for macOS/Linux/Windows, and
-`brew install awwwkshay-org/tap/adico`.
+`adico` isn't yet published on crates.io, so `cargo install adico-cli` isn't
+live — that will follow once `adico-primitives` and `adico-registry-core` are
+published ahead of it.
 
 ## Usage
 

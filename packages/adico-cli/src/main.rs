@@ -39,9 +39,12 @@ fn main() {
         Some("list") => run_list(&arguments[1..]),
         Some("view") => run_view(&arguments[1..]),
         Some("css") => run_css(&arguments[1..]),
+        Some("--version") | Some("-V") => {
+            println!("adico {}", env!("CARGO_PKG_VERSION"));
+        }
         _ => {
             eprintln!(
-                "usage:\n  adico init [--default-registry <@namespace>] [--registry <@namespace>=<embedded|relative-path|https-url>] [--dry-run]\n  adico add <component...> [--dry-run] [--replace]\n  adico add --all [--dry-run] [--replace]\n  adico list [--registry <@namespace>]\n  adico view <component>\n  adico css build\n  adico css check"
+                "usage:\n  adico init [--default-registry <@namespace>] [--registry <@namespace>=<embedded|relative-path|https-url>] [--dry-run]\n  adico add <component...> [--dry-run] [--replace]\n  adico add --all [--dry-run] [--replace]\n  adico list [--registry <@namespace>]\n  adico view <component>\n  adico css build\n  adico css check\n  adico --version"
             );
             std::process::exit(2);
         }

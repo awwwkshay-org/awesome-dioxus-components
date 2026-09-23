@@ -10,15 +10,23 @@ check`, `playground-controls check`, `prop-parity check`). See
 surfaces with an authored harness that CI does not yet run (wasm32,
 Playwright, Windows).
 
-`cd.yml` and a CLI release workflow are being built to support the public
-v0.1.0 release: `cd.yml` will build the hosted site image (`apps/docs` +
+`release.yml` is the CLI release workflow: it triggers on a `v[0-9]+.[0-9]+.[0-9]+`
+tag push, builds `adico` on native runners for macOS (arm64/x64), Linux
+(arm64/x64), and Windows (x64) — no cross-compilation and no musl target (the
+Tailwind standalone CLI `adico` downloads at runtime is only published for
+glibc/macOS/Windows hosts; see `packages/adico-cli/src/css_build.rs`) —
+publishes the archives and SHA-256 checksums as GitHub Release assets via
+`gh release create --verify-tag`, and then updates the `adico` formula in
+`awwwkshay-org/homebrew-tap` using `.github/scripts/render_homebrew_formula.py`
+(unit-tested by `ci.yml`). It does not publish to crates.io; that remains a
+separate, not-yet-scheduled workstream because `adico-primitives` and
+`adico-registry-core` must publish ahead of `adico-cli` with version
+requirements instead of the workspace's local `[patch.crates-io]` override.
+
+A future `cd.yml` may build the hosted site image (`apps/docs` +
 `apps/playground` + the generated registry, served by nginx), push it to
 `ghcr.io/awwwkshay-org/adico-web`, and open a deployment PR against the
-`awwwkshay-infra` repository. A separate tag-triggered release workflow will
-build native `adico-cli` binaries, publish GitHub Release assets, update the
-`awwwkshay-org/homebrew-tap` formula, and publish
-`adico-cli`/`adico-primitives`/`adico-registry-core` to crates.io. Until both
-land, update this file to describe what actually runs.
+`awwwkshay-infra` repository — not yet built. Update this file when it lands.
 
 Network-dependent upstream synchronization (`cargo xtask catalog fetch`)
 remains an explicit maintainer action; ordinary CI uses checked-in snapshots

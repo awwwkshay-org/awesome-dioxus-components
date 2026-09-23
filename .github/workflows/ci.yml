@@ -30,6 +30,9 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Test the Homebrew formula renderer
+        run: python3 -m unittest discover -s .github/scripts -p 'test_*.py'
+
       - name: Install Linux desktop build dependencies
         run: |
           sudo apt-get update
