@@ -1125,6 +1125,11 @@
                 "type": "BadgeVariant"
               },
               {
+                "default": "default()",
+                "name": "color",
+                "type": "Tone"
+              },
+              {
                 "default": "Radius::Md",
                 "name": "radius",
                 "type": "Radius"
@@ -1373,6 +1378,11 @@
                 "default": "default()",
                 "name": "variant",
                 "type": "ButtonVariant"
+              },
+              {
+                "default": "default()",
+                "name": "color",
+                "type": "Tone"
               },
               {
                 "default": "default()",
@@ -2766,6 +2776,7 @@
           "components": [
             "ColorPicker",
             "ColorPickerPopover",
+            "ColorPickerContent",
             "ColorPickerTrigger",
             "ColorPickerSwatch",
             "ColorArea",
@@ -2832,6 +2843,21 @@
                 "type": "ReadSignal<bool>"
               },
               {
+                "name": "class",
+                "type": "Option<String>"
+              },
+              {
+                "name": "attributes",
+                "type": "Vec<Attribute>"
+              },
+              {
+                "name": "children",
+                "type": "Element"
+              }
+            ],
+            "ColorPickerContentProps": [
+              {
+                "default": "default()",
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -8289,7 +8315,9 @@
         "adico_primitive": {
           "components": [],
           "hooks_used": [],
-          "modules": [],
+          "modules": [
+            "icons"
+          ],
           "props": {}
         },
         "name": "input",
@@ -8531,6 +8559,7 @@
           ],
           "hooks_used": [],
           "modules": [
+            "icons",
             "otp_field"
           ],
           "props": {
@@ -8615,7 +8644,8 @@
             "InputOTP",
             "InputOTPGroup",
             "InputOTPSlot",
-            "InputOTPSeparator"
+            "InputOTPSeparator",
+            "InputOTPRevealToggle"
           ],
           "files": [
             "ui/input_otp.rs"
@@ -8671,6 +8701,16 @@
               {
                 "name": "children",
                 "type": "Element"
+              },
+              {
+                "name": "class",
+                "type": "Option<String>"
+              }
+            ],
+            "InputOTPRevealToggle": [
+              {
+                "name": "mask",
+                "type": "Signal<bool>"
               },
               {
                 "name": "class",
@@ -14282,6 +14322,14 @@
                 "type": "Radius"
               },
               {
+                "name": "variant",
+                "type": "TagOptionVariant"
+              },
+              {
+                "name": "color",
+                "type": "Tone"
+              },
+              {
                 "name": "class",
                 "type": "Option<String>"
               },
@@ -16456,5 +16504,5 @@
       "total_upstream_components": 61
     }
   },
-  "synced_at": "2026-09-08"
+  "synced_at": "2026-09-23"
 }
