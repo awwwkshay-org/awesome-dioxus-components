@@ -124,9 +124,12 @@ mod tests {
     //
     // What's covered here without a runtime: the pure, cfg-gated logic
     // `copy_to_clipboard` reduces to on a non-`web` build -- always `false`,
-    // never a silent pretend-success. This crate's default test features
-    // omit `web`, so this is exactly the branch that compiles under `cargo
-    // test -p adico-primitives`.
+    // never a silent pretend-success. Gated to match `copy_to_clipboard`'s
+    // own `#[cfg(not(feature = "web"))]`: sibling workspace members (the
+    // playground, both examples) depend on this crate with `web` enabled,
+    // so `cargo test --workspace` unifies that feature into this crate's
+    // own test build too, selecting the other (runtime-requiring) branch.
+    #[cfg(not(feature = "web"))]
     #[test]
     fn non_web_targets_report_failure_not_silent_success() {
         // No async runtime available in this crate's tests; poll the future

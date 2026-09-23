@@ -17,7 +17,17 @@ fn render(root: fn() -> Element) -> String {
 }
 
 /// Dispatches a real mouseenter at the first `onmouseenter`-listening element in `dom`
-/// and returns the freshly re-rendered HTML.
+/// and returns the html once it stops changing across a render cycle.
+///
+/// How many `render_immediate_to_vec` calls a `delay_ms: 0` `HoverIntent::request`
+/// (still a spawned task, never applied synchronously -- see `hover_intent.rs`) takes
+/// to resolve is `dioxus_core::spawn`'s own scheduling detail, not a contract this
+/// crate controls or asserts a fixed count for: it has been observed to take one cycle
+/// building `adico-primitives` alone, and two when built alongside a consumer that also
+/// pulls in `dioxus`'s `fullstack`/`router` features (e.g. this workspace's playground
+/// app, and so `cargo test --workspace`), presumably from an extra internal task-poll
+/// step those features add. Draining to a stable render is what actually matters: a
+/// human hovering never perceives the difference between one and two render passes.
 fn hover_first(dom: &mut VirtualDom) -> String {
     let edits = dom.rebuild_to_vec();
     let id = edits
@@ -34,8 +44,16 @@ fn hover_first(dom: &mut VirtualDom) -> String {
         true,
     );
     dom.runtime().handle_event("mouseenter", event, id);
-    dom.render_immediate_to_vec();
-    dioxus_ssr::render(dom)
+    let mut html = dioxus_ssr::render(dom);
+    for _ in 0..4 {
+        dom.render_immediate_to_vec();
+        let next = dioxus_ssr::render(dom);
+        if next == html {
+            return html;
+        }
+        html = next;
+    }
+    panic!("render did not stabilize after 4 cycles: {html}");
 }
 
 #[component]
