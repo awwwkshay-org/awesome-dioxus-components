@@ -103,7 +103,14 @@ pub fn Demo(
                     class: "flex min-h-0 flex-col",
                     div {
                         class: "relative z-20 grid min-h-0 flex-1 cursor-grab place-items-center overflow-visible rounded-lg border border-border bg-muted/20 p-6",
-                        style: "background-image: linear-gradient(hsl(var(--border) / 0.08) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border) / 0.08) 1px, transparent 1px); background-size: 2rem 2rem;",
+                        // The grid is what tells a viewer this is a pannable
+                        // workspace rather than dead margin -- it moves under
+                        // the component as you drag. At the previous 0.08
+                        // alpha it did not resolve on screen against
+                        // `bg-muted/20`, so the canvas read as an empty box,
+                        // which matters a lot here: a `button` demo fills
+                        // under 1% of this area.
+                        style: "background-image: linear-gradient(hsl(var(--border) / 0.45) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border) / 0.45) 1px, transparent 1px); background-size: 2rem 2rem;",
                         onpointerdown: move |event: Event<PointerData>| {
                             let point = event.client_coordinates();
                             pan.set(

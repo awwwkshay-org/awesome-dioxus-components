@@ -397,11 +397,13 @@ pub fn PlaygroundLayout() -> Element {
             // hamburger trigger, a nav selection, or Sheet's own dismissal),
             // never by measuring the viewport.
             div { class: "flex items-center justify-between gap-2 border-b border-border p-3 md:hidden",
+                // A plain section label, not the logo and wordmark:
+                // `SiteLayout`'s header sits directly above this bar and
+                // already carries both.
                 Link {
-                    class: "flex min-w-0 items-center gap-2 text-lg font-bold",
+                    class: "min-w-0 truncate text-sm font-semibold",
                     to: Route::PlaygroundIndex {},
-                    img { class: "size-8 shrink-0 rounded-md", src: SITE_LOGO, alt: "adico logo" }
-                    span { class: "min-w-0 truncate", "Adico Playground" }
+                    "Playground"
                 }
                 components::ui::Sheet {
                     open: mobile_nav_open(),
@@ -425,11 +427,12 @@ pub fn PlaygroundLayout() -> Element {
                                 },
                             }
                         }
+                        // Only the theme-builder launcher: it is
+                        // playground-specific and has no equivalent in
+                        // `SiteLayout`'s header, unlike `ModeToggle` and
+                        // `ThemeSwitcher`, which that header already renders
+                        // on every route.
                         div { class: "flex shrink-0 flex-col gap-2 border-t border-border pt-4",
-                            div { class: "flex items-end gap-2",
-                                components::ui::ModeToggle {}
-                                components::ui::ThemeSwitcher { class: "flex-1", show_label: false }
-                            }
                             ThemeBuilderLauncher {}
                         }
                     }
@@ -455,19 +458,16 @@ pub fn PlaygroundLayout() -> Element {
                         max_size: 30.0,
                         class: "hidden h-full min-w-0 flex-col md:flex",
                         components::ui::SidebarHeader {
-                            // `Link`'s own `shrink-0` (harmless under the old fixed
-                            // 16rem `Sidebar`, which never got narrow enough for it
-                            // to matter) actively fights a resizable nav column: it
-                            // stops this row from shrinking at all, so "adico
-                            // playground" is forced to wrap instead of truncating
-                            // once the column is dragged narrow. `min-w-0` +
-                            // wrapping the text in its own `truncate` span lets the
-                            // row shrink and elide instead.
+                            // A section label, not the brand: `SiteLayout`'s
+                            // header already renders the logo and wordmark
+                            // directly above this column. `min-w-0 truncate`
+                            // because this column is resizable and can be
+                            // dragged narrow -- without it the row refuses to
+                            // shrink and wraps instead of eliding.
                             Link {
-                                class: "flex min-w-0 items-center gap-2 text-lg font-bold",
+                                class: "min-w-0 truncate text-xs font-medium uppercase tracking-wide text-muted-foreground",
                                 to: Route::PlaygroundIndex {},
-                                img { class: "size-8 shrink-0 rounded-md", src: SITE_LOGO, alt: "adico logo" }
-                                span { class: "min-w-0 truncate", "Adico Playground" }
+                                "Components"
                             }
                         }
                         components::ui::SidebarContent {
@@ -483,10 +483,6 @@ pub fn PlaygroundLayout() -> Element {
                             }
                         }
                         components::ui::SidebarFooter {
-                            div { class: "flex items-end gap-2",
-                                components::ui::ModeToggle {}
-                                components::ui::ThemeSwitcher { class: "flex-1", show_label: false }
-                            }
                             ThemeBuilderLauncher {}
                         }
                     }
