@@ -14,6 +14,17 @@ use routes::Route;
 // Cargo.toml — `adico add`'s CSS step does not wire the link or the feature
 // automatically yet.
 const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
+// The self-hosted Geist / Geist Mono faces, declared as a *folder* asset.
+//
+// `dx` only copies files reachable from an `asset!()`, and it fingerprints
+// each one into a flat `/assets/<name>-<hash>.<ext>` — so a plain per-file
+// `asset!()` would give the fonts unpredictable names that the `@font-face`
+// `url()` in `tailwind.css` could never spell. A folder asset is the
+// exception: `FolderAssetOptions` sets `add_hash: false` and preserves the
+// directory's internal structure, so these land at a stable `/assets/fonts/
+// <original name>` — which is exactly what the stylesheet's relative
+// `url("./fonts/…")` resolves to from `/assets/tailwind-<hash>.css`.
+const FONTS: Asset = asset!("/assets/fonts", AssetOptions::folder());
 const WEB_MANIFEST: Asset = asset!("/assets/web/site.webmanifest");
 const FAVICON: Asset = asset!("/assets/web/favicon.ico");
 const FAVICON_16: Asset = asset!("/assets/web/favicon-16x16.png");
@@ -29,6 +40,18 @@ fn App() -> Element {
     rsx! {
         document::Title { "adico" }
         document::Stylesheet { href: TAILWIND_CSS }
+        // Preloaded because the body face is on the critical render path:
+        // without it the browser only discovers the font after parsing the
+        // stylesheet's `@font-face`, which lengthens the `font-display: swap`
+        // fallback flash. Also keeps `FONTS` referenced so the folder asset is
+        // actually collected.
+        document::Link {
+            rel: "preload",
+            href: format!("{FONTS}/geist-latin-wght-normal.woff2"),
+            r#as: "font",
+            r#type: "font/woff2",
+            crossorigin: "anonymous",
+        }
         document::Link { rel: "manifest", href: WEB_MANIFEST }
         document::Link { rel: "shortcut icon", r#type: "image/x-icon", href: FAVICON }
         document::Link { rel: "icon", r#type: "image/png", sizes: "16x16", href: FAVICON_16 }

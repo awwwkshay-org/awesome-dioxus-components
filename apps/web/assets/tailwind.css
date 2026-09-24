@@ -3,10 +3,11 @@
 @layer theme, base, components, utilities;
 @layer theme {
   :root, :host {
-    --font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
-    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
-    monospace;
+    --font-sans: "Geist Variable", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji";
+    --font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo,
+    Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --color-emerald-500: oklch(69.6% 0.17 162.48);
     --color-emerald-600: oklch(59.6% 0.145 163.225);
     --color-black: #000;
@@ -19,7 +20,9 @@
     --container-xl: 36rem;
     --container-2xl: 42rem;
     --container-3xl: 48rem;
+    --container-4xl: 56rem;
     --container-5xl: 64rem;
+    --container-7xl: 80rem;
     --text-xs: 0.75rem;
     --text-xs--line-height: calc(1 / 0.75);
     --text-sm: 0.875rem;
@@ -32,10 +35,6 @@
     --text-2xl--line-height: calc(2 / 1.5);
     --text-3xl: 1.875rem;
     --text-3xl--line-height: calc(2.25 / 1.875);
-    --text-4xl: 2.25rem;
-    --text-4xl--line-height: calc(2.5 / 2.25);
-    --text-5xl: 3rem;
-    --text-5xl--line-height: 1;
     --text-6xl: 3.75rem;
     --text-6xl--line-height: 1;
     --font-weight-normal: 400;
@@ -62,6 +61,7 @@
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
+    --font-display: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
     --color-background: hsl(var(--background));
     --color-foreground: hsl(var(--foreground));
     --color-card: hsl(var(--card));
@@ -282,6 +282,9 @@
   .static {
     position: static;
   }
+  .sticky {
+    position: sticky;
+  }
   .inset-0 {
     inset: calc(var(--spacing) * 0);
   }
@@ -468,6 +471,9 @@
   .mt-2 {
     margin-top: calc(var(--spacing) * 2);
   }
+  .mt-3 {
+    margin-top: calc(var(--spacing) * 3);
+  }
   .mt-4 {
     margin-top: calc(var(--spacing) * 4);
   }
@@ -581,6 +587,10 @@
   .size-12 {
     width: calc(var(--spacing) * 12);
     height: calc(var(--spacing) * 12);
+  }
+  .size-14 {
+    width: calc(var(--spacing) * 14);
+    height: calc(var(--spacing) * 14);
   }
   .size-16 {
     width: calc(var(--spacing) * 16);
@@ -709,6 +719,9 @@
   .max-h-\[var\(--adico-positioner-available-size\)\] {
     max-height: var(--adico-positioner-available-size);
   }
+  .max-h-dvh {
+    max-height: 100dvh;
+  }
   .max-h-none\! {
     max-height: none !important;
   }
@@ -717,6 +730,9 @@
   }
   .min-h-4 {
     min-height: calc(var(--spacing) * 4);
+  }
+  .min-h-\[7rem\] {
+    min-height: 7rem;
   }
   .min-h-\[60px\] {
     min-height: 60px;
@@ -772,6 +788,9 @@
   .w-10 {
     width: calc(var(--spacing) * 10);
   }
+  .w-12 {
+    width: calc(var(--spacing) * 12);
+  }
   .w-14 {
     width: calc(var(--spacing) * 14);
   }
@@ -789,6 +808,9 @@
   }
   .w-56 {
     width: calc(var(--spacing) * 56);
+  }
+  .w-60 {
+    width: calc(var(--spacing) * 60);
   }
   .w-64 {
     width: calc(var(--spacing) * 64);
@@ -844,8 +866,14 @@
   .max-w-3xl {
     max-width: var(--container-3xl);
   }
+  .max-w-4xl {
+    max-width: var(--container-4xl);
+  }
   .max-w-5xl {
     max-width: var(--container-5xl);
+  }
+  .max-w-7xl {
+    max-width: var(--container-7xl);
   }
   .max-w-56 {
     max-width: calc(var(--spacing) * 56);
@@ -918,6 +946,12 @@
   }
   .min-w-\[12rem\] {
     min-width: 12rem;
+  }
+  .min-w-\[26rem\] {
+    min-width: 26rem;
+  }
+  .min-w-\[32rem\] {
+    min-width: 32rem;
   }
   .flex-1 {
     flex: 1;
@@ -1321,6 +1355,12 @@
       border-color: color-mix(in oklab, var(--color-border) 50%, transparent);
     }
   }
+  .border-border\/60 {
+    border-color: color-mix(in srgb, hsl(var(--border)) 60%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-border) 60%, transparent);
+    }
+  }
   .border-destructive {
     border-color: var(--color-destructive);
   }
@@ -1412,6 +1452,12 @@
     background-color: color-mix(in srgb, hsl(var(--muted)) 30%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in oklab, var(--color-muted) 30%, transparent);
+    }
+  }
+  .bg-muted\/40 {
+    background-color: color-mix(in srgb, hsl(var(--muted)) 40%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-muted) 40%, transparent);
     }
   }
   .bg-muted\/50 {
@@ -1525,6 +1571,9 @@
   .px-6 {
     padding-inline: calc(var(--spacing) * 6);
   }
+  .px-\[0\.3em\] {
+    padding-inline: 0.3em;
+  }
   .py-0 {
     padding-block: calc(var(--spacing) * 0);
   }
@@ -1549,11 +1598,17 @@
   .py-6 {
     padding-block: calc(var(--spacing) * 6);
   }
+  .py-8 {
+    padding-block: calc(var(--spacing) * 8);
+  }
   .py-12 {
     padding-block: calc(var(--spacing) * 12);
   }
   .py-16 {
     padding-block: calc(var(--spacing) * 16);
+  }
+  .py-\[0\.15em\] {
+    padding-block: 0.15em;
   }
   .pt-0 {
     padding-top: calc(var(--spacing) * 0);
@@ -1584,6 +1639,9 @@
   }
   .pr-9\! {
     padding-right: calc(var(--spacing) * 9) !important;
+  }
+  .pr-14 {
+    padding-right: calc(var(--spacing) * 14);
   }
   .pb-2 {
     padding-bottom: calc(var(--spacing) * 2);
@@ -1621,11 +1679,45 @@
   .align-middle {
     vertical-align: middle;
   }
+  .text-display {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 1.75rem + 3.75vw, 4.5rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  .text-h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.875rem, 1.5rem + 1.875vw, 2.75rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  .text-h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .font-display {
+    font-family: var(--font-display);
+  }
   .font-mono {
     font-family: var(--font-mono);
   }
   .font-sans {
     font-family: var(--font-sans);
+  }
+  .text-lead {
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: -0.005em;
+    text-wrap: pretty;
   }
   .text-2xl {
     font-size: var(--text-2xl);
@@ -1634,10 +1726,6 @@
   .text-3xl {
     font-size: var(--text-3xl);
     line-height: var(--tw-leading, var(--text-3xl--line-height));
-  }
-  .text-4xl {
-    font-size: var(--text-4xl);
-    line-height: var(--tw-leading, var(--text-4xl--line-height));
   }
   .text-6xl {
     font-size: var(--text-6xl);
@@ -1663,15 +1751,25 @@
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
   }
+  .text-\[0\.875em\] {
+    font-size: 0.875em;
+  }
   .text-\[10px\] {
     font-size: 10px;
   }
   .text-\[11px\] {
     font-size: 11px;
   }
+  .text-\[13px\] {
+    font-size: 13px;
+  }
   .leading-none {
     --tw-leading: 1;
     line-height: 1;
+  }
+  .leading-relaxed {
+    --tw-leading: var(--leading-relaxed);
+    line-height: var(--leading-relaxed);
   }
   .leading-snug {
     --tw-leading: var(--leading-snug);
@@ -1712,8 +1810,14 @@
   .text-balance {
     text-wrap: balance;
   }
+  .text-pretty {
+    text-wrap: pretty;
+  }
   .break-words {
     overflow-wrap: break-word;
+  }
+  .break-all {
+    word-break: break-all;
   }
   .whitespace-nowrap {
     white-space: nowrap;
@@ -1804,6 +1908,9 @@
   }
   .uppercase {
     text-transform: uppercase;
+  }
+  .italic {
+    font-style: italic;
   }
   .tabular-nums {
     --tw-numeric-spacing: tabular-nums;
@@ -2202,6 +2309,12 @@
     &:last-child {
       border-top-right-radius: var(--radius-md);
       border-bottom-right-radius: var(--radius-md);
+    }
+  }
+  .last\:border-0 {
+    &:last-child {
+      border-style: var(--tw-border-style);
+      border-width: 0px;
     }
   }
   .read-only\:cursor-default {
@@ -3425,12 +3538,6 @@
       text-align: left;
     }
   }
-  .sm\:text-5xl {
-    @media (width >= 40rem) {
-      font-size: var(--text-5xl);
-      line-height: var(--tw-leading, var(--text-5xl--line-height));
-    }
-  }
   .md\:flex {
     @media (width >= 48rem) {
       display: flex;
@@ -3446,6 +3553,11 @@
       padding: calc(var(--spacing) * 12);
     }
   }
+  .lg\:block {
+    @media (width >= 64rem) {
+      display: block;
+    }
+  }
   .lg\:grid-cols-3 {
     @media (width >= 64rem) {
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -3459,6 +3571,11 @@
   .lg\:p-6 {
     @media (width >= 64rem) {
       padding: calc(var(--spacing) * 6);
+    }
+  }
+  .lg\:px-6 {
+    @media (width >= 64rem) {
+      padding-inline: calc(var(--spacing) * 6);
     }
   }
   .\@sm\:has-\[\[data-slot\=card-action\]\]\:grid {
@@ -3483,12 +3600,12 @@
     }
   }
   .dark\:text-emerald-500 {
-    @media (prefers-color-scheme: dark) {
+    &:is(.dark *) {
       color: var(--color-emerald-500);
     }
   }
   .dark\:hover\:bg-accent\/50 {
-    @media (prefers-color-scheme: dark) {
+    &:is(.dark *) {
       &:hover {
         @media (hover: hover) {
           background-color: color-mix(in srgb, hsl(var(--accent)) 50%, transparent);
@@ -3500,7 +3617,7 @@
     }
   }
   .dark\:hover\:bg-white\/10 {
-    @media (prefers-color-scheme: dark) {
+    &:is(.dark *) {
       &:hover {
         @media (hover: hover) {
           background-color: color-mix(in srgb, #fff 10%, transparent);
@@ -3512,7 +3629,7 @@
     }
   }
   .dark\:focus-visible\:ring-destructive\/40 {
-    @media (prefers-color-scheme: dark) {
+    &:is(.dark *) {
       &:focus-visible {
         --tw-ring-color: color-mix(in srgb, hsl(var(--destructive)) 40%, transparent);
         @supports (color: color-mix(in lab, red, red)) {
@@ -3522,7 +3639,7 @@
     }
   }
   .dark\:focus-visible\:ring-info\/40 {
-    @media (prefers-color-scheme: dark) {
+    &:is(.dark *) {
       &:focus-visible {
         --tw-ring-color: color-mix(in srgb, hsl(var(--info)) 40%, transparent);
         @supports (color: color-mix(in lab, red, red)) {
@@ -3532,7 +3649,7 @@
     }
   }
   .dark\:focus-visible\:ring-success\/40 {
-    @media (prefers-color-scheme: dark) {
+    &:is(.dark *) {
       &:focus-visible {
         --tw-ring-color: color-mix(in srgb, hsl(var(--success)) 40%, transparent);
         @supports (color: color-mix(in lab, red, red)) {
@@ -3542,7 +3659,7 @@
     }
   }
   .dark\:focus-visible\:ring-warning\/40 {
-    @media (prefers-color-scheme: dark) {
+    &:is(.dark *) {
       &:focus-visible {
         --tw-ring-color: color-mix(in srgb, hsl(var(--warning)) 40%, transparent);
         @supports (color: color-mix(in lab, red, red)) {
@@ -3552,7 +3669,7 @@
     }
   }
   .dark\:has-\[\[data-slot\]\[aria-invalid\=true\]\]\:ring-destructive\/40 {
-    @media (prefers-color-scheme: dark) {
+    &:is(.dark *) {
       &:has(*:is([data-slot][aria-invalid=true])) {
         --tw-ring-color: color-mix(in srgb, hsl(var(--destructive)) 40%, transparent);
         @supports (color: color-mix(in lab, red, red)) {
@@ -3562,7 +3679,7 @@
     }
   }
   .dark\:aria-invalid\:ring-destructive\/40 {
-    @media (prefers-color-scheme: dark) {
+    &:is(.dark *) {
       &[aria-invalid="true"] {
         --tw-ring-color: color-mix(in srgb, hsl(var(--destructive)) 40%, transparent);
         @supports (color: color-mix(in lab, red, red)) {
@@ -3998,6 +4115,22 @@
       rotate: 180deg;
     }
   }
+}
+@font-face {
+  font-family: "Geist Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("./fonts/geist-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Geist Mono Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("./fonts/geist-mono-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 :root {
   --background: 0 0% 100%;

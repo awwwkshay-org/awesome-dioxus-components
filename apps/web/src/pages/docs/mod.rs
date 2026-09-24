@@ -7,8 +7,14 @@
 //! and installed registry components, not hardcoded CSS" requirement.
 
 mod component;
-mod data;
+mod examples;
+// `pub` so the landing page can count `registry:ui` items from the same
+// compile-time manifest the docs pages read, rather than repeating a literal
+// that silently goes stale as the registry grows.
+pub mod data;
+pub mod guides;
 mod index;
+mod tokens;
 
 pub use component::DocsComponent;
 pub use index::DocsIndex;

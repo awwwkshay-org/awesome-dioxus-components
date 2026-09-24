@@ -8,6 +8,7 @@ use adico_primitives::icons;
 use dioxus::prelude::*;
 
 use crate::components;
+use crate::components::docs_nav::DocsNavList;
 use crate::components::nav::NavList;
 use crate::components::theme_builder_launcher::ThemeBuilderLauncher;
 use crate::components::ui::mode_toggle::ModeToggle;
@@ -15,6 +16,9 @@ use crate::components::ui::navigation_menu::{
     NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList,
 };
 use crate::components::ui::theme_switcher::ThemeSwitcher;
+use crate::pages::docs::guides::{
+    DarkModeGuide, InstallationGuide, SpacingGuide, TailwindGuide, ThemingGuide, TypographyGuide,
+};
 use crate::pages::docs::{DocsComponent, DocsIndex};
 use crate::pages::playground::{
     AccordionPage, AlertDialogPage, AlertPage, AspectRatioPage, AttachmentPage, AvatarPage,
@@ -39,11 +43,29 @@ pub enum Route {
     #[layout(SiteLayout)]
     #[route("/")]
     Home {},
+
+    // A second nested layout beside `PlaygroundLayout`, not a sidebar folded
+    // into `SiteLayout`: `SiteLayout` also wraps `/` and the whole playground
+    // tree, and `adico-web-structure` pins both of those shells. Nesting
+    // confines the docs navigation to `/docs/*`.
+    #[layout(DocsLayout)]
     #[route("/docs")]
     DocsIndex {},
+    #[route("/docs/installation")]
+    InstallationGuide {},
+    #[route("/docs/tailwind")]
+    TailwindGuide {},
+    #[route("/docs/theming")]
+    ThemingGuide {},
+    #[route("/docs/dark-mode")]
+    DarkModeGuide {},
+    #[route("/docs/typography")]
+    TypographyGuide {},
+    #[route("/docs/spacing")]
+    SpacingGuide {},
     #[route("/docs/components/:name")]
     DocsComponent { name: String },
-
+    #[end_layout]
     #[layout(PlaygroundLayout)]
     #[route("/playground")]
     PlaygroundIndex {},
@@ -322,6 +344,35 @@ pub fn SiteLayout() -> Element {
             // height instead of needing the document itself to grow past
             // the viewport (blocked by `overflow-hidden` on the App root).
             main { class: "flex min-h-0 flex-1 flex-col overflow-y-auto", Outlet::<Route> {} }
+        }
+    }
+}
+
+/// The docs navigation shell, nested inside `SiteLayout` under `/docs/*`.
+///
+/// The sidebar is `sticky`, not a second scroll container. `position: sticky`
+/// resolves against the nearest scrollport, which is `SiteLayout`'s `main` --
+/// so it sticks with no JavaScript and without nesting a second scrollbar
+/// inside `main`'s. Deliberately *not* a `ResizablePanelGroup` like the
+/// playground's: that uses percentage `flex-basis`, which needs a definite
+/// ancestor height, and docs content is variable-height.
+///
+/// Hidden below `lg`. Every guide stays reachable at narrow widths through
+/// `/docs`'s own guides section, so this adds no second mobile nav mechanism
+/// beside the playground's existing sheet.
+#[component]
+pub fn DocsLayout() -> Element {
+    let route = use_route::<Route>();
+    let current_path = route.to_string();
+
+    rsx! {
+        div { class: "mx-auto flex w-full max-w-7xl flex-1 gap-8 px-0 lg:px-6",
+            aside { class: "hidden w-60 shrink-0 lg:block",
+                div { class: "sticky top-0 max-h-dvh overflow-y-auto py-8 pr-2",
+                    DocsNavList { current_path }
+                }
+            }
+            div { class: "min-w-0 flex-1", Outlet::<Route> {} }
         }
     }
 }

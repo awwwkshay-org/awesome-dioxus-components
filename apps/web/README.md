@@ -79,6 +79,50 @@ wire the following two steps automatically — do them by hand once per app:
 Without both steps, every installed component renders as unstyled semantic
 HTML.
 
+## App-owned CSS: write it above the marker, never inside
+
+`tailwind.css` has two parts, and the boundary matters more than it looks:
+
+```css
+@import "tailwindcss";
+@source "./src";
+
+/* ---- app-owned prefix: yours, survives everything ---- */
+@custom-variant dark (&:is(.dark *));
+@font-face { ... }          /* self-hosted Geist / Geist Mono */
+@theme { --font-sans: ...; --font-mono: ...; --font-display: ...; }
+@utility text-display { ... }   /* the type scale */
+
+/* adico:theme:start */
+/* ---- CLI-owned: REGENERATED WHOLESALE on every `adico add` ---- */
+/* adico:theme:end */
+```
+
+`adico add` does not merge into the marker region — it rebuilds the file as
+`prefix + fresh theme_region() + suffix`, keeping only the bytes *before* the
+start marker and *after* the end marker (`packages/adico-cli/src/css.rs`,
+`plan_theme_install`). **Anything you author between the markers is deleted on
+the next install, silently and with no warning.** So fonts, font/type tokens,
+custom variants, and any other app-owned CSS go in the prefix.
+
+Two things currently live there, both load-bearing:
+
+- **`@custom-variant dark (&:is(.dark *))`.** Without it, Tailwind v4's default
+  `dark` variant applies and literal `dark:` utilities compile to
+  `@media (prefers-color-scheme: dark)` — following the operating system, while
+  every token-driven color follows the app's own `ModeToggle`. The two then
+  disagree for anyone whose OS theme differs from their chosen theme. (The
+  durable fix belongs in `theme_region()` so every consumer inherits it; this
+  declaration is the app-level interim.)
+- **Self-hosted fonts**, declared as a *folder* asset in `main.rs`:
+  `asset!("/assets/fonts", AssetOptions::folder())`. `dx` only copies files
+  reachable from an `asset!()`, and it fingerprints each into a flat
+  `/assets/<name>-<hash>.<ext>` — which no `@font-face` `url()` could ever
+  spell. A folder asset is the exception: it is not hashed and keeps its
+  internal structure, so the files stay at `/assets/fonts/<original name>` and
+  the stylesheet's relative `url("./fonts/…")` resolves. See
+  `assets/fonts/README.md` for origin and license.
+
 ## Theme combinations
 
 The navigation contains a session-only customization tray. Use primary,
