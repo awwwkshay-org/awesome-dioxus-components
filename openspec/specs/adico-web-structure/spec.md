@@ -210,6 +210,15 @@ dialog containing an installed component) SHALL live under
 `apps/web/src/components/`, SHALL NOT duplicate a registry component's own
 logic, and SHALL NOT require any change to `registry/ui/*.rs` to exist.
 
+`PlaygroundLayout` SHALL NOT re-render chrome that `SiteLayout` already
+provides for every route — specifically the adico logo and wordmark, the
+`ThemeSwitcher`, and the `ModeToggle`. Controls with no equivalent in the site
+header, such as the theme-builder launcher, SHALL remain. This applies to both
+the `>= md` and `< md` presentations.
+
+The navigation SHALL offer a filter that narrows the visible component
+entries by typed text, composed from an installed registry component.
+
 At viewports `>= md`, the navigation shell's nav column SHALL be composed
 from `sidebar`'s structural sub-components (`SidebarHeader`,
 `SidebarContent`, `SidebarGroup`, `SidebarGroupContent`, `SidebarMenu`,
@@ -407,10 +416,19 @@ entries as a single flat list ordered alphabetically ascending by displayed
 label, with no thematic batches or restarted alphabetical runs. A newly
 added component page SHALL be inserted at its alphabetical position.
 
+When a filter is applied, the entries that remain SHALL keep that same flat
+alphabetical order, and clearing the filter SHALL restore the complete list.
+A filter SHALL never be the only route to a page.
+
 #### Scenario: A user scans the navigation for a component
 - **WHEN** a user opens `/playground` and scans the navigation sidebar
 - **THEN** every component entry appears in one continuous A→Z sequence by
   its displayed label
+
+#### Scenario: A user filters the navigation
+- **WHEN** a user types into the navigation filter
+- **THEN** only entries matching the typed text remain, still in one flat
+  A→Z sequence, and clearing the filter restores every entry
 
 #### Scenario: A new component page is registered
 - **WHEN** a maintainer adds a navigation entry for a new component page
@@ -427,10 +445,19 @@ control at the bottom of the preview area, composed from the installed
 Button registry component, that restores the component to the centered
 position.
 
+The pannable area SHALL be visually distinguishable from inert page
+background, so a user can tell the space is a workspace rather than empty
+margin, even when the demoed component fills very little of it.
+
 #### Scenario: Dragging the background moves the component
 - **WHEN** a user presses on the preview zone's background and drags
 - **THEN** the rendered component follows the drag offset and remains at the
   released position
+
+#### Scenario: A preview zone holds a component much smaller than itself
+- **WHEN** a demoed component occupies a small fraction of the preview zone
+- **THEN** the pannable workspace is still identifiable as a workspace rather
+  than reading as blank page background
 
 #### Scenario: Dragging the component itself does not pan
 - **WHEN** a user begins a drag on the demoed component (e.g. a slider thumb
@@ -750,3 +777,11 @@ logic, and SHALL NOT require any change to `registry/ui/*.rs` to exist.
   normal registry-item process — the landing page SHALL NOT gain a
   parallel, app-specific implementation of behavior a registry component
   already provides
+
+The landing page SHALL show real, rendered registry components, not only prose
+describing them.
+
+#### Scenario: A visitor lands on the site
+- **WHEN** a first-time visitor opens `/`
+- **THEN** they can see actual registry components rendered on the page,
+  without navigating to another route
