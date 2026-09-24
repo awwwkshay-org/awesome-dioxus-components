@@ -8,22 +8,14 @@
  * `adico:theme:end` markers wholesale — it keeps only the bytes before the
  * start marker and after the end marker (packages/adico-cli/src/css.rs,
  * `plan_theme_install`). Anything authored inside that region is destroyed on
- * the next install, silently. Fonts, font/type tokens, and custom variants
- * therefore live here, in the prefix.
- * ------------------------------------------------------------------------ */
-
-/* Bind the `dark:` variant to the `dark` class.
+ * the next install, silently. App-owned CSS -- the typeface and the font and
+ * type-scale tokens -- therefore lives here, in the prefix.
  *
- * `adico_primitives::theme_mode` switches themes by adding/removing the `dark`
- * class on `<html>`, and the generated `.dark { --… }` token block below keys
- * off that same class. Without this line Tailwind v4's *default* `dark`
- * variant applies, which compiles literal `dark:` utilities to
- * `@media (prefers-color-scheme: dark)` — so they would follow the operating
- * system while every token-driven color follows the toggle. Components using
- * literal `dark:` utilities (Button's ghost hover, aria-invalid rings,
- * focus-visible rings) would then mis-render for anyone whose OS theme and
- * chosen theme disagree. */
-@custom-variant dark (&:is(.dark *));
+ * The `dark` custom variant used to live here too. It is now emitted by the
+ * CLI into the managed region below, so every consumer gets it rather than
+ * each app rediscovering that Tailwind's default `dark` variant follows the
+ * OS instead of the theme class.
+ * ------------------------------------------------------------------------ */
 
 /* Self-hosted Geist / Geist Mono, latin subset, variable weight axis.
  * Origin, version, and license: apps/web/assets/fonts/README.md + OFL.txt.
@@ -113,6 +105,18 @@
 }
 
 /* adico:theme:start */
+/* Bind Tailwind's `dark:` variant to the same `dark` class this region
+ * generates its dark token block for, and that `adico_primitives`'
+ * theme_mode applies to <html>.
+ *
+ * Without this, Tailwind v4's *default* `dark` variant applies and
+ * every literal `dark:` utility compiles to
+ * `@media (prefers-color-scheme: dark)` -- following the operating
+ * system while every token-driven colour follows the theme control.
+ * The two then contradict each other for any user whose OS
+ * appearance differs from the one they chose. */
+@custom-variant dark (&:is(.dark *));
+
 @theme {
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));

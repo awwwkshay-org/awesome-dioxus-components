@@ -1,6 +1,6 @@
 # Follow-up discovered by this change
 
-## `BubbleInput`'s hidden native input escapes every ancestor's overflow clip
+## ~~`BubbleInput`'s hidden native input escapes every ancestor's overflow clip~~ — RESOLVED
 
 **Where:** `packages/adico-primitives/src/checkbox.rs`, `BubbleInput`
 (checkbox.rs:295-325). `switch.rs` renders the same shape.
@@ -61,3 +61,18 @@ pattern (`clip-path`/1px box) instead of `position: absolute` with a
 transform. This is `packages/adico-primitives` source, consumer-visible
 through every installed `checkbox` and `switch`, so it wants its own change
 with its own delta against `adico-primitives`.
+
+---
+
+**Resolved by `2026-09-24-fix-hidden-form-input-layout-escape`.** `Checkbox`'s
+hidden input is now zero-sized via a single `style` string, matching what
+`switch.rs` already did, and `apps/web`'s `relative` mitigation was removed
+with it. Verified against a real `dx build`: every route measures exactly the
+viewport height and none scrolls the document, the hidden inputs measure 0×0,
+and the control still toggles with its hidden input's `checked` following.
+
+One trap worth keeping: the first attempt set `width`/`height` as individual
+attributes and silently did nothing, because those are real HTML attributes on
+`<input>` and Dioxus emits them as attributes rather than CSS — unlike
+`position`/`opacity`/`transform`, which it does map to style. Caught only by
+re-measuring instead of trusting the edit.

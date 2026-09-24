@@ -88,13 +88,13 @@ HTML.
 @source "./src";
 
 /* ---- app-owned prefix: yours, survives everything ---- */
-@custom-variant dark (&:is(.dark *));
 @font-face { ... }          /* self-hosted Geist / Geist Mono */
 @theme { --font-sans: ...; --font-mono: ...; --font-display: ...; }
 @utility text-display { ... }   /* the type scale */
 
 /* adico:theme:start */
 /* ---- CLI-owned: REGENERATED WHOLESALE on every `adico add` ---- */
+@custom-variant dark (&:is(.dark *));   /* emitted by the CLI */
 /* adico:theme:end */
 ```
 
@@ -103,17 +103,17 @@ HTML.
 start marker and *after* the end marker (`packages/adico-cli/src/css.rs`,
 `plan_theme_install`). **Anything you author between the markers is deleted on
 the next install, silently and with no warning.** So fonts, font/type tokens,
-custom variants, and any other app-owned CSS go in the prefix.
+and any other app-owned CSS go in the prefix.
 
-Two things currently live there, both load-bearing:
+One thing currently lives there, and one notable thing no longer does:
 
-- **`@custom-variant dark (&:is(.dark *))`.** Without it, Tailwind v4's default
-  `dark` variant applies and literal `dark:` utilities compile to
-  `@media (prefers-color-scheme: dark)` — following the operating system, while
-  every token-driven color follows the app's own `ModeToggle`. The two then
-  disagree for anyone whose OS theme differs from their chosen theme. (The
-  durable fix belongs in `theme_region()` so every consumer inherits it; this
-  declaration is the app-level interim.)
+- **The `dark` custom variant** is emitted by the CLI into the managed region,
+  not written here. Without it, Tailwind v4's default `dark` variant applies
+  and literal `dark:` utilities compile to
+  `@media (prefers-color-scheme: dark)` -- following the operating system,
+  while every token-driven colour follows `ModeToggle`. The two then disagree
+  for anyone whose OS theme differs from their chosen one. It lives in
+  `theme_region()` so every consumer inherits the fix.
 - **Self-hosted fonts**, declared as a *folder* asset in `main.rs`:
   `asset!("/assets/fonts", AssetOptions::folder())`. `dx` only copies files
   reachable from an `asset!()`, and it fingerprints each into a flat

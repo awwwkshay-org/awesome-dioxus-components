@@ -11,7 +11,7 @@ to hold a placeholder is worse than writing them down.
 
 ---
 
-## 1. The `dark` custom variant belongs in the CLI, not in each app
+## 1. ~~The `dark` custom variant belongs in the CLI, not in each app~~ — RESOLVED
 
 **Where:** `packages/adico-cli/src/css.rs`, `theme_region()` (css.rs:538-675).
 
@@ -40,6 +40,13 @@ prefix, which fixes the site but not any other consumer.
 runs `adico add` inherits it, then drop the app-level declaration. Note this is
 a **visible rendering change** for existing consumer projects, so it wants its
 own proposal rather than a silent patch.
+
+**Resolved by `2026-09-24-emit-dark-custom-variant`.** `theme_region()` now
+emits the variant at the top of the managed region, `apps/web`'s hand-written
+declaration and the README text describing it are gone, and a CLI test pins the
+declaration as a consumer contract. Verified in the compiled artifact: the
+stylesheet contains 0 `prefers-color-scheme` rules, and a `dark:` probe follows
+the class rather than the OS under both `colorScheme` settings.
 
 ---
 

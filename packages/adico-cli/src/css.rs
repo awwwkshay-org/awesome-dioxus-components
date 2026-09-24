@@ -538,6 +538,18 @@ fn positions(contents: &str, marker: &str) -> Vec<usize> {
 fn theme_region() -> String {
     format!(
         "{THEME_REGION_START}\n\
+/* Bind Tailwind's `dark:` variant to the same `dark` class this region\n\
+\x20* generates its dark token block for, and that `adico_primitives`'\n\
+\x20* theme_mode applies to <html>.\n\
+\x20*\n\
+\x20* Without this, Tailwind v4's *default* `dark` variant applies and\n\
+\x20* every literal `dark:` utility compiles to\n\
+\x20* `@media (prefers-color-scheme: dark)` -- following the operating\n\
+\x20* system while every token-driven colour follows the theme control.\n\
+\x20* The two then contradict each other for any user whose OS\n\
+\x20* appearance differs from the one they chose. */\n\
+@custom-variant dark (&:is(.dark *));\n\
+\n\
 @theme {{\n\
 \x20 --color-background: hsl(var(--background));\n\
 \x20 --color-foreground: hsl(var(--foreground));\n\
@@ -688,6 +700,34 @@ pub enum CssThemeError {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A consumer contract, not an implementation detail: without this
+    /// declaration Tailwind v4's default `dark` variant applies and every
+    /// literal `dark:` utility in installed registry source follows the
+    /// operating system, while token-driven colours follow the theme class --
+    /// so the two disagree for any user whose OS appearance differs from the
+    /// one they chose.
+    #[test]
+    fn the_generated_region_binds_the_dark_variant_to_the_theme_class() {
+        let region = theme_region();
+        assert!(
+            region.contains("@custom-variant dark (&:is(.dark *));"),
+            "theme_region() must declare the class-based `dark` variant"
+        );
+        // It has to be registered before the utilities that use it.
+        let variant_at = region.find("@custom-variant dark").expect("checked above");
+        let theme_at = region.find("@theme").expect("region always has @theme");
+        assert!(
+            variant_at < theme_at,
+            "the variant must be declared before @theme"
+        );
+        // And it must pair with the token block it governs.
+        assert!(
+            region.contains(".dark {"),
+            "region must still emit the .dark token block the variant targets"
+        );
+    }
+
     use std::sync::atomic::{AtomicU64, Ordering};
     use std::time::{SystemTime, UNIX_EPOCH};
 

@@ -143,7 +143,7 @@
     },
     {
       "address": "@adico/checkbox",
-      "manifestDigest": "e8f0baf622dc5c6089a7d68dce24c2d7d983926aa82c7499e048e63c707fc90e",
+      "manifestDigest": "a4f7a2c9baaf677c19c6201c83dc7f0c33afb6fed355de4ba486e19f65a3bd15",
       "files": [
         {
           "path": "src/components/ui/checkbox.rs",
