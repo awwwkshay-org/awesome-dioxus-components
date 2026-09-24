@@ -9,7 +9,7 @@ import { expect, test } from "@playwright/test";
 test("playground Drag And Drop List page renders without hanging and reorders via keyboard", async ({
   page,
 }) => {
-  await page.goto("/drag-and-drop-list");
+  await page.goto("/playground/drag-and-drop-list");
 
   const list = page.getByRole("list", { name: "Reorderable items" });
   const items = list.getByRole("listitem");

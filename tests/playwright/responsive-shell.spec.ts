@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 // `make-playground-shell-responsive`: asserts the playground's own app
-// shell (routes.rs's `Layout`, not a registry component) is usable at
+// shell (routes.rs's `PlaygroundLayout`, not a registry component) is usable at
 // 375px. The `>= md` nav column (registry/ui/sidebar.rs's
 // `SidebarContent`, composed inside the resizable panel) is not rendered;
 // a hamburger opens the full nav list in a `Sheet`; selecting an entry
@@ -10,12 +10,12 @@ import { expect, test } from "@playwright/test";
 // openspec/changes/make-playground-shell-responsive/design.md.
 
 test("the >= md nav column is not visible at 375px", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/playground");
   await expect(page.locator('[data-slot="sidebar-content"]')).not.toBeVisible();
 });
 
 test("the hamburger opens the full nav list, fully legible", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/playground");
   const trigger = page.getByRole("button", { name: "Open navigation" });
   await expect(trigger).toBeVisible();
   await trigger.click();
@@ -31,7 +31,7 @@ test("the hamburger opens the full nav list, fully legible", async ({ page }) =>
 });
 
 test("selecting a nav entry navigates and closes the sheet", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/playground");
   await page.getByRole("button", { name: "Open navigation" }).click();
   await page.getByRole("dialog").getByRole("button", { name: "Button", exact: true }).click();
 
@@ -41,7 +41,7 @@ test("selecting a nav entry navigates and closes the sheet", async ({ page }) =>
 });
 
 test("no element on the shell causes horizontal document overflow", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/playground");
   const hasOverflow = () =>
     page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
 

@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import type { Locator, Page } from "@playwright/test";
 
-// Runs against the playground (`cd apps/playground && dx serve`), not the
+// Runs against the site app (`cd apps/web && dx serve`), not the
 // installation fixture, e.g.
 //   ADICO_PLAYWRIGHT_BASE_URL=http://localhost:3000 npm run test:playground-time-picker
 //
@@ -16,7 +16,7 @@ import type { Locator, Page } from "@playwright/test";
 
 /** Opens the TimePicker popup on `/time-picker` and returns the dial. */
 async function openDial(page: Page): Promise<Locator> {
-  await page.goto("/time-picker");
+  await page.goto("/playground/time-picker");
 
   // Switch the demo's "View" control to the analog dial.
   await page.getByLabel("View").selectOption({ label: "Analog" });

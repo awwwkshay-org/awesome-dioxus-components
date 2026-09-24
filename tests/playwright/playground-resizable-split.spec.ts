@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-// Runs against the playground app (`dx serve` from `apps/playground`, then
+// Runs against the site app (`dx serve` from `apps/web`, then
 // `ADICO_PLAYWRIGHT_BASE_URL=<url> npm run test:playground-resizable-split`).
 //
 // Regression coverage for the `ResizablePanel` seeding race fixed by
@@ -38,7 +38,7 @@ async function panelHeights(page: import("@playwright/test").Page) {
   });
 }
 
-for (const path of ["/alert-dialog", "/badge"]) {
+for (const path of ["/playground/alert-dialog", "/playground/badge"]) {
   test(`${path} renders the preview/controls split at its coded 70/30 default, not equal`, async ({
     page,
   }) => {
@@ -58,7 +58,7 @@ for (const path of ["/alert-dialog", "/badge"]) {
 test("the preview/controls handle actually drags to its new bounds (load-bearing: proves seeding, not just the initial paint)", async ({
   page,
 }) => {
-  await page.goto("/alert-dialog");
+  await page.goto("/playground/alert-dialog");
   const handle = splitHandle(page);
   await expect(handle).toBeVisible();
 

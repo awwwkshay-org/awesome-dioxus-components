@@ -262,5 +262,5 @@ for two worked examples of what that documentation looks like.
   the ecosystem.
 - `cargo doc -p adico-primitives --open` — every primitive's full props/ARIA/example
   documentation, generated from the source itself.
-- `apps/playground` (`dx serve` from that directory) — a live, interactive demo of every
-  installed component built on these primitives.
+- `apps/web`'s `/playground` route (`dx serve` from that directory) — a live,
+  interactive demo of every installed component built on these primitives.

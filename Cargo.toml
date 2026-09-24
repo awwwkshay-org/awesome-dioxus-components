@@ -1,8 +1,6 @@
 [workspace]
 members = [
-    "apps/docs",
-    "apps/home",
-    "apps/playground",
+    "apps/web",
     "examples/basic-spa",
     "examples/basic-ssr",
     "packages/adico-cli",

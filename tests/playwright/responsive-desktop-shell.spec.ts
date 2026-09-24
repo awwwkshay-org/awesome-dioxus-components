@@ -9,12 +9,12 @@ import { expect, test } from "@playwright/test";
 // tree.
 
 test("the mobile top bar is not visible at desktop", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/playground");
   await expect(page.getByRole("button", { name: "Open navigation" })).not.toBeVisible();
 });
 
 test("nav column renders at its default 18% width, unaffected by mobile support", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/playground");
   await expect(page.locator('[data-slot="sidebar-content"]')).toBeVisible();
 
   const width = await page.evaluate(() => {
@@ -29,7 +29,7 @@ test("nav column renders at its default 18% width, unaffected by mobile support"
 });
 
 test("every nav entry is reachable directly in the resizable column", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/playground");
   const nav = page.locator('[data-slot="sidebar-content"]');
   const button = nav.getByRole("button", { name: "Button", exact: true });
   await expect(button).toBeVisible();
@@ -38,7 +38,7 @@ test("every nav entry is reachable directly in the resizable column", async ({ p
 });
 
 test("the resize handle between nav and content is visible and draggable", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/playground");
   const handle = page.locator('[aria-orientation]').first();
   await expect(handle).toBeVisible();
 });

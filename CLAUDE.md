@@ -60,7 +60,7 @@ shadcn-style Dioxus component ecosystem. Its product boundaries are:
 - `packages/adico-registry-core`: registry schemas, resolution, and installation planning.
 - `packages/adico-cli`: the `adico` executable.
 - `registry/`: source-owned component distribution content.
-- `apps/docs`, `apps/playground`, and `examples/`: maintained Dioxus applications and consumer fixtures.
+- `apps/web` and `examples/`: maintained Dioxus applications and consumer fixtures.
 
 Read `docs/architecture.md` before changing boundaries and
 `docs/development.md` before changing build or test workflows. Inspect the

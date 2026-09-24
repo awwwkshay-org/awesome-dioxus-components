@@ -102,9 +102,9 @@ change or a `catalog fetch` refresh, and run `check` before committing.
 
 The playground's demo-page enum controls are generated, not hand-typed:
 `cargo run -p adico-xtask -- playground-controls sync|check|diff` introspects
-`apps/playground/src/components/ui/*.rs` for enum-typed props with a
+`apps/web/src/components/ui/*.rs` for enum-typed props with a
 `#[default]` variant and writes one file per component under
-`apps/playground/src/generated/controls/`, each a `pub const
+`apps/web/src/generated/controls/`, each a `pub const
 <ENUM>_OPTIONS: &[(&str, <Enum>)]` plus a compile-time exhaustiveness guard
 over its source enum — so an added/removed/renamed variant that isn't
 regenerated fails `cargo check --locked --workspace`, not just this

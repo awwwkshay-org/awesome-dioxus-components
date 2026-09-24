@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-// Runs against the playground app (`dx serve` from `apps/playground`,
+// Runs against the site app (`dx serve` from `apps/web`,
 // then `ADICO_PLAYWRIGHT_BASE_URL=<url> npm run test:playground-enriched`).
 // Covers the two behaviors this change added to registry components that
 // only a real browser can exercise: carousel pointer-drag paging and
@@ -10,7 +10,7 @@ const track = (page: import("@playwright/test").Page) =>
   page.locator('[aria-roledescription="carousel"] [tabindex="0"]');
 
 test("installed Carousel pages one slide on a drag past the threshold", async ({ page }) => {
-  await page.goto("/carousel");
+  await page.goto("/playground/carousel");
   const content = track(page);
   await expect(content).toBeVisible();
   await expect(content).toHaveCSS("cursor", "grab");
@@ -32,7 +32,7 @@ test("installed Carousel pages one slide on a drag past the threshold", async ({
 });
 
 test("installed Carousel snaps back after a drag below the threshold", async ({ page }) => {
-  await page.goto("/carousel");
+  await page.goto("/playground/carousel");
   const content = track(page);
   await expect(content).toBeVisible();
 
@@ -53,7 +53,7 @@ test("installed Carousel snaps back after a drag below the threshold", async ({ 
 });
 
 test("installed Carousel still pages from its buttons after drag support", async ({ page }) => {
-  await page.goto("/carousel");
+  await page.goto("/playground/carousel");
   const content = track(page);
   await expect(content).toBeVisible();
 
@@ -69,7 +69,7 @@ test("installed Carousel still pages from its buttons after drag support", async
 });
 
 test("installed InputOTP masks and unmasks entered digits without losing them", async ({ page }) => {
-  await page.goto("/input-otp");
+  await page.goto("/playground/input-otp");
   const slots = page.locator('input[maxlength="1"]');
   await expect(slots.first()).toBeVisible();
   const count = await slots.count();

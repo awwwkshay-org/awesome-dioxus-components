@@ -23,8 +23,8 @@ separate, not-yet-scheduled workstream because `adico-primitives` and
 `adico-registry-core` must publish ahead of `adico-cli` with version
 requirements instead of the workspace's local `[patch.crates-io]` override.
 
-A future `cd.yml` may build the hosted site image (`apps/docs` +
-`apps/playground` + the generated registry, served by nginx), push it to
+A future `cd.yml` may build the hosted site image (`apps/web` + the
+generated registry, served by nginx), push it to
 `ghcr.io/awwwkshay-org/adico-web`, and open a deployment PR against the
 `awwwkshay-infra` repository — not yet built. Update this file when it lands.
 

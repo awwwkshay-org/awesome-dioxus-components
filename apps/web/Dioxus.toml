@@ -1,0 +1,6 @@
+[application]
+name = "adico-web"
+default_platform = "web"
+
+[web.app]
+title = "adico"

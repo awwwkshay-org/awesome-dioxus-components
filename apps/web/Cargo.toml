@@ -1,0 +1,39 @@
+[package]
+name = "adico-web"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "The public site for adico: landing page, docs, and component playground"
+publish = false
+
+[dependencies]
+# Explicit (not `dioxus.workspace = true`): `adico add`'s Cargo editor does
+# not yet understand workspace-inherited dependency tables, only plain
+# strings/inline tables. Matches the pattern examples/* already use.
+dioxus = { version = "=0.7.9", default-features = false, features = ["launch", "macro", "html", "signals", "hooks", "asset", "document", "router"] }
+adico-primitives = { version = "=0.1.0", features = ["web"] }
+time = "=0.3.44"
+# dioxus-web 0.7.10's history integration calls web_sys::Window::location(),
+# which needs this feature enabled somewhere in the dependency graph for
+# Cargo's feature unification to make it available; dioxus-web itself does
+# not declare it.
+web-sys = { version = "=0.3.104", features = ["Clipboard", "Location", "Navigator", "Window"] }
+palette = "0.7.6"
+# Used by the docs route tree to load registry/registry.json and
+# statics/component_props.json. Explicit (not `.workspace = true`), same
+# reason as the dioxus dependency above.
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen-futures = "=0.4.77"
+
+[features]
+default = ["web"]
+web = ["dioxus/web"]
+desktop = ["dioxus/desktop"]
+# Not the heavy `dioxus/server` fullstack feature (that was apps/docs's now
+# confirmed-dead SSR branch, dropped by the merge, not restored here) --
+# just `dioxus::ssr::render` for a couple of playground pages' HTML-snapshot
+# unit tests. Run with `cargo test -p adico-web --features ssr`.
+ssr = ["dioxus/ssr"]

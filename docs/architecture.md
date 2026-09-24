@@ -26,9 +26,9 @@ consumer Dioxus application
   files, `Cargo.toml`, CSS, and managed Rust module regions.
 - `registry/` contains styled source, metadata, hooks, libraries, and blocks.
   It is distribution input, not a Cargo styled-component package.
-- `apps/docs`, `apps/playground`, and `examples/` are maintained Dioxus apps.
-  Consumer-focused fixtures must exercise the CLI installation path rather than
-  import registry UI source through workspace paths.
+- `apps/web` and `examples/` are maintained Dioxus apps. Consumer-focused
+  fixtures must exercise the CLI installation path rather than import
+  registry UI source through workspace paths.
 
 ## Platform rules
 
