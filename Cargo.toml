@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "apps/docs",
+    "apps/home",
     "apps/playground",
     "examples/basic-spa",
     "examples/basic-ssr",

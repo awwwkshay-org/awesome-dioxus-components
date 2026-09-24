@@ -67,7 +67,7 @@ for pointing `adico` at your own component registry.
 | `packages/adico-primitives` | Owned headless runtime behavior used by installed components — see its own [README](packages/adico-primitives/README.md). |
 | `packages/adico-registry-core` | Registry schemas, source resolution, and installation planning. |
 | `registry/` | Authored source and metadata distributed to consumer projects. |
-| `apps/docs`, `apps/playground` | Maintained Dioxus documentation and development applications (`dx serve` to run locally). |
+| `apps/docs`, `apps/playground`, `apps/home` | Maintained Dioxus documentation, development, and landing-page applications (`dx serve` to run locally). |
 | `examples/` | Consumer-style Dioxus validation applications, installed via the real CLI. |
 
 ## Project status
@@ -75,8 +75,10 @@ for pointing `adico` at your own component registry.
 Pre-`0.1.0`. The registry, CLI, and 69 components are implemented and tested
 (~596 Rust tests, 8 CI-gated consistency checks), but nothing is published
 yet: no crates.io release, no GitHub release binaries, no hosted docs or
-registry site. That work is tracked toward a `v0.1.0` release; this section
-will be replaced with real install instructions once it ships.
+registry site — `apps/home` (the landing page), `apps/docs`, and
+`apps/playground` exist in-repo but are not yet deployed anywhere. That work
+is tracked toward a `v0.1.0` release; this section will be replaced with
+real install instructions once it ships.
 
 ## Development
 

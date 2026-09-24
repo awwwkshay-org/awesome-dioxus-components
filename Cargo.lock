@@ -47,6 +47,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "adico-home"
+version = "0.1.0"
+dependencies = [
+ "adico-primitives",
+ "dioxus",
+ "web-sys",
+]
+
+[[package]]
 name = "adico-playground"
 version = "0.1.0"
 dependencies = [

@@ -1,5 +1,5 @@
 # Maintained adico applications
 
-`docs/` and `playground/` are added as Dioxus application skeletons in M0. They
-are maintained product applications and must not replace consumer-style
-installation fixtures under `examples/` and `tests/installation/`.
+`docs/`, `playground/`, and `home/` (the public landing page) are maintained
+Dioxus applications and must not replace consumer-style installation
+fixtures under `examples/` and `tests/installation/`.
