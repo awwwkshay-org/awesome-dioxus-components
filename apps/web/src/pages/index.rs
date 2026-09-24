@@ -236,16 +236,7 @@ fn ShowcaseRow(label: String, children: Element) -> Element {
             span { class: "text-xs font-medium uppercase tracking-wide text-muted-foreground",
                 "{label}"
             }
-            // `relative` is load-bearing, not decoration. `Checkbox`/`Switch`
-            // render a hidden native input at `position: absolute` with no
-            // offsets; with no positioned ancestor its containing block is the
-            // initial containing block, so `main`'s `overflow-y: auto` does not
-            // clip it and it extends `documentElement.scrollHeight` — making
-            // the document itself scroll, which this app's `h-dvh` layout
-            // relies on never happening. Establishing a containing block here
-            // brings it back under `main`'s clip. See FOLLOWUPS.md: the real
-            // fix belongs in `adico_primitives`' `BubbleInput`.
-            div { class: "relative flex flex-wrap items-center gap-4", {children} }
+            div { class: "flex flex-wrap items-center gap-4", {children} }
         }
     }
 }

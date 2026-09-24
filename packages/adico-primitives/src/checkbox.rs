@@ -309,11 +309,23 @@ fn BubbleInput(
             type: "checkbox",
             aria_hidden: "true",
             tabindex: "-1",
-            position: "absolute",
-            pointer_events: "none",
-            opacity: "0",
-            margin: "0",
-            transform: "translateX(-100%)",
+            // One `style` string, not individual CSS-named attributes.
+            // `width`/`height` are real HTML attributes on `<input>`, so
+            // Dioxus emits them as attributes -- where they do nothing for a
+            // checkbox -- rather than as CSS, which is how an earlier attempt
+            // at this fix silently failed. `switch.rs`'s equivalent input has
+            // always used a style string for exactly this reason.
+            //
+            // Zero-sized, not merely invisible: `position: absolute` with no
+            // positioned ancestor resolves against the *initial* containing
+            // block, and an ancestor's `overflow` only clips descendants whose
+            // containing block is at or below it. A transparent input still
+            // occupying its natural ~13px box is therefore clipped by no
+            // scroll container and extends `documentElement.scrollHeight` from
+            // wherever the checkbox sits -- silently making the document
+            // scrollable in any layout that scrolls inside a container
+            // instead.
+            style: "position: absolute; pointer-events: none; opacity: 0; margin: 0; transform: translateX(-100%); width: 0; height: 0;",
 
             // Default checked
             checked: default_checked != CheckboxState::Unchecked,
