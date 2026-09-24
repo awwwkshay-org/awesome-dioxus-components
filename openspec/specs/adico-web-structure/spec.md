@@ -1,59 +1,61 @@
-# adico-playground-structure Specification
-
 ## Purpose
-Keep `apps/playground`'s router and page components in a fixed, predictable
-location — a dedicated routing module and a file-per-route pages directory
-named by TanStack Start's file-based routing convention — so adding a page
-for a newly-installed component is always "add one file in the right
-place," not an edit to a growing shared file.
+Serve adico's public landing page, documentation, and component playground
+as one Dioxus app (`apps/web`) under one router, so a visitor moves between
+`/`, `/docs`, and `/playground` without crossing an app boundary, while
+keeping the same governing conventions the pre-merge apps already followed:
+a dedicated routing module, CLI-installed component source, one page per
+file, and a shell composed from real registry components rather than
+app-specific reimplementations.
 
 ## Requirements
 
 ### Requirement: Router definitions live in routes.rs
-`apps/playground/src/routes.rs` SHALL define the `Route` enum, its
-navigation list (`nav_items()` or an equivalent), and the routing `Layout`
-shell component. `apps/playground/src/main.rs` SHALL NOT define the `Route`
-enum, the navigation list, or the routing shell directly; it retains only
-the application entrypoint, its asset consts, and the CLI-managed
+`apps/web/src/routes.rs` SHALL define every `Route` enum variant and every
+layout-shell component (`SiteLayout` wrapping the whole site,
+`PlaygroundLayout` wrapping the `/playground/*` subtree). `apps/web/src/main.rs`
+SHALL NOT define any `Route` enum variant, navigation list, or layout-shell
+component directly; it retains only the application entrypoint, its asset
+consts, the document head, the `Router` mount, and the CLI-managed
 `adico:start`/`adico:end` module block.
 
 #### Scenario: main.rs is read for routing logic
-- **WHEN** a maintainer opens `apps/playground/src/main.rs` looking for how
-  routes or navigation are defined
+- **WHEN** a maintainer opens `apps/web/src/main.rs` looking for how routes,
+  navigation, or layouts are defined
 - **THEN** it contains no `#[derive(Routable)]` enum, no route-list
   function, and no layout-shell component — those live in `routes.rs`
 
 #### Scenario: A route is added or removed
-- **WHEN** a page is added to or removed from the playground
-- **THEN** the corresponding `#[route(...)]` variant and navigation entry
-  are edited in `routes.rs`, not in `main.rs` or scattered across page files
+- **WHEN** a page is added to or removed from any section of the site
+- **THEN** the corresponding `#[route(...)]` variant (and, for a playground
+  page, its `nav_items()` entry) is edited in `routes.rs`, not in `main.rs`
+  or scattered across page files
 
 ### Requirement: One page per file under pages/, named by route segment
 Each routed page component SHALL live in its own file under
-`apps/playground/src/pages/`, aggregated by `pages/mod.rs`. Each file SHALL
-be named after its route's path segment (snake_case, e.g. `hover_card.rs`
-for `/hover-card`), following TanStack Start's file-based routing
-convention; a directory's index route (`/`) SHALL use the file name
-`index.rs`. No single file under `pages/` SHALL define more than one page
-component.
+`apps/web/src/pages/`, aggregated by `pages/mod.rs`. The root route (`/`)
+SHALL use the file name `pages/index.rs`. Playground pages SHALL live under
+`pages/playground/`, named after their route's path segment (snake_case,
+e.g. `pages/playground/hover_card.rs` for `/playground/hover-card`).
+Documentation pages SHALL live under `pages/docs/`. No single file under
+`pages/` SHALL define more than one page component.
 
-#### Scenario: A new component page is added
+#### Scenario: A new playground component page is added
 - **WHEN** a maintainer adds a playground page for a newly-installed
   registry component
-- **THEN** they create exactly one new file under `pages/` named after the
-  route's path segment, add its `pub mod`/re-export to `pages/mod.rs`, and
-  add its `#[route(...)]` variant to `routes.rs` — no existing page file is
-  edited to make room
+- **THEN** they create exactly one new file under `pages/playground/` named
+  after the route's path segment, add its `pub mod`/re-export to
+  `pages/playground/mod.rs`, and add its `#[route(...)]` variant to
+  `routes.rs` — no existing page file is edited to make room
 
 #### Scenario: The root route is located
 - **WHEN** a maintainer looks for the component rendered at `/`
-- **THEN** it is defined in `apps/playground/src/pages/index.rs`
+- **THEN** it is defined in `apps/web/src/pages/index.rs`
 
 #### Scenario: pages.rs is searched for
 - **WHEN** a maintainer or tool searches the repository for
-  `apps/playground/src/pages.rs`
+  `apps/web/src/pages.rs`
 - **THEN** no such file exists — page components live under the `pages/`
-  directory established by this requirement
+  directory tree established by this requirement
 
 ### Requirement: dioxus-router routes stay explicitly declared
 Because dioxus-router has no file-system-based route generation, the
@@ -62,7 +64,7 @@ producing routes. Every route SHALL remain an explicit `#[route(...)]`
 variant in `routes.rs`'s `Route` enum, kept in sync by hand with the files
 under `pages/`. A generated `<Component>DemoState`/`<Component>Controls`/
 `<Component>Preview` triad under
-`apps/playground/src/generated/controls/` likewise SHALL NOT be treated as
+`apps/web/src/generated/controls/` likewise SHALL NOT be treated as
 automatically producing a page or route — a page still explicitly wires
 the generated panel in, and its route remains an explicit `routes.rs`
 entry.
@@ -74,23 +76,139 @@ entry.
   evidence that routes are derived from the file tree
 
 #### Scenario: A generated control panel exists with no matching page
-- **WHEN** `apps/playground/src/generated/controls/` contains a
+- **WHEN** `apps/web/src/generated/controls/` contains a
   `<Component>DemoState`/`<Component>Controls` pair for a component with
-  no corresponding page under `pages/`
+  no corresponding page under `pages/playground/`
 - **THEN** this is not evidence that a page or route exists — a page must
-  still be explicitly created under `pages/` and registered in
+  still be explicitly created under `pages/playground/` and registered in
   `routes.rs` to actually use the generated panel
 
+### Requirement: Shell-free harness routes stay outside every layout
+`/responsive/flow` and `/responsive/overlay` (with its `case` query
+parameter) SHALL render outside both `SiteLayout` and `PlaygroundLayout` —
+not merely outside the innermost shell — so the automated viewport test
+harness measures each fixture's real, full-bleed geometry with no site
+chrome affecting the measurement. These routes are additive: they SHALL NOT
+change `SiteLayout`'s or `PlaygroundLayout`'s own behavior, and they are not
+part of the site's normal browsing navigation.
+
+#### Scenario: The viewport harness measures a component's real geometry
+- **WHEN** the narrow-viewport test harness needs to measure a registry
+  component's layout at 375px without any site or playground shell chrome
+  affecting the measurement
+- **THEN** it loads a shell-free route that renders that component directly
+  at the browser's actual viewport width, with no header, nav, or footer
+  present in the rendered output
+
+#### Scenario: A shell-free route needs fixture content the demo page doesn't provide
+- **WHEN** a component's existing playground demo page uses fixture content
+  too minimal to exercise a real-world layout failure (for example, a Tabs
+  demo with only two tabs, which cannot reproduce horizontal overflow with
+  five)
+- **THEN** the shell-free harness route renders that component with
+  separately authored, realistic fixture content, rather than reusing the
+  minimal demo fixture
+
+### Requirement: apps/web is initialized and kept current through the real adico CLI
+`apps/web` SHALL be initialized and kept current through the real `adico`
+CLI (`adico init`, `adico add`) rather than hand-edited component source.
+Its `components.json`, `adico.lock`, `src/components/ui/*`,
+`src/adico_lib/*`, and the `adico:theme:start`/`adico:theme:end` block of
+`tailwind.css` SHALL be produced by those commands, never authored or
+edited by hand, consistent with CLAUDE.md's architecture rule that a
+consumer-style app must exercise the CLI installation path rather than
+import `registry/` source through a workspace path.
+
+#### Scenario: apps/web is refreshed
+- **WHEN** the CLI installer's public commands are re-run against
+  `apps/web`
+- **THEN** the app's installed component source, `adico.lock`, and
+  `components.json` are produced by those commands, not manual edits
+
+#### Scenario: A maintainer searches for a workspace-path import of registry/
+- **WHEN** a maintainer or tool searches `apps/web/src/**` for a `use`
+  statement or path referencing the workspace's `registry/` directory
+  directly
+- **THEN** no such import exists — installed component source under
+  `src/components/ui/` and `src/adico_lib/` is the only source of UI code
+
+### Requirement: apps/web has its own per-project Tailwind pipeline
+`apps/web` SHALL have its own root `tailwind.css` compiled to its own
+`apps/web/assets/tailwind.css`, linked via
+`document::Stylesheet { href: asset!(...) }`, covering the landing, docs,
+and playground route trees from one compiled stylesheet — since Tailwind
+only emits the utility classes actually referenced in the project's own
+`src/`, one project now needs exactly one such pipeline where three
+previously needed three.
+
+App-owned CSS — typeface declarations, font and type-scale tokens, and custom
+variants — SHALL be written outside the `adico:theme:start`/`adico:theme:end`
+marker region, because the `adico` CLI regenerates that region wholesale rather
+than merging into it, and SHALL NOT be written inside it.
+
+`apps/web` SHALL declare a `dark` custom variant bound to the `dark` class, so
+that literal `dark:` utilities resolve against the theme class the app's own
+theme control applies rather than against the operating system's colour-scheme
+preference.
+
+`apps/web` SHALL declare its own typeface: font families SHALL be served from
+assets the project ships rather than fetched from a third-party origin at page
+load, SHALL declare a fallback family so text remains legible before the
+webfont loads, and SHALL be exposed as font tokens so pages reference them
+through Tailwind utilities rather than per-element font declarations.
+
+#### Scenario: apps/web is built
+- **WHEN** `apps/web` is built or served
+- **THEN** every Tailwind utility class referenced anywhere under its
+  `src/` (landing, docs, or playground pages) is present in
+  `apps/web/assets/tailwind.css`
+
+#### Scenario: A registry item is installed after app-owned CSS exists
+- **WHEN** `adico add <item>` runs against `apps/web` and regenerates the
+  `adico:theme:start`/`adico:theme:end` region
+- **THEN** the app's typeface declarations, font and type-scale tokens, and
+  custom variants survive unchanged, and `adico css check` reports the
+  compiled stylesheet up to date
+
+#### Scenario: A visitor's OS theme disagrees with their chosen app theme
+- **WHEN** a visitor whose operating system reports a light colour-scheme
+  preference selects dark mode through the site's theme control (or the
+  reverse)
+- **THEN** elements styled with literal `dark:` utilities render according to
+  the theme the visitor selected, not according to the operating system
+  preference
+
+#### Scenario: A page renders text
+- **WHEN** any route under `apps/web` renders
+- **THEN** its text is set in the project's declared typeface, served from the
+  project's own assets, with no request to a third-party font origin
+
+### Requirement: The site shell composes real registry components, not app-specific reimplementations
+`SiteLayout` (the header/navigation and theme controls shared by every
+route) SHALL be composed from installed registry components rather than
+hand-rolled, app-specific reimplementations of the same behavior. Any
+site-wide wiring needed to compose these components SHALL live under
+`apps/web/src/components/`, SHALL NOT duplicate a registry component's own
+logic, and SHALL NOT require any change to `registry/ui/*.rs` to exist.
+
+#### Scenario: A new UI need arises in the site shell
+- **WHEN** `SiteLayout` needs a button, card, navigation, or theme-toggle
+  element
+- **THEN** an existing installed registry component is composed to provide
+  it, or a new generic registry component is proposed and added through the
+  normal registry-item process — the site shell SHALL NOT gain a parallel,
+  app-specific implementation of behavior a registry component already
+  provides
+
 ### Requirement: Playground shell composes real registry components, not app-specific reimplementations
-`apps/playground`'s navigation shell and theme controls SHALL be composed
+`PlaygroundLayout`'s navigation shell and theme controls SHALL be composed
 from installed registry components (`sidebar`, `sheet`, `mode-toggle`,
 `theme-switcher`, `theme-builder`, `resizable`) rather than hand-rolled,
 app-specific reimplementations of the same behavior. Any playground-specific
 wiring needed to compose these components (e.g. a launcher that opens a
 dialog containing an installed component) SHALL live under
-`apps/playground/src/components/`, SHALL NOT duplicate a registry
-component's own logic, and SHALL NOT require any change to
-`registry/ui/*.rs` to exist.
+`apps/web/src/components/`, SHALL NOT duplicate a registry component's own
+logic, and SHALL NOT require any change to `registry/ui/*.rs` to exist.
 
 At viewports `>= md`, the navigation shell's nav column SHALL be composed
 from `sidebar`'s structural sub-components (`SidebarHeader`,
@@ -112,26 +230,25 @@ control — never by measuring or reacting to the viewport at runtime (see
 the "Navigation is reachable and usable below the `md` breakpoint"
 requirement, below, for the full behavior contract).
 
-#### Scenario: A new theme or navigation need arises in playground
-- **WHEN** playground needs new theme-editing or navigation behavior
+#### Scenario: A new theme or navigation need arises in the playground
+- **WHEN** the playground needs new theme-editing or navigation behavior
 - **THEN** an existing installed registry component is composed to provide
   it, or a new generic registry component is proposed and added through
-  the normal registry-item process — playground SHALL NOT gain a
+  the normal registry-item process — the playground SHALL NOT gain a
   parallel, app-specific implementation of behavior a registry component
   already provides
 
 #### Scenario: A registry component appears unused in playground source
 - **WHEN** a registry component is installed in
-  `apps/playground/src/components/ui/` but referenced nowhere in
-  playground source
+  `apps/web/src/components/ui/` but referenced nowhere in playground source
 - **THEN** this is a defect to fix (either wire it in or determine it's
   genuinely unneeded and stop installing it) — not a state to leave
-  indefinitely, since it signals playground has drifted from the
+  indefinitely, since it signals the playground has drifted from the
   components it's meant to demonstrate
 
 #### Scenario: The nav column's sizing mechanism is located
 - **WHEN** a maintainer looks for what controls the left nav column's
-  width in `Layout` at a viewport `>= md`
+  width in `PlaygroundLayout` at a viewport `>= md`
 - **THEN** it is the installed `resizable` component's `ResizablePanel`,
   not `Sidebar`'s own CSS-variable-driven width, and not a
   playground-specific width calculation
@@ -144,9 +261,9 @@ requirement, below, for the full behavior contract).
   JS-driven viewport check
 
 ### Requirement: Navigation is reachable and usable below the `md` breakpoint
-Below the `md` breakpoint, `Layout` SHALL present a mobile top bar (at
-minimum: the playground logo/home link and a hamburger control) and SHALL
-NOT render the `>= md` `ResizablePanelGroup` nav column, since that
+Below the `md` breakpoint, `PlaygroundLayout` SHALL present a mobile top bar
+(at minimum: the playground logo/home link and a hamburger control) and
+SHALL NOT render the `>= md` `ResizablePanelGroup` nav column, since that
 column's minimum width truncates every nav label to an unreadable
 fragment at phone widths. Activating the hamburger control SHALL reveal
 the full nav list (every entry `nav_items()` produces, with the current
@@ -162,7 +279,7 @@ consistent with the documented non-functional `document::eval`
 viewport-detection pattern this project avoids elsewhere.
 
 #### Scenario: A phone-width viewer opens the playground
-- **WHEN** the playground is loaded at a viewport narrower than `md`
+- **WHEN** `/playground` is loaded at a viewport narrower than `md`
 - **THEN** the `>= md` resizable nav column is not rendered, a top bar
   with a hamburger control is visible, and no element on the page causes
   horizontal document overflow
@@ -185,44 +302,45 @@ viewport-detection pattern this project avoids elsewhere.
   `< md` overlay with no additional per-breakpoint wiring, because both
   render the same shared nav-list rendering
 
-### Requirement: The `>= md` layout is unaffected by mobile support
+### Requirement: The `>= md` playground layout is unaffected by mobile support
 Adding the `< md` mobile presentation SHALL NOT change the markup,
 classes, sizing, or behavior of the existing `>= md`
 `ResizablePanelGroup` layout (nav column via `resizable`, content panel,
-resize handle). The `>= md` tree remains exactly the composition already
-required by "Playground shell composes real registry components, not
-app-specific reimplementations" and "The preview/controls split and the
-nav/content split are user-resizable".
+resize handle) in `PlaygroundLayout`. The `>= md` tree remains exactly the
+composition already required by "Playground shell composes real registry
+components, not app-specific reimplementations" and "The preview/controls
+split and the nav/content split are user-resizable".
 
 #### Scenario: A desktop-width viewer opens the playground after this change
-- **WHEN** the playground is loaded at a viewport `>= md`
+- **WHEN** `/playground` is loaded at a viewport `>= md`
 - **THEN** the rendered nav column, content panel, and resize handle are
   unchanged from their pre-mobile-support geometry and behavior
 
-### Requirement: Registry components are never modified solely for playground's convenience
+### Requirement: Registry components are never modified solely for an app-section's convenience
 A confirmed rendering or behavioral defect in a registry component,
-discovered while composing it in `apps/playground`, SHALL be fixed in the
-registry source directly. A registry component SHALL NOT be modified,
-extended, or given a playground-specific escape hatch (e.g. an `as_child`
-prop added only so playground can nest a router `Link`) solely because
-playground's current composition approach would otherwise be
-inconvenient.
+discovered while composing it anywhere in `apps/web` (landing, docs, or
+playground), SHALL be fixed in the registry source directly. A registry
+component SHALL NOT be modified, extended, or given a section-specific
+escape hatch (e.g. an `as_child` prop added only so playground can nest a
+router `Link`) solely because a section's current composition approach
+would otherwise be inconvenient.
 
-#### Scenario: A registry component lacks a feature playground wants
-- **WHEN** a registry component's existing API makes a playground
-  composition awkward (e.g. `SidebarMenuButton` always rendering a native
-  `<button>` with no way to substitute an `<a>`)
-- **THEN** playground SHALL compose around the existing API using ordinary
-  Dioxus patterns (e.g. `onclick` plus programmatic navigation) rather
-  than the registry component being changed to accommodate playground
+#### Scenario: A registry component lacks a feature a section wants
+- **WHEN** a registry component's existing API makes a composition awkward
+  (e.g. `SidebarMenuButton` always rendering a native `<button>` with no
+  way to substitute an `<a>`)
+- **THEN** that section SHALL compose around the existing API using
+  ordinary Dioxus patterns (e.g. `onclick` plus programmatic navigation, or
+  an app-specific wiring component under `apps/web/src/components/`) rather
+  than the registry component being changed to accommodate it
 
 #### Scenario: A genuine rendering defect is found while using a real component
-- **WHEN** composing an installed registry component in playground
-  surfaces behavior that is wrong independent of playground (a real bug,
-  not a playground-specific inconvenience)
+- **WHEN** composing an installed registry component anywhere in `apps/web`
+  surfaces behavior that is wrong independent of that section (a real bug,
+  not a section-specific inconvenience)
 - **THEN** the fix lands in `registry/ui/*.rs` (or the relevant
   `adico-primitives` module) as its own cited change, verified against a
-  live render, not worked around in playground's composition
+  live render, not worked around in that section's composition
 
 ### Requirement: Popup-family components are demoed via trigger and popup composition
 A playground route for a component whose registry facade composes a trigger
@@ -269,7 +387,8 @@ to demonstrate props that are only meaningful while the surface is visible
   and SHALL NOT gain a controlled-open prop added to the registry item solely
   to satisfy this requirement — that would be a playground-convenience-only
   registry change, which the existing "Registry components are never
-  modified solely for playground's convenience" requirement already forbids
+  modified solely for an app-section's convenience" requirement already
+  forbids
 
 ### Requirement: Playground demo defaults reflect the local timezone of the running device
 Any playground demo default value derived from "now" (e.g. a calendar's
@@ -289,7 +408,7 @@ label, with no thematic batches or restarted alphabetical runs. A newly
 added component page SHALL be inserted at its alphabetical position.
 
 #### Scenario: A user scans the navigation for a component
-- **WHEN** a user opens the playground and scans the navigation sidebar
+- **WHEN** a user opens `/playground` and scans the navigation sidebar
 - **THEN** every component entry appears in one continuous A→Z sequence by
   its displayed label
 
@@ -363,13 +482,13 @@ ancestor scope where the context does not resolve.
   composition — no placeholder element is added to host the panel's bindings
 
 #### Scenario: The Input page renders one field
-- **WHEN** a user opens the Input playground page
+- **WHEN** a user opens the `/playground/input` page
 - **THEN** exactly one `Input` field is rendered, and its password-reveal
   behavior (when `r#type` is `"password"`) comes from the `Input` component
   itself, not from a second, separately composed field
 
 #### Scenario: The Drag And Drop List page renders without hanging
-- **WHEN** a user opens the Drag And Drop List playground page
+- **WHEN** a user opens the `/playground/drag-and-drop-list` page
 - **THEN** the page renders successfully and remains interactive, because
   `use_drag_and_drop_list_items()` is called from a scope that can resolve
   `DragAndDropList`'s context
@@ -403,26 +522,17 @@ to an unrelated sibling.
 
 #### Scenario: A multi-part page's controls read as distinct components
 - **WHEN** a user views a converted multi-part component's page (for example
-  `/select`, `/accordion`, `/sidebar`, `/dialog`)
+  `/playground/select`, `/playground/accordion`, `/playground/sidebar`,
+  `/playground/dialog`)
 - **THEN** the control panel's groups correspond one-to-one with the real
   components in that composition, and no group's label implies a component
   accepts a prop it does not declare
 
-#### Scenario: A component has both a generated panel and page-level hand-written controls
-- **WHEN** a page hand-writes a control for a component (for example
-  Accordion's "Allow multiple open" demo-scenario toggle, grouped under
-  `Accordion`) and that same component also has its own generated panel
-  (once `Accordion` is discovered as a re-exported component)
-- **THEN** the page MAY render these as two separate groups both labeled with
-  that component's name, rather than merging them into one — every control
-  under either group still correctly names the component it belongs to, so
-  this is not a violation of "grouped by the component that declares them"
-
 #### Scenario: A page is not required to display every component its registry file exposes
 - **WHEN** a registry file exposes a component (locally or via a resolved
   re-export) that the page's own composition never renders (for example
-  `select.rs`'s re-exported `SelectGroup`, which the `/select` page never
-  composes)
+  `select.rs`'s re-exported `SelectGroup`, which the `/playground/select`
+  page never composes)
 - **THEN** the page is not required to render a group for it — this
   requirement governs how a control that IS shown must be grouped, not which
   of a file's available components a page must display; the existing
@@ -432,8 +542,8 @@ to an unrelated sibling.
 
 ### Requirement: The preview/controls split and the nav/content split are user-resizable
 The shared demo preview/controls split (`Demo`) and the shared nav/content
-split (`Layout`) SHALL each be composed from the installed `resizable`
-registry component (`ResizablePanelGroup`/`ResizablePanel`/
+split (`PlaygroundLayout`) SHALL each be composed from the installed
+`resizable` registry component (`ResizablePanelGroup`/`ResizablePanel`/
 `ResizableHandle`), letting a user drag to adjust the relative size of each
 pair. Each split's two sides SHALL enforce a minimum and maximum size so
 neither side can be dragged to zero or to fully consume the other; for the
@@ -446,12 +556,12 @@ panel's initial state may be overwritten by another panel's configuration.
 A resize handle's pointer hit target SHALL extend beyond its visible
 divider line, so a user can grab it without pixel-precise pointer placement.
 Resized sizes are NOT required to persist across a full page reload.
-Because `Layout` is a persistent router layout (mounted once, not
-re-mounted by in-app navigation) while `Demo` is re-mounted fresh by every
-page navigation, the nav/content split's resized size MAY persist across
-in-app navigation within the same session, while the preview/controls
-split's resized size is reset by every page navigation — neither behavior
-is a defect.
+Because `PlaygroundLayout` is a persistent router layout (mounted once, not
+re-mounted by in-app navigation within `/playground/*`) while `Demo` is
+re-mounted fresh by every page navigation, the nav/content split's resized
+size MAY persist across in-app navigation within the same session, while
+the preview/controls split's resized size is reset by every page
+navigation — neither behavior is a defect.
 
 #### Scenario: A user resizes the preview/controls split
 - **WHEN** a user drags the handle between the live component preview and
@@ -472,8 +582,8 @@ is a defect.
   shrinking to zero or growing to consume all available space
 
 #### Scenario: A split renders at its intended default on every page, regardless of mount order
-- **WHEN** a playground page mounts a `Demo` (or `Layout`'s) resizable split
-  for the first time
+- **WHEN** a playground page mounts a `Demo` (or `PlaygroundLayout`'s)
+  resizable split for the first time
 - **THEN** each panel renders at its own coded default size — not a size
   copied from a sibling panel — independent of which panel's setup happens
   to complete first
@@ -491,29 +601,152 @@ is a defect.
 #### Scenario: In-app navigation may preserve the nav/content split but not the preview/controls split
 - **WHEN** a user resizes the nav/content split, then clicks a different
   nav item without reloading the browser
-- **THEN** the nav/content split MAY keep its resized size (`Layout` is not
-  re-mounted by in-app navigation), while the new page's preview/controls
-  split renders at its own default sizes (`Demo` is re-mounted fresh per
-  page) — neither outcome is a defect
+- **THEN** the nav/content split MAY keep its resized size
+  (`PlaygroundLayout` is not re-mounted by in-app navigation), while the new
+  page's preview/controls split renders at its own default sizes (`Demo` is
+  re-mounted fresh per page) — neither outcome is a defect
 
-### Requirement: The playground exposes shell-free routes for viewport harness fixtures
-The playground SHALL expose routes outside the desktop-only `Layout` shell that
-render registry components full-bleed, with realistic fixture content, for use
-by the automated viewport test harness. These routes are additive: they SHALL
-NOT change the existing `Layout` shell's desktop-only behavior, and they are
-not part of the playground's normal browsing navigation.
+### Requirement: The docs route tree renders through Tailwind and installed registry components, not hardcoded CSS
+`/docs` and `/docs/components/:name` SHALL be styled through `apps/web`'s
+Tailwind pipeline and composed from installed registry components (e.g.
+`Card`, `Table`, `Badge`) rather than a hardcoded, app-specific stylesheet.
+Neither route SHALL inject CSS that overrides `body`-level or other
+global styling outside its own rendered subtree, so light and dark mode
+render correctly on every other route.
 
-#### Scenario: The viewport harness measures a component's real geometry
-- **WHEN** the narrow-viewport test harness needs to measure a registry
-  component's layout at 375px without the playground shell's own fixed-size
-  panels affecting the measurement
-- **THEN** it loads a shell-free route that renders that component directly at
-  the browser's actual viewport width
+Registry-authored prose rendered by these routes SHALL present markdown inline
+code spans as code rather than as literal backtick characters. The component
+that performs this rendering SHALL live under `apps/web/src/components/` as
+app-level wiring, and SHALL NOT require any change to `registry/ui/*.rs`.
 
-#### Scenario: A shell-free route needs fixture content the demo page doesn't provide
-- **WHEN** a component's existing playground demo page uses fixture content too
-  minimal to exercise a real-world layout failure (for example, a Tabs demo
-  with only two tabs, which cannot reproduce horizontal overflow with five)
-- **THEN** the shell-free harness route renders that component with separately
-  authored, realistic fixture content, rather than reusing the minimal demo
-  fixture
+Registry-authored text rendered by these routes SHALL wrap within the bounds of
+the element containing it, for every item in the registry, with no horizontal
+overflow past that element's visible edge at any supported viewport width.
+
+`/docs/components/:name` SHALL render the component itself, live, in addition to
+its prose and props table. Where a component has more than one variant, size, or
+supported composition, the page SHALL show them rather than describing them.
+
+For each such example the page SHALL display the example's source, and that
+displayed source SHALL be the same source that produced the rendered example —
+not a separately maintained copy of it. The mechanism SHALL make divergence
+impossible rather than detectable after the fact.
+
+`/docs/components/:name` SHALL show the command that installs the component, and
+SHALL link to that component's `/playground/<name>` page.
+`/docs` SHALL additionally provide conceptual guide routes covering, at minimum,
+installation, theming, typography, spacing, light/dark mode, and how the
+Tailwind pipeline is wired into a Dioxus application. Each guide SHALL be its
+own route and its own file, consistent with the one-page-per-file rule.
+
+Where a guide documents the theme tokens a project has installed, it SHALL
+derive them from that project's own stylesheet rather than restating them in
+prose, so the documented set cannot diverge from the set `adico add` actually
+installed.
+
+The docs route tree SHALL have a navigation shell listing its guides and its
+components, composed from installed registry components. Adding that shell SHALL
+NOT change the markup, classes, sizing, or behavior of `SiteLayout`, of the
+landing page, or of `PlaygroundLayout`, and SHALL NOT introduce document-level
+scrolling — the application scrolls inside `main`, not the document.
+
+Every guide route SHALL be reachable at every supported viewport width,
+including widths at which the docs navigation shell is not displayed.
+
+A component for which no examples are authored SHALL still render its prose,
+props table, install command, and playground link, so that adding examples is
+incremental and never regresses a page.
+
+The components that present examples, source, and install commands SHALL live
+under `apps/web/src/components/` as app-level wiring composed from installed
+registry components, and SHALL NOT require any change to `registry/ui/*.rs`.
+
+#### Scenario: A user switches to light mode on a docs page
+- **WHEN** a user toggles light mode while viewing `/docs` or
+  `/docs/components/:name`
+- **THEN** the page renders with the site's light theme tokens, with no
+  forced dark background left over from a global style override
+
+#### Scenario: A user navigates from docs to another site section
+- **WHEN** a user navigates from `/docs/components/:name` to `/` or
+  `/playground`
+- **THEN** the destination route's own theme (light or dark, per the
+  user's current selection) renders correctly, unaffected by any styling
+  docs previously applied
+
+#### Scenario: A registry item's prose contains markdown inline code
+- **WHEN** `/docs/components/:name` renders a registry item whose description,
+  composition note, accessibility text, or keyboard text contains a
+  backtick-delimited span
+- **THEN** that span renders as styled inline code, and no literal backtick
+  character appears in the rendered text
+
+#### Scenario: A registry item has a long description
+- **WHEN** `/docs` renders the registry item with the longest description
+- **THEN** that description wraps inside its card and no text crosses the
+  card's visible border
+
+#### Scenario: A reader opens the docs page for a component with variants
+- **WHEN** a reader opens `/docs/components/:name` for a component that has
+  authored examples
+- **THEN** each example renders as a live, interactive instance of the real
+  installed component, with its title and its own source available
+
+#### Scenario: An example's source is changed
+- **WHEN** the code of an authored example is edited
+- **THEN** the source displayed for that example on the docs page changes with
+  it in the same edit, with no separate regeneration, sync command, or
+  verification step required to keep the two in agreement
+
+#### Scenario: A reader wants to install the component they are reading about
+- **WHEN** a reader views `/docs/components/:name`
+- **THEN** the page shows that component's install command in copyable form and
+  offers a link to its `/playground/<name>` page
+
+#### Scenario: A component has no authored examples yet
+- **WHEN** a reader opens `/docs/components/:name` for a component with no
+  example module
+- **THEN** the page renders its prose, props table, install command, and
+  playground link without error and without an empty examples section
+
+#### Scenario: A reader needs to wire Tailwind into a fresh project
+- **WHEN** a reader opens the Tailwind guide
+- **THEN** it documents the root stylesheet input, the compiled output and how
+  it is linked, and the region of that file which is regenerated by the CLI and
+  must not be hand-edited
+
+#### Scenario: A project installs a registry item that adds a theme token
+- **WHEN** the set of theme tokens in the project's stylesheet changes
+- **THEN** the theming guide reflects the new set without any edit to the guide
+
+#### Scenario: A reader wants to try a theme change while reading about it
+- **WHEN** a reader opens the theming guide
+- **THEN** they can change theme values from that page and see the page respond
+
+#### Scenario: A reader opens a guide at a narrow viewport
+- **WHEN** a reader opens any guide route at a width where the docs navigation
+  shell is not displayed
+- **THEN** the guide renders in full and remains reachable from `/docs`
+
+#### Scenario: The docs shell is added
+- **WHEN** the docs navigation shell is present
+- **THEN** the playground's `>= md` resizable panel geometry and the landing
+  page's shell are unchanged, and no scrollbar appears on the document itself
+
+### Requirement: The landing page shell composes real registry components, not app-specific reimplementations
+The landing page (`/`) content SHALL be composed from installed registry
+components (e.g. `Badge`, `Card`, `CopyButton`) rather than hand-rolled,
+app-specific reimplementations of the same behavior. Any app-specific
+wiring needed to compose these components (e.g. a link component usable
+where neither `Button` nor `NavigationMenuLink` can serve) SHALL live under
+`apps/web/src/components/`, SHALL NOT duplicate a registry component's own
+logic, and SHALL NOT require any change to `registry/ui/*.rs` to exist.
+
+#### Scenario: A new UI need arises on the landing page
+- **WHEN** the landing page needs a button, card, or install-command display
+  element
+- **THEN** an existing installed registry component is composed to provide
+  it, or a new generic registry component is proposed and added through the
+  normal registry-item process — the landing page SHALL NOT gain a
+  parallel, app-specific implementation of behavior a registry component
+  already provides
