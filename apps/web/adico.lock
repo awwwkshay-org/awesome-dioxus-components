@@ -93,7 +93,7 @@
     },
     {
       "address": "@adico/button",
-      "manifestDigest": "ad45ab103370edbc7111bf978f73be5ad15bc642783e4ecd852adec20337bcaa",
+      "manifestDigest": "a4f7a2c9baaf677c19c6201c83dc7f0c33afb6fed355de4ba486e19f65a3bd15",
       "files": [
         {
           "path": "src/components/ui/button.rs",
@@ -133,11 +133,11 @@
     },
     {
       "address": "@adico/carousel",
-      "manifestDigest": "ad45ab103370edbc7111bf978f73be5ad15bc642783e4ecd852adec20337bcaa",
+      "manifestDigest": "a4f7a2c9baaf677c19c6201c83dc7f0c33afb6fed355de4ba486e19f65a3bd15",
       "files": [
         {
           "path": "src/components/ui/carousel.rs",
-          "checksum": "5a09da954423010d40ec0a28d6a76468dfed2710293a181a068df0972d48006d"
+          "checksum": "fa34b75b923edc22113f698e811982e9c41ef8cf243358931e7001a4b3a65bc3"
         }
       ]
     },
@@ -153,7 +153,7 @@
     },
     {
       "address": "@adico/cn",
-      "manifestDigest": "6c5d2e16bacfda33d92a4b7595f9a6e27f41380674298937f799b577f65bb8fe",
+      "manifestDigest": "a4f7a2c9baaf677c19c6201c83dc7f0c33afb6fed355de4ba486e19f65a3bd15",
       "files": [
         {
           "path": "src/adico_lib/cn.rs",
@@ -423,7 +423,7 @@
     },
     {
       "address": "@adico/native-select",
-      "manifestDigest": "806c0ea3cb5a26f6547ac3e75e894eeb543bb4b6e8404b346a411d81ef0e52b7",
+      "manifestDigest": "a4f7a2c9baaf677c19c6201c83dc7f0c33afb6fed355de4ba486e19f65a3bd15",
       "files": [
         {
           "path": "src/components/ui/native_select.rs",
@@ -453,7 +453,7 @@
     },
     {
       "address": "@adico/popover",
-      "manifestDigest": "806c0ea3cb5a26f6547ac3e75e894eeb543bb4b6e8404b346a411d81ef0e52b7",
+      "manifestDigest": "a4f7a2c9baaf677c19c6201c83dc7f0c33afb6fed355de4ba486e19f65a3bd15",
       "files": [
         {
           "path": "src/components/ui/popover.rs",
@@ -553,7 +553,7 @@
     },
     {
       "address": "@adico/spinner",
-      "manifestDigest": "ad45ab103370edbc7111bf978f73be5ad15bc642783e4ecd852adec20337bcaa",
+      "manifestDigest": "a4f7a2c9baaf677c19c6201c83dc7f0c33afb6fed355de4ba486e19f65a3bd15",
       "files": [
         {
           "path": "src/components/ui/spinner.rs",
@@ -633,11 +633,11 @@
     },
     {
       "address": "@adico/time-picker",
-      "manifestDigest": "806c0ea3cb5a26f6547ac3e75e894eeb543bb4b6e8404b346a411d81ef0e52b7",
+      "manifestDigest": "a4f7a2c9baaf677c19c6201c83dc7f0c33afb6fed355de4ba486e19f65a3bd15",
       "files": [
         {
           "path": "src/components/ui/time_picker.rs",
-          "checksum": "a0fe367b052604a56bac267eb96d6ec62157f03e52a225f912c0b5f74a6b1b6c"
+          "checksum": "c82f744630724cd830f8bf1f320242582ce820111cf57d0e302f6b1bb0a49365"
         }
       ]
     },
@@ -693,7 +693,7 @@
     },
     {
       "address": "@adico/variants",
-      "manifestDigest": "6c5d2e16bacfda33d92a4b7595f9a6e27f41380674298937f799b577f65bb8fe",
+      "manifestDigest": "a4f7a2c9baaf677c19c6201c83dc7f0c33afb6fed355de4ba486e19f65a3bd15",
       "files": [
         {
           "path": "src/adico_lib/variants.rs",

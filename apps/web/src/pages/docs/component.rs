@@ -1,7 +1,11 @@
 use dioxus::prelude::*;
 
 use super::data::{component_props, find_component};
+use super::examples;
+use crate::components::code_block::CodeBlock;
 use crate::components::cta_link::{CtaLink, CtaLinkVariant};
+use crate::components::doc_example::DocExample;
+use crate::components::prose::Prose;
 use crate::components::ui::badge::Badge;
 use crate::components::ui::card::{Card, CardContent, CardHeader, CardTitle};
 use crate::components::ui::table::{Table, TableBody, TableCell, TableHead, TableHeader, TableRow};
@@ -12,7 +16,7 @@ pub fn DocsComponent(name: String) -> Element {
         return rsx! {
             div { class: "mx-auto flex w-full max-w-3xl flex-col gap-4 px-6 py-12",
                 CtaLink { href: "/docs".to_string(), variant: CtaLinkVariant::Ghost, "← Back to components" }
-                h1 { class: "text-3xl font-bold tracking-tight", "Not found" }
+                h1 { class: "text-h1", "Not found" }
                 p { class: "text-muted-foreground", "No registry component named \"{name}\"." }
             }
         };
@@ -22,16 +26,58 @@ pub fn DocsComponent(name: String) -> Element {
     rsx! {
         div { class: "mx-auto flex w-full max-w-3xl flex-col gap-6 px-6 py-12",
             CtaLink { href: "/docs".to_string(), variant: CtaLinkVariant::Ghost, "← Back to components" }
-            div { class: "flex items-center gap-3",
-                h1 { class: "text-3xl font-bold tracking-tight", "{component.name}" }
+            div { class: "flex flex-wrap items-center gap-3",
+                h1 { class: "text-h1", "{component.name}" }
                 Badge { "{component.item_type}" }
             }
-            p { class: "text-muted-foreground", "{component.description}" }
+            Prose {
+                text: component.description.clone(),
+                class: "text-lead text-muted-foreground",
+            }
+
+            // Install command and playground link: the two things a reader is
+            // most likely to want next, so they sit above the reference
+            // material rather than at the bottom of the page.
+            div { class: "flex flex-col gap-3",
+                CodeBlock { code: format!("adico add {}", component.name) }
+                div { class: "flex flex-wrap gap-3",
+                    CtaLink {
+                        href: format!("/playground/{}", component.name),
+                        variant: CtaLinkVariant::Outline,
+                        "Open in playground →"
+                    }
+                }
+            }
+
+            // Examples come before the prose: seeing the component is the
+            // point of the page. A component with no example module skips
+            // this section entirely rather than rendering an empty one.
+            if let Some(item) = examples::for_item(&component.name) {
+                section { class: "flex flex-col gap-8",
+                    h2 { class: "text-h2", "Examples" }
+                    for meta in item.metas {
+                        // Keyed by component *and* example: navigating
+                        // /docs/components/a → /b reuses the element at the
+                        // same tree position, which otherwise carries the
+                        // previous page's Preview/Code selection across with
+                        // it. Including the component name forces a remount,
+                        // so every page opens on Preview.
+                        DocExample {
+                            key: "{component.name}-{meta.id}",
+                            id: meta.id.to_string(),
+                            title: meta.title.to_string(),
+                            description: meta.description.to_string(),
+                            code: examples::extract(item.source, meta.id),
+                            {(item.render)(meta.id)}
+                        }
+                    }
+                }
+            }
 
             if let Some(note) = doc.and_then(|d| d.composition_note.as_deref()) {
                 Card {
                     CardHeader { CardTitle { "Composition note" } }
-                    CardContent { p { class: "text-sm text-muted-foreground", "{note}" } }
+                    CardContent { Prose { text: note.to_string() } }
                 }
             }
 
@@ -49,14 +95,14 @@ pub fn DocsComponent(name: String) -> Element {
             if let Some(accessibility) = doc.and_then(|d| d.accessibility.as_deref()) {
                 Card {
                     CardHeader { CardTitle { "Accessibility" } }
-                    CardContent { p { class: "text-sm text-muted-foreground", "{accessibility}" } }
+                    CardContent { Prose { text: accessibility.to_string() } }
                 }
             }
 
             if let Some(keyboard) = doc.and_then(|d| d.keyboard.as_deref()) {
                 Card {
                     CardHeader { CardTitle { "Keyboard" } }
-                    CardContent { p { class: "text-sm text-muted-foreground", "{keyboard}" } }
+                    CardContent { Prose { text: keyboard.to_string() } }
                 }
             }
 

@@ -717,6 +717,26 @@ pub fn TimePickerClock(props: TimePickerClockProps) -> Element {
                         face_size.set(Some((size.width, size.height)));
                     }
                 },
+                // `onmounted` can measure the face while `Positioner` is still
+                // placing the popup and its zoom-in entrance is still running,
+                // so the size recorded there is not always the final one --
+                // and `apply_from_pointer` resolves every pointer position
+                // against it, so a stale size misplaces the hand for the life
+                // of the popup. `ResizeData` (a real `ResizeObserver`) fires
+                // once the box settles and corrects it.
+                //
+                // Size only, still never position: the comment above explains
+                // why a position captured here would describe where the dial
+                // sat before placement. The content box is also immune to the
+                // entrance transform, for the same reason `get_scroll_size`
+                // was chosen over `get_client_rect`.
+                onresize: move |event: Event<ResizeData>| {
+                    if let Ok(size) = event.data().get_content_box_size() {
+                        if size.width > 0.0 && size.height > 0.0 {
+                            face_size.set(Some((size.width, size.height)));
+                        }
+                    }
+                },
                 onpointerdown: move |event: Event<PointerData>| {
                     is_dragging.set(true);
                     apply_from_pointer(event.element_coordinates());

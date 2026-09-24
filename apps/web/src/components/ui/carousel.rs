@@ -210,6 +210,50 @@ pub fn CarouselContent(children: Element, class: Option<String>) -> Element {
         });
     };
 
+    // Re-measure whenever the track's box actually changes.
+    //
+    // `onmounted` above can run before layout has settled -- how early depends
+    // on how deeply the carousel is nested, which is why this surfaced only
+    // after a layout layer was added above it. A stale mount measurement makes
+    // `max_offset()` zero, which disables both paging buttons *and* pins
+    // `scroll_next`/`scroll_prev` to the current offset; nothing can then
+    // scroll, so `onscroll` -- the other place sizes are refreshed -- never
+    // fires to correct it. The two form a deadlock, and the carousel is
+    // permanently unpageable.
+    //
+    // `ResizeData` is backed by a real `ResizeObserver`, so this fires exactly
+    // when the box settles, rather than guessing at a delay (the timing is
+    // what shifts with nesting). Same mechanism as
+    // `adico_primitives::scroll_area`'s own viewport handler.
+    let onresize = move |event: Event<ResizeData>| {
+        let Ok(size) = event.data().get_content_box_size() else {
+            return;
+        };
+        let viewport = match orientation {
+            CarouselOrientation::Horizontal => size.width,
+            CarouselOrientation::Vertical => size.height,
+        };
+        // A hidden element reports a zero box; adopting that would put the
+        // component straight back into the stuck state this handler exists to
+        // clear. Matches `onscroll`'s own `> 0.0` guards below.
+        if viewport > 0.0 {
+            ctx.viewport_size.set(viewport);
+        }
+        if let Some(handle) = (ctx.content_ref)() {
+            spawn(async move {
+                if let Ok(scroll_size) = handle.get_scroll_size().await {
+                    let content = match orientation {
+                        CarouselOrientation::Horizontal => scroll_size.width,
+                        CarouselOrientation::Vertical => scroll_size.height,
+                    };
+                    if content > 0.0 {
+                        ctx.content_size.set(content);
+                    }
+                }
+            });
+        }
+    };
+
     let onscroll = move |event: Event<ScrollData>| {
         let data = event.data();
         let (offset, viewport, content) = match orientation {
@@ -289,6 +333,7 @@ pub fn CarouselContent(children: Element, class: Option<String>) -> Element {
             class,
             tabindex: "0",
             onmounted,
+            onresize,
             onscroll,
             onkeydown,
             onpointerdown,

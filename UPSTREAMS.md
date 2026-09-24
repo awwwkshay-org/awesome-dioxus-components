@@ -21,6 +21,20 @@ they were imported together and have identical origin and license details.
 5. Run `cargo xtask provenance check` once M1 introduces that command. Until
    then, validate records against the checked-in schema during review.
 
+## Vendored assets
+
+Redistributed, unmodified binary assets are not *imported source*: nothing is
+ported, and there is no local divergence to track. They therefore carry the
+upstream license text and an origin record next to the files themselves,
+rather than a `provenance/records/*.json` entry — that schema requires an
+immutable revision echoed inside each recorded local path, which a binary file
+cannot carry. Redistribution obligations (license text and copyright notice)
+still apply and are retained in full.
+
+| Asset | Upstream | License | Record |
+| --- | --- | --- | --- |
+| Geist and Geist Mono variable `woff2` (latin subset) | [`vercel/geist-font`](https://github.com/vercel/geist-font), obtained via `@fontsource-variable/geist@5.3.0` | OFL-1.1 | `apps/web/assets/fonts/README.md` + `OFL.txt` |
+
 Provenance records above track *imported source*. Separately, `adico`'s own
 compatibility tooling (`primitive-compat`, `component-compat`) compares
 itself against upstream *inventories* (component/primitive lists, props,

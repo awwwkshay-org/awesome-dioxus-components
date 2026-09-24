@@ -1,6 +1,117 @@
 @import "tailwindcss";
 @source "./src";
 
+/* ---------------------------------------------------------------------------
+ * App-owned CSS. MUST stay above `adico:theme:start`.
+ *
+ * `adico add` regenerates everything between the `adico:theme:start` and
+ * `adico:theme:end` markers wholesale — it keeps only the bytes before the
+ * start marker and after the end marker (packages/adico-cli/src/css.rs,
+ * `plan_theme_install`). Anything authored inside that region is destroyed on
+ * the next install, silently. Fonts, font/type tokens, and custom variants
+ * therefore live here, in the prefix.
+ * ------------------------------------------------------------------------ */
+
+/* Bind the `dark:` variant to the `dark` class.
+ *
+ * `adico_primitives::theme_mode` switches themes by adding/removing the `dark`
+ * class on `<html>`, and the generated `.dark { --… }` token block below keys
+ * off that same class. Without this line Tailwind v4's *default* `dark`
+ * variant applies, which compiles literal `dark:` utilities to
+ * `@media (prefers-color-scheme: dark)` — so they would follow the operating
+ * system while every token-driven color follows the toggle. Components using
+ * literal `dark:` utilities (Button's ghost hover, aria-invalid rings,
+ * focus-visible rings) would then mis-render for anyone whose OS theme and
+ * chosen theme disagree. */
+@custom-variant dark (&:is(.dark *));
+
+/* Self-hosted Geist / Geist Mono, latin subset, variable weight axis.
+ * Origin, version, and license: apps/web/assets/fonts/README.md + OFL.txt.
+ * Paths are relative to the COMPILED stylesheet (assets/tailwind.css), not to
+ * this input file. */
+@font-face {
+  font-family: "Geist Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("./fonts/geist-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Geist Mono Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("./fonts/geist-mono-latin-wght-normal.woff2")
+    format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Font tokens. Fallbacks are the stacks Tailwind preflight would otherwise
+ * use, so text stays legible and metrically close while the webfont loads
+ * (`font-display: swap`). */
+@theme {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo,
+    Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-display: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Type scale.
+ *
+ * One named step per role, so pages stop repeating ad-hoc
+ * `text-3xl font-bold tracking-tight` strings and a later guide page has
+ * something concrete to document. Sizes are fluid where the role spans a wide
+ * range (display, h1) and fixed where it does not. `clamp()` keeps them from
+ * needing breakpoints.
+ *
+ * Only the four steps pages actually use are defined. Tailwind emits an
+ * `@utility` lazily (only once `src/` references it), so an unused step would
+ * be invisible in the compiled output anyway — and defining scale steps ahead
+ * of a caller is the kind of anticipatory abstraction CLAUDE.md rules out. Add
+ * a step when a page needs it. */
+@utility text-display {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 1.75rem + 3.75vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+@utility text-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 1.5rem + 1.875vw, 2.75rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+@utility text-h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+@utility text-lead {
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: -0.005em;
+  text-wrap: pretty;
+}
+
 /* adico:theme:start */
 @theme {
   --color-background: hsl(var(--background));
